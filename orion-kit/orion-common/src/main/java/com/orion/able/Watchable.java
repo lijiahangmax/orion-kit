@@ -1,0 +1,14 @@
+package com.orion.able;
+
+/**
+ * 观察接口
+ *
+ * @author Li
+ * @version 1.0.0
+ * @date 2019/12/11 17:31
+ */
+public interface Watchable {
+
+    void watch();
+
+}
