@@ -12,7 +12,7 @@
     <artifactId>orion-spring</artifactId>
 
     <name>orion-spring</name>
-    <url>http://www.example.com</url>
+    <description>Orion Integrated Spring</description>
 
     <dependencies>
         <dependency>

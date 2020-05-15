@@ -6,13 +6,13 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.2.7.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
     <groupId>com.orion.paas</groupId>
     <artifactId>orion-config</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>orion-config</name>
-    <description>Demo project for Spring Boot</description>
+    <description>Orion Configuration Center</description>
 
     <properties>
         <java.version>1.8</java.version>

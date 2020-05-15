@@ -15,7 +15,7 @@
 
     <packaging>pom</packaging>
     <name>orion-kit</name>
-    <url>http://www.example.com</url>
+    <description>Orion Dev Kit</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

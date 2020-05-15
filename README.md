@@ -1,1 +1,1 @@
-# Orion Project Kit
+# Orion Project

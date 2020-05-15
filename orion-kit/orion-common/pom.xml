@@ -12,7 +12,7 @@
     <artifactId>orion-common</artifactId>
 
     <name>orion-common</name>
-    <url>http://www.example.com</url>
+    <description>Orion Common</description>
 
     <dependencies>
         <!-- 拼音处理 -->

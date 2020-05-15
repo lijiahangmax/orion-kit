@@ -11,7 +11,7 @@
     <artifactId>orion-modules</artifactId>
 
     <name>orion-modules</name>
-    <url>http://www.example.com</url>
+    <description>Orion Base Modules</description>
 
     <dependencies>
         <dependency>

@@ -9,7 +9,6 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>orion-modules</artifactId>
     <name>orion-modules</name>
-    <url>http://www.example.com</url>
     <build>
         <resources>
             <resource>
