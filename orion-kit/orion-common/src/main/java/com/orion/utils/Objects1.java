@@ -3,7 +3,7 @@ package com.orion.utils;
 import com.orion.lang.Null;
 import com.orion.utils.collect.Lists;
 import com.orion.utils.collect.Maps;
-import com.orion.utils.reflect.Reflects;
+import com.orion.utils.reflect.Methods;
 
 import java.io.*;
 import java.util.*;
@@ -269,7 +269,7 @@ public class Objects1 {
             return (T) deserialize(serialize(o));
         }
         if (o.getClass() != Object.class && o instanceof Cloneable) {
-            return Reflects.invokeMethod(o, "clone");
+            return Methods.invokeMethod(o, "clone");
         } else if (o instanceof Serializable) {
             return (T) deserialize(serialize(o));
         } else {

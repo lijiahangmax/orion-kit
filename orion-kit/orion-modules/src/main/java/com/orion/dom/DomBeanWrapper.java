@@ -127,11 +127,9 @@ class DomBeanWrapper {
                             }
                         }
                         Collection c = ((Collection) Constructors.newInstance(paramType));
-                        if (c != null) {
-                            Collection<Element> list = element.elements(entry.getKey());
-                            for (Element e : list) {
-                                c.add(e.getStringValue());
-                            }
+                        Collection<Element> list = element.elements(entry.getKey());
+                        for (Element e : list) {
+                            c.add(e.getStringValue());
                         }
                         paramValue = c;
                     } else if (paramsClass.equals(String.class)) {

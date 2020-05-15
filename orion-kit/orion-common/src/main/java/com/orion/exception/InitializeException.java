@@ -9,19 +9,19 @@ package com.orion.exception;
  */
 public class InitializeException extends Exception {
 
-public InitializeException() {
-        }
+    public InitializeException() {
+    }
 
-public InitializeException(String info) {
+    public InitializeException(String info) {
         super(info);
-        }
+    }
 
-public InitializeException(Throwable res) {
+    public InitializeException(Throwable res) {
         super(res);
-        }
+    }
 
-public InitializeException(String info, Throwable res) {
+    public InitializeException(String info, Throwable res) {
         super(info, res);
-        }
+    }
 
-        }
+}

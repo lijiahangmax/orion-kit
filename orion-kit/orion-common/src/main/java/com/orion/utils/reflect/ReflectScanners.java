@@ -14,8 +14,6 @@ import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import static com.orion.utils.reflect.Reflects.*;
-
 /**
  * 包扫描器
  *
@@ -23,7 +21,7 @@ import static com.orion.utils.reflect.Reflects.*;
  * @version 1.0.0
  * @date 2020/4/23 17:38
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings("ALL")
 public class ReflectScanners {
 
     /**
@@ -104,7 +102,7 @@ public class ReflectScanners {
         }
         Set<Class<?>> impl = new HashSet<>();
         for (Class c : classes) {
-            if (!c.equals(superClass) && Reflects.isImplClass(superClass, c)) {
+            if (!c.equals(superClass) && Classes.isImplClass(superClass, c)) {
                 impl.add(c);
             }
         }
@@ -121,7 +119,7 @@ public class ReflectScanners {
         Valid.notEmpty(annotateClasses, "AnnotateClasses length is 0");
         Set<Class<?>> annotatedClass = new HashSet<>();
         for (Class c : classes) {
-            if (classHasAnnotated(c, annotateClasses)) {
+            if (Annotations.classHasAnnotated(c, annotateClasses)) {
                 annotatedClass.add(c);
             }
         }
@@ -140,7 +138,7 @@ public class ReflectScanners {
         for (Class c : classes) {
             Set<Constructor> constructors = null;
             for (Constructor constructor : c.getConstructors()) {
-                if (constructorHasAnnotated(constructor, annotateClasses)) {
+                if (Annotations.constructorHasAnnotated(constructor, annotateClasses)) {
                     if (constructors == null) {
                         constructors = new HashSet<>();
                     }
@@ -166,13 +164,13 @@ public class ReflectScanners {
         Valid.notEmpty(constructorAnnotateClasses, "ConstructorAnnotateClasses length is 0");
         Map<Class<?>, Set<Constructor>> annotatedClass = new HashMap<>(16);
         for (Class c : classes) {
-            boolean hasAnnotated = classHasAnnotated(c, classAnnotatedClass);
+            boolean hasAnnotated = Annotations.classHasAnnotated(c, classAnnotatedClass);
             if (!hasAnnotated) {
                 continue;
             }
             Set<Constructor> constructors = null;
             for (Constructor constructor : c.getConstructors()) {
-                if (constructorHasAnnotated(constructor, constructorAnnotateClasses)) {
+                if (Annotations.constructorHasAnnotated(constructor, constructorAnnotateClasses)) {
                     if (constructors == null) {
                         constructors = new HashSet<>();
                     }
@@ -198,7 +196,7 @@ public class ReflectScanners {
         for (Class c : classes) {
             Set<Method> methods = null;
             for (Method method : c.getDeclaredMethods()) {
-                if (methodHasAnnotated(method, annotateClasses)) {
+                if (Annotations.methodHasAnnotated(method, annotateClasses)) {
                     if (methods == null) {
                         methods = new HashSet<>();
                     }
@@ -224,13 +222,13 @@ public class ReflectScanners {
         Valid.notEmpty(methodAnnotateClasses, "MethodAnnotateClasses length is 0");
         Map<Class<?>, Set<Method>> annotatedClass = new HashMap<>(16);
         for (Class c : classes) {
-            boolean hasAnnotated = classHasAnnotated(c, classAnnotatedClass);
+            boolean hasAnnotated = Annotations.classHasAnnotated(c, classAnnotatedClass);
             if (!hasAnnotated) {
                 continue;
             }
             Set<Method> methods = null;
             for (Method method : c.getDeclaredMethods()) {
-                if (methodHasAnnotated(method, methodAnnotateClasses)) {
+                if (Annotations.methodHasAnnotated(method, methodAnnotateClasses)) {
                     if (methods == null) {
                         methods = new HashSet<>();
                     }
@@ -256,7 +254,7 @@ public class ReflectScanners {
         for (Class c : classes) {
             Set<Field> fields = null;
             for (Field field : c.getDeclaredFields()) {
-                if (fieldHasAnnotated(field, annotateClasses)) {
+                if (Annotations.fieldHasAnnotated(field, annotateClasses)) {
                     if (fields == null) {
                         fields = new HashSet<>();
                     }
@@ -282,13 +280,13 @@ public class ReflectScanners {
         Valid.notEmpty(fieldAnnotateClasses, "FieldAnnotateClasses length is 0");
         Map<Class<?>, Set<Field>> annotatedClass = new HashMap<>(16);
         for (Class c : classes) {
-            boolean hasAnnotated = classHasAnnotated(c, classAnnotatedClass);
+            boolean hasAnnotated = Annotations.classHasAnnotated(c, classAnnotatedClass);
             if (!hasAnnotated) {
                 continue;
             }
             Set<Field> fields = null;
             for (Field field : c.getDeclaredFields()) {
-                if (fieldHasAnnotated(field, fieldAnnotateClasses)) {
+                if (Annotations.fieldHasAnnotated(field, fieldAnnotateClasses)) {
                     if (fields == null) {
                         fields = new HashSet<>();
                     }
@@ -402,7 +400,7 @@ public class ReflectScanners {
         for (String className : classNames) {
             Class<?> c = null;
             try {
-                c = Class.forName(className, false, Reflects.getCurrentClassLoader());
+                c = Class.forName(className, false, Classes.getCurrentClassLoader());
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
