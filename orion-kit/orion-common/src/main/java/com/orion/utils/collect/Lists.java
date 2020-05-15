@@ -1,6 +1,6 @@
 package com.orion.utils.collect;
 
-import com.orion.lang.ConvertArrayList;
+import com.orion.lang.collect.ConvertArrayList;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Objects1;
 

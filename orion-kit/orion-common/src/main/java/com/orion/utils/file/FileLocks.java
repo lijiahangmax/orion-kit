@@ -214,6 +214,7 @@ public class FileLocks {
                 return true;
             }
             try {
+                Files1.mkdirs(lockFile.getParentFile());
                 return lockFile.createNewFile();
             } catch (Exception e) {
                 throw Exceptions.ioRuntime("Create Lock File Error: " + file.getAbsolutePath());
@@ -223,7 +224,7 @@ public class FileLocks {
         @Override
         public void unLock() {
             if (lockFile.exists() && lockFile.isFile()) {
-                lockFile.delete();
+                Files1.deleteFile(lockFile);
             }
         }
 

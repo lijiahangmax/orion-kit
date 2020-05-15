@@ -1,5 +1,6 @@
 package com.orion.utils.file;
 
+import com.orion.id.UUIds;
 import com.orion.lang.SystemConst;
 import com.orion.utils.*;
 import com.orion.utils.collect.Lists;
@@ -721,7 +722,9 @@ public class Files1 {
      * @return \n \r \r\n
      */
     public static String getFileLineSeparator(File file) {
-        try (RandomAccessFile r = new RandomAccessFile(file, "r")) {
+        RandomAccessFile r = null;
+        try {
+            r = new RandomAccessFile(file, "r");
             long length = r.length();
             if (length == 0) {
                 return "\n";
@@ -742,6 +745,8 @@ public class Files1 {
             }
         } catch (IOException e) {
             // ignore
+        } finally {
+            Streams.closeQuietly(r);
         }
         return "\n";
     }
@@ -763,7 +768,9 @@ public class Files1 {
      * @return \n \r \r\n null
      */
     public static String getFileEndLineSeparator(File file) {
-        try (RandomAccessFile r = new RandomAccessFile(file, "r")) {
+        RandomAccessFile r = null;
+        try {
+            r = new RandomAccessFile(file, "r");
             long length = r.length();
             if (length == 0) {
                 return "\n";
@@ -789,6 +796,8 @@ public class Files1 {
             }
         } catch (IOException e) {
             // ignore
+        } finally {
+            Streams.closeQuietly(r);
         }
         return null;
     }
@@ -810,7 +819,9 @@ public class Files1 {
      * @return true 是 \n \r \r\n结尾
      */
     public static boolean hasEndLineSeparator(File file) {
-        try (RandomAccessFile r = new RandomAccessFile(file, "r")) {
+        RandomAccessFile r = null;
+        try {
+            r = new RandomAccessFile(file, "r");
             long length = r.length();
             if (length == 0) {
                 return true;
@@ -823,6 +834,8 @@ public class Files1 {
             }
         } catch (IOException e) {
             // ignore
+        } finally {
+            Streams.closeQuietly(r);
         }
         return false;
     }
@@ -2008,11 +2021,15 @@ public class Files1 {
      * @param len  length
      */
     public static void append(File file, byte[] bs, int off, int len) {
-        try (RandomAccessFile r = new RandomAccessFile(file, "rw")) {
+        RandomAccessFile r = null;
+        try {
+            r = new RandomAccessFile(file, "rw");
             r.seek(r.length());
             r.write(bs, off, len);
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
+        } finally {
+            Streams.closeQuietly(r);
         }
     }
 
@@ -2117,17 +2134,18 @@ public class Files1 {
             return;
         }
         FileInputStream in = null;
+        RandomAccessFile r = null;
         try {
             if (fileLen - offset <= BUFFER_SIZE) {
                 byte[] bs = new byte[((int) (fileLen - offset + len))];
                 System.arraycopy(bytes, 0, bs, 0, len);
-                RandomAccessFile r = new RandomAccessFile(file, "rw");
+                r = new RandomAccessFile(file, "rw");
                 r.seek(offset);
                 r.read(bs, len, bs.length - len);
                 r.seek(offset);
                 r.write(bs);
             } else {
-                RandomAccessFile r = new RandomAccessFile(file, "rw");
+                r = new RandomAccessFile(file, "rw");
                 File endFile = touchIOTempFile(true);
                 writeToFile(file, offset, endFile);
                 r.seek(offset);
@@ -2143,6 +2161,7 @@ public class Files1 {
             throw Exceptions.ioRuntime(e);
         } finally {
             closeQuietly(in);
+            closeQuietly(r);
         }
     }
 
@@ -2325,8 +2344,9 @@ public class Files1 {
             append = true;
         }
         FileInputStream in = null;
+        RandomAccessFile r = null;
         try {
-            RandomAccessFile r = new RandomAccessFile(file, "rw");
+            r = new RandomAccessFile(file, "rw");
             boolean useBuffer = true;
             byte[] bs = null;
             int read = 0;
@@ -2369,6 +2389,7 @@ public class Files1 {
             throw Exceptions.ioRuntime(e);
         } finally {
             closeQuietly(in);
+            closeQuietly(r);
         }
     }
 
@@ -2565,7 +2586,9 @@ public class Files1 {
                 before = true;
             }
         }
-        try (RandomAccessFile rw = new RandomAccessFile(file, "rw")) {
+        RandomAccessFile rw = null;
+        try {
+            rw = new RandomAccessFile(file, "rw");
             if (append) {
                 rw.seek(rw.length());
             }
@@ -2585,6 +2608,8 @@ public class Files1 {
             }
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
+        } finally {
+            closeQuietly(rw);
         }
     }
 
@@ -2758,6 +2783,7 @@ public class Files1 {
                     RandomAccessFile r = new RandomAccessFile(file, "rw");
                     r.seek(rangeStart);
                     r.write(n);
+                    closeQuietly(r);
                 } else {
                     File endFile = touchIOTempFile(true);
                     writeToFile(file, Long.valueOf(rangeEnd), endFile);
@@ -2770,6 +2796,8 @@ public class Files1 {
                     while (-1 != (read = in.read(bs))) {
                         r.write(bs, 0, read);
                     }
+                    closeQuietly(r);
+                    closeQuietly(in);
                 }
             }
         } catch (Exception e) {

@@ -1,7 +1,7 @@
 package com.orion.utils.collect;
 
-import com.orion.lang.ConcurrentHashSet;
-import com.orion.lang.ConvertHashSet;
+import com.orion.lang.collect.ConcurrentHashSet;
+import com.orion.lang.collect.ConvertHashSet;
 import com.orion.utils.Arrays1;
 
 import java.util.*;

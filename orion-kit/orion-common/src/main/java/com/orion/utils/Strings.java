@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
  * @version 1.0.0
  * @date 2019/9/3 10:21
  */
+@SuppressWarnings("ALL")
 public class Strings {
 
     /**
@@ -1119,125 +1120,6 @@ public class Strings {
     }
 
     /**
-     * 转化变量命名风格
-     *
-     * @param variable 变量
-     * @param e        命名风格
-     * @return 变量
-     */
-    public static String convertVariableStyle(String variable, VariableStyleEnum e) {
-        if (isBlank(variable)) {
-            return variable;
-        }
-        int styleType = VariableStyleEnum.getType(variable).getStyleType();
-        if (e.getStyleType() == styleType) {
-            return variable;
-        }
-        switch (styleType) {
-            case 1:
-                switch (e.getStyleType()) {
-                    case 2:
-                        return styleConvert(variable, 0);
-                    case 3:
-                        return styleConvert(variable, "_");
-                    case 4:
-                        return styleConvert(variable, "-");
-                    default:
-                        return variable;
-                }
-            case 2:
-                switch (e.getStyleType()) {
-                    case 1:
-                        return styleConvert(variable, 1);
-                    case 3:
-                        return styleConvert(variable, "_");
-                    case 4:
-                        return styleConvert(variable, "-");
-                    default:
-                        return variable;
-                }
-            case 3:
-                switch (e.getStyleType()) {
-                    case 1:
-                        return styleConvert(variable, true);
-                    case 2:
-                        return styleConvert(variable, false);
-                    case 4:
-                        return styleConvert(variable, "_", "-");
-                    default:
-                        return variable;
-                }
-            case 4:
-                switch (e.getStyleType()) {
-                    case 1:
-                        return styleConvert(variable, true);
-                    case 2:
-                        return styleConvert(variable, false);
-                    case 3:
-                        return styleConvert(variable, "-", "_");
-                    default:
-                        return variable;
-                }
-            default:
-                return variable;
-        }
-    }
-
-    // --------------- 转化格式私有方法 ---------------
-
-    private static String styleConvert(String variable, String before, String after) {
-        return variable.toLowerCase().replaceAll(before, after);
-    }
-
-    private static String styleConvert(String variable, String tokenizer) {
-        variable = String.valueOf(variable.charAt(0)).toUpperCase().concat(variable.substring(1));
-        StringBuilder sb = new StringBuilder();
-        Matcher matcher = BIG_HUMP.matcher(variable);
-        while (matcher.find()) {
-            sb.append(matcher.group().toLowerCase())
-                    .append(matcher.end() == variable.length() ? "" : tokenizer);
-        }
-        return sb.toString();
-    }
-
-    private static String styleConvert(String variable, boolean small) {
-        String tokenizer;
-        if (variable.contains("-")) {
-            tokenizer = "-";
-        } else {
-            tokenizer = "_";
-        }
-        String patternRegex = "-".equals(tokenizer) ? "([A-Za-z\\d]+)(-)?" : "([A-Za-z\\d]+)(_)?";
-        StringBuilder sb = new StringBuilder();
-        Pattern pattern = Pattern.compile(patternRegex);
-        Matcher matcher = pattern.matcher(variable);
-        int i = 0;
-        while (matcher.find()) {
-            String word = matcher.group();
-            if (++i == 1 && small) {
-                sb.append(Character.toLowerCase(word.charAt(0)));
-            } else {
-                sb.append(Character.toUpperCase(word.charAt(0)));
-            }
-            int index = word.lastIndexOf(tokenizer);
-            if (index > 0) {
-                sb.append(word.substring(1, index));
-            } else {
-                sb.append(word.substring(1));
-            }
-        }
-        return sb.toString();
-    }
-
-    private static String styleConvert(String variable, int t) {
-        if (t == 0) {
-            return Character.toUpperCase(variable.charAt(0)) + variable.substring(1);
-        } else {
-            return Character.toLowerCase(variable.charAt(0)) + variable.substring(1);
-        }
-    }
-
-    /**
      * 匹配字符出现次数
      *
      * @param s    源数据
@@ -1561,6 +1443,148 @@ public class Strings {
         str = leftPad(str, strLen + pads / 2, padStr);
         str = rightPad(str, size, padStr);
         return str;
+    }
+
+    /**
+     * 获取字符串码点
+     *
+     * @param s s
+     * @return ignore
+     */
+    public static int[] getCodePoints(String s) {
+        if (s == null) {
+            return null;
+        }
+        if (s.length() == 0) {
+            return new int[0];
+        }
+
+        int[] result = new int[s.codePointCount(0, s.length())];
+        int index = 0;
+        for (int i = 0; i < result.length; i++) {
+            result[i] = s.codePointAt(index);
+            index += Character.charCount(result[i]);
+        }
+        return result;
+    }
+
+    /**
+     * 转化变量命名风格
+     *
+     * @param variable 变量
+     * @param e        命名风格
+     * @return 变量
+     */
+    public static String convertVariableStyle(String variable, VariableStyleEnum e) {
+        if (isBlank(variable)) {
+            return variable;
+        }
+        int styleType = VariableStyleEnum.getType(variable).getStyleType();
+        if (e.getStyleType() == styleType) {
+            return variable;
+        }
+        switch (styleType) {
+            case 1:
+                switch (e.getStyleType()) {
+                    case 2:
+                        return styleConvert(variable, 0);
+                    case 3:
+                        return styleConvert(variable, "_");
+                    case 4:
+                        return styleConvert(variable, "-");
+                    default:
+                        return variable;
+                }
+            case 2:
+                switch (e.getStyleType()) {
+                    case 1:
+                        return styleConvert(variable, 1);
+                    case 3:
+                        return styleConvert(variable, "_");
+                    case 4:
+                        return styleConvert(variable, "-");
+                    default:
+                        return variable;
+                }
+            case 3:
+                switch (e.getStyleType()) {
+                    case 1:
+                        return styleConvert(variable, true);
+                    case 2:
+                        return styleConvert(variable, false);
+                    case 4:
+                        return styleConvert(variable, "_", "-");
+                    default:
+                        return variable;
+                }
+            case 4:
+                switch (e.getStyleType()) {
+                    case 1:
+                        return styleConvert(variable, true);
+                    case 2:
+                        return styleConvert(variable, false);
+                    case 3:
+                        return styleConvert(variable, "-", "_");
+                    default:
+                        return variable;
+                }
+            default:
+                return variable;
+        }
+    }
+
+    // --------------- 转化格式私有方法 ---------------
+
+    private static String styleConvert(String variable, String before, String after) {
+        return variable.toLowerCase().replaceAll(before, after);
+    }
+
+    private static String styleConvert(String variable, String tokenizer) {
+        variable = String.valueOf(variable.charAt(0)).toUpperCase().concat(variable.substring(1));
+        StringBuilder sb = new StringBuilder();
+        Matcher matcher = BIG_HUMP.matcher(variable);
+        while (matcher.find()) {
+            sb.append(matcher.group().toLowerCase())
+                    .append(matcher.end() == variable.length() ? "" : tokenizer);
+        }
+        return sb.toString();
+    }
+
+    private static String styleConvert(String variable, boolean small) {
+        String tokenizer;
+        if (variable.contains("-")) {
+            tokenizer = "-";
+        } else {
+            tokenizer = "_";
+        }
+        String patternRegex = "-".equals(tokenizer) ? "([A-Za-z\\d]+)(-)?" : "([A-Za-z\\d]+)(_)?";
+        StringBuilder sb = new StringBuilder();
+        Pattern pattern = Pattern.compile(patternRegex);
+        Matcher matcher = pattern.matcher(variable);
+        int i = 0;
+        while (matcher.find()) {
+            String word = matcher.group();
+            if (++i == 1 && small) {
+                sb.append(Character.toLowerCase(word.charAt(0)));
+            } else {
+                sb.append(Character.toUpperCase(word.charAt(0)));
+            }
+            int index = word.lastIndexOf(tokenizer);
+            if (index > 0) {
+                sb.append(word.substring(1, index));
+            } else {
+                sb.append(word.substring(1));
+            }
+        }
+        return sb.toString();
+    }
+
+    private static String styleConvert(String variable, int t) {
+        if (t == 0) {
+            return Character.toUpperCase(variable.charAt(0)) + variable.substring(1);
+        } else {
+            return Character.toLowerCase(variable.charAt(0)) + variable.substring(1);
+        }
     }
 
 }

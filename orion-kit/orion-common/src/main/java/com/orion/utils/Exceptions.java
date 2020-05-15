@@ -3,6 +3,7 @@ package com.orion.utils;
 import com.orion.exception.*;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * 异常工具类
@@ -422,6 +423,16 @@ public class Exceptions {
 
     public static Error error(String s, Throwable t) {
         return new Error(s, t);
+    }
+
+    /**
+     * 获取异常栈内信息
+     *
+     * @param t 异常
+     * @return 栈
+     */
+    public static List<Stacks.StackTrace> getStackTrace(Throwable t) {
+        return Stacks.toStackTraces(t.getStackTrace());
     }
 
 }

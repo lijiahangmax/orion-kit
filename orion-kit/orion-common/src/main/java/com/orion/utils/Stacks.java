@@ -103,6 +103,30 @@ public class Stacks {
     }
 
     /**
+     * StackTraceElement -> StackTrace
+     *
+     * @param e StackTraceElement
+     * @return StackTrace
+     */
+    public static StackTrace toStackTrace(StackTraceElement e) {
+        return new StackTrace(e);
+    }
+
+    /**
+     * StackTraceElement -> StackTrace
+     *
+     * @param es StackTraceElement
+     * @return StackTrace
+     */
+    public static List<StackTrace> toStackTraces(StackTraceElement[] es) {
+        List<StackTrace> list = new ArrayList<>();
+        for (StackTraceElement e : es) {
+            list.add(new StackTrace(e));
+        }
+        return list;
+    }
+
+    /**
      * 栈内信息
      */
     public static class StackTrace implements Serializable {

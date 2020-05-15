@@ -1,7 +1,7 @@
 package com.orion.utils.collect;
 
-import com.orion.lang.Arg;
-import com.orion.lang.ConvertHashMap;
+import com.orion.lang.wrapper.Arg;
+import com.orion.lang.collect.ConvertHashMap;
 import com.orion.lang.MapEntry;
 import com.orion.utils.Arrays1;
 

@@ -1,6 +1,6 @@
 package com.orion.utils.reflect;
 
-import com.orion.lang.MultiHashMap;
+import com.orion.lang.collect.MultiHashMap;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.Valid;
@@ -90,7 +90,7 @@ public class BeanWrapper {
                     fieldName = s;
                 }
             }
-            Object o = Reflects.invokeMethod(bean, getterMethod);
+            Object o = Methods.invokeMethod(bean, getterMethod);
             if (o == null) {
                 if (putNull) {
                     map.put(fieldName, null);
@@ -166,7 +166,7 @@ public class BeanWrapper {
      * @return bean
      */
     public static <T> T toBean(Map<String, ?> map, Map<String, ?> fieldMap, Class<T> clazz) {
-        T t = Reflects.newInstance(getConstructor(clazz));
+        T t = Constructors.newInstance(getConstructor(clazz));
         for (Map.Entry<String, ?> entry : map.entrySet()) {
             List<Method> setterMethods = getAllSetterMethod(clazz);
             String key = entry.getKey();
@@ -191,16 +191,16 @@ public class BeanWrapper {
                     try {
                         if (isImplClass(paramClass, valueClass)) {
                             // 赋值
-                            Reflects.invokeMethod(t, setterMethod, new Object[]{value});
+                            Methods.invokeMethod(t, setterMethod, new Object[]{value});
                         } else if (isImplClass(Map.class, valueClass) && !isImplClass(Map.class, paramClass)) {
                             // 值为map 属性为 bean
-                            Reflects.invokeMethod(t, setterMethod, new Object[]{toBean((Map<String, ?>) value, keyMap, paramClass)});
+                            Methods.invokeMethod(t, setterMethod, new Object[]{toBean((Map<String, ?>) value, keyMap, paramClass)});
                         } else if (isImplClass(Map.class, paramClass) && !isImplClass(Map.class, valueClass)) {
                             // 值为bean 属性为 map
-                            Reflects.invokeMethod(t, setterMethod, new Object[]{toMap(value, (Map<String, String>) keyMap)});
+                            Methods.invokeMethod(t, setterMethod, new Object[]{toMap(value, (Map<String, String>) keyMap)});
                         } else {
                             // 推断
-                            Reflects.invokeMethodInfer(t, setterMethod, new Object[]{value});
+                            Methods.invokeMethodInfer(t, setterMethod, new Object[]{value});
                         }
                     } catch (Exception e) {
                         // ignore
@@ -222,7 +222,7 @@ public class BeanWrapper {
      * @return bean
      */
     public static <T> T toBean(Object[] values, Map<Integer, String> fieldMap, Class<T> clazz) {
-        T t = Reflects.newInstance(getConstructor(clazz));
+        T t = Constructors.newInstance(getConstructor(clazz));
         for (Map.Entry<Integer, String> entry : fieldMap.entrySet()) {
             try {
                 Integer i = entry.getKey();
@@ -235,19 +235,19 @@ public class BeanWrapper {
                     if (isImplClass(paramClass, valueClass)) {
                         // 赋值
                         valueArr[0] = value;
-                        Reflects.invokeMethod(t, setterMethod, valueArr);
+                        Methods.invokeMethod(t, setterMethod, valueArr);
                     } else if (isImplClass(Map.class, valueClass) && !isImplClass(Map.class, paramClass)) {
                         // 值为map 属性为 bean
                         valueArr[0] = toBean((Map<String, ?>) value, null, paramClass);
-                        Reflects.invokeMethod(t, setterMethod, valueArr);
+                        Methods.invokeMethod(t, setterMethod, valueArr);
                     } else if (isImplClass(Map.class, paramClass) && !isImplClass(Map.class, valueClass)) {
                         // 值为bean 属性为 map
                         valueArr[0] = toMap(value);
-                        Reflects.invokeMethod(t, setterMethod, valueArr);
+                        Methods.invokeMethod(t, setterMethod, valueArr);
                     } else {
                         // 推断
                         valueArr[0] = value;
-                        Reflects.invokeMethodInfer(t, setterMethod, valueArr);
+                        Methods.invokeMethodInfer(t, setterMethod, valueArr);
                     }
                 }
             } catch (Exception e) {
@@ -370,7 +370,7 @@ public class BeanWrapper {
         Valid.notNull(source, "source object is null");
         Valid.notNull(targetClass, "target class is null");
         Constructor<T> constructor = getConstructor(targetClass);
-        T target = Reflects.newInstance(constructor);
+        T target = Constructors.newInstance(constructor);
         copy(source, target, fieldMap, ignores);
         return target;
     }
@@ -390,9 +390,9 @@ public class BeanWrapper {
             for (Method sourceGetter : sourceGetters) {
                 if (getFieldNameByGetterMethod(sourceGetter).equals(sourceFieldName)) {
                     try {
-                        Object sourceValue = Reflects.invokeMethod(source, sourceGetter);
+                        Object sourceValue = Methods.invokeMethod(source, sourceGetter);
                         if (sourceValue != null) {
-                            Reflects.invokeMethodInfer(target, targetSetter, new Object[]{sourceValue});
+                            Methods.invokeMethodInfer(target, targetSetter, new Object[]{sourceValue});
                         }
                         break;
                     } catch (Exception e) {
@@ -438,8 +438,8 @@ public class BeanWrapper {
         }
         List<Class<?>> list = ALL_INTERFACE_CACHE.get(argClass);
         if (list == null) {
-            list = Reflects.getInterfaces(argClass);
-            list.addAll(Reflects.getSuperClasses(argClass));
+            list = Classes.getInterfaces(argClass);
+            list.addAll(Classes.getSuperClasses(argClass));
             ALL_INTERFACE_CACHE.put(argClass, list);
         }
         if (list.isEmpty()) {
@@ -473,7 +473,7 @@ public class BeanWrapper {
     private static List<Method> getAllSetterMethod(Class clazz) {
         List<Method> methodList = ALL_SET_METHOD_CACHE.get(clazz);
         if (methodList == null) {
-            methodList = Reflects.getAllSetterMethod(clazz);
+            methodList = Methods.getAllSetterMethod(clazz);
             ALL_SET_METHOD_CACHE.put(clazz, methodList);
         }
         return methodList;
@@ -488,7 +488,7 @@ public class BeanWrapper {
     private static List<Method> getAllGetterMethod(Class clazz) {
         List<Method> methodList = ALL_GET_METHOD_CACHE.get(clazz);
         if (methodList == null) {
-            methodList = Reflects.getAllGetterMethod(clazz);
+            methodList = Methods.getAllGetterMethod(clazz);
             ALL_GET_METHOD_CACHE.put(clazz, methodList);
         }
         return methodList;
@@ -505,7 +505,7 @@ public class BeanWrapper {
         String methodName = "set" + Strings.firstUpper(fieldName);
         Method method = METHOD_CACHE.get(clazz, methodName);
         if (method == null) {
-            method = Reflects.getAccessibleMethod(clazz, methodName, 1);
+            method = Methods.getAccessibleMethod(clazz, methodName, 1);
             METHOD_CACHE.put(clazz, methodName, method);
         }
         return method;
@@ -520,7 +520,7 @@ public class BeanWrapper {
     private static <T> Constructor<T> getConstructor(Class<T> clazz) {
         Constructor<T> constructor = CONSTRUCTOR_CACHE.get(clazz);
         if (constructor == null) {
-            constructor = Reflects.getDefaultConstructor(clazz);
+            constructor = Constructors.getDefaultConstructor(clazz);
             CONSTRUCTOR_CACHE.put(clazz, constructor);
         }
         return constructor;

@@ -5,13 +5,15 @@ import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import com.orion.id.SnowFlake;
+import com.orion.id.UUIds;
+import com.orion.utils.file.Files1;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +40,7 @@ public class QRCodes {
     /**
      * 格式
      */
-    private static final String FORMAT_NAME = "JPG";
+    private static final String FORMAT_NAME = "jpg";
 
     /**
      * 二维码尺寸
@@ -59,11 +61,11 @@ public class QRCodes {
      * 生成二维码
      *
      * @param content      源内容
-     * @param logoPath     生成二维码保存的路径
+     * @param logoInput    二维码logo流
      * @param needCompress 是否要压缩logo
      * @return 返回二维码图片
      */
-    private static BufferedImage createImage(String content, String logoPath, boolean needCompress) throws Exception {
+    private static BufferedImage createImage(String content, InputStream logoInput, boolean needCompress) throws Exception {
         ConcurrentHashMap<EncodeHintType, Object> map = new ConcurrentHashMap<>(3);
         map.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
         map.put(EncodeHintType.CHARACTER_SET, CHARSET);
@@ -77,11 +79,11 @@ public class QRCodes {
                 image.setRGB(x, y, bitMatrix.get(x, y) ? 0xFF000000 : 0xFFFFFFFF);
             }
         }
-        if (logoPath == null || "".equals(logoPath)) {
+        if (logoInput == null) {
             return image;
         }
         // 插入图片
-        insertImage(image, logoPath, needCompress);
+        insertImage(image, logoInput, needCompress);
         return image;
     }
 
@@ -89,15 +91,11 @@ public class QRCodes {
      * 在生成的二维码中插入图片
      *
      * @param source       二维码源
-     * @param logoPath     插入图片地址
+     * @param logoInput    二维码logo流
      * @param needCompress 是否压缩
      */
-    private static void insertImage(BufferedImage source, String logoPath, boolean needCompress) throws Exception {
-        File file = new File(logoPath);
-        if (!file.exists()) {
-            throw new RuntimeException("Logo file not found");
-        }
-        Image src = ImageIO.read(new File(logoPath));
+    private static void insertImage(BufferedImage source, InputStream logoInput, boolean needCompress) throws Exception {
+        Image src = ImageIO.read(logoInput);
         int width = src.getWidth(null);
         int height = src.getHeight(null);
         // 压缩LOGO
@@ -128,41 +126,31 @@ public class QRCodes {
     }
 
     /**
-     * 创建文件夹
-     */
-    private static void mkdirs(String destPath) {
-        File file = new File(destPath);
-        if (!file.exists() && !file.isDirectory()) {
-            file.mkdirs();
-        }
-    }
-
-    /**
      * 生成二维码
      *
      * @param content      二维码内容
-     * @param logoPath     logo图片 可以为null
      * @param destPath     存储的地址
-     * @param fileName     文件名称
+     * @param fileName     文件名称 不需要后缀
+     * @param logoPath     logo图片 可以为null
      * @param needCompress 是否压缩
      */
-    public static void encode(String content, String logoPath, String destPath, String fileName, boolean needCompress) throws Exception {
-        BufferedImage image = createImage(content, logoPath, needCompress);
-        mkdirs(destPath);
-        String file = fileName + "." + FORMAT_NAME.toLowerCase();
-        ImageIO.write(image, FORMAT_NAME, new File(destPath + "/" + file));
+    public static void encode(String content, String destPath, String fileName, String logoPath, boolean needCompress) throws Exception {
+        BufferedImage image = createImage(content, logoPath == null ? null : Files1.openInputStream(logoPath), needCompress);
+        Files1.mkdirs(destPath);
+        fileName = fileName + "." + FORMAT_NAME;
+        ImageIO.write(image, FORMAT_NAME, new File(destPath + "/" + fileName));
     }
 
     /**
      * 生成二维码 不压缩, 不带logo
      *
      * @param content  二维码内容
-     * @param logoPath logo图片
      * @param destPath 存储的地址
-     * @param fileName 文件名称
+     * @param fileName 文件名称 不需要后缀
+     * @param logoPath logo图片
      */
-    public static void encode(String content, String logoPath, String destPath, String fileName) throws Exception {
-        encode(content, logoPath, destPath, fileName, false);
+    public static void encode(String content, String destPath, String fileName, String logoPath) throws Exception {
+        encode(content, destPath, fileName, logoPath, false);
     }
 
     /**
@@ -170,10 +158,10 @@ public class QRCodes {
      *
      * @param content  二维码内容
      * @param destPath 存储的地址
-     * @param fileName 文件名称
+     * @param fileName 文件名称 不需要后缀
      */
     public static void encode(String content, String destPath, String fileName) throws Exception {
-        encode(content, null, destPath, fileName, false);
+        encode(content, destPath, fileName, null, false);
     }
 
     /**
@@ -181,22 +169,12 @@ public class QRCodes {
      *
      * @param content  二维码内容
      * @param destPath 存储的地址
+     * @return 二维码路径
      */
-    public static void encode(String content, String destPath) throws Exception {
-        encode(content, null, destPath, String.valueOf(SnowFlake.createId()), false);
-    }
-
-    /**
-     * 图片流输出二维码
-     *
-     * @param content      存储的内容
-     * @param logoPath     logo图片
-     * @param output       图片输出流
-     * @param needCompress 是否压缩
-     */
-    public static void encode(String content, String logoPath, OutputStream output, boolean needCompress) throws Exception {
-        BufferedImage image = createImage(content, logoPath, needCompress);
-        ImageIO.write(image, FORMAT_NAME, output);
+    public static String encode(String content, String destPath) throws Exception {
+        String name = UUIds.random32();
+        encode(content, destPath, name, null, false);
+        return Files1.getPath(destPath + "/" + name);
     }
 
     /**
@@ -206,16 +184,66 @@ public class QRCodes {
      * @param output  图片输出流
      */
     public static void encode(String content, OutputStream output) throws Exception {
-        encode(content, null, output, false);
+        encode(content, output, null, false);
+    }
+
+    /**
+     * 图片流输出二维码
+     *
+     * @param content   存储的内容
+     * @param output    图片输出流
+     * @param logoInput logo流
+     */
+    public static void encode(String content, OutputStream output, InputStream logoInput) throws Exception {
+        encode(content, output, logoInput, false);
+    }
+
+    /**
+     * 图片流输出二维码
+     *
+     * @param content      存储的内容
+     * @param output       图片输出流
+     * @param logoInput    logo流
+     * @param needCompress 是否压缩
+     */
+    public static void encode(String content, OutputStream output, InputStream logoInput, boolean needCompress) throws Exception {
+        BufferedImage image = createImage(content, logoInput, needCompress);
+        ImageIO.write(image, FORMAT_NAME, output);
     }
 
     /**
      * 解析二维码数据
      *
-     * @param file 二维码文件
+     * @param file 二维码文件路径
+     */
+    public static String decode(String file) throws Exception {
+        return decode(ImageIO.read(QRCodes.class.getClassLoader().getResourceAsStream(file)));
+    }
+
+    /**
+     * 解析二维码数据
+     *
+     * @param file 二维码文件路径
      */
     public static String decode(File file) throws Exception {
-        BufferedImage image = ImageIO.read(file);
+        return decode(ImageIO.read(file));
+    }
+
+    /**
+     * 解析二维码数据
+     *
+     * @param in 二维码流
+     */
+    public static String decode(InputStream in) throws Exception {
+        return decode(ImageIO.read(in));
+    }
+
+    /**
+     * 解析二维码数据
+     *
+     * @param image 二维码
+     */
+    private static String decode(BufferedImage image) throws Exception {
         if (image == null) {
             return null;
         }
@@ -224,15 +252,6 @@ public class QRCodes {
         Map<DecodeHintType, Object> map = new HashMap<>(1);
         map.put(DecodeHintType.CHARACTER_SET, CHARSET);
         return new MultiFormatReader().decode(bitmap, map).getText();
-    }
-
-    /**
-     * 解析二维码数据
-     *
-     * @param path 二维码文件路径
-     */
-    public static String decode(String path) throws Exception {
-        return decode(new File(path));
     }
 
 }

@@ -21,7 +21,7 @@ import java.util.function.IntFunction;
  * <p>
  * 需要注意: 可变参数 Object... T... 不应该传基本类型的数组, JVM会将它将包装成一个单元素数组, 并不会结构多个基本类型的对象
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings("ALL")
 public class Arrays1 {
 
     private Arrays1() {
@@ -982,18 +982,53 @@ public class Arrays1 {
     // ------------------ asArray ------------------
 
     /**
-     * 将对象转化为数组
+     * 将可变参数转化为数组
      *
-     * @param t   对象
-     * @param <T> ignore
+     * @param i 可边参数
      * @return 数组
      */
-    public static <T> T[] asArrs(T... t) {
+    public static byte[] of(byte... i) {
+        return i;
+    }
+
+    public static short[] of(short... i) {
+        return i;
+    }
+
+    public static int[] of(int... i) {
+        return i;
+    }
+
+    public static long[] of(long... i) {
+        return i;
+    }
+
+    public static float[] of(float... i) {
+        return i;
+    }
+
+    public static double[] of(double... i) {
+        return i;
+    }
+
+    public static boolean[] of(boolean... i) {
+        return i;
+    }
+
+    public static char[] of(char... i) {
+        return i;
+    }
+
+    public static String[] of(String... i) {
+        return i;
+    }
+
+    public static <T> T[] of(T... t) {
         return t;
     }
 
     @SuppressWarnings("all")
-    public static Object[] asArrays(Object... i) {
+    public static Object[] ofs(Object... i) {
         int lengths = lengths(i);
         if (lengths == 0) {
             return new Object[]{};
@@ -1008,42 +1043,6 @@ public class Arrays1 {
             return i;
         }
         return r;
-    }
-
-    public static byte[] asArray(byte... i) {
-        return i;
-    }
-
-    public static short[] asArray(short... i) {
-        return i;
-    }
-
-    public static int[] asArray(int... i) {
-        return i;
-    }
-
-    public static long[] asArray(long... i) {
-        return i;
-    }
-
-    public static float[] asArray(float... i) {
-        return i;
-    }
-
-    public static double[] asArray(double... i) {
-        return i;
-    }
-
-    public static boolean[] asArray(boolean... i) {
-        return i;
-    }
-
-    public static char[] asArray(char... i) {
-        return i;
-    }
-
-    public static String[] asArray(String... i) {
-        return i;
     }
 
     // ------------------ isEmpty ------------------
@@ -2127,7 +2126,7 @@ public class Arrays1 {
     }
 
     private static int indexOfs(Object a, Object s, int start) {
-        Object[] arr = asArrays(a);
+        Object[] arr = ofs(a);
         int length = arr.length;
         if (start < 0) {
             return -1;
@@ -2225,7 +2224,7 @@ public class Arrays1 {
     }
 
     private static int lastIndexOfs(Object a, Object s, int start) {
-        Object[] arr = asArrays(a);
+        Object[] arr = ofs(a);
         int length = arr.length;
         if (start <= 0) {
             return -1;

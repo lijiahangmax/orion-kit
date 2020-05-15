@@ -14,6 +14,7 @@ import java.util.*;
  * @version 1.0.0
  * @date 2020/3/6 21:45
  */
+@SuppressWarnings("ALL")
 public class Streams {
 
     /**
@@ -201,7 +202,7 @@ public class Streams {
      * 从当前偏移量读取到最后一行
      *
      * @param reader 输入流
-     * @return
+     * @return lines
      * @throws IOException I/O异常
      */
     public static String readLines(RandomAccessFile reader, String charset) throws IOException {
@@ -215,7 +216,6 @@ public class Streams {
             System.arraycopy(buffer, 0, bs, 0, num);
             lineBuffer.add(bs);
             allSize += num;
-            pos = reader.getFilePointer();
         }
         byte[] abs = new byte[allSize];
         int tp = 0;
@@ -276,6 +276,16 @@ public class Streams {
         try {
             if (output != null) {
                 output.close();
+            }
+        } catch (IOException ioe) {
+            // ignore
+        }
+    }
+
+    public static void closeQuietly(Closeable c) {
+        try {
+            if (c != null) {
+                c.close();
             }
         } catch (IOException ioe) {
             // ignore

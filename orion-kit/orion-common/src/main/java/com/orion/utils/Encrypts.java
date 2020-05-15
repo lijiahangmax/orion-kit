@@ -1,6 +1,6 @@
 package com.orion.utils;
 
-import com.orion.lang.Arg;
+import com.orion.lang.wrapper.Arg;
 import com.orion.utils.file.Files1;
 
 import javax.crypto.Cipher;
@@ -28,6 +28,7 @@ import java.util.Enumeration;
  * @version 1.0.0
  * @date 2019/9/10 9:46
  */
+@SuppressWarnings("ALL")
 public class Encrypts {
 
     private static final String AES_ALGORITHM = "SHA1PRNG";
@@ -91,6 +92,16 @@ public class Encrypts {
      */
     public static String sha1(String s) {
         return hashEncrypt(s, "SHA-1");
+    }
+
+    /**
+     * SHA224加密
+     *
+     * @param s 明文
+     * @return 密文
+     */
+    public static String sha224(String s) {
+        return hashEncrypt(s, "SHA-224");
     }
 
     /**
@@ -229,7 +240,7 @@ public class Encrypts {
      * @param s ignore
      * @return ignore
      */
-    public static String base64UrlEncode(String s) {
+    public static String url64Encode(String s) {
         return new String(Base64.getUrlEncoder().encode(s.getBytes()));
     }
 
@@ -239,7 +250,7 @@ public class Encrypts {
      * @param b ignore
      * @return ignore
      */
-    public static byte[] base64UrlEncode(byte[] b) {
+    public static byte[] url64Encode(byte[] b) {
         return Base64.getUrlEncoder().encode(b);
     }
 
@@ -249,7 +260,7 @@ public class Encrypts {
      * @param s ignore
      * @return ignore
      */
-    public static String base64UrlDecode(String s) {
+    public static String url64Decode(String s) {
         return new String(Base64.getUrlDecoder().decode(s));
     }
 
@@ -259,7 +270,7 @@ public class Encrypts {
      * @param b ignore
      * @return ignore
      */
-    public static byte[] base64UrlDecode(byte[] b) {
+    public static byte[] url64Decode(byte[] b) {
         return Base64.getUrlDecoder().decode(b);
     }
 

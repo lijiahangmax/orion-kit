@@ -1,6 +1,6 @@
 package com.orion.utils.file;
 
-import com.orion.lang.Arg;
+import com.orion.lang.wrapper.Arg;
 import com.orion.utils.Streams;
 import com.orion.utils.Strings;
 
@@ -98,9 +98,7 @@ public class FileMerge implements Callable<String> {
         int last = 0, i = 0;
         String filePath = "";
         List<String> fileList = new ArrayList<>();
-        TreeSet<Map.Entry<Integer, String>> entries = new TreeSet<Map.Entry<Integer, String>>((o1, o2) -> {
-            return Integer.compare(o1.getKey(), o2.getKey());
-        });
+        TreeSet<Map.Entry<Integer, String>> entries = new TreeSet<>(Comparator.comparingInt(Map.Entry::getKey));
         entries.addAll(fm.entrySet());
         for (Map.Entry<Integer, String> is : entries) {
             if (i++ == 0) {

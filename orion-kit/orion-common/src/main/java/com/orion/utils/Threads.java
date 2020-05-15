@@ -1,7 +1,7 @@
 package com.orion.utils;
 
-import com.orion.lang.ConcurrentCallable;
-import com.orion.lang.ConcurrentRunnable;
+import com.orion.lang.thread.ConcurrentCallable;
+import com.orion.lang.thread.ConcurrentRunnable;
 import com.orion.utils.collect.Lists;
 
 import java.util.ArrayList;
@@ -15,6 +15,7 @@ import java.util.concurrent.*;
  * @version 1.0.0
  * @date 2020/2/24 18:13
  */
+@SuppressWarnings("ALL")
 public class Threads {
 
     private Threads() {

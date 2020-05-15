@@ -1,7 +1,7 @@
 package com.orion.utils;
 
 import com.orion.lang.MapEntry;
-import com.orion.lang.StringExt;
+import com.orion.utils.ext.StringExt;
 import com.orion.utils.collect.Maps;
 
 import java.io.IOException;

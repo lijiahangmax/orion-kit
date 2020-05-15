@@ -12,6 +12,8 @@ import java.util.Random;
  */
 public class Randoms {
 
+    private static final Random RANDOM = new Random();
+
     private Randoms() {
     }
 
@@ -104,7 +106,67 @@ public class Randoms {
      * @return ignore
      */
     public static int randomInt(int min, int max) {
-        return new Random().nextInt(max - min) + min;
+        return RANDOM.nextInt(max - min) + min;
+    }
+
+    /**
+     * 随机一个数字
+     *
+     * @return ignore
+     */
+    public static double randomDouble() {
+        return randomDouble(0, Double.MAX_VALUE);
+    }
+
+    /**
+     * 随机一个数字
+     *
+     * @param max 最大值
+     * @return ignore
+     */
+    public static double randomDouble(double max) {
+        return randomDouble(0, max);
+    }
+
+    /**
+     * 随机一个数字
+     *
+     * @param min 最小值
+     * @param max 最大值
+     * @return ignore
+     */
+    public static double randomDouble(double min, double max) {
+        return RANDOM.nextDouble() * (max - min) + min;
+    }
+
+    /**
+     * 随机一个数字
+     *
+     * @return ignore
+     */
+    public static long randomLong() {
+        return randomLong(0, Long.MAX_VALUE);
+    }
+
+    /**
+     * 随机一个数字
+     *
+     * @param max 最大值
+     * @return ignore
+     */
+    public static long randomLong(long max) {
+        return randomLong(0, max);
+    }
+
+    /**
+     * 随机一个数字
+     *
+     * @param min 最小值
+     * @param max 最大值
+     * @return ignore
+     */
+    public static long randomLong(long min, long max) {
+        return (long) (RANDOM.nextDouble() * (max - min)) + min;
     }
 
     /**
@@ -113,7 +175,7 @@ public class Randoms {
      * @param length 长度
      * @return ignor
      */
-    public static String randomScopeInt(int length) {
+    public static String randomNumber(int length) {
         StringBuilder sb = new StringBuilder();
         Random random = new Random();
         for (int i = 0; i < length; i++) {

@@ -19,6 +19,26 @@ import java.util.regex.Pattern;
  */
 public class Spells {
 
+    /**
+     * 中文正则
+     */
+    private static final Pattern CHINESE_CHAR = Pattern.compile("[\\u4E00-\\u9FA5]+");
+
+    /**
+     * 中文正则 JCK
+     */
+    private static final Pattern CHINESE_CJK = Pattern.compile("\\p{InCJK Unified Ideographs}&&\\P{Cn}");
+
+    /**
+     * 中文正则 REG
+     */
+    private static final Pattern CHINESE_REG = Pattern.compile("[\\u4E00-\\u9FBF]+");
+
+    /**
+     * 乱码正则
+     */
+    private static final Pattern MESSY_CODE = Pattern.compile("\\s*|\t*|\r*|\n*");
+
     private Spells() {
     }
 
@@ -28,25 +48,25 @@ public class Spells {
      * @param s 中文
      * @return 拼音
      */
-    public static String toSpell(String s) {
+    public static String getSpell(String s) {
         HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
         format.setCaseType(HanyuPinyinCaseType.LOWERCASE);
         format.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
         format.setVCharType(HanyuPinyinVCharType.WITH_V);
         char[] input = s.trim().toCharArray();
-        String output = "";
+        StringBuilder sb = new StringBuilder();
         try {
-            for (int i = 0; i < input.length; i++) {
-                if (Character.toString(input[i]).matches("[\\u4E00-\\u9FA5]+")) {
-                    String[] temp = PinyinHelper.toHanyuPinyinStringArray(input[i], format);
-                    output += temp[0];
-                } else
-                    output += Character.toString(input[i]);
+            for (char c : input) {
+                if (Matches.test(Character.toString(c), CHINESE_CHAR)) {
+                    sb.append(PinyinHelper.toHanyuPinyinStringArray(c, format)[0]);
+                } else {
+                    sb.append(Character.toString(c));
+                }
             }
         } catch (BadHanyuPinyinOutputFormatCombination e) {
-            e.printStackTrace();
+            // ignore
         }
-        return output;
+        return sb.toString();
     }
 
     /**
@@ -55,71 +75,72 @@ public class Spells {
      * @param s 汉字
      * @return 汉语拼音首字母
      */
-    public static String toFirstSpell(String s) {
-        StringBuffer bf = new StringBuffer();
+    public static String getFirstSpell(String s) {
+        StringBuilder sb = new StringBuilder();
         char[] arr = s.toCharArray();
         HanyuPinyinOutputFormat defaultFormat = new HanyuPinyinOutputFormat();
         defaultFormat.setCaseType(HanyuPinyinCaseType.LOWERCASE);
         defaultFormat.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i] > 128) {
+        for (char anArr : arr) {
+            if (anArr > 128) {
                 try {
-                    String[] temp = PinyinHelper.toHanyuPinyinStringArray(arr[i], defaultFormat);
+                    String[] temp = PinyinHelper.toHanyuPinyinStringArray(anArr, defaultFormat);
                     if (temp != null) {
-                        bf.append(temp[0].charAt(0));
+                        sb.append(temp[0].charAt(0));
                     }
                 } catch (BadHanyuPinyinOutputFormatCombination e) {
                     e.printStackTrace();
                 }
             } else {
-                bf.append(arr[i]);
+                sb.append(anArr);
             }
         }
-        return bf.toString().replaceAll("\\W", "").trim();
+        return sb.toString().replaceAll("\\W", "").trim();
     }
 
     /**
-     * 获取汉字串拼音, 英文字符不变
+     * 将字符串中的中文转化为拼音, 其他字符不变 有声调
      *
      * @param s 汉字串
      * @return 汉语拼音
      */
-    public static String FullSpell(String s) {
-        StringBuffer bf = new StringBuffer();
+    public static String getFullSpell(String s) {
+        StringBuilder sb = new StringBuilder();
         char[] arr = s.toCharArray();
-        HanyuPinyinOutputFormat defaultFormat = new HanyuPinyinOutputFormat();
-        defaultFormat.setCaseType(HanyuPinyinCaseType.LOWERCASE);
-        defaultFormat.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i] > 128) {
+        HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
+        format.setCaseType(HanyuPinyinCaseType.LOWERCASE);
+        format.setVCharType(HanyuPinyinVCharType.WITH_U_UNICODE);
+        for (char anArr : arr) {
+            if (anArr > 128) {
                 try {
-                    bf.append(PinyinHelper.toHanyuPinyinStringArray(arr[i], defaultFormat)[0]);
+                    sb.append(PinyinHelper.toHanyuPinyinStringArray(anArr, format)[0]);
                 } catch (BadHanyuPinyinOutputFormatCombination e) {
-                    e.printStackTrace();
+                    // ignore
                 }
             } else {
-                bf.append(arr[i]);
+                sb.append(anArr);
             }
         }
-        return bf.toString();
+        return sb.toString();
     }
 
     /**
+     * 通过unicode正则
      * 判断字符串是否是中文
      * 只能判断部分CJK字符
      *
      * @param s ignore
      * @return true 中文
      */
-    public static boolean isChineseByREG(String s) {
+    public static boolean isChineseByReg(String s) {
         if (Strings.isEmpty(s)) {
             return false;
         }
-        Pattern pattern = Pattern.compile("[\\u4E00-\\u9FBF]+");
-        return pattern.matcher(s.trim()).find();
+        return CHINESE_REG.matcher(s.trim()).find();
     }
 
     /**
+     * 通过 InCJK 正则
      * 判断字符串是否是中文
      * 只能判断部分CJK字符
      *
@@ -133,26 +154,39 @@ public class Spells {
         // \\p 表示包含大写, \\P 表示不包含大写
         // \\p{Cn} 表示 Unicode 中未被定义字符的编码
         // \\P{Cn} 表示 Unicode中已经被定义字符的编码
-        String reg = "\\p{InCJK Unified Ideographs}&&\\P{Cn}";
-        Pattern pattern = Pattern.compile(reg);
-        return pattern.matcher(s.trim()).find();
+        return CHINESE_CJK.matcher(s.trim()).find();
     }
 
     /**
-     * 完整的判断中文汉字和符号
+     * 是否包含中文
      *
-     * @param c char字符
-     * @return true 中文
+     * @param s s
+     * @return true 包含中文
      */
-    public static boolean isChinese(String s) {
+    public static boolean containsChinese(String s) {
         char[] ch = s.toCharArray();
-        for (int i = 0; i < ch.length; i++) {
-            char c = ch[i];
+        for (char c : ch) {
             if (isChinese(c)) {
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     * 是否全为中文 包括空格
+     *
+     * @param s s
+     * @return true 全中文
+     */
+    public static boolean isAllChinese(String s) {
+        char[] ch = s.toCharArray();
+        for (char c : ch) {
+            if (!isChinese(c)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -163,10 +197,7 @@ public class Spells {
      */
     public static boolean isChinese(char c) {
         Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
-        if (ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS || ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A || ub == Character.UnicodeBlock.GENERAL_PUNCTUATION || ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION || ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS) {
-            return true;
-        }
-        return false;
+        return ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS || ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A || ub == Character.UnicodeBlock.GENERAL_PUNCTUATION || ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION || ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS;
     }
 
     /**
@@ -176,8 +207,7 @@ public class Spells {
      * @return 中文的个数
      */
     public static int getChineseLength(String s) {
-        Pattern p = Pattern.compile("[\u4E00-\u9FA5]+");
-        Matcher m = p.matcher(s);
+        Matcher m = CHINESE_CHAR.matcher(s);
         int i = 0;
         while (m.find()) {
             String temp = m.group(0);
@@ -193,15 +223,13 @@ public class Spells {
      * @return true 乱码
      */
     public static boolean isMessyCode(String s) {
-        Pattern p = Pattern.compile("\\s*|\t*|\r*|\n*");
-        Matcher m = p.matcher(s);
+        Matcher m = MESSY_CODE.matcher(s);
         String after = m.replaceAll("");
         String temp = after.replaceAll("\\p{P}", "");
         char[] ch = temp.trim().toCharArray();
         float chLength = 0;
         float count = 0;
-        for (int i = 0; i < ch.length; i++) {
-            char c = ch[i];
+        for (char c : ch) {
             if (!Character.isLetterOrDigit(c)) {
                 if (!isChinese(c)) {
                     count = count + 1;
@@ -210,11 +238,7 @@ public class Spells {
             }
         }
         float result = count / chLength;
-        if (result > 0.4) {
-            return true;
-        } else {
-            return false;
-        }
+        return result > 0.4;
     }
 
 }

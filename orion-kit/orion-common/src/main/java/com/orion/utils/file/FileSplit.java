@@ -136,7 +136,7 @@ public class FileSplit implements Callable<String[]> {
         System.out.println("MD5 sign: " + Files1.md5(file));
         String[] blockPaths = new String[blockCount];
         File df = new File(file.getAbsolutePath() + ".block");
-        df.mkdir();
+        Files1.touch(df);
         for (int i = 0; i < blockCount; i++) {
             String splitFileName = df.getAbsolutePath() + "\\" + file.getName() + ".000" + (i + 1);
             blockPaths[i] = splitFileName;
@@ -146,7 +146,7 @@ public class FileSplit implements Callable<String[]> {
     }
 
     private void randomReadToFile(long offset, File writeFile) {
-        RandomAccessFile accessFile;
+        RandomAccessFile accessFile = null;
         FileOutputStream outputStream = null;
         try {
             accessFile = new RandomAccessFile(file, "r");
@@ -154,9 +154,7 @@ public class FileSplit implements Callable<String[]> {
             if (accessFile.length() - offset < blockSize) {
                 blockSize = accessFile.length() - offset;
             }
-            if (!writeFile.exists()) {
-                writeFile.createNewFile();
-            }
+            Files1.touch(writeFile);
             outputStream = new FileOutputStream(writeFile);
             if (blockSize < bufferSize) {
                 bufferSize = (int) blockSize;
@@ -179,6 +177,7 @@ public class FileSplit implements Callable<String[]> {
             e.printStackTrace();
         } finally {
             Streams.closeQuietly(outputStream);
+            Streams.closeQuietly(accessFile);
         }
     }
 

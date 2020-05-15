@@ -1,5 +1,7 @@
 package com.orion.utils;
 
+import com.orion.utils.file.Files1;
+
 import java.io.*;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
@@ -153,13 +155,10 @@ public class Zips {
                 if (entry.isDirectory()) {
                     String dirPath = destPath + File.separator + entry.getName();
                     File dir = new File(dirPath);
-                    dir.mkdirs();
+                    Files1.mkdirs(dir);
                 } else {
                     File targetFile = new File(destPath + File.separator + entry.getName());
-                    if (!targetFile.getParentFile().exists()) {
-                        targetFile.getParentFile().mkdirs();
-                    }
-                    targetFile.createNewFile();
+                    Files1.touch(targetFile);
                     InputStream is = zipFile.getInputStream(entry);
                     FileOutputStream fos = new FileOutputStream(targetFile);
                     int len;
