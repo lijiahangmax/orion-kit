@@ -24,7 +24,7 @@ public class Springs {
     private Springs() {
     }
 
-    private static class ApplicationContextAwareStore implements ApplicationContextAware, BeanFactoryPostProcessor {
+    public static class ApplicationContextAwareStore implements ApplicationContextAware, BeanFactoryPostProcessor {
 
         public ApplicationContextAwareStore() {
         }

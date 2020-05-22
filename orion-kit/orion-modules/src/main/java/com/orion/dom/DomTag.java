@@ -16,7 +16,7 @@ import java.util.Map;
  * @date 2020/3/25 14:04
  */
 @SuppressWarnings("ALL")
-public class DomInfo implements Serializable {
+public class DomTag implements Serializable {
 
     /**
      * 标签名称
@@ -31,7 +31,7 @@ public class DomInfo implements Serializable {
     /**
      * 子节点
      */
-    private List<DomInfo> childNode;
+    private List<DomTag> childNode;
 
     /**
      * 值
@@ -43,7 +43,7 @@ public class DomInfo implements Serializable {
      */
     private Boolean cdata = false;
 
-    public DomInfo(String name) {
+    public DomTag(String name) {
         this.name = name;
     }
 
@@ -51,7 +51,7 @@ public class DomInfo implements Serializable {
         return name;
     }
 
-    public DomInfo setName(String name) {
+    public DomTag setName(String name) {
         this.name = name;
         return this;
     }
@@ -60,7 +60,7 @@ public class DomInfo implements Serializable {
         return attributes;
     }
 
-    public DomInfo addAttributes(String key, String value) {
+    public DomTag addAttributes(String key, String value) {
         if (this.attributes == null) {
             this.attributes = new LinkedHashMap<>();
         }
@@ -68,28 +68,28 @@ public class DomInfo implements Serializable {
         return this;
     }
 
-    public DomInfo setAttributes(Map<String, String> attributes) {
+    public DomTag setAttributes(Map<String, String> attributes) {
         this.attributes = attributes;
         return this;
     }
 
-    public DomInfo newChildNode(String name) {
+    public DomTag newChildNode(String name) {
         if (value == null) {
             if (this.childNode == null) {
                 this.childNode = new ArrayList<>();
             }
-            DomInfo domInfo = new DomInfo(name);
-            this.childNode.add(domInfo);
-            return domInfo;
+            DomTag domTag = new DomTag(name);
+            this.childNode.add(domTag);
+            return domTag;
         }
         throw Exceptions.argument("value is not null");
     }
 
-    public List<DomInfo> getChildNode() {
+    public List<DomTag> getChildNode() {
         return childNode;
     }
 
-    public DomInfo addChildNode(DomInfo child) {
+    public DomTag addChildNode(DomTag child) {
         if (value == null) {
             if (this.childNode == null) {
                 this.childNode = new ArrayList<>();
@@ -100,7 +100,7 @@ public class DomInfo implements Serializable {
         throw Exceptions.argument("value is not null");
     }
 
-    public DomInfo setChildNode(List<DomInfo> childNode) {
+    public DomTag setChildNode(List<DomTag> childNode) {
         if (value == null) {
             this.childNode = childNode;
             return this;
@@ -112,7 +112,7 @@ public class DomInfo implements Serializable {
         return value;
     }
 
-    public DomInfo setValue(String value) {
+    public DomTag setValue(String value) {
         if (childNode == null) {
             this.value = value;
             return this;
@@ -120,7 +120,7 @@ public class DomInfo implements Serializable {
         throw Exceptions.argument("childNode is not null");
     }
 
-    public DomInfo cdata() {
+    public DomTag cdata() {
         cdata = true;
         return this;
     }

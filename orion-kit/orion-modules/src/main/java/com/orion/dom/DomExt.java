@@ -1,6 +1,5 @@
 package com.orion.dom;
 
-import com.orion.utils.ext.StringExt;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Streams;
 import com.orion.utils.collect.Lists;
@@ -8,10 +7,12 @@ import com.orion.utils.file.Files1;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.Element;
+import org.dom4j.Node;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.dom4j.tree.DefaultCDATA;
+import org.dom4j.tree.DefaultDocument;
 import org.dom4j.tree.DefaultElement;
 
 import java.io.*;
@@ -57,61 +58,7 @@ public class DomExt {
         this.document = document;
     }
 
-    /**
-     * 获取dom流
-     *
-     * @return dom流
-     */
-    public DomStream stream() {
-        return new DomStream(document.getRootElement());
-    }
-
-    /**
-     * 获取解析的element
-     *
-     * @param formula 如: bean[1] > property > list > ref[0]:name=c   [n] 下标  k:v 属性     不需要包含跟元素
-     * @return element
-     */
-    public Element parse(String formula) {
-        return new DomParser(document.getRootElement(), formula).getElement();
-    }
-
-    /**
-     * 获取解析的element的value
-     *
-     * @param formula 如: bean[1] > property > list > ref[0]:name=c   [n] 下标  k:v 属性     不需要包含跟元素
-     * @return element的value
-     */
-    public String parseValue(String formula) {
-        return new DomParser(document.getRootElement(), formula).getElementValue();
-    }
-
-    /**
-     * 获取 document
-     *
-     * @return document
-     */
-    public Document getDocument() {
-        return document;
-    }
-
-    /**
-     * 获取根 element
-     *
-     * @return element
-     */
-    public Element getRootElement() {
-        return document.getRootElement();
-    }
-
-    /**
-     * 获取根节点元素
-     *
-     * @return element
-     */
-    public Map<String, List<Element>> getRootElements() {
-        return getElements(document.getRootElement());
-    }
+    // --------------- new ---------------
 
     /**
      * 将xml文本转换为 DomExt
@@ -121,6 +68,43 @@ public class DomExt {
      */
     public static DomExt newDomExt(String xml) {
         return new DomExt(toDocument(xml));
+    }
+
+    // --------------- stream ---------------
+
+    /**
+     * 获取dom流
+     *
+     * @return dom流
+     */
+    public DomStream stream() {
+        return new DomStream(document.getRootElement());
+    }
+
+    // --------------- parse ---------------
+
+    /**
+     * 获取解析的element
+     * 不需要包含跟元素
+     *
+     * @param formula 如: bean[1] > property > list > ref[0]:name=c
+     *                语法: [n] 下标  k:v 属性
+     * @return element
+     */
+    public Element parse(String formula) {
+        return new DomParser(document.getRootElement(), formula).getElement();
+    }
+
+    /**
+     * 获取解析的element的value
+     * 不需要包含跟元素
+     *
+     * @param formula 如: bean[1] > property > list > ref[0]:name=c
+     *                语法: [n] 下标  k:v 属性
+     * @return element的value
+     */
+    public String parseValue(String formula) {
+        return new DomParser(document.getRootElement(), formula).getElementValue();
     }
 
     /**
@@ -145,6 +129,105 @@ public class DomExt {
         return new DomParser(element, formula).getElementValue();
     }
 
+    // --------------- format ---------------
+
+    /**
+     * 格式化xml
+     *
+     * @param xml xml
+     * @return 格式化后的xml
+     */
+    public static String format(String xml) {
+        return format(xml, "    ", false);
+    }
+
+    /**
+     * 格式化xml
+     *
+     * @param xml     xml
+     * @param newLine 缩进后是否另起一行
+     * @return 格式化后的xml
+     */
+    public static String format(String xml, boolean newLine) {
+        return format(xml, "    ", newLine);
+    }
+
+    /**
+     * 格式化xml
+     *
+     * @param xml    xml
+     * @param indent 缩进
+     * @return 格式化后的xml
+     */
+    public static String format(String xml, String indent) {
+        return format(xml, indent, false);
+    }
+
+    /**
+     * 格式化xml
+     *
+     * @param xml     xml
+     * @param indent  缩进
+     * @param newLine 缩进后是否另起一行
+     * @return 格式化后的xml
+     */
+    public static String format(String xml, String indent, boolean newLine) {
+        try {
+            SAXReader reader = new SAXReader();
+            Document document = reader.read(new StringReader(xml));
+            String r = null;
+            XMLWriter writer = null;
+            if (document != null) {
+                try {
+                    StringWriter stringWriter = new StringWriter();
+                    OutputFormat format = new OutputFormat(indent, newLine);
+                    writer = new XMLWriter(stringWriter, format);
+                    writer.write(document);
+                    writer.flush();
+                    r = stringWriter.getBuffer().toString();
+                } finally {
+                    if (writer != null) {
+                        writer.close();
+                    }
+                }
+            }
+            return r;
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime(e);
+        }
+    }
+
+    // --------------- document ---------------
+
+    /**
+     * 获取 document
+     *
+     * @return document
+     */
+    public Document getDocument() {
+        return document;
+    }
+
+    // --------------- element ---------------
+
+    /**
+     * 获取根 element
+     *
+     * @return element
+     */
+    public Element getRootElement() {
+        return document.getRootElement();
+    }
+
+    /**
+     * 获取根节点元素
+     *
+     * @return element
+     */
+    public Map<String, List<Element>> getRootElements() {
+        return getElements(document.getRootElement());
+    }
+
     /**
      * 获取节点元素
      *
@@ -162,6 +245,8 @@ public class DomExt {
         return map;
     }
 
+    // --------------- attribute ---------------
+
     /**
      * 获取属性集
      *
@@ -173,21 +258,6 @@ public class DomExt {
         List<Attribute> attributes = e.attributes();
         for (Attribute attr : attributes) {
             map.put(attr.getName(), attr.getValue());
-        }
-        return map;
-    }
-
-    /**
-     * 获取属性集
-     *
-     * @param e element
-     * @return values
-     */
-    public static Map<String, StringExt> getAttributesExt(Element e) {
-        Map<String, StringExt> map = new HashMap<>();
-        List<Attribute> attributes = e.attributes();
-        for (Attribute attr : attributes) {
-            map.put(attr.getName(), new StringExt(attr.getValue()));
         }
         return map;
     }
@@ -209,65 +279,227 @@ public class DomExt {
         return null;
     }
 
-    /**
-     * 获取属性
-     *
-     * @param e   element
-     * @param key key
-     * @return value
-     */
-    public static StringExt getAttributeExt(Element e, String key) {
-        List<Attribute> attributes = e.attributes();
-        for (Attribute attr : attributes) {
-            if (key.trim().equals(attr.getName().trim())) {
-                return new StringExt(attr.getValue());
-            }
-        }
-        return null;
-    }
+    // --------------- toDocument ---------------
 
     /**
-     * 格式化xml
+     * xml转document
      *
      * @param xml xml
-     * @return 格式化后的xml
+     * @return document
      */
-    public static String format(String xml) {
-        return format(xml, "    ");
+    public static Document toDocument(String xml) {
+        try {
+            return reader.read(new ByteArrayInputStream(xml.getBytes()));
+        } catch (Exception e) {
+            throw Exceptions.argument("XML Parse To Document Error " + e.getMessage());
+        }
     }
 
     /**
-     * 格式化xml
+     * 将Map转为 Document
      *
-     * @param xml    xml
-     * @param indent 缩进
-     * @return 格式化后的xml
+     * @param rootName 根节点名称
+     * @param childMap Map <String, String>
+     *                 Map <String, Map<String,Object>>
+     *                 Map <String, List<Map>>
+     *                 Map <String, List<String>>
+     * @return Document
      */
-    public static String format(String xml, String indent) {
-        try {
-            SAXReader reader = new SAXReader();
-            Document document = reader.read(new StringReader(xml));
-            String r = null;
-            XMLWriter writer = null;
-            if (document != null) {
-                try {
-                    StringWriter stringWriter = new StringWriter();
-                    OutputFormat format = new OutputFormat(indent, true);
-                    writer = new XMLWriter(stringWriter, format);
-                    writer.write(document);
-                    writer.flush();
-                    r = stringWriter.getBuffer().toString();
-                } finally {
-                    if (writer != null) {
-                        writer.close();
+    public static Document toDocument(String rootName, Map<String, ?> childMap) {
+        DefaultDocument d = new DefaultDocument();
+        d.setRootElement(toElement(rootName, childMap, true));
+        return d;
+    }
+
+    /**
+     * 将Map转为 Document
+     *
+     * @param rootName 根节点名称
+     * @param childMap Map <String, String>
+     *                 Map <String, Map<String,Object>>
+     *                 Map <String, List<Map>>
+     *                 Map <String, List<String>>
+     * @param cdata    string是否使用CDATA修饰
+     * @return Document
+     */
+    public static Document toDocument(String rootName, Map<String, ?> childMap, boolean cdata) {
+        DefaultDocument d = new DefaultDocument();
+        DefaultElement root = new DefaultElement(rootName);
+        toElement(root, childMap, cdata);
+        d.setRootElement(root);
+        return d;
+    }
+
+    // --------------- toElement ---------------
+
+    /**
+     * 将Map转为 Element
+     *
+     * @param xml xml
+     * @return Element
+     */
+    public static Element toElement(String xml) {
+        return toDocument(xml).getRootElement();
+    }
+
+    /**
+     * 将Map转为 Element
+     *
+     * @param rootName 根节点名称
+     * @param childMap Map <String, String>
+     *                 Map <String, Map<String,Object>>
+     *                 Map <String, List<Map>>
+     *                 Map <String, List<String>>
+     * @return Element
+     */
+    public static Element toElement(String rootName, Map<String, ?> childMap) {
+        return toElement(rootName, childMap, true);
+    }
+
+    /**
+     * 将Map转为 Element
+     *
+     * @param rootName 根节点名称
+     * @param childMap Map <String, String>
+     *                 Map <String, Map<String,Object>>
+     *                 Map <String, List<Map>>
+     *                 Map <String, List<String>>
+     * @param cdata    string是否使用CDATA修饰
+     * @return Element
+     */
+    public static Element toElement(String rootName, Map<String, ?> childMap, boolean cdata) {
+        DefaultElement root = new DefaultElement(rootName);
+        toElement(root, childMap, cdata);
+        return root;
+    }
+
+    /**
+     * 将Map转为 Element
+     *
+     * @param element  根节点
+     * @param childMap Map <String, String>
+     *                 Map <String, Map<String,Object>>
+     *                 Map <String, List<Map>>
+     *                 Map <String, List<String>>
+     * @param cdata    string是否使用CDATA修饰
+     */
+    private static void toElement(Element element, Map<String, ?> childMap, boolean cdata) {
+        for (Map.Entry<String, ?> entry : childMap.entrySet()) {
+            Object value = entry.getValue();
+            if (value != null) {
+                DefaultElement child = new DefaultElement(entry.getKey());
+                if (value instanceof Map) {
+                    toElement(child, (Map) value, cdata);
+                    element.add(child);
+                } else if (value instanceof List) {
+                    toElementList(element, entry.getKey(), (List<?>) value, cdata);
+                } else {
+                    if (cdata) {
+                        child.add(new DefaultCDATA(value.toString()));
+                    } else {
+                        child.setText(value.toString());
                     }
+                    element.add(child);
                 }
             }
-            return r;
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
         }
     }
+
+    private static void toElementList(Element element, String key, List<?> list, boolean cdata) {
+        if (Lists.isEmpty(list)) {
+            return;
+        }
+        Element child = new DefaultElement(key);
+        int i = 0;
+        for (Object obj : list) {
+            if (i++ > 0) {
+                child = new DefaultElement(key);
+            }
+            if (obj == null) {
+                continue;
+            }
+            if (obj instanceof Map) {
+                toElement(child, (Map<String, ?>) obj, cdata);
+                element.add(child);
+            } else if (obj instanceof List) {
+                Map<String, Object> listMap = new HashMap<>();
+                listMap.put(key, obj);
+                toElement(child, listMap, cdata);
+                element.add(child);
+            } else {
+                if (cdata) {
+                    child.add(new DefaultCDATA(obj.toString()));
+                } else {
+                    child.setText(obj.toString());
+                }
+                element.add(child);
+            }
+        }
+    }
+
+    // --------------- toMap ---------------
+
+    /**
+     * XML 解析为 Map 只有标签值, 没有属性值, 不具有根标签
+     *
+     * @return Map
+     */
+    public Map<String, Object> toMap() {
+        return DomBeanWrapper.toMap(this.document.getRootElement());
+    }
+
+    /**
+     * XML 解析为 Map 只有标签值, 没有属性值, 不具有根标签
+     *
+     * @param document document
+     * @return Map
+     */
+    public static Map<String, Object> toMap(Document document) {
+        return DomBeanWrapper.toMap(document.getRootElement());
+    }
+
+    /**
+     * XML 解析为 Map 只有标签值, 没有属性值, 不具有根标签
+     *
+     * @param element element
+     * @return Map
+     */
+    public static Map<String, Object> toMap(Element element) {
+        return DomBeanWrapper.toMap(element);
+    }
+
+    // --------------- toDomNode ---------------
+
+    /**
+     * XML 解析为 DomNode 有标签值, 有属性值, 不具有根标签
+     *
+     * @return DomNode
+     */
+    public Map<String, DomNode> toDomNode() {
+        return DomBeanWrapper.toDomNode(this.document.getRootElement());
+    }
+
+    /**
+     * XML 解析为 DomNode  有标签值, 有属性值, 不具有根标签
+     *
+     * @param document document
+     * @return DomNode
+     */
+    public static Map<String, DomNode> toDomNode(Document document) {
+        return DomBeanWrapper.toDomNode(document.getRootElement());
+    }
+
+    /**
+     * XML 解析为 DomNode 有标签值, 有属性值, 不具有根标签
+     *
+     * @param element element
+     * @return DomNode
+     */
+    public static Map<String, DomNode> toDomNode(Element element) {
+        return DomBeanWrapper.toDomNode(element);
+    }
+
+    // --------------- toBean ---------------
 
     /**
      * XML 转 bean
@@ -319,150 +551,7 @@ public class DomExt {
         return DomBeanWrapper.toBean(element, convertMap, clazz);
     }
 
-    /**
-     * XML 解析为 Map 只有属性值, 没有属性
-     *
-     * @param document document
-     * @return Map
-     */
-    public static Map<String, Object> toMap(Document document) {
-        return DomBeanWrapper.toMap(document.getRootElement());
-    }
-
-    /**
-     * XML 解析为 Map 只有属性值, 没有属性
-     *
-     * @param element element
-     * @return Map
-     */
-    public static Map<String, Object> toMap(Element element) {
-        return DomBeanWrapper.toMap(element);
-    }
-
-    /**
-     * XML 解析为 DomNode  有属性值, 有属性
-     *
-     * @param document document
-     * @return DomNode
-     */
-    public static Map<String, DomNode> toDomNode(Document document) {
-        return DomBeanWrapper.toDomNode(document.getRootElement());
-    }
-
-    /**
-     * XML 解析为 DomNode 有属性值, 有属性
-     *
-     * @param element element
-     * @return DomNode
-     */
-    public static Map<String, DomNode> toDomNode(Element element) {
-        return DomBeanWrapper.toDomNode(element);
-    }
-
-    /**
-     * xml转document
-     *
-     * @param xml xml
-     * @return document
-     */
-    public static Document toDocument(String xml) {
-        try {
-            return reader.read(new ByteArrayInputStream(xml.getBytes()));
-        } catch (Exception e) {
-            throw Exceptions.argument("XML Parse To Document Error " + e.getMessage());
-        }
-    }
-
-    /**
-     * 将Map转为 Element
-     *
-     * @param rootName 根节点名称
-     * @param childMap Map <String, String>
-     *                 Map <String, Map<String,Object>>
-     *                 Map <String, List<Map>>
-     *                 Map <String, List<String>>
-     * @return Element
-     */
-    public static Element toElement(String rootName, Map<String, ?> childMap) {
-        return toElement(rootName, childMap, true);
-    }
-
-    /**
-     * 将Map转为 Element
-     *
-     * @param rootName 根节点名称
-     * @param childMap Map <String, String>
-     *                 Map <String, Map<String,Object>>
-     *                 Map <String, List<Map>>
-     *                 Map <String, List<String>>
-     * @param cdata    string是否使用CDATA修饰
-     * @return Element
-     */
-    public static Element toElement(String rootName, Map<String, ?> childMap, boolean cdata) {
-        DefaultElement root = new DefaultElement(rootName);
-        toElement(root, childMap, cdata);
-        return root;
-    }
-
-    /**
-     * 将Map转为 Element
-     *
-     * @param element  根节点
-     * @param childMap Map <String, String>
-     *                 Map <String, Map<String,Object>>
-     *                 Map <String, List<Map>>
-     *                 Map <String, List<String>>
-     * @param cdata    string是否使用CDATA修饰
-     */
-    private static void toElement(Element element, Map<String, ?> childMap, boolean cdata) {
-        for (Map.Entry<String, ?> entry : childMap.entrySet()) {
-            Object value = entry.getValue();
-            DefaultElement child = new DefaultElement(entry.getKey());
-            if (value != null) {
-                if (value instanceof Map) {
-                    toElement(child, (Map) value, cdata);
-                    element.add(child);
-                } else if (value instanceof List) {
-                    List<?> children = (List<?>) value;
-                    if (Lists.isEmpty(children)) {
-                        continue;
-                    }
-                    int i = 0;
-                    Object typeCheck = children.get(0);
-                    while (typeCheck == null && ++i < children.size()) {
-                        typeCheck = children.get(i);
-                    }
-                    if (typeCheck == null) {
-                        continue;
-                    }
-                    if (typeCheck instanceof Map) {
-                        for (Object o : children) {
-                            toElement(child, (Map<String, ?>) o, cdata);
-                            element.add(child);
-                            child = new DefaultElement(entry.getKey());
-                        }
-                    } else {
-                        for (Object o : children) {
-                            if (cdata) {
-                                child.add(new DefaultCDATA(o.toString()));
-                            } else {
-                                child.setText(o.toString());
-                            }
-                            element.add(child);
-                            child = new DefaultElement(entry.getKey());
-                        }
-                    }
-                } else {
-                    if (cdata) {
-                        child.add(new DefaultCDATA(value.toString()));
-                    } else {
-                        child.setText(value.toString());
-                    }
-                    element.add(child);
-                }
-            }
-        }
-    }
+    // --------------- write ---------------
 
     /**
      * 将xml保存到文件
@@ -513,6 +602,90 @@ public class DomExt {
         } finally {
             Streams.closeQuietly(out);
         }
+    }
+
+    // --------------- cleanComment ---------------
+
+    /**
+     * 去除注释
+     */
+    public DomExt cleanComment() {
+        cleanComment(this.document.getRootElement());
+        return this;
+    }
+
+    /**
+     * 去除注释
+     *
+     * @param document document
+     */
+    public static void cleanComment(Document document) {
+        cleanComment(document.getRootElement());
+    }
+
+    /**
+     * 去除注释
+     *
+     * @param element element
+     */
+    public static void cleanComment(Element element) {
+        Iterator<Node> nodes = element.nodeIterator();
+        List<Node> rmNodes = new ArrayList<>();
+        while (nodes.hasNext()) {
+            Node subNode = nodes.next();
+            if (subNode.getNodeType() == Node.COMMENT_NODE) {
+                rmNodes.add(subNode);
+                rmNodes.add(nodes.next());
+            }
+        }
+        for (Node node : rmNodes) {
+            element.remove(node);
+        }
+        Iterator<Element> eleIt = element.elementIterator();
+        while (eleIt.hasNext()) {
+            cleanComment(eleIt.next());
+        }
+    }
+
+    // --------------- result ---------------
+
+    /**
+     * 获取当前Document的XML
+     *
+     * @return xml
+     */
+    public String toXML() {
+        return document.asXML();
+    }
+
+    /**
+     * 获取当前Document的XML
+     *
+     * @return 格式化后的xml
+     */
+    public String formatXML() {
+        return format(document.asXML(), "    ", false);
+    }
+
+    /**
+     * 获取当前Document的XML
+     *
+     * @param indent 缩进
+     * @return 格式化后的xml
+     */
+    public String formatXML(String indent) {
+        return format(document.asXML(), indent, false);
+    }
+
+    /**
+     * 获取当前Document的XML
+     *
+     * @param indent  缩进
+     * @param newLine 缩进后是否另起一行
+     * @return 格式化后的xml
+     */
+    public String formatXML(String indent, boolean newLine) {
+        return format(document.asXML(), indent, newLine);
     }
 
     @Override

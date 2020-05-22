@@ -509,64 +509,12 @@ public class Methods {
         for (int i = 0; i < len; i++) {
             if (args[i] != null) {
                 if (!params[i].equals(Object.class) && params[i] != args[i].getClass() && !Classes.getInterfaces(args[i].getClass()).contains(params[i])) {
-                    args[i] = convert(args[i], params[i]);
+                    args[i] = TypeInfer.convert(args[i], params[i]);
                 }
             }
         }
         Methods.setAccessible(method);
         return (E) method.invoke(obj, args);
-    }
-
-    /**
-     * 根据class转换object
-     *
-     * @param o     o
-     * @param clazz class
-     * @return o
-     */
-    protected static Object convert(Object o, Class<?> clazz) {
-        if (clazz.equals(byte.class)) {
-            return Converts.toByte(o);
-        } else if (clazz.equals(Byte.class)) {
-            return Converts.toByte(o);
-        } else if (clazz.equals(short.class)) {
-            return Converts.toShort(o);
-        } else if (clazz.equals(Short.class)) {
-            return Converts.toShort(o);
-        } else if (clazz.equals(int.class)) {
-            return Converts.toInt(o);
-        } else if (clazz.equals(Integer.class)) {
-            return Converts.toInt(o);
-        } else if (clazz.equals(long.class)) {
-            return Converts.toLong(o);
-        } else if (clazz.equals(Long.class)) {
-            return Converts.toLong(o);
-        } else if (clazz.equals(float.class)) {
-            return Converts.toFloat(o);
-        } else if (clazz.equals(Float.class)) {
-            return Converts.toFloat(o);
-        } else if (clazz.equals(double.class)) {
-            return Converts.toDouble(o);
-        } else if (clazz.equals(Double.class)) {
-            return Converts.toDouble(o);
-        } else if (clazz.equals(boolean.class)) {
-            return Converts.toBoolean(o);
-        } else if (clazz.equals(Boolean.class)) {
-            return Converts.toBoolean(o);
-        } else if (clazz.equals(char.class)) {
-            return Converts.toChar(o);
-        } else if (clazz.equals(Character.class)) {
-            return Converts.toChar(o);
-        } else if (clazz.equals(String.class)) {
-            return Converts.toString(o);
-        } else if (clazz.equals(Date.class)) {
-            return Converts.toDate(o);
-        } else if (clazz.equals(BigDecimal.class)) {
-            return Decimals.toDecimal(o);
-        } else if (clazz.equals(BigInteger.class)) {
-            return BigIntegers.toBigInteger(o);
-        }
-        return o;
     }
 
 }

@@ -35,6 +35,11 @@ public class MockResult {
     private byte[] body;
 
     /**
+     * 响应体
+     */
+    private String bodyString;
+
+    /**
      * url
      */
     private String url;
@@ -294,6 +299,13 @@ public class MockResult {
 
     public MockRequest getMockRequest() {
         return mockRequest;
+    }
+
+    public String getBodyString() {
+        if (body != null) {
+            return new String(body);
+        }
+        return null;
     }
 
     @Override

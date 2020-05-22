@@ -30,7 +30,7 @@ public class DomBuilder implements Builderable<DomBuilder> {
     /**
      * 构建xml信息
      */
-    private DomInfo domInfo;
+    private DomTag domTag;
 
     /**
      * document
@@ -50,8 +50,19 @@ public class DomBuilder implements Builderable<DomBuilder> {
      *
      * @return 节点
      */
-    public DomInfo getDomInfo() {
-        return domInfo;
+    public DomTag getDomTag() {
+        return domTag;
+    }
+
+    /**
+     * 设置节点信息
+     *
+     * @param domTag domTag
+     * @return this
+     */
+    public DomBuilder setDomTag(DomTag domTag) {
+        this.domTag = domTag;
+        return this;
     }
 
     /**
@@ -60,22 +71,11 @@ public class DomBuilder implements Builderable<DomBuilder> {
      * @param name 标签
      * @return 节点
      */
-    public DomInfo getDomInfo(String name) {
-        if (domInfo == null) {
-            domInfo = new DomInfo(name);
+    public DomTag getDomRootTag(String name) {
+        if (domTag == null) {
+            domTag = new DomTag(name);
         }
-        return domInfo;
-    }
-
-    /**
-     * 设置节点信息
-     *
-     * @param domInfo domInfo
-     * @return this
-     */
-    public DomBuilder setDomInfo(DomInfo domInfo) {
-        this.domInfo = domInfo;
-        return this;
+        return domTag;
     }
 
     /**
@@ -96,22 +96,22 @@ public class DomBuilder implements Builderable<DomBuilder> {
      */
     @Override
     public DomBuilder build() {
-        if (domInfo == null) {
-            throw Exceptions.argument("domInfo is null");
+        if (domTag == null) {
+            throw Exceptions.argument("DomTag is null");
         }
         this.document = new DefaultDocument();
         this.document.setXMLEncoding(charset);
-        Element rootElement = new DefaultElement(domInfo.getName());
+        Element rootElement = new DefaultElement(domTag.getName());
         this.document.setRootElement(rootElement);
-        rootElement.setAttributes(getAttribute(domInfo.getAttributes()));
-        if (domInfo.getValue() != null) {
-            if (domInfo.getCdata()) {
-                rootElement.add(new DefaultCDATA(domInfo.getValue()));
+        rootElement.setAttributes(getAttribute(domTag.getAttributes()));
+        if (domTag.getValue() != null) {
+            if (domTag.getCdata()) {
+                rootElement.add(new DefaultCDATA(domTag.getValue()));
             } else {
-                rootElement.setText(domInfo.getValue());
+                rootElement.setText(domTag.getValue());
             }
-        } else if (!Lists.isEmpty(domInfo.getChildNode())) {
-            for (DomInfo info : this.domInfo.getChildNode()) {
+        } else if (!Lists.isEmpty(domTag.getChildNode())) {
+            for (DomTag info : this.domTag.getChildNode()) {
                 buildChildElement(rootElement, info);
             }
         }
@@ -122,20 +122,20 @@ public class DomBuilder implements Builderable<DomBuilder> {
      * 构建子节点
      *
      * @param element 上级节点
-     * @param domInfo dom信息
+     * @param domTag  dom信息
      */
-    private void buildChildElement(Element element, DomInfo domInfo) {
-        DefaultElement e = new DefaultElement(domInfo.getName());
+    private void buildChildElement(Element element, DomTag domTag) {
+        DefaultElement e = new DefaultElement(domTag.getName());
         element.add(e);
-        e.setAttributes(getAttribute(domInfo.getAttributes()));
-        if (domInfo.getValue() != null) {
-            if (domInfo.getCdata()) {
-                e.add(new DefaultCDATA(domInfo.getValue()));
+        e.setAttributes(getAttribute(domTag.getAttributes()));
+        if (domTag.getValue() != null) {
+            if (domTag.getCdata()) {
+                e.add(new DefaultCDATA(domTag.getValue()));
             } else {
-                e.setText(domInfo.getValue());
+                e.setText(domTag.getValue());
             }
-        } else if (!Lists.isEmpty(domInfo.getChildNode())) {
-            for (DomInfo info : domInfo.getChildNode()) {
+        } else if (!Lists.isEmpty(domTag.getChildNode())) {
+            for (DomTag info : domTag.getChildNode()) {
                 buildChildElement(e, info);
             }
         }

@@ -22,6 +22,10 @@ public class StringExt implements Serializable {
         s = "";
     }
 
+    public StringExt(Object o) {
+        this.s = Strings.str(o);
+    }
+
     public StringExt(String s) {
         this.s = s;
     }

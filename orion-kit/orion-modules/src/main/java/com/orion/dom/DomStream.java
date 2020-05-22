@@ -7,6 +7,7 @@ import org.dom4j.Element;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * XML流
@@ -713,6 +714,25 @@ public class DomStream {
      */
     public Element getElement() {
         return element;
+    }
+
+    /**
+     * 获取当前属性
+     *
+     * @param key value
+     * @return value
+     */
+    public String getAttribute(String key) {
+        return DomExt.getAttribute(this.element, key);
+    }
+
+    /**
+     * 获取当前属性
+     *
+     * @return value
+     */
+    public Map<String, String> getAttributes() {
+        return DomExt.getAttributes(this.element);
     }
 
     /**

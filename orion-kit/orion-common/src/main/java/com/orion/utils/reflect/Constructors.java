@@ -245,7 +245,7 @@ public class Constructors {
         for (int i = 0; i < len; i++) {
             if (args[i] != null) {
                 if (!params[i].equals(Object.class) && params[i] != args[i].getClass() && !Classes.getInterfaces(args[i].getClass()).contains(params[i])) {
-                    args[i] = Methods.convert(args[i], params[i]);
+                    args[i] = TypeInfer.convert(args[i], params[i]);
                 }
             }
         }

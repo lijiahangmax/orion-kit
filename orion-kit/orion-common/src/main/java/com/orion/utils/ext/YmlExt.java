@@ -75,37 +75,6 @@ public class YmlExt {
      * 获取值
      *
      * @param key key 用.隔开
-     * @return value
-     */
-    public String getValue(String key) {
-        try {
-            String value = null;
-            Map map = null;
-            String[] nodes = key.split("\\.");
-            int len = nodes.length;
-            for (int i = 0; i < len; i++) {
-                if (i == 0) {
-                    if (len == 1) {
-                        value = convertHashMap.getObject(nodes[0]).toString();
-                    } else {
-                        map = (Map) convertHashMap.getObject(nodes[0]);
-                    }
-                } else if (len - 1 > i) {
-                    map = (Map) map.get(nodes[i]);
-                } else if (len - 1 == i) {
-                    value = map.get(nodes[i]).toString();
-                }
-            }
-            return value;
-        } catch (Exception e) {
-            throw Exceptions.argument("invalid key " + key);
-        }
-    }
-
-    /**
-     * 获取值
-     *
-     * @param key key 用.隔开
      * @return value 有可能是string 有可能是Map
      */
     public Map<String, Object> getValues(String key) {
@@ -157,6 +126,37 @@ public class YmlExt {
                 }
             }
             return null;
+        } catch (Exception e) {
+            throw Exceptions.argument("invalid key " + key);
+        }
+    }
+
+    /**
+     * 获取值
+     *
+     * @param key key 用.隔开
+     * @return value
+     */
+    public String getValue(String key) {
+        try {
+            String value = null;
+            Map map = null;
+            String[] nodes = key.split("\\.");
+            int len = nodes.length;
+            for (int i = 0; i < len; i++) {
+                if (i == 0) {
+                    if (len == 1) {
+                        value = convertHashMap.getObject(nodes[0]).toString();
+                    } else {
+                        map = (Map) convertHashMap.getObject(nodes[0]);
+                    }
+                } else if (len - 1 > i) {
+                    map = (Map) map.get(nodes[i]);
+                } else if (len - 1 == i) {
+                    value = map.get(nodes[i]).toString();
+                }
+            }
+            return value;
         } catch (Exception e) {
             throw Exceptions.argument("invalid key " + key);
         }

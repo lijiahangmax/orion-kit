@@ -134,8 +134,6 @@ class DomBeanWrapper {
                         paramValue = c;
                     } else if (paramsClass.equals(String.class)) {
                         paramValue = element.element(entry.getKey()).getStringValue();
-                    } else if (paramsClass.equals(StringExt.class)) {
-                        paramValue = new StringExt(element.element(entry.getKey()).getStringValue());
                     }
                     if (paramValue != null) {
                         Methods.invokeMethodInfer(t, method.getName(), new Object[]{paramValue});
@@ -195,7 +193,7 @@ class DomBeanWrapper {
     }
 
     /**
-     * XML 解析为 Map 只有属性值, 没有属性
+     * XML 解析为 Map 只有标签值, 没有属性值, 不具有跟标签
      *
      * @param document document
      * @return Map
@@ -205,7 +203,7 @@ class DomBeanWrapper {
     }
 
     /**
-     * XML 解析为 Map 只有属性值, 没有属性
+     * XML 解析为 Map 只有标签值, 没有属性值, 不具有跟标签
      *
      * @param element element
      * @return Map
@@ -242,7 +240,7 @@ class DomBeanWrapper {
     }
 
     /**
-     * XML 解析为 DomNode  有属性值, 有属性
+     * XML 解析为 DomNode 有标签值, 有属性值, 不具有跟标签
      *
      * @param document document
      * @return DomNode
@@ -252,7 +250,7 @@ class DomBeanWrapper {
     }
 
     /**
-     * XML 解析为 DomNode 有属性值, 有属性
+     * XML 解析为 DomNode 有标签值, 有属性值, 不具有跟标签
      *
      * @param element element
      * @return DomNode
