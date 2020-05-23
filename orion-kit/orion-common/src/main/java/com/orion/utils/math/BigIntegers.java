@@ -68,6 +68,17 @@ public class BigIntegers {
         if (o == null) {
             return null;
         }
+        if (o instanceof String) {
+            return new BigInteger((String) o);
+        } else if (o instanceof Boolean) {
+            if ((Boolean) o) {
+                return BigInteger.ONE;
+            } else {
+                return BigInteger.ZERO;
+            }
+        } else if (o instanceof BigInteger) {
+            return (BigInteger) o;
+        }
         return new BigInteger(o.toString());
     }
 

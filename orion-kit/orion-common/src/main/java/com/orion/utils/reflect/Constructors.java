@@ -191,6 +191,8 @@ public class Constructors {
 
     /**
      * 实例化对象 参数类型推断, 不推荐使用到多个构造方法参数列表长度相同的类
+     * 如果使用到多个重载方法切长度相同的方法上, 对象需要实现序列化或者实现了Cloneable,
+     * 因为推断时会克隆一个新的对象, 防止前面执行失败, 导致对象的值被修改
      *
      * @param clazz 需要实例化的对象
      * @param <T>   类实例型
@@ -204,7 +206,11 @@ public class Constructors {
         Constructor<?>[] constructors = clazz.getDeclaredConstructors();
         for (Constructor constructor : constructors) {
             try {
-                return (T) newInstanceInfers(constructor, Objects1.clone(args));
+                if (constructors.length == 1) {
+                    return (T) newInstanceInfers(constructor, args);
+                } else {
+                    return (T) newInstanceInfers(constructor, Objects1.clone(args));
+                }
             } catch (IllegalAccessException | InvocationTargetException e) {
                 throw Exceptions.invoke(Strings.format("Cannot initialize class: {}, values: {}", clazz.getName(), Arrays.toString(args)), e);
             } catch (Exception e) {
@@ -216,6 +222,8 @@ public class Constructors {
 
     /**
      * 实例化对象 参数类型推断, 不推荐使用到多个构造方法参数列表长度相同的类
+     * 如果使用到多个重载方法切长度相同的方法上, 对象需要实现序列化或者实现了Cloneable,
+     * 因为推断时会克隆一个新的对象, 防止前面执行失败, 导致对象的值被修改
      *
      * @param constructor constructor
      * @param <T>         类实例型
@@ -231,6 +239,8 @@ public class Constructors {
 
     /**
      * 实例化对象 参数类型推断, 不推荐使用到多个构造方法参数列表长度相同的类
+     * 如果使用到多个重载方法切长度相同的方法上, 对象需要实现序列化或者实现了Cloneable,
+     * 因为推断时会克隆一个新的对象, 防止前面执行失败, 导致对象的值被修改
      *
      * @param constructor constructor
      * @param <T>         类实例型

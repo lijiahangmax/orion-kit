@@ -54,28 +54,28 @@ public class MultiHashMap<E, K, V> implements Serializable {
         }
     }
 
-    public static MultiHashMap newMultiHashMap() {
-        return new MultiHashMap(16, 16, false);
+    public static <E, K, V> MultiHashMap<E, K, V> newMultiHashMap() {
+        return new MultiHashMap<>(16, 16, false);
     }
 
-    public static MultiHashMap newMultiHashMap(int initialElementCapacity) {
-        return new MultiHashMap(initialElementCapacity, 16, false);
+    public static <E, K, V> MultiHashMap<E, K, V> newMultiHashMap(int initialElementCapacity) {
+        return new MultiHashMap<>(initialElementCapacity, 16, false);
     }
 
-    public static MultiHashMap newMultiHashMap(int initialElementCapacity, int initialKeyCapacity) {
-        return new MultiHashMap(initialElementCapacity, initialKeyCapacity, false);
+    public static <E, K, V> MultiHashMap<E, K, V> newMultiHashMap(int initialElementCapacity, int initialKeyCapacity) {
+        return new MultiHashMap<>(initialElementCapacity, initialKeyCapacity, false);
     }
 
-    public static MultiHashMap newMultiHashMap(boolean concurrent) {
-        return new MultiHashMap(16, 16, concurrent);
+    public static <E, K, V> MultiHashMap<E, K, V> newMultiHashMap(boolean concurrent) {
+        return new MultiHashMap<>(16, 16, concurrent);
     }
 
-    public static MultiHashMap newMultiHashMap(int initialElementCapacity, boolean concurrent) {
-        return new MultiHashMap(initialElementCapacity, 16, concurrent);
+    public static <E, K, V> MultiHashMap<E, K, V> newMultiHashMap(int initialElementCapacity, boolean concurrent) {
+        return new MultiHashMap<>(initialElementCapacity, 16, concurrent);
     }
 
-    public static MultiHashMap newMultiHashMap(int initialElementCapacity, int initialKeyCapacity, boolean concurrent) {
-        return new MultiHashMap(initialElementCapacity, initialKeyCapacity, concurrent);
+    public static <E, K, V> MultiHashMap<E, K, V> newMultiHashMap(int initialElementCapacity, int initialKeyCapacity, boolean concurrent) {
+        return new MultiHashMap<>(initialElementCapacity, initialKeyCapacity, concurrent);
     }
 
     private void initSpace(E e) {

@@ -47,6 +47,11 @@ public class DomTag implements Serializable {
         this.name = name;
     }
 
+    public DomTag(String name, String value) {
+        this.name = name;
+        this.value = value;
+    }
+
     public String getName() {
         return name;
     }

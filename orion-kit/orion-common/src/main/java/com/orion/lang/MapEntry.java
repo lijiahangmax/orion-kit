@@ -59,11 +59,24 @@ public class MapEntry<K, V> implements Map.Entry<K, V>, Serializable {
     }
 
     @Override
+    public int hashCode() {
+        return key.hashCode() ^ value.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        Object k, v;
+        Map.Entry<?, ?> e;
+        return ((o instanceof Map.Entry) &&
+                (k = (e = (Map.Entry<?, ?>) o).getKey()) != null &&
+                (v = e.getValue()) != null &&
+                (k == key || k.equals(key)) &&
+                (v == value || v.equals(value)));
+    }
+
+    @Override
     public String toString() {
-        return "MapEntry{" +
-                "key=" + key +
-                ", value=" + value +
-                '}';
+        return key + "=" + value;
     }
 
 }

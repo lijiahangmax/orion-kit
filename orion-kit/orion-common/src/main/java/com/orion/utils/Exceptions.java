@@ -409,6 +409,22 @@ public class Exceptions {
         return new ExecuteException(s, t);
     }
 
+    public static ConvertException convert() {
+        return new ConvertException();
+    }
+
+    public static ConvertException convert(Throwable t) {
+        return new ConvertException(t);
+    }
+
+    public static ConvertException convert(String s) {
+        return new ConvertException(s);
+    }
+
+    public static ConvertException convert(String s, Throwable t) {
+        return new ConvertException(s, t);
+    }
+
     public static Error error() {
         return new Error();
     }

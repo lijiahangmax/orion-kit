@@ -1,8 +1,8 @@
 package com.orion.dom;
 
+import com.orion.utils.Converts;
 import com.orion.utils.Strings;
 import com.orion.utils.collect.Lists;
-import com.orion.utils.ext.StringExt;
 import com.orion.utils.reflect.Classes;
 import com.orion.utils.reflect.Constructors;
 import com.orion.utils.reflect.Methods;
@@ -135,6 +135,13 @@ class DomBeanWrapper {
                     } else if (paramsClass.equals(String.class)) {
                         paramValue = element.element(entry.getKey()).getStringValue();
                     }
+                    if (paramValue == null) {
+                        try {
+                            paramValue = Converts.convert(element.element(entry.getKey()).getStringValue(), String.class);
+                        } catch (Exception e) {
+                            // ignore
+                        }
+                    }
                     if (paramValue != null) {
                         Methods.invokeMethodInfer(t, method.getName(), new Object[]{paramValue});
                     }
@@ -170,7 +177,7 @@ class DomBeanWrapper {
                     }
                     Object paramValue;
                     if (paramsClass.equals(Map.class)) {
-                        paramValue = toMap(element.element(entry.getKey()));
+                        paramValue = toMap(paramType, element.element(entry.getKey()));
                     } else {
                         if (convertMap != null) {
                             Object childConvertMap = convertMap.get(entry.getKey());
@@ -199,7 +206,7 @@ class DomBeanWrapper {
      * @return Map
      */
     static Map<String, Object> toMap(Document document) {
-        return toMap(document.getRootElement());
+        return toMap(LinkedHashMap.class, document.getRootElement());
     }
 
     /**
@@ -209,7 +216,22 @@ class DomBeanWrapper {
      * @return Map
      */
     static Map<String, Object> toMap(Element element) {
-        Map<String, Object> map = new LinkedHashMap<>();
+        return toMap(LinkedHashMap.class, element);
+    }
+
+    /**
+     * XML 解析为 Map 只有标签值, 没有属性值, 不具有跟标签
+     *
+     * @param element element
+     * @return Map
+     */
+    static Map<String, Object> toMap(Class<?> mapClass, Element element) {
+        Map<String, Object> map;
+        if (mapClass.equals(Map.class)) {
+            map = new LinkedHashMap<>();
+        } else {
+            map = ((Map<String, Object>) Constructors.newInstance(mapClass));
+        }
         Map<String, Integer> countMap = new LinkedHashMap<>();
         List<Element> elements = element.elements();
         for (Element e : elements) {

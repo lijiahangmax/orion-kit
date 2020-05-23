@@ -504,6 +504,29 @@ public class DomExt {
     /**
      * XML 转 bean
      *
+     * @param clazz beanClass
+     * @param <T>   beanType
+     * @return bean
+     */
+    public <T> T toBean(Class<T> clazz) {
+        return DomBeanWrapper.toBean(document.getRootElement(), null, clazz);
+    }
+
+    /**
+     * XML 转 bean
+     *
+     * @param convertMap 属性转换map key:xml value:bean
+     * @param clazz      beanClass
+     * @param <T>        beanType
+     * @return bean
+     */
+    public <T> T toBean(Map<String, Object> convertMap, Class<T> clazz) {
+        return DomBeanWrapper.toBean(document.getRootElement(), convertMap, clazz);
+    }
+
+    /**
+     * XML 转 bean
+     *
      * @param document document
      * @param clazz    beanClass
      * @param <T>      beanType

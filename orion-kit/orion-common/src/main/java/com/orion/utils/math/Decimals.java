@@ -87,19 +87,33 @@ public class Decimals {
             return null;
         }
         if (o instanceof String) {
-            return new BigDecimal(((String) o));
+            return new BigDecimal((String) o);
+        } else if (o instanceof Byte) {
+            return new BigDecimal((Byte) o);
+        } else if (o instanceof Short) {
+            return new BigDecimal((Short) o);
         } else if (o instanceof Integer) {
-            return new BigDecimal(((Integer) o));
-        } else if (o instanceof BigInteger) {
-            return new BigDecimal(((BigInteger) o));
+            return new BigDecimal((Integer) o);
         } else if (o instanceof Long) {
-            return new BigDecimal(((Long) o));
+            return new BigDecimal((Long) o);
+        } else if (o instanceof Float) {
+            return new BigDecimal((Float) o);
         } else if (o instanceof Double) {
-            return new BigDecimal(((Double) o));
+            return new BigDecimal((Double) o);
+        } else if (o instanceof Boolean) {
+            if ((Boolean) o) {
+                return BigDecimal.ONE;
+            } else {
+                return BigDecimal.ZERO;
+            }
+        } else if (o instanceof Character) {
+            return new BigDecimal((Character) o);
         } else if (o instanceof char[]) {
-            return new BigDecimal(((char[]) o));
+            return new BigDecimal((char[]) o);
+        } else if (o instanceof BigInteger) {
+            return new BigDecimal((BigInteger) o);
         } else if (o instanceof BigDecimal) {
-            return ((BigDecimal) o);
+            return (BigDecimal) o;
         }
         return null;
     }

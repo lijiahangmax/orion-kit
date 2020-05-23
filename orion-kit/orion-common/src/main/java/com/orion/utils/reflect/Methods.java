@@ -439,6 +439,8 @@ public class Methods {
 
     /**
      * 直接调用对象方法, 会进行参数推断, 不推荐使用到多个重载方法且参数列表长度相同的方法
+     * 如果使用到多个重载方法切长度相同的方法上, 对象需要实现序列化或者实现了Cloneable,
+     * 因为推断时会克隆一个新的对象, 防止前面执行失败, 导致对象的值被修改
      *
      * @param obj    对象
      * @param method 方法
@@ -464,6 +466,8 @@ public class Methods {
 
     /**
      * 直接调用对象方法, 会进行参数推断, 不推荐使用到多个重载方法且参数列表长度相同的方法
+     * 如果使用到多个重载方法切长度相同的方法上, 对象需要实现序列化或者实现了Cloneable,
+     * 因为推断时会克隆一个新的对象, 防止前面执行失败, 导致对象的值被修改
      *
      * @param obj        对象
      * @param methodName 方法名称
@@ -481,7 +485,11 @@ public class Methods {
         Method[] methods = Methods.getAccessibleMethods(obj.getClass(), methodName, len);
         for (Method method : methods) {
             try {
-                return invokeMethodInfers(obj, method, Objects1.clone(args));
+                if (methods.length == 1) {
+                    return invokeMethodInfers(obj, method, args);
+                } else {
+                    return invokeMethodInfers(obj, method, Objects1.clone(args));
+                }
             } catch (IllegalAccessException | InvocationTargetException e) {
                 throw Exceptions.invoke(Strings.format("Invoke Method error: {}, class: {}, args: {}", methodName, obj.getClass().getName(), Arrays.toString(args)), e);
             } catch (Exception e) {
@@ -493,6 +501,8 @@ public class Methods {
 
     /**
      * 直接调用对象方法, 会进行参数推断, 不推荐使用到多个重载方法且参数列表长度相同的方法
+     * 如果使用到多个重载方法切长度相同的方法上, 对象需要实现序列化或者实现了Cloneable,
+     * 因为推断时会克隆一个新的对象, 防止前面执行失败, 导致对象的值被修改
      *
      * @param obj    对象
      * @param method 方法名称
