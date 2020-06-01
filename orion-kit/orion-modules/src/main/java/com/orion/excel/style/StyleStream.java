@@ -36,6 +36,37 @@ public class StyleStream {
     }
 
     /**
+     * 获取 StyleStream
+     *
+     * @param workbook Workbook
+     * @return StyleStream
+     */
+    public static StyleStream styleStream(Workbook workbook) {
+        return new StyleStream(workbook);
+    }
+
+    /**
+     * 获取 StyleStream
+     *
+     * @param style CellStyle
+     * @return StyleStream
+     */
+    public static StyleStream styleStream(CellStyle style) {
+        return new StyleStream(style);
+    }
+
+    /**
+     * 获取 StyleStream
+     *
+     * @param workbook Workbook
+     * @param style    CellStyle
+     * @return StyleStream
+     */
+    public static StyleStream styleStream(Workbook workbook, CellStyle style) {
+        return new StyleStream(workbook, style);
+    }
+
+    /**
      * 设置字体
      *
      * @return this

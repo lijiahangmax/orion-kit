@@ -38,6 +38,37 @@ public class FontStream {
     }
 
     /**
+     * 获取 FontStream
+     *
+     * @param workbook Workbook
+     * @return FontStream
+     */
+    public static FontStream fontStream(Workbook workbook) {
+        return new FontStream(workbook);
+    }
+
+    /**
+     * 获取 FontStream
+     *
+     * @param font Font
+     * @return FontStream
+     */
+    public static FontStream fontStream(Font font) {
+        return new FontStream(font);
+    }
+
+    /**
+     * 获取 FontStream
+     *
+     * @param workbook Workbook
+     * @param font     Font
+     * @return FontStream
+     */
+    public static FontStream fontStream(Workbook workbook, Font font) {
+        return new FontStream(workbook, font);
+    }
+
+    /**
      * 设置字体名称
      *
      * @param name 名称
