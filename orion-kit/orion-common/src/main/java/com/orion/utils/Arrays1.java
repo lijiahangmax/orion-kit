@@ -6,8 +6,6 @@ import com.orion.function.Reduce;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntFunction;
@@ -26,19 +24,6 @@ public class Arrays1 {
 
     private Arrays1() {
     }
-
-    // --------------- singleton map ---------------
-
-    private static final Map<Object, byte[]> BYTE_MAP = new HashMap<>(4);
-    private static final Map<Object, short[]> SHORT_MAP = new HashMap<>(4);
-    private static final Map<Object, int[]> INT_MAP = new HashMap<>(4);
-    private static final Map<Object, long[]> LONG_MAP = new HashMap<>(4);
-    private static final Map<Object, float[]> FLOAT_MAP = new HashMap<>(4);
-    private static final Map<Object, double[]> DOUBLE_MAP = new HashMap<>(4);
-    private static final Map<Object, char[]> CHAR_MAP = new HashMap<>(4);
-    private static final Map<Object, boolean[]> BOOLEAN_MAP = new HashMap<>(4);
-    private static final Map<Object, Object[]> OBJECT_MAP = new HashMap<>(4);
-    private static final Map<Object, Object> T_MAP = new HashMap<>(4);
 
     // ------------------ new ------------------
 
@@ -1055,73 +1040,43 @@ public class Arrays1 {
      */
     @SuppressWarnings("all")
     public static boolean isEmpties(Object o) {
-        if (isArray(o)) {
-            return Array.getLength(o) == 0;
-        }
-        return true;
+        return o == null || (isArray(o) && Array.getLength(o) == 0);
     }
 
     public static boolean isEmpty(Object[] o) {
-        if (o == null) {
-            return true;
-        }
-        return length(o) == 0;
+        return o == null || length(o) == 0;
     }
 
     public static boolean isEmpty(byte[] o) {
-        if (o == null) {
-            return true;
-        }
-        return length(o) == 0;
+        return o == null || length(o) == 0;
     }
 
     public static boolean isEmpty(short[] o) {
-        if (o == null) {
-            return true;
-        }
-        return length(o) == 0;
+        return o == null || length(o) == 0;
     }
 
     public static boolean isEmpty(int[] o) {
-        if (o == null) {
-            return true;
-        }
-        return length(o) == 0;
+        return o == null || length(o) == 0;
     }
 
     public static boolean isEmpty(long[] o) {
-        if (o == null) {
-            return true;
-        }
-        return length(o) == 0;
+        return o == null || length(o) == 0;
     }
 
     public static boolean isEmpty(float[] o) {
-        if (o == null) {
-            return true;
-        }
-        return length(o) == 0;
+        return o == null || length(o) == 0;
     }
 
     public static boolean isEmpty(double[] o) {
-        if (o == null) {
-            return true;
-        }
-        return length(o) == 0;
+        return o == null || length(o) == 0;
     }
 
     public static boolean isEmpty(boolean[] o) {
-        if (o == null) {
-            return true;
-        }
-        return length(o) == 0;
+        return o == null || length(o) == 0;
     }
 
     public static boolean isEmpty(char[] o) {
-        if (o == null) {
-            return true;
-        }
-        return length(o) == 0;
+        return o == null || length(o) == 0;
     }
 
     // ------------------ isNotEmpty ------------------
@@ -1354,6 +1309,21 @@ public class Arrays1 {
             return nbs;
         } else if (arr.length > newSize) {
             char[] nbs = new char[newSize];
+            System.arraycopy(arr, 0, nbs, 0, newSize);
+            return nbs;
+        }
+        return arr;
+    }
+    public static String[] resize(String[] arr, int newSize) {
+        if (newSize <= 0) {
+            return new String[0];
+        }
+        if (arr.length < newSize) {
+            String[] nbs = new String[newSize];
+            System.arraycopy(arr, 0, nbs, 0, arr.length);
+            return nbs;
+        } else if (arr.length > newSize) {
+            String[] nbs = new String[newSize];
             System.arraycopy(arr, 0, nbs, 0, newSize);
             return nbs;
         }
@@ -2527,126 +2497,6 @@ public class Arrays1 {
         return false;
     }
 
-    // ------------------ singleton ------------------
-
-    /**
-     * 获取单例数组
-     *
-     * @param key key
-     * @param len 数组为空的情况下的空间
-     * @return 数组
-     */
-    public static byte[] singletonByte(Object key, int len) {
-        byte[] arr = BYTE_MAP.get(key);
-        if (arr != null) {
-            return arr;
-        }
-        byte[] na = new byte[len];
-        BYTE_MAP.put(key, na);
-        return na;
-    }
-
-    public static short[] singletonShort(Object key, int len) {
-        short[] arr = SHORT_MAP.get(key);
-        if (arr != null) {
-            return arr;
-        }
-        short[] na = new short[len];
-        SHORT_MAP.put(key, na);
-        return na;
-    }
-
-    public static int[] singletonInt(Object key, int len) {
-        int[] arr = INT_MAP.get(key);
-        if (arr != null) {
-            return arr;
-        }
-        int[] na = new int[len];
-        INT_MAP.put(key, na);
-        return na;
-    }
-
-    public static long[] singletonLong(Object key, int len) {
-        long[] arr = LONG_MAP.get(key);
-        if (arr != null) {
-            return arr;
-        }
-        long[] na = new long[len];
-        LONG_MAP.put(key, na);
-        return na;
-    }
-
-    public static float[] singletonFloat(Object key, int len) {
-        float[] arr = FLOAT_MAP.get(key);
-        if (arr != null) {
-            return arr;
-        }
-        float[] na = new float[len];
-        FLOAT_MAP.put(key, na);
-        return na;
-    }
-
-    public static double[] singletonDouble(Object key, int len) {
-        double[] arr = DOUBLE_MAP.get(key);
-        if (arr != null) {
-            return arr;
-        }
-        double[] na = new double[len];
-        DOUBLE_MAP.put(key, na);
-        return na;
-    }
-
-    public static char[] singletonChar(Object key, int len) {
-        char[] arr = CHAR_MAP.get(key);
-        if (arr != null) {
-            return arr;
-        }
-        char[] na = new char[len];
-        CHAR_MAP.put(key, na);
-        return na;
-    }
-
-    public static boolean[] singletonBoolean(Object key, int len) {
-        boolean[] arr = BOOLEAN_MAP.get(key);
-        if (arr != null) {
-            return arr;
-        }
-        boolean[] na = new boolean[len];
-        BOOLEAN_MAP.put(key, na);
-        return na;
-    }
-
-    public static Object[] singletonObject(Object key, int len) {
-        Object[] arr = OBJECT_MAP.get(key);
-        if (arr != null) {
-            return arr;
-        }
-        Object[] na = new Object[len];
-        OBJECT_MAP.put(key, na);
-        return na;
-    }
-
-    /**
-     * 获取单例数组
-     *
-     * @param key       key
-     * @param len       数组为空开辟的空间
-     * @param generator 数组创建函数 如Integer[]::new
-     * @param <T>       类型
-     * @return 单例数组
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> T[] singletonT(Object key, int len, IntFunction<T[]> generator) {
-        Object arr = T_MAP.get(key);
-        if (arr != null) {
-            return (T[]) arr;
-        }
-        T[] na = generator.apply(len);
-        T_MAP.put(key, na);
-        return na;
-    }
-
-
     // ------------------ reverse ------------------
 
     /**
@@ -2780,63 +2630,60 @@ public class Arrays1 {
      * @param i 换位的元素1
      * @param j 换位的元素2
      */
-    @SuppressWarnings("all")
-    public static void swap(byte[] a, int i, int j) {
+    public static void onChangeSwap(byte[] a, int i, int j) {
         a[i] ^= a[j];
         a[j] ^= a[i];
         a[i] ^= a[j];
     }
 
-    @SuppressWarnings("all")
+    public static void swap(byte[] a, int i, int j) {
+        byte temp = a[i];
+        a[i] = a[j];
+        a[j] = temp;
+    }
+
     public static void swap(short[] a, int i, int j) {
         short temp = a[i];
         a[i] = a[j];
         a[j] = temp;
     }
 
-    @SuppressWarnings("all")
     public static void swap(int[] a, int i, int j) {
         int temp = a[i];
         a[i] = a[j];
         a[j] = temp;
     }
 
-    @SuppressWarnings("all")
     public static void swap(long[] a, int i, int j) {
         long temp = a[i];
         a[i] = a[j];
         a[j] = temp;
     }
 
-    @SuppressWarnings("all")
     public static void swap(float[] a, int i, int j) {
         float temp = a[i];
         a[i] = a[j];
         a[j] = temp;
     }
 
-    @SuppressWarnings("all")
     public static void swap(double[] a, int i, int j) {
         double temp = a[i];
         a[i] = a[j];
         a[j] = temp;
     }
 
-    @SuppressWarnings("all")
     public static void swap(char[] a, int i, int j) {
         char temp = a[i];
         a[i] = a[j];
         a[j] = temp;
     }
 
-    @SuppressWarnings("all")
     public static void swap(boolean[] a, int i, int j) {
         boolean temp = a[i];
         a[i] = a[j];
         a[j] = temp;
     }
 
-    @SuppressWarnings("all")
     public static void swap(Object[] a, int i, int j) {
         Object temp = a[i];
         a[i] = a[j];

@@ -1,15 +1,20 @@
-package com.orion.excel;
+package com.orion.excel.importing;
 
+import com.monitorjbl.xlsx.impl.StreamingSheet;
+import com.orion.excel.Excels;
 import com.orion.utils.Valid;
 import com.orion.utils.reflect.BeanWrapper;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 /**
+ * Excel 流式读取器 不支持随机读写 不支持注解
+ *
  * @author ljh15
  * @version 1.0.0
  * @date 2020/4/6 15:41
@@ -19,34 +24,29 @@ public class ExcelStream {
     private Sheet sheet;
 
     /**
-     * 列数
-     */
-    private int columnNum;
-
-    /**
      * 行数
      */
     private int rowNum;
 
     /**
-     * 首行
-     */
-    private Row firstRow;
-
-    /**
-     * 行索引
+     * 包含跳过的索引位
      */
     private int rowIndex;
+
+    /**
+     * 流迭代器索引
+     */
+    private int iterableIndex;
+
+    /**
+     * 流迭代器索引
+     */
+    private Iterator<Row> streamIterable;
 
     /**
      * 读取的列
      */
     private int[] columns;
-
-    /**
-     * 读取的行
-     */
-    private String[] row;
 
     /**
      * 是否跳过空行
@@ -67,10 +67,7 @@ public class ExcelStream {
         this.sheet = sheet;
         this.columns = columns;
         this.rowNum = sheet.getLastRowNum() + 1;
-        this.firstRow = sheet.getRow(0);
-        if (this.firstRow != null) {
-            this.columnNum = this.firstRow.getLastCellNum();
-        }
+        this.streamIterable = sheet.iterator();
     }
 
     // --------------- skip ---------------
@@ -115,18 +112,22 @@ public class ExcelStream {
      * @return this
      */
     public ExcelStream readRow() {
-        return readRow(true);
+        readOneRow();
+        return this;
     }
 
     /**
-     * 读取多行
+     * 读取多行 需要包含跳过的行
      *
      * @param line 行
      * @return this
      */
     public ExcelStream readRows(int line) {
-        for (int i = 0; i < line && rowIndex < rowNum; i++) {
-            readRow(false);
+        if (iterableIndex != rowIndex) {
+            line += rowIndex - iterableIndex;
+        }
+        for (int i = 0; i < line && iterableIndex < rowNum; i++) {
+            readOneRow();
         }
         return this;
     }
@@ -138,23 +139,26 @@ public class ExcelStream {
      */
     public ExcelStream readRows() {
         while (rowIndex < rowNum) {
-            readRow(false);
+            readOneRow();
         }
         return this;
     }
 
     /**
      * 读取一行
-     *
-     * @param setRow 是否设置row
-     * @return this
      */
-    private ExcelStream readRow(boolean setRow) {
-        Row row = sheet.getRow(rowIndex++);
-        String[] rowString = readRow(row);
-        if (setRow) {
-            this.row = rowString;
+    private void readOneRow() {
+        Row row;
+        if (streamIterable.hasNext()) {
+            row = streamIterable.next();
+            if (iterableIndex++ < rowIndex) {
+                return;
+            }
+        } else {
+            return;
         }
+        rowIndex++;
+        String[] rowString = parseRow(row);
         if (rowString == null) {
             if (!skipNullRows) {
                 rows.add(null);
@@ -162,16 +166,15 @@ public class ExcelStream {
         } else {
             rows.add(rowString);
         }
-        return this;
     }
 
     /**
-     * 读取row
+     * 解析row
      *
      * @param row row
      * @return String[]
      */
-    private String[] readRow(Row row) {
+    private String[] parseRow(Row row) {
         if (row == null) {
             return null;
         }
@@ -194,88 +197,12 @@ public class ExcelStream {
     // --------------- result ---------------
 
     /**
-     * 读取行 不添加到读取记录 可能会返回null
-     *
-     * @param i 行索引
-     * @return 行
-     */
-    public String[] readRowRecord(int i) {
-        return readRow(sheet.getRow(i));
-    }
-
-    /**
-     * 读取多行 不添加到读取记录 如果skipNullRows为true, list不可能包含null
-     *
-     * @param start 开始行
-     * @param end   结束行
-     * @return 行
-     */
-    public List<String[]> readRowsRecord(int start, int end) {
-        List<String[]> list = new ArrayList<>();
-        for (int i = start; i < end && i < rowNum; i++) {
-            String[] row = readRow(sheet.getRow(i));
-            if (row == null) {
-                if (!this.skipNullRows) {
-                    list.add(null);
-                }
-            } else {
-                list.add(row);
-            }
-        }
-        return list;
-    }
-
-    /**
-     * 读取多行 不添加到读取记录 如果skipNullRows为true, list不可能包含null
-     *
-     * @param start 开始行
-     * @return 行
-     */
-    public List<String[]> readRowsRecord(int start) {
-        List<String[]> list = new ArrayList<>();
-        while (start < rowNum) {
-            String[] row = readRow(sheet.getRow(start++));
-            if (row == null) {
-                if (!this.skipNullRows) {
-                    list.add(null);
-                }
-            } else {
-                list.add(row);
-            }
-        }
-        return list;
-    }
-
-    /**
-     * 设置列数
-     *
-     * @param rowIndex 行索引
-     * @return 列数
-     */
-    public int setColumnNum(int rowIndex) {
-        Row row = sheet.getRow(rowIndex);
-        if (row != null) {
-            columnNum = row.getLastCellNum();
-        }
-        return columnNum;
-    }
-
-    /**
      * 获取当前sheet
      *
      * @return sheet
      */
     public Sheet getSheet() {
         return sheet;
-    }
-
-    /**
-     * 获取列数
-     *
-     * @return 列数
-     */
-    public int getColumnNum() {
-        return columnNum;
     }
 
     /**
@@ -306,21 +233,21 @@ public class ExcelStream {
     }
 
     /**
-     * 获取首行
+     * 是否跳过空row
      *
-     * @return 首行
+     * @return true跳过
      */
-    public Row getFirstRow() {
-        return firstRow;
+    public boolean isSkipNullRows() {
+        return skipNullRows;
     }
 
     /**
-     * 获取读取的行 可能为null
+     * 是否为流式读取
      *
-     * @return 行
+     * @return true 流式读取
      */
-    public String[] row() {
-        return row;
+    public boolean isStreaming() {
+        return sheet instanceof StreamingSheet;
     }
 
     /**
@@ -330,21 +257,6 @@ public class ExcelStream {
      */
     public List<String[]> rows() {
         return rows;
-    }
-
-    /**
-     * 单行转bean 可能为null
-     *
-     * @param clazz beanClass
-     * @param map   fieldMap
-     * @param <T>   T
-     * @return bean
-     */
-    public <T> T toBean(Class<T> clazz, Map<Integer, String> map) {
-        if (row == null) {
-            return null;
-        }
-        return BeanWrapper.toBean(row, map, clazz);
     }
 
     /**
@@ -367,19 +279,6 @@ public class ExcelStream {
             }
         }
         return list;
-    }
-
-    /**
-     * 单行转Map 可能为null
-     *
-     * @param map fieldMap
-     * @return bean
-     */
-    public Map<String, String> toMap(Map<Integer, String> map) {
-        if (row == null) {
-            return null;
-        }
-        return BeanWrapper.toMap(row, map);
     }
 
     /**

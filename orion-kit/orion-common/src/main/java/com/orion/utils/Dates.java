@@ -57,6 +57,7 @@ public class Dates {
 
     /**
      * 将对象转换为时间
+     * LocalTime 不支持转化
      *
      * @param o 对象
      * @return 时间
@@ -100,6 +101,17 @@ public class Dates {
             return date((Instant) o);
         }
         return null;
+    }
+
+    /**
+     * 判断对象是否为时间格式
+     *
+     * @param c c
+     * @return ignore
+     */
+    public static boolean isDateClass(Class c) {
+        return c != null && (c == long.class || c == long.class || c == Date.class || c == Calendar.class ||
+                c == LocalDate.class || c == LocalDateTime.class || c == Instant.class);
     }
 
     /**
@@ -578,7 +590,7 @@ public class Dates {
      * @return ignore
      */
     public static String format(Date d, String pattern) {
-        return FastDateFormat.getInstance(pattern).format(d);
+        return d == null ? null : FastDateFormat.getInstance(pattern).format(d);
     }
 
     /**

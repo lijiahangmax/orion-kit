@@ -136,6 +136,36 @@ public class Methods {
         return list;
     }
 
+    //---
+
+    /**
+     * 通过字段获取对应的getter方法
+     *
+     * @param clazz class
+     * @param field field
+     * @return get方法
+     */
+    public static Method getGetterMethodByField(Class<?> clazz, Field field) {
+        String methodName;
+        if (field.getType().equals(boolean.class)) {
+            methodName = "is" + Strings.firstUpper(field.getName());
+        } else {
+            methodName = "get" + Strings.firstUpper(field.getName());
+        }
+        return getAccessibleMethod(clazz, methodName, 0);
+    }
+
+    /**
+     * 通过字段获取所有的setter方法
+     *
+     * @param clazz class
+     * @return set方法
+     */
+    public static Method getSetterMethodByField(Class<?> clazz, Field field) {
+        String methodName = "set" + Strings.firstUpper(field.getName());
+        return getAccessibleMethod(clazz, methodName, field.getType());
+    }
+
     /**
      * 获取对象的DeclaredMethod, 并强制设置为可访问
      *

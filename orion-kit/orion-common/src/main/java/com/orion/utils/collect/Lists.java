@@ -5,6 +5,7 @@ import com.orion.utils.Arrays1;
 import com.orion.utils.Objects1;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * List 工具类
@@ -19,10 +20,6 @@ public class Lists extends Collections {
     private Lists() {
     }
 
-    // --------------- singleton map ---------------
-
-    private static final Map<Object, List> SINGLETON_MAP = new HashMap<>(4);
-
     // --------------- new ---------------
 
     public static <E> List<E> newList() {
@@ -34,7 +31,7 @@ public class Lists extends Collections {
     }
 
     public static <E> List<E> newList(Collection<? extends E> c) {
-        if (size(c) == 0) {
+        if (c == null) {
             return new ArrayList<>();
         }
         return new ArrayList<>(c);
@@ -45,7 +42,7 @@ public class Lists extends Collections {
     }
 
     public static <E> LinkedList<E> newLinkedList(Collection<? extends E> c) {
-        if (size(c) == 0) {
+        if (c == null) {
             return new LinkedList<>();
         }
         return new LinkedList<>(c);
@@ -60,21 +57,36 @@ public class Lists extends Collections {
     }
 
     public static <E> ConvertArrayList<E> newConvertList(Collection<? extends E> c) {
-        if (size(c) == 0) {
+        if (c == null) {
             return new ConvertArrayList<>();
         }
         return new ConvertArrayList<>(c);
     }
 
-    // --------------- singleton ---------------
+    public static <E> List<E> newCopyOnWriteList() {
+        return new CopyOnWriteArrayList<>();
+    }
 
-    public static <E> List<E> singletonList(Object key) {
-        if (SINGLETON_MAP.containsKey(key)) {
-            return SINGLETON_MAP.get(key);
+    public static <E> List<E> newCopyOnWriteList(E[] ea) {
+        return new CopyOnWriteArrayList<>(ea);
+    }
+
+    public static <E> List<E> newCopyOnWriteList(Collection<? extends E> c) {
+        if (c == null) {
+            return new CopyOnWriteArrayList<>();
         }
-        List<E> list = new ArrayList<>();
-        SINGLETON_MAP.put(key, list);
-        return list;
+        return new CopyOnWriteArrayList<>(c);
+    }
+
+    public static <E> List<E> newSynchronizedList() {
+        return java.util.Collections.synchronizedList(new ArrayList<>());
+    }
+
+    public static <E> List<E> newSynchronizedList(List<E> c) {
+        if (c == null) {
+            return java.util.Collections.synchronizedList(new ArrayList<>());
+        }
+        return java.util.Collections.synchronizedList(c);
     }
 
     // --------------- function ---------------

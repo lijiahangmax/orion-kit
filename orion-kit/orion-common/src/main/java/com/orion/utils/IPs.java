@@ -2,15 +2,14 @@ package com.orion.utils;
 
 import com.orion.utils.collect.Lists;
 
+import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
- * ip地址工具
+ * IP 地址工具
  *
  * @author ljh15
  * @version 1.0.0
@@ -18,7 +17,32 @@ import java.util.Map;
  */
 public class IPs {
 
+    /**
+     * 本机外网IP  没有则为127.0.0.1
+     */
+    private static final String IP;
+
     private IPs() {
+    }
+
+    static {
+        String i = "127.0.0.1";
+        try {
+            Enumeration<NetworkInterface> allNetInterfaces = NetworkInterface.getNetworkInterfaces();
+            while (allNetInterfaces.hasMoreElements()) {
+                NetworkInterface netInterface = allNetInterfaces.nextElement();
+                Enumeration<InetAddress> addresses = netInterface.getInetAddresses();
+                while (addresses.hasMoreElements()) {
+                    InetAddress ip = addresses.nextElement();
+                    if (ip instanceof Inet4Address && !ip.isLoopbackAddress() && !ip.getHostAddress().contains(":")) {
+                        i = ip.getHostAddress();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // ignore
+        }
+        IP = i;
     }
 
     /**

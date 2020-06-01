@@ -19,10 +19,6 @@ public class Sets extends Collections {
     private Sets() {
     }
 
-    // --------------- singleton map ---------------
-
-    private static final Map<Object, Set> SINGLETON_MAP = new HashMap<>(4);
-
     public static <E> Set<E> newSet() {
         return new HashSet<>();
     }
@@ -32,7 +28,7 @@ public class Sets extends Collections {
     }
 
     public static <E> Set<E> newSet(Collection<? extends E> c) {
-        if (size(c) == 0) {
+        if (c == null) {
             return new HashSet<>();
         }
         return new HashSet<>(c);
@@ -47,7 +43,7 @@ public class Sets extends Collections {
     }
 
     public static <E> TreeSet<E> newTreeSet(Collection<? extends E> c) {
-        if (size(c) == 0) {
+        if (c == null) {
             return new TreeSet<>();
         }
         return new TreeSet<>(c);
@@ -62,10 +58,40 @@ public class Sets extends Collections {
     }
 
     public static <E> ConvertHashSet<E> newConvertSet(Collection<? extends E> c) {
-        if (size(c) == 0) {
+        if (c == null) {
             return new ConvertHashSet<>();
         }
         return new ConvertHashSet<>(c);
+    }
+
+    public static <E> Set<E> newSynchronizedSet() {
+        return java.util.Collections.synchronizedSet(new HashSet<>());
+    }
+
+    public static <E> Set<E> newSynchronizedSet(Set<E> set) {
+        if (set == null) {
+            return java.util.Collections.synchronizedSet(new HashSet<>());
+        }
+        return java.util.Collections.synchronizedSet(set);
+    }
+
+    public static <E> SortedSet<E> newSynchronizedSortedSet() {
+        return java.util.Collections.synchronizedSortedSet(new TreeSet<>());
+    }
+
+    public static <E> SortedSet<E> newSynchronizedSortedSet(SortedSet<E> set) {
+        if (set == null) {
+            return java.util.Collections.synchronizedSortedSet(new TreeSet<>());
+        }
+        return java.util.Collections.synchronizedSortedSet(set);
+    }
+
+    public static BitSet newBitSet() {
+        return new BitSet();
+    }
+
+    public static BitSet newBitSet(int initialSize) {
+        return new BitSet(initialSize);
     }
 
     public static <E> ConcurrentHashSet<E> newCurrentSet() {
@@ -77,29 +103,19 @@ public class Sets extends Collections {
     }
 
     public static <E> ConcurrentHashSet<E> newCurrentSet(Collection<? extends E> c) {
-        if (size(c) == 0) {
+        if (c == null) {
             return new ConcurrentHashSet<>();
         }
         return new ConcurrentHashSet<>(c);
     }
 
     public static <E> ConcurrentHashSet<E> newCurrentSet(Map<? extends E, ?> m) {
-        if (Maps.size(m) == 0) {
+        if (m == null) {
             return new ConcurrentHashSet<>();
         }
         return new ConcurrentHashSet<>(m);
     }
 
-    // --------------- singleton ---------------
-
-    public static <E> Set<E> singletonSet(Object key) {
-        if (SINGLETON_MAP.containsKey(key)) {
-            return SINGLETON_MAP.get(key);
-        }
-        Set<E> set = new HashSet<>();
-        SINGLETON_MAP.put(key, set);
-        return set;
-    }
 
     // --------------- function ---------------
 

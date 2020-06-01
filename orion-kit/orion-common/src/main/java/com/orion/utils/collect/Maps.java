@@ -1,10 +1,11 @@
 package com.orion.utils.collect;
 
-import com.orion.lang.wrapper.Arg;
-import com.orion.lang.collect.ConvertHashMap;
 import com.orion.lang.MapEntry;
+import com.orion.lang.collect.ConvertHashMap;
+import com.orion.lang.wrapper.Arg;
 import com.orion.utils.Arrays1;
 
+import java.util.Collections;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -21,10 +22,6 @@ public class Maps {
     private Maps() {
     }
 
-    // --------------- singleton map ---------------
-
-    private static final Map<Object, Map> SINGLETON_MAP = new HashMap<>(4);
-
     // --------------- new ---------------
 
     public static <K, V> Map<K, V> newMap() {
@@ -36,7 +33,7 @@ public class Maps {
     }
 
     public static <K, V> Map<K, V> newMap(Map<? extends K, ? extends V> m) {
-        if (size(m) == 0) {
+        if (m == null) {
             return new HashMap<>(16);
         }
         return new HashMap<>(m);
@@ -51,7 +48,7 @@ public class Maps {
     }
 
     public static <K, V> TreeMap<K, V> newTreeMap(Map<? extends K, ? extends V> m) {
-        if (size(m) == 0) {
+        if (m == null) {
             return new TreeMap<>();
         }
         return new TreeMap<>(m);
@@ -66,7 +63,7 @@ public class Maps {
     }
 
     public static <K, V> LinkedHashMap<K, V> newLinkedMap(Map<? extends K, ? extends V> m) {
-        if (size(m) == 0) {
+        if (m == null) {
             return new LinkedHashMap<>(16);
         }
         return new LinkedHashMap<>(m);
@@ -81,7 +78,7 @@ public class Maps {
     }
 
     public static <K, V> ConcurrentHashMap<K, V> newCurrentMap(Map<? extends K, ? extends V> m) {
-        if (size(m) == 0) {
+        if (m == null) {
             return new ConcurrentHashMap<>(16);
         }
         return new ConcurrentHashMap<>(m);
@@ -96,22 +93,53 @@ public class Maps {
     }
 
     public static <K, V> ConvertHashMap<K, V> newConvertMap(Map<? extends K, ? extends V> m) {
-        if (size(m) == 0) {
+        if (m == null) {
             return new ConvertHashMap<>(16);
         }
         return new ConvertHashMap<>(m);
     }
 
-    // --------------- singleton ---------------
-
-    public static <K, V> Map<K, V> singletonMap(Object key) {
-        if (SINGLETON_MAP.containsKey(key)) {
-            return SINGLETON_MAP.get(key);
-        }
-        Map<K, V> map = new HashMap<>(16);
-        SINGLETON_MAP.put(key, map);
-        return map;
+    public static <K, V> IdentityHashMap<K, V> newIdentityHashMap() {
+        return new IdentityHashMap<>(16);
     }
+
+    public static <K, V> IdentityHashMap<K, V> newIdentityHashMap(int capacity) {
+        return new IdentityHashMap<>(capacity);
+    }
+
+    public static <K, V> IdentityHashMap<K, V> newIdentityHashMap(Map<? extends K, ? extends V> m) {
+        if (m == null) {
+            return new IdentityHashMap<>(16);
+        }
+        return new IdentityHashMap<>(m);
+    }
+
+    public static <K, V> WeakHashMap<K, V> newWeakHashMap() {
+        return new WeakHashMap<>(16);
+    }
+
+    public static <K, V> WeakHashMap<K, V> newWeakHashMap(int capacity) {
+        return new WeakHashMap<>(capacity);
+    }
+
+    public static <K, V> WeakHashMap<K, V> newWeakHashMap(Map<? extends K, ? extends V> m) {
+        if (m == null) {
+            return new WeakHashMap<>(16);
+        }
+        return new WeakHashMap<>(m);
+    }
+
+    public static <K, V> Map<K, V> newSynchronizedMap() {
+        return Collections.synchronizedMap(new HashMap<>(16));
+    }
+
+    public static <K, V> Map<K, V> newSynchronizedMap(Map<K, V> m) {
+        if (m == null) {
+            return Collections.synchronizedMap(m);
+        }
+        return Collections.synchronizedMap(new HashMap<>(16));
+    }
+
 
     // --------------- function ---------------
 

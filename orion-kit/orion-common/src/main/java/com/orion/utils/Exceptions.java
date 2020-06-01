@@ -425,6 +425,22 @@ public class Exceptions {
         return new ConvertException(s, t);
     }
 
+    public static UnsupportedOperationException unsupport() {
+        return new UnsupportedOperationException();
+    }
+
+    public static UnsupportedOperationException unsupport(Throwable t) {
+        return new UnsupportedOperationException(t);
+    }
+
+    public static UnsupportedOperationException unsupport(String s) {
+        return new UnsupportedOperationException(s);
+    }
+
+    public static UnsupportedOperationException unsupport(String s, Throwable t) {
+        return new UnsupportedOperationException(s, t);
+    }
+
     public static Error error() {
         return new Error();
     }

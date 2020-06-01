@@ -22,7 +22,7 @@ import java.util.jar.JarFile;
  * @date 2020/4/23 17:38
  */
 @SuppressWarnings("ALL")
-public class ReflectScanners {
+public class PackageScanners {
 
     /**
      * 扫描到的类
@@ -49,7 +49,7 @@ public class ReflectScanners {
      *
      * @param packageNames 包
      */
-    public ReflectScanners(String... packageNames) {
+    public PackageScanners(String... packageNames) {
         this(false, packageNames);
     }
 
@@ -59,10 +59,10 @@ public class ReflectScanners {
      * @param scanChildPackage 是否扫描子包
      * @param packageNames     包
      */
-    public ReflectScanners(boolean scanChildPackage, String... packageNames) {
-        URL resource = ReflectScanners.class.getClassLoader().getResource("");
+    public PackageScanners(boolean scanChildPackage, String... packageNames) {
+        URL resource = PackageScanners.class.getClassLoader().getResource("");
         if (resource == null) {
-            resource = ReflectScanners.class.getResource("");
+            resource = PackageScanners.class.getResource("");
         }
         this.resource = resource;
         if (packageNames == null || packageNames.length == 0) {

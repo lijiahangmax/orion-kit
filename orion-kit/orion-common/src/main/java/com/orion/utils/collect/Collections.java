@@ -17,6 +17,10 @@ class Collections {
     Collections() {
     }
 
+    public static <E> Collection<E> newSynchronizedCollection(Collection<E> c) {
+        return java.util.Collections.synchronizedCollection(c);
+    }
+
     /**
      * 将集合连接成字符串
      *

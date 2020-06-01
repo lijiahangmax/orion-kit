@@ -2,15 +2,17 @@ package com.orion.excel;
 
 import com.orion.utils.Dates;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DateUtil;
-import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Date;
 
 /**
- * excel工具类
+ * Excel 工具类
  *
  * @author ljh15
  * @version 1.0.0
@@ -32,7 +34,7 @@ public class Excels {
             return value;
         }
         switch (cell.getCellType()) {
-            case Cell.CELL_TYPE_NUMERIC:
+            case NUMERIC:
                 if (DateUtil.isCellDateFormatted(cell)) {
                     value = Dates.format(DateUtil.getJavaDate(cell.getNumericCellValue()));
                 } else {
@@ -41,28 +43,28 @@ public class Excels {
                     value = big.toString();
                     if (null != value && !"".equals(value.trim())) {
                         String[] item = value.split("[.]");
-                        if (1 < item.length && "0".equals(item[1])) {
+                        if (1 < item.length && Integer.parseInt(item[1]) == 0) {
                             value = item[0];
                         }
                     }
                 }
                 break;
-            case Cell.CELL_TYPE_STRING:
+            case STRING:
                 value = cell.getStringCellValue();
                 break;
-            case Cell.CELL_TYPE_FORMULA:
+            case FORMULA:
                 value = String.valueOf(cell.getNumericCellValue());
                 if ("NaN".equals(value)) {
                     value = cell.getStringCellValue();
                 }
                 break;
-            case Cell.CELL_TYPE_BOOLEAN:
+            case BOOLEAN:
                 value = "" + cell.getBooleanCellValue();
                 break;
-            case Cell.CELL_TYPE_BLANK:
+            case BLANK:
                 value = "";
                 break;
-            case Cell.CELL_TYPE_ERROR:
+            case ERROR:
                 value = "";
                 break;
             default:
@@ -77,11 +79,12 @@ public class Excels {
      * @param cell cell
      * @return 时间
      */
-    private static Date getCellDate(Cell cell) {
+    public static Date getCellDate(Cell cell) {
         if (cell != null) {
-            switch (cell.getCellType()) {
-                case Cell.CELL_TYPE_NUMERIC:
-                case Cell.CELL_TYPE_FORMULA:
+            CellType cellType = cell.getCellType();
+            switch (cellType) {
+                case NUMERIC:
+                case FORMULA:
                     if (DateUtil.isCellDateFormatted(cell)) {
                         return cell.getDateCellValue();
                     }
@@ -99,15 +102,65 @@ public class Excels {
      * @param cell cell
      * @return 手机号
      */
-    private static String getCellPhone(Cell cell) {
+    public static String getCellPhone(Cell cell) {
         switch (cell.getCellType()) {
-            case XSSFCell.CELL_TYPE_NUMERIC:
+            case NUMERIC:
                 return DF.format(cell.getNumericCellValue());
-            case XSSFCell.CELL_TYPE_STRING:
+            case STRING:
                 return DF.format(Double.parseDouble(cell.toString()));
             default:
                 return cell.toString();
         }
+    }
+
+    /**
+     * 合并单元格
+     *
+     * @param row       合并行
+     * @param firstCell 合并开始单元格
+     * @param lastCell  合并结束单元格
+     * @return merge
+     */
+    public static CellRangeAddress mergeCell(int row, int firstCell, int lastCell) {
+        return new CellRangeAddress(row, row, firstCell, lastCell);
+    }
+
+    /**
+     * 合并单元格
+     *
+     * @param firstRow  合并开始行
+     * @param lastRow   合并结束行
+     * @param firstCell 合并开始单元格
+     * @param lastCell  合并结束单元格
+     * @return merge
+     */
+    public static CellRangeAddress mergeCell(int firstRow, int lastRow, int firstCell, int lastCell) {
+        return new CellRangeAddress(firstRow, lastRow, firstCell, lastCell);
+    }
+
+    /**
+     * 合并单元格
+     *
+     * @param sheet     sheet
+     * @param firstRow  合并开始行
+     * @param lastRow   合并结束行
+     * @param firstCell 合并开始单元格
+     * @param lastCell  合并结束单元格
+     */
+    public static void mergeCell(Sheet sheet, int firstRow, int lastRow, int firstCell, int lastCell) {
+        sheet.addMergedRegion(new CellRangeAddress(firstRow, lastRow, firstCell, lastCell));
+    }
+
+    /**
+     * 合并单元格
+     *
+     * @param sheet     sheet
+     * @param row       合并行
+     * @param firstCell 合并开始单元格
+     * @param lastCell  合并结束单元格
+     */
+    public static void mergeCell(Sheet sheet, int row, int firstCell, int lastCell) {
+        sheet.addMergedRegion(new CellRangeAddress(row, row, firstCell, lastCell));
     }
 
 }

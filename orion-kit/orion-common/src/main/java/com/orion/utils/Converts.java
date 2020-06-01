@@ -41,10 +41,6 @@ public class Converts {
             TO_FLOAT = Converts::toFloat, TO_DOUBLE = Converts::toDouble, TO_BOOLEAN = Converts::toBoolean, TO_CHAR = Converts::toChar,
             TO_DECIMAL = Decimals::toDecimal, TO_BIG_INTEGER = BigIntegers::toBigInteger, TO_DATE = Dates::date, TO_STRING = Converts::toString;
 
-    public static void main(String[] args) {
-        System.out.println(convert("2020-02-20", Date.class));
-    }
-
     // -------------------- convert --------------------
 
     /**

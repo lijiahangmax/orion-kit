@@ -1,12 +1,13 @@
 package com.orion.excel.builder;
 
+import com.orion.excel.common.ExcelFieldType;
 import com.orion.utils.Converts;
+import com.orion.utils.Dates;
 import com.orion.utils.Objects1;
 import com.orion.utils.Strings;
 import com.orion.utils.reflect.Methods;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -24,6 +25,8 @@ import static com.orion.excel.builder.ExcelBuilder.getAllGetterMethod;
 @SuppressWarnings("ALL")
 public class ExcelSheet<T> {
 
+    private Workbook workbook;
+
     private Sheet sheet;
 
     /**
@@ -31,18 +34,32 @@ public class ExcelSheet<T> {
      */
     private int index;
 
-    public ExcelSheet(Sheet sheet) {
+    /**
+     * 表头默认行高
+     */
+    private short headerDefalutHeigth;
+
+    /**
+     * 是否跳过null
+     */
+    private boolean skipNullRow = true;
+
+    public ExcelSheet(Workbook workbook, Sheet sheet) {
+        this.workbook = workbook;
         this.sheet = sheet;
     }
 
     /**
-     * 添加头
+     * 添加表头
      *
-     * @param header 头
+     * @param header 表头
      * @return this
      */
-    public ExcelSheet addHeader(String... header) {
+    public ExcelSheet<T> addHeaders(String... header) {
         Row row = sheet.createRow(index++);
+        if (headerDefalutHeigth != 0) {
+            row.setHeight((short) (headerDefalutHeigth * 20));
+        }
         for (int i = 0; i < header.length; i++) {
             Cell cell = row.createCell(i);
             cell.setCellValue(header[i]);
@@ -51,11 +68,69 @@ public class ExcelSheet<T> {
     }
 
     /**
+     * 添加表头
+     *
+     * @param heigth 行高
+     * @param header 表头
+     * @return this
+     */
+    public ExcelSheet<T> addHeaders(int heigth, String... header) {
+        Row row = sheet.createRow(index++);
+        row.setHeight((short) (heigth * 20));
+        for (int i = 0; i < header.length; i++) {
+            Cell cell = row.createCell(i);
+            cell.setCellValue(header[i]);
+        }
+        return this;
+    }
+
+    /**
+     * 添加表头
+     *
+     * @param headerMap 表头信息
+     * @return this
+     */
+    public ExcelSheet<T> addHeaders(List<ExcelHeaderMap> headerMap, int heigth) {
+        Row row = sheet.createRow(index++);
+        if (heigth != 0) {
+            row.setHeight((short) (heigth * 20));
+        }
+        for (int i = 0; i < headerMap.size(); i++) {
+            ExcelHeaderMap map = headerMap.get(i);
+            Cell cell = row.createCell(i);
+            cell.setCellValue(map.getName());
+            CellStyle cellStyle = map.getCellStyle();
+            if (cellStyle != null) {
+                cell.setCellStyle(cellStyle);
+            }
+            Font font = map.getFont();
+            if (font != null) {
+                if (cellStyle == null) {
+                    cellStyle = workbook.createCellStyle();
+                    cell.setCellStyle(cellStyle);
+                }
+                cellStyle.setFont(font);
+            }
+        }
+        return this;
+    }
+
+    /**
+     * 添加表头
+     *
+     * @param headerMap 表头信息
+     * @return this
+     */
+    public ExcelSheet<T> addHeaders(List<ExcelHeaderMap> headerMap) {
+        return this.addHeaders(headerMap, headerDefalutHeigth);
+    }
+
+    /**
      * 跳过一行
      *
      * @return this
      */
-    public ExcelSheet skip() {
+    public ExcelSheet<T> skip() {
         index++;
         return this;
     }
@@ -66,255 +141,254 @@ public class ExcelSheet<T> {
      * @param i 行
      * @return this
      */
-    public ExcelSheet skip(int i) {
+    public ExcelSheet<T> skip(int i) {
         index += i;
         return this;
     }
 
     /**
-     * 添加列 根据bean的getter方法
+     * 跳过空行
      *
-     * @param list     list
-     * @param fieldMap key: bean字段 value: cell索引
-     * @param typeMap  key: bean字段 value: cell类型
+     * @param skip 跳过空行
      * @return this
      */
-    public ExcelSheet addRows(List<T> list, Map<String, Integer> fieldMap, Map<String, ExcelFieldType> typeMap) {
+    public ExcelSheet<T> skipNullRow(boolean skip) {
+        this.skipNullRow = skip;
+        return this;
+    }
+
+    /**
+     * 设置行宽
+     *
+     * @param column 列索引
+     * @param width  行宽
+     * @return this
+     */
+    public ExcelSheet<T> width(int column, int width) {
+        sheet.setColumnWidth(column, (int) ((width + 0.72) * 256));
+        return this;
+    }
+
+    /**
+     * 设置默认行宽
+     *
+     * @param width 行宽
+     * @return this
+     */
+    public ExcelSheet<T> width(int width) {
+        sheet.setDefaultColumnWidth((int) ((width + 0.72) * 256));
+        return this;
+    }
+
+    /**
+     * 设置默认行高
+     *
+     * @param heigth 行高
+     * @return this
+     */
+    public ExcelSheet<T> heigth(int heigth) {
+        sheet.setDefaultRowHeight((short) (heigth * 20));
+        return this;
+    }
+
+    /**
+     * 设置表头默认行高
+     *
+     * @param heigth 行高
+     * @return this
+     */
+    public ExcelSheet<T> headerHeigth(int heigth) {
+        headerDefalutHeigth = (short) heigth;
+        return this;
+    }
+
+    /**
+     * 合并单元格
+     *
+     * @param sheet     sheet
+     * @param firstRow  合并开始行
+     * @param lastRow   合并结束行
+     * @param firstCell 合并开始单元格
+     * @param lastCell  合并结束单元格
+     */
+    public ExcelSheet<T> mergeCell(int firstRow, int lastRow, int firstCell, int lastCell) {
+        sheet.addMergedRegion(new CellRangeAddress(firstRow, lastRow, firstCell, lastCell));
+        return this;
+    }
+
+    /**
+     * 合并单元格
+     *
+     * @param sheet     sheet
+     * @param row       合并行
+     * @param firstCell 合并开始单元格
+     * @param lastCell  合并结束单元格
+     */
+    public ExcelSheet<T> mergeCell(int row, int firstCell, int lastCell) {
+        sheet.addMergedRegion(new CellRangeAddress(row, row, firstCell, lastCell));
+        return this;
+    }
+
+    /**
+     * 添加列 根据bean的getter方法
+     *
+     * @param list      列
+     * @param fieldMaps 配置
+     * @return this
+     */
+    public ExcelSheet<T> addRows(List<T> list, List<ExcelFieldMap> fieldMaps) {
+        List<Method> allGetterMethod = null;
         for (T t : list) {
-            addRow(t, fieldMap, typeMap);
-        }
-        return this;
-    }
-
-    /**
-     * 添加列 根据bean的getter方法
-     *
-     * @param list     list
-     * @param fieldMap key: bean字段 value: cell索引
-     * @return this
-     */
-    public ExcelSheet addRows(List<T> list, Map<String, Integer> fieldMap) {
-        for (T t : list) {
-            addRow(t, fieldMap, null);
-        }
-        return this;
-    }
-
-    /**
-     * 添加列
-     *
-     * @param maps    key: cell索引 value: 值
-     * @param typeMap key: cell索引 value: cell类型
-     * @return this
-     */
-    public ExcelSheet addMaps(List<Map<Integer, ?>> maps, Map<Integer, ExcelFieldType> typeMap) {
-        for (Map<Integer, ?> map : maps) {
-            addMap(map, typeMap);
-        }
-        return this;
-    }
-
-    /**
-     * 添加列
-     *
-     * @param maps key: cell索引 value: 值
-     * @return this
-     */
-    public ExcelSheet addMaps(List<Map<Integer, ?>> maps) {
-        for (Map<Integer, ?> map : maps) {
-            addMap(map, null);
-        }
-        return this;
-    }
-
-    /**
-     * 添加列
-     *
-     * @param arrays   array
-     * @param fieldMap key: cell索引 value: array索引
-     * @param typeMap  key: cell索引 value: cell类型
-     * @return this
-     */
-    public ExcelSheet addArrays(List<Object[]> arrays, Map<Integer, Integer> fieldMap, Map<Integer, ExcelFieldType> typeMap) {
-        for (Object[] arr : arrays) {
-            addArray(arr, fieldMap, typeMap);
-        }
-        return this;
-    }
-
-    /**
-     * 添加列
-     *
-     * @param arrays   array
-     * @param fieldMap key: cell索引 value: array索引
-     * @return this
-     */
-    public ExcelSheet addArrays(List<Object[]> arrays, Map<Integer, Integer> fieldMap) {
-        for (Object[] arr : arrays) {
-            addArray(arr, fieldMap, null);
-        }
-        return this;
-    }
-
-    /**
-     * 添加列
-     *
-     * @param arrays array
-     * @return this
-     */
-    public ExcelSheet addArrays(List<Object[]> arrays) {
-        for (Object[] arr : arrays) {
-            addArray(arr, null, null);
-        }
-        return this;
-    }
-
-    /**
-     * 添加列 根据bean的getter方法
-     *
-     * @param t        bean
-     * @param fieldMap key: bean字段 value: cell索引
-     * @return this
-     */
-    public ExcelSheet addRow(T t, Map<String, Integer> fieldMap) {
-        return addRow(t, fieldMap, null);
-    }
-
-    /**
-     * 添加列 根据bean的getter方法
-     *
-     * @param t        bean
-     * @param fieldMap key: bean字段 value: cell索引
-     * @param typeMap  key: bean字段 value: cell类型
-     * @return this
-     */
-    public ExcelSheet addRow(T t, Map<String, Integer> fieldMap, Map<String, ExcelFieldType> typeMap) {
-        if (t == null) {
-            index++;
-            return this;
-        }
-        Row row = sheet.createRow(index++);
-        List<Method> allGetterMethod = getAllGetterMethod(t.getClass());
-        for (Method method : allGetterMethod) {
-            String methodName = method.getName();
-            String fieldName = Strings.firstLower(methodName.substring(3, methodName.length()));
-            Integer cellIndex = fieldMap.get(fieldName);
-            if (cellIndex != null) {
-                Cell cell = row.createCell(cellIndex);
-                ExcelFieldType type = null;
-                if (typeMap != null) {
-                    ExcelFieldType excelFieldType = typeMap.get(fieldName);
-                    if (excelFieldType != null) {
-                        type = excelFieldType;
-                    }
+            if (t == null) {
+                if (skipNullRow) {
+                    index++;
                 }
-                Object v = Methods.invokeMethod(t, method);
-                this.setCellValue(cell, v, type);
+                return this;
             }
-        }
-        return this;
-    }
-
-    /**
-     * 添加列
-     *
-     * @param map key: cell索引 value: 值
-     * @return this
-     */
-    public ExcelSheet addMap(Map<Integer, ?> map) {
-        return addMap(map, null);
-    }
-
-    /**
-     * 添加列
-     *
-     * @param map     key: cell索引 value: 值
-     * @param typeMap key: cell索引 value: cell类型
-     * @return this
-     */
-    public ExcelSheet addMap(Map<Integer, ?> map, Map<Integer, ExcelFieldType> typeMap) {
-        if (map == null) {
-            index++;
-            return this;
-        }
-        Row row = sheet.createRow(index++);
-        for (Map.Entry<Integer, ?> entry : map.entrySet()) {
-            Integer cellIndex = entry.getKey();
-            if (cellIndex != null) {
-                Cell cell = row.createCell(cellIndex);
-                ExcelFieldType type = null;
-                if (typeMap != null) {
-                    ExcelFieldType excelFieldType = typeMap.get(cellIndex);
-                    if (excelFieldType != null) {
-                        type = excelFieldType;
-                    }
+            if (allGetterMethod == null) {
+                allGetterMethod = getAllGetterMethod(t.getClass());
+            }
+            Row row = sheet.createRow(index++);
+            for (ExcelFieldMap fieldMap : fieldMaps) {
+                Integer index = fieldMap.getColumnIndex();
+                if (index == null) {
+                    continue;
                 }
-                this.setCellValue(cell, entry.getValue(), type);
-            }
-        }
-        return this;
-    }
-
-    /**
-     * 添加列
-     *
-     * @param arr array
-     * @return this
-     */
-    public ExcelSheet addArray(Object[] arr) {
-        return addArray(arr, null, null);
-    }
-
-    /**
-     * 添加列
-     *
-     * @param arr      array
-     * @param fieldMap key: cell索引 value: array索引
-     * @return this
-     */
-    public ExcelSheet addArray(Object[] arr, Map<Integer, Integer> fieldMap) {
-        return addArray(arr, fieldMap, null);
-    }
-
-    /**
-     * 添加列
-     *
-     * @param arr      array
-     * @param fieldMap key: cell索引 value: array索引
-     * @param typeMap  key: cell索引 value: cell类型
-     * @return this
-     */
-    public ExcelSheet addArray(Object[] arr, Map<Integer, Integer> fieldMap, Map<Integer, ExcelFieldType> typeMap) {
-        if (arr == null) {
-            index++;
-            return this;
-        }
-        Row row = sheet.createRow(index++);
-        if (fieldMap == null) {
-            for (int i = 0; i < arr.length; i++) {
-                Cell cell = row.createCell(i);
-                ExcelFieldType type = null;
-                if (typeMap != null) {
-                    ExcelFieldType excelFieldType = typeMap.get(i);
-                    if (excelFieldType != null) {
-                        type = excelFieldType;
-                    }
+                Cell cell = row.createCell(index);
+                String fieldName = fieldMap.getFieldName();
+                if (fieldName == null) {
+                    continue;
                 }
-                this.setCellValue(cell, arr[i], type);
-            }
-        } else {
-            for (Map.Entry<Integer, Integer> entry : fieldMap.entrySet()) {
-                Integer cellIndex = entry.getKey();
-                if (cellIndex != null) {
-                    Cell cell = row.createCell(cellIndex);
-                    ExcelFieldType type = null;
-                    if (typeMap != null) {
-                        ExcelFieldType excelFieldType = typeMap.get(cellIndex);
-                        if (excelFieldType != null) {
-                            type = excelFieldType;
+                for (Method method : allGetterMethod) {
+                    String methodName = method.getName();
+                    String getterFieldName;
+                    if (method.getReturnType() == boolean.class) {
+                        getterFieldName = Strings.firstLower(methodName.substring(2, methodName.length()));
+                    } else {
+                        getterFieldName = Strings.firstLower(methodName.substring(3, methodName.length()));
+                    }
+                    if (!fieldName.equals(getterFieldName)) {
+                        continue;
+                    }
+                    CellStyle style = fieldMap.getCellStyle();
+                    if (style != null) {
+                        cell.setCellStyle(style);
+                    }
+                    Font font = fieldMap.getFont();
+                    if (font != null) {
+                        if (style == null) {
+                            style = workbook.createCellStyle();
                         }
+                        style.setFont(font);
+                        cell.setCellStyle(style);
                     }
-                    this.setCellValue(cell, arr[entry.getValue()], type);
+
+                    Object v = Methods.invokeMethod(t, method);
+                    this.setCellValue(cell, v, fieldMap.getFieldType(), fieldMap.getDatePattern());
+                    break;
+                }
+            }
+        }
+        return this;
+    }
+
+    /**
+     * 添加列 根据bean的getter方法
+     *
+     * @param list      列
+     * @param fieldMaps 配置
+     * @return this
+     */
+    public ExcelSheet<T> addMaps(List<Map<Integer, ?>> list, List<ExcelFieldMap> fieldMaps) {
+        for (Map<Integer, ?> t : list) {
+            if (t == null) {
+                if (skipNullRow) {
+                    index++;
+                }
+                return this;
+            }
+            Row row = sheet.createRow(index++);
+            for (Map.Entry<Integer, ?> entry : t.entrySet()) {
+                Integer columnIndex = entry.getKey();
+                Object value = entry.getValue();
+                if (value == null) {
+                    continue;
+                }
+                Cell cell = row.createCell(columnIndex);
+                boolean set = false;
+                for (ExcelFieldMap fieldMap : fieldMaps) {
+                    if (!fieldMap.getFieldIndex().equals(columnIndex)) {
+                        continue;
+                    }
+                    CellStyle style = fieldMap.getCellStyle();
+                    if (style != null) {
+                        cell.setCellStyle(style);
+                    }
+                    Font font = fieldMap.getFont();
+                    if (font != null) {
+                        if (style == null) {
+                            style = workbook.createCellStyle();
+                        }
+                        style.setFont(font);
+                        cell.setCellStyle(style);
+                    }
+                    this.setCellValue(cell, value, fieldMap.getFieldType(), fieldMap.getDatePattern());
+                    set = true;
+                    break;
+                }
+                if (!set) {
+                    this.setCellValue(cell, value, null, null);
+                }
+            }
+        }
+        return this;
+    }
+
+    /**
+     * 添加列 根据bean的getter方法
+     *
+     * @param list      列
+     * @param fieldMaps 配置
+     * @return this
+     */
+    public ExcelSheet<T> addArrays(List<Object[]> list, List<ExcelFieldMap> fieldMaps) {
+        for (Object[] t : list) {
+            if (t == null) {
+                if (skipNullRow) {
+                    index++;
+                }
+                return this;
+            }
+            Row row = sheet.createRow(index++);
+            for (int i = 0; i < t.length; i++) {
+                Cell cell = row.createCell(i);
+                Object value = t[i];
+                if (value == null) {
+                    continue;
+                }
+                boolean set = false;
+                for (ExcelFieldMap fieldMap : fieldMaps) {
+                    if (!fieldMap.getFieldIndex().equals(i)) {
+                        continue;
+                    }
+                    CellStyle style = fieldMap.getCellStyle();
+                    if (style != null) {
+                        cell.setCellStyle(style);
+                    }
+                    Font font = fieldMap.getFont();
+                    if (font != null) {
+                        if (style == null) {
+                            style = workbook.createCellStyle();
+                        }
+                        style.setFont(font);
+                        cell.setCellStyle(style);
+                    }
+                    this.setCellValue(cell, value, fieldMap.getFieldType(), fieldMap.getDatePattern());
+                    set = true;
+                    break;
+                }
+                if (!set) {
+                    this.setCellValue(cell, value, null, null);
                 }
             }
         }
@@ -328,7 +402,7 @@ public class ExcelSheet<T> {
      * @param value value
      * @param type  type
      */
-    private void setCellValue(Cell cell, Object value, ExcelFieldType type) {
+    private void setCellValue(Cell cell, Object value, ExcelFieldType type, String datePattern) {
         if (type == null) {
             cell.setCellValue(Objects1.toString(value));
         } else {
@@ -344,7 +418,11 @@ public class ExcelSheet<T> {
                     }
                     break;
                 case DATE:
-                    cell.setCellValue(Converts.toDate(value));
+                    if (datePattern != null) {
+                        cell.setCellValue(Dates.format(Converts.toDate(value), datePattern));
+                    } else {
+                        cell.setCellValue(Converts.toDate(value));
+                    }
                     break;
                 default:
                     cell.setCellValue(Objects1.toString(value));
@@ -353,13 +431,16 @@ public class ExcelSheet<T> {
         }
     }
 
-    /**
-     * 获取当前表格
-     *
-     * @return sheet
-     */
     public Sheet getSheet() {
         return sheet;
+    }
+
+    public Workbook getWorkbook() {
+        return workbook;
+    }
+
+    public int getIndex() {
+        return index;
     }
 
 }

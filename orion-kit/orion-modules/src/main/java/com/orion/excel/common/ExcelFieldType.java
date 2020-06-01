@@ -1,4 +1,4 @@
-package com.orion.excel.builder;
+package com.orion.excel.common;
 
 /**
  * Excel 字段类型

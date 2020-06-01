@@ -58,6 +58,18 @@
             <version>${poi.version}</version>
         </dependency>
 
+        <!-- poi-streaming -->
+        <dependency>
+            <groupId>com.monitorjbl</groupId>
+            <artifactId>xlsx-streamer</artifactId>
+            <version>${poi.stream.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+            <version>${poi.stream.xml.version}</version>
+        </dependency>
+
         <!-- okhttp -->
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>

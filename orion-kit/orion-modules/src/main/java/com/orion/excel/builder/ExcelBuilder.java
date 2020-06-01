@@ -1,6 +1,5 @@
 package com.orion.excel.builder;
 
-import com.orion.able.Builderable;
 import com.orion.utils.Streams;
 import com.orion.utils.Valid;
 import com.orion.utils.file.Files1;
@@ -9,7 +8,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
@@ -18,13 +16,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Excel 构建器
+ * Excel 构建器 不支持注解
  *
  * @author ljh15
  * @version 1.0.0
  * @date 2020/4/6 21:59
  */
-public class ExcelBuilder implements Builderable<Workbook> {
+public class ExcelBuilder {
 
     /**
      * getter方法实例
@@ -40,6 +38,10 @@ public class ExcelBuilder implements Builderable<Workbook> {
         this.workbook = new SXSSFWorkbook();
     }
 
+    public ExcelBuilder(Workbook workbook) {
+        this.workbook = workbook;
+    }
+
     /**
      * 获取sheet
      *
@@ -47,7 +49,7 @@ public class ExcelBuilder implements Builderable<Workbook> {
      * @return ExcelSheet
      */
     public <T> ExcelSheet<T> newSheet() {
-        return new ExcelSheet<>(workbook.createSheet());
+        return new ExcelSheet<>(workbook, workbook.createSheet());
     }
 
     /**
@@ -58,11 +60,10 @@ public class ExcelBuilder implements Builderable<Workbook> {
      * @return ExcelSheet
      */
     public <T> ExcelSheet<T> newSheet(String name) {
-        return new ExcelSheet<>(workbook.createSheet(name));
+        return new ExcelSheet<>(workbook, workbook.createSheet(name));
     }
 
-    @Override
-    public Workbook build() {
+    public Workbook getWorkbook() {
         return workbook;
     }
 
@@ -73,7 +74,7 @@ public class ExcelBuilder implements Builderable<Workbook> {
      * @throws IOException IOException
      */
     public void write(OutputStream out) throws IOException {
-        workbook.write(out);
+        write(out, false);
     }
 
     /**
@@ -83,7 +84,9 @@ public class ExcelBuilder implements Builderable<Workbook> {
      * @throws IOException IOException
      */
     public void write(String file) throws IOException {
-        write(new File(file));
+        Valid.notNull(file, "file is null");
+        Files1.touch(file);
+        write(Files1.openOutputStream(file), true);
     }
 
     /**
@@ -95,12 +98,23 @@ public class ExcelBuilder implements Builderable<Workbook> {
     public void write(File file) throws IOException {
         Valid.notNull(file, "file is null");
         Files1.touch(file);
-        FileOutputStream out = null;
+        write(Files1.openOutputStream(file), true);
+    }
+
+    /**
+     * 写入到文件
+     *
+     * @param out   out
+     * @param close close
+     * @throws IOException IOException
+     */
+    private void write(OutputStream out, boolean close) throws IOException {
         try {
-            out = Files1.openOutputStream(file);
             workbook.write(out);
         } finally {
-            Streams.closeQuietly(out);
+            if (close) {
+                Streams.closeQuietly(out);
+            }
         }
     }
 
