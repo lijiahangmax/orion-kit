@@ -3,6 +3,8 @@ package com.orion.utils.ext;
 import com.orion.utils.*;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -545,6 +547,44 @@ public class StringExt implements Serializable {
             return def;
         }
         return Converts.toDate(s);
+    }
+
+    /**
+     * 转为 LocalDateTime
+     *
+     * @return LocalDateTime
+     */
+    public LocalDateTime toLocalDateTime() {
+        if (isEmpty()) {
+            return null;
+        }
+        return Converts.toLocalDateTime(s);
+    }
+
+    public LocalDateTime toLocalDateTime(LocalDateTime def) {
+        if (isEmpty()) {
+            return def;
+        }
+        return Converts.toLocalDateTime(s);
+    }
+
+    /**
+     * 转为 date
+     *
+     * @return date
+     */
+    public LocalDate toLocalDate() {
+        if (isEmpty()) {
+            return null;
+        }
+        return Converts.toLocalDate(s);
+    }
+
+    public LocalDate toLocalDate(LocalDate def) {
+        if (isEmpty()) {
+            return def;
+        }
+        return Converts.toLocalDate(s);
     }
 
     /**

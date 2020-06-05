@@ -1,6 +1,6 @@
 package com.orion.id;
 
-import com.orion.lang.SystemConst;
+import com.orion.utils.Systems;
 import com.orion.utils.Randoms;
 import com.orion.utils.Strings;
 
@@ -184,7 +184,7 @@ public class SnowFlakes {
      * @return 机器id
      */
     private static Long getDataCenterId() {
-        int[] ints = Strings.getCodePoints(SystemConst.HOST_NAME);
+        int[] ints = Strings.getCodePoints(Systems.HOST_NAME);
         int sums = 0;
         for (int i : ints) {
             sums += i;

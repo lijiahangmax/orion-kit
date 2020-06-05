@@ -3,12 +3,8 @@ package com.orion.excel.exporting;
 import com.orion.excel.annotation.ExportField;
 import com.orion.excel.annotation.ExportFont;
 import com.orion.excel.annotation.ExportSheet;
-import com.orion.excel.common.ExportFieldStyle;
-import com.orion.excel.common.ExportFontStyle;
-import com.orion.excel.common.ExportSheetStyle;
 import com.orion.lang.wrapper.Arg;
 import com.orion.utils.*;
-import com.orion.utils.collect.Lists;
 import com.orion.utils.file.Files1;
 import com.orion.utils.reflect.Fields;
 import com.orion.utils.reflect.Methods;
@@ -72,11 +68,6 @@ public class ExcelExport<T> {
     private ExportSheetStyle sheetStyle;
 
     /**
-     * 添加头之前跳过的行数
-     */
-    private int beforeSkip;
-
-    /**
      * 添加头之后跳过的行数
      */
     private int afterSkip;
@@ -107,14 +98,25 @@ public class ExcelExport<T> {
     private List<CellRangeAddress> merges;
 
     /**
-     * HSSF 调色板自定义颜色索引(可能会覆盖预设颜色), 最大只能有 64-32个自定义颜色
+     * 2003版本 调色板自定义颜色索引(可能会覆盖预设颜色), 最大只能有 64-32个自定义颜色
      */
     private short colorIndex = 32;
 
     /**
      * 头使用行的样式
      */
-    private boolean headUseRowStyle = false;
+    private boolean headUseRowStyle;
+
+    /**
+     * 是否跳过空行 (row == null)
+     * 空行没有颜色及边框
+     */
+    private boolean skipNullRow = true;
+
+    /**
+     * 是否跳过表头
+     */
+    private boolean skipHeader;
 
     public ExcelExport(Class<T> targetClass) {
         this(targetClass, null, new SXSSFWorkbook());
@@ -142,8 +144,7 @@ public class ExcelExport<T> {
      *
      * @return this
      */
-    public ExcelExport<T> skipBefore() {
-        beforeSkip += 1;
+    public ExcelExport<T> skip() {
         rowIndex += 1;
         return this;
     }
@@ -154,8 +155,7 @@ public class ExcelExport<T> {
      * @param i 行
      * @return this
      */
-    public ExcelExport<T> skipBefore(int i) {
-        beforeSkip += i;
+    public ExcelExport<T> skip(int i) {
         rowIndex += i;
         return this;
     }
@@ -178,6 +178,38 @@ public class ExcelExport<T> {
      */
     public ExcelExport<T> skipAfter(int i) {
         afterSkip += i;
+        return this;
+    }
+
+    /**
+     * 跳过空行
+     *
+     * @param skipNullRow true跳过
+     * @return this
+     */
+    public ExcelExport<T> skipNullRow(boolean skipNullRow) {
+        this.skipNullRow = skipNullRow;
+        return this;
+    }
+
+    /**
+     * 跳过表头
+     *
+     * @return this
+     */
+    public ExcelExport<T> skipHeader() {
+        this.skipHeader = true;
+        return this;
+    }
+
+    /**
+     * 跳过表头
+     *
+     * @param skipHeader true跳过
+     * @return this
+     */
+    public ExcelExport<T> skipHeader(boolean skipHeader) {
+        this.skipHeader = skipHeader;
         return this;
     }
 
@@ -423,6 +455,21 @@ public class ExcelExport<T> {
     }
 
     /**
+     * 添加数据
+     *
+     * @param rows rows
+     * @return this
+     */
+    public ExcelExport<T> addRows(List<T> rows) {
+        if (this.rows == null) {
+            this.rows = rows;
+        } else {
+            this.rows.addAll(rows);
+        }
+        return this;
+    }
+
+    /**
      * 合并单元格
      *
      * @param firstRow  合并开始行
@@ -558,6 +605,14 @@ public class ExcelExport<T> {
         if (f.wrapText()) {
             style.setWrapText(true);
         }
+        int border = f.border();
+        if (border != -1) {
+            style.setBorder(border);
+            String borderColor = f.borderColor();
+            if (!Strings.isEmpty(borderColor)) {
+                style.setBorderColor(borderColor);
+            }
+        }
         String datePattern = f.datePattern();
         if (!Strings.isEmpty(datePattern)) {
             style.setDatePattern(datePattern);
@@ -565,6 +620,9 @@ public class ExcelExport<T> {
         int index = f.value();
         String header = f.header();
         if (!Strings.isEmpty(header) && index != -1) {
+            if (headers == null) {
+                headers = new String[1];
+            }
             if (index > headers.length - 1) {
                 headers = Arrays1.resize(headers, index + 1);
             }
@@ -634,6 +692,29 @@ public class ExcelExport<T> {
                     style.setFillForegroundColor(this.paletteColor(backgroundColor));
                 }
                 style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            }
+            int border = info.getBorder();
+            if (border != -1) {
+                style.setBorderTop(BorderStyle.valueOf((short) border));
+                style.setBorderLeft(BorderStyle.valueOf((short) border));
+                style.setBorderBottom(BorderStyle.valueOf((short) border));
+                style.setBorderRight(BorderStyle.valueOf((short) border));
+                String borderColor = info.getBorderColor();
+                if (!Strings.isEmpty(borderColor)) {
+                    if (style instanceof XSSFCellStyle) {
+                        XSSFColor bc = new XSSFColor(Colors.toRgb(borderColor), null);
+                        ((XSSFCellStyle) style).setTopBorderColor(bc);
+                        ((XSSFCellStyle) style).setLeftBorderColor(bc);
+                        ((XSSFCellStyle) style).setBottomBorderColor(bc);
+                        ((XSSFCellStyle) style).setRightBorderColor(bc);
+                    } else if (workbook instanceof HSSFWorkbook) {
+                        short bc = this.paletteColor(borderColor);
+                        style.setTopBorderColor(bc);
+                        style.setLeftBorderColor(bc);
+                        style.setBottomBorderColor(bc);
+                        style.setRightBorderColor(bc);
+                    }
+                }
             }
             ExportFontStyle fontStyle = info.getFontStyle();
             if (fontStyle != null) {
@@ -732,7 +813,7 @@ public class ExcelExport<T> {
             }
         });
         // 表头
-        if (headers != null) {
+        if (!skipHeader && Arrays1.length(headers) != 0) {
             Row headRow = sheet.createRow(rowIndex++);
             Integer headerHeight = sheetStyle.getHeaderHeight();
             if (headerHeight != null) {
@@ -750,6 +831,12 @@ public class ExcelExport<T> {
         // 表格
         rowIndex += afterSkip;
         for (T row : rows) {
+            if (row == null) {
+                if (!skipNullRow) {
+                    rowIndex++;
+                }
+                continue;
+            }
             Row rowRow = sheet.createRow(rowIndex++);
             for (int i = 0; i < columnSize + 1; i++) {
                 Arg.Two<ExportFieldStyle, CellStyle> thisRowStyle = rowStyles.get(i);
@@ -853,11 +940,19 @@ public class ExcelExport<T> {
      * @return 总行数
      */
     public int getLines() {
-        return beforeSkip + afterSkip + (headers != null ? 1 : 0) + Lists.size(rows);
+        return sheet.getLastRowNum() + 1;
     }
 
     public Workbook getWorkbook() {
         return workbook;
+    }
+
+    public Sheet getSheet() {
+        return sheet;
+    }
+
+    public Class<T> getTargetClass() {
+        return targetClass;
     }
 
     public List<T> getRows() {

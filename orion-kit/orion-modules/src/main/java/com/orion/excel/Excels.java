@@ -1,10 +1,8 @@
 package com.orion.excel;
 
+import com.orion.excel.copying.CopySheet;
 import com.orion.utils.Dates;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.DateUtil;
-import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 
 import java.math.BigDecimal;
@@ -161,6 +159,20 @@ public class Excels {
      */
     public static void mergeCell(Sheet sheet, int row, int firstCell, int lastCell) {
         sheet.addMergedRegion(new CellRangeAddress(row, row, firstCell, lastCell));
+    }
+
+    /**
+     * 复制sheet
+     *
+     * @param resourceWorkbook 源表
+     * @param targetWorkbook   目标表
+     * @param resourceIndex    源sheet索引
+     * @return CopySheet
+     */
+    public static CopySheet copySheet(Workbook resourceWorkbook, Workbook targetWorkbook, int resourceIndex) {
+        Sheet resourceSheet = resourceWorkbook.getSheetAt(resourceIndex);
+        Sheet targetSheet = targetWorkbook.createSheet(resourceSheet.getSheetName());
+        return new CopySheet(resourceWorkbook, targetWorkbook, resourceSheet, targetSheet);
     }
 
 }

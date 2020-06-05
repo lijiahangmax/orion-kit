@@ -16,7 +16,7 @@ import java.lang.annotation.*;
 public @interface ExportField {
 
     /**
-     * 表格列索引
+     * 表格列索引 从0开始
      */
     int value();
 
@@ -53,6 +53,17 @@ public @interface ExportField {
      * 背景颜色
      */
     String backgroundColor() default "";
+
+    /**
+     * 边框
+     * 0默认(不设置) 1细边框 2中边框 3粗边框
+     */
+    int border() default -1;
+
+    /**
+     * 边框颜色
+     */
+    String borderColor() default "";
 
     /**
      * 时间格式化

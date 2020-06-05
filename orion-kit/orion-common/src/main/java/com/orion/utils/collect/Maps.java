@@ -272,6 +272,29 @@ public class Maps {
     }
 
     /**
+     * 多层转单层
+     *
+     * @param map 多层map
+     * @return 单层map
+     */
+    public static Map<String, Object> multiToSingleMap(Map<String, ?> map) {
+        Map<String, Object> result = new LinkedHashMap<>();
+        multiToSingleMap(map, "", result);
+        return result;
+    }
+
+    private static void multiToSingleMap(Map<String, ?> map, String nowKey, Map<String, Object> result) {
+        for (String key : map.keySet()) {
+            Object value = map.get(key);
+            if (value instanceof Map) {
+                multiToSingleMap(((Map<String, ?>) value), nowKey + key + ".", result);
+            } else {
+                result.put(nowKey + key, value);
+            }
+        }
+    }
+
+    /**
      * 从map随机获取一个元素
      *
      * @param map map

@@ -16,17 +16,17 @@ import java.lang.annotation.*;
 public @interface ExportFont {
 
     /**
-     * 设置字体名称
+     * 字体名称
      */
     String fontName() default "";
 
     /**
-     * 设置字体大小
+     * 字体大小
      */
     int fontSize() default -1;
 
     /**
-     * 设置字体颜色
+     * 字体颜色
      */
     String fontColor() default "";
 

@@ -27,7 +27,7 @@ public class SystemClock {
     /**
      * 获取当前毫秒
      *
-     * @return
+     * @return 当前毫秒数
      */
     public static long now() {
         return InstanceHolder.INSTANCE.currentTimeMillis();
@@ -36,7 +36,7 @@ public class SystemClock {
     /**
      * 获取当前毫秒数
      *
-     * @return
+     * @return 当前毫秒数
      */
     public static String nowDate() {
         return new Timestamp(InstanceHolder.INSTANCE.currentTimeMillis()).toString();

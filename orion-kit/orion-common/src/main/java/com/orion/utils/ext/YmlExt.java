@@ -23,7 +23,7 @@ import java.util.Set;
 @SuppressWarnings("unchecked")
 public class YmlExt {
 
-    private ConvertHashMap convertHashMap;
+    private ConvertHashMap<String, Object> convertHashMap;
 
     public YmlExt(String path) {
         InputStream inputStream = null;
@@ -63,12 +63,27 @@ public class YmlExt {
         }
     }
 
-    public ConvertHashMap getValues() {
-        return convertHashMap;
+    private YmlExt() {
+    }
+
+    /**
+     * 获取YmlExt
+     *
+     * @param yml ymlString
+     * @return YmlExt
+     */
+    public static YmlExt toYmlExt(String yml) {
+        YmlExt ymlExt = new YmlExt();
+        ymlExt.convertHashMap = Yaml.loadType(yml, ConvertHashMap.class);
+        return ymlExt;
     }
 
     public ConvertHashSet getKeys() {
         return new ConvertHashSet(convertHashMap.keySet());
+    }
+
+    public ConvertHashMap getValues() {
+        return convertHashMap;
     }
 
     /**
@@ -162,4 +177,7 @@ public class YmlExt {
         }
     }
 
+    public ConvertHashMap<String, Object> getMap() {
+        return convertHashMap;
+    }
 }

@@ -1,17 +1,21 @@
-package com.orion.lang;
+package com.orion.utils;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
- * 系统常量
+ * 系统工具类
  *
  * @author ljh15
  * @version 1.0.0
  * @date 2020/1/16 16:56
  */
-public class SystemConst {
+public class Systems {
 
-    private SystemConst() {
+    private Systems() {
     }
 
     /**
@@ -100,6 +104,33 @@ public class SystemConst {
     }
 
     /**
+     * 添加一个系统关闭的钩子 可以取消
+     *
+     * @param thread hook
+     */
+    public static void addShutdownHook(Thread thread) {
+        Runtime.getRuntime().addShutdownHook(thread);
+    }
+
+    /**
+     * 添加一个系统关闭的钩子 不可取消
+     *
+     * @param runnable hook
+     */
+    public static void addShutdownHook(Runnable runnable) {
+        Runtime.getRuntime().addShutdownHook(new Thread(runnable));
+    }
+
+    /**
+     * 移除一个系统关闭的钩子
+     *
+     * @param thread hook
+     */
+    public static void removeShutdownHook(Thread thread) {
+        Runtime.getRuntime().removeShutdownHook(thread);
+    }
+
+    /**
      * 获取环境变量
      *
      * @param key key
@@ -107,6 +138,15 @@ public class SystemConst {
      */
     public static String getEnv(String key) {
         return System.getenv(key);
+    }
+
+    /**
+     * 获取环境变量
+     *
+     * @return ignore
+     */
+    public static Map<String, String> getEnv() {
+        return System.getenv();
     }
 
     /**
@@ -128,6 +168,52 @@ public class SystemConst {
      */
     public static String getProperty(String key, String def) {
         return System.getProperty(key, def);
+    }
+
+    /**
+     * 获取系统属性
+     *
+     * @return value
+     */
+    public static Properties getProperties() {
+        return System.getProperties();
+    }
+
+    /**
+     * 设置系统属性
+     *
+     * @param key   key
+     * @param value value
+     * @return value
+     */
+    public static String setProperty(String key, String value) {
+        return System.setProperty(key, value);
+    }
+
+    /**
+     * 设置系统属性
+     *
+     * @param map 属性
+     */
+    public static void setProperty(Map<String, String> map) {
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            System.setProperty(entry.getKey(), entry.getValue());
+        }
+    }
+
+    /**
+     * 移除系统属性
+     *
+     * @param keys keys
+     * @return keys values
+     */
+    public static Map<String, String> clearProperty(List<String> keys) {
+        Map<String, String> map = new HashMap<>();
+        for (String key : keys) {
+            String value = System.clearProperty(key);
+            map.put(key, value);
+        }
+        return map;
     }
 
 }

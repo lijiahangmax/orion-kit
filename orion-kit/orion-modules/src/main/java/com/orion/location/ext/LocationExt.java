@@ -1,6 +1,6 @@
 package com.orion.location.ext;
 
-import com.orion.lang.SystemConst;
+import com.orion.utils.Systems;
 import com.orion.location.ext.core.LocationSeeker;
 import com.orion.location.region.LocationRegions;
 import com.orion.location.region.core.Region;
@@ -23,7 +23,7 @@ public class LocationExt {
     /**
      * db文件路径
      */
-    private static final String DAT_PATH = SystemConst.HOME_DIR + "/region/" + "region.dat";
+    private static final String DAT_PATH = Systems.HOME_DIR + "/region/" + "region.dat";
 
     /**
      * db文件
@@ -33,7 +33,7 @@ public class LocationExt {
     /**
      * db文件目录
      */
-    private static final File DAT_FILE_DIR = new File(SystemConst.HOME_DIR + "/region/");
+    private static final File DAT_FILE_DIR = new File(Systems.HOME_DIR + "/region/");
 
     /**
      * 查询器

@@ -6,6 +6,7 @@ import com.orion.utils.Valid;
 import com.orion.utils.collect.Lists;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,6 +27,67 @@ import static java.util.stream.Collectors.toMap;
 public class Fields {
 
     private Fields() {
+    }
+
+    /**
+     * 通过方法名获取字段名 仅限于 getter setter
+     *
+     * @param methodName 方法名称
+     * @return 字段名称
+     */
+    public static String getFieldNameByMethodName(String methodName) {
+        if (Strings.isBlank(methodName)) {
+            return null;
+        }
+        methodName = methodName.trim();
+        String fieldName = null;
+        int length = methodName.length();
+        if (methodName.startsWith(Methods.GETTER_PREFIX) || methodName.startsWith(Methods.SETTER_PREFIX)) {
+            if (length != 3) {
+                fieldName = methodName.substring(3, length);
+            }
+        } else if (methodName.startsWith(Methods.BOOLEAN_GETTER_PREFIX)) {
+            if (length != 2) {
+                fieldName = methodName.substring(2, length);
+            }
+        }
+        if (fieldName != null) {
+            return Strings.firstLower(fieldName);
+        }
+        return null;
+    }
+
+    /**
+     * 通过方法获取字段 仅限于 getter setter
+     *
+     * @param methodClazz 方法类
+     * @param method      方法
+     * @return 字段
+     */
+    public static Field getFieldByMethod(Class<?> methodClazz, Method method) {
+        if (method == null) {
+            return null;
+        }
+        String fieldName = getFieldNameByMethodName(method.getName());
+        if (fieldName != null) {
+            return getAccessibleField(methodClazz, fieldName);
+        }
+        return null;
+    }
+
+    /**
+     * 通过方法获取字段 仅限于 getter setter
+     *
+     * @param methodClazz 方法类
+     * @param methodName  方法名称
+     * @return 字段
+     */
+    public static Field getFieldByMethodName(Class<?> methodClazz, String methodName) {
+        String fieldName = getFieldNameByMethodName(methodName);
+        if (fieldName != null) {
+            return getAccessibleField(methodClazz, fieldName);
+        }
+        return null;
     }
 
     /**

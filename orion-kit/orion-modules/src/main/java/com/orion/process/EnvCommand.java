@@ -1,6 +1,6 @@
 package com.orion.process;
 
-import com.orion.lang.SystemConst;
+import com.orion.utils.Systems;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ public class EnvCommand {
     static final String SPACE = " ";
 
     static {
-        if (SystemConst.OS_NAME.toLowerCase().contains("windows")) {
+        if (Systems.OS_NAME.toLowerCase().contains("windows")) {
             COMMAND.add("cmd");
             COMMAND.add("/c");
         } else {

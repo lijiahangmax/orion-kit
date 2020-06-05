@@ -2,15 +2,11 @@ package com.orion.utils.reflect;
 
 import com.orion.utils.*;
 import com.orion.utils.collect.Lists;
-import com.orion.utils.math.BigIntegers;
-import com.orion.utils.math.Decimals;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -32,36 +28,76 @@ public class Methods {
     /**
      * set方法前缀
      */
-    private static final String SETTER_PREFIX = "set";
+    protected static final String SETTER_PREFIX = "set";
 
     /**
      * get方法前缀
      */
-    private static final String GETTER_PREFIX = "get";
+    protected static final String GETTER_PREFIX = "get";
 
     /**
      * boolean get方法前缀
      */
-    private static final String BOOLEAN_GETTER_PREFIX = "is";
+    protected static final String BOOLEAN_GETTER_PREFIX = "is";
 
     private Methods() {
+    }
+
+    /**
+     * 通过字段名称获取getter方法
+     *
+     * @param fieldName fieldName
+     * @return getter方法
+     */
+    public static String getGetterMethodNameByFieldName(String fieldName) {
+        if (Strings.isBlank(fieldName)) {
+            return null;
+        }
+        return GETTER_PREFIX + Strings.firstUpper(fieldName.trim());
+    }
+
+    /**
+     * 通过字段名称获取getter方法
+     *
+     * @param fieldName      fieldName
+     * @param isBooleanClass 是否为boolean.class
+     * @return getter方法
+     */
+    public static String getGetterMethodNameByFieldName(String fieldName, boolean isBooleanClass) {
+        if (Strings.isBlank(fieldName)) {
+            return null;
+        }
+        return (isBooleanClass ? BOOLEAN_GETTER_PREFIX : GETTER_PREFIX) + Strings.firstUpper(fieldName.trim());
+    }
+
+    /**
+     * 通过字段名称获取setter方法
+     *
+     * @param fieldName fieldName
+     * @return setter方法
+     */
+    public static String getSetterMethodNameByFieldName(String fieldName) {
+        if (Strings.isBlank(fieldName)) {
+            return null;
+        }
+        return SETTER_PREFIX + Strings.firstUpper(fieldName.trim());
     }
 
     /**
      * 通过方法获取所有的getter方法
      *
      * @param clazz class
-     * @return get方法
+     * @return getter方法
      */
     public static List<Method> getAllGetterMethod(Class<?> clazz) {
         List<Method> list = new ArrayList<>();
         for (Method method : clazz.getMethods()) {
             if (!"getClass".equals(method.getName()) && !Modifier.isStatic(method.getModifiers()) && method.getParameters().length == 0) {
                 String name = method.getName();
-                if (name.startsWith("get") && name.length() != 3 && !"void".equals(method.getReturnType().getName())) {
+                if (name.startsWith(GETTER_PREFIX) && name.length() != 3 && !"void".equals(method.getReturnType().getName())) {
                     setAccessible(method);
                     list.add(method);
-                } else if (method.getName().startsWith("is") && method.getReturnType().equals(boolean.class)) {
+                } else if (method.getName().startsWith(BOOLEAN_GETTER_PREFIX) && method.getReturnType().equals(boolean.class)) {
                     setAccessible(method);
                     list.add(method);
                 }
@@ -74,13 +110,13 @@ public class Methods {
      * 通过方法获取所有的setter方法
      *
      * @param clazz class
-     * @return set方法
+     * @return setter方法
      */
     public static List<Method> getAllSetterMethod(Class<?> clazz) {
         List<Method> list = new ArrayList<>();
         for (Method method : clazz.getMethods()) {
             String name = method.getName();
-            if (name.startsWith("set") && name.length() != 3 && !Modifier.isStatic(method.getModifiers()) && method.getParameters().length == 1) {
+            if (name.startsWith(SETTER_PREFIX) && name.length() != 3 && !Modifier.isStatic(method.getModifiers()) && method.getParameters().length == 1) {
                 setAccessible(method);
                 list.add(method);
             }
@@ -92,20 +128,23 @@ public class Methods {
      * 通过字段获取所有的getter方法
      *
      * @param clazz class
-     * @return get方法
+     * @return getter方法
      */
     public static List<Method> getAllGetterMethodByField(Class<?> clazz) {
         List<Method> list = new ArrayList<>();
         List<Field> fields = Fields.getFieldList(clazz);
         for (Field field : fields) {
             if (!Modifier.isStatic(field.getModifiers())) {
-                String methodName;
+                Method method;
                 if (field.getType().equals(boolean.class)) {
-                    methodName = "is" + Strings.firstUpper(field.getName());
+                    String fieldName = Strings.firstUpper(field.getName());
+                    method = getAccessibleMethod(clazz, BOOLEAN_GETTER_PREFIX + fieldName, 0);
+                    if (method == null) {
+                        method = getAccessibleMethod(clazz, GETTER_PREFIX + fieldName, 0);
+                    }
                 } else {
-                    methodName = "get" + Strings.firstUpper(field.getName());
+                    method = getAccessibleMethod(clazz, GETTER_PREFIX + Strings.firstUpper(field.getName()), 0);
                 }
-                Method method = getAccessibleMethod(clazz, methodName, 0);
                 if (method != null) {
                     list.add(method);
                 }
@@ -118,56 +157,94 @@ public class Methods {
      * 通过字段获取所有的setter方法
      *
      * @param clazz class
-     * @return set方法
+     * @return setter方法
      */
     public static List<Method> getAllSetterMethodByField(Class<?> clazz) {
         List<Method> list = new ArrayList<>();
         List<Field> fields = Fields.getFieldList(clazz);
         for (Field field : fields) {
             if (!Modifier.isStatic(field.getModifiers())) {
-                String methodName = "set" + Strings.firstUpper(field.getName());
-                try {
-                    list.add(getAccessibleMethod(clazz, methodName, field.getType()));
-                } catch (Exception e) {
-                    // ignore
+                String methodName = SETTER_PREFIX + Strings.firstUpper(field.getName());
+                Method method = getAccessibleMethod(clazz, methodName, field.getType());
+                if (method != null) {
+                    list.add(method);
                 }
             }
         }
         return list;
     }
 
-    //---
-
     /**
-     * 通过字段获取对应的getter方法
+     * 通过字段获取getter方法
      *
      * @param clazz class
      * @param field field
      * @return get方法
      */
     public static Method getGetterMethodByField(Class<?> clazz, Field field) {
-        String methodName;
+        Method method;
         if (field.getType().equals(boolean.class)) {
-            methodName = "is" + Strings.firstUpper(field.getName());
+            String fieldName = Strings.firstUpper(field.getName());
+            method = getAccessibleMethod(clazz, BOOLEAN_GETTER_PREFIX + fieldName, 0);
+            if (method == null) {
+                method = getAccessibleMethod(clazz, GETTER_PREFIX + fieldName, 0);
+            }
         } else {
-            methodName = "get" + Strings.firstUpper(field.getName());
+            String methodName = GETTER_PREFIX + Strings.firstUpper(field.getName());
+            method = getAccessibleMethod(clazz, methodName, 0);
         }
-        return getAccessibleMethod(clazz, methodName, 0);
+        return method;
     }
 
     /**
-     * 通过字段获取所有的setter方法
+     * 通过字段名称获取getter方法
      *
      * @param clazz class
-     * @return set方法
+     * @param field fieldName
+     * @return getter方法
+     */
+    public static Method getGetterMethodByFieldName(Class<?> clazz, String fieldName) {
+        if (Strings.isBlank(fieldName)) {
+            return null;
+        }
+        fieldName = Strings.firstUpper(fieldName.trim());
+        Method method = getAccessibleMethod(clazz, GETTER_PREFIX + fieldName, 0);
+        if (method == null) {
+            method = getAccessibleMethod(clazz, BOOLEAN_GETTER_PREFIX + fieldName, 0);
+        }
+        return method;
+    }
+
+    /**
+     * 通过字段名称获取setter方法
+     *
+     * @param clazz class
+     * @param field field
+     * @return setter方法
      */
     public static Method getSetterMethodByField(Class<?> clazz, Field field) {
-        String methodName = "set" + Strings.firstUpper(field.getName());
+        String methodName = SETTER_PREFIX + Strings.firstUpper(field.getName());
         return getAccessibleMethod(clazz, methodName, field.getType());
     }
 
     /**
-     * 获取对象的DeclaredMethod, 并强制设置为可访问
+     * 通过字段获取setter方法
+     *
+     * @param clazz class
+     * @param field field
+     * @return setter方法
+     */
+    public static Method getSetterMethodByFieldName(Class<?> clazz, String fieldName) {
+        if (Strings.isBlank(fieldName)) {
+            return null;
+        }
+        fieldName = fieldName.trim();
+        String methodName = SETTER_PREFIX + Strings.firstUpper(fieldName);
+        return getAccessibleMethod(clazz, methodName, 1);
+    }
+
+    /**
+     * 获取对象匹配方法名和参数类型的DeclaredMethod, 并强制设置为可访问
      *
      * @param clazz          class
      * @param methodName     方法名
@@ -189,7 +266,7 @@ public class Methods {
     }
 
     /**
-     * 获取对象匹配参数长度的第一个DeclaredMethod, 并强制设置为可访问
+     * 获取对象匹配方法名和参数长度的第一个DeclaredMethod, 并强制设置为可访问
      *
      * @param clazz      class
      * @param methodName 方法名称
@@ -211,7 +288,28 @@ public class Methods {
     }
 
     /**
-     * 获取对象匹配参数长度的DeclaredMethod, 并强制设置为可访问
+     * 获取对象匹配方法名的第一个DeclaredMethod, 并强制设置为可访问
+     *
+     * @param clazz      class
+     * @param methodName 方法名称
+     * @return 方法对象
+     */
+    public static Method getAccessibleMethod(Class<?> clazz, String methodName) {
+        Valid.notNull(clazz, "Method class is null");
+        for (Class<?> searchType = clazz; searchType != Object.class; searchType = searchType.getSuperclass()) {
+            Method[] methods = searchType.getDeclaredMethods();
+            for (Method method : methods) {
+                if (method.getName().equals(methodName)) {
+                    setAccessible(method);
+                    return method;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取对象匹配方法名和参数长度的DeclaredMethod, 并强制设置为可访问
      *
      * @param clazz      class
      * @param methodName 方法名称
@@ -226,6 +324,36 @@ public class Methods {
             Method[] searchMethods = searchType.getDeclaredMethods();
             for (Method method : searchMethods) {
                 if (method.getName().equals(methodName) && method.getParameterTypes().length == argsNum) {
+                    int len = methods.length;
+                    if (i + 1 >= len) {
+                        methods = Arrays1.resize(methods, len + 2, Method[]::new);
+                    }
+                    setAccessible(method);
+                    methods[i++] = method;
+                }
+            }
+        }
+        if (i != methods.length) {
+            methods = Arrays1.resize(methods, i, Method[]::new);
+        }
+        return methods;
+    }
+
+    /**
+     * 获取对象匹配方法名的DeclaredMethod, 并强制设置为可访问
+     *
+     * @param clazz      class
+     * @param methodName 方法名称
+     * @return 方法对象
+     */
+    public static Method[] getAccessibleMethods(Class<?> clazz, String methodName) {
+        Valid.notNull(clazz, "Method class is null");
+        int i = 0;
+        Method[] methods = new Method[0];
+        for (Class<?> searchType = clazz; searchType != Object.class; searchType = searchType.getSuperclass()) {
+            Method[] searchMethods = searchType.getDeclaredMethods();
+            for (Method method : searchMethods) {
+                if (method.getName().equals(methodName)) {
                     int len = methods.length;
                     if (i + 1 >= len) {
                         methods = Arrays1.resize(methods, len + 2, Method[]::new);

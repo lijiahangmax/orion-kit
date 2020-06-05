@@ -35,8 +35,8 @@ public @interface ExportSheet {
     int rowHeight() default -1;
 
     /**
-     * 头是否使用列的样式
+     * 表头是否使用数据列的样式
      */
-    boolean headerUseRowStyle() default false;
+    boolean headerUseRowStyle() default true;
 
 }

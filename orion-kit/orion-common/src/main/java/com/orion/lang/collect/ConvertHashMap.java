@@ -9,6 +9,8 @@ import com.orion.utils.math.Decimals;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 
@@ -366,6 +368,30 @@ public class ConvertHashMap<K, V> extends HashMap<K, V> {
             return def;
         }
         return Converts.toDate(v);
+    }
+
+    public LocalDateTime getLocalDateTime(K k) {
+        return Converts.toLocalDateTime(get(k));
+    }
+
+    public LocalDateTime getLocalDateTime(K k, LocalDateTime def) {
+        V v = get(k);
+        if (v == null) {
+            return def;
+        }
+        return Converts.toLocalDateTime(v);
+    }
+
+    public LocalDate getLocalDate(K k) {
+        return Converts.toLocalDate(get(k));
+    }
+
+    public LocalDate getLocalDate(K k, LocalDate def) {
+        V v = get(k);
+        if (v == null) {
+            return def;
+        }
+        return Converts.toLocalDate(v);
     }
 
     public BigDecimal getBigDecimal(K k) {

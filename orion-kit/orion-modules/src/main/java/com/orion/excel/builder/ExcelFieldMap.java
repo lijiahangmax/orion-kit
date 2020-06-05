@@ -1,6 +1,5 @@
 package com.orion.excel.builder;
 
-import com.orion.excel.common.ExcelFieldType;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 

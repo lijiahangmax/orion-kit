@@ -6,12 +6,11 @@ import com.orion.lang.collect.MultiHashMap;
 import com.orion.utils.math.BigIntegers;
 import com.orion.utils.math.Decimals;
 import com.orion.utils.reflect.Classes;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,7 +38,8 @@ public class Converts {
 
     private static final Conversion TO_BYTE = Converts::toByte, TO_SHORT = Converts::toShort, TO_INT = Converts::toInt, TO_LONG = Converts::toLong,
             TO_FLOAT = Converts::toFloat, TO_DOUBLE = Converts::toDouble, TO_BOOLEAN = Converts::toBoolean, TO_CHAR = Converts::toChar,
-            TO_DECIMAL = Decimals::toDecimal, TO_BIG_INTEGER = BigIntegers::toBigInteger, TO_DATE = Dates::date, TO_STRING = Converts::toString;
+            TO_DECIMAL = Decimals::toDecimal, TO_BIG_INTEGER = BigIntegers::toBigInteger,
+            TO_DATE = Dates::date, TO_LOCAL_DATE_TIME = Dates::localDateTime, TO_LOCAL_DATE = Dates::localDate, TO_STRING = Converts::toString;
 
     // -------------------- convert --------------------
 
@@ -245,6 +245,8 @@ public class Converts {
         CONVERT_MULTI_MAP.put(Long.class, BigInteger.class, TO_BIG_INTEGER);
         CONVERT_MULTI_MAP.put(Long.class, String.class, TO_STRING);
         CONVERT_MULTI_MAP.put(Long.class, Date.class, TO_DATE);
+        CONVERT_MULTI_MAP.put(Long.class, LocalDateTime.class, TO_LOCAL_DATE_TIME);
+        CONVERT_MULTI_MAP.put(Long.class, LocalDate.class, TO_LOCAL_DATE);
     }
 
     private static void lazyLoadFloat() {
@@ -259,7 +261,6 @@ public class Converts {
         CONVERT_MULTI_MAP.put(Float.class, BigDecimal.class, TO_DECIMAL);
         CONVERT_MULTI_MAP.put(Float.class, BigInteger.class, TO_BIG_INTEGER);
         CONVERT_MULTI_MAP.put(Float.class, String.class, TO_STRING);
-        CONVERT_MULTI_MAP.put(Float.class, Date.class, TO_DATE);
     }
 
     private static void lazyLoadDouble() {
@@ -317,6 +318,8 @@ public class Converts {
         CONVERT_MULTI_MAP.put(String.class, BigDecimal.class, TO_DECIMAL);
         CONVERT_MULTI_MAP.put(String.class, BigInteger.class, TO_BIG_INTEGER);
         CONVERT_MULTI_MAP.put(String.class, Date.class, TO_DATE);
+        CONVERT_MULTI_MAP.put(String.class, LocalDateTime.class, TO_LOCAL_DATE_TIME);
+        CONVERT_MULTI_MAP.put(String.class, LocalDate.class, TO_LOCAL_DATE);
     }
 
     // -------------------- toString --------------------
@@ -329,6 +332,14 @@ public class Converts {
 
     public static Date toDate(Object o) {
         return Dates.date(o);
+    }
+
+    public static LocalDate toLocalDate(Object o) {
+        return Dates.localDate(o);
+    }
+
+    public static LocalDateTime toLocalDateTime(Object o) {
+        return Dates.localDateTime(o);
     }
 
     // -------------------- toByte --------------------

@@ -6,6 +6,8 @@ import com.orion.utils.math.Decimals;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -61,6 +63,10 @@ class TypeInfer {
             return Converts.toString(o);
         } else if (clazz.equals(Date.class)) {
             return Converts.toDate(o);
+        } else if (clazz.equals(LocalDateTime.class)) {
+            return Converts.toLocalDateTime(o);
+        } else if (clazz.equals(LocalDate.class)) {
+            return Converts.toLocalDate(o);
         } else if (clazz.equals(BigDecimal.class)) {
             return Decimals.toDecimal(o);
         } else if (clazz.equals(BigInteger.class)) {

@@ -1,4 +1,4 @@
-package com.orion.excel.common;
+package com.orion.excel.exporting;
 
 import java.io.Serializable;
 
@@ -42,6 +42,17 @@ public class ExportFieldStyle implements Serializable {
      * 字体样式
      */
     private ExportFontStyle fontStyle;
+
+    /**
+     * 是否设置边框
+     * 0默认(不设置) 1细边框 2中边框 3粗边框
+     */
+    private int border;
+
+    /**
+     * 边框颜色
+     */
+    private String borderColor;
 
     /**
      * 时间格式
@@ -111,6 +122,24 @@ public class ExportFieldStyle implements Serializable {
         return this;
     }
 
+    public int getBorder() {
+        return border;
+    }
+
+    public ExportFieldStyle setBorder(int border) {
+        this.border = border;
+        return this;
+    }
+
+    public String getBorderColor() {
+        return borderColor;
+    }
+
+    public ExportFieldStyle setBorderColor(String borderColor) {
+        this.borderColor = borderColor;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "ExportFieldStyle{" +
@@ -118,8 +147,10 @@ public class ExportFieldStyle implements Serializable {
                 ", wrapText=" + wrapText +
                 ", verticalAlign=" + verticalAlign +
                 ", align=" + align +
-                ", backgroundColor=" + backgroundColor +
+                ", backgroundColor='" + backgroundColor + '\'' +
                 ", fontStyle=" + fontStyle +
+                ", border=" + border +
+                ", borderColor='" + borderColor + '\'' +
                 ", datePattern='" + datePattern + '\'' +
                 '}';
     }

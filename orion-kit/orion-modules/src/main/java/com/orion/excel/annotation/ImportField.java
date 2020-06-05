@@ -16,7 +16,7 @@ import java.lang.annotation.*;
 public @interface ImportField {
 
     /**
-     * 导出表格列索引
+     * 导出表格列索引 从0开始
      */
     int value();
 

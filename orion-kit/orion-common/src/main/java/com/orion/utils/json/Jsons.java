@@ -21,7 +21,7 @@ import static com.alibaba.fastjson.serializer.SerializerFeature.WriteMapNullValu
  *
  * @author Li
  * @version 1.0.0
- * @date 2019/8/19 To0:07
+ * @date 2019/8/19 00:07
  */
 public class Jsons {
 
@@ -95,7 +95,7 @@ public class Jsons {
      * @return ignore
      */
     public static <T> T toBean(String json, Class<T> targetClass) {
-        if (Strings.isEmpty(json)) {
+        if (Strings.isBlank(json)) {
             return null;
         }
         try {
@@ -115,7 +115,7 @@ public class Jsons {
      * @return ignore
      */
     public static <T> T toBean(String json, Class<T> targetClass, Feature... features) {
-        if (Strings.isEmpty(json)) {
+        if (Strings.isBlank(json)) {
             return null;
         }
         try {
@@ -134,7 +134,7 @@ public class Jsons {
      * @return ignore
      */
     public static <T> List<T> toList(String json, Class<T> targetClass) {
-        if (Strings.isEmpty(json)) {
+        if (Strings.isBlank(json)) {
             return new ArrayList<>();
         }
         try {
@@ -151,7 +151,7 @@ public class Jsons {
      * @return ignore
      */
     public static Map<String, Object> toMap(String json) {
-        if (Strings.isEmpty(json)) {
+        if (Strings.isBlank(json)) {
             return new HashMap<>(16);
         }
         try {
@@ -168,7 +168,7 @@ public class Jsons {
      * @return ignore
      */
     public static JSONObject toJSONObject(String json) {
-        if (Strings.isEmpty(json)) {
+        if (Strings.isBlank(json)) {
             return new JSONObject();
         }
         try {
@@ -185,7 +185,7 @@ public class Jsons {
      * @return ignore
      */
     public static JSONArray toJSONArray(String json) {
-        if (Strings.isEmpty(json)) {
+        if (Strings.isBlank(json)) {
             return new JSONArray();
         }
         try {
@@ -216,11 +216,11 @@ public class Jsons {
      * @return json
      */
     public static String encode(String json) {
-        if (Strings.isEmpty(json)) {
+        if (Strings.isBlank(json)) {
             return "";
         }
         json = JSON.toJSONString(json);
-        if (Strings.isEmpty(json)) {
+        if (Strings.isBlank(json)) {
             return "";
         }
         json = json.substring(1, json.length() - 1);
@@ -234,7 +234,7 @@ public class Jsons {
      * @return json
      */
     public static String decode(String json) {
-        if (Strings.isEmpty(json)) {
+        if (Strings.isBlank(json)) {
             return "";
         }
         return json.replaceAll("\\\\", "");
@@ -247,7 +247,7 @@ public class Jsons {
      * @return json
      */
     public static String compress(String json) {
-        if (Strings.isEmpty(json)) {
+        if (Strings.isBlank(json)) {
             return "";
         }
         return json.replaceAll("\n", "")

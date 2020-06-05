@@ -7,6 +7,8 @@ import com.orion.utils.math.Decimals;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 
@@ -346,6 +348,30 @@ public class ConvertArrayList<E> extends ArrayList<E> {
             return def;
         }
         return Converts.toDate(e);
+    }
+
+    public LocalDateTime getLocalDateTime(int i) {
+        return Converts.toLocalDateTime(get(i));
+    }
+
+    public LocalDateTime getLocalDateTime(int i, LocalDateTime def) {
+        E e = get(i);
+        if (e == null) {
+            return def;
+        }
+        return Converts.toLocalDateTime(e);
+    }
+
+    public LocalDate getLocalDate(int i) {
+        return Converts.toLocalDate(get(i));
+    }
+
+    public LocalDate getLocalDate(int i, LocalDate def) {
+        E e = get(i);
+        if (e == null) {
+            return def;
+        }
+        return Converts.toLocalDate(e);
     }
 
     public BigDecimal getBigDecimal(int i) {

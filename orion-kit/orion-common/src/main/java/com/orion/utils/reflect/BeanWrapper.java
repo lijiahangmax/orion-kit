@@ -2,6 +2,7 @@ package com.orion.utils.reflect;
 
 import com.orion.lang.collect.MultiHashMap;
 import com.orion.utils.Exceptions;
+import com.orion.utils.Objects1;
 import com.orion.utils.Strings;
 import com.orion.utils.Valid;
 
@@ -83,7 +84,7 @@ public class BeanWrapper {
         }
         List<Method> getterMethods = getAllGetterMethod(bean.getClass());
         for (Method getterMethod : getterMethods) {
-            String fieldName = getFieldNameByGetterMethod(getterMethod);
+            String fieldName = Fields.getFieldNameByMethodName(getterMethod.getName());
             if (fieldMap != null) {
                 String s = fieldMap.get(fieldName);
                 if (s != null) {
@@ -386,9 +387,9 @@ public class BeanWrapper {
             if (isIgnore(targetFieldName, ignores)) {
                 continue;
             }
-            String sourceFieldName = nameAlias(targetFieldName, fieldMap);
+            String sourceFieldName = getFieldNameAlias(targetFieldName, fieldMap);
             for (Method sourceGetter : sourceGetters) {
-                if (getFieldNameByGetterMethod(sourceGetter).equals(sourceFieldName)) {
+                if (Objects1.eq(Fields.getFieldNameByMethodName(sourceGetter.getName()), sourceFieldName)) {
                     try {
                         Object sourceValue = Methods.invokeMethod(source, sourceGetter);
                         if (sourceValue != null) {
@@ -414,7 +415,7 @@ public class BeanWrapper {
         return false;
     }
 
-    private static String nameAlias(String name, Map<String, String> fieldMap) {
+    private static String getFieldNameAlias(String name, Map<String, String> fieldMap) {
         if (fieldMap != null) {
             for (Map.Entry<String, String> entry : fieldMap.entrySet()) {
                 if (entry.getValue().equals(name)) {
@@ -446,22 +447,6 @@ public class BeanWrapper {
             return false;
         }
         return list.contains(paramClass);
-    }
-
-    /**
-     * 通过method获取字段名
-     *
-     * @param m method
-     * @return 字段名
-     */
-    private static String getFieldNameByGetterMethod(Method m) {
-        String name = m.getName();
-        if (m.getReturnType().equals(boolean.class)) {
-            name = name.substring(2, name.length());
-        } else {
-            name = name.substring(3, name.length());
-        }
-        return Strings.firstLower(name);
     }
 
     /**

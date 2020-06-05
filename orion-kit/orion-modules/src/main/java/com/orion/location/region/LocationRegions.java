@@ -1,6 +1,6 @@
 package com.orion.location.region;
 
-import com.orion.lang.SystemConst;
+import com.orion.utils.Systems;
 import com.orion.location.region.block.DataBlock;
 import com.orion.location.region.config.DbConfig;
 import com.orion.location.region.core.DbSearcher;
@@ -28,7 +28,7 @@ public class LocationRegions {
     /**
      * db文件路径
      */
-    private static final String DB_PATH = SystemConst.HOME_DIR + "/region/" + "region.db";
+    private static final String DB_PATH = Systems.HOME_DIR + "/region/" + "region.db";
 
     /**
      * db文件
@@ -38,7 +38,7 @@ public class LocationRegions {
     /**
      * db文件目录
      */
-    private static final File DB_FILE_DIR = new File(SystemConst.HOME_DIR + "/region/");
+    private static final File DB_FILE_DIR = new File(Systems.HOME_DIR + "/region/");
 
     /**
      * 是否初始化成功

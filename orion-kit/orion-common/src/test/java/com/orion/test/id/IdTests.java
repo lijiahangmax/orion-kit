@@ -6,6 +6,8 @@ import com.orion.id.UUIds;
 import com.orion.utils.Threads;
 import org.junit.Test;
 
+import java.util.concurrent.Executors;
+
 /**
  * id 生成器测试
  *
@@ -20,15 +22,15 @@ public class IdTests {
     }
 
     private static void sequence() {
-        Threads.concurrent(100, () -> System.out.println(Sequences.createId()));
+        Threads.concurrent(100, Executors.newCachedThreadPool(), () -> System.out.println(Sequences.createId()));
     }
 
     private static void snowflake() {
-        Threads.concurrent(100, () -> System.out.println(SnowFlakes.createId()));
+        Threads.concurrent(100, Executors.newCachedThreadPool(), () -> System.out.println(SnowFlakes.createId()));
     }
 
     private static void uuid() {
-        Threads.concurrent(100, () -> System.out.println(UUIds.random15Long()));
+        Threads.concurrent(100, Executors.newCachedThreadPool(), () -> System.out.println(UUIds.random15Long()));
     }
 
 }

@@ -1,7 +1,7 @@
 package com.orion.utils.file;
 
 import com.orion.id.UUIds;
-import com.orion.lang.SystemConst;
+import com.orion.utils.Systems;
 import com.orion.utils.*;
 import com.orion.utils.collect.Lists;
 
@@ -478,7 +478,7 @@ public class Files1 {
      * @return io临时文件路径
      */
     public static String getIOTempFilePath() {
-        return SystemConst.HOME_DIR + IO_TEMP_DIR + UUIds.random32() + ".temp";
+        return Systems.HOME_DIR + IO_TEMP_DIR + UUIds.random32() + ".temp";
     }
 
     /**
@@ -1190,13 +1190,13 @@ public class Files1 {
      */
     public static String getRootPath(String path) {
         if (Strings.isBlank(path)) {
-            return System.getProperty(SystemConst.HOME_DIR);
+            return System.getProperty(Systems.HOME_DIR);
         }
         path = path.trim();
         if (path.startsWith("\\") || path.startsWith("/")) {
-            return replacePath(SystemConst.HOME_DIR + path);
+            return replacePath(Systems.HOME_DIR + path);
         } else {
-            return replacePath(SystemConst.HOME_DIR + File.separator + path);
+            return replacePath(Systems.HOME_DIR + File.separator + path);
         }
     }
 

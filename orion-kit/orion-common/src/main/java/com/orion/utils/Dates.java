@@ -78,12 +78,14 @@ public class Dates {
                 o instanceof float[] || o instanceof Float[] || o instanceof double[] || o instanceof Double[] ||
                 o instanceof char[] || o instanceof Character[] || o instanceof String[]) {
             try {
-                int len = Arrays1.lengths(o);
-                int[] analyse = new int[7];
-                for (int i = 0; i < len; i++) {
-                    analyse[i] = Converts.toInt(((Object) Arrays1.gets(o, i)));
+                int[] analyse = Converts.toInts(o);
+                if (analyse.length == 3) {
+                    return build(analyse[0], analyse[1], analyse[2]);
+                } else if (analyse.length == 6) {
+                    return build(analyse[0], analyse[1], analyse[2], analyse[3], analyse[4], analyse[5]);
+                } else if (analyse.length == 7) {
+                    return build(analyse[0], analyse[1], analyse[2], analyse[3], analyse[4], analyse[5], analyse[6]);
                 }
-                return build(analyse[0], analyse[1], analyse[2], analyse[3], analyse[4], analyse[5], analyse[6]);
             } catch (Exception e) {
                 return null;
             }
@@ -101,6 +103,46 @@ public class Dates {
             return date((Instant) o);
         }
         return null;
+    }
+
+    /**
+     * 将对象转化为 LocalDateTime
+     *
+     * @param o 对象
+     * @return LocalDateTime
+     */
+    public static LocalDateTime localDateTime(Object o) {
+        if (o == null) {
+            return null;
+        }
+        if (o instanceof LocalDateTime) {
+            return (LocalDateTime) o;
+        }
+        Date date = date(o);
+        if (date == null) {
+            return null;
+        }
+        return localDateTime(date);
+    }
+
+    /**
+     * 将对象转化为 LocalDate
+     *
+     * @param o 对象
+     * @return LocalDate
+     */
+    public static LocalDate localDate(Object o) {
+        if (o == null) {
+            return null;
+        }
+        if (o instanceof LocalDate) {
+            return (LocalDate) o;
+        }
+        Date date = date(o);
+        if (date == null) {
+            return null;
+        }
+        return localDate(date);
     }
 
     /**

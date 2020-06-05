@@ -65,7 +65,6 @@ public class Colors {
             int blue = Integer.parseInt(str3, 16);
             return new byte[]{(byte) red, (byte) green, (byte) blue};
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }

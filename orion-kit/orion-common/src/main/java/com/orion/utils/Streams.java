@@ -1,7 +1,5 @@
 package com.orion.utils;
 
-import com.orion.lang.SystemConst;
-
 import java.io.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -501,7 +499,7 @@ public class Streams {
             return;
         }
         if (lineEnding == null) {
-            lineEnding = SystemConst.LINE_SEPARATOR;
+            lineEnding = Systems.LINE_SEPARATOR;
         }
         for (Object line : lines) {
             if (line != null) {
@@ -519,7 +517,7 @@ public class Streams {
                 return;
             }
             if (lineEnding == null) {
-                lineEnding = SystemConst.LINE_SEPARATOR;
+                lineEnding = Systems.LINE_SEPARATOR;
             }
             for (Object line : lines) {
                 if (line != null) {
@@ -535,7 +533,7 @@ public class Streams {
             return;
         }
         if (lineEnding == null) {
-            lineEnding = SystemConst.LINE_SEPARATOR;
+            lineEnding = Systems.LINE_SEPARATOR;
         }
         for (Object line : lines) {
             if (line != null) {
