@@ -77,6 +77,16 @@ public class StyleStream {
     }
 
     /**
+     * 设置字体
+     *
+     * @return this
+     */
+    public StyleStream font(FontStream font) {
+        style.setFont(font.getFont());
+        return this;
+    }
+
+    /**
      * 不设置自动换行
      *
      * @return this
@@ -235,6 +245,96 @@ public class StyleStream {
      */
     public StyleStream rotation(int i) {
         style.setRotation((short) i);
+        return this;
+    }
+
+    /**
+     * 不设置公式前缀
+     *
+     * @return this
+     */
+    public StyleStream unsetQuotePrefixed() {
+        style.setQuotePrefixed(false);
+        return this;
+    }
+
+    /**
+     * 设置公式前缀
+     *
+     * @return this
+     */
+    public StyleStream quotePrefixed() {
+        style.setQuotePrefixed(true);
+        return this;
+    }
+
+    /**
+     * 不设置自动调整大小
+     *
+     * @return this
+     */
+    public StyleStream unsetAutoResize() {
+        style.setShrinkToFit(false);
+        return this;
+    }
+
+    /**
+     * 设置自动调整大小
+     *
+     * @return this
+     */
+    public StyleStream autoResize() {
+        style.setShrinkToFit(true);
+        return this;
+    }
+
+    /**
+     * 设置数据格式化
+     *
+     * @param index index
+     * @return this
+     */
+    public StyleStream dataFormat(int index) {
+        style.setDataFormat((short) index);
+        return this;
+    }
+
+    /**
+     * 不设置读顺序(默认)
+     *
+     * @return this
+     */
+    public StyleStream unsetReadingOrder() {
+        if (style instanceof XSSFCellStyle) {
+            // 设置顺序
+            ((XSSFCellStyle) style).setReadingOrder(ReadingOrder.CONTEXT);
+        }
+        return this;
+    }
+
+    /**
+     * 设置读顺序为从左到右
+     *
+     * @return this
+     */
+    public StyleStream leftReading() {
+        if (style instanceof XSSFCellStyle) {
+            // 设置顺序
+            ((XSSFCellStyle) style).setReadingOrder(ReadingOrder.LEFT_TO_RIGHT);
+        }
+        return this;
+    }
+
+    /**
+     * 设置读顺序为从右到左
+     *
+     * @return this
+     */
+    public StyleStream rightReading() {
+        if (style instanceof XSSFCellStyle) {
+            // 设置顺序
+            ((XSSFCellStyle) style).setReadingOrder(ReadingOrder.RIGHT_TO_LEFT);
+        }
         return this;
     }
 
@@ -1295,7 +1395,7 @@ public class StyleStream {
      *
      * @return true自动换行
      */
-    public Boolean getWrapText() {
+    public boolean getWrapText() {
         return style.getWrapText();
     }
 
@@ -1358,7 +1458,7 @@ public class StyleStream {
      *
      * @return true锁定样式
      */
-    public Boolean getLocked() {
+    public boolean getLocked() {
         return style.getLocked();
     }
 
@@ -1459,6 +1559,54 @@ public class StyleStream {
      */
     public short getBorderBottomColor() {
         return style.getBottomBorderColor();
+    }
+
+    /**
+     * 公式前缀
+     *
+     * @return ignore
+     */
+    public boolean getQuotePrefixed() {
+        return style.getQuotePrefixed();
+    }
+
+    /**
+     * 是否自动调整大小
+     *
+     * @return ignore
+     */
+    public boolean getAutoResize() {
+        return style.getShrinkToFit();
+    }
+
+    /**
+     * 获取数据格式化索引
+     *
+     * @return ignore
+     */
+    public short getDataFormatIndex() {
+        return style.getDataFormat();
+    }
+
+    /**
+     * 获取数据格式化字符串
+     *
+     * @return ignore
+     */
+    public String getDataFormatString() {
+        return style.getDataFormatString();
+    }
+
+    /**
+     * 获取读取顺序
+     *
+     * @return 0默认 1从左往右 2从右往左
+     */
+    public int getReadingOrder() {
+        if (style instanceof XSSFCellStyle) {
+            return ((XSSFCellStyle) style).getReadingOrder().getCode();
+        }
+        return -1;
     }
 
 }

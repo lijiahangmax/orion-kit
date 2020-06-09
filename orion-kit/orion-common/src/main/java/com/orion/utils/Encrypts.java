@@ -1,7 +1,7 @@
 package com.orion.utils;
 
 import com.orion.lang.wrapper.Arg;
-import com.orion.utils.file.Files1;
+import com.orion.utils.io.Files1;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;

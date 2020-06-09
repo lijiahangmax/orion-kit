@@ -9,6 +9,9 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 
 /**
+ * 拷贝Sheet, 拷贝的列宽有些许差异
+ * Streaming不适用
+ *
  * @author ljh15
  * @version 1.0.0
  * @date 2020/6/4 12:03
@@ -54,18 +57,17 @@ public class CopySheet {
 
     /**
      * copy
-     *
-     * @return this
      */
-    public CopySheet copy() {
+    public void copy() {
         this.copyWorkbookColor();
         this.copySheet();
+        this.copyMargin();
+        this.copyPrint();
         for (Row resource : resourceSheet) {
             Row target = targetSheet.createRow(resource.getRowNum());
             copyRow(resource, target);
         }
         this.copyRegion(resourceSheet, targetSheet);
-        return this;
     }
 
     /**
@@ -117,7 +119,8 @@ public class CopySheet {
         CellStyle resourceStyle = resource.getRowStyle();
         if (resourceStyle != null) {
             CellStyle targetStyle = targetWorkbook.createCellStyle();
-            this.copyCellStyle(resourceStyle, targetStyle);
+            targetStyle.cloneStyleFrom(resourceStyle);
+            // this.copyCellStyle(resourceStyle, targetStyle);
             target.setRowStyle(targetStyle);
         }
         target.setZeroHeight(resource.getZeroHeight());
@@ -152,7 +155,8 @@ public class CopySheet {
         CellStyle resStyle = resource.getCellStyle();
         if (resStyle != null) {
             CellStyle style = targetWorkbook.createCellStyle();
-            this.copyCellStyle(resStyle, style);
+            style.cloneStyleFrom(resStyle);
+            // this.copyCellStyle(resStyle, style);
             target.setCellStyle(style);
         }
         Comment comment = resource.getCellComment();
@@ -238,6 +242,8 @@ public class CopySheet {
     private void copyFont(Font resource, Font target) {
         if (resource instanceof XSSFFont && target instanceof XSSFFont) {
             ((XSSFFont) target).setColor(((XSSFFont) resource).getXSSFColor());
+            ((XSSFFont) target).setFamily(((XSSFFont) resource).getFamily());
+            ((XSSFFont) target).setScheme(((XSSFFont) resource).getScheme());
         } else {
             target.setColor(resource.getColor());
         }
@@ -249,6 +255,45 @@ public class CopySheet {
         target.setCharSet(resource.getCharSet());
         target.setTypeOffset(resource.getTypeOffset());
         target.setStrikeout(resource.getStrikeout());
+    }
+
+    /**
+     * copy sheet print setting
+     */
+    private void copyPrint() {
+        PrintSetup resource = resourceSheet.getPrintSetup();
+        PrintSetup target = targetSheet.getPrintSetup();
+        target.setUsePage(resource.getUsePage());
+        target.setScale(resource.getScale());
+        target.setPaperSize(resource.getPaperSize());
+        target.setPageStart(resource.getPageStart());
+        target.setNotes(resource.getNotes());
+        if (resource.getNoOrientation()) {
+            target.setNoOrientation(true);
+        } else {
+            target.setNoOrientation(false);
+            target.setLandscape(resource.getLandscape());
+        }
+        target.setNoColor(resource.getNoColor());
+        target.setLeftToRight(resource.getLeftToRight());
+        target.setHResolution(resource.getHResolution());
+        target.setVResolution(resource.getVResolution());
+        target.setHeaderMargin(resource.getHeaderMargin());
+        target.setFooterMargin(resource.getFooterMargin());
+        target.setCopies(resource.getCopies());
+        target.setDraft(resource.getDraft());
+        target.setFitWidth(resource.getFitWidth());
+        target.setFitHeight(resource.getFitHeight());
+        target.setValidSettings(resource.getValidSettings());
+    }
+
+    /**
+     * copy margin
+     */
+    private void copyMargin() {
+        for (short i = 0; i < 5; i++) {
+            targetSheet.setMargin(i, resourceSheet.getMargin(i));
+        }
     }
 
     public Workbook getResourceWorkbook() {

@@ -6,7 +6,9 @@ import org.apache.poi.hssf.usermodel.HSSFPalette;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.FontScheme;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.model.ThemesTable;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 
@@ -358,6 +360,89 @@ public class FontStream {
         return this;
     }
 
+    /**
+     * 设置字体家族
+     *
+     * @param i NOT_APPLICABLE 0
+     *          ROMAN 1
+     *          SWISS 2
+     *          MODERN 3
+     *          SCRIPT 4
+     *          DECORATIVE 5
+     * @return this
+     */
+    public FontStream family(int i) {
+        if (font instanceof XSSFFont) {
+            ((XSSFFont) font).setFamily(i);
+        }
+        return this;
+    }
+
+    /**
+     * 不设置字体家族
+     *
+     * @return this
+     */
+    public FontStream unsetFamily() {
+        if (font instanceof XSSFFont) {
+            ((XSSFFont) font).setFamily(0);
+        }
+        return this;
+    }
+
+    /**
+     * 设置属性
+     *
+     * @param i NONE 1
+     *          MAJOR 2
+     *          MINOR 3
+     * @return this
+     */
+    public FontStream scheme(int i) {
+        if (font instanceof XSSFFont) {
+            ((XSSFFont) font).setScheme(FontScheme.valueOf(i));
+        }
+        return this;
+    }
+
+    /**
+     * 设置属性
+     *
+     * @return this
+     */
+    public FontStream unsetScheme() {
+        if (font instanceof XSSFFont) {
+            ((XSSFFont) font).setScheme(FontScheme.NONE);
+        }
+        return this;
+    }
+
+    /**
+     * 设置主题表格
+     *
+     * @param table table
+     * @return this
+     */
+    public FontStream themesTable(ThemesTable table) {
+        if (font instanceof XSSFFont) {
+            ((XSSFFont) font).setThemesTable(table);
+        }
+        return this;
+    }
+
+    /**
+     * 设置主题颜色
+     *
+     * @param i 颜色
+     * @return this
+     */
+    public FontStream themesColor(int i) {
+        if (font instanceof XSSFFont) {
+            ((XSSFFont) font).setThemeColor((short) i);
+        }
+        return this;
+    }
+
     public Workbook getWorkbook() {
         return workbook;
     }
@@ -389,7 +474,7 @@ public class FontStream {
      *
      * @return true加粗
      */
-    public Boolean getBold() {
+    public boolean getBold() {
         return font.getBold();
     }
 
@@ -398,7 +483,7 @@ public class FontStream {
      *
      * @return true斜体
      */
-    public Boolean getItalic() {
+    public boolean getItalic() {
         return font.getItalic();
     }
 
@@ -436,6 +521,42 @@ public class FontStream {
      */
     public short getColor() {
         return font.getColor();
+    }
+
+    /**
+     * 获取字体家族
+     *
+     * @return family
+     */
+    public int getFamily() {
+        if (font instanceof XSSFFont) {
+            return ((XSSFFont) font).getFamily();
+        }
+        return -1;
+    }
+
+    /**
+     * 获取属性
+     *
+     * @return scheme
+     */
+    public int getScheme() {
+        if (font instanceof XSSFFont) {
+            return ((XSSFFont) font).getScheme().getValue();
+        }
+        return -1;
+    }
+
+    /**
+     * 获取主题颜色
+     *
+     * @return color
+     */
+    public int getThemeColor() {
+        if (font instanceof XSSFFont) {
+            return ((XSSFFont) font).getThemeColor();
+        }
+        return -1;
     }
 
 }

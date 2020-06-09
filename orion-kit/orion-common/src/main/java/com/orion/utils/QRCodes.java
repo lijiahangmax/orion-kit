@@ -6,7 +6,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.orion.id.UUIds;
-import com.orion.utils.file.Files1;
+import com.orion.utils.io.Files1;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

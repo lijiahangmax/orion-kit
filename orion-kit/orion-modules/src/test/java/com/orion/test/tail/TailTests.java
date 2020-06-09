@@ -5,7 +5,7 @@ import com.orion.utils.Spells;
 import com.orion.utils.Streams;
 import com.orion.utils.Strings;
 import com.orion.utils.Threads;
-import com.orion.utils.file.Files1;
+import com.orion.utils.io.Files1;
 import org.junit.Test;
 
 import java.io.File;

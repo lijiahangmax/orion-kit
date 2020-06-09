@@ -162,7 +162,7 @@ public class Excels {
     }
 
     /**
-     * 复制sheet
+     * 复制sheet 新建sheet
      *
      * @param resourceWorkbook 源表
      * @param targetWorkbook   目标表
@@ -172,6 +172,26 @@ public class Excels {
     public static CopySheet copySheet(Workbook resourceWorkbook, Workbook targetWorkbook, int resourceIndex) {
         Sheet resourceSheet = resourceWorkbook.getSheetAt(resourceIndex);
         Sheet targetSheet = targetWorkbook.createSheet(resourceSheet.getSheetName());
+        return new CopySheet(resourceWorkbook, targetWorkbook, resourceSheet, targetSheet);
+    }
+
+    /**
+     * 复制sheet 如果未找到目标sheet 则新建sheet
+     *
+     * @param resourceWorkbook 源表
+     * @param targetWorkbook   目标表
+     * @param resourceIndex    源sheet索引
+     * @param targetIndex      目标sheet索引
+     * @return CopySheet
+     */
+    public static CopySheet copySheet(Workbook resourceWorkbook, Workbook targetWorkbook, int resourceIndex, int targetIndex) {
+        Sheet resourceSheet = resourceWorkbook.getSheetAt(resourceIndex);
+        Sheet targetSheet;
+        try {
+            targetSheet = targetWorkbook.getSheetAt(targetIndex);
+        } catch (Exception e) {
+            targetSheet = targetWorkbook.createSheet(resourceSheet.getSheetName());
+        }
         return new CopySheet(resourceWorkbook, targetWorkbook, resourceSheet, targetSheet);
     }
 

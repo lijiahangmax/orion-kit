@@ -1,6 +1,6 @@
 package com.orion.utils;
 
-import com.orion.utils.file.Files1;
+import com.orion.utils.io.Files1;
 
 import java.io.*;
 import java.util.Enumeration;
