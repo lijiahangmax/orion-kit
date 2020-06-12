@@ -1,5 +1,7 @@
 package com.orion.http.ok;
 
+import com.orion.http.common.HttpMethod;
+import com.orion.http.common.HttpContent;
 import com.orion.http.ok.file.MockDownload;
 import com.orion.http.ok.file.MockUpload;
 import com.orion.http.ok.ws.MockWebSocketClient;
@@ -9,7 +11,7 @@ import java.net.InetAddress;
 import java.util.Map;
 
 /**
- * Mocks
+ * Mock 调用工具
  *
  * @author ljh15
  * @version 1.0.0
@@ -23,7 +25,7 @@ public class Mocks {
      * @param url url
      * @return response
      */
-    public static MockResult get(String url) {
+    public static MockResponse get(String url) {
         return new MockRequest(url).await();
     }
 
@@ -34,7 +36,7 @@ public class Mocks {
      * @param params params
      * @return response
      */
-    public static MockResult get(String url, Map<String, String> params) {
+    public static MockResponse get(String url, Map<String, String> params) {
         return new MockRequest(url).queryParams(params).await();
     }
 
@@ -44,8 +46,8 @@ public class Mocks {
      * @param url url
      * @return response
      */
-    static MockResult post(String url) {
-        return new MockRequest(url).method(MockMethod.POST).await();
+    static MockResponse post(String url) {
+        return new MockRequest(url).method(HttpMethod.POST).await();
     }
 
     /**
@@ -55,8 +57,8 @@ public class Mocks {
      * @param body body
      * @return response
      */
-    public static MockResult post(String url, byte[] body) {
-        return new MockRequest(url).method(MockMethod.POST).contentType(MockContent.APPLICATION_JSON).body(body).await();
+    public static MockResponse post(String url, byte[] body) {
+        return new MockRequest(url).method(HttpMethod.POST).contentType(HttpContent.APPLICATION_JSON).body(body).await();
     }
 
     /**
@@ -66,8 +68,8 @@ public class Mocks {
      * @param body body
      * @return response
      */
-    public static MockResult post(String url, String body) {
-        return new MockRequest(url).method(MockMethod.POST).contentType(MockContent.APPLICATION_JSON).body(body).await();
+    public static MockResponse post(String url, String body) {
+        return new MockRequest(url).method(HttpMethod.POST).contentType(HttpContent.APPLICATION_JSON).body(body).await();
     }
 
     /**
@@ -78,8 +80,8 @@ public class Mocks {
      * @param body        body
      * @return response
      */
-    public static MockResult post(String url, String contentType, byte[] body) {
-        return new MockRequest(url).method(MockMethod.POST).contentType(contentType).body(body).await();
+    public static MockResponse post(String url, String contentType, byte[] body) {
+        return new MockRequest(url).method(HttpMethod.POST).contentType(contentType).body(body).await();
     }
 
     /**
@@ -90,8 +92,8 @@ public class Mocks {
      * @param body        body
      * @return response
      */
-    public static MockResult post(String url, String contentType, String body) {
-        return new MockRequest(url).method(MockMethod.POST).contentType(contentType).body(body).await();
+    public static MockResponse post(String url, String contentType, String body) {
+        return new MockRequest(url).method(HttpMethod.POST).contentType(contentType).body(body).await();
     }
 
     /**
@@ -109,7 +111,7 @@ public class Mocks {
      * @return post
      */
     public static MockRequest post() {
-        return new MockRequest().method(MockMethod.POST);
+        return new MockRequest().method(HttpMethod.POST);
     }
 
     /**

@@ -20,7 +20,7 @@ public class EnvProperties {
      pom.xml
      <build>
          <filters>
-             <filter>src/main/java/com/li/filter/${env}.properties</filter>
+             <filter>src/main/java/com/orion/filter/${env}.properties</filter>
          </filters>
 
          <resources>
@@ -32,7 +32,7 @@ public class EnvProperties {
      </build>
 
      application.xml
-     <bean id="envPropertiesInitialize" class="com.li.support.EnvProperties$InitializeProperties">
+     <bean id="envPropertiesInitialize" class="com.orion.spring.EnvProperties$InitializeProperties">
         <constructor-arg index="0" value="env.properties"/> resources根目录
      </bean>
      */

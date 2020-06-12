@@ -2,7 +2,7 @@ package com.orion.utils.collect;
 
 import com.orion.lang.MapEntry;
 import com.orion.lang.collect.ConvertHashMap;
-import com.orion.lang.wrapper.Arg;
+import com.orion.lang.wrapper.Args;
 import com.orion.utils.Arrays1;
 
 import java.util.Collections;
@@ -155,7 +155,7 @@ public class Maps {
         return map;
     }
 
-    public static <K, V> Map<K, V> of(Arg.Entry<K, V>... entries) {
+    public static <K, V> Map<K, V> of(Args.Entry<K, V>... entries) {
         int len = Arrays1.length(entries);
         if (len == 0) {
             return new HashMap<>(16);

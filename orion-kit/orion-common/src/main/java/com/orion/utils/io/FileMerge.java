@@ -1,6 +1,6 @@
 package com.orion.utils.io;
 
-import com.orion.lang.wrapper.Arg;
+import com.orion.lang.wrapper.Args;
 import com.orion.utils.Streams;
 import com.orion.utils.Strings;
 
@@ -69,7 +69,7 @@ public class FileMerge implements Callable<String> {
 
     @Override
     public String call() {
-        Arg.Two<String, List<String>> fl = shuffleFile(blockFile);
+        Args.Two<String, List<String>> fl = shuffleFile(blockFile);
         try {
             String mergeFile = mergeFile(file.getAbsolutePath(), fl.getArg1(), fl.getArg2());
             System.out.println("MD5 sign: " + Files1.md5(mergeFile));
@@ -86,7 +86,7 @@ public class FileMerge implements Callable<String> {
      * @param files 块文件
      * @return 合并文件路径, 块文件路径
      */
-    private Arg.Two<String, List<String>> shuffleFile(String[] files) {
+    private Args.Two<String, List<String>> shuffleFile(String[] files) {
         Map<Integer, String> fm = new HashMap<>();
         for (String file : files) {
             int l = file.lastIndexOf(".");
@@ -111,7 +111,7 @@ public class FileMerge implements Callable<String> {
             }
             fileList.add(is.getValue());
         }
-        return Arg.init(filePath, fileList);
+        return Args.of(filePath, fileList);
     }
 
     /**

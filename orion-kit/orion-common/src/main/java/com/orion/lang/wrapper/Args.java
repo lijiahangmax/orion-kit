@@ -10,28 +10,28 @@ import java.io.Serializable;
  * @date 2019/7/26 14:06
  */
 @SuppressWarnings("ALL")
-public class Arg implements Serializable {
+public class Args implements Serializable {
 
     private static final long serialVersionUID = -5879929949885108697L;
 
-    private Arg() {
+    private Args() {
     }
 
     public static Zero toArgs(Object... os) {
         if (os == null) {
-            return init(null);
+            return of(null);
         } else if (os.length == 0) {
-            return init();
+            return of();
         } else if (os.length == 1) {
-            return init(os[0]);
+            return of(os[0]);
         } else if (os.length == 2) {
-            return init(os[0], os[1]);
+            return of(os[0], os[1]);
         } else if (os.length == 3) {
-            return init(os[0], os[1], os[2]);
+            return of(os[0], os[1], os[2]);
         } else if (os.length == 4) {
-            return init(os[0], os[1], os[2], os[3]);
+            return of(os[0], os[1], os[2], os[3]);
         } else if (os.length == 5) {
-            return init(os[0], os[1], os[2], os[3], os[4]);
+            return of(os[0], os[1], os[2], os[3], os[4]);
         } else {
             throw new IllegalArgumentException("ConvertError: maxSize: 5, thisSize: " + os.length);
         }
@@ -92,27 +92,27 @@ public class Arg implements Serializable {
         return new Five<>();
     }
 
-    public static Zero init() {
+    public static Zero of() {
         return new Zero();
     }
 
-    public static <A1> One<A1> init(A1 arg1) {
+    public static <A1> One<A1> of(A1 arg1) {
         return new One<>(arg1);
     }
 
-    public static <A1, A2> Two<A1, A2> init(A1 arg1, A2 arg2) {
+    public static <A1, A2> Two<A1, A2> of(A1 arg1, A2 arg2) {
         return new Two<>(arg1, arg2);
     }
 
-    public static <A1, A2, A3> Three<A1, A2, A3> init(A1 arg1, A2 arg2, A3 arg3) {
+    public static <A1, A2, A3> Three<A1, A2, A3> of(A1 arg1, A2 arg2, A3 arg3) {
         return new Three<>(arg1, arg2, arg3);
     }
 
-    public static <A1, A2, A3, A4> Four<A1, A2, A3, A4> init(A1 arg1, A2 arg2, A3 arg3, A4 arg4) {
+    public static <A1, A2, A3, A4> Four<A1, A2, A3, A4> of(A1 arg1, A2 arg2, A3 arg3, A4 arg4) {
         return new Four<>(arg1, arg2, arg3, arg4);
     }
 
-    public static <A1, A2, A3, A4, A5> Five<A1, A2, A3, A4, A5> init(A1 arg1, A2 arg2, A3 arg3, A4 arg4, A5 arg5) {
+    public static <A1, A2, A3, A4, A5> Five<A1, A2, A3, A4, A5> of(A1 arg1, A2 arg2, A3 arg3, A4 arg4, A5 arg5) {
         return new Five<>(arg1, arg2, arg3, arg4, arg5);
     }
 

@@ -1023,7 +1023,7 @@ public class Arrays1 {
     }
 
     /**
-     * 可接收基本类型的数组, 反回Object[]
+     * 可接收基本类型的数组, 返回Object[]
      *
      * @param t   t
      * @param <T> t

@@ -1,5 +1,6 @@
 package com.orion.http.ok.file;
 
+import com.orion.http.common.HttpUploadPart;
 import com.orion.http.ok.MockClient;
 import com.orion.utils.collect.Lists;
 import okhttp3.*;
@@ -91,7 +92,7 @@ public class MockUpload {
      *
      * @param part ignore
      */
-    public void upload(MockUploadPart part) {
+    public void upload(HttpUploadPart part) {
         upload(Lists.of(part));
     }
 
@@ -100,7 +101,7 @@ public class MockUpload {
      *
      * @param parts ignore
      */
-    public void upload(List<MockUploadPart> parts) {
+    public void upload(List<HttpUploadPart> parts) {
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM);
         if (this.queryParams != null) {
@@ -108,7 +109,7 @@ public class MockUpload {
                 builder.addFormDataPart(entry.getKey(), entry.getValue());
             }
         }
-        for (MockUploadPart part : parts) {
+        for (HttpUploadPart part : parts) {
             if (part == null) {
                 continue;
             }

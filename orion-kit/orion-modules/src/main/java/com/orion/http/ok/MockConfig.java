@@ -1,5 +1,7 @@
 package com.orion.http.ok;
 
+import java.io.Serializable;
+
 /**
  * Mock 配置类
  *
@@ -8,27 +10,27 @@ package com.orion.http.ok;
  * @date 2020/4/8 10:33
  */
 @SuppressWarnings("ALL")
-public class MockConfig {
+public class MockConfig implements Serializable {
 
     /**
      * call超时时间
      */
-    private long callTimeout = 3;
+    private long callTimeout = 3000;
 
     /**
      * 连接超时时间
      */
-    private long connectTimeout = 3;
+    private long connectTimeout = 3000;
 
     /**
      * 读超时时间
      */
-    private long readTimeout = 15;
+    private long readTimeout = 15000;
 
     /**
      * 写超时时间
      */
-    private long writeTimeout = 15;
+    private long writeTimeout = 15000;
 
     /**
      * 是否开启logInterceptor
@@ -36,9 +38,20 @@ public class MockConfig {
     private boolean logInterceptor;
 
     /**
-     * ssl证书文件路径
+     * 代理主机
      */
-    private String certPath;
+    private String proxyHost;
+
+    /**
+     * 代理端口
+     */
+    private int proxyPort;
+
+    public MockConfig proxy(String host, int port) {
+        this.proxyHost = host;
+        this.proxyPort = port;
+        return this;
+    }
 
     public MockConfig logInterceptor() {
         this.logInterceptor = true;
@@ -90,13 +103,12 @@ public class MockConfig {
         return this;
     }
 
-    public String getCertPath() {
-        return certPath;
+    public String getProxyHost() {
+        return proxyHost;
     }
 
-    public MockConfig setCertPath(String certPath) {
-        this.certPath = certPath;
-        return this;
+    public int getProxyPort() {
+        return proxyPort;
     }
 
     @Override
@@ -107,7 +119,8 @@ public class MockConfig {
                 ", readTimeout=" + readTimeout +
                 ", writeTimeout=" + writeTimeout +
                 ", logInterceptor=" + logInterceptor +
-                ", certPath='" + certPath + '\'' +
+                ", proxyHost='" + proxyHost + '\'' +
+                ", proxyPort=" + proxyPort +
                 '}';
     }
 

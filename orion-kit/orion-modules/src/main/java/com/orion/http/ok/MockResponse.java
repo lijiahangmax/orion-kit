@@ -7,6 +7,7 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +18,7 @@ import java.util.Map;
  * @version 1.0.0
  * @date 2020/4/7 23:52
  */
-public class MockResult {
+public class MockResponse implements Serializable {
 
     /**
      * 状态码
@@ -92,19 +93,19 @@ public class MockResult {
     /**
      * 用于异步
      */
-    MockResult() {
+    MockResponse() {
         done = false;
     }
 
-    public MockResult(Request request, Response response) {
+    public MockResponse(Request request, Response response) {
         this(request, response, null);
     }
 
-    public MockResult(Request request, Exception exception) {
+    public MockResponse(Request request, Exception exception) {
         this(request, null, exception);
     }
 
-    public MockResult(Request request, Response response, Exception exception) {
+    public MockResponse(Request request, Response response, Exception exception) {
         this.request = request;
         this.response = response;
         this.exception = exception;
@@ -164,7 +165,7 @@ public class MockResult {
      * @param call call
      * @return this
      */
-    public MockResult call(Call call) {
+    public MockResponse call(Call call) {
         this.call = call;
         return this;
     }
@@ -174,7 +175,7 @@ public class MockResult {
      *
      * @return this
      */
-    public MockResult done() {
+    public MockResponse done() {
         this.done = true;
         if (this.exception == null) {
             if (this.request != null) {
@@ -206,7 +207,7 @@ public class MockResult {
      * @param request request
      * @return this
      */
-    public MockResult request(Request request) {
+    public MockResponse request(Request request) {
         this.request = request;
         return this;
     }
@@ -217,7 +218,7 @@ public class MockResult {
      * @param response response
      * @return this
      */
-    public MockResult response(Response response) {
+    public MockResponse response(Response response) {
         this.response = response;
         return this;
     }
@@ -228,7 +229,7 @@ public class MockResult {
      * @param exception exception
      * @return this
      */
-    public MockResult exception(Exception exception) {
+    public MockResponse exception(Exception exception) {
         this.exception = exception;
         return this;
     }
@@ -239,7 +240,7 @@ public class MockResult {
      * @param mockRequest mockRequest
      * @return this
      */
-    public MockResult mockRequest(MockRequest mockRequest) {
+    public MockResponse mockRequest(MockRequest mockRequest) {
         this.mockRequest = mockRequest;
         return this;
     }

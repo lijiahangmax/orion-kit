@@ -1,28 +1,31 @@
-package com.orion.http.ok;
+package com.orion.http.client;
 
-import com.orion.able.Asyncable;
 import com.orion.able.Awaitable;
 import com.orion.http.common.HttpContent;
 import com.orion.http.common.HttpMethod;
+import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.Urls;
 import com.orion.utils.Valid;
-import okhttp3.*;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.*;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.message.BasicHeader;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 
 /**
- * Mock 请求
+ * Hyper HttpClient 请求
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/4/7 23:49
+ * @date 2020/6/12 14:52
  */
-public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<MockResponse>> {
+public class HyperRequest implements Awaitable<HyperResponse> {
 
     /**
      * url
@@ -33,11 +36,6 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      * method
      */
     private String method = "GET";
-
-    /**
-     * 编码格式 GET HEAD 无效
-     */
-    private String charset;
 
     /**
      * Content-Type GET HEAD 无效
@@ -85,49 +83,29 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
     private String[] ignoreHeaders;
 
     /**
-     * tag
-     */
-    private Object tag;
-
-    /**
      * 是否使用ssl
      */
     private boolean ssl;
 
     /**
-     * 是否为异步
-     */
-    private boolean async;
-
-    /**
-     * 异步接口
-     */
-    private Consumer<MockResponse> consumer;
-
-    /**
-     * 请求
-     */
-    private Request request;
-
-    /**
-     * call
-     */
-    private Call call;
-
-    /**
      * client
      */
-    private OkHttpClient client;
+    private CloseableHttpClient client;
 
     /**
-     * MockResponse
+     * HttpRequest
      */
-    private MockResponse response;
+    private HttpUriRequest request;
 
-    public MockRequest() {
+    /**
+     * response
+     */
+    private HyperResponse response;
+
+    public HyperRequest() {
     }
 
-    public MockRequest(String url) {
+    public HyperRequest(String url) {
         this.url = url;
     }
 
@@ -137,7 +115,7 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      * @param url url
      * @return this
      */
-    public MockRequest url(String url) {
+    public HyperRequest url(String url) {
         this.url = url;
         return this;
     }
@@ -148,7 +126,7 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      * @param o 参数
      * @return this
      */
-    public MockRequest format(Object... o) {
+    public HyperRequest format(Object... o) {
         this.url = Strings.format(this.url, o);
         return this;
     }
@@ -159,7 +137,7 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      * @param map 参数
      * @return this
      */
-    public MockRequest format(Map<String, Object> map) {
+    public HyperRequest format(Map<String, Object> map) {
         this.url = Strings.format(this.url, map);
         return this;
     }
@@ -170,7 +148,7 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      * @param method method
      * @return this
      */
-    public MockRequest method(String method) {
+    public HyperRequest method(String method) {
         this.method = method;
         return this;
     }
@@ -181,19 +159,8 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      * @param method method
      * @return this
      */
-    public MockRequest method(HttpMethod method) {
+    public HyperRequest method(HttpMethod method) {
         this.method = method.getMethod();
-        return this;
-    }
-
-    /**
-     * charset
-     *
-     * @param charset charset
-     * @return this
-     */
-    public MockRequest charset(String charset) {
-        this.charset = charset;
         return this;
     }
 
@@ -203,7 +170,7 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      * @param contentType contentType
      * @return this
      */
-    public MockRequest contentType(String contentType) {
+    public HyperRequest contentType(String contentType) {
         this.contentType = contentType;
         return this;
     }
@@ -214,7 +181,7 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      * @param contentType contentType
      * @return this
      */
-    public MockRequest contentType(HttpContent contentType) {
+    public HyperRequest contentType(HttpContent contentType) {
         this.contentType = contentType.getType();
         return this;
     }
@@ -225,7 +192,7 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      * @param queryParams queryParams
      * @return this
      */
-    public MockRequest queryParams(Map<String, String> queryParams) {
+    public HyperRequest queryParams(Map<String, String> queryParams) {
         this.queryParams = queryParams;
         return this;
     }
@@ -237,7 +204,7 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      * @param value value
      * @return this
      */
-    public MockRequest queryParam(String key, String value) {
+    public HyperRequest queryParam(String key, String value) {
         if (this.queryParams == null) {
             this.queryParams = new HashMap<>();
         }
@@ -251,7 +218,7 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      * @param query key, value
      * @return this
      */
-    public MockRequest queryParam(Map.Entry<String, String> query) {
+    public HyperRequest queryParam(Map.Entry<String, String> query) {
         if (this.queryParams == null) {
             this.queryParams = new HashMap<>();
         }
@@ -264,7 +231,7 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      *
      * @return this
      */
-    public MockRequest queryStringEncode() {
+    public HyperRequest queryStringEncode() {
         this.queryStringEncode = true;
         return this;
     }
@@ -275,13 +242,13 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      * @param body body
      * @return this
      */
-    public MockRequest body(String body) {
+    public HyperRequest body(String body) {
         if (body == null) {
             return this;
         }
         this.body = body.getBytes();
-        this.bodyOffset = 0;
         this.bodyLen = this.body.length;
+        this.bodyOffset = 0;
         return this;
     }
 
@@ -291,7 +258,7 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      * @param body body
      * @return this
      */
-    public MockRequest body(byte[] body) {
+    public HyperRequest body(byte[] body) {
         this.body = body;
         this.bodyOffset = 0;
         this.bodyLen = body.length;
@@ -306,7 +273,7 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      * @param len    len
      * @return this
      */
-    public MockRequest body(byte[] body, int offset, int len) {
+    public HyperRequest body(byte[] body, int offset, int len) {
         this.body = body;
         this.bodyOffset = offset;
         this.bodyLen = len;
@@ -319,7 +286,7 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      * @param headers headers
      * @return this
      */
-    public MockRequest headers(Map<String, String> headers) {
+    public HyperRequest headers(Map<String, String> headers) {
         this.headers = headers;
         return this;
     }
@@ -331,7 +298,7 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      * @param value value
      * @return this
      */
-    public MockRequest headers(String key, String value) {
+    public HyperRequest headers(String key, String value) {
         if (this.headers == null) {
             this.headers = new HashMap<>();
         }
@@ -345,7 +312,7 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      * @param header key, value
      * @return this
      */
-    public MockRequest headers(Map.Entry<String, String> header) {
+    public HyperRequest headers(Map.Entry<String, String> header) {
         if (this.headers == null) {
             this.headers = new HashMap<>();
         }
@@ -354,22 +321,11 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
     }
 
     /**
-     * tag
-     *
-     * @param tag tag
-     * @return this
-     */
-    public MockRequest tag(Object tag) {
-        this.tag = tag;
-        return this;
-    }
-
-    /**
      * ignoreHeaders
      *
      * @return this
      */
-    public MockRequest ignoreHeaders(String... ignoreHeaders) {
+    public HyperRequest ignoreHeaders(String... ignoreHeaders) {
         this.ignoreHeaders = ignoreHeaders;
         return this;
     }
@@ -380,7 +336,7 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      * @param ssl ssl
      * @return this
      */
-    public MockRequest ssl(boolean ssl) {
+    public HyperRequest ssl(boolean ssl) {
         this.ssl = ssl;
         return this;
     }
@@ -390,7 +346,7 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      *
      * @return this
      */
-    public MockRequest ssl() {
+    public HyperRequest ssl() {
         this.ssl = true;
         return this;
     }
@@ -400,130 +356,94 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      *
      * @return this
      */
-    private MockRequest cancel() {
-        this.call.cancel();
+    private HyperRequest cancel() {
+        this.request.abort();
         return this;
     }
 
-    /**
-     * 同步调用
-     *
-     * @return MockResult
-     */
     @Override
-    public MockResponse await() {
+    public HyperResponse await() {
         execute();
         return this.response;
     }
 
-    /**
-     * 异步调用
-     *
-     * @param consumer consumer
-     */
-    @Override
-    public void async(Consumer<MockResponse> consumer) {
-        Valid.notNull(consumer, "Async call back is null");
-        this.consumer = consumer;
-        this.async = true;
-        execute();
-    }
-
-    /**
-     * 构建request
-     */
     private void buildRequest() {
-        Request.Builder requestBuilder = new Request.Builder();
-        if (this.headers != null) {
-            requestBuilder.headers(Headers.of(this.headers));
-        }
-        if (this.ignoreHeaders != null) {
-            for (String ignoreHeader : this.ignoreHeaders) {
-                requestBuilder.removeHeader(ignoreHeader);
-            }
-        }
-        if (this.queryParams != null) {
+        if (queryParams != null) {
             this.queryString = Urls.buildUrl(this.queryParams);
             if (this.queryStringEncode) {
                 this.queryString = Urls.encode(this.queryString);
             }
             this.url += ("?" + this.queryString);
         }
-        requestBuilder.url(this.url);
-        this.method = this.method.toUpperCase();
-        HttpMethod.validHethod(this.method, true);
-        if (HttpMethod.GET.getMethod().equals(this.method)) {
-            requestBuilder.get();
-        } else if (HttpMethod.HEAD.getMethod().equals(this.method)) {
-            requestBuilder.head();
-        } else {
+        this.method = this.method.trim().toUpperCase();
+        this.getRequestByMethod();
+        if (this.headers != null) {
+            this.headers.forEach((k, v) -> this.request.addHeader(new BasicHeader(k, v)));
+        }
+        if (this.ignoreHeaders != null) {
+            for (String ignoreHeader : this.ignoreHeaders) {
+                this.request.removeHeader(new BasicHeader(ignoreHeader, null));
+            }
+        }
+        if (!HttpMethod.GET.getMethod().equals(this.method) && !HttpMethod.HEAD.getMethod().equals(this.method)) {
             if (this.contentType == null) {
                 this.contentType = HttpContent.TEXT_PLAIN.getType();
             }
-            if (this.charset == null) {
-                if (this.body == null) {
-                    requestBuilder.method(this.method, RequestBody.create(MediaType.parse(this.contentType), ""));
-                } else {
-                    if (this.bodyLen == 0) {
-                        this.bodyLen = this.body.length - this.bodyOffset;
-                    }
-                    requestBuilder.method(this.method, RequestBody.create(MediaType.parse(this.contentType), this.body, this.bodyOffset, this.bodyLen));
-                }
-            } else {
-                if (this.body == null) {
-                    requestBuilder.method(this.method, RequestBody.create(MediaType.parse(this.contentType + "; charset=" + this.charset), ""));
-                } else {
-                    if (this.bodyLen == 0) {
-                        this.bodyLen = this.body.length - this.bodyOffset;
-                    }
-                    requestBuilder.method(this.method, RequestBody.create(MediaType.parse(this.contentType + "; charset=" + this.charset), this.body, this.bodyOffset, this.bodyLen));
-                }
-            }
+            this.request.setHeader(new BasicHeader("Content-type", this.contentType));
         }
-        if (this.tag != null) {
-            requestBuilder.tag(this.tag);
-        }
-        this.request = requestBuilder.build();
     }
 
-    /**
-     * 执行
-     */
     private void execute() {
         Valid.notNull(this.url, "Request url is null");
         this.buildRequest();
         if (this.client == null) {
             if (this.ssl) {
-                this.client = MockClient.getSslClient();
+                this.client = HyperClient.getSslClient();
             } else {
-                this.client = MockClient.getClient();
+                this.client = HyperClient.getClient();
             }
         }
-        this.call = this.client.newCall(this.request);
-        if (this.async) {
-            this.response = new MockResponse().request(this.request).mockRequest(this);
-            this.call.enqueue(new Callback() {
-                @Override
-                public void onResponse(Call call, Response res) {
-                    try {
-                        consumer.accept(response.call(call).response(res).done());
-                    } catch (Exception e) {
-                        consumer.accept(response.call(call).response(res).exception(e).done());
-                    }
-                }
+        try {
+            CloseableHttpResponse execute = this.client.execute(this.request);
+            this.response = new HyperResponse(this.request, execute)
+                    .url(this.url)
+                    .method(this.method);
+            execute.close();
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
+        }
+    }
 
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    consumer.accept(response.call(call).exception(e).done());
-                }
-            });
-        } else {
-            try {
-                this.response = new MockResponse(this.request, this.call.execute()).call(this.call).mockRequest(this);
-            } catch (IOException e) {
-                this.response = new MockResponse(this.request, e).call(this.call).mockRequest(this);
-            }
+    private void getRequestByMethod() {
+        HttpMethod.validHethod(this.method, false);
+        if (HttpMethod.GET.getMethod().equals(this.method)) {
+            this.request = new HttpGet(this.url);
+        } else if (HttpMethod.POST.getMethod().equals(this.method)) {
+            HttpPost request = new HttpPost(this.url);
+            request.setEntity(getEntry());
+            this.request = request;
+        } else if (HttpMethod.PUT.getMethod().equals(this.method)) {
+            HttpPut request = new HttpPut(this.url);
+            request.setEntity(getEntry());
+            this.request = request;
+        } else if (HttpMethod.DELETE.getMethod().equals(this.method)) {
+            this.request = new HttpDelete(this.url);
+        } else if (HttpMethod.PATCH.getMethod().equals(this.method)) {
+            HttpPatch request = new HttpPatch(this.url);
+            request.setEntity(getEntry());
+            this.request = request;
+        } else if (HttpMethod.HEAD.getMethod().equals(this.method)) {
+            this.request = new HttpHead(this.url);
+        } else if (HttpMethod.TRACE.getMethod().equals(this.method)) {
+            this.request = new HttpTrace(this.url);
         }
+    }
+
+    private HttpEntity getEntry() {
+        if (this.body == null) {
+            return null;
+        }
+        return new ByteArrayEntity(this.body, this.bodyOffset, this.bodyLen);
     }
 
     public String getUrl() {
@@ -532,10 +452,6 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
 
     public String getMethod() {
         return method;
-    }
-
-    public String getCharset() {
-        return charset;
     }
 
     public String getContentType() {
@@ -574,53 +490,34 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
         return ignoreHeaders;
     }
 
-    public Object getTag() {
-        return tag;
-    }
-
     public boolean isSsl() {
         return ssl;
     }
 
-    public boolean isAsync() {
-        return async;
-    }
-
-    public Consumer<MockResponse> getConsumer() {
-        return consumer;
-    }
-
-    public Request getRequest() {
-        return request;
-    }
-
-    public Call getCall() {
-        return call;
-    }
-
-    public OkHttpClient getClient() {
+    public CloseableHttpClient getClient() {
         return client;
     }
 
-    public MockResponse getResponse() {
+    public HttpUriRequest getRequest() {
+        return request;
+    }
+
+    public HyperResponse getResponse() {
         return response;
     }
 
     @Override
     public String toString() {
-        return "MockRequest{" +
+        return "HyperRequest{" +
                 "url='" + url + '\'' +
                 ", method='" + method + '\'' +
-                ", charset='" + charset + '\'' +
                 ", contentType='" + contentType + '\'' +
                 ", queryString='" + queryString + '\'' +
                 ", queryStringEncode=" + queryStringEncode +
                 ", bodyLen=" + bodyLen +
                 ", headers=" + headers +
                 ", ignoreHeaders=" + Arrays.toString(ignoreHeaders) +
-                ", tag=" + tag +
                 ", ssl=" + ssl +
-                ", async=" + async +
                 '}';
     }
 

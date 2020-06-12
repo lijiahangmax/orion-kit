@@ -1,6 +1,6 @@
 package com.orion.utils;
 
-import com.orion.lang.wrapper.Arg;
+import com.orion.lang.wrapper.Args;
 import com.orion.utils.io.Files1;
 
 import javax.crypto.Cipher;
@@ -1121,13 +1121,13 @@ public class Encrypts {
      *
      * @return PublicKey PrivateKey
      */
-    public static Arg.Two<PublicKey, PrivateKey> generatorRSAKey() {
+    public static Args.Two<PublicKey, PrivateKey> generatorRSAKey() {
         try {
             KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");
             // 96 ~ 1024
             keyPairGen.initialize(1024, new SecureRandom());
             KeyPair keyPair = keyPairGen.generateKeyPair();
-            return Arg.init(keyPair.getPublic(), keyPair.getPrivate());
+            return Args.of(keyPair.getPublic(), keyPair.getPrivate());
         } catch (Exception e) {
             return null;
         }
@@ -1253,7 +1253,7 @@ public class Encrypts {
      * @param password 密码
      * @return PublicKey, PrivateKey
      */
-    public static Arg.Two<PublicKey, PrivateKey> getPFXPrivateKey(File file, String password) {
+    public static Args.Two<PublicKey, PrivateKey> getPFXPrivateKey(File file, String password) {
         try {
             return getPFXPrivateKey(Files1.openInputStream(file), password, true);
         } catch (IOException e) {
@@ -1268,7 +1268,7 @@ public class Encrypts {
      * @param password 密码
      * @return PublicKey, PrivateKey
      */
-    public static Arg.Two<PublicKey, PrivateKey> getPFXPrivateKey(InputStream in, String password) {
+    public static Args.Two<PublicKey, PrivateKey> getPFXPrivateKey(InputStream in, String password) {
         return getPFXPrivateKey(in, password, false);
     }
 
@@ -1280,7 +1280,7 @@ public class Encrypts {
      * @param close    是否关闭流
      * @return PublicKey, PrivateKey
      */
-    private static Arg.Two<PublicKey, PrivateKey> getPFXPrivateKey(InputStream in, String password, boolean close) {
+    private static Args.Two<PublicKey, PrivateKey> getPFXPrivateKey(InputStream in, String password, boolean close) {
         try {
             char[] ps = password == null ? null : password.toCharArray();
             KeyStore ks = KeyStore.getInstance("PKCS12");
@@ -1291,7 +1291,7 @@ public class Encrypts {
                 keyAlias = (String) aliases.nextElement();
             }
             Certificate cert = ks.getCertificate(keyAlias);
-            return Arg.init(cert.getPublicKey(), (PrivateKey) ks.getKey(keyAlias, ps));
+            return Args.of(cert.getPublicKey(), (PrivateKey) ks.getKey(keyAlias, ps));
         } catch (Exception e) {
             return null;
         } finally {

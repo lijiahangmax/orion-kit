@@ -2,7 +2,7 @@ package com.orion.lang.collect;
 
 import com.orion.lang.MapEntry;
 import com.orion.utils.ext.StringExt;
-import com.orion.lang.wrapper.Arg;
+import com.orion.lang.wrapper.Args;
 import com.orion.utils.*;
 import com.orion.utils.math.BigIntegers;
 import com.orion.utils.math.Decimals;
@@ -40,7 +40,7 @@ public class ConvertHashMap<K, V> extends HashMap<K, V> {
         super(m);
     }
 
-    public void puts(Arg.Entry<K, V>... es) {
+    public void puts(Args.Entry<K, V>... es) {
         int length = Arrays1.length(es);
         for (int i = 0; i < length; i++) {
             put(es[i].getKey(), es[i].getValue());

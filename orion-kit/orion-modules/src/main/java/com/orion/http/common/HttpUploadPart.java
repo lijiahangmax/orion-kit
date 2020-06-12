@@ -1,4 +1,4 @@
-package com.orion.http.ok.file;
+package com.orion.http.common;
 
 import com.orion.id.UUIds;
 import com.orion.utils.Streams;
@@ -9,13 +9,13 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Mock 上传文件实体
+ * Http 上传文件实体
  *
  * @author ljh15
  * @version 1.0.0
  * @date 2020/4/14 11:47
  */
-public class MockUploadPart {
+public class HttpUploadPart {
 
     /**
      * serverKey
@@ -44,29 +44,29 @@ public class MockUploadPart {
 
     private InputStream in;
 
-    public MockUploadPart(String key) {
+    public HttpUploadPart(String key) {
         this.key = key;
     }
 
-    public MockUploadPart(String key, File file) {
+    public HttpUploadPart(String key, File file) {
         this.key = key;
         this.file = file;
     }
 
-    public MockUploadPart(String key, byte[] bytes) {
+    public HttpUploadPart(String key, byte[] bytes) {
         this.key = key;
         this.bytes = bytes;
         this.len = bytes.length;
     }
 
-    public MockUploadPart(String key, byte[] bytes, int off, int len) {
+    public HttpUploadPart(String key, byte[] bytes, int off, int len) {
         this.key = key;
         this.bytes = bytes;
         this.off = off;
         this.len = len;
     }
 
-    public MockUploadPart(String key, InputStream in) {
+    public HttpUploadPart(String key, InputStream in) {
         this.key = key;
         this.in = in;
     }
@@ -110,40 +110,40 @@ public class MockUploadPart {
         return in;
     }
 
-    public MockUploadPart setKey(String key) {
+    public HttpUploadPart setKey(String key) {
         this.key = key;
         return this;
     }
 
-    public MockUploadPart setFileName(String fileName) {
+    public HttpUploadPart setFileName(String fileName) {
         this.fileName = fileName;
         return this;
     }
 
-    public MockUploadPart setContentType(String contentType) {
+    public HttpUploadPart setContentType(String contentType) {
         this.contentType = contentType;
         return this;
     }
 
-    public MockUploadPart setFile(File file) {
+    public HttpUploadPart setFile(File file) {
         this.file = file;
         return this;
     }
 
-    public MockUploadPart setBytes(byte[] bytes, int off, int len) {
+    public HttpUploadPart setBytes(byte[] bytes, int off, int len) {
         this.bytes = bytes;
         this.off = off;
         this.len = len;
         return this;
     }
 
-    public MockUploadPart setBytes(byte[] bytes) {
+    public HttpUploadPart setBytes(byte[] bytes) {
         this.bytes = bytes;
         this.len = bytes.length;
         return this;
     }
 
-    public MockUploadPart setIn(InputStream in) throws IOException {
+    public HttpUploadPart setIn(InputStream in) throws IOException {
         this.in = in;
         this.bytes = Streams.toByteArray(in);
         this.len = bytes.length;

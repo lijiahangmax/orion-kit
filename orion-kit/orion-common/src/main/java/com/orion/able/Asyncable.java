@@ -7,11 +7,11 @@ package com.orion.able;
  * @version 1.0.0
  * @date 2020/4/17 13:41
  */
-public interface Asyncable {
+public interface Asyncable<T> {
 
     /**
      * 异步执行
      */
-    void async();
+    void async(T handler);
 
 }

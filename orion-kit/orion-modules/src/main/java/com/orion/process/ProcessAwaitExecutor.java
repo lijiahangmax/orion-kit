@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0.0
  * @date 2020/4/17 13:44
  */
-public class ProcessAwaitExecutor implements Awaitable {
+public class ProcessAwaitExecutor implements Awaitable<ProcessAwaitExecutor> {
 
     /**
      * 命令
@@ -101,11 +101,6 @@ public class ProcessAwaitExecutor implements Awaitable {
      */
     private ErrorHandler<ProcessAwaitExecutor> errorHandler;
 
-    /**
-     * 如果命令带参数, 并且不调用replaceCommand, 需要使用命令数组
-     *
-     * @param command 命令
-     */
     public ProcessAwaitExecutor(String command) {
         this(new String[]{command}, null);
     }
@@ -124,11 +119,12 @@ public class ProcessAwaitExecutor implements Awaitable {
     }
 
     /**
-     * 处理命令, 如果进程不会自动停止不可以使用, 因为destroy杀死的不是terminal执行的进程, 而是terminal
+     * 命名使用系统 terminal 执行
+     * 如果进程不会自动停止不可以使用, 因为destroy杀死的不是terminal执行的进程, 而是terminal
      *
      * @return this
      */
-    public ProcessAwaitExecutor replaceCommand() {
+    public ProcessAwaitExecutor terminal() {
         List<String> c = EnvCommand.getCommand();
         for (String s : this.command) {
             c.add(s.replaceAll("\n", EnvCommand.SPACE).replaceAll("\r", EnvCommand.SPACE));
@@ -273,7 +269,7 @@ public class ProcessAwaitExecutor implements Awaitable {
     }
 
     @Override
-    public void await() {
+    public ProcessAwaitExecutor await() {
         try {
             this.pb = new ProcessBuilder(command);
             this.env = this.pb.environment();
@@ -313,6 +309,7 @@ public class ProcessAwaitExecutor implements Awaitable {
                 this.errorHandler.onError(this, e);
             }
         }
+        return this;
     }
 
     /**

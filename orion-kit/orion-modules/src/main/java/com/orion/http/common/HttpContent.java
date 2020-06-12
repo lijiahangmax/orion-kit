@@ -1,13 +1,13 @@
-package com.orion.http.ok;
+package com.orion.http.common;
 
 /**
- * Mock Content-Type
+ * HTTP Content-Type
  *
  * @author ljh15
  * @version 1.0.0
  * @date 2020/4/8 10:02
  */
-public enum MockContent {
+public enum HttpContent {
 
     /**
      * HTML格式
@@ -76,7 +76,7 @@ public enum MockContent {
 
     String type;
 
-    MockContent(String type) {
+    HttpContent(String type) {
         this.type = type;
     }
 

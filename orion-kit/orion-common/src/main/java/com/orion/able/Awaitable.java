@@ -7,11 +7,11 @@ package com.orion.able;
  * @version 1.0.0
  * @date 2020/4/17 13:40
  */
-public interface Awaitable {
+public interface Awaitable<T> {
 
     /**
      * 同步执行
      */
-    void await();
+    T await();
 
 }

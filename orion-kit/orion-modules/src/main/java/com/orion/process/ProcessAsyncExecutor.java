@@ -15,7 +15,7 @@ import java.util.*;
  * @date 2020/4/17 13:44
  */
 @SuppressWarnings("ALL")
-public class ProcessAsyncExecutor implements Asyncable {
+public class ProcessAsyncExecutor {
 
     /**
      * 命令
@@ -53,7 +53,7 @@ public class ProcessAsyncExecutor implements Asyncable {
     private boolean errAppend;
 
     /**
-     * 输出流转存文件 #async
+     * 输出流转存文件
      */
     private File outputFile;
 
@@ -92,11 +92,6 @@ public class ProcessAsyncExecutor implements Asyncable {
      */
     private ErrorHandler<ProcessAsyncExecutor> errorHandler;
 
-    /**
-     * 如果命令带参数, 并且不调用replaceCommand, 需要使用命令数组
-     *
-     * @param command 命令
-     */
     public ProcessAsyncExecutor(String command) {
         this(new String[]{command}, null);
     }
@@ -115,11 +110,12 @@ public class ProcessAsyncExecutor implements Asyncable {
     }
 
     /**
-     * 处理命令, 如果进程不会自动停止不可以使用, 因为destroy杀死的不是terminal执行的进程, 而是terminal
+     * 命名使用系统 terminal 执行
+     * 如果进程不会自动停止不可以使用, 因为destroy杀死的不是terminal执行的进程, 而是terminal
      *
      * @return this
      */
-    public ProcessAsyncExecutor replaceCommand() {
+    public ProcessAsyncExecutor terminal() {
         List<String> c = EnvCommand.getCommand();
         for (String s : this.command) {
             c.add(s.replaceAll("\n", EnvCommand.SPACE).replaceAll("\r", EnvCommand.SPACE));
@@ -280,7 +276,6 @@ public class ProcessAsyncExecutor implements Asyncable {
         return this;
     }
 
-    @Override
     public void async() {
         try {
             this.pb = new ProcessBuilder(command);

@@ -10,18 +10,18 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 /**
  * spring工具类
- * 需要配置 <bean id="springs" class="com.li.Springs$ApplicationContextAwareStore"/>
+ * 需要配置 <bean id="springHolder" class="com.orion.spring.SpringHolder$ApplicationContextAwareStore"/>
  *
  * @author ljh15
  * @version 1.0.0
  * @date 2020/2/3 14:36
  */
-public class Springs {
+public class SpringHolder {
 
     private static ApplicationContext applicationContext;
     private static ConfigurableListableBeanFactory beanFactory;
 
-    private Springs() {
+    private SpringHolder() {
     }
 
     public static class ApplicationContextAwareStore implements ApplicationContextAware, BeanFactoryPostProcessor {
@@ -32,13 +32,13 @@ public class Springs {
         @Override
         public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
             System.out.println("set springs applicationContext");
-            Springs.applicationContext = applicationContext;
+            SpringHolder.applicationContext = applicationContext;
         }
 
         @Override
         public void postProcessBeanFactory(ConfigurableListableBeanFactory configurableListableBeanFactory) throws BeansException {
             System.out.println("set springs beanFactory");
-            Springs.beanFactory = configurableListableBeanFactory;
+            SpringHolder.beanFactory = configurableListableBeanFactory;
         }
 
     }
@@ -50,6 +50,10 @@ public class Springs {
      */
     public static ApplicationContext getApplicationContext() {
         return applicationContext;
+    }
+
+    public static ConfigurableListableBeanFactory getBeanFactory() {
+        return beanFactory;
     }
 
     @SuppressWarnings("unchecked")
@@ -89,9 +93,15 @@ public class Springs {
         return applicationContext.getAliases(beanName);
     }
 
+    public static void close() {
+        if (applicationContext instanceof ConfigurableApplicationContext) {
+            ((ConfigurableApplicationContext) applicationContext).close();
+        }
+    }
+
     public static void refresh() {
         Valid.isInstanceOf(ConfigurableApplicationContext.class, applicationContext);
-        ConfigurableApplicationContext applicationContext = (ConfigurableApplicationContext) Springs.applicationContext;
+        ConfigurableApplicationContext applicationContext = (ConfigurableApplicationContext) SpringHolder.applicationContext;
         applicationContext.refresh();
     }
 

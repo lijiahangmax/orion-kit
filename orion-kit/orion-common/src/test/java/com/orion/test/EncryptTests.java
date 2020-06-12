@@ -1,6 +1,6 @@
 package com.orion.test;
 
-import com.orion.lang.wrapper.Arg;
+import com.orion.lang.wrapper.Args;
 import com.orion.utils.Encrypts;
 import com.orion.utils.Streams;
 import org.junit.Test;
@@ -52,7 +52,7 @@ public class EncryptTests {
 
     @Test
     public void rsa() {
-        Arg.Two<PublicKey, PrivateKey> keys = Encrypts.generatorRSAKey();
+        Args.Two<PublicKey, PrivateKey> keys = Encrypts.generatorRSAKey();
         String e = Encrypts.rsaEncrypt("哈哈哈", keys.getArg1());
         System.out.println(e);
         System.out.println(Encrypts.rsaDecrypt(e, keys.getArg2()));

@@ -3,7 +3,7 @@ package com.orion.excel.exporting;
 import com.orion.excel.annotation.ExportField;
 import com.orion.excel.annotation.ExportFont;
 import com.orion.excel.annotation.ExportSheet;
-import com.orion.lang.wrapper.Arg;
+import com.orion.lang.wrapper.Args;
 import com.orion.utils.*;
 import com.orion.utils.io.Files1;
 import com.orion.utils.reflect.Fields;
@@ -55,12 +55,12 @@ public class ExcelExport<T> {
     /**
      * 行信息
      */
-    private Map<Integer, Arg.Two<ExportFieldStyle, CellStyle>> rowStyles = new HashMap<>();
+    private Map<Integer, Args.Two<ExportFieldStyle, CellStyle>> rowStyles = new HashMap<>();
 
     /**
      * 表头信息
      */
-    private Map<Integer, Arg.Two<ExportFieldStyle, CellStyle>> headerStyles = new HashMap<>();
+    private Map<Integer, Args.Two<ExportFieldStyle, CellStyle>> headerStyles = new HashMap<>();
 
     /**
      * sheetStyle
@@ -235,13 +235,13 @@ public class ExcelExport<T> {
      * @return this
      */
     public ExcelExport<T> cleanStyle(int row) {
-        Arg.Two<ExportFieldStyle, CellStyle> rowStyle = rowStyles.get(row);
-        Arg.Two<ExportFieldStyle, CellStyle> headerStyle = headerStyles.get(row);
+        Args.Two<ExportFieldStyle, CellStyle> rowStyle = rowStyles.get(row);
+        Args.Two<ExportFieldStyle, CellStyle> headerStyle = headerStyles.get(row);
         if (rowStyle != null) {
-            rowStyles.put(row, Arg.two());
+            rowStyles.put(row, Args.two());
         }
         if (headerStyle != null) {
-            headerStyles.put(row, Arg.two());
+            headerStyles.put(row, Args.two());
         }
         return this;
     }
@@ -253,9 +253,9 @@ public class ExcelExport<T> {
      * @return this
      */
     public ExcelExport<T> cleanRowStyle(int row) {
-        Arg.Two<ExportFieldStyle, CellStyle> rowStyle = rowStyles.get(row);
+        Args.Two<ExportFieldStyle, CellStyle> rowStyle = rowStyles.get(row);
         if (rowStyle != null) {
-            rowStyles.put(row, Arg.two());
+            rowStyles.put(row, Args.two());
         }
         return this;
     }
@@ -267,9 +267,9 @@ public class ExcelExport<T> {
      * @return this
      */
     public ExcelExport<T> cleanHeaderStyle(int row) {
-        Arg.Two<ExportFieldStyle, CellStyle> headerStyle = headerStyles.get(row);
+        Args.Two<ExportFieldStyle, CellStyle> headerStyle = headerStyles.get(row);
         if (headerStyle != null) {
-            headerStyles.put(row, Arg.two());
+            headerStyles.put(row, Args.two());
         }
         return this;
     }
@@ -291,7 +291,7 @@ public class ExcelExport<T> {
      * @return this
      */
     public ExcelExport<T> headUseRowStyle(int row) {
-        Arg.Two<ExportFieldStyle, CellStyle> style = rowStyles.get(row);
+        Args.Two<ExportFieldStyle, CellStyle> style = rowStyles.get(row);
         if (style != null) {
             headerStyles.put(row, style);
         }
@@ -315,7 +315,7 @@ public class ExcelExport<T> {
      * @return this
      */
     public ExcelExport<T> rowUseHeadStyle(int row) {
-        Arg.Two<ExportFieldStyle, CellStyle> style = headerStyles.get(row);
+        Args.Two<ExportFieldStyle, CellStyle> style = headerStyles.get(row);
         if (style != null) {
             rowStyles.put(row, style);
         }
@@ -333,8 +333,8 @@ public class ExcelExport<T> {
         if (style == null) {
             return this;
         }
-        Arg.Two<ExportFieldStyle, CellStyle> rowStyle = rowStyles.get(row);
-        Arg.Two<ExportFieldStyle, CellStyle> headerStyle = headerStyles.get(row);
+        Args.Two<ExportFieldStyle, CellStyle> rowStyle = rowStyles.get(row);
+        Args.Two<ExportFieldStyle, CellStyle> headerStyle = headerStyles.get(row);
         if (rowStyle != null) {
             rowStyle.setArg2(style);
         }
@@ -355,7 +355,7 @@ public class ExcelExport<T> {
         if (style == null) {
             return this;
         }
-        Arg.Two<ExportFieldStyle, CellStyle> headerStyle = headerStyles.get(row);
+        Args.Two<ExportFieldStyle, CellStyle> headerStyle = headerStyles.get(row);
         if (headerStyle != null) {
             headerStyle.setArg2(style);
         }
@@ -373,7 +373,7 @@ public class ExcelExport<T> {
         if (style == null) {
             return this;
         }
-        Arg.Two<ExportFieldStyle, CellStyle> rowStyle = rowStyles.get(row);
+        Args.Two<ExportFieldStyle, CellStyle> rowStyle = rowStyles.get(row);
         if (rowStyle != null) {
             rowStyle.setArg2(style);
         }
@@ -391,8 +391,8 @@ public class ExcelExport<T> {
         if (style == null) {
             return this;
         }
-        Arg.Two<ExportFieldStyle, CellStyle> rowStyle = rowStyles.get(row);
-        Arg.Two<ExportFieldStyle, CellStyle> headerStyle = headerStyles.get(row);
+        Args.Two<ExportFieldStyle, CellStyle> rowStyle = rowStyles.get(row);
+        Args.Two<ExportFieldStyle, CellStyle> headerStyle = headerStyles.get(row);
         CellStyle cellStyle = this.parseStyle(style);
         if (rowStyle != null) {
             rowStyle.setArg1(style);
@@ -416,7 +416,7 @@ public class ExcelExport<T> {
         if (style == null) {
             return this;
         }
-        Arg.Two<ExportFieldStyle, CellStyle> headerStyle = headerStyles.get(row);
+        Args.Two<ExportFieldStyle, CellStyle> headerStyle = headerStyles.get(row);
         if (headerStyle != null) {
             headerStyle.setArg1(style);
             headerStyle.setArg2(this.parseStyle(style));
@@ -435,7 +435,7 @@ public class ExcelExport<T> {
         if (style == null) {
             return this;
         }
-        Arg.Two<ExportFieldStyle, CellStyle> rowStyle = rowStyles.get(row);
+        Args.Two<ExportFieldStyle, CellStyle> rowStyle = rowStyles.get(row);
         if (rowStyle != null) {
             rowStyle.setArg1(style);
             rowStyle.setArg2(this.parseStyle(style));
@@ -567,7 +567,7 @@ public class ExcelExport<T> {
         int index = f.value();
         columnSize = Math.max(columnSize, index);
         getMethods.put(index, m);
-        Arg.Two<ExportFieldStyle, CellStyle> arg = Arg.two();
+        Args.Two<ExportFieldStyle, CellStyle> arg = Args.two();
         rowStyles.put(index, arg);
         ExportFieldStyle fieldStyle = analysisField(f);
         arg.setArg1(fieldStyle);
@@ -753,7 +753,7 @@ public class ExcelExport<T> {
      * 解析样式
      */
     private void parseStyle(int i) {
-        Arg.Two<ExportFieldStyle, CellStyle> ms = rowStyles.get(i);
+        Args.Two<ExportFieldStyle, CellStyle> ms = rowStyles.get(i);
         if (ms != null) {
             ms.setArg2(this.parseStyle(ms.getArg1()));
         }
@@ -821,7 +821,7 @@ public class ExcelExport<T> {
             }
             for (int i = 0; i < headers.length; i++) {
                 Cell headCell = headRow.createCell(i);
-                Arg.Two<ExportFieldStyle, CellStyle> headStyle = headerStyles.get(i);
+                Args.Two<ExportFieldStyle, CellStyle> headStyle = headerStyles.get(i);
                 if (headStyle != null) {
                     headCell.setCellStyle(headStyle.getArg2());
                 }
@@ -839,7 +839,7 @@ public class ExcelExport<T> {
             }
             Row rowRow = sheet.createRow(rowIndex++);
             for (int i = 0; i < columnSize + 1; i++) {
-                Arg.Two<ExportFieldStyle, CellStyle> thisRowStyle = rowStyles.get(i);
+                Args.Two<ExportFieldStyle, CellStyle> thisRowStyle = rowStyles.get(i);
                 if (thisRowStyle == null) {
                     continue;
                 }
@@ -862,7 +862,7 @@ public class ExcelExport<T> {
      */
     private void setCellValue(Cell cell, int index, T row) {
         Method method = getMethods.get(index);
-        Arg.Two<ExportFieldStyle, CellStyle> styles = rowStyles.get(index);
+        Args.Two<ExportFieldStyle, CellStyle> styles = rowStyles.get(index);
         ExportFieldStyle style1 = styles.getArg1();
         CellStyle style2 = styles.getArg2();
         String datePattern = null;
