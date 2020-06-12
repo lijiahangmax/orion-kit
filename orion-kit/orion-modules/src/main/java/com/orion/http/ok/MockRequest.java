@@ -128,12 +128,12 @@ public class MockRequest {
     }
 
     public MockRequest(MockApi mockApi) {
-        this.url = mockApi.url;
-        this.method = mockApi.method.getMethod();
-        this.tag = mockApi.tag;
-        this.ssl = mockApi.ssl;
-        if (mockApi.contentType != null) {
-            this.contentType = mockApi.contentType.getType();
+        this.url = mockApi.getUrl();
+        this.method = mockApi.getMethod().getMethod();
+        this.tag = mockApi.getTag();
+        this.ssl = mockApi.isSsl();
+        if (mockApi.getContentType() != null) {
+            this.contentType = mockApi.getContentType().getType();
         }
     }
 
@@ -594,7 +594,6 @@ public class MockRequest {
                 ", method='" + method + '\'' +
                 ", charset='" + charset + '\'' +
                 ", contentType='" + contentType + '\'' +
-                ", queryParams=" + queryParams +
                 ", queryString='" + queryString + '\'' +
                 ", queryStringEncode=" + queryStringEncode +
                 ", bodyLength=" + Arrays1.length(body) +
@@ -605,10 +604,6 @@ public class MockRequest {
                 ", tag=" + tag +
                 ", ssl=" + ssl +
                 ", async=" + async +
-                ", consumer=" + consumer +
-                ", request=" + request +
-                ", call=" + call +
-                ", client=" + client +
                 ", result=" + result +
                 '}';
     }

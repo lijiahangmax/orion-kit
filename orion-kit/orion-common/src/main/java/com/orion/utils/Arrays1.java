@@ -11,19 +11,22 @@ import java.util.function.Function;
 import java.util.function.IntFunction;
 
 /**
- * 数组的工具类
+ * 数组工具类
  *
  * @author Li
  * @version 1.0.0
  * @date 2019/9/9 10:25
  * <p>
- * 需要注意: 可变参数 Object... T... 不应该传基本类型的数组, JVM会将它将包装成一个单元素数组, 并不会结构多个基本类型的对象
+ * 需要注意: 可变参数 Object... T... 不应该传基本类型的数组, 应该传基本类型的包装类,
+ * 基本类型数组无法转化为包装类型的数组, 从而入参为转化Object, 导致与预期结果不相同
  */
 @SuppressWarnings("ALL")
 public class Arrays1 {
 
     private Arrays1() {
     }
+
+    private static final int TWO = 2;
 
     // ------------------ new ------------------
 
@@ -1008,11 +1011,24 @@ public class Arrays1 {
         return i;
     }
 
+    /**
+     * 不可接收基本类型的数组, 可以使用包装类 否则会返回 T[][]
+     *
+     * @param t   t
+     * @param <T> t
+     * @return array
+     */
     public static <T> T[] of(T... t) {
         return t;
     }
 
-    @SuppressWarnings("all")
+    /**
+     * 可接收基本类型的数组, 反回Object[]
+     *
+     * @param t   t
+     * @param <T> t
+     * @return array
+     */
     public static Object[] ofs(Object... i) {
         int lengths = lengths(i);
         if (lengths == 0) {
@@ -1038,7 +1054,6 @@ public class Arrays1 {
      * @param o 数组
      * @return true为空
      */
-    @SuppressWarnings("all")
     public static boolean isEmpties(Object o) {
         return o == null || (isArray(o) && Array.getLength(o) == 0);
     }
@@ -1314,6 +1329,7 @@ public class Arrays1 {
         }
         return arr;
     }
+
     public static String[] resize(String[] arr, int newSize) {
         if (newSize <= 0) {
             return new String[0];
@@ -2509,7 +2525,7 @@ public class Arrays1 {
         if (length == 0) {
             return;
         }
-        for (int i = 0, mid = length / 2; i < mid; i++) {
+        for (int i = 0, mid = length / TWO; i < mid; i++) {
             int len = length - i - 1;
             if (a[i] != a[len]) {
                 swap(a, i, len);
@@ -2522,7 +2538,7 @@ public class Arrays1 {
         if (length == 0) {
             return;
         }
-        for (int i = 0, mid = length / 2; i < mid; i++) {
+        for (int i = 0, mid = length / TWO; i < mid; i++) {
             int len = length - i - 1;
             if (a[i] != a[len]) {
                 swap(a, i, len);
@@ -2535,7 +2551,7 @@ public class Arrays1 {
         if (length == 0) {
             return;
         }
-        for (int i = 0, mid = length / 2; i < mid; i++) {
+        for (int i = 0, mid = length / TWO; i < mid; i++) {
             int len = length - i - 1;
             if (a[i] != a[len]) {
                 swap(a, i, len);
@@ -2548,7 +2564,7 @@ public class Arrays1 {
         if (length == 0) {
             return;
         }
-        for (int i = 0, mid = length / 2; i < mid; i++) {
+        for (int i = 0, mid = length / TWO; i < mid; i++) {
             int len = length - i - 1;
             if (a[i] != a[len]) {
                 swap(a, i, len);
@@ -2561,7 +2577,7 @@ public class Arrays1 {
         if (length == 0) {
             return;
         }
-        for (int i = 0, mid = length / 2; i < mid; i++) {
+        for (int i = 0, mid = length / TWO; i < mid; i++) {
             int len = length - i - 1;
             if (a[i] != a[len]) {
                 swap(a, i, len);
@@ -2574,7 +2590,7 @@ public class Arrays1 {
         if (length == 0) {
             return;
         }
-        for (int i = 0, mid = length / 2; i < mid; i++) {
+        for (int i = 0, mid = length / TWO; i < mid; i++) {
             int len = length - i - 1;
             if (a[i] != a[len]) {
                 swap(a, i, len);
@@ -2587,7 +2603,7 @@ public class Arrays1 {
         if (length == 0) {
             return;
         }
-        for (int i = 0, mid = length / 2; i < mid; i++) {
+        for (int i = 0, mid = length / TWO; i < mid; i++) {
             int len = length - i - 1;
             if (a[i] != a[len]) {
                 swap(a, i, len);
@@ -2600,7 +2616,7 @@ public class Arrays1 {
         if (length == 0) {
             return;
         }
-        for (int i = 0, mid = length / 2; i < mid; i++) {
+        for (int i = 0, mid = length / TWO; i < mid; i++) {
             int len = length - i - 1;
             if (a[i] != a[len]) {
                 swap(a, i, len);
@@ -2613,7 +2629,7 @@ public class Arrays1 {
         if (length == 0) {
             return;
         }
-        for (int i = 0, mid = length / 2; i < mid; i++) {
+        for (int i = 0, mid = length / TWO; i < mid; i++) {
             int len = length - i - 1;
             if (a[i] != a[len]) {
                 swap(a, i, len);

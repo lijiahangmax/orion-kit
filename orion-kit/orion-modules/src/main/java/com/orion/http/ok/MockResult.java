@@ -35,11 +35,6 @@ public class MockResult {
     private byte[] body;
 
     /**
-     * 响应体
-     */
-    private String bodyString;
-
-    /**
      * url
      */
     private String url;
@@ -319,9 +314,6 @@ public class MockResult {
                 ", tag=" + tag +
                 ", protocol='" + protocol + '\'' +
                 ", headers=" + headers +
-                ", call=" + call +
-                ", request=" + request +
-                ", response=" + response +
                 ", exception=" + exception +
                 ", done=" + done +
                 '}';

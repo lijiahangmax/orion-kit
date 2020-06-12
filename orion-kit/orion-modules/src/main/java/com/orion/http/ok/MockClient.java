@@ -1,10 +1,9 @@
 package com.orion.http.ok;
 
+import com.orion.lang.DefaultX509TrustManager;
 import okhttp3.OkHttpClient;
 
 import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.X509TrustManager;
-import java.security.cert.X509Certificate;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -14,11 +13,17 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0.0
  * @date 2020/4/8 10:33
  */
+@SuppressWarnings("ALL")
 public class MockClient {
 
     static {
         // 开启log打印
-        reloadClient(new MockConfig().setCallTimeout(60000).setConnectTimeout(60000).setReadTimeout(60000).setWriteTimeout(60000).logInterceptor());
+        reloadClient(new MockConfig()
+                .setCallTimeout(3000)
+                .setConnectTimeout(3000)
+                .setReadTimeout(15000)
+                .setWriteTimeout(15000)
+                .logInterceptor());
     }
 
     /**
@@ -58,6 +63,24 @@ public class MockClient {
         return client;
     }
 
+    /**
+     * 设置 Client
+     *
+     * @param client Client
+     */
+    public static void setClient(OkHttpClient client) {
+        ClientInstance.client = client;
+    }
+
+    /**
+     * 设置 sslClient
+     *
+     * @param sslClient sslClient
+     */
+    public static void setSslClient(OkHttpClient sslClient) {
+        ClientInstance.sslClient = sslClient;
+    }
+
     private static class ClientInstance {
 
         private static OkHttpClient client;
@@ -81,7 +104,7 @@ public class MockClient {
                         .connectTimeout(mockConfig.getConnectTimeout(), TimeUnit.SECONDS)
                         .readTimeout(mockConfig.getReadTimeout(), TimeUnit.SECONDS)
                         .writeTimeout(mockConfig.getWriteTimeout(), TimeUnit.SECONDS)
-                        .sslSocketFactory((SSLSocketFactory) SSLSocketFactory.getDefault(), DEFAULT_MANAGER);
+                        .sslSocketFactory((SSLSocketFactory) SSLSocketFactory.getDefault(), DefaultX509TrustManager.DEFAULT_TRUST_MANAGER);
                 if (mockConfig.isLogInterceptor()) {
                     MockLoggerInterceptor mockLoggerInterceptor = new MockLoggerInterceptor();
                     client.addInterceptor(mockLoggerInterceptor);
@@ -91,23 +114,6 @@ public class MockClient {
                 ClientInstance.sslClient = sslClient.build();
             }
         }
-
-        private static final X509TrustManager DEFAULT_MANAGER = new X509TrustManager() {
-            @Override
-            public void checkClientTrusted(X509Certificate[] x509Certificates, String s) {
-
-            }
-
-            @Override
-            public void checkServerTrusted(X509Certificate[] x509Certificates, String s) {
-
-            }
-
-            @Override
-            public X509Certificate[] getAcceptedIssuers() {
-                return new X509Certificate[0];
-            }
-        };
 
     }
 

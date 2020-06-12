@@ -2,6 +2,9 @@ package com.orion.http.ok;
 
 import com.orion.utils.Strings;
 
+import java.io.Serializable;
+import java.util.Map;
+
 /**
  * Mock API
  *
@@ -9,54 +12,61 @@ import com.orion.utils.Strings;
  * @version 1.0.0
  * @date 2020/4/9 12:42
  */
-public enum MockApi {
+public class MockApi implements Serializable {
 
-    /**
-     * 微信获取accessToken
-     */
-    WX_GET_ACCESS_TOKEN("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={}&secret={}", MockMethod.GET, null, "微信获取accessToken", false),
-
-    /**
-     * 微信公众号推送模板消息
-     */
-    WX_PUSH_TEMPLATE_MESSAGE("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={}", MockMethod.POST, MockContent.APPLICATION_JSON, "微信公众号推送模板消息", false),
-
-    /**
-     * 微信获取用户openId
-     */
-    WX_GET_USER_OPEN_ID("https://api.weixin.qq.com/sns/oauth2/access_token?appid={}&secret={}&code={}&grant_type=authorization_code", MockMethod.GET, null, "微信获取用户openId", false),
-
-    /**
-     * 微信获取用户信息
-     */
-    WX_GET_USER_INFO("https://api.weixin.qq.com/cgi-bin/user/info?access_token={}&openid={}", MockMethod.GET, null, "微信获取用户信息", false);
+    private static final long serialVersionUID = -4875745193358767L;
 
     /**
      * url
      */
-    String url;
+    private String url;
 
     /**
      * method
      */
-    MockMethod method;
+    private MockMethod method;
 
     /**
      * contentType
      */
-    MockContent contentType;
+    private MockContent contentType;
 
     /**
      * tag
      */
-    String tag;
+    private String tag;
 
     /**
      * ssl
      */
-    boolean ssl;
+    private boolean ssl;
 
-    MockApi(String url, MockMethod method, MockContent contentType, String tag, boolean ssl) {
+    public MockApi() {
+    }
+
+    public MockApi(String url) {
+        this.url = url;
+    }
+
+    public MockApi(String url, MockMethod method) {
+        this.url = url;
+        this.method = method;
+    }
+
+    public MockApi(String url, MockMethod method, MockContent contentType) {
+        this.url = url;
+        this.method = method;
+        this.contentType = contentType;
+    }
+
+    public MockApi(String url, MockMethod method, MockContent contentType, String tag) {
+        this.url = url;
+        this.method = method;
+        this.contentType = contentType;
+        this.tag = tag;
+    }
+
+    public MockApi(String url, MockMethod method, MockContent contentType, String tag, boolean ssl) {
         this.url = url;
         this.method = method;
         this.contentType = contentType;
@@ -65,13 +75,24 @@ public enum MockApi {
     }
 
     /**
-     * 格式化url的参数
+     * 格式化url的参数 {}
      *
      * @param o 参数
      * @return this
      */
-    public MockApi formatUrl(Object... o) {
+    public MockApi format(Object... o) {
         this.url = Strings.format(this.url, o);
+        return this;
+    }
+
+    /**
+     * 格式化url的参数 ${?}
+     *
+     * @param map 参数
+     * @return this
+     */
+    public MockApi format(Map<String, Object> map) {
+        this.url = Strings.format(this.url, map);
         return this;
     }
 
@@ -132,6 +153,11 @@ public enum MockApi {
     public MockApi setSsl(boolean ssl) {
         this.ssl = ssl;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return url;
     }
 
 }

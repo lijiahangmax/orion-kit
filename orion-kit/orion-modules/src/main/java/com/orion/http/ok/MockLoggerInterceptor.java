@@ -26,15 +26,15 @@ public class MockLoggerInterceptor implements Interceptor {
     public Response intercept(Interceptor.Chain chain) throws IOException {
         Request request = chain.request();
         long start = System.currentTimeMillis();
-        LOGGER.info("MOCK-API START method: [{}], url: [{}], tag: [{}]", request.method(), request.url(), request.tag());
+        LOGGER.info("OK-Request START method: [{}], url: [{}], tag: [{}]", request.method(), request.url(), request.tag());
         try {
             Response response = chain.proceed(request);
             long end = System.currentTimeMillis();
-            LOGGER.info("MOCK-API END [use: {}ms], code: {}, success: {}, method: [{}], url: [{}], tag: [{}]", end - start, response.code(), response.isSuccessful(), request.method(), request.url(), request.tag());
+            LOGGER.info("OK-Request END [use: {}ms], code: {}, success: {}, method: [{}], url: [{}], tag: [{}]", end - start, response.code(), response.isSuccessful(), request.method(), request.url(), request.tag());
             return response;
         } catch (IOException e) {
             long end = System.currentTimeMillis();
-            LOGGER.error("MOCK-API ERROR [use: {}ms], method: [{}], url: [{}], tag: [{}]", end - start, request.method(), request.url(), request.tag());
+            LOGGER.error("OK-Request ERROR [use: {}ms], method: [{}], url: [{}], tag: [{}], errorMessage: [{}]", end - start, request.method(), request.url(), request.tag(), e.getMessage());
             throw e;
         }
     }

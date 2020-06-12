@@ -13,22 +13,22 @@ public class MockConfig {
     /**
      * call超时时间
      */
-    private long callTimeout = 60;
+    private long callTimeout = 3;
 
     /**
      * 连接超时时间
      */
-    private long connectTimeout = 60;
+    private long connectTimeout = 3;
 
     /**
      * 读超时时间
      */
-    private long readTimeout = 60;
+    private long readTimeout = 15;
 
     /**
      * 写超时时间
      */
-    private long writeTimeout = 60;
+    private long writeTimeout = 15;
 
     /**
      * 是否开启logInterceptor
