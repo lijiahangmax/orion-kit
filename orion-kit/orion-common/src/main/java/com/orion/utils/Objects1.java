@@ -21,10 +21,6 @@ public class Objects1 {
     private Objects1() {
     }
 
-    // --------------- singleton map ---------------
-
-    private static final Map<Object, Object> OBJECT_MAP = new HashMap<>(4);
-
     /**
      * 默认值
      *
@@ -76,24 +72,6 @@ public class Objects1 {
      */
     public static boolean eq(Object o1, Object o2) {
         return (o1 == o2) || (o1 != null && o1.equals(o2));
-    }
-
-    /**
-     * 获取单例对象
-     *
-     * @param key key
-     * @param t   对象为空添加此对象
-     * @param <T> 类型
-     * @return 对象
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> T singleton(Object key, T t) {
-        Object o = OBJECT_MAP.get(key);
-        if (!isNull(o)) {
-            return (T) o;
-        }
-        OBJECT_MAP.put(key, t);
-        return t;
     }
 
     /**

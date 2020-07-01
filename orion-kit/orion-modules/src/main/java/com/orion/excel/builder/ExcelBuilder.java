@@ -1,8 +1,8 @@
 package com.orion.excel.builder;
 
-import com.orion.utils.Streams;
 import com.orion.utils.Valid;
 import com.orion.utils.io.Files1;
+import com.orion.utils.io.Streams;
 import com.orion.utils.reflect.Methods;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -40,6 +40,17 @@ public class ExcelBuilder {
 
     public ExcelBuilder(Workbook workbook) {
         this.workbook = workbook;
+    }
+
+    /**
+     * 获取sheet
+     *
+     * @param <T>   T
+     * @param index index
+     * @return ExcelSheet
+     */
+    public <T> ExcelSheet<T> getSheet(int index) {
+        return new ExcelSheet<>(workbook, workbook.getSheetAt(index));
     }
 
     /**

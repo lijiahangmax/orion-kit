@@ -1,13 +1,13 @@
 package com.orion.http.client;
 
-import com.orion.utils.Streams;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpRequestInterceptor;
-import org.apache.http.HttpResponseInterceptor;
-import org.apache.http.client.config.RequestConfig;
+import com.orion.lang.DefaultX509TrustManager;
+import com.orion.utils.io.Streams;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
 
 /**
  * Hyper HttpClient
@@ -19,8 +19,19 @@ import org.apache.http.impl.client.HttpClients;
 public class HyperClient {
 
     static {
-        ClientInstance.init(new HyperConfig().logInterceptor());
-        ClientInstance.initSsl(new HyperConfig().logInterceptor());
+        ClientInstance.init(new HyperClientConfig().logInterceptor());
+        try {
+            SSLContext sc = SSLContext.getInstance("TLSv1.1");
+            sc.init(null, new TrustManager[]{DefaultX509TrustManager.DEFAULT_X509_TRUST_MANAGER}, null);
+            ClientInstance.initSsl(new HyperClientConfig()
+                    .sslContext(sc)
+                    .sslSocketFactory(new SSLConnectionSocketFactory(sc))
+                    .logInterceptor());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     /**
@@ -29,7 +40,7 @@ public class HyperClient {
      * @param config config
      * @return reload client
      */
-    public static CloseableHttpClient reloadClient(HyperConfig config) {
+    public static CloseableHttpClient reloadClient(HyperClientConfig config) {
         ClientInstance.init(config);
         return ClientInstance.client;
     }
@@ -40,7 +51,7 @@ public class HyperClient {
      * @param config config
      * @return reload ssl client
      */
-    public static CloseableHttpClient reloadSslClient(HyperConfig config) {
+    public static CloseableHttpClient reloadSslClient(HyperClientConfig config) {
         ClientInstance.initSsl(config);
         return ClientInstance.sslClient;
     }
@@ -117,15 +128,15 @@ public class HyperClient {
         private ClientInstance() {
         }
 
-        private static void init(HyperConfig config) {
+        private static void init(HyperClientConfig config) {
             init(config, false);
         }
 
-        private static void initSsl(HyperConfig config) {
+        private static void initSsl(HyperClientConfig config) {
             init(config, true);
         }
 
-        private static void init(HyperConfig config, boolean ssl) {
+        private static void init(HyperClientConfig config, boolean ssl) {
             if (config == null) {
                 if (ssl) {
                     sslClient = HttpClients.custom().build();
@@ -133,33 +144,10 @@ public class HyperClient {
                     client = HttpClients.custom().build();
                 }
             } else {
-                RequestConfig requestConfig = RequestConfig.custom()
-                        .setConnectTimeout(config.getConnectTimeout())
-                        .setSocketTimeout(config.getSocketTimeout())
-                        .setConnectionRequestTimeout(config.getRequestTimeout())
-                        .build();
-                HttpClientBuilder builder = HttpClients.custom()
-                        .setMaxConnPerRoute(config.getRoute())
-                        .setDefaultRequestConfig(requestConfig);
-                String userAgent = config.getUserAgent();
-                if (userAgent != null) {
-                    builder.setUserAgent(userAgent);
-                }
-                if (config.isLogInterceptor()) {
-                    HyperLoggerInterceptor loggerInterceptor = new HyperLoggerInterceptor();
-                    builder.addInterceptorFirst((HttpRequestInterceptor) loggerInterceptor)
-                            .addInterceptorFirst((HttpResponseInterceptor) loggerInterceptor);
-                }
-                String proxyHost = config.getProxyHost();
-                if (proxyHost != null) {
-                    builder.setProxy(new HttpHost(proxyHost, config.getProxyPort()));
-                }
                 if (ssl) {
-                    builder.setSSLContext(config.getSslContext())
-                            .setSSLSocketFactory(config.getSslSocketFactory());
-                    ClientInstance.sslClient = builder.build();
+                    ClientInstance.sslClient = config.createClient(true);
                 } else {
-                    ClientInstance.client = builder.build();
+                    ClientInstance.client = config.createClient(false);
                 }
             }
         }

@@ -1,15 +1,16 @@
 package com.orion.remote.ssh;
 
 import com.orion.exception.AuthenticationException;
+import com.orion.lang.thread.NamedThreadFactory;
 import com.orion.remote.RemoteConnection;
 import com.orion.remote.ssh.handler.ErrorHandler;
 import com.orion.remote.ssh.handler.SuccessHandler;
 import com.orion.utils.Exceptions;
+import com.orion.utils.Threads;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 
 /**
@@ -22,10 +23,13 @@ import java.util.function.Consumer;
 @SuppressWarnings("ALL")
 public class ShellRunner {
 
+    private ShellRunner() {
+    }
+
     /**
      * shell执行线程池
      */
-    private static final ExecutorService POOL = Executors.newCachedThreadPool();
+    private static final ExecutorService POOL = Threads.newThreadPool(0, 15, 30000, new LinkedBlockingQueue<>(), "SHELL-RUNNER-");
 
     /**
      * 获取远程连接

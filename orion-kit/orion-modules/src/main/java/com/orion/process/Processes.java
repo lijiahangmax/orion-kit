@@ -3,16 +3,17 @@ package com.orion.process;
 import com.orion.process.handler.ErrorHandler;
 import com.orion.process.handler.StreamHandler;
 import com.orion.utils.Exceptions;
+import com.orion.utils.Threads;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 
 /**
- * 进程执行
+ * 进程执行器
  *
  * @author ljh15
  * @version 1.0.0
@@ -20,10 +21,24 @@ import java.util.function.Consumer;
  */
 public class Processes {
 
+    private Processes() {
+    }
+
     /**
      * shell执行线程池
      */
-    private static final ExecutorService POOL = Executors.newCachedThreadPool();
+    private static final ExecutorService POOL = Threads.newThreadPool(0, 15, 30000, new LinkedBlockingQueue<>(), "PROCESS-RUNNER-");
+
+    /**
+     * 同步执行命令
+     *
+     * @param command  command
+     * @param consumer 行处理器
+     * @return ProcessAwaitExecutor
+     */
+    public static ProcessAwaitExecutor awaitLine(String command, Consumer<String> consumer) {
+        return awaitLine(command, null, null, null, consumer, null);
+    }
 
     /**
      * 同步执行命令
@@ -48,6 +63,17 @@ public class Processes {
      */
     public static ProcessAwaitExecutor awaitLine(String command, String dir, String charset, Consumer<String> consumer) {
         return awaitLine(command, null, dir, charset, consumer, null);
+    }
+
+    /**
+     * 同步执行命令
+     *
+     * @param command  command
+     * @param consumer 行处理器
+     * @return ProcessAwaitExecutor
+     */
+    public static ProcessAwaitExecutor awaitLine(String[] command, Consumer<String> consumer) {
+        return awaitLine(null, command, null, null, consumer, null);
     }
 
     /**

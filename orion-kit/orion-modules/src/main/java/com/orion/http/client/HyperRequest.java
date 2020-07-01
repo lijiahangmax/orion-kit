@@ -2,21 +2,25 @@ package com.orion.http.client;
 
 import com.orion.able.Awaitable;
 import com.orion.http.common.HttpContent;
+import com.orion.http.common.HttpCookie;
 import com.orion.http.common.HttpMethod;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.Urls;
 import com.orion.utils.Valid;
+import com.orion.utils.io.Streams;
 import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.charset.Charset;
+import java.util.*;
 
 /**
  * Hyper HttpClient 请求
@@ -38,6 +42,11 @@ public class HyperRequest implements Awaitable<HyperResponse> {
     private String method = "GET";
 
     /**
+     * charset
+     */
+    private String charset;
+
+    /**
      * Content-Type GET HEAD 无效
      */
     private String contentType;
@@ -46,6 +55,16 @@ public class HyperRequest implements Awaitable<HyperResponse> {
      * 请求参数
      */
     private Map<String, String> queryParams;
+
+    /**
+     * 表单参数
+     */
+    private Map<String, String> formParts;
+
+    /**
+     * cookies
+     */
+    private List<HttpCookie> cookies;
 
     /**
      * 请求参数
@@ -80,7 +99,7 @@ public class HyperRequest implements Awaitable<HyperResponse> {
     /**
      * 忽略的请求头
      */
-    private String[] ignoreHeaders;
+    private List<String> ignoreHeaders;
 
     /**
      * 是否使用ssl
@@ -95,7 +114,7 @@ public class HyperRequest implements Awaitable<HyperResponse> {
     /**
      * HttpRequest
      */
-    private HttpUriRequest request;
+    private HttpRequestBase request;
 
     /**
      * response
@@ -103,10 +122,21 @@ public class HyperRequest implements Awaitable<HyperResponse> {
     private HyperResponse response;
 
     public HyperRequest() {
+        this.client = HyperClient.getClient();
+    }
+
+    public HyperRequest(CloseableHttpClient client) {
+        this.client = client;
     }
 
     public HyperRequest(String url) {
         this.url = url;
+        this.client = HyperClient.getClient();
+    }
+
+    public HyperRequest(String url, CloseableHttpClient client) {
+        this.url = url;
+        this.client = client;
     }
 
     /**
@@ -143,6 +173,17 @@ public class HyperRequest implements Awaitable<HyperResponse> {
     }
 
     /**
+     * client
+     *
+     * @param client client
+     * @return this
+     */
+    public HyperRequest client(CloseableHttpClient client) {
+        this.client = client;
+        return this;
+    }
+
+    /**
      * method
      *
      * @param method method
@@ -161,6 +202,17 @@ public class HyperRequest implements Awaitable<HyperResponse> {
      */
     public HyperRequest method(HttpMethod method) {
         this.method = method.getMethod();
+        return this;
+    }
+
+    /**
+     * 编码格式
+     *
+     * @param charset charset
+     * @return this
+     */
+    public HyperRequest charset(String charset) {
+        this.charset = charset;
         return this;
     }
 
@@ -193,7 +245,11 @@ public class HyperRequest implements Awaitable<HyperResponse> {
      * @return this
      */
     public HyperRequest queryParams(Map<String, String> queryParams) {
-        this.queryParams = queryParams;
+        if (this.queryParams == null) {
+            this.queryParams = queryParams;
+        } else {
+            this.queryParams.putAll(queryParams);
+        }
         return this;
     }
 
@@ -206,23 +262,39 @@ public class HyperRequest implements Awaitable<HyperResponse> {
      */
     public HyperRequest queryParam(String key, String value) {
         if (this.queryParams == null) {
-            this.queryParams = new HashMap<>();
+            this.queryParams = new LinkedHashMap<>();
         }
         this.queryParams.put(key, value);
         return this;
     }
 
     /**
-     * queryParams
+     * formParts
      *
-     * @param query key, value
+     * @param formParts formParts
      * @return this
      */
-    public HyperRequest queryParam(Map.Entry<String, String> query) {
-        if (this.queryParams == null) {
-            this.queryParams = new HashMap<>();
+    public HyperRequest formParts(Map<String, String> formParts) {
+        if (this.formParts == null) {
+            this.formParts = formParts;
+        } else {
+            this.formParts.putAll(formParts);
         }
-        this.queryParams.put(query.getKey(), query.getValue());
+        return this;
+    }
+
+    /**
+     * formParts
+     *
+     * @param key   key
+     * @param value value
+     * @return this
+     */
+    public HyperRequest formPart(String key, String value) {
+        if (this.formParts == null) {
+            this.formParts = new LinkedHashMap<>();
+        }
+        this.formParts.put(key, value);
         return this;
     }
 
@@ -237,18 +309,48 @@ public class HyperRequest implements Awaitable<HyperResponse> {
     }
 
     /**
+     * queryStringEncode
+     *
+     * @param encode encode
+     * @return this
+     */
+    public HyperRequest queryStringEncode(boolean encode) {
+        this.queryStringEncode = encode;
+        return this;
+    }
+
+    /**
      * body
      *
      * @param body body
      * @return this
      */
     public HyperRequest body(String body) {
+        return body(body, false);
+    }
+
+    /**
+     * body
+     *
+     * @param body       body
+     * @param useCharset 使用charset
+     * @return this
+     */
+    public HyperRequest body(String body, boolean useCharset) {
         if (body == null) {
             return this;
         }
-        this.body = body.getBytes();
-        this.bodyLen = this.body.length;
+        if (useCharset) {
+            try {
+                this.body = body.getBytes(this.charset);
+            } catch (Exception e) {
+                throw Exceptions.unEnding(e);
+            }
+        } else {
+            this.body = body.getBytes();
+        }
         this.bodyOffset = 0;
+        this.bodyLen = this.body.length;
         return this;
     }
 
@@ -287,7 +389,11 @@ public class HyperRequest implements Awaitable<HyperResponse> {
      * @return this
      */
     public HyperRequest headers(Map<String, String> headers) {
-        this.headers = headers;
+        if (this.headers == null) {
+            this.headers = headers;
+        } else {
+            this.headers.putAll(headers);
+        }
         return this;
     }
 
@@ -300,23 +406,86 @@ public class HyperRequest implements Awaitable<HyperResponse> {
      */
     public HyperRequest headers(String key, String value) {
         if (this.headers == null) {
-            this.headers = new HashMap<>();
+            this.headers = new LinkedHashMap<>();
         }
         this.headers.put(key, value);
         return this;
     }
 
     /**
-     * headers
+     * UserAgent
      *
-     * @param header key, value
+     * @param value value
      * @return this
      */
-    public HyperRequest headers(Map.Entry<String, String> header) {
+    public HyperRequest userAgent(String value) {
         if (this.headers == null) {
-            this.headers = new HashMap<>();
+            this.headers = new LinkedHashMap<>();
         }
-        this.headers.put(header.getKey(), header.getValue());
+        this.headers.put("User-Agent", value);
+        return this;
+    }
+
+    /**
+     * cookie
+     *
+     * @param cookie cookie
+     * @return this
+     */
+    public HyperRequest cookie(HttpCookie cookie) {
+        if (this.cookies == null) {
+            this.cookies = new ArrayList<>();
+        }
+        this.cookies.add(cookie);
+        return this;
+    }
+
+    /**
+     * cookies
+     *
+     * @param cookies cookies
+     * @return this
+     */
+    public HyperRequest cookies(List<HttpCookie> cookies) {
+        if (this.cookies == null) {
+            this.cookies = cookies;
+        } else {
+            this.cookies.addAll(cookies);
+        }
+        return this;
+    }
+
+    /**
+     * ignoreHeader
+     *
+     * @param ignoreHeader ignoreHeader
+     * @return this
+     */
+    public HyperRequest ignoreHeader(String ignoreHeader) {
+        if (ignoreHeader == null) {
+            return this;
+        }
+        if (this.ignoreHeaders == null) {
+            this.ignoreHeaders = new ArrayList<>();
+        }
+        this.ignoreHeaders.add(ignoreHeader);
+        return this;
+    }
+
+    /**
+     * ignoreHeaders
+     *
+     * @param ignoreHeaders ignoreHeaders
+     * @return this
+     */
+    public HyperRequest ignoreHeaders(String... ignoreHeaders) {
+        if (ignoreHeaders == null) {
+            return this;
+        }
+        if (this.ignoreHeaders == null) {
+            this.ignoreHeaders = new ArrayList<>();
+        }
+        this.ignoreHeaders.addAll(Arrays.asList(ignoreHeaders));
         return this;
     }
 
@@ -325,8 +494,12 @@ public class HyperRequest implements Awaitable<HyperResponse> {
      *
      * @return this
      */
-    public HyperRequest ignoreHeaders(String... ignoreHeaders) {
-        this.ignoreHeaders = ignoreHeaders;
+    public HyperRequest ignoreHeaders(List<String> ignoreHeaders) {
+        if (this.ignoreHeaders == null) {
+            this.ignoreHeaders = ignoreHeaders;
+        } else {
+            this.ignoreHeaders.addAll(ignoreHeaders);
+        }
         return this;
     }
 
@@ -338,6 +511,9 @@ public class HyperRequest implements Awaitable<HyperResponse> {
      */
     public HyperRequest ssl(boolean ssl) {
         this.ssl = ssl;
+        if (ssl) {
+            this.client = HyperClient.getSslClient();
+        }
         return this;
     }
 
@@ -348,6 +524,7 @@ public class HyperRequest implements Awaitable<HyperResponse> {
      */
     public HyperRequest ssl() {
         this.ssl = true;
+        this.client = HyperClient.getSslClient();
         return this;
     }
 
@@ -368,54 +545,58 @@ public class HyperRequest implements Awaitable<HyperResponse> {
     }
 
     private void buildRequest() {
-        if (queryParams != null) {
-            this.queryString = Urls.buildUrl(this.queryParams);
-            if (this.queryStringEncode) {
-                this.queryString = Urls.encode(this.queryString);
+        this.method = this.method.trim().toUpperCase();
+        if (HttpMethod.GET.getMethod().equals(this.method) || HttpMethod.HEAD.getMethod().equals(this.method)) {
+            if (this.formParts != null) {
+                if (this.queryParams == null) {
+                    this.queryParams = new LinkedHashMap<>();
+                }
+                this.queryParams.putAll(this.formParts);
             }
+        }
+        if (queryParams != null) {
+            this.queryString = Urls.buildQueryString(this.queryParams, this.queryStringEncode);
             this.url += ("?" + this.queryString);
         }
-        this.method = this.method.trim().toUpperCase();
         this.getRequestByMethod();
         if (this.headers != null) {
             this.headers.forEach((k, v) -> this.request.addHeader(new BasicHeader(k, v)));
         }
+        if (this.cookies != null) {
+            this.cookies.forEach(c -> this.request.addHeader(new BasicHeader("Cookie", c.toString())));
+        }
         if (this.ignoreHeaders != null) {
-            for (String ignoreHeader : this.ignoreHeaders) {
-                this.request.removeHeader(new BasicHeader(ignoreHeader, null));
-            }
+            this.ignoreHeaders.forEach(ignoreHeader -> this.request.removeHeader(new BasicHeader(ignoreHeader, null)));
         }
         if (!HttpMethod.GET.getMethod().equals(this.method) && !HttpMethod.HEAD.getMethod().equals(this.method)) {
             if (this.contentType == null) {
                 this.contentType = HttpContent.TEXT_PLAIN.getType();
             }
-            this.request.setHeader(new BasicHeader("Content-type", this.contentType));
+            if (this.charset == null) {
+                this.request.setHeader(new BasicHeader("Content-type", this.contentType));
+            } else {
+                this.request.setHeader(new BasicHeader("Content-type", this.contentType + "; charset=" + this.charset));
+            }
         }
     }
 
     private void execute() {
         Valid.notNull(this.url, "Request url is null");
         this.buildRequest();
-        if (this.client == null) {
-            if (this.ssl) {
-                this.client = HyperClient.getSslClient();
-            } else {
-                this.client = HyperClient.getClient();
-            }
-        }
         try {
             CloseableHttpResponse execute = this.client.execute(this.request);
             this.response = new HyperResponse(this.request, execute)
                     .url(this.url)
                     .method(this.method);
-            execute.close();
+            this.request.releaseConnection();
+            Streams.closeQuietly(execute);
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         }
     }
 
     private void getRequestByMethod() {
-        HttpMethod.validHethod(this.method, false);
+        HttpMethod.validMethod(this.method, false);
         if (HttpMethod.GET.getMethod().equals(this.method)) {
             this.request = new HttpGet(this.url);
         } else if (HttpMethod.POST.getMethod().equals(this.method)) {
@@ -436,14 +617,32 @@ public class HyperRequest implements Awaitable<HyperResponse> {
             this.request = new HttpHead(this.url);
         } else if (HttpMethod.TRACE.getMethod().equals(this.method)) {
             this.request = new HttpTrace(this.url);
+        } else if (HttpMethod.OPTIONS.getMethod().equals(this.method)) {
+            this.request = new HttpOptions(this.url);
         }
     }
 
     private HttpEntity getEntry() {
-        if (this.body == null) {
-            return null;
+        if (this.body != null) {
+            return new ByteArrayEntity(this.body, this.bodyOffset, this.bodyLen);
         }
-        return new ByteArrayEntity(this.body, this.bodyOffset, this.bodyLen);
+        if (!HttpMethod.GET.getMethod().equals(this.method) &&
+                !HttpMethod.HEAD.getMethod().equals(this.method) &&
+                this.formParts != null) {
+            List<NameValuePair> pairs = new ArrayList<>();
+            this.formParts.forEach((k, v) -> pairs.add(new BasicNameValuePair(k, v)));
+            try {
+                this.contentType = HttpContent.APPLICATION_FORM.getType();
+                if (this.charset == null) {
+                    return new UrlEncodedFormEntity(pairs);
+                } else {
+                    return new UrlEncodedFormEntity(pairs, Charset.forName(charset));
+                }
+            } catch (Exception e) {
+                throw Exceptions.unEnding(e);
+            }
+        }
+        return null;
     }
 
     public String getUrl() {
@@ -486,7 +685,7 @@ public class HyperRequest implements Awaitable<HyperResponse> {
         return headers;
     }
 
-    public String[] getIgnoreHeaders() {
+    public List<String> getIgnoreHeaders() {
         return ignoreHeaders;
     }
 
@@ -506,19 +705,21 @@ public class HyperRequest implements Awaitable<HyperResponse> {
         return response;
     }
 
+    public String getCharset() {
+        return charset;
+    }
+
+    public Map<String, String> getFormParts() {
+        return formParts;
+    }
+
+    public List<HttpCookie> getCookies() {
+        return cookies;
+    }
+
     @Override
     public String toString() {
-        return "HyperRequest{" +
-                "url='" + url + '\'' +
-                ", method='" + method + '\'' +
-                ", contentType='" + contentType + '\'' +
-                ", queryString='" + queryString + '\'' +
-                ", queryStringEncode=" + queryStringEncode +
-                ", bodyLen=" + bodyLen +
-                ", headers=" + headers +
-                ", ignoreHeaders=" + Arrays.toString(ignoreHeaders) +
-                ", ssl=" + ssl +
-                '}';
+        return url;
     }
 
 }

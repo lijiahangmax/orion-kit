@@ -28,12 +28,28 @@ public class StringExt implements Serializable {
         this.s = Strings.str(o);
     }
 
+    public StringExt(Object o, String def) {
+        if (o == null) {
+            this.s = def;
+        } else {
+            this.s = Strings.str(o);
+        }
+    }
+
     public StringExt(String s) {
         this.s = s;
     }
 
     public StringExt(String s, String def) {
         this.s = Objects1.det(s, def);
+    }
+
+    public StringExt of(String s) {
+        return new StringExt(s);
+    }
+
+    public StringExt of(String s, String def) {
+        return new StringExt(s, def);
     }
 
     /**

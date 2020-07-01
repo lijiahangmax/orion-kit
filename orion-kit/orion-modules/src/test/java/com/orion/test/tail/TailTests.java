@@ -2,10 +2,10 @@ package com.orion.test.tail;
 
 import com.orion.tail.Tracker;
 import com.orion.utils.Spells;
-import com.orion.utils.Streams;
 import com.orion.utils.Strings;
 import com.orion.utils.Threads;
 import com.orion.utils.io.Files1;
+import com.orion.utils.io.Streams;
 import org.junit.Test;
 
 import java.io.File;

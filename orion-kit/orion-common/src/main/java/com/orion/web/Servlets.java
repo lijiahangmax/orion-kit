@@ -1,9 +1,10 @@
 package com.orion.web;
 
-import com.orion.utils.ext.StringExt;
+import com.orion.lang.collect.ConvertHashMap;
 import com.orion.utils.IPs;
-import com.orion.utils.Streams;
 import com.orion.utils.Urls;
+import com.orion.utils.ext.StringExt;
+import com.orion.utils.io.Streams;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
@@ -12,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.Collection;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -25,6 +25,8 @@ import java.util.Map;
 public class Servlets {
 
     private static final String UA = "user-Agent";
+
+    private static final String CONTENT_TYPE = "Content-Type";
 
     private Servlets() {
     }
@@ -39,12 +41,7 @@ public class Servlets {
      * @return stringExt
      */
     public static StringExt getParameter(HttpServletRequest request, String key) {
-        String parameter = request.getParameter(key);
-        if (parameter != null) {
-            return new StringExt(parameter);
-        } else {
-            return new StringExt();
-        }
+        return new StringExt(request.getParameter(key));
     }
 
     /**
@@ -54,15 +51,10 @@ public class Servlets {
      * @param keys    keys
      * @return stringExt
      */
-    public static Map<String, StringExt> getParameters(HttpServletRequest request, String... keys) {
-        Map<String, StringExt> map = new HashMap<>();
+    public static ConvertHashMap<String, String> getParameters(HttpServletRequest request, String... keys) {
+        ConvertHashMap<String, String> map = new ConvertHashMap<>();
         for (String key : keys) {
-            String parameter = request.getParameter(key);
-            if (parameter != null) {
-                map.put(key, new StringExt(parameter));
-            } else {
-                map.put(key, new StringExt());
-            }
+            map.put(key, request.getParameter(key));
         }
         return map;
     }
@@ -73,11 +65,11 @@ public class Servlets {
      * @param request request
      * @return stringExt
      */
-    public static Map<String, StringExt> getParameterMap(HttpServletRequest request) {
+    public static ConvertHashMap<String, String> getParameterMap(HttpServletRequest request) {
         Map<String, String[]> parameterMap = request.getParameterMap();
-        Map<String, StringExt> map = new HashMap<>();
+        ConvertHashMap<String, String> map = new ConvertHashMap<>();
         for (Map.Entry<String, String[]> es : parameterMap.entrySet()) {
-            map.put(es.getKey(), new StringExt(es.getValue()[0]));
+            map.put(es.getKey(), es.getValue()[0]);
         }
         return map;
     }
@@ -100,12 +92,7 @@ public class Servlets {
      * @return 请求头
      */
     public static StringExt getHeader(HttpServletRequest request, String key) {
-        String header = request.getHeader(key);
-        if (header != null) {
-            return new StringExt(header);
-        } else {
-            return new StringExt();
-        }
+        return new StringExt(request.getHeader(key));
     }
 
     /**
@@ -115,15 +102,10 @@ public class Servlets {
      * @param keys    keys
      * @return 请求头
      */
-    public static Map<String, StringExt> getHeaders(HttpServletRequest request, String... keys) {
-        Map<String, StringExt> map = new HashMap<>();
+    public static ConvertHashMap<String, String> getHeaders(HttpServletRequest request, String... keys) {
+        ConvertHashMap<String, String> map = new ConvertHashMap<>();
         for (String key : keys) {
-            String header = request.getHeader(key);
-            if (header != null) {
-                map.put(key, new StringExt(header));
-            } else {
-                map.put(key, new StringExt());
-            }
+            map.put(key, request.getHeader(key));
         }
         return map;
     }
@@ -134,13 +116,12 @@ public class Servlets {
      * @param request request
      * @return 请求头
      */
-    public static Map<String, StringExt> getHeaderMap(HttpServletRequest request) {
-        Map<String, StringExt> map = new HashMap<>();
+    public static ConvertHashMap<String, String> getHeaderMap(HttpServletRequest request) {
+        ConvertHashMap<String, String> map = new ConvertHashMap<>();
         Enumeration<String> it = request.getHeaderNames();
         while (it.hasMoreElements()) {
             String key = it.nextElement();
-            map.put(key, new StringExt(request.getHeader(key)));
-
+            map.put(key, request.getHeader(key));
         }
         return map;
     }
@@ -179,7 +160,6 @@ public class Servlets {
         return IPs.checkIp(request.getRemoteAddr());
     }
 
-
     /**
      * 获取请求方法
      *
@@ -206,8 +186,8 @@ public class Servlets {
      * @param request request
      * @return url请求参数
      */
-    public static Map<String, StringExt> getQueryStringMap(HttpServletRequest request) {
-        return Urls.getQueryStringExt(request.getQueryString());
+    public static ConvertHashMap<String, String> getQueryStringMap(HttpServletRequest request) {
+        return Urls.getQueryString(request.getQueryString());
     }
 
     /**
@@ -426,6 +406,16 @@ public class Servlets {
     }
 
     /**
+     * 获取ContentType
+     *
+     * @param response response
+     * @return ContentType
+     */
+    public static String getContentType(HttpServletResponse response) {
+        return response.getHeader(CONTENT_TYPE);
+    }
+
+    /**
      * 获取请求头
      *
      * @param response response
@@ -433,12 +423,7 @@ public class Servlets {
      * @return 请求头
      */
     public static StringExt getHeader(HttpServletResponse response, String key) {
-        String header = response.getHeader(key);
-        if (header != null) {
-            return new StringExt(header);
-        } else {
-            return new StringExt();
-        }
+        return new StringExt(response.getHeader(key));
     }
 
     /**
@@ -448,15 +433,10 @@ public class Servlets {
      * @param keys     keys
      * @return 请求头
      */
-    public static Map<String, StringExt> getHeaders(HttpServletResponse response, String... keys) {
-        Map<String, StringExt> map = new HashMap<>();
+    public static ConvertHashMap<String, String> getHeaders(HttpServletResponse response, String... keys) {
+        ConvertHashMap<String, String> map = new ConvertHashMap<>();
         for (String key : keys) {
-            String header = response.getHeader(key);
-            if (header != null) {
-                map.put(key, new StringExt(header));
-            } else {
-                map.put(key, new StringExt());
-            }
+            map.put(key, response.getHeader(key));
         }
         return map;
     }
@@ -467,11 +447,11 @@ public class Servlets {
      * @param response response
      * @return 请求头
      */
-    public static Map<String, StringExt> getHeaderMap(HttpServletResponse response) {
-        Map<String, StringExt> map = new HashMap<>();
+    public static ConvertHashMap<String, String> getHeaderMap(HttpServletResponse response) {
+        ConvertHashMap<String, String> map = new ConvertHashMap<>();
         Collection<String> headerNames = response.getHeaderNames();
         for (String headerName : headerNames) {
-            map.put(headerName, new StringExt(response.getHeader(headerName)));
+            map.put(headerName, response.getHeader(headerName));
         }
         return map;
     }

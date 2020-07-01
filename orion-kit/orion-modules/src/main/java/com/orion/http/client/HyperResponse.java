@@ -1,12 +1,17 @@
 package com.orion.http.client;
 
+import com.orion.http.common.HttpCookie;
+import com.orion.lang.collect.ConvertArrayList;
 import com.orion.utils.Arrays1;
-import com.orion.utils.Streams;
+import com.orion.utils.ext.StringExt;
+import com.orion.utils.io.Streams;
 import org.apache.http.*;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -61,7 +66,7 @@ public class HyperResponse implements Serializable {
     /**
      * headers
      */
-    private Map<String, String> headers = new HashMap<>();
+    private Map<String, ConvertArrayList<String>> headers = new LinkedHashMap<>();
 
     public HyperResponse(HttpRequest request, HttpResponse response) throws IOException {
         this.request = request;
@@ -71,7 +76,8 @@ public class HyperResponse implements Serializable {
         this.message = statusLine.getReasonPhrase();
         this.protocol = statusLine.getProtocolVersion().getProtocol();
         for (Header header : response.getAllHeaders()) {
-            headers.put(header.getName(), header.getValue());
+            ConvertArrayList<String> list = headers.computeIfAbsent(header.getName(), k -> new ConvertArrayList<>());
+            list.add(header.getValue());
         }
         HttpEntity entity = response.getEntity();
         if (entity != null) {
@@ -128,8 +134,40 @@ public class HyperResponse implements Serializable {
         return protocol;
     }
 
-    public Map<String, String> getHeaders() {
+    public Map<String, ConvertArrayList<String>> getHeaders() {
         return headers;
+    }
+
+    public ConvertArrayList<String> getHeaders(String key) {
+        ConvertArrayList<String> list = new ConvertArrayList<>();
+        for (Header header : response.getHeaders(key)) {
+            list.add(header.getValue());
+        }
+        return list;
+    }
+
+    public StringExt getHeader(String key) {
+        Header header = response.getFirstHeader(key);
+        if (header != null) {
+            return new StringExt(header.getValue());
+        }
+        return new StringExt(null);
+    }
+
+    public StringExt getHeader(String key, String def) {
+        Header header = response.getFirstHeader(key);
+        if (header != null) {
+            return new StringExt(header.getValue(), def);
+        }
+        return new StringExt(def);
+    }
+
+    public List<HttpCookie> getCookies() {
+        List<HttpCookie> list = new ArrayList<>();
+        for (Header header : response.getHeaders(HttpCookie.SET_COOKIE)) {
+            list.add(new HttpCookie(header.getValue()));
+        }
+        return list;
     }
 
     @Override

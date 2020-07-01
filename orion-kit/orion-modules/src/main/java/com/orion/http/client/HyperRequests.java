@@ -1,7 +1,10 @@
 package com.orion.http.client;
 
+import com.orion.http.client.file.HyperDownload;
+import com.orion.http.client.file.HyperUpload;
 import com.orion.http.common.HttpContent;
 import com.orion.http.common.HttpMethod;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 import java.util.Map;
 
@@ -12,7 +15,7 @@ import java.util.Map;
  * @version 1.0.0
  * @date 2020/6/12 15:08
  */
-public class HyperCustom {
+public class HyperRequests {
 
     /**
      * get
@@ -41,7 +44,7 @@ public class HyperCustom {
      * @param url url
      * @return response
      */
-    static HyperResponse post(String url) {
+    public static HyperResponse post(String url) {
         return new HyperRequest(url).method(HttpMethod.POST).await();
     }
 
@@ -107,6 +110,48 @@ public class HyperCustom {
      */
     public static HyperRequest post() {
         return new HyperRequest().method(HttpMethod.POST);
+    }
+
+    /**
+     * 同步下载文件
+     *
+     * @param url url
+     * @return ignore
+     */
+    public static HyperDownload download(String url) {
+        return new HyperDownload(url);
+    }
+
+    /**
+     * 同步下载文件
+     *
+     * @param url    url
+     * @param client client
+     * @return ignore
+     */
+    public static HyperDownload download(String url, CloseableHttpClient client) {
+        return new HyperDownload(url, client);
+    }
+
+    /**
+     * 上传文件
+     *
+     * @param url url
+     * @return ignore
+     */
+    public static HyperUpload upload(String url) {
+        return new HyperUpload(url);
+    }
+
+    /**
+     * 上传文件
+     *
+     * @param url    url
+     * @param client client
+     * @return ignore
+     */
+    public static HyperUpload upload(String url, CloseableHttpClient client) {
+        return new HyperUpload(url, client);
     }
 
 }

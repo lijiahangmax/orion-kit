@@ -1,5 +1,7 @@
 package com.orion.utils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
@@ -37,22 +39,27 @@ public class Matches {
     /**
      * 邮箱正则
      */
-    public static final String EMAIL = "^[A-Za-z0-9]+([_\\.][A-Za-z0-9]+)*@([A-Za-z0-9\\-]+\\.)+[A-Za-z]{2,6}$";
+    public static final String EMAIL = "^[A-Za-z0-9]+([_.][A-Za-z0-9]+)*@([A-Za-z0-9\\-]+\\.)+[A-Za-z]{2,6}$";
 
     /**
      * http正则
      */
-    public static final String HTTP = "^(http|https):\\/\\/([\\w.]+\\/?)\\S*$";
+    public static final String HTTP = "^(http|https)://([\\w.]+/?)\\S*$";
 
     /**
-     * http正则
+     * uri正则
      */
-    public static final String INTEGER = "^[-\\+]?[\\d]*$";
+    public static final String URI = "^[a-zA-z]+://[\\S]*$";
 
     /**
-     * http正则
+     * integer正则
      */
-    public static final String DOUBLE = "^[-\\+]?\\d*[.]\\d+$";
+    public static final String INTEGER = "^[-+]?[\\d]*$";
+
+    /**
+     * double正则
+     */
+    public static final String DOUBLE = "^[-+]?\\d*[.]\\d+$";
 
     /**
      * IPV4正则
@@ -85,6 +92,7 @@ public class Matches {
         MAP.put(PHONE, Pattern.compile(PHONE));
         MAP.put(EMAIL, Pattern.compile(EMAIL));
         MAP.put(HTTP, Pattern.compile(HTTP));
+        MAP.put(URI, Pattern.compile(URI));
         MAP.put(INTEGER, Pattern.compile(INTEGER));
         MAP.put(DOUBLE, Pattern.compile(DOUBLE));
         MAP.put(IPV4, Pattern.compile(IPV4));
@@ -110,6 +118,47 @@ public class Matches {
     }
 
     /**
+     * 获取正则对象 忽略首尾 ^ $
+     * 用于字符串提取
+     *
+     * @param pattern 表达式
+     * @return 正则
+     */
+    public static Pattern getPatternExt(String pattern) {
+        if (pattern.startsWith("^")) {
+            pattern = pattern.substring(1, pattern.length());
+        }
+        if (pattern.endsWith("$")) {
+            pattern = pattern.substring(0, pattern.length() - 1);
+        }
+        Pattern p = MAP.get(pattern);
+        if (p == null) {
+            p = Pattern.compile(pattern);
+            MAP.put(pattern, p);
+        }
+        return p;
+    }
+
+    /**
+     * 匹配字符出现次数
+     *
+     * @param s    源数据
+     * @param find 匹配数据
+     * @return 次数
+     */
+    public static int findNum(String s, String find) {
+        int count = 0;
+        Pattern p = Pattern.compile(find);
+        Matcher m = p.matcher(s);
+        while (m.find()) {
+            count++;
+        }
+        return count;
+    }
+
+    // --------------- test ---------------
+
+    /**
      * 是否匹配
      *
      * @param s       字符
@@ -129,23 +178,6 @@ public class Matches {
      */
     public static boolean test(String s, Pattern pattern) {
         return pattern.matcher(s).matches();
-    }
-
-    /**
-     * 匹配字符出现次数
-     *
-     * @param s    源数据
-     * @param find 匹配数据
-     * @return 次数
-     */
-    public static int findNum(String s, String find) {
-        int count = 0;
-        Pattern p = Pattern.compile(find);
-        Matcher m = p.matcher(s);
-        while (m.find()) {
-            count++;
-        }
-        return count;
     }
 
     /**
@@ -214,8 +246,18 @@ public class Matches {
      * @param http url
      * @return true HTTP url
      */
-    public static boolean isHttpUrl(String http) {
+    public static boolean isHttp(String http) {
         return getPattern(HTTP).matcher(http).matches();
+    }
+
+    /**
+     * 匹配是否为 uri
+     *
+     * @param uri uri
+     * @return true uri
+     */
+    public static boolean isUri(String uri) {
+        return getPattern(URI).matcher(uri).matches();
     }
 
     /**
@@ -246,6 +288,210 @@ public class Matches {
      */
     public static boolean isLinuxPath(String path) {
         return getPattern(LINUX_PATH).matcher(path).matches();
+    }
+
+    // --------------- ext ---------------
+
+    /**
+     * 组提取
+     *
+     * @param s       字符
+     * @param pattern 模式
+     * @return 匹配到的组
+     */
+    public static String extGroup(String s, String pattern) {
+        Matcher matcher = getPattern(pattern).matcher(s);
+        if (matcher.find()) {
+            return matcher.group();
+        }
+        return null;
+    }
+
+    /**
+     * 组提取
+     *
+     * @param s       字符
+     * @param pattern 模式
+     * @return 匹配到的组
+     */
+    public static String extGroup(String s, Pattern pattern) {
+        Matcher matcher = pattern.matcher(s);
+        if (matcher.find()) {
+            return matcher.group();
+        }
+        return null;
+    }
+
+    /**
+     * 组提取
+     *
+     * @param s       字符
+     * @param pattern 模式
+     * @return 匹配到的组
+     */
+    public static List<String> extGroups(String s, String pattern) {
+        List<String> groups = new ArrayList<>();
+        Matcher matcher = getPattern(pattern).matcher(s);
+        while (matcher.find()) {
+            groups.add(matcher.group());
+        }
+        return groups;
+    }
+
+    /**
+     * 组提取
+     *
+     * @param s       字符
+     * @param pattern 模式
+     * @return 匹配到的组
+     */
+    public static List<String> extGroups(String s, Pattern pattern) {
+        List<String> groups = new ArrayList<>();
+        Matcher matcher = pattern.matcher(s);
+        while (matcher.find()) {
+            groups.add(matcher.group());
+        }
+        return groups;
+    }
+
+    /**
+     * 提取手机号
+     *
+     * @param s 字符
+     * @return 提取到的第一个手机号
+     */
+    public static String extPhone(String s) {
+        return extGroup(s, getPatternExt(PHONE));
+    }
+
+    /**
+     * 提取手机号
+     *
+     * @param s 字符
+     * @return 提取到的所有手机号
+     */
+    public static List<String> extPhoneList(String s) {
+        return extGroups(s, getPatternExt(PHONE));
+    }
+
+    /**
+     * 提取邮箱
+     *
+     * @param s 字符
+     * @return 提取到的第一个邮箱
+     */
+    public static String extEmail(String s) {
+        return extGroup(s, getPatternExt(EMAIL));
+    }
+
+    /**
+     * 提取邮箱
+     *
+     * @param s 字符
+     * @return 提取到的所有邮箱
+     */
+    public static List<String> extEmailList(String s) {
+        return extGroups(s, getPatternExt(EMAIL));
+    }
+
+    /**
+     * 提取HTTP url
+     *
+     * @param s 字符
+     * @return 提取到的第一个HTTP url
+     */
+    public static String extHttp(String s) {
+        return extGroup(s, getPatternExt(HTTP));
+    }
+
+    /**
+     * 提取HTTP url
+     *
+     * @param s 字符
+     * @return 提取到的所有HTTP url
+     */
+    public static List<String> extHttpList(String s) {
+        return extGroups(s, getPatternExt(HTTP));
+    }
+
+    /**
+     * 提取Uri
+     *
+     * @param s 字符
+     * @return 提取到的第一个Uri
+     */
+    public static String extUri(String s) {
+        return extGroup(s, getPatternExt(URI));
+    }
+
+    /**
+     * 提取Uri
+     *
+     * @param s 字符
+     * @return 提取到的所有Uri
+     */
+    public static List<String> extUriList(String s) {
+        return extGroups(s, getPatternExt(URI));
+    }
+
+    /**
+     * 提取整数
+     *
+     * @param s 字符
+     * @return 提取到的第一个整数
+     */
+    public static String extInteger(String s) {
+        return extGroup(s, getPatternExt(INTEGER));
+    }
+
+    /**
+     * 提取整数
+     *
+     * @param s 字符
+     * @return 提取到的所有整数
+     */
+    public static List<String> extIntegerList(String s) {
+        return extGroups(s, getPatternExt(INTEGER));
+    }
+
+    /**
+     * 提取浮点数
+     *
+     * @param s 字符
+     * @return 提取到的第一个浮点数
+     */
+    public static String extDouble(String s) {
+        return extGroup(s, getPatternExt(DOUBLE));
+    }
+
+    /**
+     * 提取浮点数
+     *
+     * @param s 字符
+     * @return 提取到的所有浮点数
+     */
+    public static List<String> extDoubleList(String s) {
+        return extGroups(s, getPatternExt(DOUBLE));
+    }
+
+    /**
+     * 提取ipv4
+     *
+     * @param s 字符
+     * @return 提取到的第一个ip
+     */
+    public static String extIp(String s) {
+        return extGroup(s, getPatternExt(IPV4));
+    }
+
+    /**
+     * 提取ipv4
+     *
+     * @param s 字符
+     * @return 提取到的所有ip
+     */
+    public static List<String> extIpList(String s) {
+        return extGroups(s, getPatternExt(IPV4));
     }
 
 }

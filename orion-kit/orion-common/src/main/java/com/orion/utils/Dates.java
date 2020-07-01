@@ -3,15 +3,11 @@ package com.orion.utils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -78,13 +74,13 @@ public class Dates {
                 o instanceof float[] || o instanceof Float[] || o instanceof double[] || o instanceof Double[] ||
                 o instanceof char[] || o instanceof Character[] || o instanceof String[]) {
             try {
-                int[] analyse = Converts.toInts(o);
-                if (analyse.length == 3) {
-                    return build(analyse[0], analyse[1], analyse[2]);
-                } else if (analyse.length == 6) {
-                    return build(analyse[0], analyse[1], analyse[2], analyse[3], analyse[4], analyse[5]);
-                } else if (analyse.length == 7) {
-                    return build(analyse[0], analyse[1], analyse[2], analyse[3], analyse[4], analyse[5], analyse[6]);
+                int[] analysis = Converts.toInts(o);
+                if (analysis.length == 3) {
+                    return build(analysis[0], analysis[1], analysis[2]);
+                } else if (analysis.length == 6) {
+                    return build(analysis[0], analysis[1], analysis[2], analysis[3], analysis[4], analysis[5]);
+                } else if (analysis.length == 7) {
+                    return build(analysis[0], analysis[1], analysis[2], analysis[3], analysis[4], analysis[5], analysis[6]);
                 }
             } catch (Exception e) {
                 return null;
@@ -172,7 +168,7 @@ public class Dates {
      * @param d 时间
      * @return [y, M, d, H, m, s, S]
      */
-    public static int[] analyse(Date d) {
+    public static int[] analysis(Date d) {
         Calendar c = Calendar.getInstance();
         c.setTime(d);
         return new int[]{
@@ -636,6 +632,77 @@ public class Dates {
     }
 
     /**
+     * 格式化
+     *
+     * @param d      时间
+     * @param locale 地区
+     * @return ignore
+     */
+    public static String format(Date d, Locale locale) {
+        return FastDateFormat.getInstance(YMDHMS, locale).format(d);
+    }
+
+    /**
+     * 格式化
+     *
+     * @param d       时间
+     * @param pattern 格式
+     * @param locale  地区
+     * @return ignore
+     */
+    public static String format(Date d, String pattern, Locale locale) {
+        return d == null ? null : FastDateFormat.getInstance(pattern, locale).format(d);
+    }
+
+    /**
+     * 格式化
+     *
+     * @param d        时间
+     * @param timeZone 时区
+     * @return ignore
+     */
+    public static String format(Date d, TimeZone timeZone) {
+        return FastDateFormat.getInstance(YMDHMS, timeZone).format(d);
+    }
+
+    /**
+     * 格式化
+     *
+     * @param d        时间
+     * @param pattern  格式
+     * @param timeZone 时区
+     * @return ignore
+     */
+    public static String format(Date d, String pattern, TimeZone timeZone) {
+        return d == null ? null : FastDateFormat.getInstance(pattern, timeZone).format(d);
+    }
+
+    /**
+     * 格式化
+     *
+     * @param d        时间
+     * @param timeZone 时区
+     * @param locale   地区
+     * @return ignore
+     */
+    public static String format(Date d, TimeZone timeZone, Locale locale) {
+        return FastDateFormat.getInstance(YMDHMS, timeZone, locale).format(d);
+    }
+
+    /**
+     * 格式化
+     *
+     * @param d        时间
+     * @param pattern  格式
+     * @param timeZone 时区
+     * @param locale   地区
+     * @return ignore
+     */
+    public static String format(Date d, String pattern, TimeZone timeZone, Locale locale) {
+        return d == null ? null : FastDateFormat.getInstance(pattern, timeZone, locale).format(d);
+    }
+
+    /**
      * 日期转化
      *
      * @param d 日期
@@ -668,7 +735,7 @@ public class Dates {
                 return parse(d, pattern);
             }
         } else if (d.split(" ").length == 6) {
-            return world(d);
+            return parse(d, WORLD, Locale.US);
         }
         return null;
     }
@@ -683,7 +750,7 @@ public class Dates {
     public static Date parse(String d, String pattern) {
         try {
             return FastDateFormat.getInstance(pattern).parse(d);
-        } catch (ParseException e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -706,30 +773,117 @@ public class Dates {
     }
 
     /**
-     * 将英国时间转为date
+     * 日期转化
+     *
+     * @param d       日期
+     * @param pattern 格式
+     * @param locale  地区
+     * @return 日期
+     */
+    public static Date parse(String d, String pattern, Locale locale) {
+        try {
+            return FastDateFormat.getInstance(pattern, locale).parse(d);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * 日期转化
+     *
+     * @param d        日期
+     * @param locale   地区
+     * @param patterns 格式
+     * @return 日期
+     */
+    public static Date parse(String d, Locale locale, String... patterns) {
+        for (String pattern : patterns) {
+            Date parse = parse(d, pattern, locale);
+            if (parse != null) {
+                return parse;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 日期转化
+     *
+     * @param d        日期
+     * @param pattern  格式
+     * @param timeZone 时区
+     * @return 日期
+     */
+    public static Date parse(String d, String pattern, TimeZone timeZone) {
+        try {
+            return FastDateFormat.getInstance(pattern, timeZone).parse(d);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * 日期转化
+     *
+     * @param d        日期
+     * @param timeZone 时区
+     * @param patterns 格式
+     * @return 日期
+     */
+    public static Date parse(String d, TimeZone timeZone, String... patterns) {
+        for (String pattern : patterns) {
+            Date parse = parse(d, pattern, timeZone);
+            if (parse != null) {
+                return parse;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 日期转化
+     *
+     * @param d        日期
+     * @param pattern  格式
+     * @param timeZone 时区
+     * @param locale   地区
+     * @return 日期
+     */
+    public static Date parse(String d, String pattern, TimeZone timeZone, Locale locale) {
+        try {
+            return FastDateFormat.getInstance(pattern, timeZone, locale).parse(d);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * 日期转化
+     *
+     * @param d        日期
+     * @param timeZone 时区
+     * @param locale   地区
+     * @param patterns 格式
+     * @return 日期
+     */
+    public static Date parse(String d, TimeZone timeZone, Locale locale, String... patterns) {
+        for (String pattern : patterns) {
+            Date parse = parse(d, pattern, timeZone, locale);
+            if (parse != null) {
+                return parse;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 将GMT时间转为date
      *
      * @param s 英国时间
      * @return date
      */
     public static Date world(String s) {
-        return world(s, WORLD, Locale.ENGLISH);
-    }
-
-    /**
-     * 将世界时间转为date
-     *
-     * @param s       时间
-     * @param pattern 格式
-     * @param locale  时区
-     * @return date
-     */
-    public static Date world(String s, String pattern, Locale locale) {
-        try {
-            SimpleDateFormat p = new SimpleDateFormat(pattern, locale);
-            return p.parse(s);
-        } catch (ParseException e) {
-            return null;
-        }
+        return parse(s, WORLD, Locale.US);
     }
 
     /**
@@ -1070,9 +1224,9 @@ public class Dates {
      * @param date2 时间2
      * @return 时差 [天,时,分,秒]
      */
-    public static long[] intervalAnalyse(Date date1, Date date2) {
+    public static long[] intervalanalysis(Date date1, Date date2) {
         long d1 = date1.getTime(), d2 = date2.getTime();
-        return intervalAnalyse((d1 - d2) > 0 ? d1 - d2 : d2 - d1);
+        return intervalanalysis((d1 - d2) > 0 ? d1 - d2 : d2 - d1);
     }
 
     /**
@@ -1108,7 +1262,7 @@ public class Dates {
      * @param ms 时间戳毫秒
      * @return 时差 [天,时,分,秒]
      */
-    public static long[] intervalAnalyse(long ms) {
+    public static long[] intervalanalysis(long ms) {
         long distanceDay = ms / DAY_STAMP;
         long distanceHour = ms % DAY_STAMP / HOUR_STAMP;
         long distanceMinute = ms % DAY_STAMP % HOUR_STAMP / MINUTE_STAMP;

@@ -1,24 +1,33 @@
-package com.orion.http.ok.file;
+package com.orion.http.client.file;
 
 import com.orion.http.common.HttpCookie;
 import com.orion.http.common.HttpUploadPart;
-import com.orion.http.ok.MockResponse;
 import com.orion.utils.Strings;
 import com.orion.utils.Urls;
 import com.orion.utils.collect.Lists;
-import okhttp3.*;
+import com.orion.utils.io.Streams;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.message.BasicHeader;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 /**
- * Mock 上传文件
+ * Hyper 文件上传
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/4/9 14:09
+ * @date 2020/6/13 1:03
  */
-public class MockUpload {
+public class HyperUpload {
 
     /**
      * url
@@ -28,7 +37,7 @@ public class MockUpload {
     /**
      * client
      */
-    private OkHttpClient client;
+    private CloseableHttpClient client;
 
     /**
      * 是否执行完毕
@@ -46,7 +55,7 @@ public class MockUpload {
     private long endDate;
 
     /**
-     * url请求参数
+     * 请求参数
      */
     private Map<String, String> queryParams;
 
@@ -66,14 +75,14 @@ public class MockUpload {
     private Map<String, String> formParts;
 
     /**
-     * 请求头
-     */
-    private Map<String, String> headers;
-
-    /**
      * cookies
      */
     private List<HttpCookie> cookies;
+
+    /**
+     * 请求头
+     */
+    private Map<String, String> headers;
 
     /**
      * 忽略的请求头
@@ -81,28 +90,30 @@ public class MockUpload {
     private List<String> ignoreHeaders;
 
     /**
-     * tag
+     * request
      */
-    private Object tag;
+    private HttpPost request;
 
-    private MockResponse response;
+    /**
+     * response
+     */
+    private CloseableHttpResponse response;
 
-    private Request request;
-
-    private Call call;
-
+    /**
+     * exception
+     */
     private Exception exception;
 
-    public MockUpload(String url) {
+    public HyperUpload(String url) {
         this.url = url;
     }
 
-    public MockUpload(String url, OkHttpClient client) {
+    public HyperUpload(String url, CloseableHttpClient client) {
         this.url = url;
         this.client = client;
     }
 
-    public MockUpload client(OkHttpClient client) {
+    public HyperUpload client(CloseableHttpClient client) {
         this.client = client;
         return this;
     }
@@ -113,7 +124,7 @@ public class MockUpload {
      * @param o 参数
      * @return this
      */
-    public MockUpload format(Object... o) {
+    public HyperUpload format(Object... o) {
         this.url = Strings.format(this.url, o);
         return this;
     }
@@ -124,68 +135,8 @@ public class MockUpload {
      * @param map 参数
      * @return this
      */
-    public MockUpload format(Map<String, Object> map) {
+    public HyperUpload format(Map<String, Object> map) {
         this.url = Strings.format(this.url, map);
-        return this;
-    }
-
-    /**
-     * 添加url参数
-     *
-     * @param queryParams 参数
-     * @return this
-     */
-    public MockUpload queryParams(Map<String, String> queryParams) {
-        if (this.queryParams == null) {
-            this.queryParams = queryParams;
-        } else {
-            this.queryParams.putAll(queryParams);
-        }
-        return this;
-    }
-
-    /**
-     * 添加url参数
-     *
-     * @param key   key
-     * @param value value
-     * @return this
-     */
-    public MockUpload queryParam(String key, String value) {
-        if (this.queryParams == null) {
-            this.queryParams = new LinkedHashMap<>();
-        }
-        this.queryParams.put(key, value);
-        return this;
-    }
-
-    /**
-     * 添加表单参数
-     *
-     * @param formParts 参数
-     * @return this
-     */
-    public MockUpload formParts(Map<String, String> formParts) {
-        if (this.formParts == null) {
-            this.formParts = formParts;
-        } else {
-            this.formParts.putAll(formParts);
-        }
-        return this;
-    }
-
-    /**
-     * 添加表单参数
-     *
-     * @param key   key
-     * @param value value
-     * @return this
-     */
-    public MockUpload formPart(String key, String value) {
-        if (this.formParts == null) {
-            this.formParts = new LinkedHashMap<>();
-        }
-        this.formParts.put(key, value);
         return this;
     }
 
@@ -194,7 +145,7 @@ public class MockUpload {
      *
      * @return this
      */
-    public MockUpload queryStringEncode() {
+    public HyperUpload queryStringEncode() {
         this.queryStringEncode = true;
         return this;
     }
@@ -205,7 +156,7 @@ public class MockUpload {
      * @param encode ignore
      * @return this
      */
-    public MockUpload queryStringEncode(boolean encode) {
+    public HyperUpload queryStringEncode(boolean encode) {
         this.queryStringEncode = encode;
         return this;
     }
@@ -216,7 +167,7 @@ public class MockUpload {
      * @param headers headers
      * @return this
      */
-    public MockUpload headers(Map<String, String> headers) {
+    public HyperUpload headers(Map<String, String> headers) {
         if (this.headers == null) {
             this.headers = headers;
         } else {
@@ -226,15 +177,15 @@ public class MockUpload {
     }
 
     /**
-     * header
+     * headers
      *
      * @param key   key
      * @param value value
      * @return this
      */
-    public MockUpload header(String key, String value) {
+    public HyperUpload headers(String key, String value) {
         if (this.headers == null) {
-            this.headers = new LinkedHashMap<>();
+            this.headers = new HashMap<>();
         }
         this.headers.put(key, value);
         return this;
@@ -246,7 +197,7 @@ public class MockUpload {
      * @param value value
      * @return this
      */
-    public MockUpload userAgent(String value) {
+    public HyperUpload userAgent(String value) {
         if (this.headers == null) {
             this.headers = new LinkedHashMap<>();
         }
@@ -260,7 +211,7 @@ public class MockUpload {
      * @param cookie cookie
      * @return this
      */
-    public MockUpload cookie(HttpCookie cookie) {
+    public HyperUpload cookie(HttpCookie cookie) {
         if (this.cookies == null) {
             this.cookies = new ArrayList<>();
         }
@@ -274,7 +225,7 @@ public class MockUpload {
      * @param cookies cookies
      * @return this
      */
-    public MockUpload cookies(List<HttpCookie> cookies) {
+    public HyperUpload cookies(List<HttpCookie> cookies) {
         if (this.cookies == null) {
             this.cookies = cookies;
         } else {
@@ -289,7 +240,7 @@ public class MockUpload {
      * @param ignoreHeader ignoreHeader
      * @return this
      */
-    public MockUpload ignoreHeader(String ignoreHeader) {
+    public HyperUpload ignoreHeader(String ignoreHeader) {
         if (ignoreHeader == null) {
             return this;
         }
@@ -306,7 +257,7 @@ public class MockUpload {
      * @param ignoreHeaders ignoreHeaders
      * @return this
      */
-    public MockUpload ignoreHeaders(String... ignoreHeaders) {
+    public HyperUpload ignoreHeaders(String... ignoreHeaders) {
         if (ignoreHeaders == null) {
             return this;
         }
@@ -323,7 +274,7 @@ public class MockUpload {
      * @param ignoreHeaders ignoreHeaders
      * @return this
      */
-    public MockUpload ignoreHeaders(List<String> ignoreHeaders) {
+    public HyperUpload ignoreHeaders(List<String> ignoreHeaders) {
         if (this.ignoreHeaders == null) {
             this.ignoreHeaders = ignoreHeaders;
         } else {
@@ -333,13 +284,62 @@ public class MockUpload {
     }
 
     /**
-     * tag
+     * 添加url参数
      *
-     * @param tag tag
+     * @param queryParams 参数
      * @return this
      */
-    public MockUpload tag(Object tag) {
-        this.tag = tag;
+    public HyperUpload queryParams(Map<String, String> queryParams) {
+        if (this.queryParams == null) {
+            this.queryParams = queryParams;
+        } else {
+            this.queryParams.putAll(queryParams);
+        }
+        return this;
+    }
+
+    /**
+     * 添加url参数
+     *
+     * @param key   key
+     * @param value value
+     * @return this
+     */
+    public HyperUpload queryParam(String key, String value) {
+        if (this.queryParams == null) {
+            this.queryParams = new LinkedHashMap<>();
+        }
+        this.queryParams.put(key, value);
+        return this;
+    }
+
+    /**
+     * 添加表单参数
+     *
+     * @param formParts 参数
+     * @return this
+     */
+    public HyperUpload formParts(Map<String, String> formParts) {
+        if (this.formParts == null) {
+            this.formParts = formParts;
+        } else {
+            this.formParts.putAll(formParts);
+        }
+        return this;
+    }
+
+    /**
+     * 添加表单参数
+     *
+     * @param key   key
+     * @param value value
+     * @return this
+     */
+    public HyperUpload formPart(String key, String value) {
+        if (this.formParts == null) {
+            this.formParts = new LinkedHashMap<>();
+        }
+        this.formParts.put(key, value);
         return this;
     }
 
@@ -348,8 +348,8 @@ public class MockUpload {
      *
      * @return this
      */
-    public MockUpload cancel() {
-        this.call.cancel();
+    private HyperUpload cancel() {
+        this.request.abort();
         return this;
     }
 
@@ -357,9 +357,8 @@ public class MockUpload {
      * 上传单文件
      *
      * @param part ignore
-     * @return this
      */
-    public MockUpload upload(HttpUploadPart part) {
+    public HyperUpload upload(HttpUploadPart part) {
         return upload(Lists.of(part));
     }
 
@@ -367,58 +366,52 @@ public class MockUpload {
      * 上传多文件
      *
      * @param parts ignore
-     * @return this
      */
-    public MockUpload upload(List<HttpUploadPart> parts) {
-        MultipartBody.Builder builder = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM);
-        if (this.formParts != null) {
-            formParts.forEach(builder::addFormDataPart);
-        }
+    public HyperUpload upload(List<HttpUploadPart> parts) {
         if (this.queryParams != null) {
             this.queryString = Urls.buildQueryString(this.queryParams, this.queryStringEncode);
             this.url += ("?" + this.queryString);
         }
-        for (HttpUploadPart part : parts) {
-            if (part == null) {
-                continue;
-            }
-            RequestBody body = null;
-            if (part.getFile() != null) {
-                body = RequestBody.create(part.getContentType() == null ? null : MediaType.parse(part.getContentType()), part.getFile());
-            } else if (part.getBytes() != null) {
-                body = RequestBody.create(part.getContentType() == null ? null : MediaType.parse(part.getContentType()), part.getBytes(), part.getOff(), part.getLen());
-            }
-            if (body != null) {
-                builder.addFormDataPart(part.getKey(), part.getFileName(), body);
-            }
-        }
-        Request.Builder requestBuilder = new Request.Builder()
-                .url(url)
-                .post(builder.build());
-        if (this.tag != null) {
-            requestBuilder.tag(this.tag);
-        }
+        this.request = new HttpPost(url);
         if (this.headers != null) {
-            this.headers.forEach(requestBuilder::addHeader);
+            this.headers.forEach(request::addHeader);
         }
         if (this.cookies != null) {
-            this.cookies.forEach(c -> requestBuilder.addHeader("Cookie", c.toString()));
+            this.cookies.forEach(c -> this.request.addHeader(new BasicHeader("Cookie", c.toString())));
         }
         if (this.ignoreHeaders != null) {
-            this.ignoreHeaders.forEach(requestBuilder::removeHeader);
+            this.ignoreHeaders.forEach(request::removeHeaders);
         }
-        this.request = requestBuilder.build();
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        if (queryParams != null) {
+            formParts.forEach(builder::addTextBody);
+        }
+        for (HttpUploadPart part : parts) {
+            String key = part.getKey();
+            String contentType = part.getContentType();
+            File file = part.getFile();
+            String fileName = part.getFileName();
+            byte[] bytes = part.getBytes();
+            InputStream in = part.getIn();
+            if (in != null) {
+                builder.addBinaryBody(key, in, contentType == null ? ContentType.APPLICATION_OCTET_STREAM : ContentType.parse(contentType), fileName);
+            } else if (file != null) {
+                builder.addBinaryBody(key, file, contentType == null ? ContentType.APPLICATION_OCTET_STREAM : ContentType.parse(contentType), fileName);
+            } else if (bytes != null) {
+                builder.addBinaryBody(key, bytes, contentType == null ? ContentType.APPLICATION_OCTET_STREAM : ContentType.parse(contentType), fileName);
+            }
+        }
+        this.request.setEntity(builder.build());
         try {
             this.startDate = System.currentTimeMillis();
-            this.call = this.client.newCall(this.request);
-            this.response = new MockResponse(this.request, this.call.execute()).call(this.call);
+            this.response = client.execute(this.request);
         } catch (IOException e) {
             this.exception = e;
-            this.response = new MockResponse(this.request, e).call(this.call);
         } finally {
             this.endDate = System.currentTimeMillis();
             this.done = true;
+            this.request.releaseConnection();
+            Streams.closeQuietly(this.response);
         }
         return this;
     }
@@ -427,7 +420,7 @@ public class MockUpload {
         return url;
     }
 
-    public OkHttpClient getClient() {
+    public HttpClient getClient() {
         return client;
     }
 
@@ -443,7 +436,8 @@ public class MockUpload {
         if (this.response == null) {
             return false;
         }
-        return this.response.isOk();
+        int code = this.response.getStatusLine().getStatusCode();
+        return code >= 200 && code < 300;
     }
 
     public long getStartDate() {
@@ -469,26 +463,6 @@ public class MockUpload {
         return queryParams;
     }
 
-    public Map<String, String> getHeaders() {
-        return headers;
-    }
-
-    public List<String> getIgnoreHeaders() {
-        return ignoreHeaders;
-    }
-
-    public Object getTag() {
-        return tag;
-    }
-
-    public Request getRequest() {
-        return request;
-    }
-
-    public Call getCall() {
-        return call;
-    }
-
     public String getQueryString() {
         return queryString;
     }
@@ -501,7 +475,19 @@ public class MockUpload {
         return formParts;
     }
 
-    public MockResponse getResponse() {
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
+
+    public List<String> getIgnoreHeaders() {
+        return ignoreHeaders;
+    }
+
+    public HttpPost getRequest() {
+        return request;
+    }
+
+    public HttpResponse getResponse() {
         return response;
     }
 

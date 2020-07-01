@@ -2,6 +2,7 @@ package com.orion.utils;
 
 import com.orion.lang.thread.ConcurrentCallable;
 import com.orion.lang.thread.ConcurrentRunnable;
+import com.orion.lang.thread.NamedThreadFactory;
 import com.orion.utils.collect.Lists;
 
 import java.util.ArrayList;
@@ -291,6 +292,35 @@ public class Threads {
         } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
         }
+    }
+
+    /**
+     * 创建线程池
+     *
+     * @param core      核心线程数量
+     * @param max       最大线程数
+     * @param keepMilli 空闲线程等待时间
+     * @param workQueue 任务队列
+     * @param prefix    线程前缀
+     * @return 线程池
+     */
+    public static ExecutorService newThreadPool(int core, int max, int keepMilli, BlockingQueue<Runnable> workQueue, String prefix) {
+        return new ThreadPoolExecutor(core, max, keepMilli, TimeUnit.MILLISECONDS, workQueue, new NamedThreadFactory(prefix));
+    }
+
+    /**
+     * 创建线程池
+     *
+     * @param core      核心线程数量
+     * @param max       最大线程数
+     * @param keepMilli 空闲线程等待时间
+     * @param workQueue 任务队列
+     * @param prefix    线程前缀
+     * @param handler   任务队列已满时的拒绝策略
+     * @return 线程池
+     */
+    public static ExecutorService newThreadPool(int core, int max, int keepMilli, BlockingQueue<Runnable> workQueue, String prefix, RejectedExecutionHandler handler) {
+        return new ThreadPoolExecutor(core, max, keepMilli, TimeUnit.MILLISECONDS, workQueue, new NamedThreadFactory(prefix), handler);
     }
 
 }

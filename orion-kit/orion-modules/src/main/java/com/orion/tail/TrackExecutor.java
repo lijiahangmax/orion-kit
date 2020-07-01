@@ -1,8 +1,10 @@
 package com.orion.tail;
 
+import com.orion.utils.Threads;
+
 import java.io.File;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 
 /**
@@ -12,12 +14,15 @@ import java.util.function.Consumer;
  * @version 1.0.0
  * @date 2020/5/14 23:51
  */
-public class TrackExecuter {
+public class TrackExecutor {
+
+    private TrackExecutor() {
+    }
 
     /**
      * tail 线程池
      */
-    private static final ExecutorService TAIL_POOL = Executors.newCachedThreadPool();
+    private static final ExecutorService TAIL_POOL = Threads.newThreadPool(0,10, 10000, new LinkedBlockingQueue<>(), "TAIL-RUNNER-");
 
     /**
      * 追踪文件

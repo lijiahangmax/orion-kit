@@ -7,7 +7,7 @@ import com.orion.able.Executorable;
 import com.orion.remote.ssh.handler.ErrorHandler;
 import com.orion.remote.ssh.handler.SuccessHandler;
 import com.orion.utils.Exceptions;
-import com.orion.utils.Streams;
+import com.orion.utils.io.Streams;
 
 import java.io.InputStream;
 import java.io.OutputStream;

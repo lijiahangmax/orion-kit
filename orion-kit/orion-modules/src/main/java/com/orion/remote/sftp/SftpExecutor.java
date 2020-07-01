@@ -4,9 +4,9 @@ import ch.ethz.ssh2.*;
 import com.orion.lang.StreamEntry;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Matches;
-import com.orion.utils.Streams;
 import com.orion.utils.Strings;
 import com.orion.utils.io.Files1;
+import com.orion.utils.io.Streams;
 
 import java.io.File;
 import java.io.IOException;

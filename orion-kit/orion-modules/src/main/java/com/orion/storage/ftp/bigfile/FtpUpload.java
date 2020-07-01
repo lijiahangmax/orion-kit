@@ -3,10 +3,10 @@ package com.orion.storage.ftp.bigfile;
 import com.orion.storage.ftp.FtpFileAttr;
 import com.orion.storage.ftp.FtpInstance;
 import com.orion.utils.Exceptions;
-import com.orion.utils.Streams;
 import com.orion.utils.Threads;
 import com.orion.utils.io.FileLocks;
 import com.orion.utils.io.Files1;
+import com.orion.utils.io.Streams;
 
 import java.io.*;
 
@@ -83,7 +83,7 @@ public class FtpUpload implements Runnable {
     /**
      * 是否已完成
      */
-    private boolean done;
+    private volatile boolean done;
 
     public FtpUpload(FtpInstance instance, String remote, File local) {
         this.instance = instance;

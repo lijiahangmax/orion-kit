@@ -1,8 +1,8 @@
 package com.orion.http.common;
 
 import com.orion.id.UUIds;
-import com.orion.utils.Streams;
 import com.orion.utils.io.Files1;
+import com.orion.utils.io.Streams;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,8 +38,14 @@ public class HttpUploadPart {
 
     private byte[] bytes;
 
+    /**
+     * HttpClient无效
+     */
     private int off;
 
+    /**
+     * HttpClient无效
+     */
     private int len;
 
     private InputStream in;

@@ -2,7 +2,7 @@ package com.orion.test;
 
 import com.orion.lang.wrapper.Args;
 import com.orion.utils.Encrypts;
-import com.orion.utils.Streams;
+import com.orion.utils.io.Streams;
 import org.junit.Test;
 
 import java.io.FileInputStream;

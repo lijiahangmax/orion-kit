@@ -4,9 +4,6 @@ import com.orion.lang.DefaultX509TrustManager;
 import okhttp3.OkHttpClient;
 
 import javax.net.ssl.SSLSocketFactory;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Mock Client
@@ -18,29 +15,32 @@ import java.util.concurrent.TimeUnit;
 public class MockClient {
 
     static {
-        ClientInstance.init(new MockConfig().logInterceptor());
-        ClientInstance.initSsl(new MockConfig().logInterceptor());
+        ClientInstance.init(new MockClientConfig().logInterceptor());
+        ClientInstance.initSsl(new MockClientConfig()
+                .sslSocketFactory((SSLSocketFactory) SSLSocketFactory.getDefault())
+                .trustManager(DefaultX509TrustManager.DEFAULT_X509_TRUST_MANAGER)
+                .logInterceptor());
     }
 
     /**
      * 重新配置client
      *
-     * @param mockConfig config
+     * @param mockClientConfig config
      * @return reload client
      */
-    public static OkHttpClient reloadClient(MockConfig mockConfig) {
-        ClientInstance.init(mockConfig);
+    public static OkHttpClient reloadClient(MockClientConfig mockClientConfig) {
+        ClientInstance.init(mockClientConfig);
         return ClientInstance.client;
     }
 
     /**
      * 重新配置ssl client
      *
-     * @param mockConfig config
+     * @param mockClientConfig config
      * @return reload ssl client
      */
-    public static OkHttpClient reloadSslClient(MockConfig mockConfig) {
-        ClientInstance.initSsl(mockConfig);
+    public static OkHttpClient reloadSslClient(MockClientConfig mockClientConfig) {
+        ClientInstance.initSsl(mockClientConfig);
         return ClientInstance.sslClient;
     }
 
@@ -102,43 +102,26 @@ public class MockClient {
         private ClientInstance() {
         }
 
-        public static void main(String[] args) {
-            System.out.println(Mocks.get("http://www.hao123.com/").getBodyString());
+        private static void init(MockClientConfig mockClientConfig) {
+            init(mockClientConfig, false);
         }
 
-        private static void init(MockConfig mockConfig) {
-            init(mockConfig, false);
+        private static void initSsl(MockClientConfig mockClientConfig) {
+            init(mockClientConfig, true);
         }
 
-        private static void initSsl(MockConfig mockConfig) {
-            init(mockConfig, true);
-        }
-
-        private static void init(MockConfig mockConfig, boolean ssl) {
-            if (mockConfig == null) {
+        private static void init(MockClientConfig mockClientConfig, boolean ssl) {
+            if (mockClientConfig == null) {
                 if (ssl) {
                     ClientInstance.sslClient = new OkHttpClient();
                 } else {
                     ClientInstance.client = new OkHttpClient();
                 }
             } else {
-                OkHttpClient.Builder client = new OkHttpClient.Builder()
-                        .callTimeout(mockConfig.getCallTimeout(), TimeUnit.MILLISECONDS)
-                        .connectTimeout(mockConfig.getConnectTimeout(), TimeUnit.MILLISECONDS)
-                        .readTimeout(mockConfig.getReadTimeout(), TimeUnit.MILLISECONDS)
-                        .writeTimeout(mockConfig.getWriteTimeout(), TimeUnit.MILLISECONDS);
-                if (mockConfig.isLogInterceptor()) {
-                    client.addInterceptor(new MockLoggerInterceptor());
-                }
-                String proxyHost = mockConfig.getProxyHost();
-                if (proxyHost != null) {
-                    client.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, mockConfig.getProxyPort())));
-                }
                 if (ssl) {
-                    client.sslSocketFactory((SSLSocketFactory) SSLSocketFactory.getDefault(), DefaultX509TrustManager.DEFAULT_TRUST_MANAGER);
-                    ClientInstance.sslClient = client.build();
+                    ClientInstance.sslClient = mockClientConfig.createClient(true);
                 } else {
-                    ClientInstance.client = client.build();
+                    ClientInstance.client = mockClientConfig.createClient(false);
                 }
             }
         }

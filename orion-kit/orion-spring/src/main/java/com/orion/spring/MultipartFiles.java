@@ -1,7 +1,7 @@
 package com.orion.spring;
 
-import com.orion.utils.Streams;
 import com.orion.utils.Strings;
+import com.orion.utils.io.Streams;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;

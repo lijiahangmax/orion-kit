@@ -1,6 +1,8 @@
 package com.orion.http.ok;
 
+import com.orion.http.common.HttpCookie;
 import com.orion.utils.Arrays1;
+import com.orion.utils.ext.StringExt;
 import okhttp3.Call;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -8,6 +10,7 @@ import okhttp3.ResponseBody;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -175,7 +178,7 @@ public class MockResponse implements Serializable {
      *
      * @return this
      */
-    public MockResponse done() {
+    protected MockResponse done() {
         this.done = true;
         if (this.exception == null) {
             if (this.request != null) {
@@ -257,12 +260,23 @@ public class MockResponse implements Serializable {
         return body;
     }
 
+    public String getBodyString() {
+        if (body != null) {
+            return new String(body);
+        }
+        return null;
+    }
+
     public Call getCall() {
         return call;
     }
 
     public Request getRequest() {
         return request;
+    }
+
+    public MockRequest getMockRequest() {
+        return mockRequest;
     }
 
     public Response getResponse() {
@@ -293,15 +307,24 @@ public class MockResponse implements Serializable {
         return headers;
     }
 
-    public MockRequest getMockRequest() {
-        return mockRequest;
+    public List<String> getHeaders(String key) {
+        return response.headers(key);
     }
 
-    public String getBodyString() {
-        if (body != null) {
-            return new String(body);
+    public StringExt getHeader(String key) {
+        return new StringExt(response.header(key));
+    }
+
+    public StringExt getHeader(String key, String def) {
+        return new StringExt(response.header(key, def));
+    }
+
+    public List<HttpCookie> getCookies() {
+        List<HttpCookie> list = new ArrayList<>();
+        for (String value : response.headers().values(HttpCookie.SET_COOKIE)) {
+            list.add(new HttpCookie(value));
         }
-        return null;
+        return list;
     }
 
     @Override

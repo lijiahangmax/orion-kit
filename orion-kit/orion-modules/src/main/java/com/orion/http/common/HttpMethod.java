@@ -42,6 +42,11 @@ public enum HttpMethod {
     HEAD("HEAD"),
 
     /**
+     * options ok不支持
+     */
+    OPTIONS("OPTIONS"),
+
+    /**
      * trace ok不支持
      */
     TRACE("TRACE");
@@ -59,14 +64,14 @@ public enum HttpMethod {
     /**
      * 方法是否支持
      *
-     * @param method    method
-     * @param skipTrace 是否跳过trace
+     * @param method method
+     * @param skip   是否跳过 options trace
      */
-    public static void validHethod(String method, boolean skipTrace) {
+    public static void validMethod(String method, boolean skip) {
         boolean opt = false;
         int length = values().length;
-        if (skipTrace) {
-            length--;
+        if (skip) {
+            length -= 2;
         }
         method = method.trim().toUpperCase();
         for (int i = 0; i < length; i++) {

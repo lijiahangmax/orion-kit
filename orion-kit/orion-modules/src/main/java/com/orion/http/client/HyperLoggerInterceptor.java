@@ -20,7 +20,7 @@ public class HyperLoggerInterceptor implements HttpRequestInterceptor, HttpRespo
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(HyperLoggerInterceptor.class);
 
-    private static final ThreadLocal<Args.Three<String, String, Long>> START_DATE = new ThreadLocal<>();
+    private static final ThreadLocal<Args.Three<String, String, Long>> REQUEST_STORE = new ThreadLocal<>();
 
     @Override
     public void process(HttpRequest httpRequest, HttpContext httpContext) {
@@ -28,14 +28,14 @@ public class HyperLoggerInterceptor implements HttpRequestInterceptor, HttpRespo
         String method = request.getMethod();
         String uri = request.getUri();
         long start = System.currentTimeMillis();
-        START_DATE.set(Args.of(method, uri, start));
+        REQUEST_STORE.set(Args.of(method, uri, start));
         LOGGER.info("Hyper-Request START method: [{}], url: [{}], start: [{}]", method, uri, start);
     }
 
     @Override
     public void process(HttpResponse httpResponse, HttpContext httpContext) {
-        Args.Three<String, String, Long> p = START_DATE.get();
-        START_DATE.remove();
+        Args.Three<String, String, Long> p = REQUEST_STORE.get();
+        REQUEST_STORE.remove();
         StatusLine response = httpResponse.getStatusLine();
         long end = System.currentTimeMillis();
         int code = response.getStatusCode();

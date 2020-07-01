@@ -1,14 +1,13 @@
 package com.orion.utils;
 
-import com.orion.lang.MapEntry;
+import com.orion.lang.collect.ConvertHashMap;
 import com.orion.utils.ext.StringExt;
-import com.orion.utils.collect.Maps;
+import com.orion.utils.io.Streams;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.*;
 import java.util.*;
-import java.util.Collections;
 
 /**
  * url工具类
@@ -22,13 +21,36 @@ public class Urls {
     private static final String DEFAULT_CHARSET = "UTF-8";
 
     /**
-     * 将map参数拼接为url 拼接签名
+     * 将map参数拼接为url
      *
      * @param request 请求参数
      * @return url
      */
-    public static String buildUrl(Map<String, ?> request) {
-        return buildUrl(request, null);
+    public static String buildQueryString(Map<String, ?> request) {
+        return buildQueryString(request, null, false, null);
+    }
+
+    /**
+     * 将map参数拼接为url
+     *
+     * @param request 请求参数
+     * @param encode  是否编码
+     * @return url
+     */
+    public static String buildQueryString(Map<String, ?> request, boolean encode) {
+        return buildQueryString(request, null, encode, null);
+    }
+
+    /**
+     * 将map参数拼接为url
+     *
+     * @param request       请求参数
+     * @param encode        是否编码
+     * @param encodeCharset 编码格式
+     * @return url
+     */
+    public static String buildQueryString(Map<String, ?> request, boolean encode, String encodeCharset) {
+        return buildQueryString(request, null, encode, encodeCharset);
     }
 
     /**
@@ -38,7 +60,32 @@ public class Urls {
      * @param skipFields 跳过构建字段
      * @return url
      */
-    public static String buildUrl(Map<String, ?> request, List<String> skipFields) {
+    public static String buildQueryString(Map<String, ?> request, List<String> skipFields) {
+        return buildQueryString(request, skipFields, false, null);
+    }
+
+    /**
+     * 将map参数拼接为url
+     *
+     * @param request    请求参数
+     * @param skipFields 跳过构建字段
+     * @param encode     是否编码
+     * @return url
+     */
+    public static String buildQueryString(Map<String, ?> request, List<String> skipFields, boolean encode) {
+        return buildQueryString(request, skipFields, encode, null);
+    }
+
+    /**
+     * 将map参数拼接为url
+     *
+     * @param request       请求参数
+     * @param skipFields    跳过构建字段
+     * @param encode        是否编码
+     * @param encodeCharset 编码格式
+     * @return url
+     */
+    public static String buildQueryString(Map<String, ?> request, List<String> skipFields, boolean encode, String encodeCharset) {
         if (request == null || request.isEmpty()) {
             return "";
         }
@@ -61,7 +108,11 @@ public class Urls {
             }
             if (!skip) {
                 if (Strings.isNotBlank(fieldValue)) {
-                    sb.append(fieldName).append("=").append(fieldValue).append("&");
+                    if (encode) {
+                        sb.append(fieldName).append("=").append(encode(fieldValue, encodeCharset)).append("&");
+                    } else {
+                        sb.append(fieldName).append("=").append(fieldValue).append("&");
+                    }
                 } else {
                     sb.append(fieldName).append("&");
                 }
@@ -79,9 +130,10 @@ public class Urls {
      * @param url url
      * @return 参数
      */
-    public static Map<String, String> getQueryString(String url) {
+    public static ConvertHashMap<String, String> getQueryString(String url) {
+        ConvertHashMap<String, String> map = new ConvertHashMap<>();
         if (Strings.isBlank(url)) {
-            return new HashMap<>();
+            return map;
         }
         url = decode(url);
         String[] query = url.split("\\?");
@@ -91,50 +143,17 @@ public class Urls {
         } else if (query.length == 2) {
             entries = query[1].split("&");
         } else {
-            return new HashMap<>();
+            return map;
         }
-        MapEntry<String, String>[] mapEntries = new MapEntry[entries.length];
-        for (int i = 0, len = entries.length; i < len; i++) {
-            String[] kv = entries[i].split("=");
+        for (String entry : entries) {
+            String[] kv = entry.split("=");
             if (kv.length == 2) {
-                mapEntries[i] = new MapEntry<>(kv[0], kv[1]);
+                map.put(kv[0], kv[1]);
             } else if (kv.length == 1) {
-                mapEntries[i] = new MapEntry<>(kv[0], "");
+                map.put(kv[0], null);
             }
         }
-        return Maps.of(mapEntries);
-    }
-
-    /**
-     * 将url中的参数转化为map
-     *
-     * @param url url
-     * @return 参数
-     */
-    public static Map<String, StringExt> getQueryStringExt(String url) {
-        if (Strings.isBlank(url)) {
-            return new HashMap<>();
-        }
-        url = decode(url);
-        String[] query = url.split("\\?");
-        String[] entries;
-        if (query.length == 1) {
-            entries = query[0].split("&");
-        } else if (query.length == 2) {
-            entries = query[1].split("&");
-        } else {
-            return new HashMap<>();
-        }
-        MapEntry<String, StringExt>[] mapEntries = new MapEntry[entries.length];
-        for (int i = 0, len = entries.length; i < len; i++) {
-            String[] kv = entries[i].split("=");
-            if (kv.length == 2) {
-                mapEntries[i] = new MapEntry<>(kv[0], new StringExt(kv[1]));
-            } else if (kv.length == 1) {
-                mapEntries[i] = new MapEntry<>(kv[0], new StringExt());
-            }
-        }
-        return Maps.of(mapEntries);
+        return map;
     }
 
     /**
@@ -145,13 +164,7 @@ public class Urls {
      * @return value
      */
     public static StringExt queryExt(String url, String key) {
-        Map<String, StringExt> queryString = getQueryStringExt(url);
-        for (Map.Entry<String, StringExt> entry : queryString.entrySet()) {
-            if (entry.getKey().equals(key)) {
-                return entry.getValue();
-            }
-        }
-        return new StringExt();
+        return new StringExt(query(url, key));
     }
 
     /**
@@ -178,40 +191,12 @@ public class Urls {
      * @param keys keys
      * @return values
      */
-    public static Map<String, StringExt> queryExts(String url, String... keys) {
-        Map<String, StringExt> queryString = getQueryStringExt(url);
-        Map<String, StringExt> res = new HashMap<>();
-        if (keys != null) {
-            for (String key : keys) {
-                StringExt stringExt = queryString.get(key);
-                if (stringExt == null) {
-                    res.put(key, new StringExt());
-                } else {
-                    res.put(key, stringExt);
-                }
-            }
-        }
-        return res;
-    }
-
-    /**
-     * 获取url参数
-     *
-     * @param url  url
-     * @param keys keys
-     * @return values
-     */
-    public static Map<String, String> querys(String url, String... keys) {
+    public static ConvertHashMap<String, String> querys(String url, String... keys) {
         Map<String, String> queryString = getQueryString(url);
-        Map<String, String> res = new HashMap<>();
+        ConvertHashMap<String, String> res = new ConvertHashMap<>();
         if (keys != null) {
             for (String key : keys) {
-                String s = queryString.get(key);
-                if (s == null) {
-                    res.put(key, null);
-                } else {
-                    res.put(key, s);
-                }
+                res.put(key, queryString.get(key));
             }
         }
         return res;
@@ -236,6 +221,9 @@ public class Urls {
      */
     public static String encode(String url, String charset) {
         try {
+            if (charset == null) {
+                return URLEncoder.encode(url, DEFAULT_CHARSET);
+            }
             return URLEncoder.encode(url, charset);
         } catch (Exception e) {
             e.printStackTrace();
@@ -262,6 +250,9 @@ public class Urls {
      */
     public static String decode(String url, String charset) {
         try {
+            if (charset == null) {
+                return URLDecoder.decode(url, DEFAULT_CHARSET);
+            }
             return URLDecoder.decode(url, charset);
         } catch (Exception e) {
             e.printStackTrace();
@@ -433,7 +424,7 @@ public class Urls {
                 }
             }
             if (query != null) {
-                queryString = buildUrl(query);
+                queryString = buildQueryString(query);
                 if (!Strings.isBlank(queryString)) {
                     sb.append("?");
                 }

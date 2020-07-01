@@ -170,6 +170,16 @@ public class Randoms {
     }
 
     /**
+     * 返回一个随机的布尔值
+     *
+     * @param i 几率 1/i
+     * @return boolean
+     */
+    public static boolean randomBoolean(int i) {
+        return RANDOM.nextInt(i) == i - 1;
+    }
+
+    /**
      * 返回固定长度的数字
      *
      * @param length 长度

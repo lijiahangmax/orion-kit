@@ -1,8 +1,8 @@
 package com.orion.socket;
 
 import com.orion.utils.Exceptions;
-import com.orion.utils.Streams;
 import com.orion.utils.Threads;
+import com.orion.utils.io.Streams;
 
 import java.io.IOException;
 import java.io.OutputStream;

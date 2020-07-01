@@ -88,6 +88,11 @@
             <artifactId>httpclient</artifactId>
             <version>${http.client.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+            <version>${http.client.version}</version>
+        </dependency>
 
         <!-- slf4j -->
         <dependency>

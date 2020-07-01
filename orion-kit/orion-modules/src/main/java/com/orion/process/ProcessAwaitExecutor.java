@@ -3,7 +3,7 @@ package com.orion.process;
 import com.orion.able.Awaitable;
 import com.orion.process.handler.ErrorHandler;
 import com.orion.process.handler.StreamHandler;
-import com.orion.utils.Streams;
+import com.orion.utils.io.Streams;
 
 import java.io.File;
 import java.io.IOException;

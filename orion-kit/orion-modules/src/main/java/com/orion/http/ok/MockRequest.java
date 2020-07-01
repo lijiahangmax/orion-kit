@@ -3,16 +3,17 @@ package com.orion.http.ok;
 import com.orion.able.Asyncable;
 import com.orion.able.Awaitable;
 import com.orion.http.common.HttpContent;
+import com.orion.http.common.HttpCookie;
 import com.orion.http.common.HttpMethod;
+import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.Urls;
 import com.orion.utils.Valid;
 import okhttp3.*;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.charset.Charset;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -22,6 +23,7 @@ import java.util.function.Consumer;
  * @version 1.0.0
  * @date 2020/4/7 23:49
  */
+@SuppressWarnings("ALL")
 public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<MockResponse>> {
 
     /**
@@ -48,6 +50,11 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      * 请求参数
      */
     private Map<String, String> queryParams;
+
+    /**
+     * 表单参数
+     */
+    private Map<String, String> formParts;
 
     /**
      * 请求参数
@@ -82,7 +89,12 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
     /**
      * 忽略的请求头
      */
-    private String[] ignoreHeaders;
+    private List<String> ignoreHeaders;
+
+    /**
+     * cookies
+     */
+    private List<HttpCookie> cookies;
 
     /**
      * tag
@@ -125,10 +137,21 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
     private MockResponse response;
 
     public MockRequest() {
+        this.client = MockClient.getClient();
+    }
+
+    public MockRequest(OkHttpClient client) {
+        this.client = client;
     }
 
     public MockRequest(String url) {
         this.url = url;
+        this.client = MockClient.getClient();
+    }
+
+    public MockRequest(String url, OkHttpClient client) {
+        this.url = url;
+        this.client = client;
     }
 
     /**
@@ -161,6 +184,17 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      */
     public MockRequest format(Map<String, Object> map) {
         this.url = Strings.format(this.url, map);
+        return this;
+    }
+
+    /**
+     * 设置Client
+     *
+     * @param client client
+     * @return this
+     */
+    public MockRequest client(OkHttpClient client) {
+        this.client = client;
         return this;
     }
 
@@ -226,7 +260,11 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      * @return this
      */
     public MockRequest queryParams(Map<String, String> queryParams) {
-        this.queryParams = queryParams;
+        if (this.queryParams == null) {
+            this.queryParams = queryParams;
+        } else {
+            this.queryParams.putAll(queryParams);
+        }
         return this;
     }
 
@@ -239,23 +277,39 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      */
     public MockRequest queryParam(String key, String value) {
         if (this.queryParams == null) {
-            this.queryParams = new HashMap<>();
+            this.queryParams = new LinkedHashMap<>();
         }
         this.queryParams.put(key, value);
         return this;
     }
 
     /**
-     * queryParams
+     * formParts
      *
-     * @param query key, value
+     * @param formParts formParts
      * @return this
      */
-    public MockRequest queryParam(Map.Entry<String, String> query) {
-        if (this.queryParams == null) {
-            this.queryParams = new HashMap<>();
+    public MockRequest formParts(Map<String, String> formParts) {
+        if (this.formParts == null) {
+            this.formParts = formParts;
+        } else {
+            this.formParts.putAll(formParts);
         }
-        this.queryParams.put(query.getKey(), query.getValue());
+        return this;
+    }
+
+    /**
+     * formParts
+     *
+     * @param key   key
+     * @param value value
+     * @return this
+     */
+    public MockRequest formPart(String key, String value) {
+        if (this.formParts == null) {
+            this.formParts = new LinkedHashMap<>();
+        }
+        this.formParts.put(key, value);
         return this;
     }
 
@@ -270,16 +324,46 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
     }
 
     /**
+     * queryStringEncode
+     *
+     * @param encode ignore
+     * @return this
+     */
+    public MockRequest queryStringEncode(boolean encode) {
+        this.queryStringEncode = encode;
+        return this;
+    }
+
+    /**
      * body
      *
      * @param body body
      * @return this
      */
     public MockRequest body(String body) {
+        return body(body, false);
+    }
+
+    /**
+     * body
+     *
+     * @param body       body
+     * @param useCharset 使用charset
+     * @return this
+     */
+    public MockRequest body(String body, boolean useCharset) {
         if (body == null) {
             return this;
         }
-        this.body = body.getBytes();
+        if (!useCharset) {
+            this.body = body.getBytes();
+        } else {
+            try {
+                this.body = body.getBytes(this.charset);
+            } catch (Exception e) {
+                throw Exceptions.unEnding(e);
+            }
+        }
         this.bodyOffset = 0;
         this.bodyLen = this.body.length;
         return this;
@@ -320,36 +404,118 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      * @return this
      */
     public MockRequest headers(Map<String, String> headers) {
-        this.headers = headers;
+        if (this.headers == null) {
+            this.headers = headers;
+        } else {
+            this.headers.putAll(headers);
+        }
         return this;
     }
 
     /**
-     * headers
+     * header
      *
      * @param key   key
      * @param value value
      * @return this
      */
-    public MockRequest headers(String key, String value) {
+    public MockRequest header(String key, String value) {
         if (this.headers == null) {
-            this.headers = new HashMap<>();
+            this.headers = new LinkedHashMap<>();
         }
         this.headers.put(key, value);
         return this;
     }
 
     /**
-     * headers
+     * UserAgent
      *
-     * @param header key, value
+     * @param value value
      * @return this
      */
-    public MockRequest headers(Map.Entry<String, String> header) {
+    public MockRequest userAgent(String value) {
         if (this.headers == null) {
-            this.headers = new HashMap<>();
+            this.headers = new LinkedHashMap<>();
         }
-        this.headers.put(header.getKey(), header.getValue());
+        this.headers.put("User-Agent", value);
+        return this;
+    }
+
+    /**
+     * cookie
+     *
+     * @param cookie cookie
+     * @return this
+     */
+    public MockRequest cookie(HttpCookie cookie) {
+        if (this.cookies == null) {
+            this.cookies = new ArrayList<>();
+        }
+        this.cookies.add(cookie);
+        return this;
+    }
+
+    /**
+     * cookies
+     *
+     * @param cookies cookies
+     * @return this
+     */
+    public MockRequest cookies(List<HttpCookie> cookies) {
+        if (this.cookies == null) {
+            this.cookies = cookies;
+        } else {
+            this.cookies.addAll(cookies);
+        }
+        return this;
+    }
+
+    /**
+     * ignoreHeader
+     *
+     * @param ignoreHeader ignoreHeader
+     * @return this
+     */
+    public MockRequest ignoreHeader(String ignoreHeader) {
+        if (ignoreHeader == null) {
+            return this;
+        }
+        if (this.ignoreHeaders == null) {
+            this.ignoreHeaders = new ArrayList<>();
+        }
+        this.ignoreHeaders.add(ignoreHeader);
+        return this;
+    }
+
+    /**
+     * ignoreHeaders
+     *
+     * @param ignoreHeaders ignoreHeaders
+     * @return this
+     */
+    public MockRequest ignoreHeaders(String... ignoreHeaders) {
+        if (ignoreHeaders == null) {
+            return this;
+        }
+        if (this.ignoreHeaders == null) {
+            this.ignoreHeaders = new ArrayList<>();
+        }
+        this.ignoreHeaders.addAll(Arrays.asList(ignoreHeaders));
+        return this;
+    }
+
+    /**
+     * ignoreHeaders
+     *
+     * @param ignoreHeaders ignoreHeaders
+     * @return this
+     */
+    public MockRequest ignoreHeaders(List<String> ignoreHeaders) {
+        if (this.ignoreHeaders == null) {
+            this.ignoreHeaders = ignoreHeaders;
+        } else {
+            this.ignoreHeaders.addAll(ignoreHeaders);
+        }
         return this;
     }
 
@@ -365,16 +531,6 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
     }
 
     /**
-     * ignoreHeaders
-     *
-     * @return this
-     */
-    public MockRequest ignoreHeaders(String... ignoreHeaders) {
-        this.ignoreHeaders = ignoreHeaders;
-        return this;
-    }
-
-    /**
      * ssl
      *
      * @param ssl ssl
@@ -382,6 +538,9 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      */
     public MockRequest ssl(boolean ssl) {
         this.ssl = ssl;
+        if (this.ssl) {
+            this.client = MockClient.getSslClient();
+        }
         return this;
     }
 
@@ -400,7 +559,7 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      *
      * @return this
      */
-    private MockRequest cancel() {
+    public MockRequest cancel() {
         this.call.cancel();
         return this;
     }
@@ -434,24 +593,32 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
      */
     private void buildRequest() {
         Request.Builder requestBuilder = new Request.Builder();
+        this.method = this.method.toUpperCase();
+        HttpMethod.validMethod(this.method, true);
         if (this.headers != null) {
-            requestBuilder.headers(Headers.of(this.headers));
+            this.headers.forEach(requestBuilder::addHeader);
+        }
+        if (this.cookies != null) {
+            this.cookies.forEach(c -> requestBuilder.addHeader("Cookie", c.toString()));
         }
         if (this.ignoreHeaders != null) {
-            for (String ignoreHeader : this.ignoreHeaders) {
-                requestBuilder.removeHeader(ignoreHeader);
+            this.ignoreHeaders.forEach(requestBuilder::removeHeader);
+        }
+        boolean show = false;
+        if (HttpMethod.GET.getMethod().equals(this.method) || HttpMethod.HEAD.getMethod().equals(this.method)) {
+            show = true;
+            if (this.formParts != null) {
+                if (this.queryParams == null) {
+                    this.queryParams = new LinkedHashMap<>();
+                }
+                this.queryParams.putAll(this.formParts);
             }
         }
         if (this.queryParams != null) {
-            this.queryString = Urls.buildUrl(this.queryParams);
-            if (this.queryStringEncode) {
-                this.queryString = Urls.encode(this.queryString);
-            }
+            this.queryString = Urls.buildQueryString(this.queryParams, this.queryStringEncode);
             this.url += ("?" + this.queryString);
         }
         requestBuilder.url(this.url);
-        this.method = this.method.toUpperCase();
-        HttpMethod.validHethod(this.method, true);
         if (HttpMethod.GET.getMethod().equals(this.method)) {
             requestBuilder.get();
         } else if (HttpMethod.HEAD.getMethod().equals(this.method)) {
@@ -461,22 +628,24 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
                 this.contentType = HttpContent.TEXT_PLAIN.getType();
             }
             if (this.charset == null) {
-                if (this.body == null) {
-                    requestBuilder.method(this.method, RequestBody.create(MediaType.parse(this.contentType), ""));
-                } else {
-                    if (this.bodyLen == 0) {
-                        this.bodyLen = this.body.length - this.bodyOffset;
-                    }
+                if (this.body != null) {
                     requestBuilder.method(this.method, RequestBody.create(MediaType.parse(this.contentType), this.body, this.bodyOffset, this.bodyLen));
+                } else if (this.formParts != null && !show) {
+                    FormBody.Builder formBuilder = new FormBody.Builder();
+                    this.formParts.forEach(formBuilder::add);
+                    requestBuilder.method(this.method, formBuilder.build());
+                } else {
+                    requestBuilder.method(this.method, RequestBody.create(MediaType.parse(this.contentType), ""));
                 }
             } else {
-                if (this.body == null) {
-                    requestBuilder.method(this.method, RequestBody.create(MediaType.parse(this.contentType + "; charset=" + this.charset), ""));
-                } else {
-                    if (this.bodyLen == 0) {
-                        this.bodyLen = this.body.length - this.bodyOffset;
-                    }
+                if (this.body != null) {
                     requestBuilder.method(this.method, RequestBody.create(MediaType.parse(this.contentType + "; charset=" + this.charset), this.body, this.bodyOffset, this.bodyLen));
+                } else if (this.formParts != null && !show) {
+                    FormBody.Builder formBuilder = new FormBody.Builder(Charset.forName(this.charset));
+                    this.formParts.forEach(formBuilder::addEncoded);
+                    requestBuilder.method(this.method, formBuilder.build());
+                } else {
+                    requestBuilder.method(this.method, RequestBody.create(MediaType.parse(this.contentType + "; charset=" + this.charset), ""));
                 }
             }
         }
@@ -492,13 +661,6 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
     private void execute() {
         Valid.notNull(this.url, "Request url is null");
         this.buildRequest();
-        if (this.client == null) {
-            if (this.ssl) {
-                this.client = MockClient.getSslClient();
-            } else {
-                this.client = MockClient.getClient();
-            }
-        }
         this.call = this.client.newCall(this.request);
         if (this.async) {
             this.response = new MockResponse().request(this.request).mockRequest(this);
@@ -550,6 +712,10 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
         return queryString;
     }
 
+    public Map<String, String> getFormParts() {
+        return formParts;
+    }
+
     public boolean isQueryStringEncode() {
         return queryStringEncode;
     }
@@ -570,7 +736,7 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
         return headers;
     }
 
-    public String[] getIgnoreHeaders() {
+    public List<String> getIgnoreHeaders() {
         return ignoreHeaders;
     }
 
@@ -606,22 +772,13 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
         return response;
     }
 
+    public List<HttpCookie> getCookies() {
+        return cookies;
+    }
+
     @Override
     public String toString() {
-        return "MockRequest{" +
-                "url='" + url + '\'' +
-                ", method='" + method + '\'' +
-                ", charset='" + charset + '\'' +
-                ", contentType='" + contentType + '\'' +
-                ", queryString='" + queryString + '\'' +
-                ", queryStringEncode=" + queryStringEncode +
-                ", bodyLen=" + bodyLen +
-                ", headers=" + headers +
-                ", ignoreHeaders=" + Arrays.toString(ignoreHeaders) +
-                ", tag=" + tag +
-                ", ssl=" + ssl +
-                ", async=" + async +
-                '}';
+        return url;
     }
 
 }

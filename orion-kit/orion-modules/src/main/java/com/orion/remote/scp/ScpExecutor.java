@@ -1,7 +1,7 @@
 package com.orion.remote.scp;
 
 import ch.ethz.ssh2.SCPClient;
-import com.orion.utils.Streams;
+import com.orion.utils.io.Streams;
 import com.orion.utils.io.Files1;
 
 import java.io.*;

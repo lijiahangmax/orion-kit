@@ -55,6 +55,11 @@ public enum HttpContent {
     APPLICATION_PDF("application/pdf"),
 
     /**
+     * zip格式
+     */
+    APPLICATION_ZIP("application/zip"),
+
+    /**
      * Word文档格式
      */
     APPLICATION_MSWORD("application/msword"),

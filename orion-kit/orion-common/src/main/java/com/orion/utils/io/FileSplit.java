@@ -1,7 +1,5 @@
 package com.orion.utils.io;
 
-import com.orion.utils.Streams;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.RandomAccessFile;

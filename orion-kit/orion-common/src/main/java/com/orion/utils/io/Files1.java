@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static com.orion.utils.Streams.closeQuietly;
+import static com.orion.utils.io.Streams.closeQuietly;
 
 /**
  * 文件工具类
