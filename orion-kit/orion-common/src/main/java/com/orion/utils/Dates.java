@@ -3,7 +3,6 @@ package com.orion.utils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 
-import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
@@ -1750,12 +1749,88 @@ public class Dates {
     /**
      * 日期流
      *
+     * @param timeZone 时区
+     * @return 流
+     */
+    public static DateStream stream(TimeZone timeZone) {
+        Valid.notNull(timeZone);
+        return new DateStream(new Date(), timeZone);
+    }
+
+    /**
+     * 日期流
+     *
+     * @param locale 地区
+     * @return 流
+     */
+    public static DateStream stream(Locale locale) {
+        Valid.notNull(locale);
+        return new DateStream(new Date(), locale);
+    }
+
+    /**
+     * 日期流
+     *
+     * @param timeZone 时区
+     * @param locale   地区
+     * @return 流
+     */
+    public static DateStream stream(TimeZone timeZone, Locale locale) {
+        Valid.notNull(timeZone);
+        Valid.notNull(locale);
+        return new DateStream(new Date(), timeZone, locale);
+    }
+
+    /**
+     * 日期流
+     *
      * @param date 时间
      * @return 流
      */
     public static DateStream stream(Date date) {
         Valid.notNull(date);
         return new DateStream(date);
+    }
+
+    /**
+     * 日期流
+     *
+     * @param date     时间
+     * @param timeZone 时区
+     * @return 流
+     */
+    public static DateStream stream(Date date, TimeZone timeZone) {
+        Valid.notNull(date);
+        Valid.notNull(timeZone);
+        return new DateStream(date, timeZone);
+    }
+
+    /**
+     * 日期流
+     *
+     * @param date   时间
+     * @param locale 地区
+     * @return 流
+     */
+    public static DateStream stream(Date date, Locale locale) {
+        Valid.notNull(date);
+        Valid.notNull(locale);
+        return new DateStream(date, locale);
+    }
+
+    /**
+     * 日期流
+     *
+     * @param date     时间
+     * @param timeZone 时区
+     * @param locale   地区
+     * @return 流
+     */
+    public static DateStream stream(Date date, TimeZone timeZone, Locale locale) {
+        Valid.notNull(date);
+        Valid.notNull(timeZone);
+        Valid.notNull(locale);
+        return new DateStream(date, timeZone, locale);
     }
 
     /**
@@ -1778,6 +1853,21 @@ public class Dates {
 
         private DateStream(Date date) {
             this.c = Calendar.getInstance();
+            this.c.setTime(date);
+        }
+
+        private DateStream(Date date, TimeZone timeZone) {
+            this.c = Calendar.getInstance(timeZone);
+            this.c.setTime(date);
+        }
+
+        private DateStream(Date date, Locale locale) {
+            this.c = Calendar.getInstance(locale);
+            this.c.setTime(date);
+        }
+
+        private DateStream(Date date, TimeZone timeZone, Locale locale) {
+            this.c = Calendar.getInstance(timeZone, locale);
             this.c.setTime(date);
         }
 
