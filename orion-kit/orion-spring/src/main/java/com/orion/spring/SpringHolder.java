@@ -31,13 +31,13 @@ public class SpringHolder {
 
         @Override
         public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-            System.out.println("set springs applicationContext");
+            System.out.println("SpringHolder: Inject ApplicationContext");
             SpringHolder.applicationContext = applicationContext;
         }
 
         @Override
         public void postProcessBeanFactory(ConfigurableListableBeanFactory configurableListableBeanFactory) throws BeansException {
-            System.out.println("set springs beanFactory");
+            System.out.println("SpringHolder: Inject BeanFactory");
             SpringHolder.beanFactory = configurableListableBeanFactory;
         }
 

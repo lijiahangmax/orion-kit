@@ -87,16 +87,16 @@ public class EnvProperties {
 
         public InitializeProperties(String propertiesPath) {
             this.propertiesPath = propertiesPath;
-            System.out.println("load env properties file " + propertiesPath);
+            System.out.println("EnvProperties: load env properties file: " + propertiesPath);
         }
 
         @Override
         public void afterPropertiesSet() {
             try {
                 EnvProperties.propertiesExt = new PropertiesExt(this.propertiesPath);
-                System.out.println("load env properties success...");
+                System.out.println("EnvProperties: load env properties success...");
             } catch (Exception e) {
-                System.err.println("load env properties fail...");
+                System.err.println("EnvProperties: load env properties fail...");
                 throw new RuntimeException(e);
             }
         }
