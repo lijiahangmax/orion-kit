@@ -3,7 +3,7 @@ package com.orion.lang.collect;
 import com.orion.utils.ext.StringExt;
 import com.orion.utils.*;
 import com.orion.utils.math.BigIntegers;
-import com.orion.utils.math.Decimals;
+import com.orion.utils.math.BigDecimals;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -397,7 +397,7 @@ public class ConvertHashSet<E> extends HashSet<E> {
     }
 
     public BigDecimal getBigDecimal(int i) {
-        return Decimals.toDecimal(get(i));
+        return BigDecimals.toBigDecimal(get(i));
     }
 
     public BigDecimal getBigDecimal(int i, BigDecimal def) {
@@ -405,7 +405,7 @@ public class ConvertHashSet<E> extends HashSet<E> {
         if (e == null) {
             return def;
         }
-        return Decimals.toDecimal(e);
+        return BigDecimals.toBigDecimal(e);
     }
 
     public BigInteger getBigInteger(int i) {

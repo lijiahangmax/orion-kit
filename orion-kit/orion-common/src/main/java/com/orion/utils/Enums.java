@@ -29,17 +29,17 @@ public class Enums {
     public static <E extends Enum<?>> E valueOf(Class<E> enumClass, Object value, Method method) {
         E[] es = enumClass.getEnumConstants();
         for (E e : es) {
-            Object evalue;
+            Object v;
             try {
                 method.setAccessible(true);
-                evalue = method.invoke(e);
+                v = method.invoke(e);
             } catch (IllegalAccessException | InvocationTargetException e1) {
                 throw new RuntimeException("NoSuchMethod");
             }
-            if (value instanceof Number && evalue instanceof Number && new BigDecimal(String.valueOf(value)).compareTo(new BigDecimal(String.valueOf(evalue))) == 0) {
+            if (value instanceof Number && v instanceof Number && new BigDecimal(String.valueOf(value)).compareTo(new BigDecimal(String.valueOf(v))) == 0) {
                 return e;
             }
-            if (Objects.equals(evalue, value)) {
+            if (Objects.equals(v, value)) {
                 return e;
             }
         }

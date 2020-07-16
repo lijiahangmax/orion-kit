@@ -22,7 +22,7 @@ public class LocalDataStore {
     /**
      * 本地文件
      */
-    private File localDataStoreFile = new File(System.getProperty("user.dir") + "/data/dataStore.map");
+    private File localDataStoreFile = new File(Files1.getPath(System.getProperty("user.dir") + "/data/dataStore.map"));
 
     /**
      * 数据容器

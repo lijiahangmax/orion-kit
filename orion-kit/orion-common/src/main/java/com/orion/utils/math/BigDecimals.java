@@ -15,9 +15,9 @@ import java.text.DecimalFormat;
  * @version 1.0.0
  * @date 2019/9/4 11:37
  */
-public class Decimals {
+public class BigDecimals {
 
-    private Decimals() {
+    private BigDecimals() {
     }
 
     /**
@@ -41,7 +41,7 @@ public class Decimals {
      * @param o Object
      * @return BigDecimal
      */
-    public static BigDecimal toDecimal(Object o) {
+    public static BigDecimal toBigDecimal(Object o) {
         return objectToDecimal(o);
     }
 
@@ -52,7 +52,7 @@ public class Decimals {
      * @param defaultV 默认值
      * @return BigDecimal
      */
-    public static BigDecimal toDecimal(Object o, BigDecimal defaultV) {
+    public static BigDecimal toBigDecimal(Object o, BigDecimal defaultV) {
         if (o == null) {
             return defaultV;
         }
@@ -65,7 +65,7 @@ public class Decimals {
      * @param o Object[]
      * @return BigDecimals[]
      */
-    public static BigDecimal[] toDecimals(Object... o) {
+    public static BigDecimal[] toBigDecimals(Object... o) {
         if (Arrays1.length(o) == 0) {
             return new BigDecimal[]{};
         }

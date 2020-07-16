@@ -49,12 +49,11 @@ public class RpcWrapper<T> implements Wrapper<T>, Jsonable, Logable, Mapable {
      */
     private String traceID = this.createTrace();
 
-    /**
-     * 跟踪号前缀
-     */
-    private static final String TRACE_PREFIX = "SESSION-TRACE-";
-
     private RpcWrapper() {
+    }
+
+    private RpcWrapper(int code) {
+        this.code = code;
     }
 
     private RpcWrapper(int code, String msg) {
@@ -79,100 +78,84 @@ public class RpcWrapper<T> implements Wrapper<T>, Jsonable, Logable, Mapable {
      * 定义
      */
     public static <T> RpcWrapper<T> wrap(int code) {
-        return new RpcWrapper<>(code, null);
+        return new RpcWrapper<>(code);
     }
 
     public static <T> RpcWrapper<T> wrap(int code, String msg) {
         return new RpcWrapper<>(code, msg);
     }
 
-    public static <T> RpcWrapper<T> wrap(int code, String tpl, Object... args) {
-        return new RpcWrapper<>(code, Strings.format(tpl, args));
+    public static <T> RpcWrapper<T> wrap(int code, String msg, Object... args) {
+        return new RpcWrapper<>(code, Strings.format(msg, args));
     }
 
     public static <T> RpcWrapper<T> wrap(int code, String msg, T data) {
         return new RpcWrapper<>(code, msg, data);
     }
 
-    public static <T> RpcWrapper<T> wrap(T data, int code, String tpl, Object... args) {
-        return new RpcWrapper<>(code, Strings.format(tpl, args), data);
-    }
-
-    public static <T> RpcWrapper<T> wrap(RpcStatus rpcStatus) {
-        return new RpcWrapper<>(rpcStatus.getCode(), rpcStatus.getMsg());
-    }
-
-    public static <T> RpcWrapper<T> wrap(RpcStatus rpcStatus, T data) {
-        return new RpcWrapper<>(rpcStatus.getCode(), rpcStatus.getMsg(), data);
-    }
-
-    public static <T> RpcWrapper<T> wrap(RpcStatus rpcStatus, Object... args) {
-        return new RpcWrapper<>(rpcStatus.getCode(), Strings.format(rpcStatus.getMsg(), args));
-    }
-
-    public static <T> RpcWrapper<T> wrap(T data, RpcStatus rpcStatus, Object... args) {
-        return new RpcWrapper<>(rpcStatus.getCode(), Strings.format(rpcStatus.getMsg(), args), data);
+    public static <T> RpcWrapper<T> wrap(T data, int code, String msg, Object... args) {
+        return new RpcWrapper<>(code, Strings.format(msg, args), data);
     }
 
     /**
      * 成功
      */
-    public static <T> RpcWrapper<T> success() {
-        return new RpcWrapper<>(RpcStatus.SUCCESS.getCode(), RpcStatus.SUCCESS.getMsg());
+    public static <T> RpcWrapper<T> ok() {
+        return new RpcWrapper<>(RPC_OK_CODE, RPC_OK_MESSAGE);
     }
 
-    public static <T> RpcWrapper<T> success(String msg) {
-        return new RpcWrapper<>(RpcStatus.SUCCESS.getCode(), msg);
+    public static <T> RpcWrapper<T> ok(String msg) {
+        return new RpcWrapper<>(RPC_OK_CODE, msg);
     }
 
-    public static <T> RpcWrapper<T> success(String tpl, Object... args) {
-        return new RpcWrapper<>(RpcStatus.SUCCESS.getCode(), Strings.format(tpl, args));
+    public static <T> RpcWrapper<T> ok(String msg, Object... args) {
+        return new RpcWrapper<>(RPC_OK_CODE, Strings.format(msg, args));
     }
 
-    public static <T> RpcWrapper<T> success(T data) {
-        return new RpcWrapper<>(RpcStatus.SUCCESS.getCode(), RpcStatus.SUCCESS.getMsg(), data);
+    public static <T> RpcWrapper<T> ok(T data) {
+        return new RpcWrapper<>(RPC_OK_CODE, RPC_OK_MESSAGE, data);
     }
 
-    public static <T> RpcWrapper<T> success(String msg, T data) {
-        return new RpcWrapper<>(RpcStatus.SUCCESS.getCode(), msg, data);
+    public static <T> RpcWrapper<T> ok(String msg, T data) {
+        return new RpcWrapper<>(RPC_OK_CODE, msg, data);
     }
 
-    public static <T> RpcWrapper<T> success(T data, String tpl, Object... args) {
-        return new RpcWrapper<>(RpcStatus.SUCCESS.getCode(), Strings.format(tpl, args), data);
+    public static <T> RpcWrapper<T> ok(T data, String msg, Object... args) {
+        return new RpcWrapper<>(RPC_OK_CODE, Strings.format(msg, args), data);
     }
 
     /**
      * 失败
      */
     public static <T> RpcWrapper<T> error() {
-        return new RpcWrapper<>(RpcStatus.ERROR.getCode(), RpcStatus.ERROR.getMsg());
+        return new RpcWrapper<>(RPC_ERROR_CODE, RPC_ERROR_MESSAGE);
     }
 
     public static <T> RpcWrapper<T> error(String msg) {
-        return new RpcWrapper<>(RpcStatus.ERROR.getCode(), msg);
+        return new RpcWrapper<>(RPC_ERROR_CODE, msg);
     }
 
-    public static <T> RpcWrapper<T> error(String tpl, Object... args) {
-        return new RpcWrapper<>(RpcStatus.ERROR.getCode(), Strings.format(tpl, args));
+    public static <T> RpcWrapper<T> error(String msg, Object... args) {
+        return new RpcWrapper<>(RPC_ERROR_CODE, Strings.format(msg, args));
     }
 
     public static <T> RpcWrapper<T> error(T data) {
-        return new RpcWrapper<>(RpcStatus.ERROR.getCode(), RpcStatus.ERROR.getMsg(), data);
+        return new RpcWrapper<>(RPC_ERROR_CODE, RPC_ERROR_MESSAGE, data);
     }
 
     public static <T> RpcWrapper<T> error(String msg, T data) {
-        return new RpcWrapper<>(RpcStatus.ERROR.getCode(), msg, data);
+        return new RpcWrapper<>(RPC_ERROR_CODE, msg, data);
     }
 
-    public static <T> RpcWrapper<T> error(T data, String tpl, Object... args) {
-        return new RpcWrapper<>(RpcStatus.ERROR.getCode(), Strings.format(tpl, args), data);
+    public static <T> RpcWrapper<T> error(T data, String msg, Object... args) {
+        return new RpcWrapper<>(RPC_ERROR_CODE, Strings.format(msg, args), data);
     }
 
     /**
      * 检查是否成功
      */
     public boolean isSuccess() {
-        return RpcStatus.ERROR.getCode() != code && (errorMsg == null || errorMsg.isEmpty());
+        return RPC_OK_CODE == code && (errorMsg == null || errorMsg.isEmpty());
     }
 
     /**
@@ -186,12 +169,12 @@ public class RpcWrapper<T> implements Wrapper<T>, Jsonable, Logable, Mapable {
         errorThrows(msg, true);
     }
 
-    public void errorThrows(String tpl, Object... args) {
-        errorThrows(Strings.format(tpl, args), true);
+    public void errorThrows(String msg, Object... args) {
+        errorThrows(Strings.format(msg, args), true);
     }
 
-    public void errorThrows(boolean appendErrMsg, String tpl, Object... args) {
-        errorThrows(Strings.format(tpl, args), appendErrMsg);
+    public void errorThrows(boolean appendErrMsg, String msg, Object... args) {
+        errorThrows(Strings.format(msg, args), appendErrMsg);
     }
 
     public void errorThrows(String msg, boolean appendErrMsg) {
@@ -259,7 +242,7 @@ public class RpcWrapper<T> implements Wrapper<T>, Jsonable, Logable, Mapable {
     }
 
     public List<String> getErrorMsg() {
-        return errorMsg;
+        return errorMsg == null ? new ArrayList<>() : errorMsg;
     }
 
     public RpcWrapper<T> setErrorMsg(List<String> errorMsg) {
@@ -299,13 +282,13 @@ public class RpcWrapper<T> implements Wrapper<T>, Jsonable, Logable, Mapable {
     @Override
     public String toLogString() {
         StringBuilder builder = new StringBuilder();
-        boolean success = isSuccess();
-        builder.append("RpcWrapper:\n\tisSuccess ==> ").append(success).append("\n\t")
+        boolean ok = isSuccess();
+        builder.append("RpcWrapper:\n\tisSuccess ==> ").append(ok).append("\n\t")
                 .append("traceID ==> ").append(traceID).append("\n\t")
                 .append("code ==> ").append(code).append("\n\t")
                 .append("msg ==> ").append(msg).append("\n\t")
                 .append("data ==> ").append(Jsons.toJSONWriteNull(data));
-        if (!success) {
+        if (!ok) {
             builder.append("errorMsg ==> ").append(errorMsg);
         }
         return builder.toString();

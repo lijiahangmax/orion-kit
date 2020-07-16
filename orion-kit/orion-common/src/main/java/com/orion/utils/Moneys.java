@@ -14,7 +14,7 @@ public class Moneys {
 
     private static final char[] CN_UPPER_NUMBER = {'零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'};
     private static final char[] CN_UPPER_UNIT = {'分', '角', '元', '拾', '佰', '仟', '万', '拾', '佰', '仟', '亿', '拾', '佰', '仟', '兆', '拾', '佰', '仟'};
-    private static final char[] CN_UNIT = new char[]{'分', '角', '拾', '佰', '仟', '万', '亿', '兆', '元'};
+    private static final char[] CN_UNIT = new char[]{'分', '角', '元', '拾', '佰', '仟', '万', '亿', '兆'};
     private static final char CN_FULL = '整';
     private static final char CN_NEGATIVE = '负';
     private static final String CN_ZERO_FULL = "零元整";
@@ -131,34 +131,31 @@ public class Moneys {
                                 tmp = BigDecimal.ZERO;
                                 break;
                             case 2:
-                                t = t.add(tmp.multiply(BigDecimal.valueOf(10)));
-                                break;
-                            case 3:
-                                t = t.add(tmp.multiply(BigDecimal.valueOf(100)));
-                                break;
-                            case 4:
-                                t = t.add(tmp.multiply(BigDecimal.valueOf(1000)));
-                                break;
-                            case 5:
-                                t = t.add(tmp).multiply(BigDecimal.valueOf(10000));
-                                res = res.add(t);
-                                t = BigDecimal.ZERO;
+                                t = t.add(tmp);
                                 tmp = BigDecimal.ZERO;
                                 break;
+                            case 3:
+                                t = t.add(tmp.multiply(BigDecimal.valueOf(10)));
+                                break;
+                            case 4:
+                                t = t.add(tmp.multiply(BigDecimal.valueOf(100)));
+                                break;
+                            case 5:
+                                t = t.add(tmp.multiply(BigDecimal.valueOf(1000)));
+                                break;
                             case 6:
-                                t = t.add(tmp).multiply(BigDecimal.valueOf(100000000));
-                                res = res.add(t);
+                                res = res.add(t.add(tmp).multiply(BigDecimal.valueOf(10000)));
                                 t = BigDecimal.ZERO;
                                 tmp = BigDecimal.ZERO;
                                 break;
                             case 7:
-                                t = t.add(tmp).multiply(BigDecimal.valueOf(1000000000000L));
-                                res = res.add(t);
+                                res = res.add(t.add(tmp).multiply(BigDecimal.valueOf(100000000)));
                                 t = BigDecimal.ZERO;
                                 tmp = BigDecimal.ZERO;
                                 break;
                             case 8:
-                                t = t.add(tmp);
+                                res = res.add(t.add(tmp).multiply(BigDecimal.valueOf(1000000000000L)));
+                                t = BigDecimal.ZERO;
                                 tmp = BigDecimal.ZERO;
                                 break;
                             default:
@@ -173,6 +170,5 @@ public class Moneys {
         res = res.add(t).add(tmp).setScale(2, RoundingMode.UNNECESSARY);
         return negate ? res.negate() : res;
     }
-
 
 }

@@ -2,7 +2,7 @@ package com.orion.utils.reflect;
 
 import com.orion.utils.Converts;
 import com.orion.utils.math.BigIntegers;
-import com.orion.utils.math.Decimals;
+import com.orion.utils.math.BigDecimals;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -68,7 +68,7 @@ class TypeInfer {
         } else if (clazz.equals(LocalDate.class)) {
             return Converts.toLocalDate(o);
         } else if (clazz.equals(BigDecimal.class)) {
-            return Decimals.toDecimal(o);
+            return BigDecimals.toBigDecimal(o);
         } else if (clazz.equals(BigInteger.class)) {
             return BigIntegers.toBigInteger(o);
         }

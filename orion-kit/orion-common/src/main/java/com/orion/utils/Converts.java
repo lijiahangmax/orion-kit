@@ -4,7 +4,7 @@ import com.orion.function.Conversion;
 import com.orion.lang.MapEntry;
 import com.orion.lang.collect.MultiHashMap;
 import com.orion.utils.math.BigIntegers;
-import com.orion.utils.math.Decimals;
+import com.orion.utils.math.BigDecimals;
 import com.orion.utils.reflect.Classes;
 
 import java.math.BigDecimal;
@@ -38,7 +38,7 @@ public class Converts {
 
     private static final Conversion TO_BYTE = Converts::toByte, TO_SHORT = Converts::toShort, TO_INT = Converts::toInt, TO_LONG = Converts::toLong,
             TO_FLOAT = Converts::toFloat, TO_DOUBLE = Converts::toDouble, TO_BOOLEAN = Converts::toBoolean, TO_CHAR = Converts::toChar,
-            TO_DECIMAL = Decimals::toDecimal, TO_BIG_INTEGER = BigIntegers::toBigInteger,
+            TO_BIG_DECIMAL = BigDecimals::toBigDecimal, TO_BIG_INTEGER = BigIntegers::toBigInteger,
             TO_DATE = Dates::date, TO_LOCAL_DATE_TIME = Dates::localDateTime, TO_LOCAL_DATE = Dates::localDate, TO_STRING = Converts::toString;
 
     // -------------------- convert --------------------
@@ -199,7 +199,7 @@ public class Converts {
         CONVERT_MULTI_MAP.put(Byte.class, Double.class, TO_DOUBLE);
         CONVERT_MULTI_MAP.put(Byte.class, Boolean.class, TO_BOOLEAN);
         CONVERT_MULTI_MAP.put(Byte.class, Character.class, TO_CHAR);
-        CONVERT_MULTI_MAP.put(Byte.class, BigDecimal.class, TO_DECIMAL);
+        CONVERT_MULTI_MAP.put(Byte.class, BigDecimal.class, TO_BIG_DECIMAL);
         CONVERT_MULTI_MAP.put(Byte.class, BigInteger.class, TO_BIG_INTEGER);
         CONVERT_MULTI_MAP.put(Byte.class, String.class, TO_STRING);
     }
@@ -213,7 +213,7 @@ public class Converts {
         CONVERT_MULTI_MAP.put(Short.class, Double.class, TO_DOUBLE);
         CONVERT_MULTI_MAP.put(Short.class, Boolean.class, TO_BOOLEAN);
         CONVERT_MULTI_MAP.put(Short.class, Character.class, TO_CHAR);
-        CONVERT_MULTI_MAP.put(Short.class, BigDecimal.class, TO_DECIMAL);
+        CONVERT_MULTI_MAP.put(Short.class, BigDecimal.class, TO_BIG_DECIMAL);
         CONVERT_MULTI_MAP.put(Short.class, BigInteger.class, TO_BIG_INTEGER);
         CONVERT_MULTI_MAP.put(Short.class, String.class, TO_STRING);
     }
@@ -227,7 +227,7 @@ public class Converts {
         CONVERT_MULTI_MAP.put(Integer.class, Double.class, TO_DOUBLE);
         CONVERT_MULTI_MAP.put(Integer.class, Boolean.class, TO_BOOLEAN);
         CONVERT_MULTI_MAP.put(Integer.class, Character.class, TO_CHAR);
-        CONVERT_MULTI_MAP.put(Integer.class, BigDecimal.class, TO_DECIMAL);
+        CONVERT_MULTI_MAP.put(Integer.class, BigDecimal.class, TO_BIG_DECIMAL);
         CONVERT_MULTI_MAP.put(Integer.class, BigInteger.class, TO_BIG_INTEGER);
         CONVERT_MULTI_MAP.put(Integer.class, String.class, TO_STRING);
     }
@@ -241,7 +241,7 @@ public class Converts {
         CONVERT_MULTI_MAP.put(Long.class, Double.class, TO_DOUBLE);
         CONVERT_MULTI_MAP.put(Long.class, Boolean.class, TO_BOOLEAN);
         CONVERT_MULTI_MAP.put(Long.class, Character.class, TO_CHAR);
-        CONVERT_MULTI_MAP.put(Long.class, BigDecimal.class, TO_DECIMAL);
+        CONVERT_MULTI_MAP.put(Long.class, BigDecimal.class, TO_BIG_DECIMAL);
         CONVERT_MULTI_MAP.put(Long.class, BigInteger.class, TO_BIG_INTEGER);
         CONVERT_MULTI_MAP.put(Long.class, String.class, TO_STRING);
         CONVERT_MULTI_MAP.put(Long.class, Date.class, TO_DATE);
@@ -258,7 +258,7 @@ public class Converts {
         CONVERT_MULTI_MAP.put(Float.class, Double.class, TO_DOUBLE);
         CONVERT_MULTI_MAP.put(Float.class, Boolean.class, TO_BOOLEAN);
         CONVERT_MULTI_MAP.put(Float.class, Character.class, TO_CHAR);
-        CONVERT_MULTI_MAP.put(Float.class, BigDecimal.class, TO_DECIMAL);
+        CONVERT_MULTI_MAP.put(Float.class, BigDecimal.class, TO_BIG_DECIMAL);
         CONVERT_MULTI_MAP.put(Float.class, BigInteger.class, TO_BIG_INTEGER);
         CONVERT_MULTI_MAP.put(Float.class, String.class, TO_STRING);
     }
@@ -272,7 +272,7 @@ public class Converts {
         CONVERT_MULTI_MAP.put(Double.class, Float.class, TO_FLOAT);
         CONVERT_MULTI_MAP.put(Double.class, Boolean.class, TO_BOOLEAN);
         CONVERT_MULTI_MAP.put(Double.class, Character.class, TO_CHAR);
-        CONVERT_MULTI_MAP.put(Double.class, BigDecimal.class, TO_DECIMAL);
+        CONVERT_MULTI_MAP.put(Double.class, BigDecimal.class, TO_BIG_DECIMAL);
         CONVERT_MULTI_MAP.put(Double.class, BigInteger.class, TO_BIG_INTEGER);
         CONVERT_MULTI_MAP.put(Double.class, String.class, TO_STRING);
     }
@@ -286,7 +286,7 @@ public class Converts {
         CONVERT_MULTI_MAP.put(Boolean.class, Float.class, TO_FLOAT);
         CONVERT_MULTI_MAP.put(Boolean.class, Double.class, TO_DOUBLE);
         CONVERT_MULTI_MAP.put(Boolean.class, Character.class, TO_CHAR);
-        CONVERT_MULTI_MAP.put(Boolean.class, BigDecimal.class, TO_DECIMAL);
+        CONVERT_MULTI_MAP.put(Boolean.class, BigDecimal.class, TO_BIG_DECIMAL);
         CONVERT_MULTI_MAP.put(Boolean.class, BigInteger.class, TO_BIG_INTEGER);
         CONVERT_MULTI_MAP.put(Boolean.class, String.class, TO_STRING);
     }
@@ -300,7 +300,7 @@ public class Converts {
         CONVERT_MULTI_MAP.put(Character.class, Float.class, TO_FLOAT);
         CONVERT_MULTI_MAP.put(Character.class, Double.class, TO_DOUBLE);
         CONVERT_MULTI_MAP.put(Character.class, Boolean.class, TO_BOOLEAN);
-        CONVERT_MULTI_MAP.put(Character.class, BigDecimal.class, TO_DECIMAL);
+        CONVERT_MULTI_MAP.put(Character.class, BigDecimal.class, TO_BIG_DECIMAL);
         CONVERT_MULTI_MAP.put(Character.class, BigInteger.class, TO_BIG_INTEGER);
         CONVERT_MULTI_MAP.put(Character.class, String.class, TO_STRING);
     }
@@ -315,7 +315,7 @@ public class Converts {
         CONVERT_MULTI_MAP.put(String.class, Double.class, TO_DOUBLE);
         CONVERT_MULTI_MAP.put(String.class, Boolean.class, TO_BOOLEAN);
         CONVERT_MULTI_MAP.put(String.class, Character.class, TO_CHAR);
-        CONVERT_MULTI_MAP.put(String.class, BigDecimal.class, TO_DECIMAL);
+        CONVERT_MULTI_MAP.put(String.class, BigDecimal.class, TO_BIG_DECIMAL);
         CONVERT_MULTI_MAP.put(String.class, BigInteger.class, TO_BIG_INTEGER);
         CONVERT_MULTI_MAP.put(String.class, Date.class, TO_DATE);
         CONVERT_MULTI_MAP.put(String.class, LocalDateTime.class, TO_LOCAL_DATE_TIME);

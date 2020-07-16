@@ -70,9 +70,7 @@ public class FileMerge implements Callable<String> {
     public String call() {
         Args.Two<String, List<String>> fl = shuffleFile(blockFile);
         try {
-            String mergeFile = mergeFile(file.getAbsolutePath(), fl.getArg1(), fl.getArg2());
-            System.out.println("MD5 sign: " + Files1.md5(mergeFile));
-            return mergeFile;
+            return mergeFile(file.getAbsolutePath(), fl.getArg1(), fl.getArg2());
         } catch (Exception e) {
             e.printStackTrace();
             return "error: " + e.getMessage();

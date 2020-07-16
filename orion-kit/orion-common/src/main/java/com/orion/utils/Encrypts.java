@@ -415,6 +415,7 @@ public class Encrypts {
             }
             return base64Encode(cipher.doFinal(bs));
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -522,7 +523,6 @@ public class Encrypts {
             }
             return cipher.doFinal(base64Decode(bs));
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }

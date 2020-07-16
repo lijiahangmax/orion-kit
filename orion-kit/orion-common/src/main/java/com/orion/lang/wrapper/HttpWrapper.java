@@ -3,9 +3,9 @@ package com.orion.lang.wrapper;
 import com.orion.able.Jsonable;
 import com.orion.able.Logable;
 import com.orion.able.Mapable;
-import com.orion.utils.json.Jsons;
 import com.orion.utils.Objects1;
 import com.orion.utils.Strings;
+import com.orion.utils.json.Jsons;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +39,10 @@ public class HttpWrapper<T> implements Wrapper<T>, Jsonable, Logable, Mapable {
     private HttpWrapper() {
     }
 
+    private HttpWrapper(int code) {
+        this.code = code;
+    }
+
     private HttpWrapper(int code, String msg) {
         this.code = code;
         this.msg = msg;
@@ -61,178 +65,77 @@ public class HttpWrapper<T> implements Wrapper<T>, Jsonable, Logable, Mapable {
      * 定义
      */
     public static <T> HttpWrapper<T> wrap(int code) {
-        return new HttpWrapper<>(code, null);
+        return new HttpWrapper<>(code);
     }
 
     public static <T> HttpWrapper<T> wrap(int code, String msg) {
         return new HttpWrapper<>(code, msg);
     }
 
-    public static <T> HttpWrapper<T> wrap(int code, String tpl, Object... args) {
-        return new HttpWrapper<>(code, Strings.format(tpl, args));
+    public static <T> HttpWrapper<T> wrap(int code, String msg, Object... args) {
+        return new HttpWrapper<>(code, Strings.format(msg, args));
     }
 
     public static <T> HttpWrapper<T> wrap(int code, String msg, T data) {
         return new HttpWrapper<>(code, msg, data);
     }
 
-    public static <T> HttpWrapper<T> wrap(T data, int code, String tpl, Object... args) {
-        return new HttpWrapper<>(code, Strings.format(tpl, args), data);
-    }
-
-    public static <T> HttpWrapper<T> wrap(HttpStatus status) {
-        return new HttpWrapper<>(status.getCode(), status.getMsg());
-    }
-
-    public static <T> HttpWrapper<T> wrap(HttpStatus status, T data) {
-        return new HttpWrapper<>(status.getCode(), status.getMsg(), data);
-    }
-
-    public static <T> HttpWrapper<T> wrap(HttpStatus status, Object... args) {
-        return new HttpWrapper<>(status.getCode(), Strings.format(status.getMsg(), args));
-    }
-
-    public static <T> HttpWrapper<T> wrap(T data, HttpStatus status, Object... args) {
-        return new HttpWrapper<>(status.getCode(), Strings.format(status.getMsg(), args), data);
+    public static <T> HttpWrapper<T> wrap(T data, int code, String msg, Object... args) {
+        return new HttpWrapper<>(code, Strings.format(msg, args), data);
     }
 
     /**
      * 成功
      */
     public static <T> HttpWrapper<T> ok() {
-        return new HttpWrapper<>(HttpStatus.OK.getCode(), HttpStatus.OK.getMsg());
+        return new HttpWrapper<>(HTTP_OK_CODE, HTTP_OK_MESSAGE);
     }
 
     public static <T> HttpWrapper<T> ok(String msg) {
-        return new HttpWrapper<>(HttpStatus.OK.getCode(), msg);
+        return new HttpWrapper<>(HTTP_OK_CODE, msg);
     }
 
-    public static <T> HttpWrapper<T> ok(String tpl, Object... args) {
-        return new HttpWrapper<>(HttpStatus.OK.getCode(), Strings.format(tpl, args));
+    public static <T> HttpWrapper<T> ok(String msg, Object... args) {
+        return new HttpWrapper<>(HTTP_OK_CODE, Strings.format(msg, args));
     }
 
     public static <T> HttpWrapper<T> ok(T data) {
-        return new HttpWrapper<>(HttpStatus.OK.getCode(), HttpStatus.OK.getMsg(), data);
+        return new HttpWrapper<>(HTTP_OK_CODE, HTTP_OK_MESSAGE, data);
     }
 
     public static <T> HttpWrapper<T> ok(String msg, T data) {
-        return new HttpWrapper<>(HttpStatus.OK.getCode(), msg, data);
+        return new HttpWrapper<>(HTTP_OK_CODE, msg, data);
     }
 
-    public static <T> HttpWrapper<T> ok(T data, String tpl, Object... args) {
-        return new HttpWrapper<>(HttpStatus.OK.getCode(), Strings.format(tpl, args), data);
+    public static <T> HttpWrapper<T> ok(T data, String msg, Object... args) {
+        return new HttpWrapper<>(HTTP_OK_CODE, Strings.format(msg, args), data);
     }
 
     /**
      * 失败
      */
     public static <T> HttpWrapper<T> error() {
-        return new HttpWrapper<>(HttpStatus.ERROR.getCode(), HttpStatus.ERROR.getMsg());
+        return new HttpWrapper<>(HTTP_ERROR_CODE, HTTP_ERROR_MESSAGE);
     }
 
     public static <T> HttpWrapper<T> error(String msg) {
-        return new HttpWrapper<>(HttpStatus.ERROR.getCode(), msg);
+        return new HttpWrapper<>(HTTP_ERROR_CODE, msg);
     }
 
-    public static <T> HttpWrapper<T> error(String tpl, Object... args) {
-        return new HttpWrapper<>(HttpStatus.ERROR.getCode(), Strings.format(tpl, args));
+    public static <T> HttpWrapper<T> error(String msg, Object... args) {
+        return new HttpWrapper<>(HTTP_ERROR_CODE, Strings.format(msg, args));
     }
 
     public static <T> HttpWrapper<T> error(T data) {
-        return new HttpWrapper<>(HttpStatus.ERROR.getCode(), HttpStatus.ERROR.getMsg(), data);
+        return new HttpWrapper<>(HTTP_ERROR_CODE, HTTP_ERROR_MESSAGE, data);
     }
 
     public static <T> HttpWrapper<T> error(String msg, T data) {
-        return new HttpWrapper<>(HttpStatus.ERROR.getCode(), msg, data);
+        return new HttpWrapper<>(HTTP_ERROR_CODE, msg, data);
     }
 
-    public static <T> HttpWrapper<T> error(T data, String tpl, Object... args) {
-        return new HttpWrapper<>(HttpStatus.ERROR.getCode(), Strings.format(tpl, args), data);
-    }
-
-    /**
-     * url
-     */
-    public static <T> HttpWrapper<UrlWrapper<T>> url() {
-        return new HttpWrapper<UrlWrapper<T>>().setData(UrlWrapper.get());
-    }
-
-    public static <T> HttpWrapper<UrlWrapper<T>> url(int code) {
-        return new HttpWrapper<UrlWrapper<T>>().setCode(code).setData(UrlWrapper.get());
-    }
-
-    public static <T> HttpWrapper<UrlWrapper<T>> url(int code, String msg) {
-        return new HttpWrapper<>(code, msg, UrlWrapper.get());
-    }
-
-    public static <T> HttpWrapper<UrlWrapper<T>> url(int code, String tpl, Object... args) {
-        return new HttpWrapper<>(code, Strings.format(tpl, args), UrlWrapper.get());
-    }
-
-    public static <T> HttpWrapper<UrlWrapper<T>> url(int code, String msg, T data) {
-        return new HttpWrapper<>(code, msg, UrlWrapper.get(data));
-    }
-
-    public static <T> HttpWrapper<UrlWrapper<T>> url(int code, T data, String tpl, Object... args) {
-        return new HttpWrapper<>(code, Strings.format(tpl, args), UrlWrapper.get(data));
-    }
-
-    /**
-     * refresh
-     */
-    public static <T> HttpWrapper<UrlWrapper<T>> refresh() {
-        return new HttpWrapper<UrlWrapper<T>>().setData(UrlWrapper.refresh());
-    }
-
-    public static <T> HttpWrapper<UrlWrapper<T>> refresh(int code) {
-        return new HttpWrapper<UrlWrapper<T>>().setCode(code).setData(UrlWrapper.refresh());
-    }
-
-    public static <T> HttpWrapper<UrlWrapper<T>> refresh(int code, String msg) {
-        return new HttpWrapper<>(code, msg, UrlWrapper.refresh());
-    }
-
-    public static <T> HttpWrapper<UrlWrapper<T>> refresh(int code, String tpl, Object... args) {
-        return new HttpWrapper<>(code, Strings.format(tpl, args), UrlWrapper.refresh());
-    }
-
-    public static <T> HttpWrapper<UrlWrapper<T>> refresh(int code, String msg, T data) {
-        return new HttpWrapper<>(code, msg, UrlWrapper.refresh(data));
-    }
-
-    public static <T> HttpWrapper<UrlWrapper<T>> refresh(int code, T data, String tpl, Object... args) {
-        return new HttpWrapper<>(code, Strings.format(tpl, args), UrlWrapper.refresh(data));
-    }
-
-    /**
-     * redirect
-     */
-    public static <T> HttpWrapper<UrlWrapper<T>> redirect() {
-        return new HttpWrapper<UrlWrapper<T>>().setData(UrlWrapper.redirect());
-    }
-
-    public static <T> HttpWrapper<UrlWrapper<T>> redirect(String url) {
-        return new HttpWrapper<UrlWrapper<T>>().setData(UrlWrapper.redirect(url));
-    }
-
-    public static <T> HttpWrapper<UrlWrapper<T>> redirect(String url, int code) {
-        return new HttpWrapper<UrlWrapper<T>>().setCode(code).setData(UrlWrapper.redirect(url));
-    }
-
-    public static <T> HttpWrapper<UrlWrapper<T>> redirect(String url, int code, String msg) {
-        return new HttpWrapper<>(code, msg, UrlWrapper.redirect(url));
-    }
-
-    public static <T> HttpWrapper<UrlWrapper<T>> redirect(String url, int code, String tpl, Object... args) {
-        return new HttpWrapper<>(code, Strings.format(tpl, args), UrlWrapper.redirect(url));
-    }
-
-    public static <T> HttpWrapper<UrlWrapper<T>> redirect(String url, int code, String msg, T data) {
-        return new HttpWrapper<>(code, msg, UrlWrapper.redirect(url, data));
-    }
-
-    public static <T> HttpWrapper<UrlWrapper<T>> redirect(String url, int code, T data, String tpl, Object... args) {
-        return new HttpWrapper<>(code, Strings.format(tpl, args), UrlWrapper.redirect(url, data));
+    public static <T> HttpWrapper<T> error(T data, String msg, Object... args) {
+        return new HttpWrapper<>(HTTP_ERROR_CODE, Strings.format(msg, args), data);
     }
 
     public HttpWrapper<T> code(int code) {

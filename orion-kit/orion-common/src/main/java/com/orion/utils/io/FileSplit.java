@@ -131,12 +131,12 @@ public class FileSplit implements Callable<String[]> {
         if (nothing) {
             return new String[]{file.getAbsolutePath()};
         }
-        System.out.println("MD5 sign: " + Files1.md5(file));
         String[] blockPaths = new String[blockCount];
         File df = new File(file.getAbsolutePath() + ".block");
-        Files1.touch(df);
+        Files1.mkdirs(df);
         for (int i = 0; i < blockCount; i++) {
             String splitFileName = df.getAbsolutePath() + "\\" + file.getName() + ".000" + (i + 1);
+            Files1.touch(splitFileName);
             blockPaths[i] = splitFileName;
             randomReadToFile((i * blockSize), new File(splitFileName));
         }

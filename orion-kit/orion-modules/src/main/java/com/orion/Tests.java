@@ -16,7 +16,6 @@ public class Tests {
     private static final Logger LOGGER = LoggerFactory.getLogger(Tests.class);
 
     public static void main(String[] args) throws Exception {
-
     }
 
 }

@@ -5,7 +5,7 @@ import com.orion.utils.ext.StringExt;
 import com.orion.lang.wrapper.Args;
 import com.orion.utils.*;
 import com.orion.utils.math.BigIntegers;
-import com.orion.utils.math.Decimals;
+import com.orion.utils.math.BigDecimals;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -395,7 +395,7 @@ public class ConvertHashMap<K, V> extends HashMap<K, V> {
     }
 
     public BigDecimal getBigDecimal(K k) {
-        return Decimals.toDecimal(get(k));
+        return BigDecimals.toBigDecimal(get(k));
     }
 
     public BigDecimal getBigDecimal(K k, BigDecimal def) {
@@ -403,7 +403,7 @@ public class ConvertHashMap<K, V> extends HashMap<K, V> {
         if (v == null) {
             return def;
         }
-        return Decimals.toDecimal(v);
+        return BigDecimals.toBigDecimal(v);
     }
 
     public BigInteger getBigInteger(K k) {

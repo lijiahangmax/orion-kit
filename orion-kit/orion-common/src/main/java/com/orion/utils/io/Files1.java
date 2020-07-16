@@ -1,7 +1,6 @@
 package com.orion.utils.io;
 
 import com.orion.id.UUIds;
-import com.orion.utils.Systems;
 import com.orion.utils.*;
 import com.orion.utils.collect.Lists;
 
@@ -412,7 +411,7 @@ public class Files1 {
      * @param file 文件
      */
     public static void touch(String file) {
-        touch(new File(file), null);
+        touch(new File(file), null, false);
     }
 
     /**
@@ -421,7 +420,7 @@ public class Files1 {
      * @param file 文件
      */
     public static void touch(File file) {
-        touch(file, null);
+        touch(file, null, false);
     }
 
     /**
@@ -431,7 +430,7 @@ public class Files1 {
      * @param charset 编码格式
      */
     public static void touch(String file, String charset) {
-        touch(new File(file), charset);
+        touch(new File(file), charset, false);
     }
 
     /**
@@ -441,6 +440,48 @@ public class Files1 {
      * @param charset 编码格式
      */
     public static void touch(File file, String charset) {
+        touch(file, charset, false);
+    }
+
+    /**
+     * 创建文件
+     *
+     * @param file  文件
+     * @param clean 如果文件存在是否清除文件内容
+     */
+    public static void touch(String file, boolean clean) {
+        touch(new File(file), null, clean);
+    }
+
+    /**
+     * 创建文件
+     *
+     * @param file  文件
+     * @param clean 如果文件存在是否清除文件内容
+     */
+    public static void touch(File file, boolean clean) {
+        touch(file, null, clean);
+    }
+
+    /**
+     * 创建文件
+     *
+     * @param file    文件
+     * @param charset 编码格式
+     * @param clean   如果文件存在是否清除文件内容
+     */
+    public static void touch(String file, String charset, boolean clean) {
+        touch(new File(file), charset, clean);
+    }
+
+    /**
+     * 创建文件
+     *
+     * @param file    文件
+     * @param charset 编码格式
+     * @param clean   如果文件存在是否清除文件内容
+     */
+    public static void touch(File file, String charset, boolean clean) {
         File dir = file.getParentFile();
         boolean create = false;
         if (!dir.exists()) {
@@ -469,6 +510,8 @@ public class Files1 {
             } catch (IOException e) {
                 throw Exceptions.ioRuntime(e);
             }
+        } else if (clean) {
+            cleanFile(file);
         }
     }
 
@@ -624,9 +667,7 @@ public class Files1 {
      * @param file 文件
      */
     public static void deleteBigFile(String file) {
-        File f = new File(file);
-        cleanFile(f);
-        f.delete();
+        deleteBigFile(new File(file));
     }
 
     /**
@@ -645,11 +686,7 @@ public class Files1 {
      * @param file 文件
      */
     public static void cleanFile(String file) {
-        try (FileWriter fw = new FileWriter(file)) {
-            fw.write("");
-        } catch (IOException e) {
-            throw Exceptions.ioRuntime(e);
-        }
+        cleanFile(new File(file));
     }
 
     /**
@@ -658,6 +695,9 @@ public class Files1 {
      * @param file 文件
      */
     public static void cleanFile(File file) {
+        if (!file.exists()) {
+            return;
+        }
         try (FileWriter fw = new FileWriter(file)) {
             fw.write("");
         } catch (IOException e) {
