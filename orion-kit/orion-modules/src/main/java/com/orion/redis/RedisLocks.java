@@ -1,5 +1,6 @@
 package com.orion.redis;
 
+import com.orion.utils.Strings;
 import redis.clients.jedis.Jedis;
 
 /**
@@ -14,7 +15,7 @@ public class RedisLocks {
     private static Jedis redisTemplate;
 
     /**
-     * 锁过期时间
+     * 默认锁过期时间
      */
     private static final long EXPIRED = 1000 * 5;
 
@@ -41,22 +42,26 @@ public class RedisLocks {
      * @return 锁的值 0没抢到锁
      */
     public static long tryLock(String lock, long expired) {
-        Long lockValue = System.currentTimeMillis() + expired;
-        Long r = redisTemplate.setnx(lock, String.valueOf(lockValue));
-        if (r == 1) {
-            return lockValue;
-        } else {
-            Long oldLockValue = Long.valueOf(redisTemplate.get(lock));
-            if (oldLockValue < System.currentTimeMillis()) {
-                String getOldLockValue = redisTemplate.getSet(lock, String.valueOf(lockValue));
-                if (Long.valueOf(getOldLockValue).equals(oldLockValue)) {
-                    return lockValue;
+        try {
+            Long lockValue = System.currentTimeMillis() + expired;
+            Long r = redisTemplate.setnx(lock, String.valueOf(lockValue));
+            if (r == 1) {
+                return lockValue;
+            } else {
+                Long oldLockValue = Long.valueOf(redisTemplate.get(lock));
+                if (oldLockValue < System.currentTimeMillis()) {
+                    String getOldLockValue = redisTemplate.getSet(lock, String.valueOf(lockValue));
+                    if (!Strings.isBlank(getOldLockValue) && Long.valueOf(getOldLockValue).equals(oldLockValue)) {
+                        return lockValue;
+                    } else {
+                        return 0;
+                    }
                 } else {
                     return 0;
                 }
-            } else {
-                return 0;
             }
+        } catch (Exception e) {
+            return 0;
         }
     }
 
@@ -64,15 +69,19 @@ public class RedisLocks {
      * 释放分布式锁
      * 锁超时时不能直接del 如果在del之前有其他线程获得了锁, 那么可能造成锁的释放
      *
-     * @param lock    锁名称
-     * @param timeOut 超时时间 lock的value
+     * @param lockName  锁名称
+     * @param lockValue 锁的值
      */
-    public static void unLock(String lock, long timeOut) {
-        // 先获取锁
-        String lockValue = redisTemplate.get(lock);
-        if (Long.valueOf(lockValue).equals(timeOut)) {
-            // 删除key
-            redisTemplate.del(lock);
+    public static void unLock(String lockName, Long lockValue) {
+        try {
+            // 先获取锁
+            String currentLockValue = redisTemplate.get(lockName);
+            if (!Strings.isBlank(currentLockValue) && lockValue.equals(Long.valueOf(currentLockValue))) {
+                // 删除key
+                redisTemplate.del(lockName);
+            }
+        } catch (Exception e) {
+            // ignore
         }
     }
 

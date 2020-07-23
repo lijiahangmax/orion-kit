@@ -38,7 +38,7 @@ public class BarCodes {
     /**
      * 格式
      */
-    private String suffix = "jpg";
+    private String suffix = "png";
 
     /**
      * 存放文件夹
@@ -113,17 +113,16 @@ public class BarCodes {
         Graphics2D g2d = outImage.createGraphics();
         // 抗锯齿
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_DEFAULT);
         Stroke s = new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER);
         g2d.setStroke(s);
-        // 设置颜色
+        // 设置背景颜色
         g2d.setColor(Color.WHITE);
         g2d.fillRect(0, 0, width, newHeight);
-        g2d.setColor(Color.BLACK);
         // 画条形码
         g2d.drawImage(image, 0, topMargin, image.getWidth(), image.getHeight(), null);
-        Color color = new Color(0, 0, 0);
-        g2d.setColor(color);
+        g2d.setColor(Color.BLACK);
         g2d.setFont(new Font(wordsFontName, Font.PLAIN, wordsFontSize));
         int strWidth = g2d.getFontMetrics().stringWidth(words);
         int wordStartX = (wordsWidth - strWidth) / 2;
@@ -357,6 +356,12 @@ public class BarCodes {
 
     public BarCodes setBottomMargin(int bottomMargin) {
         this.bottomMargin = bottomMargin;
+        return this;
+    }
+
+    public BarCodes setMargin(int margin) {
+        this.topMargin = margin;
+        this.bottomMargin = margin;
         return this;
     }
 

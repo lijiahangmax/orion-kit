@@ -105,7 +105,6 @@ public class Colors {
             int blue = Integer.parseInt(str3, 16);
             return new Color(red, green, blue);
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }

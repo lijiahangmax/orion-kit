@@ -21,6 +21,11 @@ import java.io.OutputStream;
  */
 public class ImageExecutorStream {
 
+    /**
+     * 文件格式 如果有的话
+     */
+    private String format;
+
     private Thumbnails.Builder builder;
 
     public ImageExecutorStream(String name) {
@@ -33,6 +38,10 @@ public class ImageExecutorStream {
 
     public ImageExecutorStream(InputStream in) {
         builder = Thumbnails.of(in);
+    }
+
+    public ImageExecutorStream(byte[] bs) {
+        builder = Thumbnails.of(Streams.toInputStream(bs));
     }
 
     /**
@@ -140,6 +149,7 @@ public class ImageExecutorStream {
      * @return this
      */
     public ImageExecutorStream format(String format) {
+        this.format = format;
         builder.outputFormat(format);
         return this;
     }
@@ -357,10 +367,25 @@ public class ImageExecutorStream {
     /**
      * 转化为 BufferedImage
      *
+     * @return BufferedImage
      * @throws IOException IOException
      */
-    public BufferedImage asBufferedImage() throws IOException {
+    public BufferedImage getImage() throws IOException {
         return builder.asBufferedImage();
+    }
+
+    /**
+     * 转化为 base64
+     *
+     * @return base64
+     * @throws IOException IOException
+     */
+    public String getBase64() throws IOException {
+        if (this.format == null) {
+            return Images.base64Encode(builder.asBufferedImage());
+        } else {
+            return Images.base64Encode(builder.asBufferedImage(), this.format);
+        }
     }
 
     public Thumbnails.Builder getBuilder() {

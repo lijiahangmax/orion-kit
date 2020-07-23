@@ -170,7 +170,7 @@ public class Encrypts {
      * @return base64
      */
     public static String img64Encode(byte[] bs) {
-        return img64Encode(bs, "jpg");
+        return img64Encode(bs, "png");
     }
 
     /**
@@ -191,8 +191,10 @@ public class Encrypts {
      * @return 图片
      */
     public static byte[] img64Decode(String s) {
-        int i = s.indexOf("base64");
-        return s.substring(i + 7, s.length()).getBytes();
+        // int i = s.indexOf("base64");
+        // return base64Decode(s.substring(i + 7, s.length()).getBytes());
+        String[] b = s.split(",");
+        return base64Decode(b[b.length - 1].getBytes());
     }
 
     /**
