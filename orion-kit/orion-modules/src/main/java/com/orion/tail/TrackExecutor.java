@@ -22,7 +22,7 @@ public class TrackExecutor {
     /**
      * tail 线程池
      */
-    private static final ExecutorService TAIL_POOL = Threads.newThreadPool(0,10, 10000, new LinkedBlockingQueue<>(), "TAIL-RUNNER-");
+    private static final ExecutorService TAIL_POOL = Threads.newThreadPool(0, 10, 10000, new LinkedBlockingQueue<>(), "TAIL-RUNNER-");
 
     /**
      * 追踪文件

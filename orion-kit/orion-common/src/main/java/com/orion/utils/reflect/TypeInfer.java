@@ -1,8 +1,8 @@
 package com.orion.utils.reflect;
 
 import com.orion.utils.Converts;
-import com.orion.utils.math.BigIntegers;
 import com.orion.utils.math.BigDecimals;
+import com.orion.utils.math.BigIntegers;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

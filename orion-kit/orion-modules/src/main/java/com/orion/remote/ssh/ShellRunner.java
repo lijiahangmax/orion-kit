@@ -1,7 +1,6 @@
 package com.orion.remote.ssh;
 
 import com.orion.exception.AuthenticationException;
-import com.orion.lang.thread.NamedThreadFactory;
 import com.orion.remote.RemoteConnection;
 import com.orion.remote.ssh.handler.ErrorHandler;
 import com.orion.remote.ssh.handler.SuccessHandler;
@@ -10,7 +9,8 @@ import com.orion.utils.Threads;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 
 /**

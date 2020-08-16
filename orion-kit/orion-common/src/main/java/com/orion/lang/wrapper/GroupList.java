@@ -2,8 +2,8 @@ package com.orion.lang.wrapper;
 
 import com.orion.lang.collect.MultiHashMap;
 import com.orion.utils.Objects1;
-import com.orion.utils.reflect.Methods;
 import com.orion.utils.Strings;
+import com.orion.utils.reflect.Methods;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
