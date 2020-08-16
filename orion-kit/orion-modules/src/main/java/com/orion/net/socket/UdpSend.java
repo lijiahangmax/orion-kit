@@ -69,7 +69,7 @@ public class UdpSend {
     }
 
     public void close() {
-        Streams.closeQuietly(ds);
+        Streams.close(ds);
     }
 
     public String getHost() {

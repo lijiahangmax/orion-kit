@@ -1,7 +1,7 @@
-package com.orion.storage.ftp.bigfile;
+package com.orion.ftp.client.bigfile;
 
-import com.orion.storage.ftp.FtpFileAttr;
-import com.orion.storage.ftp.FtpInstance;
+import com.orion.ftp.client.FtpFileAttr;
+import com.orion.ftp.client.FtpInstance;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Threads;
 import com.orion.utils.io.FileLocks;
@@ -149,8 +149,8 @@ public class FtpDownload implements Runnable {
         } finally {
             this.endTime = System.currentTimeMillis();
             this.done = true;
-            Streams.closeQuietly(in);
-            Streams.closeQuietly(out);
+            Streams.close(in);
+            Streams.close(out);
             instance.client().setRestartOffset(0);
             try {
                 if (in != null) {

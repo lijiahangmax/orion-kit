@@ -96,10 +96,10 @@ public class ScpExecutor {
                 Streams.copy(in, writer);
             }
         } finally {
-            Streams.closeQuietly(in);
+            Streams.close(in);
             if (close) {
-                Streams.closeQuietly(out);
-                Streams.closeQuietly(writer);
+                Streams.close(out);
+                Streams.close(writer);
             }
         }
     }
@@ -240,7 +240,7 @@ public class ScpExecutor {
             Streams.copy(in, out);
             out.flush();
         } finally {
-            Streams.closeQuietly(out);
+            Streams.close(out);
             if (close) {
                 in.close();
             }

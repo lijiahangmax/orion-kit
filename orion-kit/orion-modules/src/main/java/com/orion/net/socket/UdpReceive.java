@@ -77,7 +77,7 @@ public class UdpReceive {
     }
 
     public void close() {
-        Streams.closeQuietly(ds);
+        Streams.close(ds);
     }
 
     public int getPort() {

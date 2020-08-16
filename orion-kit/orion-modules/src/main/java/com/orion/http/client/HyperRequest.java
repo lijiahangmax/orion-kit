@@ -589,7 +589,7 @@ public class HyperRequest implements Awaitable<HyperResponse> {
                     .url(this.url)
                     .method(this.method);
             this.request.releaseConnection();
-            Streams.closeQuietly(execute);
+            Streams.close(execute);
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         }

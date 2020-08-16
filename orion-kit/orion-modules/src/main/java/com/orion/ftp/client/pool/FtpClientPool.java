@@ -1,4 +1,4 @@
-package com.orion.storage.ftp.pool;
+package com.orion.ftp.client.pool;
 
 import com.orion.utils.Exceptions;
 import org.apache.commons.net.ftp.FTPClient;
@@ -29,7 +29,7 @@ public class FtpClientPool {
     /**
      * 队列
      */
-    private BlockingQueue<FTPClient> pool;
+    private volatile BlockingQueue<FTPClient> pool;
 
     /**
      * 连接工厂
@@ -111,7 +111,7 @@ public class FtpClientPool {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            // ignore
         }
     }
 

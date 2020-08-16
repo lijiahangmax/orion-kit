@@ -348,9 +348,9 @@ public class ProcessAwaitExecutor implements Awaitable<ProcessAwaitExecutor> {
             if (this.process != null) {
                 this.process.destroy();
             }
-            Streams.closeQuietly(this.in);
-            Streams.closeQuietly(this.out);
-            Streams.closeQuietly(this.err);
+            Streams.close(this.in);
+            Streams.close(this.out);
+            Streams.close(this.err);
         } catch (Exception e) {
             // ignore
         }

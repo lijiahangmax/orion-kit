@@ -42,12 +42,38 @@ public class ImageIcons implements Processable<Character, BufferedImage> {
     private int fontSize;
 
     /**
+     * 字体绘制的X坐标
+     */
+    private float fontPointX;
+
+    /**
      * 字体绘制的Y坐标
      */
-    private int fontPointY;
+    private float fontPointY;
+
+    /**
+     * base64编码图标
+     *
+     * @param c 字符
+     * @return base64
+     */
+    public String executeBase64(Character c) {
+        return Images.base64Encode(this.execute(c));
+    }
+
+    /**
+     * base64编码图标
+     *
+     * @param c      字符
+     * @param format 格式
+     * @return base64
+     */
+    public String executeBase64(Character c, String format) {
+        return Images.base64Encode(this.execute(c), format);
+    }
 
     @Override
-    public BufferedImage execute(Character s) {
+    public BufferedImage execute(Character c) {
         BufferedImage img = Images.getTransparentImage(size, size);
         Graphics2D g2d = img.createGraphics();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -58,18 +84,18 @@ public class ImageIcons implements Processable<Character, BufferedImage> {
         if (fontSize != 0) {
             int i = (size - fontSize) / 2;
             g2d.setFont(new Font(fontName, Font.PLAIN, fontSize));
-            if (fontPointY != 0) {
-                g2d.drawString(s.toString(), i, fontPointY);
+            if (fontPointX != 0 && fontPointY != 0) {
+                g2d.drawString(c.toString(), fontPointX, fontPointY);
             } else {
-                g2d.drawString(s.toString(), i, (float) (size - i * 1.2));
+                g2d.drawString(c.toString(), i, (float) (size - i * 1.5));
             }
         } else {
             int i = size / 6;
             g2d.setFont(new Font(fontName, Font.PLAIN, i * 4));
-            if (fontPointY != 0) {
-                g2d.drawString(s.toString(), i, fontPointY);
+            if (fontPointX != 0 && fontPointY != 0) {
+                g2d.drawString(c.toString(), fontPointX, fontPointY);
             } else {
-                g2d.drawString(s.toString(), i, (float) (size - i * 1.5));
+                g2d.drawString(c.toString(), i, (float) (size - i * 1.5));
             }
         }
         g2d.dispose();
@@ -83,6 +109,13 @@ public class ImageIcons implements Processable<Character, BufferedImage> {
 
     public ImageIcons color(Color color) {
         this.color = color;
+        return this;
+    }
+
+    public ImageIcons font(String fontName, int fontSize, Color fontColor) {
+        this.fontName = fontName;
+        this.fontSize = fontSize;
+        this.fontColor = fontColor;
         return this;
     }
 
@@ -101,8 +134,15 @@ public class ImageIcons implements Processable<Character, BufferedImage> {
         return this;
     }
 
-    public ImageIcons fontPointY(int fontPointY) {
-        this.fontPointY = fontPointY;
+    public ImageIcons fontPoint(int x, int y) {
+        this.fontPointX = x;
+        this.fontPointY = y;
+        return this;
+    }
+
+    public ImageIcons fontPoint(float x, float y) {
+        this.fontPointX = x;
+        this.fontPointY = y;
         return this;
     }
 
@@ -126,7 +166,11 @@ public class ImageIcons implements Processable<Character, BufferedImage> {
         return fontSize;
     }
 
-    public int getFontPointY() {
+    public float getFontPointX() {
+        return fontPointX;
+    }
+
+    public float getFontPointY() {
         return fontPointY;
     }
 

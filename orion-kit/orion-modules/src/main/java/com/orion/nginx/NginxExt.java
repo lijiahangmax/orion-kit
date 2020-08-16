@@ -200,7 +200,7 @@ public class NginxExt {
             out = Files1.openOutputStream(file);
             new NgxDumper(this.config).dump(out);
         } finally {
-            Streams.closeQuietly(out);
+            Streams.close(out);
         }
     }
 

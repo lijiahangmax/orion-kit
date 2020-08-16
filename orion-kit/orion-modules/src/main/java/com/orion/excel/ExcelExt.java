@@ -101,7 +101,7 @@ public class ExcelExt {
         }
         Valid.notNull(workbook, "workbook is null");
         this.streaming = streaming;
-        Streams.closeQuietly(in);
+        Streams.close(in);
     }
 
     public ExcelExt(Workbook workbook) {
@@ -234,7 +234,7 @@ public class ExcelExt {
     }
 
     public void close() {
-        Streams.closeQuietly(workbook);
+        Streams.close(workbook);
     }
 
 }

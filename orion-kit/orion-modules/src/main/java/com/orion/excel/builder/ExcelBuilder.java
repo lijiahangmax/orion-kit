@@ -124,7 +124,7 @@ public class ExcelBuilder {
             workbook.write(out);
         } finally {
             if (close) {
-                Streams.closeQuietly(out);
+                Streams.close(out);
             }
         }
     }

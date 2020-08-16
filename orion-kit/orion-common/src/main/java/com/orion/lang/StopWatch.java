@@ -1,6 +1,6 @@
 package com.orion.lang;
 
-import com.orion.utils.Dates;
+import com.orion.utils.time.Dates;
 import com.orion.utils.Strings;
 
 import java.util.Date;

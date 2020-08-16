@@ -9,6 +9,7 @@ import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
 import com.orion.utils.reflect.Fields;
 import com.orion.utils.reflect.Methods;
+import com.orion.utils.time.Dates;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFPalette;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -923,7 +924,7 @@ public class ExcelExport<T> {
     private ExcelExport<T> write(OutputStream out, boolean close) throws IOException {
         workbook.write(out);
         if (close) {
-            Streams.closeQuietly(out);
+            Streams.close(out);
         }
         return this;
     }
@@ -932,7 +933,7 @@ public class ExcelExport<T> {
      * 关闭
      */
     public void close() {
-        Streams.closeQuietly(workbook);
+        Streams.close(workbook);
     }
 
     /**

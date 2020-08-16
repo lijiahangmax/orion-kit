@@ -589,7 +589,7 @@ public class DomExt {
             out = Files1.openOutputStream(file);
             out.write(format(xml).getBytes());
         } finally {
-            Streams.closeQuietly(out);
+            Streams.close(out);
         }
     }
 
@@ -606,7 +606,7 @@ public class DomExt {
             out = Files1.openOutputStream(file);
             out.write(format(document.asXML()).getBytes());
         } finally {
-            Streams.closeQuietly(out);
+            Streams.close(out);
         }
     }
 
@@ -623,7 +623,7 @@ public class DomExt {
             out = Files1.openOutputStream(file);
             out.write(format("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + element.asXML()).getBytes());
         } finally {
-            Streams.closeQuietly(out);
+            Streams.close(out);
         }
     }
 

@@ -144,7 +144,7 @@ public class Tracker implements Runnable {
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            Streams.closeQuietly(reader);
+            Streams.close(reader);
         }
     }
 

@@ -135,7 +135,7 @@ public class FileMerge implements Callable<String> {
                 while ((read = in.read(buffer)) != -1) {
                     fo.write(buffer, 0, read);
                 }
-                Streams.closeQuietly(in);
+                Streams.close(in);
             }
             fo.flush();
             return wf.getAbsolutePath();
@@ -143,7 +143,7 @@ public class FileMerge implements Callable<String> {
             e.printStackTrace();
             throw new RuntimeException("merge error: " + e.getMessage());
         } finally {
-            Streams.closeQuietly(fo);
+            Streams.close(fo);
         }
     }
 

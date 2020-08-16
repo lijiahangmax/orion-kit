@@ -1,6 +1,6 @@
-package com.orion.storage.ftp.pool;
+package com.orion.ftp.client.pool;
 
-import com.orion.storage.ftp.FtpConfig;
+import com.orion.ftp.client.FtpConfig;
 import com.orion.utils.Exceptions;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
@@ -67,12 +67,12 @@ public class FtpClientFactory {
             try {
                 client.logout();
             } catch (Exception e) {
-                e.printStackTrace();
+                // ignore
             } finally {
                 try {
                     client.disconnect();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    // ignore
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.orion.lang.collect;
 
+import com.orion.utils.Exceptions;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
 
@@ -56,7 +57,7 @@ public class LocalDataStore {
         } catch (Exception e) {
             localStore = new HashMap<>(4);
         } finally {
-            Streams.closeQuietly(in);
+            Streams.close(in);
         }
     }
 
@@ -72,9 +73,9 @@ public class LocalDataStore {
                 out.writeObject(localStore);
                 out.writeObject(null);
             } catch (Exception e) {
-                e.printStackTrace();
+                throw Exceptions.ioRuntime(e);
             } finally {
-                Streams.closeQuietly(out);
+                Streams.close(out);
             }
         }
     }
@@ -89,9 +90,9 @@ public class LocalDataStore {
             clean.write("");
             clean.flush();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw Exceptions.ioRuntime(e);
         } finally {
-            Streams.closeQuietly(clean);
+            Streams.close(clean);
         }
     }
 

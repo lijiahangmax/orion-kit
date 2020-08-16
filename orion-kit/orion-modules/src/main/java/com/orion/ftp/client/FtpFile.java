@@ -1,4 +1,4 @@
-package com.orion.storage.ftp;
+package com.orion.ftp.client;
 
 import java.io.Serializable;
 import java.util.Calendar;

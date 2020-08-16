@@ -89,7 +89,7 @@ public class Spells {
                         sb.append(temp[0].charAt(0));
                     }
                 } catch (BadHanyuPinyinOutputFormatCombination e) {
-                    e.printStackTrace();
+                    // ignore
                 }
             } else {
                 sb.append(anArr);

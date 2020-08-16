@@ -151,7 +151,7 @@ public class Strings {
      * @param strs 待验证的一组字符串, 参数为空返回为true
      * @return 全部为空true
      */
-    public static boolean isAllblank(String... strs) {
+    public static boolean isAllBlank(String... strs) {
         if (strs == null) {
             return true;
         } else if (strs.length == 0) {
@@ -721,7 +721,7 @@ public class Strings {
                 build.append(new String(b, "GBK"));
             }
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            // ignore
         }
         return build.toString();
     }

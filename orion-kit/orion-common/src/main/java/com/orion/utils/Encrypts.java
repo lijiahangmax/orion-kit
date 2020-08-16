@@ -417,7 +417,6 @@ public class Encrypts {
             }
             return base64Encode(cipher.doFinal(bs));
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -1198,7 +1197,7 @@ public class Encrypts {
             return null;
         } finally {
             if (close) {
-                Streams.closeQuietly(reader);
+                Streams.close(reader);
             }
         }
     }
@@ -1244,7 +1243,7 @@ public class Encrypts {
             return null;
         } finally {
             if (close) {
-                Streams.closeQuietly(in);
+                Streams.close(in);
             }
         }
     }
@@ -1299,7 +1298,7 @@ public class Encrypts {
             return null;
         } finally {
             if (close) {
-                Streams.closeQuietly(in);
+                Streams.close(in);
             }
         }
     }

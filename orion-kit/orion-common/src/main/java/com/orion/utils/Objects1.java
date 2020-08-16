@@ -6,7 +6,10 @@ import com.orion.utils.collect.Maps;
 import com.orion.utils.reflect.Methods;
 
 import java.io.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -244,12 +247,12 @@ public class Objects1 {
             return null;
         }
         if (Arrays1.isArray(o)) {
-            return (T) deserialize(serialize(o));
+            return (T) deserialize(serialize(((Serializable) o)));
         }
         if (o.getClass() != Object.class && o instanceof Cloneable) {
             return Methods.invokeMethod(o, "clone");
         } else if (o instanceof Serializable) {
-            return (T) deserialize(serialize(o));
+            return (T) deserialize(serialize(((Serializable) o)));
         } else {
             throw Exceptions.argument("Failed to serialize object, not implements Cloneable and not implements Serializable");
         }
@@ -258,21 +261,20 @@ public class Objects1 {
     /**
      * 序列化对象
      *
-     * @param object 对象 必须实现序列化接口
+     * @param o 对象
      * @return ignore
      */
-    public static byte[] serialize(Object object) {
-        if (object == null) {
+    public static <T extends Serializable> byte[] serialize(T o) {
+        if (o == null) {
             return null;
         }
         ByteArrayOutputStream bs = new ByteArrayOutputStream(1024);
         try {
             ObjectOutputStream oos = new ObjectOutputStream(bs);
-            oos.writeObject(object);
+            oos.writeObject(o);
             oos.flush();
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException("Failed to serialize object of type: " + object.getClass(), e);
+            throw Exceptions.argument("Failed to serialize object of type: " + o.getClass(), e);
         }
         return bs.toByteArray();
     }
@@ -291,7 +293,6 @@ public class Objects1 {
             ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
             return ois.readObject();
         } catch (Exception e) {
-            e.printStackTrace();
             throw new IllegalArgumentException("Failed to deserialize object", e);
         }
     }

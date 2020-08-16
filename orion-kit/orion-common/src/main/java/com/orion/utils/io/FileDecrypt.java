@@ -93,8 +93,8 @@ public class FileDecrypt implements Callable<Boolean> {
             return false;
         } finally {
             if (autoClose) {
-                Streams.closeQuietly(reader);
-                Streams.closeQuietly(out);
+                Streams.close(reader);
+                Streams.close(out);
             }
         }
     }

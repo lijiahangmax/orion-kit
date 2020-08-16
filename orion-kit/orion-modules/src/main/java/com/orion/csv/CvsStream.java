@@ -39,7 +39,7 @@ public class CvsStream {
         try {
             reader.readHeaders();
         } catch (Exception e) {
-            e.printStackTrace();
+            // ignore
         }
         return this;
     }
@@ -56,7 +56,7 @@ public class CvsStream {
                 reader.readHeaders();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            // ignore
         }
         return this;
     }
@@ -70,7 +70,7 @@ public class CvsStream {
         try {
             reader.skipRecord();
         } catch (Exception e) {
-            e.printStackTrace();
+            // ignore
         }
         return this;
     }

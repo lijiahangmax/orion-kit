@@ -269,7 +269,7 @@ public class QRCodes {
         } catch (Exception e) {
             return null;
         } finally {
-            Streams.closeQuietly(out);
+            Streams.close(out);
         }
     }
 

@@ -752,9 +752,9 @@ public class MockAsyncDownload {
                     throw e;
                 } finally {
                     endDate = System.currentTimeMillis();
-                    Streams.closeQuietly(in);
+                    Streams.close(in);
                     if (autoClose) {
-                        Streams.closeQuietly(out);
+                        Streams.close(out);
                     }
                 }
             }

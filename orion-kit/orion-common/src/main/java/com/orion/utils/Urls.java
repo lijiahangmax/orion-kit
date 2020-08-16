@@ -226,7 +226,6 @@ public class Urls {
             }
             return URLEncoder.encode(url, charset);
         } catch (Exception e) {
-            e.printStackTrace();
             return url;
         }
     }
@@ -255,7 +254,6 @@ public class Urls {
             }
             return URLDecoder.decode(url, charset);
         } catch (Exception e) {
-            e.printStackTrace();
             return url;
         }
     }

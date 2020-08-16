@@ -27,6 +27,7 @@ hs_err_pid*
 .project
 .settings
 .idea
+.logs
 target
 
 # [core]

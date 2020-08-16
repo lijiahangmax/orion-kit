@@ -243,7 +243,7 @@ public class Streams {
 
     // -------------------------------- 关闭流 --------------------------------
 
-    public static void closeQuietly(Reader input) {
+    public static void close(Reader input) {
         try {
             if (input != null) {
                 input.close();
@@ -253,7 +253,7 @@ public class Streams {
         }
     }
 
-    public static void closeQuietly(Writer output) {
+    public static void close(Writer output) {
         try {
             if (output != null) {
                 output.close();
@@ -263,7 +263,7 @@ public class Streams {
         }
     }
 
-    public static void closeQuietly(InputStream input) {
+    public static void close(InputStream input) {
         try {
             if (input != null) {
                 input.close();
@@ -273,7 +273,7 @@ public class Streams {
         }
     }
 
-    public static void closeQuietly(OutputStream output) {
+    public static void close(OutputStream output) {
         try {
             if (output != null) {
                 output.close();
@@ -283,7 +283,7 @@ public class Streams {
         }
     }
 
-    public static void closeQuietly(Closeable c) {
+    public static void close(Closeable c) {
         try {
             if (c != null) {
                 c.close();
@@ -805,7 +805,7 @@ public class Streams {
 
         public void close() {
             finished = true;
-            Streams.closeQuietly(bufferedReader);
+            Streams.close(bufferedReader);
             cachedLine = null;
         }
 

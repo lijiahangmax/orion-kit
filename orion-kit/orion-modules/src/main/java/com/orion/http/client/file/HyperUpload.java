@@ -411,7 +411,7 @@ public class HyperUpload {
             this.endDate = System.currentTimeMillis();
             this.done = true;
             this.request.releaseConnection();
-            Streams.closeQuietly(this.response);
+            Streams.close(this.response);
         }
         return this;
     }

@@ -1,7 +1,7 @@
-package com.orion.storage.ftp;
+package com.orion.ftp.client;
 
-import com.orion.storage.ftp.bigfile.FtpDownload;
-import com.orion.storage.ftp.bigfile.FtpUpload;
+import com.orion.ftp.client.bigfile.FtpDownload;
+import com.orion.ftp.client.bigfile.FtpUpload;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Matches;
 import com.orion.utils.collect.Lists;
@@ -214,7 +214,7 @@ public class FtpInstance {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            // ignore
         }
         return list;
     }
@@ -286,7 +286,7 @@ public class FtpInstance {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            // ignore
         }
         return list;
     }
@@ -684,7 +684,7 @@ public class FtpInstance {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            // ignore
         }
         return list;
     }
@@ -777,7 +777,7 @@ public class FtpInstance {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            // ignore
         }
         return map;
     }
@@ -807,7 +807,7 @@ public class FtpInstance {
         } catch (IOException e) {
             throw Exceptions.ftp(e);
         } finally {
-            Streams.closeQuietly(out);
+            Streams.close(out);
         }
     }
 
@@ -871,7 +871,7 @@ public class FtpInstance {
         } catch (Exception e) {
             throw Exceptions.ftp(e);
         } finally {
-            Streams.closeQuietly(in);
+            Streams.close(in);
         }
     }
 
@@ -957,7 +957,7 @@ public class FtpInstance {
             out = client.appendFileStream(serverCharset(config.getRemoteBaseDir() + file));
             out.write(bs, off, len);
         } finally {
-            Streams.closeQuietly(out);
+            Streams.close(out);
             if (out != null) {
                 client.completePendingCommand();
             }
@@ -991,7 +991,7 @@ public class FtpInstance {
                 out.write(13);
             }
         } finally {
-            Streams.closeQuietly(out);
+            Streams.close(out);
             if (out != null) {
                 client.completePendingCommand();
             }
@@ -1048,7 +1048,7 @@ public class FtpInstance {
             out = client.storeFileStream(serverCharset(config.getRemoteBaseDir() + file));
             out.write(bs, off, len);
         } finally {
-            Streams.closeQuietly(out);
+            Streams.close(out);
             if (out != null) {
                 client.completePendingCommand();
             }
@@ -1082,7 +1082,7 @@ public class FtpInstance {
                 out.write(13);
             }
         } finally {
-            Streams.closeQuietly(out);
+            Streams.close(out);
             if (out != null) {
                 client.completePendingCommand();
             }
@@ -1179,7 +1179,7 @@ public class FtpInstance {
             in = client.retrieveFileStream(serverCharset(config.getRemoteBaseDir() + file));
             return in.read(bs, off, len);
         } finally {
-            Streams.closeQuietly(in);
+            Streams.close(in);
             client.setRestartOffset(0);
             if (in != null) {
                 client.completePendingCommand();
@@ -1213,7 +1213,7 @@ public class FtpInstance {
             in = new BufferedReader(new InputStreamReader(client.retrieveFileStream(serverCharset(config.getRemoteBaseDir() + file))));
             return in.readLine();
         } finally {
-            Streams.closeQuietly(in);
+            Streams.close(in);
             client.setRestartOffset(0);
             if (in != null) {
                 client.completePendingCommand();
@@ -1273,7 +1273,7 @@ public class FtpInstance {
             }
             return list;
         } finally {
-            Streams.closeQuietly(in);
+            Streams.close(in);
             client.setRestartOffset(0);
             if (in != null) {
                 client.completePendingCommand();

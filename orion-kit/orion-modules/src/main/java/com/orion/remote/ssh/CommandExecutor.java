@@ -335,10 +335,10 @@ public class CommandExecutor implements Executorable {
      */
     public void close() {
         this.close = true;
-        Streams.closeQuietly(this.in);
-        Streams.closeQuietly(this.out);
-        Streams.closeQuietly(this.err);
-        Streams.closeQuietly(this.inherit);
+        Streams.close(this.in);
+        Streams.close(this.out);
+        Streams.close(this.err);
+        Streams.close(this.inherit);
         this.session.close();
     }
 

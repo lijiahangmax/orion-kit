@@ -143,6 +143,19 @@ public class Arrays1 {
     }
 
     /**
+     * 判断是否是包装类型的数组
+     *
+     * @param o 对象
+     * @return true 是包装类型的数组
+     */
+    public static boolean isWrapArray(Object o) {
+        if (o == null) {
+            return false;
+        }
+        return !isNotBaseArray(o);
+    }
+
+    /**
      * 判断是否不是基本类型的数组
      *
      * @param o 对象
@@ -167,6 +180,34 @@ public class Arrays1 {
             return false;
         } else {
             return !(o instanceof boolean[]);
+        }
+    }
+
+    /**
+     * 判断是否不是包装类型的数组
+     *
+     * @param o 对象
+     * @return true 不是包装类型的数组
+     */
+    public static boolean isWrapBaseArray(Object o) {
+        if (o == null) {
+            return false;
+        } else if (o instanceof Byte[]) {
+            return false;
+        } else if (o instanceof Short[]) {
+            return false;
+        } else if (o instanceof Integer[]) {
+            return false;
+        } else if (o instanceof Long[]) {
+            return false;
+        } else if (o instanceof Float[]) {
+            return false;
+        } else if (o instanceof Double[]) {
+            return false;
+        } else if (o instanceof Character[]) {
+            return false;
+        } else {
+            return !(o instanceof Boolean[]);
         }
     }
 
@@ -1018,7 +1059,7 @@ public class Arrays1 {
      * @param <T> t
      * @return array
      */
-    public static <T> T[] of(T... t) {
+    public static <T> T[] oft(T... t) {
         return t;
     }
 

@@ -30,8 +30,6 @@ public class HyperClient {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
     /**
@@ -110,14 +108,14 @@ public class HyperClient {
      * 关闭 client
      */
     public static void closeClient() {
-        Streams.closeQuietly(ClientInstance.client);
+        Streams.close(ClientInstance.client);
     }
 
     /**
      * 关闭 ssl client
      */
     public static void closeSslClient() {
-        Streams.closeQuietly(ClientInstance.sslClient);
+        Streams.close(ClientInstance.sslClient);
     }
 
     private static class ClientInstance {

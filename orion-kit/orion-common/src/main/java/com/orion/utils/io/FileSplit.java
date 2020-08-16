@@ -174,8 +174,8 @@ public class FileSplit implements Callable<String[]> {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            Streams.closeQuietly(outputStream);
-            Streams.closeQuietly(accessFile);
+            Streams.close(outputStream);
+            Streams.close(accessFile);
         }
     }
 

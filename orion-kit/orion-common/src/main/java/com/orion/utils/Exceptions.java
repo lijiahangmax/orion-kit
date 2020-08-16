@@ -141,8 +141,16 @@ public class Exceptions {
         return new IllegalArgumentException();
     }
 
+    public static IllegalArgumentException argument(Throwable t) {
+        return new IllegalArgumentException(t);
+    }
+
     public static IllegalArgumentException argument(String s) {
         return new IllegalArgumentException(s);
+    }
+
+    public static IllegalArgumentException argument(String s, Throwable t) {
+        return new IllegalArgumentException(s, t);
     }
 
     public static IndexOutOfBoundsException index() {

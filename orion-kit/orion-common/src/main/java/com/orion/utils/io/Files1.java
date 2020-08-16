@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static com.orion.utils.io.Streams.closeQuietly;
+import static com.orion.utils.io.Streams.close;
 
 /**
  * 文件工具类
@@ -61,7 +61,7 @@ public class Files1 {
         } catch (IOException e) {
             // ignore
         } finally {
-            closeQuietly(in);
+            Streams.close(in);
         }
         return type;
     }
@@ -180,8 +180,8 @@ public class Files1 {
             } catch (Exception e) {
                 throw Exceptions.ioRuntime(e);
             } finally {
-                closeQuietly(in);
-                closeQuietly(out);
+                Streams.close(in);
+                Streams.close(out);
             }
         }
         return file.getAbsolutePath();
@@ -224,7 +224,7 @@ public class Files1 {
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            closeQuietly(writer);
+            Streams.close(writer);
         }
         return file.getAbsolutePath();
     }
@@ -250,7 +250,7 @@ public class Files1 {
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            closeQuietly(out);
+            Streams.close(out);
         }
         return file.getAbsolutePath();
     }
@@ -286,14 +286,14 @@ public class Files1 {
                 while (-1 != (read = in.read(bytes))) {
                     out.write(bytes, 0, read);
                 }
-                closeQuietly(in);
+                Streams.close(in);
                 in = null;
             }
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            closeQuietly(in);
-            closeQuietly(out);
+            Streams.close(in);
+            Streams.close(out);
         }
 
     }
@@ -329,8 +329,8 @@ public class Files1 {
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            closeQuietly(in);
-            closeQuietly(out);
+            Streams.close(in);
+            Streams.close(out);
         }
     }
 
@@ -400,8 +400,8 @@ public class Files1 {
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            closeQuietly(in);
-            closeQuietly(out);
+            Streams.close(in);
+            Streams.close(out);
         }
     }
 
@@ -504,7 +504,7 @@ public class Files1 {
                     } catch (IOException e) {
                         throw Exceptions.ioRuntime(e);
                     } finally {
-                        closeQuietly(osw);
+                        Streams.close(osw);
                     }
                 }
             } catch (IOException e) {
@@ -786,7 +786,7 @@ public class Files1 {
         } catch (IOException e) {
             // ignore
         } finally {
-            Streams.closeQuietly(r);
+            Streams.close(r);
         }
         return "\n";
     }
@@ -837,7 +837,7 @@ public class Files1 {
         } catch (IOException e) {
             // ignore
         } finally {
-            Streams.closeQuietly(r);
+            Streams.close(r);
         }
         return null;
     }
@@ -875,7 +875,7 @@ public class Files1 {
         } catch (IOException e) {
             // ignore
         } finally {
-            Streams.closeQuietly(r);
+            Streams.close(r);
         }
         return false;
     }
@@ -905,7 +905,7 @@ public class Files1 {
         } catch (IOException e) {
             // ignore
         } finally {
-            closeQuietly(rf);
+            Streams.close(rf);
         }
         return 0;
     }
@@ -1106,7 +1106,7 @@ public class Files1 {
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            closeQuietly(bis);
+            Streams.close(bis);
         }
         return charset;
     }
@@ -1147,7 +1147,7 @@ public class Files1 {
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            closeQuietly(reader);
+            Streams.close(reader);
         }
 
         // write
@@ -1158,7 +1158,7 @@ public class Files1 {
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            closeQuietly(write);
+            Streams.close(write);
         }
     }
 
@@ -2069,7 +2069,7 @@ public class Files1 {
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            Streams.closeQuietly(r);
+            Streams.close(r);
         }
     }
 
@@ -2200,8 +2200,8 @@ public class Files1 {
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            closeQuietly(in);
-            closeQuietly(r);
+            Streams.close(in);
+            close(r);
         }
     }
 
@@ -2428,8 +2428,8 @@ public class Files1 {
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            closeQuietly(in);
-            closeQuietly(r);
+            Streams.close(in);
+            close(r);
         }
     }
 
@@ -2481,7 +2481,7 @@ public class Files1 {
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            closeQuietly(out);
+            Streams.close(out);
         }
     }
 
@@ -2649,7 +2649,7 @@ public class Files1 {
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            closeQuietly(rw);
+            close(rw);
         }
     }
 
@@ -2709,7 +2709,7 @@ public class Files1 {
             } catch (Exception e) {
                 throw Exceptions.ioRuntime(e);
             } finally {
-                closeQuietly(in);
+                Streams.close(in);
             }
         } else {
             write(file, bs, off, len);
@@ -2823,7 +2823,7 @@ public class Files1 {
                     RandomAccessFile r = new RandomAccessFile(file, "rw");
                     r.seek(rangeStart);
                     r.write(n);
-                    closeQuietly(r);
+                    close(r);
                 } else {
                     File endFile = touchIOTempFile(true);
                     writeToFile(file, Long.valueOf(rangeEnd), endFile);
@@ -2836,8 +2836,8 @@ public class Files1 {
                     while (-1 != (read = in.read(bs))) {
                         r.write(bs, 0, read);
                     }
-                    closeQuietly(r);
-                    closeQuietly(in);
+                    close(r);
+                    Streams.close(in);
                 }
             }
         } catch (Exception e) {
@@ -2897,8 +2897,8 @@ public class Files1 {
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            closeQuietly(in);
-            closeQuietly(out);
+            Streams.close(in);
+            Streams.close(out);
         }
     }
 
@@ -2961,7 +2961,7 @@ public class Files1 {
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            closeQuietly(in);
+            Streams.close(in);
         }
     }
 
@@ -3022,7 +3022,7 @@ public class Files1 {
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            closeQuietly(reader);
+            Streams.close(reader);
         }
     }
 
@@ -3122,7 +3122,7 @@ public class Files1 {
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            closeQuietly(reader);
+            Streams.close(reader);
         }
     }
 
@@ -3204,7 +3204,7 @@ public class Files1 {
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            closeQuietly(reader);
+            Streams.close(reader);
         }
     }
 
@@ -3316,7 +3316,7 @@ public class Files1 {
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            closeQuietly(reader);
+            Streams.close(reader);
         }
     }
 

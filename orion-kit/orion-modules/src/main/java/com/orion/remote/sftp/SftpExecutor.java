@@ -217,7 +217,6 @@ public class SftpExecutor {
             clear.getClient().closeFile(clear);
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
             return false;
         }
     }
@@ -263,7 +262,6 @@ public class SftpExecutor {
             }
             return list;
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -553,7 +551,6 @@ public class SftpExecutor {
             }
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
             return false;
         }
     }
@@ -847,7 +844,7 @@ public class SftpExecutor {
         try {
             return this.transfer(null, path, out = Files1.openOutputStream(file));
         } finally {
-            Streams.closeQuietly(out);
+            Streams.close(out);
         }
     }
 
@@ -857,7 +854,7 @@ public class SftpExecutor {
         try {
             return this.transfer(handle, null, out = Files1.openOutputStream(file));
         } finally {
-            Streams.closeQuietly(out);
+            Streams.close(out);
         }
     }
 
@@ -867,7 +864,7 @@ public class SftpExecutor {
         try {
             return this.transfer(null, path, out = Files1.openOutputStream(file));
         } finally {
-            Streams.closeQuietly(out);
+            Streams.close(out);
         }
     }
 
@@ -877,7 +874,7 @@ public class SftpExecutor {
         try {
             return this.transfer(handle, null, out = Files1.openOutputStream(file));
         } finally {
-            Streams.closeQuietly(out);
+            Streams.close(out);
         }
     }
 

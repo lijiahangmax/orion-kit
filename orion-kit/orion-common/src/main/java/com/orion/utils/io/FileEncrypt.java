@@ -92,8 +92,8 @@ public class FileEncrypt implements Callable<Boolean> {
             return false;
         } finally {
             if (autoClose) {
-                Streams.closeQuietly(in);
-                Streams.closeQuietly(out);
+                Streams.close(in);
+                Streams.close(out);
             }
         }
     }

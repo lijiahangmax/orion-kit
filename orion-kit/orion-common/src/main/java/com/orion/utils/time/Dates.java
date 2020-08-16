@@ -1,5 +1,8 @@
-package com.orion.utils;
+package com.orion.utils.time;
 
+import com.orion.utils.Converts;
+import com.orion.utils.Strings;
+import com.orion.utils.Valid;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 
@@ -589,24 +592,6 @@ public class Dates {
      */
     public static String current(String pattern) {
         return DateFormatUtils.format(new Date(), pattern);
-    }
-
-    /**
-     * 判断时间是否有交集
-     *
-     * @param d1 时间1开始
-     * @param d2 时间1结束
-     * @param d3 时间2开始
-     * @param d4 时间2结束
-     * @return true有交集
-     */
-    public static boolean cross(Date d1, Date d2, Date d3, Date d4) {
-        long l1 = d1.getTime(), l2 = d2.getTime(), l3 = d3.getTime(), l4 = d4.getTime();
-        if (l1 >= l3 && l2 >= l4) {
-            return false;
-        } else {
-            return !(l1 <= l3 && l2 <= l4);
-        }
     }
 
     /**
@@ -1322,32 +1307,6 @@ public class Dates {
             return "";
         }
         return format(parse, n);
-    }
-
-    /**
-     * 判断是否在这个时间段内
-     *
-     * @param d 时间
-     * @param s 开始时间
-     * @param e 结束时间
-     * @return true: 包含
-     */
-    public static boolean include(Date d, Date s, Date e) {
-        long ds = d.getTime(), ss = s.getTime(), es = e.getTime();
-        return ds >= ss && ds <= es;
-    }
-
-    /**
-     * 判断是否不在这个时间段内
-     *
-     * @param d 时间
-     * @param s 开始时间
-     * @param e 结束时间
-     * @return true: 不包含
-     */
-    public static boolean exclude(Date d, Date s, Date e) {
-        long ds = d.getTime(), ss = s.getTime(), es = e.getTime();
-        return ds < ss || ds > es;
     }
 
     /**

@@ -212,7 +212,7 @@ public class BarCodes {
         } catch (Exception e) {
             return null;
         } finally {
-            Streams.closeQuietly(out);
+            Streams.close(out);
         }
     }
 
@@ -287,7 +287,7 @@ public class BarCodes {
         } catch (Exception e) {
             return null;
         } finally {
-            Streams.closeQuietly(in);
+            Streams.close(in);
         }
     }
 

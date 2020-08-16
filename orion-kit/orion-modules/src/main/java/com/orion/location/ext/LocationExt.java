@@ -240,7 +240,6 @@ public class LocationExt {
         try {
             return seeker.getRegion(ip);
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }

@@ -1,4 +1,4 @@
-package com.orion.storage.ftp;
+package com.orion.ftp.client;
 
 import com.orion.able.Jsonable;
 

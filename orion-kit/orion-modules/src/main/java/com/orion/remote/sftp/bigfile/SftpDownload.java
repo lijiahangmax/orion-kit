@@ -158,7 +158,7 @@ public class SftpDownload implements Runnable {
         } finally {
             this.endTime = System.currentTimeMillis();
             this.done = true;
-            Streams.closeQuietly(out);
+            Streams.close(out);
             try {
                 if (readHandler != null) {
                     readHandler.getClient().closeFile(readHandler);

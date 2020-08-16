@@ -146,7 +146,7 @@ public class SftpUpload implements Runnable {
                     now += read;
                 }
                 lock.unLock();
-                Streams.closeQuietly(random);
+                Streams.close(random);
             } else {
                 if (fileAttr != null) {
                     if (fileAttr.size == size) {
@@ -172,7 +172,7 @@ public class SftpUpload implements Runnable {
             throw Exceptions.ioRuntime(e);
         } finally {
             this.endTime = System.currentTimeMillis();
-            Streams.closeQuietly(in);
+            Streams.close(in);
             done = true;
         }
     }

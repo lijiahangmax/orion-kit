@@ -60,7 +60,6 @@ public class MultipartFiles {
             }
             return toMultiPartFile(new FileInputStream(file), charset, field, fileName);
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -98,7 +97,6 @@ public class MultipartFiles {
             }
             return toMultiPartFile(MultipartFiles.class.getClassLoader().getResourceAsStream(src), charset, field, fileName);
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -140,16 +138,14 @@ public class MultipartFiles {
                 os.close();
                 in.close();
             } catch (IOException e) {
-                e.printStackTrace();
                 return null;
             }
             return new CommonsMultipartFile(item);
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         } finally {
-            Streams.closeQuietly(in);
-            Streams.closeQuietly(os);
+            Streams.close(in);
+            Streams.close(os);
         }
     }
 

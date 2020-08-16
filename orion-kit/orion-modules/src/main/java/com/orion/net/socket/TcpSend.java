@@ -92,7 +92,7 @@ public class TcpSend {
     }
 
     public void close() {
-        Streams.closeQuietly(socket);
+        Streams.close(socket);
     }
 
     public String getHost() {

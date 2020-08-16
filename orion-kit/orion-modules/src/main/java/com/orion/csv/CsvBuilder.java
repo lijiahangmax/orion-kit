@@ -295,8 +295,8 @@ public class CsvBuilder implements Builderable<CsvBuilder> {
      * @return this
      */
     public CsvBuilder close() {
-        Streams.closeQuietly(out);
-        Streams.closeQuietly(writer);
+        Streams.close(out);
+        Streams.close(writer);
         return this;
     }
 

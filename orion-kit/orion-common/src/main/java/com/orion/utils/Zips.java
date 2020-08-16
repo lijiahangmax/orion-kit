@@ -1,6 +1,7 @@
 package com.orion.utils;
 
 import com.orion.utils.io.Files1;
+import com.orion.utils.io.Streams;
 
 import java.io.*;
 import java.util.Enumeration;
@@ -71,16 +72,9 @@ public class Zips {
             generateFile(zos, file, "");
             return dest;
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         } finally {
-            try {
-                if (zos != null) {
-                    zos.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            Streams.close(zos);
         }
     }
 
@@ -113,7 +107,7 @@ public class Zips {
                 in.close();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            // ignore
         }
     }
 
@@ -172,16 +166,9 @@ public class Zips {
             }
             return destPath;
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         } finally {
-            if (zipFile != null) {
-                try {
-                    zipFile.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            Streams.close(zipFile);
         }
     }
 

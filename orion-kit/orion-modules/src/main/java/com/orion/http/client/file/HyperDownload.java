@@ -65,7 +65,7 @@ public class HyperDownload {
         this.response = this.request.await();
         out.write(this.response.getBody());
         if (autoClose) {
-            Streams.closeQuietly(out);
+            Streams.close(out);
         }
         return this;
     }

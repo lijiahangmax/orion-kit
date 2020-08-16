@@ -1,4 +1,4 @@
-package com.orion.storage.ftp.pool;
+package com.orion.ftp.client.pool;
 
 import com.orion.utils.Threads;
 import org.apache.commons.net.ftp.FTPClient;
@@ -78,7 +78,6 @@ public class FtpClientKeepAlive {
                                 pool.addClient();
                             }
                         } catch (Exception e) {
-                            e.printStackTrace();
                             pool.invalidateClient(ftpClient);
                             pool.addClient();
                         }

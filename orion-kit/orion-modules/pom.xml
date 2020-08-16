@@ -27,6 +27,13 @@
             <version>${apache.net.version}</version>
         </dependency>
 
+        <!-- ftp server -->
+        <dependency>
+            <groupId>org.apache.ftpserver</groupId>
+            <artifactId>ftpserver-core</artifactId>
+            <version>${apache.ftp.server.version}</version>
+        </dependency>
+
         <!-- mail -->
         <dependency>
             <groupId>javax.mail</groupId>
@@ -94,7 +101,17 @@
             <version>${http.client.version}</version>
         </dependency>
 
-        <!-- slf4j -->
+        <!-- log -->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${log4j.slf4j.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>

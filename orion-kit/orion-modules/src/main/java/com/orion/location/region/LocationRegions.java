@@ -6,6 +6,7 @@ import com.orion.location.region.config.DbConfig;
 import com.orion.location.region.core.DbSearcher;
 import com.orion.location.region.core.Region;
 import com.orion.utils.IPs;
+import com.orion.utils.io.Streams;
 
 import java.io.*;
 
@@ -19,10 +20,6 @@ import java.io.*;
 public class LocationRegions {
 
     private LocationRegions() {
-    }
-
-    public static void main(String[] args) {
-        System.out.println(LocationRegions.getRegion("129.164.133.21"));
     }
 
     /**
@@ -97,14 +94,9 @@ public class LocationRegions {
                 out.close();
             } catch (Exception e) {
                 init = false;
-                e.printStackTrace();
                 throw new RuntimeException("region 服务初始化异常");
             } finally {
-                try {
-                    in.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                Streams.close(in);
             }
         } else {
             try {
@@ -112,7 +104,7 @@ public class LocationRegions {
                     initDbFile();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                // ignore
             }
         }
     }
@@ -128,7 +120,6 @@ public class LocationRegions {
             } catch (Exception e) {
                 init = false;
                 System.out.println("region 服务未初始失败");
-                e.printStackTrace();
             }
         }
     }
@@ -204,7 +195,6 @@ public class LocationRegions {
                 return "未知|未知|未知|未知|未知";
             }
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }

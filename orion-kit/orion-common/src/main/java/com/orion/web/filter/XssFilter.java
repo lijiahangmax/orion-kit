@@ -159,7 +159,7 @@ public class XssFilter implements Filter {
                 // htmlStr = m_ba.replaceAll("");
                 textStr = htmlStr;
             } catch (Exception e) {
-                e.printStackTrace();
+                // ignore
             }
             return textStr;
         }

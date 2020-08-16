@@ -91,7 +91,7 @@ public class TcpReceive {
 
     public void close() {
         Threads.shutdownPool(acceptThreadPool, 6, TimeUnit.SECONDS);
-        Streams.closeQuietly(serverSocket);
+        Streams.close(serverSocket);
     }
 
     public int getPort() {

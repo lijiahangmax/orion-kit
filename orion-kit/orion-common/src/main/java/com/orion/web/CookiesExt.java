@@ -1,6 +1,6 @@
 package com.orion.web;
 
-import com.orion.utils.Dates;
+import com.orion.utils.time.Dates;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
