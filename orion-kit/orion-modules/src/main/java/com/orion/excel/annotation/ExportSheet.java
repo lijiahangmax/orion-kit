@@ -20,7 +20,7 @@ public @interface ExportSheet {
     String value() default "";
 
     /**
-     * 行宽
+     * 默认行宽
      */
     int rowWidth() default -1;
 

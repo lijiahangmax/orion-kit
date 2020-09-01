@@ -87,6 +87,7 @@ public class ExcelSheet<T> {
      * 添加表头
      *
      * @param headerMap 表头信息
+     * @param heigth    行高
      * @return this
      */
     public ExcelSheet<T> addHeaders(List<ExcelHeaderMap> headerMap, int heigth) {

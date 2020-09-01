@@ -23,13 +23,240 @@ public class Valid {
     private Valid() {
     }
 
-    public static void isEquals(Object o1, Object o2) {
-        isEquals(o1, o2, "The validated objects not equal");
+    public static void eq(Object o1, Object o2) {
+        eq(o1, o2, "The validated objects not equal");
     }
 
-    public static void isEquals(Object o1, Object o2, String message, Object... values) {
+    public static void eq(Object o1, Object o2, String message, Object... values) {
         notNull(o1);
         if (!o1.equals(o2)) {
+            throw new IllegalArgumentException(Strings.format(message, values));
+        }
+    }
+
+    public static void neq(Object o1, Object o2) {
+        neq(o1, o2, "The validated objects is equal");
+    }
+
+    public static void neq(Object o1, Object o2, String message, Object... values) {
+        notNull(o1);
+        if (o1.equals(o2)) {
+            throw new IllegalArgumentException(Strings.format(message, values));
+        }
+    }
+
+    public static void lt(int i1, int i2) {
+        lt(i1, i2, "The validated numbers not less than");
+    }
+
+    public static void lt(int i1, int i2, String message, Object... values) {
+        if (i1 >= i2) {
+            throw new IllegalArgumentException(Strings.format(message, values));
+        }
+    }
+
+    public static void lt(long i1, long i2) {
+        lt(i1, i2, "The validated numbers not less than");
+    }
+
+    public static void lt(long i1, long i2, String message, Object... values) {
+        if (i1 >= i2) {
+            throw new IllegalArgumentException(Strings.format(message, values));
+        }
+    }
+
+    public static void lt(double i1, double i2) {
+        lt(i1, i2, "The validated numbers not less than");
+    }
+
+    public static void lt(double i1, double i2, String message, Object... values) {
+        if (i1 >= i2) {
+            throw new IllegalArgumentException(Strings.format(message, values));
+        }
+    }
+
+    public static void lt(BigDecimal i1, BigDecimal i2) {
+        lt(i1, i2, "The validated numbers not less than");
+    }
+
+    public static void lt(BigDecimal i1, BigDecimal i2, String message, Object... values) {
+        notNull(i1);
+        notNull(i2);
+        if (i1.compareTo(i2) >= 0) {
+            throw new IllegalArgumentException(Strings.format(message, values));
+        }
+    }
+
+    public static void lt(BigInteger i1, BigInteger i2) {
+        lt(i1, i2, "The validated numbers not less than");
+    }
+
+    public static void lt(BigInteger i1, BigInteger i2, String message, Object... values) {
+        notNull(i1);
+        notNull(i2);
+        if (i1.compareTo(i2) >= 0) {
+            throw new IllegalArgumentException(Strings.format(message, values));
+        }
+    }
+
+    public static void lte(int i1, int i2) {
+        lte(i1, i2, "The validated numbers not less than or equal");
+    }
+
+    public static void lte(int i1, int i2, String message, Object... values) {
+        if (i1 > i2) {
+            throw new IllegalArgumentException(Strings.format(message, values));
+        }
+    }
+
+    public static void lte(long i1, long i2) {
+        lte(i1, i2, "The validated numbers not less than or equal");
+    }
+
+    public static void lte(long i1, long i2, String message, Object... values) {
+        if (i1 > i2) {
+            throw new IllegalArgumentException(Strings.format(message, values));
+        }
+    }
+
+    public static void lte(double i1, double i2) {
+        lte(i1, i2, "The validated numbers not less than or equal");
+    }
+
+    public static void lte(double i1, double i2, String message, Object... values) {
+        if (i1 > i2) {
+            throw new IllegalArgumentException(Strings.format(message, values));
+        }
+    }
+
+    public static void lte(BigDecimal i1, BigDecimal i2) {
+        lte(i1, i2, "The validated numbers not less than or equal");
+    }
+
+    public static void lte(BigDecimal i1, BigDecimal i2, String message, Object... values) {
+        notNull(i1);
+        notNull(i2);
+        if (i1.compareTo(i2) > 0) {
+            throw new IllegalArgumentException(Strings.format(message, values));
+        }
+    }
+
+    public static void lte(BigInteger i1, BigInteger i2) {
+        lte(i1, i2, "The validated numbers not less than or equal");
+    }
+
+    public static void lte(BigInteger i1, BigInteger i2, String message, Object... values) {
+        notNull(i1);
+        notNull(i2);
+        if (i1.compareTo(i2) > 0) {
+            throw new IllegalArgumentException(Strings.format(message, values));
+        }
+    }
+
+    public static void gt(int i1, int i2) {
+        gt(i1, i2, "The validated numbers not greater than");
+    }
+
+    public static void gt(int i1, int i2, String message, Object... values) {
+        if (i1 <= i2) {
+            throw new IllegalArgumentException(Strings.format(message, values));
+        }
+    }
+
+    public static void gt(long i1, long i2) {
+        gt(i1, i2, "The validated numbers not greater than");
+    }
+
+    public static void gt(long i1, long i2, String message, Object... values) {
+        if (i1 <= i2) {
+            throw new IllegalArgumentException(Strings.format(message, values));
+        }
+    }
+
+    public static void gt(double i1, double i2) {
+        gt(i1, i2, "The validated numbers not greater than");
+    }
+
+    public static void gt(double i1, double i2, String message, Object... values) {
+        if (i1 <= i2) {
+            throw new IllegalArgumentException(Strings.format(message, values));
+        }
+    }
+
+    public static void gt(BigDecimal i1, BigDecimal i2) {
+        gt(i1, i2, "The validated numbers not greater than");
+    }
+
+    public static void gt(BigDecimal i1, BigDecimal i2, String message, Object... values) {
+        notNull(i1);
+        notNull(i2);
+        if (i1.compareTo(i2) <= 0) {
+            throw new IllegalArgumentException(Strings.format(message, values));
+        }
+    }
+
+    public static void gt(BigInteger i1, BigInteger i2) {
+        gt(i1, i2, "The validated numbers not greater than");
+    }
+
+    public static void gt(BigInteger i1, BigInteger i2, String message, Object... values) {
+        notNull(i1);
+        notNull(i2);
+        if (i1.compareTo(i2) <= 0) {
+            throw new IllegalArgumentException(Strings.format(message, values));
+        }
+    }
+
+    public static void gte(int i1, int i2) {
+        gte(i1, i2, "The validated numbers not greater than or equal");
+    }
+
+    public static void gte(int i1, int i2, String message, Object... values) {
+        if (i1 < i2) {
+            throw new IllegalArgumentException(Strings.format(message, values));
+        }
+    }
+
+    public static void gte(long i1, long i2) {
+        gte(i1, i2, "The validated numbers not greater than or equal");
+    }
+
+    public static void gte(long i1, long i2, String message, Object... values) {
+        if (i1 < i2) {
+            throw new IllegalArgumentException(Strings.format(message, values));
+        }
+    }
+
+    public static void gte(double i1, double i2) {
+        gte(i1, i2, "The validated numbers not greater than or equal");
+    }
+
+    public static void gte(double i1, double i2, String message, Object... values) {
+        if (i1 < i2) {
+            throw new IllegalArgumentException(Strings.format(message, values));
+        }
+    }
+
+    public static void gte(BigDecimal i1, BigDecimal i2) {
+        gte(i1, i2, "The validated numbers not greater than or equal");
+    }
+
+    public static void gte(BigDecimal i1, BigDecimal i2, String message, Object... values) {
+        notNull(i1);
+        notNull(i2);
+        if (i1.compareTo(i2) < 0) {
+            throw new IllegalArgumentException(Strings.format(message, values));
+        }
+    }
+
+    public static void gte(BigInteger i1, BigInteger i2) {
+        gte(i1, i2, "The validated numbers not greater than or equal");
+    }
+
+    public static void gte(BigInteger i1, BigInteger i2, String message, Object... values) {
+        notNull(i1);
+        notNull(i2);
+        if (i1.compareTo(i2) < 0) {
             throw new IllegalArgumentException(Strings.format(message, values));
         }
     }
@@ -42,6 +269,18 @@ public class Valid {
 
     public static void isTrue(boolean expression, String message, Object... values) {
         if (!expression) {
+            throw new IllegalArgumentException(Strings.format(message, values));
+        }
+    }
+
+    public static void isFalse(boolean expression) {
+        if (expression) {
+            throw new IllegalArgumentException("The validated expression is true");
+        }
+    }
+
+    public static void isFalse(boolean expression, String message, Object... values) {
+        if (expression) {
             throw new IllegalArgumentException(Strings.format(message, values));
         }
     }
@@ -319,13 +558,13 @@ public class Valid {
         }
     }
 
-    public static <T> void notExclude(T start, T end, Comparable<T> value) {
+    public static <T> void notCompare(T start, T end, Comparable<T> value) {
         if (value.compareTo(start) <= 0 || value.compareTo(end) >= 0) {
             throw new IllegalArgumentException(Strings.format("The value {} is not in the specified exclusive range of {} to {}", value, start, end));
         }
     }
 
-    public static <T> void notExclude(T start, T end, Comparable<T> value, String message, Object... values) {
+    public static <T> void notCompare(T start, T end, Comparable<T> value, String message, Object... values) {
         if (value.compareTo(start) <= 0 || value.compareTo(end) >= 0) {
             throw new IllegalArgumentException(Strings.format(message, values));
         }

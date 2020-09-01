@@ -29,7 +29,7 @@ public class FtpClientPool {
     /**
      * 队列
      */
-    private volatile BlockingQueue<FTPClient> pool;
+    private BlockingQueue<FTPClient> pool;
 
     /**
      * 连接工厂

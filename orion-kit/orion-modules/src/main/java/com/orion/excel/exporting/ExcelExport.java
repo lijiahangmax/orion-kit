@@ -797,12 +797,12 @@ public class ExcelExport<T> {
         // 默认行宽
         Integer rowWidth = sheetStyle.getRowWidth();
         if (rowWidth != null) {
-            sheet.setDefaultColumnWidth((int) ((rowWidth + 0.72) * 256));
+            // sheet.setDefaultColumnWidth((int) ((rowWidth + 0.72) * 256));
         }
         // 默认行高
         Integer rowHeight = sheetStyle.getRowHeight();
         if (rowHeight != null) {
-            sheet.setDefaultRowHeight((short) (rowHeight * 20));
+            // sheet.setDefaultRowHeightInPoints(rowHeight);
         }
         // field行宽
         rowStyles.forEach((k, v) -> {
@@ -810,7 +810,11 @@ public class ExcelExport<T> {
             if (style1 != null) {
                 Integer width = style1.getWidth();
                 if (width != null) {
+                    // 行宽
                     sheet.setColumnWidth(k, (int) ((width + 0.72) * 256));
+                } else if (rowWidth != null) {
+                    // 默认行宽
+                    sheet.setColumnWidth(k, (int) ((rowWidth + 0.72) * 256));
                 }
             }
         });
@@ -840,7 +844,12 @@ public class ExcelExport<T> {
                 continue;
             }
             Row rowRow = sheet.createRow(rowIndex++);
+            // 行高
+            if (rowHeight != null) {
+                rowRow.setHeightInPoints(rowHeight.floatValue());
+            }
             for (int i = 0; i < columnSize + 1; i++) {
+                // 跳过未设置字段的列
                 Args.Two<ExportFieldStyle, CellStyle> thisRowStyle = rowStyles.get(i);
                 if (thisRowStyle == null) {
                     continue;
@@ -849,6 +858,7 @@ public class ExcelExport<T> {
                 setCellValue(cell, i, row);
             }
         }
+        // 合并
         if (merges != null) {
             merges.forEach(sheet::addMergedRegion);
         }

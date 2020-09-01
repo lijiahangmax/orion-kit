@@ -19,6 +19,9 @@ import java.util.Date;
  */
 class TypeInfer {
 
+    private TypeInfer() {
+    }
+
     /**
      * 根据class转换object
      *

@@ -1,4 +1,4 @@
-package com.orion.excel.copying;
+package com.orion.excel.copy;
 
 import com.orion.utils.Valid;
 import org.apache.poi.hssf.usermodel.HSSFPalette;

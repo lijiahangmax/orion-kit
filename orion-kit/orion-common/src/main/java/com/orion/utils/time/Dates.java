@@ -22,14 +22,16 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Dates {
 
     public static final String WORLD = "EEE MMM dd HH:mm:ss z yyyy";
+    public static final String YM = "yyyy-MM";
     public static final String YMD = "yyyy-MM-dd";
     public static final String YMDHMS = "yyyy-MM-dd HH:mm:ss";
     public static final String YMDHMSS = "yyyy-MM-dd HH:mm:ss SSS";
+    public static final String YM1 = "yyyy/MM";
     public static final String YMD1 = "yyyy/MM/dd";
     public static final String YMDHMS1 = "yyyy/MM/dd HH/mm/ss";
     public static final String YMDHMSS1 = "yyyy/MM/dd HH/mm/ss SSS";
-    private static final String[] PARSE_PATTERN = {YMDHMS, YMD, YMDHMSS};
-    private static final String[] PARSE_PATTERN1 = {YMDHMS1, YMD1, YMDHMSS1};
+    private static final String[] PARSE_PATTERN = {YMDHMS, YMD, YM, YMDHMSS};
+    private static final String[] PARSE_PATTERN1 = {YMDHMS1, YMD1, YM1, YMDHMSS1};
 
     private static final long WEEK_STAMP = 604800000L;
     private static final long YEAR_STAMP = 31536000000L;
