@@ -5,7 +5,7 @@ package com.orion.able;
  *
  * @author Li
  * @version 1.0.0
- * @date 2019/11/18 18:26
+ * @since 2019/11/18 18:26
  */
 public interface Errorable {
 

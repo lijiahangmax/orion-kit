@@ -9,7 +9,7 @@ import java.util.Map;
  *
  * @author Li
  * @version 1.0.0
- * @date 2019/8/19 20:03
+ * @since 2019/8/19 20:03
  */
 public interface Mapable {
 

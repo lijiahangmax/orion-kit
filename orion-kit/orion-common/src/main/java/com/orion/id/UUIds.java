@@ -10,7 +10,7 @@ import java.util.UUID;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/1/3 11:26
+ * @since 2020/1/3 11:26
  */
 public class UUIds {
 

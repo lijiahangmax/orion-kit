@@ -12,7 +12,7 @@ import java.util.Properties;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/3/5 23:22
+ * @since 2020/3/5 23:22
  */
 public class EnvProperties {
 

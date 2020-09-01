@@ -21,7 +21,7 @@ import static java.util.stream.Collectors.toMap;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/5/15 13:16
+ * @since 2020/5/15 13:16
  */
 @SuppressWarnings("ALL")
 public class Fields {

@@ -12,7 +12,7 @@ import java.net.SocketException;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/6/5 16:35
+ * @since 2020/6/5 16:35
  */
 public class UdpReceive {
 

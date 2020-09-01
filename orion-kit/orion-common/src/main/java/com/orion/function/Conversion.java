@@ -5,7 +5,7 @@ package com.orion.function;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/5/23 10:35
+ * @since 2020/5/23 10:35
  */
 @FunctionalInterface
 public interface Conversion<T, R> {

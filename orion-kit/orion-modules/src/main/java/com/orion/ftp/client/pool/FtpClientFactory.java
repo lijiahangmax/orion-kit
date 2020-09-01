@@ -12,7 +12,7 @@ import java.io.IOException;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/3/18 11:25
+ * @since 2020/3/18 11:25
  */
 public class FtpClientFactory {
 

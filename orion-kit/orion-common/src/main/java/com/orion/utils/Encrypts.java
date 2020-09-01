@@ -27,7 +27,7 @@ import java.util.Enumeration;
  *
  * @author Li
  * @version 1.0.0
- * @date 2019/9/10 9:46
+ * @since 2019/9/10 9:46
  */
 @SuppressWarnings("ALL")
 public class Encrypts {

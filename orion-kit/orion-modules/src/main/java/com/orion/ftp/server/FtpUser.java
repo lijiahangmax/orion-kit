@@ -7,7 +7,7 @@ import java.io.Serializable;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/8/14 12:03
+ * @since 2020/8/14 12:03
  */
 public class FtpUser implements Serializable {
 

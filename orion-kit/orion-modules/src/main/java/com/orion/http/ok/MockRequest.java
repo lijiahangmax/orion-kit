@@ -21,7 +21,7 @@ import java.util.function.Consumer;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/4/7 23:49
+ * @since 2020/4/7 23:49
  */
 @SuppressWarnings("ALL")
 public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<MockResponse>> {

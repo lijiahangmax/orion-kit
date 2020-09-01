@@ -11,7 +11,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author Li
  * @version 1.0.0
- * @date 2019/8/22 20:54
+ * @since 2019/8/22 20:54
  */
 public class LruCache<K, V> extends LinkedHashMap<K, V> {
 

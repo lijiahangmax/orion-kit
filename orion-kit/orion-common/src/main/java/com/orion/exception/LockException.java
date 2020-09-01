@@ -5,7 +5,7 @@ package com.orion.exception;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/3/3 2:26
+ * @since 2020/3/3 2:26
  */
 public class LockException extends RuntimeException {
 

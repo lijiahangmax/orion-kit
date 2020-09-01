@@ -5,7 +5,7 @@ package com.orion.able;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/4/16 18:03
+ * @since 2020/4/16 18:03
  */
 public interface Executorable {
 

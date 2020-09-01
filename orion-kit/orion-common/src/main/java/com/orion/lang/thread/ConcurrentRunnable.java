@@ -8,7 +8,7 @@ import java.util.concurrent.CyclicBarrier;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/3/7 11:29
+ * @since 2020/3/7 11:29
  */
 public class ConcurrentRunnable implements Runnable {
 

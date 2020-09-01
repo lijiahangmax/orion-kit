@@ -12,7 +12,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/4/29 16:58
+ * @since 2020/4/29 16:58
  */
 @SuppressWarnings("ALL")
 public class Lists extends Collections {

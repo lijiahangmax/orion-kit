@@ -5,7 +5,7 @@ package com.orion.exception;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/3/12 18:10
+ * @since 2020/3/12 18:10
  */
 public class TimeoutRuntimeException extends RuntimeException {
 

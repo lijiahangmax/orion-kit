@@ -19,7 +19,7 @@ import java.util.function.Function;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/2/29 16:29
+ * @since 2020/2/29 16:29
  */
 @SuppressWarnings("unchecked")
 public class ConvertArrayList<E> extends ArrayList<E> {

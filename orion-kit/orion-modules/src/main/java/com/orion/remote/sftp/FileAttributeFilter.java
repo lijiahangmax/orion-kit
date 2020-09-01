@@ -5,7 +5,7 @@ package com.orion.remote.sftp;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/5/9 17:27
+ * @since 2020/5/9 17:27
  */
 @FunctionalInterface
 public interface FileAttributeFilter {

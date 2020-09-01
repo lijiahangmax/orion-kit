@@ -19,7 +19,7 @@ import java.util.function.Function;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/2/29 20:50
+ * @since 2020/2/29 20:50
  */
 @SuppressWarnings("unchecked")
 public class ConvertHashSet<E> extends HashSet<E> {

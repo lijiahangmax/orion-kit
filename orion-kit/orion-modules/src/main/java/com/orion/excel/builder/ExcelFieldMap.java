@@ -10,7 +10,7 @@ import java.io.Serializable;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/6/1 16:40
+ * @since 2020/6/1 16:40
  */
 public class ExcelFieldMap implements Serializable {
 

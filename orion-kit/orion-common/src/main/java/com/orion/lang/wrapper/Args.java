@@ -7,7 +7,7 @@ import java.io.Serializable;
  *
  * @author Li
  * @version 1.0.0
- * @date 2019/7/26 14:06
+ * @since 2019/7/26 14:06
  */
 @SuppressWarnings("ALL")
 public class Args implements Serializable {

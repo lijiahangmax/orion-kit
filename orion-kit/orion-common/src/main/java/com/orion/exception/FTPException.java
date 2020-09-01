@@ -5,7 +5,7 @@ package com.orion.exception;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/3/17 18:46
+ * @since 2020/3/17 18:46
  */
 public class FTPException extends RuntimeException {
 

@@ -9,7 +9,7 @@ import java.io.Serializable;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/4/30 10:06
+ * @since 2020/4/30 10:06
  */
 public class FileAttribute implements Serializable, Jsonable {
 

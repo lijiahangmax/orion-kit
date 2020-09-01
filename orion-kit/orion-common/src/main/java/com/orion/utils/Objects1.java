@@ -17,7 +17,7 @@ import java.util.function.Function;
  *
  * @author Li
  * @version 1.0.0
- * @date 2019/9/20 17:10
+ * @since 2019/9/20 17:10
  */
 public class Objects1 {
 

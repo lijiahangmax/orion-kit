@@ -9,7 +9,7 @@ import java.io.Serializable;
  *
  * @author Li
  * @version 1.0.0
- * @date 2019/10/25 16:38
+ * @since 2019/10/25 16:38
  */
 public interface BaseInnerDTO extends Serializable {
 

@@ -18,7 +18,7 @@ import java.net.SocketException;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/4/9 15:58
+ * @since 2020/4/9 15:58
  */
 @SuppressWarnings("ALL")
 public class MockWebSocketClient {

@@ -7,7 +7,7 @@ import java.awt.*;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/5/29 21:38
+ * @since 2020/5/29 21:38
  */
 public class Colors {
 

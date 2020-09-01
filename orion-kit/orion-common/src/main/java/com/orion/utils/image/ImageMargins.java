@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/7/23 14:22
+ * @since 2020/7/23 14:22
  */
 public class ImageMargins implements Awaitable<BufferedImage> {
 

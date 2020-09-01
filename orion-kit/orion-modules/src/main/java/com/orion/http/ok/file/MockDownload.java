@@ -15,7 +15,7 @@ import java.io.OutputStream;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/6/25 0:15
+ * @since 2020/6/25 0:15
  */
 public class MockDownload {
 

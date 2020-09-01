@@ -16,7 +16,7 @@ import java.io.*;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/3/22 14:32
+ * @since 2020/3/22 14:32
  */
 public class FtpDownload implements Runnable {
 

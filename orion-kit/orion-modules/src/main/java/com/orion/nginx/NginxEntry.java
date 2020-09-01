@@ -10,7 +10,7 @@ import java.util.Map;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/4/27 18:08
+ * @since 2020/4/27 18:08
  */
 @SuppressWarnings("ALL")
 public class NginxEntry {

@@ -13,7 +13,7 @@ import java.util.Set;
  *
  * @author Li
  * @version 1.0.0
- * @date 2019/10/30 15:59
+ * @since 2019/10/30 15:59
  */
 public class EmojiExt {
 

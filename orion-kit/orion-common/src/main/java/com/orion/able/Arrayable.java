@@ -5,7 +5,7 @@ package com.orion.able;
  *
  * @author Li
  * @version 1.0.0
- * @date 2019/8/23 10:59
+ * @since 2019/8/23 10:59
  */
 public interface Arrayable<E> {
 

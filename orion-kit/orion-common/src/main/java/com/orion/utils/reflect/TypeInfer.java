@@ -15,7 +15,7 @@ import java.util.Date;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/5/22 10:41
+ * @since 2020/5/22 10:41
  */
 class TypeInfer {
 

@@ -21,7 +21,7 @@ import java.util.function.Function;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/2/27 1:03
+ * @since 2020/2/27 1:03
  */
 @SuppressWarnings("unchecked")
 public class ConvertHashMap<K, V> extends HashMap<K, V> {

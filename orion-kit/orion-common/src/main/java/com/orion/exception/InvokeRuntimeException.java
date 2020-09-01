@@ -5,7 +5,7 @@ package com.orion.exception;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/1/7 10:35
+ * @since 2020/1/7 10:35
  */
 public class InvokeRuntimeException extends RuntimeException {
 

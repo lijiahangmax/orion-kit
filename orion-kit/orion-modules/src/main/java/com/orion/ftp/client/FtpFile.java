@@ -8,7 +8,7 @@ import java.util.Calendar;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/5/9 21:22
+ * @since 2020/5/9 21:22
  */
 @SuppressWarnings("ALL")
 public class FtpFile implements Serializable {

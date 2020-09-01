@@ -7,7 +7,7 @@ import com.orion.utils.reflect.BeanWrapper;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/4/30 17:11
+ * @since 2020/4/30 17:11
  */
 public interface ConvertBeanable {
 

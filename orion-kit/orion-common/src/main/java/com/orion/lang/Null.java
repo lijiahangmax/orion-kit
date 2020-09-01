@@ -7,7 +7,7 @@ import java.io.Serializable;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/2/6 23:13
+ * @since 2020/2/6 23:13
  */
 public class Null implements Serializable {
 

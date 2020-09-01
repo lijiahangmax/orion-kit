@@ -7,7 +7,7 @@ import com.orion.utils.Strings;
  *
  * @author Li
  * @version 1.0.0
- * @date 2019/9/22 21:53
+ * @since 2019/9/22 21:53
  */
 public enum VariableStyleEnum {
 

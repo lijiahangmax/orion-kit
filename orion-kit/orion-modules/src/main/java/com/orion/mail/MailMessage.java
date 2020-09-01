@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/3/15 18:27
+ * @since 2020/3/15 18:27
  */
 @SuppressWarnings("ALL")
 public class MailMessage implements Serializable, Jsonable {

@@ -10,7 +10,7 @@ import java.io.Serializable;
  *
  * @author Li
  * @version 1.0.0
- * @date 2019/8/15 20:35
+ * @since 2019/8/15 20:35
  */
 public class BaseDTO implements Serializable, Jsonable {
 

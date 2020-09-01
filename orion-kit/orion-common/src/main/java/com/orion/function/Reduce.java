@@ -5,7 +5,7 @@ package com.orion.function;
  *
  * @author Li
  * @version 1.0.0
- * @date 2019/9/9 14:13
+ * @since 2019/9/9 14:13
  */
 @FunctionalInterface
 public interface Reduce<V, R> {

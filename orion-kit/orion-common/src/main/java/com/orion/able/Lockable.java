@@ -5,7 +5,7 @@ package com.orion.able;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/3/20 22:19
+ * @since 2020/3/20 22:19
  */
 public interface Lockable {
 

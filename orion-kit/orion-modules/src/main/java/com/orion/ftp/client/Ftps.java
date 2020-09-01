@@ -9,7 +9,7 @@ import org.apache.commons.net.ftp.FTPClient;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/3/17 16:10
+ * @since 2020/3/17 16:10
  */
 public class Ftps {
 

@@ -7,7 +7,7 @@ import java.io.Serializable;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/5/9 15:47
+ * @since 2020/5/9 15:47
  */
 public class StreamEntry implements Serializable {
 

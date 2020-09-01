@@ -5,7 +5,7 @@ package com.orion.lang.thread;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/4/13 18:00
+ * @since 2020/4/13 18:00
  */
 public class TagRunnable implements Runnable {
 

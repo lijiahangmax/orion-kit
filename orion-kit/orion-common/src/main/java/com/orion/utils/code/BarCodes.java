@@ -23,7 +23,7 @@ import java.io.OutputStream;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/7/8 17:15
+ * @since 2020/7/8 17:15
  */
 @SuppressWarnings("ALL")
 public class BarCodes {

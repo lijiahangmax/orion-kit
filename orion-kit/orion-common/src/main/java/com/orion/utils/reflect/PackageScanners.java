@@ -19,7 +19,7 @@ import java.util.jar.JarFile;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/4/23 17:38
+ * @since 2020/4/23 17:38
  */
 @SuppressWarnings("ALL")
 public class PackageScanners {

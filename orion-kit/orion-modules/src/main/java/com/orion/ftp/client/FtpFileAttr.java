@@ -10,7 +10,7 @@ import java.util.Date;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/3/17 15:56
+ * @since 2020/3/17 15:56
  */
 @SuppressWarnings("ALL")
 public class FtpFileAttr implements Serializable, Jsonable {

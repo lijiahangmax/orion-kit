@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/4/17 13:44
+ * @since 2020/4/17 13:44
  */
 public class ProcessAwaitExecutor implements Awaitable<ProcessAwaitExecutor> {
 

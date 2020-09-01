@@ -7,7 +7,7 @@ import com.orion.remote.ssh.CommandExecutor;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/4/17 14:18
+ * @since 2020/4/17 14:18
  */
 @FunctionalInterface
 public interface SuccessHandler {

@@ -9,7 +9,7 @@ import java.util.concurrent.CyclicBarrier;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/3/7 14:39
+ * @since 2020/3/7 14:39
  */
 public class ConcurrentCallable<V> implements Callable<V> {
 

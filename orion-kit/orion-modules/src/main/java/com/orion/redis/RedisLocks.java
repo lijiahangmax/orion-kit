@@ -8,7 +8,7 @@ import redis.clients.jedis.Jedis;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/3/8 15:03
+ * @since 2020/3/8 15:03
  */
 public class RedisLocks {
 

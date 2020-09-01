@@ -7,7 +7,7 @@ import okhttp3.WebSocket;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/4/9 21:57
+ * @since 2020/4/9 21:57
  */
 @FunctionalInterface
 public interface CloseHandler {

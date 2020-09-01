@@ -5,7 +5,7 @@ package com.orion.exception;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/4/15 21:27
+ * @since 2020/4/15 21:27
  */
 public class AuthenticationException extends Exception {
 

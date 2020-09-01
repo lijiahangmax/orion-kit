@@ -10,7 +10,7 @@ import java.util.function.BiConsumer;
  *
  * @author Li
  * @version 1.0.0
- * @date 2019/8/21 20:46
+ * @since 2019/8/21 20:46
  */
 @SuppressWarnings("unchecked")
 public class MultiHashMap<E, K, V> implements Serializable {

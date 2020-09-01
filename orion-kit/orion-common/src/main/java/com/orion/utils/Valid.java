@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  *
  * @author Li
  * @version 1.0.0
- * @date 2019/11/18 16:25
+ * @since 2019/11/18 16:25
  */
 @SuppressWarnings("ALL")
 public class Valid {

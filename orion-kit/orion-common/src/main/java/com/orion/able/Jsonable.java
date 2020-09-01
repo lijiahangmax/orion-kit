@@ -7,7 +7,7 @@ import com.orion.utils.json.Jsons;
  *
  * @author Li
  * @version 1.0.0
- * @date 2019/8/15 20:34
+ * @since 2019/8/15 20:34
  */
 public interface Jsonable {
 

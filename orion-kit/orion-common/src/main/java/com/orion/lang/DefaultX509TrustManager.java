@@ -9,7 +9,7 @@ import java.security.cert.X509Certificate;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/6/11 9:56
+ * @since 2020/6/11 9:56
  */
 public class DefaultX509TrustManager implements X509TrustManager {
 

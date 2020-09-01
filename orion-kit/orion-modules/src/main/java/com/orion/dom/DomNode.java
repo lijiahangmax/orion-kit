@@ -13,7 +13,7 @@ import java.util.Map;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/3/26 21:41
+ * @since 2020/3/26 21:41
  */
 @SuppressWarnings("ALL")
 public class DomNode implements Serializable, Jsonable {

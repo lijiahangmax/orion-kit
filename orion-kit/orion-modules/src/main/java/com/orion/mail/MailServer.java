@@ -5,7 +5,7 @@ package com.orion.mail;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/3/16 16:06
+ * @since 2020/3/16 16:06
  */
 public enum MailServer {
 

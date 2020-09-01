@@ -7,7 +7,7 @@ import org.junit.Test;
 /**
  * @author ljh15
  * @version 1.0.0
- * @date 2020/5/13 18:20
+ * @since 2020/5/13 18:20
  */
 public class VarableTests {
 

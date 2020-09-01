@@ -12,7 +12,7 @@ import java.util.Date;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/3/13 14:11
+ * @since 2020/3/13 14:11
  */
 public class StringExt implements Serializable {
 

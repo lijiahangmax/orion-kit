@@ -18,7 +18,7 @@ import java.util.function.Predicate;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/1/3 15:59
+ * @since 2020/1/3 15:59
  */
 public class GroupList<V> {
 

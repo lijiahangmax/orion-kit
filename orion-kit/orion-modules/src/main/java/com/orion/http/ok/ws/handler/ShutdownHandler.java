@@ -9,7 +9,7 @@ import java.util.Map;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/4/9 22:01
+ * @since 2020/4/9 22:01
  */
 @FunctionalInterface
 public interface ShutdownHandler {

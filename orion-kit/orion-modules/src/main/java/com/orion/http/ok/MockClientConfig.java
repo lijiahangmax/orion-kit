@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/4/8 10:33
+ * @since 2020/4/8 10:33
  */
 @SuppressWarnings("ALL")
 public class MockClientConfig implements Serializable {

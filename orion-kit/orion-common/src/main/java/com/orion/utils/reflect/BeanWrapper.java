@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/4/2 15:37
+ * @since 2020/4/2 15:37
  */
 @SuppressWarnings("unchecked")
 public class BeanWrapper {

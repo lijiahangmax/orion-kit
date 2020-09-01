@@ -7,7 +7,7 @@ import java.io.Serializable;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/8/30 23:53
+ * @since 2020/8/30 23:53
  */
 public class Store<T> implements Serializable {
 

@@ -14,7 +14,7 @@ import javax.net.ssl.TrustManager;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/6/12 14:21
+ * @since 2020/6/12 14:21
  */
 public class HyperClient {
 

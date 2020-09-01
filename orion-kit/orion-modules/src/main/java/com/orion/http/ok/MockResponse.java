@@ -19,7 +19,7 @@ import java.util.Map;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/4/7 23:52
+ * @since 2020/4/7 23:52
  */
 public class MockResponse implements Serializable {
 

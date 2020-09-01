@@ -5,7 +5,7 @@ package com.orion.tail;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/5/14 16:37
+ * @since 2020/5/14 16:37
  */
 @FunctionalInterface
 public interface LineHandler {

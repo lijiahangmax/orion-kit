@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/6/12 15:07
+ * @since 2020/6/12 15:07
  */
 public class HyperLoggerInterceptor implements HttpRequestInterceptor, HttpResponseInterceptor {
 

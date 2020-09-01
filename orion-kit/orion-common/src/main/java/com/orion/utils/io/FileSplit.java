@@ -10,7 +10,7 @@ import java.util.concurrent.Callable;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/2/14 15:38
+ * @since 2020/2/14 15:38
  */
 public class FileSplit implements Callable<String[]> {
 

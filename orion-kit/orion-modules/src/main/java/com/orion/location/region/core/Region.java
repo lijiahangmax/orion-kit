@@ -7,7 +7,7 @@ import java.io.Serializable;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/3/2 22:42
+ * @since 2020/3/2 22:42
  */
 public class Region implements Serializable {
 

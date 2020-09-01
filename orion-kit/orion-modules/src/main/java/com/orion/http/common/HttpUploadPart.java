@@ -13,7 +13,7 @@ import java.io.InputStream;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/4/14 11:47
+ * @since 2020/4/14 11:47
  */
 public class HttpUploadPart {
 

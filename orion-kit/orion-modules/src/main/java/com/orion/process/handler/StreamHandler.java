@@ -10,7 +10,7 @@ import java.io.OutputStream;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/4/17 15:24
+ * @since 2020/4/17 15:24
  */
 @FunctionalInterface
 public interface StreamHandler {

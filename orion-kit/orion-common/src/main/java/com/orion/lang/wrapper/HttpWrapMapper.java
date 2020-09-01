@@ -7,7 +7,7 @@ import java.util.function.Supplier;
  *
  * @author Li
  * @version 1.0.0
- * @date 2019/8/8 17:25
+ * @since 2019/8/8 17:25
  */
 public enum HttpWrapMapper implements Supplier<HttpWrapper<Object>> {
 

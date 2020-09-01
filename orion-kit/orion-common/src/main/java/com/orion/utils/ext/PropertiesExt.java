@@ -15,7 +15,7 @@ import java.util.Properties;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/3/6 12:40
+ * @since 2020/3/6 12:40
  */
 @SuppressWarnings("ALL")
 public class PropertiesExt {

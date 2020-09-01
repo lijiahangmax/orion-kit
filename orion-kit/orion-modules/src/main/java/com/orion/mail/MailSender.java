@@ -16,7 +16,7 @@ import java.util.Properties;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/3/15 18:25
+ * @since 2020/3/15 18:25
  */
 public class MailSender implements Sendable<MailMessage> {
 

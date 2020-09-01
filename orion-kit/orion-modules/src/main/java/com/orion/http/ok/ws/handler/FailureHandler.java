@@ -8,7 +8,7 @@ import okhttp3.WebSocket;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/4/9 21:53
+ * @since 2020/4/9 21:53
  */
 @FunctionalInterface
 public interface FailureHandler {

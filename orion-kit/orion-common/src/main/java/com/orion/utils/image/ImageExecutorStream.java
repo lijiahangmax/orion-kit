@@ -17,7 +17,7 @@ import java.io.OutputStream;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/7/14 17:20
+ * @since 2020/7/14 17:20
  */
 public class ImageExecutorStream {
 

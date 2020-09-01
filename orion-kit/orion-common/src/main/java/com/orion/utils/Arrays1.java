@@ -15,7 +15,7 @@ import java.util.function.IntFunction;
  *
  * @author Li
  * @version 1.0.0
- * @date 2019/9/9 10:25
+ * @since 2019/9/9 10:25
  * <p>
  * 需要注意: 可变参数 Object... T... 不应该传基本类型的数组, 应该传基本类型的包装类,
  * 基本类型数组无法转化为包装类型的数组, 从而入参为转化Object, 导致与预期结果不相同

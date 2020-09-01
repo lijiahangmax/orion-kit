@@ -10,7 +10,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *
  * @author Li
  * @version 1.0.0
- * @date 2019/07/23 19:15
+ * @since 2019/07/23 19:15
  */
 @SuppressWarnings("ALL")
 public class Sequences {

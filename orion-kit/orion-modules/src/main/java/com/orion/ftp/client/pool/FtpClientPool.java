@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/3/18 11:19
+ * @since 2020/3/18 11:19
  */
 public class FtpClientPool {
 

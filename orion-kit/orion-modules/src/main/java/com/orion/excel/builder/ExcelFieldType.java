@@ -5,7 +5,7 @@ package com.orion.excel.builder;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/4/6 22:00
+ * @since 2020/4/6 22:00
  */
 public enum ExcelFieldType {
 

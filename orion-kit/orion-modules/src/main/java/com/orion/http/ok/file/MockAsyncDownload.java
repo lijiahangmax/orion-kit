@@ -26,7 +26,7 @@ import java.util.*;
  *
  * @author ljh15
  * @version 1.0.0
- * @date 2020/4/9 14:13
+ * @since 2020/4/9 14:13
  */
 @SuppressWarnings("ALL")
 public class MockAsyncDownload {
