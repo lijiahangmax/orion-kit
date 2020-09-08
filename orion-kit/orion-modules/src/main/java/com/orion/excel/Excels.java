@@ -4,13 +4,18 @@ import com.monitorjbl.xlsx.StreamingReader;
 import com.monitorjbl.xlsx.impl.StreamingSheet;
 import com.monitorjbl.xlsx.impl.StreamingWorkbook;
 import com.orion.excel.copy.CopySheet;
+import com.orion.utils.Exceptions;
+import com.orion.utils.Valid;
+import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
 import com.orion.utils.time.Dates;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Date;
@@ -175,6 +180,53 @@ public class Excels {
      */
     public static void mergeCell(Sheet sheet, int row, int firstCell, int lastCell) {
         sheet.addMergedRegion(new CellRangeAddress(row, row, firstCell, lastCell));
+    }
+
+    /**
+     * 写入workbook到文件
+     *
+     * @param workbook workbook
+     * @param file     文件
+     */
+    public static void write(Workbook workbook, String file) {
+        write(workbook, new File(file));
+    }
+
+    /**
+     * 写入workbook到文件
+     *
+     * @param workbook workbook
+     * @param file     文件
+     */
+    public static void write(Workbook workbook, File file) {
+        Valid.notNull(workbook, "workbook is null");
+        Valid.notNull(file, "file is null");
+        Files1.touch(file);
+        FileOutputStream out = null;
+        try {
+            out = Files1.openOutputStream(file);
+            workbook.write(out);
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime(e);
+        } finally {
+            Streams.close(out);
+        }
+    }
+
+    /**
+     * 写入workbook到流
+     *
+     * @param workbook workbook
+     * @param out      流
+     */
+    public static void write(Workbook workbook, OutputStream out) {
+        Valid.notNull(workbook, "workbook is null");
+        Valid.notNull(out, "outputStream is null");
+        try {
+            workbook.write(out);
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime(e);
+        }
     }
 
     /**

@@ -3,9 +3,11 @@ package com.orion.utils.collect;
 import com.orion.lang.collect.ConvertArrayList;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Objects1;
+import com.orion.utils.Valid;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Function;
 
 /**
  * List 工具类
@@ -96,6 +98,16 @@ public class Lists extends Collections {
         int length = Arrays1.length(e);
         for (int i = 0; i < length; i++) {
             list.add(e[i]);
+        }
+        return list;
+    }
+
+    public static <E, V> List<E> of(Function<V, E> f, V... e) {
+        Valid.notNull(f, "convert function is null");
+        List<E> list = new ArrayList<>();
+        int length = Arrays1.length(e);
+        for (int i = 0; i < length; i++) {
+            list.add(f.apply(e[i]));
         }
         return list;
     }

@@ -1,8 +1,9 @@
-package com.orion.excel.split.row;
+package com.orion.excel.split;
 
 import com.orion.excel.Excels;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
+import com.orion.utils.collect.Lists;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
 import org.apache.poi.ss.usermodel.Cell;
@@ -19,7 +20,7 @@ import java.util.List;
 /**
  * Excel 行拆分器
  * <p>
- * 只是拆分 不可获取源文件数据 不支持样式 速度快 占用内存少
+ * 只是拆分 不可获取源文件数据 不支持样式 速度快 占用内存少 (最好使用StreamingSheet)
  *
  * @author ljh15
  * @version 1.0.0
@@ -57,6 +58,16 @@ public class ExcelRowSplitStreaming {
      */
     private List<OutputStream> dist;
 
+    /**
+     * 自动生成的文件目录
+     */
+    private String generatorPathDir;
+
+    /**
+     * 自动生成的文件名称
+     */
+    private String generatorBaseName;
+
     public ExcelRowSplitStreaming(Sheet sheet, int rowSize) {
         Valid.notNull(sheet, "split sheet is null");
         Valid.lte(0, rowSize);
@@ -70,10 +81,12 @@ public class ExcelRowSplitStreaming {
      * @param dist dist
      * @return this
      */
-    public ExcelRowSplitStreaming distStream(List<OutputStream> dist) {
-        Valid.notEmpty(dist);
-        this.dist = dist;
-        this.maxCount = rowSize * dist.size();
+    public ExcelRowSplitStreaming dist(OutputStream... dist) {
+        Valid.notEmpty(dist, "dist file is empty");
+        this.dist = Lists.of(dist);
+        this.maxCount = rowSize * dist.length;
+        this.generatorPathDir = null;
+        this.generatorBaseName = null;
         return this;
     }
 
@@ -83,8 +96,8 @@ public class ExcelRowSplitStreaming {
      * @param dist dist
      * @return this
      */
-    public ExcelRowSplitStreaming distFiles(List<File> dist) {
-        Valid.notEmpty(dist);
+    public ExcelRowSplitStreaming dist(File... dist) {
+        Valid.notEmpty(dist, "dist file is empty");
         List<OutputStream> out = new ArrayList<>();
         for (File file : dist) {
             Files1.touch(file);
@@ -95,7 +108,9 @@ public class ExcelRowSplitStreaming {
             }
         }
         this.dist = out;
-        this.maxCount = rowSize * dist.size();
+        this.maxCount = rowSize * dist.length;
+        this.generatorPathDir = null;
+        this.generatorBaseName = null;
         return this;
     }
 
@@ -105,8 +120,8 @@ public class ExcelRowSplitStreaming {
      * @param dist dist
      * @return this
      */
-    public ExcelRowSplitStreaming distPaths(List<String> dist) {
-        Valid.notEmpty(dist);
+    public ExcelRowSplitStreaming dist(String... dist) {
+        Valid.notEmpty(dist, "dist file is empty");
         List<OutputStream> out = new ArrayList<>();
         for (String file : dist) {
             Files1.touch(file);
@@ -117,7 +132,26 @@ public class ExcelRowSplitStreaming {
             }
         }
         this.dist = out;
-        this.maxCount = rowSize * dist.size();
+        this.maxCount = rowSize * dist.length;
+        this.generatorPathDir = null;
+        this.generatorBaseName = null;
+        return this;
+    }
+
+    /**
+     * 设置拆分文件输出文件路径
+     *
+     * @param pathDir  目标文件目录
+     * @param baseName 文件名称 不包含后缀
+     * @return this
+     */
+    public ExcelRowSplitStreaming distPath(String pathDir, String baseName) {
+        Valid.notNull(pathDir, "dist path dir is null");
+        Valid.notNull(baseName, "dist file base name is null");
+        this.dist = null;
+        this.generatorPathDir = pathDir;
+        this.generatorBaseName = baseName;
+        this.maxCount = Integer.MAX_VALUE;
         return this;
     }
 
@@ -159,9 +193,16 @@ public class ExcelRowSplitStreaming {
      * @return this
      */
     public ExcelRowSplitStreaming execute() {
-        Valid.notNull(dist, "split file dist is null");
+        if (generatorPathDir == null) {
+            Valid.notNull(dist, "split file dist is null");
+        }
         int i = 0, index = 0, blockIndex = 0, rowIndex = 0, blockRowIndex = 0;
-        OutputStream out = dist.get(0);
+        OutputStream out;
+        if (generatorPathDir != null) {
+            out = generatorOutputStream(0);
+        } else {
+            out = dist.get(0);
+        }
         Workbook wb = new XSSFWorkbook();
         Sheet sheet = wb.createSheet();
         if (this.header != null) {
@@ -183,7 +224,12 @@ public class ExcelRowSplitStreaming {
                 rowIndex = 1;
                 blockRowIndex = 0;
                 this.write(wb, out);
-                out = dist.get(++blockIndex);
+                if (generatorPathDir != null) {
+                    Streams.close(out);
+                    out = generatorOutputStream(++blockIndex);
+                } else {
+                    out = dist.get(++blockIndex);
+                }
                 Streams.close(wb);
                 wb = new XSSFWorkbook();
                 sheet = wb.createSheet();
@@ -205,11 +251,13 @@ public class ExcelRowSplitStreaming {
     }
 
     /**
-     * 关闭
+     * 关闭流
      */
     public void close() {
-        for (OutputStream outputStream : dist) {
-            Streams.close(outputStream);
+        if (dist != null) {
+            for (OutputStream outputStream : dist) {
+                Streams.close(outputStream);
+            }
         }
     }
 
@@ -222,6 +270,22 @@ public class ExcelRowSplitStreaming {
     private void write(Workbook wb, OutputStream out) {
         try {
             wb.write(out);
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime(e);
+        }
+    }
+
+    /**
+     * 生成OutputStream
+     *
+     * @param i index
+     * @return ignore
+     */
+    private OutputStream generatorOutputStream(int i) {
+        String path = Files1.getPath(generatorPathDir + "/" + generatorBaseName + "_row_split_" + (i + 1) + ".xlsx");
+        Files1.touch(path);
+        try {
+            return Files1.openOutputStream(path);
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         }
@@ -250,10 +314,6 @@ public class ExcelRowSplitStreaming {
 
     public int getMaxCount() {
         return maxCount;
-    }
-
-    public List<OutputStream> getDist() {
-        return dist;
     }
 
 }

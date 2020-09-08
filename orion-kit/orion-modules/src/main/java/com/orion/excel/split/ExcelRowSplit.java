@@ -1,4 +1,4 @@
-package com.orion.excel.split.row;
+package com.orion.excel.split;
 
 import com.orion.excel.Excels;
 import com.orion.utils.Exceptions;
@@ -16,7 +16,6 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,7 @@ import java.util.List;
 /**
  * Excel 行拆分器
  * <p>
- * 只是拆分 可以获取行数据 不支持样式 速度慢 占用内存多
+ * 只是拆分 可以获取行数据 不支持样式 速度慢 占用内存多 (最好使用StreamingSheet)
  *
  * @author ljh15
  * @version 1.0.0
@@ -153,6 +152,96 @@ public class ExcelRowSplit {
     }
 
     /**
+     * 将数据写入到拆分文件
+     *
+     * @param files files
+     * @return this
+     */
+    public ExcelRowSplit write(String... files) {
+        Valid.notEmpty(files, "write file is empty");
+        for (int i = 0; i < workbooks.size(); i++) {
+            if (i < files.length) {
+                write(new File(files[i]), i);
+            }
+        }
+        return this;
+    }
+
+    /**
+     * 将数据写入到拆分文件
+     *
+     * @param files files
+     * @return this
+     */
+    public ExcelRowSplit write(File... files) {
+        Valid.notEmpty(files, "write file is empty");
+        for (int i = 0; i < workbooks.size(); i++) {
+            if (i < files.length) {
+                write(files[i], i);
+            }
+        }
+        return this;
+    }
+
+    /**
+     * 将数据写入到拆分文件流
+     *
+     * @param outs 流
+     * @return this
+     */
+    public ExcelRowSplit write(OutputStream... outs) {
+        Valid.notEmpty(outs, "write stream is empty");
+        for (int i = 0; i < workbooks.size(); i++) {
+            if (i < outs.length) {
+                Workbook workbook = workbooks.get(i);
+                OutputStream out = outs[i];
+                try {
+                    workbook.write(out);
+                } catch (Exception e) {
+                    throw Exceptions.ioRuntime(e);
+                }
+            }
+        }
+        return this;
+    }
+
+    /**
+     * 写入数据到文件
+     *
+     * @param pathDir  目标文件目录
+     * @param baseName 文件名称 不包含后缀
+     * @return this
+     */
+    public ExcelRowSplit writeToPath(String pathDir, String baseName) {
+        Valid.notNull(pathDir, "dist path dir is null");
+        Valid.notNull(baseName, "dist file base name is null");
+        for (int i = 0; i < workbooks.size(); i++) {
+            String path = Files1.getPath(pathDir + "/" + baseName + "_row_split_" + (i + 1) + ".xlsx");
+            write(new File(path), i);
+        }
+        return this;
+    }
+
+    /**
+     * 写入数据到文件
+     *
+     * @param file          文件
+     * @param workbookIndex workbook索引
+     */
+    private void write(File file, int workbookIndex) {
+        Excels.write(workbooks.get(workbookIndex), file);
+    }
+
+    /**
+     * 关闭 workbooks
+     */
+    public void close() {
+        for (Workbook workbook : workbooks) {
+            Streams.close(workbook);
+        }
+    }
+
+    /**
      * 获取表格数据
      *
      * @return 数据
@@ -177,101 +266,6 @@ public class ExcelRowSplit {
      */
     public List<Workbook> getWorkbooks() {
         return workbooks;
-    }
-
-    /**
-     * 将数据写入到拆分文件
-     *
-     * @param files files
-     * @return this
-     */
-    public ExcelRowSplit write(String... files) {
-        for (int i = 0; i < workbooks.size(); i++) {
-            if (i < files.length) {
-                write(new File(files[i]), i);
-            }
-        }
-        return this;
-    }
-
-    /**
-     * 将数据写入到拆分文件
-     *
-     * @param files files
-     * @return this
-     */
-    public ExcelRowSplit write(File... files) {
-        for (int i = 0; i < workbooks.size(); i++) {
-            if (i < files.length) {
-                write(files[i], i);
-            }
-        }
-        return this;
-    }
-
-    /**
-     * 将数据写入到拆分文件流
-     *
-     * @param outs 流
-     * @return this
-     */
-    public ExcelRowSplit write(OutputStream... outs) {
-        for (int i = 0; i < workbooks.size(); i++) {
-            if (i < outs.length) {
-                Workbook workbook = workbooks.get(i);
-                OutputStream out = outs[i];
-                try {
-                    workbook.write(out);
-                } catch (Exception e) {
-                    throw Exceptions.ioRuntime(e);
-                }
-            }
-        }
-        return this;
-    }
-
-    /**
-     * 写入数据到文件
-     *
-     * @param pathDir  目标文件目录
-     * @param baseName 文件名称 不包含后缀
-     * @return this
-     */
-    public ExcelRowSplit writeToPath(String pathDir, String baseName) {
-        for (int i = 0; i < workbooks.size(); i++) {
-            String path = Files1.getPath(pathDir + "/" + baseName + "_split_" + (i + 1) + ".xlsx");
-            write(new File(path), i);
-        }
-        return this;
-    }
-
-    /**
-     * 写入数据到文件
-     *
-     * @param file          文件
-     * @param workbookIndex workbook索引
-     */
-    private void write(File file, int workbookIndex) {
-        Files1.touch(file);
-        FileOutputStream out = null;
-        Workbook workbook = workbooks.get(workbookIndex);
-        try {
-            out = Files1.openOutputStream(file);
-            workbook.write(out);
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
-        } finally {
-            Streams.close(out);
-        }
-    }
-
-    /**
-     * 关闭 workbooks
-     */
-    public void close() {
-        for (Workbook workbook : workbooks) {
-            Streams.close(workbook);
-        }
     }
 
 }

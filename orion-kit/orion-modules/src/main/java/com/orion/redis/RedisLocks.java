@@ -43,12 +43,12 @@ public class RedisLocks {
      */
     public static long tryLock(String lock, long expired) {
         try {
-            Long lockValue = System.currentTimeMillis() + expired;
+            long lockValue = System.currentTimeMillis() + expired;
             Long r = redisTemplate.setnx(lock, String.valueOf(lockValue));
             if (r == 1) {
                 return lockValue;
             } else {
-                Long oldLockValue = Long.valueOf(redisTemplate.get(lock));
+                long oldLockValue = Long.parseLong(redisTemplate.get(lock));
                 if (oldLockValue < System.currentTimeMillis()) {
                     String getOldLockValue = redisTemplate.getSet(lock, String.valueOf(lockValue));
                     if (!Strings.isBlank(getOldLockValue) && Long.valueOf(getOldLockValue).equals(oldLockValue)) {

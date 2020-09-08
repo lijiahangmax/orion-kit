@@ -3,8 +3,10 @@ package com.orion.utils.collect;
 import com.orion.lang.collect.ConcurrentHashSet;
 import com.orion.lang.collect.ConvertHashSet;
 import com.orion.utils.Arrays1;
+import com.orion.utils.Valid;
 
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * Set 工具类
@@ -116,7 +118,6 @@ public class Sets extends Collections {
         return new ConcurrentHashSet<>(m);
     }
 
-
     // --------------- function ---------------
 
     public static <E> Set<E> of(E... e) {
@@ -126,6 +127,16 @@ public class Sets extends Collections {
             set.add(e[i]);
         }
         return set;
+    }
+
+    public static <E, V> Set<E> of(Function<V, E> f, V... e) {
+        Valid.notNull(f, "convert function is null");
+        Set<E> list = new HashSet<>();
+        int length = Arrays1.length(e);
+        for (int i = 0; i < length; i++) {
+            list.add(f.apply(e[i]));
+        }
+        return list;
     }
 
     /**
