@@ -139,6 +139,18 @@ public class Sets extends Collections {
         return list;
     }
 
+    public static <E, V> Set<E> map(List<V> l, Function<V, E> f) {
+        Valid.notNull(f, "convert function is null");
+        Set<E> set = new HashSet<>();
+        if (isEmpty(l)) {
+            return set;
+        }
+        for (V v : l) {
+            set.add(f.apply(v));
+        }
+        return set;
+    }
+
     /**
      * 合并set
      *

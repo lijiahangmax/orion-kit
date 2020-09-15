@@ -46,7 +46,7 @@ public class LimitList<E> extends ArrayList<E> {
         int offset = (p - 1) * limit;
         int size = size();
         int end = offset + limit;
-        int re = end > size ? size : end;
+        int re = Math.min(end, size);
         List<E> list = new ArrayList<>(re);
         for (int i = offset; i < re; i++) {
             list.add(get(i));

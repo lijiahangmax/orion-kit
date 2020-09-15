@@ -112,6 +112,18 @@ public class Lists extends Collections {
         return list;
     }
 
+    public static <E, V> List<E> map(List<V> l, Function<V, E> f) {
+        Valid.notNull(f, "convert function is null");
+        List<E> list = new ArrayList<>();
+        if (isEmpty(l)) {
+            return list;
+        }
+        for (V v : l) {
+            list.add(f.apply(v));
+        }
+        return list;
+    }
+
     /**
      * 保留集合的前几位
      *

@@ -16,10 +16,10 @@ public class Tests {
     private static final Logger LOGGER = LoggerFactory.getLogger(Tests.class);
 
     public static void main(String[] args) throws Exception {
-        long s = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
 
-        long e = System.currentTimeMillis();
-        System.out.println(e - s);
+        long end = System.currentTimeMillis();
+        System.out.println(start - end);
     }
 
 }

@@ -14,7 +14,7 @@ public class Moneys {
 
     private static final char[] CN_UPPER_NUMBER = {'零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'};
     private static final char[] CN_UPPER_UNIT = {'分', '角', '元', '拾', '佰', '仟', '万', '拾', '佰', '仟', '亿', '拾', '佰', '仟', '兆', '拾', '佰', '仟'};
-    private static final char[] CN_UNIT = new char[]{'分', '角', '元', '拾', '佰', '仟', '万', '亿', '兆'};
+    private static final char[] CN_UNIT = {'分', '角', '元', '拾', '佰', '仟', '万', '亿', '兆'};
     private static final char CN_FULL = '整';
     private static final char CN_NEGATIVE = '负';
     private static final String CN_ZERO_FULL = "零元整";

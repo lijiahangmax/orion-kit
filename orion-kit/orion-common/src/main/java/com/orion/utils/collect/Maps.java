@@ -4,10 +4,12 @@ import com.orion.lang.MapEntry;
 import com.orion.lang.collect.ConvertHashMap;
 import com.orion.lang.wrapper.Args;
 import com.orion.utils.Arrays1;
+import com.orion.utils.Valid;
 
 import java.util.Collections;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 /**
  * Map工具类
@@ -180,6 +182,20 @@ public class Maps {
         if (hn == 1) {
             res.put(((K) kv[c * 2]), null);
         }
+        return res;
+    }
+
+    public static <K1, V1, K2, V2> Map<K2, V2> map(Map<K1, V1> map, Function<K1, K2> kf, Function<V1, V2> vf) {
+        Valid.notNull(kf, "key convert function is null");
+        Valid.notNull(vf, "value convert function is null");
+        int size = size(map);
+        if (size == 0) {
+            return new HashMap<>(16);
+        }
+        Map<K2, V2> res = new HashMap<>(size * 4 / 3);
+        map.forEach((k, v) -> {
+            res.put(kf.apply(k), vf.apply(v));
+        });
         return res;
     }
 
