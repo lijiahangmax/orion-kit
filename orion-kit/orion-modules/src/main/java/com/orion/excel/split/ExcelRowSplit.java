@@ -63,6 +63,7 @@ public class ExcelRowSplit {
 
     public ExcelRowSplit(Sheet sheet, int rowSize) {
         Valid.notNull(sheet, "split sheet is null");
+        Valid.lte(0, rowSize, "row size not be lte 0");
         this.sheet = sheet;
         this.rowSize = rowSize;
     }
@@ -116,7 +117,11 @@ public class ExcelRowSplit {
             }
             rows.add(rowList);
         }
-        for (int j = 0, size = rows.size(), loop = size / rowSize, mod = size % rowSize; j < (mod == 0 ? loop : (loop = loop + 1)); j++) {
+        int size = rows.size(), loop = size / rowSize, mod = size % rowSize;
+        if (mod == 0) {
+            loop++;
+        }
+        for (int j = 0; j < loop; j++) {
             int start = j * rowSize;
             int end = start + rowSize;
             if (j == loop - 1) {

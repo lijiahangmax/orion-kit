@@ -14,7 +14,7 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2020/3/27 12:21
  */
-public class CvsStream {
+public class CsvStream {
 
     private CsvReader reader;
 
@@ -22,9 +22,7 @@ public class CvsStream {
 
     private String[] headers;
 
-    private String[] line;
-
-    CvsStream(CsvReader reader) {
+    public CsvStream(CsvReader reader) {
         this.reader = reader;
     }
 
@@ -35,7 +33,7 @@ public class CvsStream {
      *
      * @return this
      */
-    public CvsStream skipHeaders() {
+    public CsvStream skipHeaders() {
         try {
             reader.readHeaders();
         } catch (Exception e) {
@@ -47,12 +45,12 @@ public class CvsStream {
     /**
      * 跳过头信息 多行
      *
-     * @param line 行
+     * @param lines 行
      * @return this
      */
-    public CvsStream skipHeaders(int line) {
+    public CsvStream skipHeaders(int lines) {
         try {
-            for (int i = 0; i < line; i++) {
+            for (int i = 0; i < lines; i++) {
                 reader.readHeaders();
             }
         } catch (Exception e) {
@@ -66,7 +64,7 @@ public class CvsStream {
      *
      * @return this
      */
-    public CvsStream skipLine() {
+    public CsvStream skipLine() {
         try {
             reader.skipRecord();
         } catch (Exception e) {
@@ -81,7 +79,7 @@ public class CvsStream {
      * @param lines 行
      * @return this
      */
-    public CvsStream skipLines(int lines) {
+    public CsvStream skipLines(int lines) {
         try {
             for (int i = 0; i < lines; i++) {
                 if (!reader.skipRecord()) {
@@ -101,11 +99,10 @@ public class CvsStream {
      *
      * @return this
      */
-    public CvsStream readLine() {
+    public CsvStream readLine() {
         try {
             if (reader.readRecord()) {
                 String[] line = reader.getValues();
-                this.line = line;
                 lines.add(line);
             }
         } catch (Exception e) {
@@ -120,7 +117,7 @@ public class CvsStream {
      * @param line 行
      * @return this
      */
-    public CvsStream readLines(int line) {
+    public CsvStream readLines(int line) {
         try {
             int i = 0;
             while (i++ < line && reader.readRecord()) {
@@ -137,7 +134,7 @@ public class CvsStream {
      *
      * @return this
      */
-    public CvsStream readLines() {
+    public CsvStream readLines() {
         try {
             while (reader.readRecord()) {
                 lines.add(reader.getValues());
@@ -145,6 +142,16 @@ public class CvsStream {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return this;
+    }
+
+    /**
+     * 清空已读取的行
+     *
+     * @return this
+     */
+    public CsvStream clean() {
+        lines.clear();
         return this;
     }
 
@@ -157,15 +164,6 @@ public class CvsStream {
      */
     public int columnCount() {
         return reader.getColumnCount();
-    }
-
-    /**
-     * 获取行记录
-     *
-     * @return line
-     */
-    public String[] line() {
-        return line;
     }
 
     /**
@@ -206,18 +204,6 @@ public class CvsStream {
     }
 
     /**
-     * 单行转bean
-     *
-     * @param clazz beanClass
-     * @param map   fieldMap
-     * @param <T>   T
-     * @return bean
-     */
-    public <T> T toBean(Class<T> clazz, Map<Integer, String> map) {
-        return BeanWrapper.toBean(line, map, clazz);
-    }
-
-    /**
      * 多行转bean
      *
      * @param clazz beanClass
@@ -231,16 +217,6 @@ public class CvsStream {
             list.add(BeanWrapper.toBean(line, map, clazz));
         }
         return list;
-    }
-
-    /**
-     * 单行转Map
-     *
-     * @param map fieldMap
-     * @return bean
-     */
-    public Map<String, String> toMap(Map<Integer, String> map) {
-        return BeanWrapper.toMap(line, map);
     }
 
     /**

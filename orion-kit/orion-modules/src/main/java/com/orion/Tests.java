@@ -19,7 +19,7 @@ public class Tests {
         long start = System.currentTimeMillis();
 
         long end = System.currentTimeMillis();
-        System.out.println(start - end);
+        System.out.println(end - start);
     }
 
 }

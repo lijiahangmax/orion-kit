@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,12 +39,12 @@ public class CsvBuilder implements Builderable<CsvBuilder> {
     /**
      * 分割字符
      */
-    private char splitChar = ',';
+    private char symbol = ',';
 
     /**
      * 编码格式
      */
-    private Charset charset = Charset.forName("UTF-8");
+    private Charset charset = StandardCharsets.UTF_8;
 
     /**
      * 列数
@@ -109,13 +110,24 @@ public class CsvBuilder implements Builderable<CsvBuilder> {
     }
 
     /**
-     * 设置分隔符
+     * 设置编码格式
      *
-     * @param splitChar 分隔符
+     * @param charset charset
      * @return this
      */
-    public CsvBuilder splitChar(char splitChar) {
-        this.splitChar = splitChar;
+    public CsvBuilder charset(Charset charset) {
+        this.charset = charset;
+        return this;
+    }
+
+    /**
+     * 设置分隔符
+     *
+     * @param symbol 分隔符
+     * @return this
+     */
+    public CsvBuilder symbol(char symbol) {
+        this.symbol = symbol;
         return this;
     }
 
@@ -195,13 +207,13 @@ public class CsvBuilder implements Builderable<CsvBuilder> {
     }
 
     /**
-     * 写入到文件
+     * 设置目标文件
      *
      * @param file 文件
      * @return this
      * @throws IOException IOException
      */
-    public CsvBuilder write(File file) throws IOException {
+    public CsvBuilder dist(File file) throws IOException {
         if (!file.exists() || !file.isFile()) {
             Files1.touch(file);
         }
@@ -210,34 +222,34 @@ public class CsvBuilder implements Builderable<CsvBuilder> {
     }
 
     /**
-     * 写入到文件
+     * 设置目标文件
      *
      * @param file 文件
      * @return this
      * @throws IOException IOException
      */
-    public CsvBuilder write(String file) throws IOException {
-        return write(new File(file));
+    public CsvBuilder dist(String file) throws IOException {
+        return dist(new File(file));
     }
 
     /**
-     * 写入到流
+     * 设置目标流
      *
      * @param out out
      * @return this
      */
-    public CsvBuilder write(OutputStream out) {
+    public CsvBuilder dist(OutputStream out) {
         this.out = out;
         return this;
     }
 
     /**
-     * 写入到流
+     * 设置目标流
      *
      * @param writer writer
      * @return this
      */
-    public CsvBuilder write(Writer writer) {
+    public CsvBuilder dist(Writer writer) {
         this.writer = writer;
         return this;
     }
@@ -272,9 +284,9 @@ public class CsvBuilder implements Builderable<CsvBuilder> {
         try {
             CsvWriter csvWriter;
             if (out != null) {
-                csvWriter = new CsvWriter(out, splitChar, charset);
+                csvWriter = new CsvWriter(out, symbol, charset);
             } else {
-                csvWriter = new CsvWriter(writer, splitChar);
+                csvWriter = new CsvWriter(writer, symbol);
             }
             for (String[] header : headers) {
                 csvWriter.writeRecord(header);
@@ -326,8 +338,8 @@ public class CsvBuilder implements Builderable<CsvBuilder> {
         return records;
     }
 
-    public char getSplitChar() {
-        return splitChar;
+    public char getSymbol() {
+        return symbol;
     }
 
     public Charset getCharset() {

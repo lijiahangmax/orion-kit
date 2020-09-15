@@ -55,7 +55,7 @@ public class ExcelColumnBatchSplit {
     /**
      * Workbook 输出流
      */
-    private List<OutputStream> dist = new ArrayList<>();
+    private List<OutputStream> dist;
 
     /**
      * rows
@@ -185,6 +185,7 @@ public class ExcelColumnBatchSplit {
      */
     public ExcelColumnBatchSplit dist(OutputStream... dist) {
         Valid.notEmpty(dist, "dist file is empty");
+        Valid.eq(dist.length, columns.size(), "dist length must eq columns size");
         this.dist = Lists.of(dist);
         return this;
     }
@@ -197,6 +198,7 @@ public class ExcelColumnBatchSplit {
      */
     public ExcelColumnBatchSplit dist(File... dist) {
         Valid.notEmpty(dist, "dist file is empty");
+        Valid.eq(dist.length, columns.size(), "dist length must eq columns size");
         List<OutputStream> out = new ArrayList<>();
         for (File file : dist) {
             Files1.touch(file);
@@ -218,6 +220,7 @@ public class ExcelColumnBatchSplit {
      */
     public ExcelColumnBatchSplit dist(String... dist) {
         Valid.notEmpty(dist, "dist file is empty");
+        Valid.eq(dist.length, columns.size(), "dist length must eq columns size");
         List<OutputStream> out = new ArrayList<>();
         for (String file : dist) {
             Files1.touch(file);

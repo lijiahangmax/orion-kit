@@ -55,7 +55,7 @@ public class ExcelRowMerge {
     private boolean autoCloseSheet = true;
 
     public ExcelRowMerge(List<Sheet> mergeSheets) {
-        Valid.notEmpty(mergeSheets, "merge sheets is null");
+        Valid.notEmpty(mergeSheets, "merge sheets is empty");
         this.mergeSheets = mergeSheets;
     }
 

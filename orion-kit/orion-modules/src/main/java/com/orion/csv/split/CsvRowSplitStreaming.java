@@ -1,16 +1,14 @@
-package com.orion.excel.split;
+package com.orion.csv.split;
 
-import com.orion.excel.Excels;
+import com.orion.csv.CsvBuilder;
+import com.orion.csv.CsvExt;
+import com.orion.csv.CsvStream;
+import com.orion.csv.core.CsvSymbol;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
 import com.orion.utils.collect.Lists;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
 import java.io.OutputStream;
@@ -18,30 +16,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Excel 行拆分器
- * <p>
- * 只是拆分 不可获取源文件数据 不支持样式 速度快 占用内存少 (最好使用StreamingSheet)
+ * CSV 行切分器 不可以获取行数据
  *
  * @author ljh15
  * @version 1.0.0
- * @since 2020/8/21 16:01
+ * @since 2020/9/15 13:43
  */
-public class ExcelRowSplitStreaming {
+public class CsvRowSplitStreaming {
 
     /**
-     * sheet
+     * 读取流
      */
-    public Sheet sheet;
+    private CsvStream stream;
 
     /**
      * 拆分文件最大行数
      */
     private int rowSize;
-
-    /**
-     * 最大行数
-     */
-    private int maxCount;
 
     /**
      * 头部跳过行数
@@ -52,6 +43,11 @@ public class ExcelRowSplitStreaming {
      * 表头
      */
     private String[] header;
+
+    /**
+     * symbol
+     */
+    private CsvSymbol symbol;
 
     /**
      * 拆分输出对流
@@ -68,23 +64,32 @@ public class ExcelRowSplitStreaming {
      */
     private String generatorBaseName;
 
-    public ExcelRowSplitStreaming(Sheet sheet, int rowSize) {
-        Valid.notNull(sheet, "split sheet is null");
+    public CsvRowSplitStreaming(CsvExt ext, int rowSize) {
+        Valid.notNull(ext, "split ext is null");
         Valid.lte(0, rowSize, "row size not be lte 0");
-        this.sheet = sheet;
+        this.stream = ext.stream();
+        this.rowSize = rowSize;
+    }
+
+    public CsvRowSplitStreaming(CsvStream stream, int rowSize) {
+        Valid.notNull(stream, "split stream is null");
+        Valid.lte(0, rowSize, "row size not be lte 0");
+        this.stream = stream;
         this.rowSize = rowSize;
     }
 
     /**
      * 设置拆分文件输出流
      *
+     * @param s    symbol
      * @param dist dist
      * @return this
      */
-    public ExcelRowSplitStreaming dist(OutputStream... dist) {
+    public CsvRowSplitStreaming dist(CsvSymbol s, OutputStream... dist) {
+        Valid.notNull(s, "csvSymbol is null");
         Valid.notEmpty(dist, "dist file is empty");
         this.dist = Lists.of(dist);
-        this.maxCount = rowSize * dist.length;
+        this.symbol = s;
         this.generatorPathDir = null;
         this.generatorBaseName = null;
         return this;
@@ -93,10 +98,12 @@ public class ExcelRowSplitStreaming {
     /**
      * 设置拆分文件输出文件
      *
+     * @param s    symbol
      * @param dist dist
      * @return this
      */
-    public ExcelRowSplitStreaming dist(File... dist) {
+    public CsvRowSplitStreaming dist(CsvSymbol s, File... dist) {
+        Valid.notNull(s, "csvSymbol is null");
         Valid.notEmpty(dist, "dist file is empty");
         List<OutputStream> out = new ArrayList<>();
         for (File file : dist) {
@@ -108,7 +115,7 @@ public class ExcelRowSplitStreaming {
             }
         }
         this.dist = out;
-        this.maxCount = rowSize * dist.length;
+        this.symbol = s;
         this.generatorPathDir = null;
         this.generatorBaseName = null;
         return this;
@@ -117,10 +124,12 @@ public class ExcelRowSplitStreaming {
     /**
      * 设置拆分文件输出文件路径
      *
+     * @param s    symbol
      * @param dist dist
      * @return this
      */
-    public ExcelRowSplitStreaming dist(String... dist) {
+    public CsvRowSplitStreaming dist(CsvSymbol s, String... dist) {
+        Valid.notNull(s, "csvSymbol is null");
         Valid.notEmpty(dist, "dist file is empty");
         List<OutputStream> out = new ArrayList<>();
         for (String file : dist) {
@@ -132,7 +141,7 @@ public class ExcelRowSplitStreaming {
             }
         }
         this.dist = out;
-        this.maxCount = rowSize * dist.length;
+        this.symbol = s;
         this.generatorPathDir = null;
         this.generatorBaseName = null;
         return this;
@@ -143,15 +152,17 @@ public class ExcelRowSplitStreaming {
      *
      * @param pathDir  目标文件目录
      * @param baseName 文件名称 不包含后缀
+     * @param s        symbol
      * @return this
      */
-    public ExcelRowSplitStreaming distPath(String pathDir, String baseName) {
+    public CsvRowSplitStreaming distPath(String pathDir, String baseName, CsvSymbol s) {
         Valid.notNull(pathDir, "dist path dir is null");
         Valid.notNull(baseName, "dist file base name is null");
+        Valid.notNull(s, "csvSymbol is null");
         this.dist = null;
+        this.symbol = s;
         this.generatorPathDir = pathDir;
         this.generatorBaseName = baseName;
-        this.maxCount = Integer.MAX_VALUE;
         return this;
     }
 
@@ -160,7 +171,7 @@ public class ExcelRowSplitStreaming {
      *
      * @return this
      */
-    public ExcelRowSplitStreaming skip() {
+    public CsvRowSplitStreaming skip() {
         this.skip += 1;
         return this;
     }
@@ -171,7 +182,7 @@ public class ExcelRowSplitStreaming {
      * @param skip 行数
      * @return this
      */
-    public ExcelRowSplitStreaming skip(int skip) {
+    public CsvRowSplitStreaming skip(int skip) {
         this.skip += skip;
         return this;
     }
@@ -182,7 +193,7 @@ public class ExcelRowSplitStreaming {
      * @param header 表头
      * @return ignore
      */
-    public ExcelRowSplitStreaming header(String... header) {
+    public CsvRowSplitStreaming header(String... header) {
         this.header = header;
         return this;
     }
@@ -192,61 +203,38 @@ public class ExcelRowSplitStreaming {
      *
      * @return this
      */
-    public ExcelRowSplitStreaming execute() {
+    public CsvRowSplitStreaming execute() {
         if (generatorPathDir == null) {
             Valid.notNull(dist, "split file dist is null");
         }
-        int i = 0, index = 0, blockIndex = 0, rowIndex = 0, blockRowIndex = 0;
-        OutputStream out;
-        if (generatorPathDir != null) {
-            out = generatorOutputStream(0);
-        } else {
-            out = dist.get(0);
-        }
-        Workbook wb = new XSSFWorkbook();
-        Sheet sheet = wb.createSheet();
-        if (this.header != null) {
-            setHeader(sheet);
-            blockRowIndex++;
-        }
-        for (Row row : this.sheet) {
-            if (i++ < skip) {
-                continue;
-            }
-            if (index++ >= maxCount) {
+        stream.skipLines(skip);
+        for (int i = 0, size = Lists.size(dist), loop = size == 0 ? Integer.MAX_VALUE : size; i < loop; i++) {
+            List<String[]> readLines = stream.clean().readLines(rowSize).lines();
+            if (readLines.isEmpty()) {
                 break;
             }
-            List<String> rowList = new ArrayList<>();
-            for (Cell cell : row) {
-                rowList.add(Excels.getValue(cell));
+            List<String[]> fileLines = new ArrayList<>();
+            if (this.header != null) {
+                fileLines.add(this.header);
             }
-            if (rowIndex++ >= rowSize) {
-                rowIndex = 1;
-                blockRowIndex = 0;
-                this.write(wb, out);
-                if (generatorPathDir != null) {
-                    Streams.close(out);
-                    out = generatorOutputStream(++blockIndex);
-                } else {
-                    out = dist.get(++blockIndex);
-                }
-                Streams.close(wb);
-                wb = new XSSFWorkbook();
-                sheet = wb.createSheet();
-                if (this.header != null) {
-                    setHeader(sheet);
-                    blockRowIndex++;
-                }
+            fileLines.addAll(readLines);
+            OutputStream out;
+            if (generatorPathDir != null) {
+                out = generatorOutputStream(i);
+            } else {
+                out = dist.get(i);
             }
-            int createCellIndex = 0;
-            Row createRow = sheet.createRow(blockRowIndex++);
-            for (String s : rowList) {
-                Cell createCell = createRow.createCell(createCellIndex++);
-                createCell.setCellValue(s);
+            try {
+                new CsvBuilder(fileLines)
+                        .symbol(symbol.getSymbol())
+                        .charset(symbol.getCharset())
+                        .dist(out)
+                        .build();
+            } catch (Exception e) {
+                throw Exceptions.ioRuntime(e);
             }
+            stream.clean();
         }
-        this.write(wb, out);
-        Streams.close(wb);
         return this;
     }
 
@@ -262,27 +250,13 @@ public class ExcelRowSplitStreaming {
     }
 
     /**
-     * 写入 Workbook 到 流
-     *
-     * @param wb  wb
-     * @param out out
-     */
-    private void write(Workbook wb, OutputStream out) {
-        try {
-            wb.write(out);
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
-        }
-    }
-
-    /**
      * 生成OutputStream
      *
      * @param i index
      * @return ignore
      */
     private OutputStream generatorOutputStream(int i) {
-        String path = Files1.getPath(generatorPathDir + "/" + generatorBaseName + "_row_split_" + (i + 1) + ".xlsx");
+        String path = Files1.getPath(generatorPathDir + "/" + generatorBaseName + "_row_split_" + (i + 1) + "." + symbol.getSuffix());
         Files1.touch(path);
         try {
             return Files1.openOutputStream(path);
@@ -291,29 +265,12 @@ public class ExcelRowSplitStreaming {
         }
     }
 
-    /**
-     * 设置头
-     *
-     * @param sheet sheet
-     */
-    private void setHeader(Sheet sheet) {
-        Row headerRow = sheet.createRow(0);
-        for (int headerRowIndex = 0; headerRowIndex < header.length; headerRowIndex++) {
-            Cell headerRowCell = headerRow.createCell(headerRowIndex);
-            headerRowCell.setCellValue(header[headerRowIndex]);
-        }
-    }
-
-    public Sheet getSheet() {
-        return sheet;
+    public CsvStream getStream() {
+        return stream;
     }
 
     public int getRowSize() {
         return rowSize;
-    }
-
-    public int getMaxCount() {
-        return maxCount;
     }
 
 }
