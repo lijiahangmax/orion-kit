@@ -4,9 +4,11 @@ import com.orion.lang.collect.ConvertHashMap;
 import com.orion.lang.collect.ConvertHashSet;
 import com.orion.utils.Exceptions;
 import com.orion.utils.io.Files1;
+import com.orion.utils.io.Streams;
 import org.ho.yaml.Yaml;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
@@ -26,40 +28,38 @@ public class YmlExt {
     private ConvertHashMap<String, Object> convertHashMap;
 
     public YmlExt(String path) {
-        InputStream inputStream = null;
+        InputStream in = null;
         try {
-            inputStream = PropertiesExt.class.getClassLoader().getResourceAsStream(path);
-            convertHashMap = Yaml.loadType(inputStream, ConvertHashMap.class);
+            in = PropertiesExt.class.getClassLoader().getResourceAsStream(path);
+            convertHashMap = Yaml.loadType(in, ConvertHashMap.class);
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw Exceptions.runtime(e);
         } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            }
+            Streams.close(in);
         }
     }
 
-    public YmlExt(File file) throws IOException {
-        this(Files1.openInputStream(file));
+    public YmlExt(File file) {
+        FileInputStream in = null;
+        try {
+            in = Files1.openInputStream(file);
+            convertHashMap = Yaml.loadType(in, ConvertHashMap.class);
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
+        } catch (Exception e) {
+            throw Exceptions.runtime(e);
+        } finally {
+            Streams.close(in);
+        }
     }
 
     public YmlExt(InputStream in) {
         try {
             convertHashMap = Yaml.loadType(in, ConvertHashMap.class);
         } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            }
+            throw Exceptions.runtime(e);
         }
     }
 

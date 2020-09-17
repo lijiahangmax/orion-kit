@@ -1,5 +1,6 @@
 package com.orion.excel.builder;
 
+import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
@@ -8,6 +9,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
@@ -82,50 +84,40 @@ public class ExcelBuilder {
      * 写入到流
      *
      * @param out out
-     * @throws IOException IOException
      */
-    public void write(OutputStream out) throws IOException {
-        write(out, false);
-    }
-
-    /**
-     * 写入到文件
-     *
-     * @param file file
-     * @throws IOException IOException
-     */
-    public void write(String file) throws IOException {
-        Valid.notNull(file, "file is null");
-        Files1.touch(file);
-        write(Files1.openOutputStream(file), true);
-    }
-
-    /**
-     * 写入到文件
-     *
-     * @param file file
-     * @throws IOException IOException
-     */
-    public void write(File file) throws IOException {
-        Valid.notNull(file, "file is null");
-        Files1.touch(file);
-        write(Files1.openOutputStream(file), true);
-    }
-
-    /**
-     * 写入到文件
-     *
-     * @param out   out
-     * @param close close
-     * @throws IOException IOException
-     */
-    private void write(OutputStream out, boolean close) throws IOException {
+    public void write(OutputStream out) {
         try {
             workbook.write(out);
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
+        }
+    }
+
+    /**
+     * 写入到文件
+     *
+     * @param file file
+     */
+    public void write(String file) {
+        Valid.notNull(file, "file is null");
+        this.write(new File(file));
+    }
+
+    /**
+     * 写入到文件
+     *
+     * @param file file
+     */
+    public void write(File file) {
+        Valid.notNull(file, "file is null");
+        Files1.touch(file);
+        FileOutputStream out = null;
+        try {
+            out = Files1.openOutputStream(file);
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
         } finally {
-            if (close) {
-                Streams.close(out);
-            }
+            Streams.close(out);
         }
     }
 

@@ -193,12 +193,15 @@ public class NginxExt {
      *
      * @param file 文件
      */
-    public void dump(File file) throws IOException {
+    public void dump(File file) {
         Files1.touch(file);
         OutputStream out = null;
         try {
             out = Files1.openOutputStream(file);
             new NgxDumper(this.config).dump(out);
+
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
         } finally {
             Streams.close(out);
         }

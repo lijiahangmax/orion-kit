@@ -2,6 +2,8 @@ package com.orion.csv;
 
 import com.orion.csv.core.CsvReader;
 import com.orion.csv.core.CsvSymbol;
+import com.orion.csv.importing.CsvStream;
+import com.orion.utils.Exceptions;
 import com.orion.utils.io.Files1;
 
 import java.io.File;
@@ -21,12 +23,12 @@ public class CsvExt {
 
     private CsvReader reader;
 
-    public CsvExt(File file) throws IOException {
-        this(Files1.openInputStream(file), CsvSymbol.DEFAULT_SYMBOL, CsvSymbol.DEFAULT_CHARSET);
+    public CsvExt(File file) {
+        this(getInputStream(file), CsvSymbol.DEFAULT_SYMBOL, CsvSymbol.DEFAULT_CHARSET);
     }
 
-    public CsvExt(File file, CsvSymbol s) throws IOException {
-        this(Files1.openInputStream(file), s.getSymbol(), s.getCharset());
+    public CsvExt(File file, CsvSymbol s) {
+        this(getInputStream(file), s.getSymbol(), s.getCharset());
     }
 
     public CsvExt(String file) {
@@ -77,6 +79,14 @@ public class CsvExt {
      */
     public static CsvExt parse(String s) {
         return new CsvExt(CsvReader.parse(s));
+    }
+
+    private static InputStream getInputStream(File file) {
+        try {
+            return Files1.openInputStream(file);
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
+        }
     }
 
 }

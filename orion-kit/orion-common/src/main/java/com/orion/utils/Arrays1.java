@@ -26,7 +26,7 @@ public class Arrays1 {
     private Arrays1() {
     }
 
-    private static final int TWO = 2;
+    private static final int BINARY = 2;
 
     // ------------------ new ------------------
 
@@ -2320,12 +2320,12 @@ public class Arrays1 {
      * @param store  数组, 可以传基本类型的元素, 但是不可以传基本类型的数组
      * @return 次数
      */
-    public static int count(Object target, Object... store) {
+    public static <T> int count(T target, T... store) {
         if (length(store) == 0) {
             return 0;
         }
         int count = 0;
-        for (Object i : store) {
+        for (T i : store) {
             if (Objects1.eq(i, target)) {
                 count++;
             }
@@ -2446,12 +2446,12 @@ public class Arrays1 {
      * @param store  数组, 可以传基本类型的元素, 但是不可以传基本类型的数组
      * @return true 出现
      */
-    public static boolean some(Object target, Object... store) {
+    public static <T> boolean some(T target, T... store) {
         if (length(store) == 0) {
             return false;
         }
-        for (Object i : store) {
-            if (Objects1.eq(i, target)) {
+        for (T i : store) {
+            if (i == target) {
                 return true;
             }
         }
@@ -2566,7 +2566,7 @@ public class Arrays1 {
         if (length == 0) {
             return;
         }
-        for (int i = 0, mid = length / TWO; i < mid; i++) {
+        for (int i = 0, mid = length / BINARY; i < mid; i++) {
             int len = length - i - 1;
             if (a[i] != a[len]) {
                 swap(a, i, len);
@@ -2579,7 +2579,7 @@ public class Arrays1 {
         if (length == 0) {
             return;
         }
-        for (int i = 0, mid = length / TWO; i < mid; i++) {
+        for (int i = 0, mid = length / BINARY; i < mid; i++) {
             int len = length - i - 1;
             if (a[i] != a[len]) {
                 swap(a, i, len);
@@ -2592,7 +2592,7 @@ public class Arrays1 {
         if (length == 0) {
             return;
         }
-        for (int i = 0, mid = length / TWO; i < mid; i++) {
+        for (int i = 0, mid = length / BINARY; i < mid; i++) {
             int len = length - i - 1;
             if (a[i] != a[len]) {
                 swap(a, i, len);
@@ -2605,7 +2605,7 @@ public class Arrays1 {
         if (length == 0) {
             return;
         }
-        for (int i = 0, mid = length / TWO; i < mid; i++) {
+        for (int i = 0, mid = length / BINARY; i < mid; i++) {
             int len = length - i - 1;
             if (a[i] != a[len]) {
                 swap(a, i, len);
@@ -2618,7 +2618,7 @@ public class Arrays1 {
         if (length == 0) {
             return;
         }
-        for (int i = 0, mid = length / TWO; i < mid; i++) {
+        for (int i = 0, mid = length / BINARY; i < mid; i++) {
             int len = length - i - 1;
             if (a[i] != a[len]) {
                 swap(a, i, len);
@@ -2631,7 +2631,7 @@ public class Arrays1 {
         if (length == 0) {
             return;
         }
-        for (int i = 0, mid = length / TWO; i < mid; i++) {
+        for (int i = 0, mid = length / BINARY; i < mid; i++) {
             int len = length - i - 1;
             if (a[i] != a[len]) {
                 swap(a, i, len);
@@ -2644,7 +2644,7 @@ public class Arrays1 {
         if (length == 0) {
             return;
         }
-        for (int i = 0, mid = length / TWO; i < mid; i++) {
+        for (int i = 0, mid = length / BINARY; i < mid; i++) {
             int len = length - i - 1;
             if (a[i] != a[len]) {
                 swap(a, i, len);
@@ -2657,7 +2657,7 @@ public class Arrays1 {
         if (length == 0) {
             return;
         }
-        for (int i = 0, mid = length / TWO; i < mid; i++) {
+        for (int i = 0, mid = length / BINARY; i < mid; i++) {
             int len = length - i - 1;
             if (a[i] != a[len]) {
                 swap(a, i, len);
@@ -2665,17 +2665,179 @@ public class Arrays1 {
         }
     }
 
-    public static void reverse(Object[] a) {
+    public static <T> void reverse(T[] a) {
         int length = length(a);
         if (length == 0) {
             return;
         }
-        for (int i = 0, mid = length / TWO; i < mid; i++) {
+        for (int i = 0, mid = length / BINARY; i < mid; i++) {
             int len = length - i - 1;
             if (a[i] != a[len]) {
                 swap(a, i, len);
             }
         }
+    }
+
+    // ------------------ first ------------------
+
+    /**
+     * 获取数组第一个元素
+     *
+     * @param array array
+     * @param def   默认值
+     * @return 第一个元素
+     */
+    public static <T> T first(T[] array, T def) {
+        int length = length(array);
+        if (length == 0) {
+            return def;
+        }
+        return array[0];
+    }
+
+    public static byte first(byte[] array, byte def) {
+        int length = length(array);
+        if (length == 0) {
+            return def;
+        }
+        return array[0];
+    }
+
+    public static short first(short[] array, short def) {
+        int length = length(array);
+        if (length == 0) {
+            return def;
+        }
+        return array[0];
+    }
+
+    public static int first(int[] array, int def) {
+        int length = length(array);
+        if (length == 0) {
+            return def;
+        }
+        return array[0];
+    }
+
+    public static long first(long[] array, long def) {
+        int length = length(array);
+        if (length == 0) {
+            return def;
+        }
+        return array[0];
+    }
+
+    public static float first(float[] array, float def) {
+        int length = length(array);
+        if (length == 0) {
+            return def;
+        }
+        return array[0];
+    }
+
+    public static double first(double[] array, double def) {
+        int length = length(array);
+        if (length == 0) {
+            return def;
+        }
+        return array[0];
+    }
+
+    public static boolean first(boolean[] array, boolean def) {
+        int length = length(array);
+        if (length == 0) {
+            return def;
+        }
+        return array[0];
+    }
+
+    public static char first(char[] array, char def) {
+        int length = length(array);
+        if (length == 0) {
+            return def;
+        }
+        return array[0];
+    }
+
+    // ------------------ last ------------------
+
+    /**
+     * 获取数组最后一个元素
+     *
+     * @param array array
+     * @param def   默认值
+     * @return 第一个元素
+     */
+    public static <T> T last(T[] array, T def) {
+        int length = length(array);
+        if (length == 0) {
+            return def;
+        }
+        return array[length - 1];
+    }
+
+    public static byte last(byte[] array, byte def) {
+        int length = length(array);
+        if (length == 0) {
+            return def;
+        }
+        return array[length - 1];
+    }
+
+    public static short last(short[] array, short def) {
+        int length = length(array);
+        if (length == 0) {
+            return def;
+        }
+        return array[length - 1];
+    }
+
+    public static int last(int[] array, int def) {
+        int length = length(array);
+        if (length == 0) {
+            return def;
+        }
+        return array[length - 1];
+    }
+
+    public static long last(long[] array, long def) {
+        int length = length(array);
+        if (length == 0) {
+            return def;
+        }
+        return array[length - 1];
+    }
+
+    public static float last(float[] array, float def) {
+        int length = length(array);
+        if (length == 0) {
+            return def;
+        }
+        return array[length - 1];
+    }
+
+    public static double last(double[] array, double def) {
+        int length = length(array);
+        if (length == 0) {
+            return def;
+        }
+        return array[length - 1];
+    }
+
+    public static boolean last(boolean[] array, boolean def) {
+        int length = length(array);
+        if (length == 0) {
+            return def;
+        }
+        return array[length - 1];
+    }
+
+    public static char last(char[] array, char def) {
+        int length = length(array);
+        if (length == 0) {
+            return def;
+        }
+        return array[length - 1];
     }
 
     // ------------------ swap ------------------

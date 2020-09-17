@@ -38,8 +38,14 @@ public class DomExt {
      */
     private Document document;
 
-    public DomExt(File file) throws IOException {
-        this(Files1.openInputStream(file));
+    public DomExt(File file) {
+        try {
+            this.document = reader.read(Files1.openInputStream(file));
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
+        } catch (Exception e) {
+            throw Exceptions.parse(e);
+        }
     }
 
     public DomExt(String file) {

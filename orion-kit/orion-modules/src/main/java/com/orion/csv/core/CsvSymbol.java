@@ -43,6 +43,11 @@ public class CsvSymbol implements Serializable {
         this.symbol = symbol;
     }
 
+    public CsvSymbol(char symbol, String suffix) {
+        this.symbol = symbol;
+        this.suffix = Objects1.det(suffix, DEFAULT_SUFFIX);
+    }
+
     public CsvSymbol(char symbol, Charset charset) {
         this.symbol = symbol;
         this.charset = Objects1.det(charset, DEFAULT_CHARSET);
@@ -56,6 +61,10 @@ public class CsvSymbol implements Serializable {
 
     private static CsvSymbol of(char symbol) {
         return new CsvSymbol(symbol);
+    }
+
+    private static CsvSymbol of(char symbol, String suffix) {
+        return new CsvSymbol(symbol, suffix);
     }
 
     private static CsvSymbol of(char symbol, Charset charset) {

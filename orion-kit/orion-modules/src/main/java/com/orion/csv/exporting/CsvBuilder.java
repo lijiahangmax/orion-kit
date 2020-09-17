@@ -1,15 +1,15 @@
-package com.orion.csv;
+package com.orion.csv.exporting;
 
 import com.orion.able.Builderable;
 import com.orion.csv.core.CsvWriter;
 import com.orion.utils.Exceptions;
+import com.orion.utils.Valid;
 import com.orion.utils.collect.Lists;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
 import com.orion.utils.reflect.Methods;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.nio.charset.Charset;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * CSV 构建器
+ * CSV 构建器 会保存数据 写操作最终执行
  *
  * @author ljh15
  * @version 1.0.0
@@ -99,6 +99,17 @@ public class CsvBuilder implements Builderable<CsvBuilder> {
     }
 
     /**
+     * 设置列数 用于空行
+     *
+     * @param columnCount 列数
+     * @return this
+     */
+    public CsvBuilder columnCount(int columnCount) {
+        this.columnCount = columnCount;
+        return this;
+    }
+
+    /**
      * 设置编码格式
      *
      * @param charset charset
@@ -160,7 +171,9 @@ public class CsvBuilder implements Builderable<CsvBuilder> {
      * @return this
      */
     public CsvBuilder addRecord(String[] records) {
-        this.columnCount = records.length;
+        if (this.columnCount != 0) {
+            this.columnCount = records.length;
+        }
         this.records.add(records);
         return this;
     }
@@ -175,7 +188,9 @@ public class CsvBuilder implements Builderable<CsvBuilder> {
         if (!Lists.isEmpty(records)) {
             String[] record = records.get(0);
             if (record != null) {
-                this.columnCount = record.length;
+                if (this.columnCount != 0) {
+                    this.columnCount = record.length;
+                }
             }
         }
         this.records.addAll(records);
@@ -211,13 +226,15 @@ public class CsvBuilder implements Builderable<CsvBuilder> {
      *
      * @param file 文件
      * @return this
-     * @throws IOException IOException
      */
-    public CsvBuilder dist(File file) throws IOException {
-        if (!file.exists() || !file.isFile()) {
+    public CsvBuilder dist(File file) {
+        try {
+            Valid.notNull(file, "file is null");
             Files1.touch(file);
+            out = Files1.openOutputStream(file);
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime(e);
         }
-        out = Files1.openOutputStream(file);
         return this;
     }
 
@@ -226,9 +243,9 @@ public class CsvBuilder implements Builderable<CsvBuilder> {
      *
      * @param file 文件
      * @return this
-     * @throws IOException IOException
      */
-    public CsvBuilder dist(String file) throws IOException {
+    public CsvBuilder dist(String file) {
+        Valid.notNull(file, "file is null");
         return dist(new File(file));
     }
 
@@ -255,7 +272,7 @@ public class CsvBuilder implements Builderable<CsvBuilder> {
     }
 
     /**
-     * 创建一空行
+     * 创建一行空行
      *
      * @return this
      */
@@ -267,6 +284,9 @@ public class CsvBuilder implements Builderable<CsvBuilder> {
                     this.columnCount = header.length;
                 }
             }
+        }
+        if (this.columnCount == 0) {
+            this.columnCount = 1;
         }
         if (Lists.isEmpty(records)) {
             this.headers.add(new String[columnCount]);
@@ -294,7 +314,8 @@ public class CsvBuilder implements Builderable<CsvBuilder> {
             for (String[] record : records) {
                 csvWriter.writeRecord(record);
             }
-            csvWriter.close();
+            csvWriter.flush();
+            Streams.close(csvWriter);
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         }

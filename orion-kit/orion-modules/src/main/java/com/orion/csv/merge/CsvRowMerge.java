@@ -1,8 +1,8 @@
 package com.orion.csv.merge;
 
-import com.orion.csv.CsvStream;
 import com.orion.csv.core.CsvSymbol;
 import com.orion.csv.core.CsvWriter;
+import com.orion.csv.importing.CsvStream;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
@@ -133,7 +133,7 @@ public class CsvRowMerge {
                     csvWriter.writeRecord(line);
                 }
             }
-            csvWriter.close();
+            Streams.close(csvWriter);
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         }

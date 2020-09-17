@@ -1,9 +1,9 @@
 package com.orion.csv.split;
 
 import com.orion.csv.CsvExt;
-import com.orion.csv.CsvStream;
 import com.orion.csv.core.CsvSymbol;
 import com.orion.csv.core.CsvWriter;
+import com.orion.csv.importing.CsvStream;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
@@ -190,7 +190,7 @@ public class CsvColumnBatchSplit {
                     CsvWriter csvWriter = new CsvWriter(out, symbol.getSymbol(), symbol.getCharset());
                     this.writeHeader(i, csvWriter);
                     this.write(stream.lines(), csvWriter, columns.get(i));
-                    csvWriter.close();
+                    Streams.close(csvWriter);
                 }
             }
         } catch (Exception e) {

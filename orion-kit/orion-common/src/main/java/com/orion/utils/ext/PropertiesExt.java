@@ -2,9 +2,12 @@ package com.orion.utils.ext;
 
 import com.orion.lang.collect.ConvertHashMap;
 import com.orion.lang.collect.ConvertHashSet;
+import com.orion.utils.Exceptions;
 import com.orion.utils.io.Files1;
+import com.orion.utils.io.Streams;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -29,41 +32,41 @@ public class PropertiesExt {
         this.properties = properties;
     }
 
-    public PropertiesExt(File file) throws IOException {
-        this(Files1.openInputStream(file));
+    public PropertiesExt(String path) {
+        InputStream in = null;
+        try {
+            in = PropertiesExt.class.getClassLoader().getResourceAsStream(path);
+            properties.load(in);
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
+        } catch (Exception e) {
+            throw Exceptions.runtime(e);
+        } finally {
+            Streams.close(in);
+        }
+    }
+
+    public PropertiesExt(File file) {
+        FileInputStream in = null;
+        try {
+            in = Files1.openInputStream(file);
+            properties.load(in);
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
+        } catch (Exception e) {
+            throw Exceptions.runtime(e);
+        } finally {
+            Streams.close(in);
+        }
     }
 
     public PropertiesExt(InputStream in) {
         try {
             properties.load(in);
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
         } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        }
-    }
-
-    public PropertiesExt(String path) {
-        InputStream inputStream = null;
-        try {
-            inputStream = PropertiesExt.class.getClassLoader().getResourceAsStream(path);
-            properties.load(inputStream);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            }
+            throw Exceptions.runtime(e);
         }
     }
 

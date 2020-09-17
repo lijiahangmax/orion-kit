@@ -7,8 +7,8 @@ package com.orion.able;
  * @version 1.0.0
  * @since 2019/11/18 18:12
  */
-public interface Adaptable<O, N> {
+public interface Adaptable<N> {
 
-    N forNew(O old);
+    N forNew();
 
 }

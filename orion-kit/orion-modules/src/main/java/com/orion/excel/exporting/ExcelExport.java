@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Excel 导出器 仅支持注解
+ * Excel 导出器 仅支持注解 支持样式
  *
  * @author ljh15
  * @version 1.0.0
@@ -901,23 +901,30 @@ public class ExcelExport<T> {
      *
      * @param file 文件
      * @return this
-     * @throws IOException IOException
      */
-    public ExcelExport<T> write(String file) throws IOException {
-        Files1.touch(file);
-        return write(Files1.openOutputStream(file), true);
+    public ExcelExport<T> write(String file) {
+        Valid.notNull(file, "file is null");
+        return write(new File(file));
     }
 
     /**
      * 写出到文件
      *
      * @param file 文件
-     * @return this
-     * @throws IOException IOException
      */
-    public ExcelExport<T> write(File file) throws IOException {
+    public ExcelExport<T> write(File file) {
+        Valid.notNull(file, "file is null");
         Files1.touch(file);
-        return write(Files1.openOutputStream(file), true);
+        OutputStream out = null;
+        try {
+            out = Files1.openOutputStream(file);
+            workbook.write(out);
+            return this;
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
+        } finally {
+            Streams.close(out);
+        }
     }
 
     /**
@@ -925,18 +932,14 @@ public class ExcelExport<T> {
      *
      * @param out 流
      * @return this
-     * @throws IOException IOException
      */
-    public ExcelExport<T> write(OutputStream out) throws IOException {
-        return write(out, false);
-    }
-
-    private ExcelExport<T> write(OutputStream out, boolean close) throws IOException {
-        workbook.write(out);
-        if (close) {
-            Streams.close(out);
+    public ExcelExport<T> write(OutputStream out) {
+        try {
+            workbook.write(out);
+            return this;
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
         }
-        return this;
     }
 
     /**

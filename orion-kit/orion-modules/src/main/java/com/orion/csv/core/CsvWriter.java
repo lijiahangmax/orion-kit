@@ -11,7 +11,7 @@ import java.nio.charset.Charset;
  * @since 2020/4/1 23:23
  */
 @SuppressWarnings("ALL")
-public class CsvWriter {
+public class CsvWriter implements Closeable {
 
     private PrintWriter outputStream;
     private String fileName;

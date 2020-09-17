@@ -1,14 +1,15 @@
 package com.orion.csv.split;
 
 import com.orion.csv.CsvExt;
-import com.orion.csv.CsvStream;
 import com.orion.csv.core.CsvSymbol;
 import com.orion.csv.core.CsvWriter;
+import com.orion.csv.importing.CsvStream;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
 import com.orion.utils.collect.Lists;
 import com.orion.utils.io.Files1;
+import com.orion.utils.io.Streams;
 
 import java.io.File;
 import java.io.IOException;
@@ -207,7 +208,7 @@ public class CsvColumnSplit {
             } else {
                 this.write(stream.readLines().lines(), csvWriter);
             }
-            csvWriter.close();
+            Streams.close(csvWriter);
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         }

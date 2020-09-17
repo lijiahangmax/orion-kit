@@ -48,31 +48,31 @@ public class ExcelExt {
      */
     private static final int STREAMING_BUFFER = 4096;
 
-    public ExcelExt(File file) throws IOException {
-        this(Files1.openInputStream(file), file.getName(), false);
+    public ExcelExt(File file) {
+        this(getInputStream(file), file.getName(), false);
     }
 
-    public ExcelExt(File file, boolean streaming) throws IOException {
-        this(Files1.openInputStream(file), file.getName(), streaming);
+    public ExcelExt(File file, boolean streaming) {
+        this(getInputStream(file), file.getName(), streaming);
     }
 
-    public ExcelExt(String file) throws IOException {
+    public ExcelExt(String file) {
         this(DomExt.class.getClassLoader().getResourceAsStream(file), null, false);
     }
 
-    public ExcelExt(String file, boolean streaming) throws IOException {
+    public ExcelExt(String file, boolean streaming) {
         this(DomExt.class.getClassLoader().getResourceAsStream(file), null, streaming);
     }
 
-    public ExcelExt(InputStream in) throws IOException {
+    public ExcelExt(InputStream in) {
         this(in, null, false);
     }
 
-    public ExcelExt(InputStream in, boolean streaming) throws IOException {
+    public ExcelExt(InputStream in, boolean streaming) {
         this(in, null, streaming);
     }
 
-    public ExcelExt(InputStream in, String name, boolean streaming) throws IOException {
+    public ExcelExt(InputStream in, String name, boolean streaming) {
         if (!in.markSupported()) {
             in = new PushbackInputStream(in, 4 * 1024);
         }
@@ -94,7 +94,7 @@ public class ExcelExt {
                     this.workbook = new XSSFWorkbook(p);
                 }
             } catch (IOException e) {
-                throw e;
+                throw Exceptions.ioRuntime(e);
             } catch (Exception e) {
                 throw Exceptions.parse("Cannot open this workbook error: " + e.getMessage());
             }
@@ -235,6 +235,14 @@ public class ExcelExt {
 
     public void close() {
         Streams.close(workbook);
+    }
+
+    private static InputStream getInputStream(File file) {
+        try {
+            return Files1.openInputStream(file);
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
+        }
     }
 
 }

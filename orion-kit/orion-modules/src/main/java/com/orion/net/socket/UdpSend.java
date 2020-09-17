@@ -1,5 +1,6 @@
 package com.orion.net.socket;
 
+import com.orion.utils.Exceptions;
 import com.orion.utils.io.Streams;
 
 import java.io.IOException;
@@ -31,13 +32,17 @@ public class UdpSend {
 
     private DatagramSocket ds;
 
-    public UdpSend(String host, int port) throws IOException {
+    public UdpSend(String host, int port) {
         this.host = host;
         this.port = port;
-        this.ds = new DatagramSocket();
-        this.inetAddress = InetAddress.getByName(host);
-        this.ds.setSendBufferSize(4 * 1024);
-        this.ds.setSoTimeout(10 * 1000);
+        try {
+            this.ds = new DatagramSocket();
+            this.inetAddress = InetAddress.getByName(host);
+            this.ds.setSendBufferSize(4 * 1024);
+            this.ds.setSoTimeout(10 * 1000);
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
+        }
     }
 
     public UdpSend bufferSize(int bufferSize) throws SocketException {
