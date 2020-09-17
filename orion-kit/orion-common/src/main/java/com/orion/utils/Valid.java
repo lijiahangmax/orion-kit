@@ -24,7 +24,7 @@ public class Valid {
     }
 
     public static void eq(Object o1, Object o2) {
-        eq(o1, o2, "The validated objects not equal");
+        eq(o1, o2, "the validated objects not equal");
     }
 
     public static void eq(Object o1, Object o2, String message, Object... values) {

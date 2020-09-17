@@ -1,5 +1,7 @@
-package com.orion.utils;
+package com.orion.utils.net;
 
+import com.orion.utils.Matches;
+import com.orion.utils.Strings;
 import com.orion.utils.collect.Lists;
 
 import java.net.Inet4Address;
@@ -20,7 +22,7 @@ public class IPs {
     /**
      * 本机外网IP  没有则为127.0.0.1
      */
-    private static final String IP;
+    public static final String IP;
 
     private IPs() {
     }
@@ -103,8 +105,8 @@ public class IPs {
                     return false;
                 }
                 // 01也会转化为1
-                Integer b = Integer.valueOf(p);
-                if (b > 255 || b < 0 || !b.toString().equals(p)) {
+                int b = Integer.parseInt(p);
+                if (b > 255 || b < 0 || !Integer.toString(b).equals(p)) {
                     return false;
                 }
             }
@@ -158,7 +160,7 @@ public class IPs {
             case 0x0A:
                 return true;
             case (byte) 0xAC:
-                if (addr[1] >= 0x10 && addr[0] <= 0x1F) {
+                if (addr[1] >= 0x10) {
                     return true;
                 }
             case (byte) 0xC0:

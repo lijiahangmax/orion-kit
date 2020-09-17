@@ -1,10 +1,10 @@
 package com.orion.web;
 
 import com.orion.lang.collect.ConvertHashMap;
-import com.orion.utils.IPs;
 import com.orion.utils.Urls;
 import com.orion.utils.ext.StringExt;
 import com.orion.utils.io.Streams;
+import com.orion.utils.net.IPs;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
