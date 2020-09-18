@@ -164,11 +164,7 @@ public class CsvColumnSplit {
         Valid.notNull(file, "write file is null");
         Valid.notNull(s, "csvSymbol is null");
         Files1.touch(file);
-        try {
-            this.out = Files1.openOutputStream(file);
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
-        }
+        this.out = Files1.openOutputStreamSafe(file);
         this.symbol = s;
         return this;
     }

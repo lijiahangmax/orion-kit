@@ -1,8 +1,8 @@
-package com.orion.excel.convert.adapter.impl;
+package com.orion.excel.convert.adapter;
 
+import com.orion.able.Adaptable;
 import com.orion.csv.exporting.CsvExport;
 import com.orion.excel.Excels;
-import com.orion.excel.convert.adapter.ExcelConvertAdapter;
 import com.orion.utils.io.Streams;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -18,7 +18,7 @@ import java.util.List;
  * @version 1.0.0
  * @since 2020/9/18 0:33
  */
-public class CsvAdapter implements ExcelConvertAdapter {
+public class CsvAdapter implements Adaptable<CsvAdapter> {
 
     /**
      * sheet
@@ -82,7 +82,7 @@ public class CsvAdapter implements ExcelConvertAdapter {
     }
 
     @Override
-    public void forNew() {
+    public CsvAdapter forNew() {
         if (header != null) {
             export.addRecord(header);
         }
@@ -99,6 +99,7 @@ public class CsvAdapter implements ExcelConvertAdapter {
             export.addRecord(row.toArray(new String[0]));
         }
         export.flush().close();
+        return this;
     }
 
     /**

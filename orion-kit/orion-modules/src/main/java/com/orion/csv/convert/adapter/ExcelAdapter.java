@@ -1,7 +1,7 @@
-package com.orion.csv.convert.adapter.impl;
+package com.orion.csv.convert.adapter;
 
+import com.orion.able.Adaptable;
 import com.orion.csv.CsvExt;
-import com.orion.csv.convert.adapter.CsvConvertAdapter;
 import com.orion.csv.importing.CsvStream;
 import com.orion.excel.Excels;
 import com.orion.utils.io.Streams;
@@ -22,7 +22,7 @@ import java.util.List;
  * @version 1.0.0
  * @since 2020/9/18 2:36
  */
-public class ExcelAdapter implements CsvConvertAdapter {
+public class ExcelAdapter implements Adaptable<ExcelAdapter> {
 
     /**
      * workbook
@@ -112,7 +112,7 @@ public class ExcelAdapter implements CsvConvertAdapter {
     }
 
     @Override
-    public void forNew() {
+    public ExcelAdapter forNew() {
         int i = 0;
         // 表头
         if (header != null) {
@@ -134,6 +134,7 @@ public class ExcelAdapter implements CsvConvertAdapter {
                 }
             }
         }
+        return this;
     }
 
     /**

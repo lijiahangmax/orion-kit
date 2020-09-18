@@ -108,11 +108,7 @@ public class CsvRowSplitStreaming {
         List<OutputStream> out = new ArrayList<>();
         for (File file : dist) {
             Files1.touch(file);
-            try {
-                out.add(Files1.openOutputStream(file));
-            } catch (Exception e) {
-                throw Exceptions.ioRuntime(e);
-            }
+            out.add(Files1.openOutputStreamSafe(file));
         }
         this.dist = out;
         this.symbol = s;
@@ -134,11 +130,7 @@ public class CsvRowSplitStreaming {
         List<OutputStream> out = new ArrayList<>();
         for (String file : dist) {
             Files1.touch(file);
-            try {
-                out.add(Files1.openOutputStream(file));
-            } catch (Exception e) {
-                throw Exceptions.ioRuntime(e);
-            }
+            out.add(Files1.openOutputStreamSafe(file));
         }
         this.dist = out;
         this.symbol = s;
@@ -258,11 +250,7 @@ public class CsvRowSplitStreaming {
     private OutputStream generatorOutputStream(int i) {
         String path = Files1.getPath(generatorPathDir + "/" + generatorBaseName + "_row_split_" + (i + 1) + "." + symbol.getSuffix());
         Files1.touch(path);
-        try {
-            return Files1.openOutputStream(path);
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
-        }
+        return Files1.openOutputStreamSafe(path);
     }
 
     public CsvStream getStream() {

@@ -203,7 +203,7 @@ public class ExcelColumnBatchSplit {
         for (File file : dist) {
             Files1.touch(file);
             try {
-                out.add(Files1.openOutputStream(file));
+                out.add(Files1.openOutputStreamSafe(file));
             } catch (Exception e) {
                 throw Exceptions.ioRuntime(e);
             }
@@ -224,11 +224,7 @@ public class ExcelColumnBatchSplit {
         List<OutputStream> out = new ArrayList<>();
         for (String file : dist) {
             Files1.touch(file);
-            try {
-                out.add(Files1.openOutputStream(file));
-            } catch (Exception e) {
-                throw Exceptions.ioRuntime(e);
-            }
+            out.add(Files1.openOutputStreamSafe(file));
         }
         this.dist = out;
         return this;
@@ -248,11 +244,7 @@ public class ExcelColumnBatchSplit {
         for (int i = 0; i < columns.size(); i++) {
             String path = Files1.getPath(pathDir + "/" + baseName + "_column_split_" + (i + 1) + ".xlsx");
             Files1.touch(path);
-            try {
-                out.add(Files1.openOutputStream(path));
-            } catch (Exception e) {
-                throw Exceptions.ioRuntime(e);
-            }
+            out.add(Files1.openOutputStreamSafe(path));
         }
         this.dist = out;
         return this;

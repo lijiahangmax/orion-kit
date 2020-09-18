@@ -199,7 +199,6 @@ public class NginxExt {
         try {
             out = Files1.openOutputStream(file);
             new NgxDumper(this.config).dump(out);
-
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         } finally {

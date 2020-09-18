@@ -662,7 +662,6 @@ public class MockAsyncDownload {
             this.request = this.buildHandler(new Request.Builder()).build();
             return this.download(Files1.openOutputStream(file), true);
         }
-
     }
 
     /**

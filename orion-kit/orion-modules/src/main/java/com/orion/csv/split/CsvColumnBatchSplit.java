@@ -263,11 +263,7 @@ public class CsvColumnBatchSplit {
         List<OutputStream> out = new ArrayList<>();
         for (File file : dist) {
             Files1.touch(file);
-            try {
-                out.add(Files1.openOutputStream(file));
-            } catch (Exception e) {
-                throw Exceptions.ioRuntime(e);
-            }
+            out.add(Files1.openOutputStreamSafe(file));
         }
         this.dist = out;
         this.symbol = s;
@@ -287,11 +283,7 @@ public class CsvColumnBatchSplit {
         List<OutputStream> out = new ArrayList<>();
         for (String file : dist) {
             Files1.touch(file);
-            try {
-                out.add(Files1.openOutputStream(file));
-            } catch (Exception e) {
-                throw Exceptions.ioRuntime(e);
-            }
+            out.add(Files1.openOutputStreamSafe(file));
         }
         this.dist = out;
         this.symbol = s;
@@ -313,11 +305,7 @@ public class CsvColumnBatchSplit {
         for (int i = 0; i < columns.size(); i++) {
             String path = Files1.getPath(pathDir + "/" + baseName + "_column_split_" + (i + 1) + "." + s.getSuffix());
             Files1.touch(path);
-            try {
-                out.add(Files1.openOutputStream(path));
-            } catch (Exception e) {
-                throw Exceptions.ioRuntime(e);
-            }
+            out.add(Files1.openOutputStreamSafe(path));
         }
         this.dist = out;
         this.symbol = s;

@@ -945,6 +945,30 @@ public class Files1 {
     }
 
     /**
+     * 打开文件输入流
+     *
+     * @param file 文件
+     * @return 输入流
+     */
+    public static FileInputStream openInputStreamSafe(String file) {
+        return openInputStreamSafe(new File(file));
+    }
+
+    /**
+     * 打开文件输入流
+     *
+     * @param file 文件
+     * @return 输入流
+     */
+    public static FileInputStream openInputStreamSafe(File file) {
+        try {
+            return openInputStream(file);
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
+        }
+    }
+
+    /**
      * 打开文件输出流
      *
      * @param file 文件
@@ -1008,10 +1032,71 @@ public class Files1 {
         }
     }
 
+    /**
+     * 打开文件输出流
+     *
+     * @param file 文件
+     * @return 输出流
+     */
+    public static FileOutputStream openOutputStreamSafe(String file) {
+        return openOutputStreamSafe(new File(file), false);
+    }
+
+    /**
+     * 打开文件输出流
+     *
+     * @param file   文件
+     * @param append 是否拼接
+     * @return 输出流
+     */
+    public static FileOutputStream openOutputStreamSafe(String file, boolean append) {
+        return openOutputStreamSafe(new File(file), append);
+    }
+
+    /**
+     * 打开文件输出流
+     *
+     * @param file 文件
+     * @return 输出流
+     */
+    public static FileOutputStream openOutputStreamSafe(File file) {
+        return openOutputStreamSafe(file, false);
+    }
+
+    /**
+     * 打开文件输出流
+     *
+     * @param file 文件
+     * @return 输出流
+     */
+    public static FileOutputStream openOutputStreamSafe(File file, boolean append) {
+        try {
+            return openOutputStream(file, append);
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
+        }
+    }
+
+    /**
+     * 打开文件随机读取
+     *
+     * @param file file
+     * @param mode r rw rws rwd
+     * @return RandomAccessFile
+     * @throws IOException
+     */
     public static RandomAccessFile openRandomAccess(String file, String mode) throws IOException {
         return openRandomAccess(new File(file), mode);
     }
 
+    /**
+     * 打开文件随机读取
+     *
+     * @param file file
+     * @param mode r rw rws rwd
+     * @return RandomAccessFile
+     * @throws IOException
+     */
     public static RandomAccessFile openRandomAccess(File file, String mode) throws IOException {
         if (file.exists()) {
             if (file.isDirectory()) {
@@ -1029,6 +1114,32 @@ public class Files1 {
             }
         }
         return new RandomAccessFile(file, mode);
+    }
+
+    /**
+     * 打开文件随机读取
+     *
+     * @param file file
+     * @param mode r rw rws rwd
+     * @return RandomAccessFile
+     */
+    public static RandomAccessFile openRandomAccessSafe(String file, String mode) {
+        return openRandomAccessSafe(new File(file), mode);
+    }
+
+    /**
+     * 打开文件随机读取
+     *
+     * @param file file
+     * @param mode r rw rws rwd
+     * @return RandomAccessFile
+     */
+    public static RandomAccessFile openRandomAccessSafe(File file, String mode) {
+        try {
+            return openRandomAccess(file, mode);
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
+        }
     }
 
     // -------------------- charset --------------------

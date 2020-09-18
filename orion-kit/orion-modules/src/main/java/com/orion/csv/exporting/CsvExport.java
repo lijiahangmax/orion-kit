@@ -71,12 +71,8 @@ public class CsvExport {
             this.symbol = symbol.getSymbol();
             this.charset = symbol.getCharset();
         }
-        try {
-            this.out = Files1.openOutputStream(file);
-            this.csvWriter = new CsvWriter(out, this.symbol, this.charset);
-        } catch (IOException e) {
-            throw Exceptions.ioRuntime(e);
-        }
+        this.out = Files1.openOutputStreamSafe(file);
+        this.csvWriter = new CsvWriter(out, this.symbol, this.charset);
     }
 
     public CsvExport(OutputStream out) {

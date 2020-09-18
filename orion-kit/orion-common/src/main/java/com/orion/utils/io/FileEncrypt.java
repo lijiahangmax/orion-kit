@@ -2,7 +2,6 @@ package com.orion.utils.io;
 
 import com.orion.utils.Arrays1;
 import com.orion.utils.Encrypts;
-import com.orion.utils.Exceptions;
 
 import javax.crypto.SecretKey;
 import java.io.File;
@@ -46,25 +45,17 @@ public class FileEncrypt implements Callable<Boolean> {
     public FileEncrypt(File file, File dest, String password, int bufferSize) {
         this.password = password;
         this.bufferSize = bufferSize;
-        try {
-            Files1.touch(dest);
-            this.in = Files1.openInputStream(file);
-            this.out = Files1.openOutputStream(dest);
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
-        }
+        Files1.touch(dest);
+        this.in = Files1.openInputStreamSafe(file);
+        this.out = Files1.openOutputStreamSafe(dest);
     }
 
     public FileEncrypt(String file, String dest, String password, int bufferSize) {
         this.password = password;
         this.bufferSize = bufferSize;
-        try {
-            Files1.touch(dest);
-            this.in = Files1.openInputStream(file);
-            this.out = Files1.openOutputStream(dest);
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
-        }
+        Files1.touch(dest);
+        this.in = Files1.openInputStreamSafe(file);
+        this.out = Files1.openOutputStreamSafe(dest);
     }
 
     public FileEncrypt(InputStream in, OutputStream out, String password, int bufferSize) {

@@ -40,9 +40,7 @@ public class DomExt {
 
     public DomExt(File file) {
         try {
-            this.document = reader.read(Files1.openInputStream(file));
-        } catch (IOException e) {
-            throw Exceptions.ioRuntime(e);
+            this.document = reader.read(Files1.openInputStreamSafe(file));
         } catch (Exception e) {
             throw Exceptions.parse(e);
         }

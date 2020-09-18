@@ -228,13 +228,9 @@ public class CsvBuilder implements Builderable<CsvBuilder> {
      * @return this
      */
     public CsvBuilder dist(File file) {
-        try {
-            Valid.notNull(file, "file is null");
-            Files1.touch(file);
-            out = Files1.openOutputStream(file);
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
-        }
+        Valid.notNull(file, "file is null");
+        Files1.touch(file);
+        out = Files1.openOutputStreamSafe(file);
         return this;
     }
 

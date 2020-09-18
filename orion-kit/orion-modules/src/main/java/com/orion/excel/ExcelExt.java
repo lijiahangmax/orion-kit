@@ -49,11 +49,11 @@ public class ExcelExt {
     private static final int STREAMING_BUFFER = 4096;
 
     public ExcelExt(File file) {
-        this(getInputStream(file), file.getName(), false);
+        this(Files1.openInputStreamSafe(file), file.getName(), false);
     }
 
     public ExcelExt(File file, boolean streaming) {
-        this(getInputStream(file), file.getName(), streaming);
+        this(Files1.openInputStreamSafe(file), file.getName(), streaming);
     }
 
     public ExcelExt(String file) {
@@ -235,14 +235,6 @@ public class ExcelExt {
 
     public void close() {
         Streams.close(workbook);
-    }
-
-    private static InputStream getInputStream(File file) {
-        try {
-            return Files1.openInputStream(file);
-        } catch (IOException e) {
-            throw Exceptions.ioRuntime(e);
-        }
     }
 
 }
