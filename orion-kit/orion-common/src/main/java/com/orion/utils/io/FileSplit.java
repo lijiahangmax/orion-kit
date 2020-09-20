@@ -77,6 +77,10 @@ public class FileSplit implements Callable<String[]> {
         this(new File(file), blockCount, bufferSize);
     }
 
+    public FileSplit(String file, long blockSize, int bufferSize) {
+        this(new File(file), blockSize, bufferSize);
+    }
+
     public FileSplit(File file, int blockCount, int bufferSize) {
         if (blockCount < 2) {
             blockCount = DEFAULT_SPLIT_BLOCK;
@@ -91,16 +95,11 @@ public class FileSplit implements Callable<String[]> {
         }
         this.file = file;
         double size = (double) file.length() / (double) blockCount;
-        if (size == file.length() / blockCount) {
+        if (size == ((int) size)) {
             this.blockSize = (long) size;
         } else {
-            this.blockSize = (long) size + BUFFER_SIZE;
+            this.blockSize = (long) size + 1;
         }
-    }
-
-    public FileSplit(String file, long blockSize, int bufferSize) {
-        this(new File(file), blockSize, bufferSize);
-
     }
 
     public FileSplit(File file, long blockSize, int bufferSize) {

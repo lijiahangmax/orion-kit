@@ -6,7 +6,10 @@ import com.orion.utils.Strings;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.Callable;
 
 /**
@@ -84,20 +87,18 @@ public class FileMerge implements Callable<String> {
      * @return 合并文件路径, 块文件路径
      */
     private Args.Two<String, List<String>> shuffleFile(String[] files) {
-        Map<Integer, String> fm = new HashMap<>();
+        Map<Integer, String> fm = new TreeMap<>();
         for (String file : files) {
             int l = file.lastIndexOf(".");
-            String blockIndex = file.substring(l + 1, file.length());
+            String blockIndex = file.substring(l + 1);
             if (Strings.isNumber(blockIndex)) {
-                fm.put(new Integer(blockIndex), file);
+                fm.put(Integer.valueOf(blockIndex), file);
             }
         }
         int last = 0, i = 0;
         String filePath = "";
         List<String> fileList = new ArrayList<>();
-        TreeSet<Map.Entry<Integer, String>> entries = new TreeSet<>(Comparator.comparingInt(Map.Entry::getKey));
-        entries.addAll(fm.entrySet());
-        for (Map.Entry<Integer, String> is : entries) {
+        for (Map.Entry<Integer, String> is : fm.entrySet()) {
             if (i++ == 0) {
                 last = is.getKey();
                 String ff = is.getValue();
