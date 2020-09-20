@@ -146,14 +146,14 @@ public class Dates {
     }
 
     /**
-     * 判断对象是否为时间格式
+     * 判断对象是否为时间格式 不包含String
      *
      * @param c c
      * @return ignore
      */
     public static boolean isDateClass(Class c) {
-        return (c == long.class || c == Date.class || c == Calendar.class ||
-                c == LocalDate.class || c == LocalDateTime.class || c == Instant.class);
+        return c == long.class || c == Long.class || c == Date.class || c == Calendar.class ||
+                c == LocalDate.class || c == LocalDateTime.class || c == Instant.class;
     }
 
     /**
