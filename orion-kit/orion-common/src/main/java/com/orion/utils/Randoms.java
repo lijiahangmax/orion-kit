@@ -12,10 +12,10 @@ import java.util.Random;
  */
 public class Randoms {
 
-    private static final Random RANDOM = new Random();
-
     private Randoms() {
     }
+
+    public static final Random RANDOM = new Random();
 
     private static final String ALL = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String LETTER = "abcdefghijkllmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";

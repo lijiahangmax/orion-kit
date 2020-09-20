@@ -89,7 +89,7 @@ public class SftpDownload implements Runnable {
     /**
      * 一次 写入/读取 最大长度
      */
-    private final int WRITE_MAX_SIZE = 32768;
+    private static final int WRITE_MAX_SIZE = 32768;
 
     public SftpDownload(SFTPv3Client client, String remote, File local) {
         this.client = client;

@@ -130,6 +130,13 @@
             <version>${ssh2.version}</version>
         </dependency>
 
+        <!-- jsch -->
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>${jsch.version}</version>
+        </dependency>
+
         <!-- nginx-parser -->
         <dependency>
             <groupId>com.github.odiszapc</groupId>

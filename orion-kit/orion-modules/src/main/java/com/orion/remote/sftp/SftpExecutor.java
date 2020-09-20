@@ -40,7 +40,7 @@ public class SftpExecutor {
     /**
      * 一次 写入/读取 最大长度
      */
-    private final int WRITE_MAX_SIZE = 32768;
+    private static final int WRITE_MAX_SIZE = 32768;
 
     /**
      * 默认缓冲区大小 因为并行数为1 并且默认执行一次读写操作最大字节为32768

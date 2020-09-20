@@ -54,11 +54,6 @@ public enum VariableStyleEnum {
         return styleType;
     }
 
-    public VariableStyleEnum setStyleType(int styleType) {
-        this.styleType = styleType;
-        return this;
-    }
-
     /**
      * 将类型转化为枚举
      *

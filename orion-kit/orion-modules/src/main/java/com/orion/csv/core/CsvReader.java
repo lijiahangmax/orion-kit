@@ -254,7 +254,7 @@ public class CsvReader {
             this.headersHolder.length = 0;
         }
         for (int var2 = 0; var2 < this.headersHolder.length; ++var2) {
-            this.headersHolder.indexByName.put(headers[var2], new Integer(var2));
+            this.headersHolder.indexByName.put(headers[var2], var2);
         }
     }
 
@@ -818,7 +818,7 @@ public class CsvReader {
         for (int var2 = 0; var2 < this.headersHolder.length; ++var2) {
             String var3 = this.get(var2);
             this.headersHolder.headers[var2] = var3;
-            this.headersHolder.indexByName.put(var3, new Integer(var2));
+            this.headersHolder.indexByName.put(var3, var2);
         }
         if (var1) {
             --this.currentRecord;
@@ -1007,11 +1007,6 @@ public class CsvReader {
         }
     }
 
-    @Override
-    protected void finalize() {
-        this.close(false);
-    }
-
     private static char hexToDec(char var0) {
         char var1;
         if (var0 >= 'a') {
@@ -1021,11 +1016,10 @@ public class CsvReader {
         } else {
             var1 = (char) (var0 - 48);
         }
-
         return var1;
     }
 
-    private class StaticSettings {
+    private static class StaticSettings {
         public static final int MAX_BUFFER_SIZE = 1024;
         public static final int MAX_FILE_BUFFER_SIZE = 4096;
         public static final int INITIAL_COLUMN_COUNT = 10;
@@ -1035,7 +1029,7 @@ public class CsvReader {
         }
     }
 
-    private class HeadersHolder {
+    private static class HeadersHolder {
         public String[] headers = null;
         public int length = 0;
         public HashMap indexByName = new HashMap();
@@ -1044,7 +1038,7 @@ public class CsvReader {
         }
     }
 
-    private class UserSettings {
+    private static class UserSettings {
         public boolean caseSensitive = true;
         public char textQualifier = '"';
         public boolean trimWhitespace = true;
@@ -1062,7 +1056,7 @@ public class CsvReader {
         }
     }
 
-    private class Letters {
+    private static class Letters {
         public static final char LF = '\n';
         public static final char CR = '\r';
         public static final char QUOTE = '"';
@@ -1082,7 +1076,7 @@ public class CsvReader {
         }
     }
 
-    private class RawRecordBuffer {
+    private static class RawRecordBuffer {
         public char[] buffer = new char[500];
         public int position = 0;
 
@@ -1090,7 +1084,7 @@ public class CsvReader {
         }
     }
 
-    private class ColumnBuffer {
+    private static class ColumnBuffer {
         public char[] buffer = new char[50];
         public int position = 0;
 
@@ -1098,7 +1092,7 @@ public class CsvReader {
         }
     }
 
-    private class DataBuffer {
+    private static class DataBuffer {
         public char[] buffer = new char[1024];
         public int position = 0;
         public int count = 0;
@@ -1109,7 +1103,7 @@ public class CsvReader {
         }
     }
 
-    private class ComplexEscape {
+    private static class ComplexEscape {
         private static final int UNICODE = 1;
         private static final int OCTAL = 2;
         private static final int DECIMAL = 3;

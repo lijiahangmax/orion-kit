@@ -204,6 +204,7 @@ public class CsvBuilder implements Builderable<CsvBuilder> {
      * @param fields  字段
      * @return this
      */
+    @SuppressWarnings("unchecked")
     public <T> CsvBuilder addRecord(T records, String[] fields) {
         toStrings(Lists.of(records), fields);
         return this;

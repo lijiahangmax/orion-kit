@@ -757,7 +757,7 @@ public class LocationSeeker {
     /**
      * IP的范围 国家, 区域, 起始IP, 结束IP
      */
-    public class IpEntry {
+    public static class IpEntry {
 
         /**
          * 起始IP

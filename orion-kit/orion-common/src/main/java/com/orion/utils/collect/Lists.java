@@ -3,6 +3,7 @@ package com.orion.utils.collect;
 import com.orion.lang.collect.ConvertArrayList;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Objects1;
+import com.orion.utils.Randoms;
 import com.orion.utils.Valid;
 
 import java.util.*;
@@ -205,7 +206,7 @@ public class Lists extends Collections {
         } else if (size == 1) {
             return list.get(0);
         } else {
-            return list.get(new Random().nextInt(size));
+            return list.get(Randoms.RANDOM.nextInt(size));
         }
     }
 

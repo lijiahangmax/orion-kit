@@ -279,10 +279,10 @@ public class ProcessAsyncExecutor {
         try {
             this.pb = new ProcessBuilder(command);
             this.env = this.pb.environment();
-            if (this.env != null && this.addEnv != null) {
+            if (this.addEnv != null) {
                 this.env.putAll(this.addEnv);
             }
-            if (this.env != null && this.removeEnv != null) {
+            if (this.removeEnv != null) {
                 for (String key : this.removeEnv) {
                     this.env.remove(key);
                 }

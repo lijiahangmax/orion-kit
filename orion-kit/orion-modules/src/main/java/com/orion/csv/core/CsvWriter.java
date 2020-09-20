@@ -274,11 +274,6 @@ public class CsvWriter implements Closeable {
         }
     }
 
-    @Override
-    protected void finalize() {
-        this.close(false);
-    }
-
     public static String replace(String var0, String var1, String var2) {
         int var3 = var1.length();
         int var4 = var0.indexOf(var1);
@@ -297,7 +292,7 @@ public class CsvWriter implements Closeable {
         }
     }
 
-    private class UserSettings {
+    private static class UserSettings {
         public char textQualifier = '"';
         public boolean useTextQualifier = true;
         public char delimiter = ',';
@@ -306,11 +301,11 @@ public class CsvWriter implements Closeable {
         public int escapeMode = 1;
         public boolean forceQualifier = false;
 
-        public UserSettings() {
+        private UserSettings() {
         }
     }
 
-    private class Letters {
+    private static class Letters {
         public static final char LF = '\n';
         public static final char CR = '\r';
         public static final char QUOTE = '"';

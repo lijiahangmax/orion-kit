@@ -2,6 +2,7 @@ package com.orion.dom;
 
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
+import com.orion.utils.Valid;
 import com.orion.utils.collect.Lists;
 import org.dom4j.Element;
 
@@ -26,9 +27,7 @@ public class DomStream {
     }
 
     public DomStream(Element element) {
-        if (element == null) {
-            throw Exceptions.argument("The Element is null");
-        }
+        Valid.notNull(element, "The Element is null");
         this.element = element;
     }
 
@@ -63,7 +62,7 @@ public class DomStream {
 
     public DomStream childLast(String tag) {
         List<Element> elements = this.element.elements(tag);
-        if (element != null && elements.size() >= 1) {
+        if (elements.size() >= 1) {
             this.element = elements.get(elements.size() - 1);
             return this;
         }
@@ -152,6 +151,8 @@ public class DomStream {
                 } else {
                     parent = p;
                 }
+            } else {
+                return this;
             }
         }
     }

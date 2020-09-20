@@ -19,52 +19,52 @@ public class SnowFlakes {
     /**
      * 开始时间截
      */
-    private final long START_TIME = 1489111610226L;
+    private static final long START_TIME = 1489111610226L;
 
     /**
      * 机器id所占的位数
      */
-    private final long WORKER_ID_BITS = 5L;
+    private static final long WORKER_ID_BITS = 5L;
 
     /**
      * 数据标识id所占的位数
      */
-    private final long DATA_CENTER_ID_BITS = 5L;
+    private static final long DATA_CENTER_ID_BITS = 5L;
 
     /**
      * 支持的最大机器id, 结果是31 (这个移位算法可以很快的计算出几位二进制数所能表示的最大十进制数)
      */
-    private final long MAX_WORKER_ID = -1L ^ (-1L << WORKER_ID_BITS);
+    private static final long MAX_WORKER_ID = -1L ^ (-1L << WORKER_ID_BITS);
 
     /**
      * 支持的最大数据标识id, 结果是31
      */
-    private final long MAX_DATA_CENTER_ID = -1L ^ (-1L << DATA_CENTER_ID_BITS);
+    private static final long MAX_DATA_CENTER_ID = -1L ^ (-1L << DATA_CENTER_ID_BITS);
 
     /**
      * 序列在id中占的位数
      */
-    private final long SEQUENCE_BITS = 12L;
+    private static final long SEQUENCE_BITS = 12L;
 
     /**
      * 机器ID向左移12位
      */
-    private final long WORKER_ID_SHIFT = SEQUENCE_BITS;
+    private static final long WORKER_ID_SHIFT = SEQUENCE_BITS;
 
     /**
      * 数据标识id向左移17位(12+5)
      */
-    private final long DATA_CENTER_ID_SHIFT = SEQUENCE_BITS + WORKER_ID_BITS;
+    private static final long DATA_CENTER_ID_SHIFT = SEQUENCE_BITS + WORKER_ID_BITS;
 
     /**
      * 时间截向左移22位(5+5+12)
      */
-    private final long TIMESTAMP_LEFT_SHIFT = SEQUENCE_BITS + WORKER_ID_BITS + DATA_CENTER_ID_BITS;
+    private static final long TIMESTAMP_LEFT_SHIFT = SEQUENCE_BITS + WORKER_ID_BITS + DATA_CENTER_ID_BITS;
 
     /**
      * 生成序列的掩码, 这里为4095 (0b111111111111=0xfff=4095)
      */
-    private final long SEQUENCE_MASK = -1L ^ (-1L << SEQUENCE_BITS);
+    private static final long SEQUENCE_MASK = -1L ^ (-1L << SEQUENCE_BITS);
 
     /**
      * 工作机器ID(0~31)

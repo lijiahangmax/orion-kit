@@ -60,10 +60,14 @@ public class XssFilter implements Filter {
         this.filterConfig = null;
     }
 
+    public FilterConfig getFilterConfig() {
+        return filterConfig;
+    }
+
     /**
      * xss请求过滤包装
      */
-    class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
+    static class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
         /**
          * 存放url中不需要过滤的字段名
@@ -153,10 +157,10 @@ public class XssFilter implements Filter {
                 Matcher mHtml = pHtml.matcher(htmlStr);
                 // 过滤html标签
                 htmlStr = mHtml.replaceAll("");
-                Pattern pBa = Pattern.compile(patternStr, Pattern.CASE_INSENSITIVE);
-                Matcher mBa = pBa.matcher(htmlStr);
+                // Pattern pBa = Pattern.compile(patternStr, Pattern.CASE_INSENSITIVE);
+                // Matcher mBa = pBa.matcher(htmlStr);
                 // 过滤空格
-                // htmlStr = m_ba.replaceAll("");
+                // htmlStr = mBa.replaceAll("");
                 textStr = htmlStr;
             } catch (Exception e) {
                 // ignore

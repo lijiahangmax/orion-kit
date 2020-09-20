@@ -152,7 +152,7 @@ public class Dates {
      * @return ignore
      */
     public static boolean isDateClass(Class c) {
-        return c != null && (c == long.class || c == long.class || c == Date.class || c == Calendar.class ||
+        return (c == long.class || c == Date.class || c == Calendar.class ||
                 c == LocalDate.class || c == LocalDateTime.class || c == Instant.class);
     }
 

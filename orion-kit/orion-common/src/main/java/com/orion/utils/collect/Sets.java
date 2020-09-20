@@ -3,6 +3,7 @@ package com.orion.utils.collect;
 import com.orion.lang.collect.ConcurrentHashSet;
 import com.orion.lang.collect.ConvertHashSet;
 import com.orion.utils.Arrays1;
+import com.orion.utils.Randoms;
 import com.orion.utils.Valid;
 
 import java.util.*;
@@ -188,7 +189,7 @@ public class Sets extends Collections {
         } else if (size == 1) {
             return set.iterator().next();
         } else {
-            return (E) (set.toArray()[new Random().nextInt(size)]);
+            return (E) (set.toArray()[Randoms.RANDOM.nextInt(size)]);
         }
     }
 

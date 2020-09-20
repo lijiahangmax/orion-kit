@@ -16,6 +16,7 @@ public interface Reduce<V, R> {
      * @param v input
      * @return output
      */
+    @SuppressWarnings("unchecked")
     R accept(V... v);
 
 }

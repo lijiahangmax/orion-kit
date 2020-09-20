@@ -4,6 +4,7 @@ import com.orion.lang.MapEntry;
 import com.orion.lang.collect.ConvertHashMap;
 import com.orion.lang.wrapper.Args;
 import com.orion.utils.Arrays1;
+import com.orion.utils.Randoms;
 import com.orion.utils.Valid;
 
 import java.util.Collections;
@@ -137,9 +138,9 @@ public class Maps {
 
     public static <K, V> Map<K, V> newSynchronizedMap(Map<K, V> m) {
         if (m == null) {
-            return Collections.synchronizedMap(m);
+            return Collections.synchronizedMap(new HashMap<>(16));
         }
-        return Collections.synchronizedMap(new HashMap<>(16));
+        return Collections.synchronizedMap(m);
     }
 
 
@@ -300,8 +301,9 @@ public class Maps {
     }
 
     private static void multiToSingleMap(Map<String, ?> map, String nowKey, Map<String, Object> result) {
-        for (String key : map.keySet()) {
-            Object value = map.get(key);
+        for (Map.Entry<String, ?> entry : map.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
             if (value instanceof Map) {
                 multiToSingleMap(((Map<String, ?>) value), nowKey + key + ".", result);
             } else {
@@ -325,7 +327,7 @@ public class Maps {
         } else if (size == 1) {
             return MapEntry.toMapEntry(map.entrySet().iterator().next());
         } else {
-            Object randomKey = map.keySet().toArray()[new Random().nextInt(size)];
+            Object randomKey = map.keySet().toArray()[Randoms.RANDOM.nextInt(size)];
             return new MapEntry(randomKey, map.get(randomKey));
         }
     }

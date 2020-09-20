@@ -9,8 +9,8 @@
     <version>1.0.0-SNAPSHOT</version>
     <modules>
         <module>orion-common</module>
-        <module>orion-spring</module>
         <module>orion-modules</module>
+        <module>orion-spring</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -56,94 +56,96 @@
         <log4j.version>1.2.17</log4j.version>
         <nginxparser.version>0.9.3</nginxparser.version>
         <ssh2.version>262</ssh2.version>
+        <jsch.version>0.1.55</jsch.version>
     </properties>
 
-    <build>
-        <plugins>
-            <!-- 打包插件1 -->
-            <!--<plugin>-->
-            <!--<groupId>org.apache.maven.plugins</groupId>-->
-            <!--<artifactId>maven-shade-plugin</artifactId>-->
-            <!--<version>2.4.3</version>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<phase>package</phase>-->
-            <!--<goals>-->
-            <!--<goal>shade</goal>-->
-            <!--</goals>-->
-            <!--<configuration>-->
-            <!--<filters>-->
-            <!--<filter>-->
-            <!--<artifact>*:*</artifact>-->
-            <!--<excludes>-->
-            <!--<exclude>META-INF/*.SF</exclude>-->
-            <!--<exclude>META-INF/*.DSA</exclude>-->
-            <!--<exclude>META-INF/*.RSA</exclude>-->
-            <!--</excludes>-->
-            <!--</filter>-->
-            <!--</filters>-->
-            <!--</configuration>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--</plugin>-->
-            <!-- 打包插件2 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.4.1</version>
-                <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <archive/>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>3.1.0</version>
-            </plugin>
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.0.2</version>
-            </plugin>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.1</version>
-            </plugin>
-            <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.0.2</version>
-            </plugin>
-            <plugin>
-                <artifactId>maven-install-plugin</artifactId>
-                <version>2.5.2</version>
-            </plugin>
-            <plugin>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.8.2</version>
-            </plugin>
-            <plugin>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>3.7.1</version>
-            </plugin>
-        </plugins>
-    </build>
+    <!--
+        <build>
+            <plugins>
+                &lt;!&ndash; 打包插件1 &ndash;&gt;
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>2.4.3</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>shade</goal>
+                            </goals>
+                            <configuration>
+                                <filters>
+                                    <filter>
+                                        <artifact>*:*</artifact>
+                                        <excludes>
+                                            <exclude>META-INF/*.SF</exclude>
+                                            <exclude>META-INF/*.DSA</exclude>
+                                            <exclude>META-INF/*.RSA</exclude>
+                                        </excludes>
+                                    </filter>
+                                </filters>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                &lt;!&ndash;            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-assembly-plugin</artifactId>
+                                <version>2.4.1</version>
+                                <configuration>
+                                    <descriptorRefs>
+                                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                                    </descriptorRefs>
+                                    <archive/>
+                                </configuration>
+                                <executions>
+                                    <execution>
+                                        <id>make-assembly</id>
+                                        <phase>package</phase>
+                                        <goals>
+                                            <goal>single</goal>
+                                        </goals>
+                                    </execution>
+                                </executions>
+                            </plugin>&ndash;&gt;
+                <plugin>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.0.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.0</version>
+                    <configuration>
+                        <source>1.8</source>
+                        <target>1.8</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.22.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.0.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>2.5.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.8.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.7.1</version>
+                </plugin>
+            </plugins>
+        </build>
+    -->
 
 </project>

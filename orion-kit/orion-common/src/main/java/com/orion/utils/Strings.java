@@ -55,7 +55,7 @@ public class Strings {
             return null;
         }
         Charset cs;
-        if (charset == obj) {
+        if (charset == null) {
             cs = Charset.defaultCharset();
         } else {
             cs = Charset.forName(charset);
