@@ -1,6 +1,6 @@
 package com.orion.utils.image;
 
-import com.orion.utils.Encrypts;
+import com.orion.utils.crypto.Base64s;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
 
@@ -172,7 +172,7 @@ public class Images {
      */
     public static BufferedImage getImageBase64(String base64) {
         try {
-            return ImageIO.read(Streams.toInputStream(Encrypts.img64Decode(base64)));
+            return ImageIO.read(Streams.toInputStream(Base64s.img64Decode(base64)));
         } catch (IOException e) {
             return null;
         }
@@ -186,7 +186,7 @@ public class Images {
      */
     public static BufferedImage getImageBase64(byte[] bs) {
         try {
-            return ImageIO.read(Streams.toInputStream(Encrypts.base64Decode(bs)));
+            return ImageIO.read(Streams.toInputStream(Base64s.base64Decode(bs)));
         } catch (IOException e) {
             return null;
         }
@@ -320,7 +320,7 @@ public class Images {
      * @return base64
      */
     public static String base64Encode(BufferedImage img, String format) {
-        return Encrypts.img64Encode(getBytes(img, format), format);
+        return Base64s.img64Encode(getBytes(img, format), format);
     }
 
     /**
@@ -330,7 +330,7 @@ public class Images {
      * @return base64
      */
     public static String base64Encode(byte[] bs) {
-        return Encrypts.img64Encode(bs);
+        return Base64s.img64Encode(bs);
     }
 
     /**
@@ -341,7 +341,7 @@ public class Images {
      * @return base64
      */
     public static String base64Encode(byte[] bs, String type) {
-        return Encrypts.img64Encode(bs, type);
+        return Base64s.img64Encode(bs, type);
     }
 
     /**
@@ -351,7 +351,7 @@ public class Images {
      * @return 图片
      */
     public static byte[] base64Decode(String s) {
-        return Encrypts.img64Decode(s);
+        return Base64s.img64Decode(s);
     }
 
 }

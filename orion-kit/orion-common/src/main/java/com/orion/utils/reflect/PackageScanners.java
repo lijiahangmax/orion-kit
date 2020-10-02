@@ -402,7 +402,7 @@ public class PackageScanners {
             try {
                 c = Class.forName(className, false, Classes.getCurrentClassLoader());
             } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                // ignore
             }
             if (c != null) {
                 classes.add(c);

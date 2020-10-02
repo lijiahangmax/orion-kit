@@ -3,13 +3,13 @@ package com.orion.utils.io;
 import com.orion.id.UUIds;
 import com.orion.utils.*;
 import com.orion.utils.collect.Lists;
+import com.orion.utils.crypto.enums.HashMessageDigest;
+import com.orion.utils.math.Hex;
 
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import static com.orion.utils.io.Streams.close;
@@ -41,30 +41,61 @@ public class Files1 {
 
     private static final long[] DATA_UNIT_EFFECT = {1000, 1024, 1000 * 1000, 1024 * 1024, 1024 * 128, 1000 * 1000 * 1000, 1024 * 1024 * 1024, 1000 * 1000 * 1000 * 1000, 1024 * 1024 * 1024 * 1024, 1};
 
-    // -------------------- file --------------------
-
     /**
-     * 通过文件头推算文件类型 不准确
-     *
-     * @param file 文件
-     * @return 类型
+     * 头文件
      */
-    public static String getFileType(File file) {
-        String type = null;
-        byte[] b = new byte[20];
-        FileInputStream in = null;
-        try {
-            in = openInputStream(file);
-            if (in.read(b) != -1) {
-                type = Streams.getFileType(b);
-            }
-        } catch (IOException e) {
-            // ignore
-        } finally {
-            Streams.close(in);
-        }
-        return type;
+    private static final Map<String, String> FILE_HEAD_MAP = new LinkedHashMap<>();
+
+    static {
+        FILE_HEAD_MAP.put("doc", "D0CF11E0A1B11AE10000000000000000");
+        FILE_HEAD_MAP.put("xls", "D0CF11E0A1B11AE10000000000000000");
+        FILE_HEAD_MAP.put("exe", "4D5A90000300000004000000FFFF0000");
+        FILE_HEAD_MAP.put("dll", "4D5A90000300000004000000FFFF0000");
+        FILE_HEAD_MAP.put("png", "89504E470D0A1A0A0000000D49484452");
+        FILE_HEAD_MAP.put("lnk", "4C0000000114020000000000C0000000");
+        FILE_HEAD_MAP.put("xsd", "3C3F786D6C2076657273696F6E3D2231");
+        FILE_HEAD_MAP.put("rmvb", "2E524D46000000120001000000000000");
+        FILE_HEAD_MAP.put("avi", "5249464616BD5301415649204C495354");
+        FILE_HEAD_MAP.put("mkv", "1A45DFA3A34286810142F7810142F281");
+        FILE_HEAD_MAP.put("gif", "474946383961E0010E01E70000000000");
+        FILE_HEAD_MAP.put("wmv", "3026B2758E66CF11A6D900AA0062CE6C");
+        FILE_HEAD_MAP.put("eml", "52656365697665643A2066726F6D2073");
+        FILE_HEAD_MAP.put("psd", "38425053000100000000000000030000");
+        FILE_HEAD_MAP.put("xmind", "504B0304140008080800");
+        FILE_HEAD_MAP.put("mdb", "5374616E64617264204A");
+        FILE_HEAD_MAP.put("eps", "252150532D41646F6265");
+        FILE_HEAD_MAP.put("ps", "252150532D41646F6265");
+        FILE_HEAD_MAP.put("asf", "3026B2758E66CF11");
+        FILE_HEAD_MAP.put("dbx", "CFAD12FEC5FD746F");
+        FILE_HEAD_MAP.put("7z", "377ABCAF271C0004");
+        FILE_HEAD_MAP.put("pdf", "255044462D312E3");
+        FILE_HEAD_MAP.put("zip", "504B03040A00000");
+        FILE_HEAD_MAP.put("rar", "526172211A070");
+        FILE_HEAD_MAP.put("rtf", "7B5C727466");
+        FILE_HEAD_MAP.put("tif", "49492A00");
+        FILE_HEAD_MAP.put("dwg", "41433130");
+        FILE_HEAD_MAP.put("pst", "2142444E");
+        FILE_HEAD_MAP.put("docx", "504B0304");
+        FILE_HEAD_MAP.put("xlsx", "504B0304");
+        FILE_HEAD_MAP.put("jar", "504B0304");
+        FILE_HEAD_MAP.put("war", "504B0304");
+        FILE_HEAD_MAP.put("wpd", "FF575043");
+        FILE_HEAD_MAP.put("class", "CAFEBABE");
+        FILE_HEAD_MAP.put("ram", "2E7261FD");
+        FILE_HEAD_MAP.put("qdf", "AC9EBD8F");
+        FILE_HEAD_MAP.put("pwl", "E3828596");
+        FILE_HEAD_MAP.put("rm", "2E524D46");
+        FILE_HEAD_MAP.put("html", "3C21444F");
+        FILE_HEAD_MAP.put("mpg", "000001BA");
+        FILE_HEAD_MAP.put("mov", "6D6F6F76");
+        FILE_HEAD_MAP.put("mid", "4D546864");
+        FILE_HEAD_MAP.put("jpg", "FFD8FFE");
+        FILE_HEAD_MAP.put("mp4", "000000");
+        FILE_HEAD_MAP.put("bmp", "424D");
+        FILE_HEAD_MAP.put("xml", "3C");
     }
+
+    // -------------------- file --------------------
 
     /**
      * 获取文件或文件夹大小
@@ -2215,7 +2246,7 @@ public class Files1 {
         try {
             append(file, s.getBytes(charset));
         } catch (UnsupportedEncodingException e) {
-            throw Exceptions.unEnding(e);
+            throw Exceptions.unCoding(e);
         }
     }
 
@@ -2230,7 +2261,7 @@ public class Files1 {
         try {
             append(new File(file), s.getBytes(charset));
         } catch (UnsupportedEncodingException e) {
-            throw Exceptions.unEnding(e);
+            throw Exceptions.unCoding(e);
         }
     }
 
@@ -2627,7 +2658,7 @@ public class Files1 {
         try {
             write(file, s.getBytes(charset));
         } catch (UnsupportedEncodingException e) {
-            throw Exceptions.unEnding(e);
+            throw Exceptions.unCoding(e);
         }
     }
 
@@ -2642,7 +2673,7 @@ public class Files1 {
         try {
             write(new File(file), s.getBytes(charset));
         } catch (UnsupportedEncodingException e) {
-            throw Exceptions.unEnding(e);
+            throw Exceptions.unCoding(e);
         }
     }
 
@@ -3434,64 +3465,133 @@ public class Files1 {
     // -------------------- sign --------------------
 
     /**
-     * 文件MD5签名
+     * 文件 MD5 签名
      *
      * @param file 文件
      * @return 签名
      */
     public static String md5(File file) {
-        return sign(file, "MD5");
+        return sign(file, HashMessageDigest.MD5);
     }
 
     /**
-     * 文件MD5签名
+     * 文件 MD5 签名
      *
      * @param file 文件
      * @return 签名
      */
     public static String md5(String file) {
-        return sign(new File(file), "MD5");
+        return sign(new File(file), HashMessageDigest.MD5);
     }
 
     /**
-     * 文件SHA1签名
+     * 文件 SHA1 签名
      *
      * @param file 文件
      * @return 签名
      */
     public static String sha1(File file) {
-        return sign(file, "SHA-1");
+        return sign(file, HashMessageDigest.SHA1);
     }
 
     /**
-     * 文件SHA1签名
+     * 文件 SHA1 签名
      *
      * @param file 文件
      * @return 签名
      */
     public static String sha1(String file) {
-        return sign(new File(file), "SHA-1");
+        return sign(new File(file), HashMessageDigest.SHA1);
     }
 
     /**
-     * 散列签名
+     * 文件 SHA224 签名
      *
      * @param file 文件
-     * @param type 加密类型
      * @return 签名
      */
-    public static String sign(String file, String type) {
-        return sign(new File(file), type);
+    public static String sha224(File file) {
+        return sign(file, HashMessageDigest.SHA224);
     }
 
     /**
-     * 散列签名
+     * 文件 SHA224 签名
      *
      * @param file 文件
-     * @param type 加密类型 MD5 SHA-1 SHA-256 SHA-384 SHA-512
      * @return 签名
      */
-    public static String sign(File file, String type) {
+    public static String sha224(String file) {
+        return sign(new File(file), HashMessageDigest.SHA224);
+    }
+
+    /**
+     * 文件 SHA256 签名
+     *
+     * @param file 文件
+     * @return 签名
+     */
+    public static String sha256(File file) {
+        return sign(file, HashMessageDigest.SHA256);
+    }
+
+    /**
+     * 文件 SHA256 签名
+     *
+     * @param file 文件
+     * @return 签名
+     */
+    public static String sha256(String file) {
+        return sign(new File(file), HashMessageDigest.SHA256);
+    }
+
+    /**
+     * 文件 SHA384 签名
+     *
+     * @param file 文件
+     * @return 签名
+     */
+    public static String sha384(File file) {
+        return sign(file, HashMessageDigest.SHA384);
+    }
+
+    /**
+     * 文件 SHA384 签名
+     *
+     * @param file 文件
+     * @return 签名
+     */
+    public static String sha384(String file) {
+        return sign(new File(file), HashMessageDigest.SHA384);
+    }
+
+    /**
+     * 文件 SHA512 签名
+     *
+     * @param file 文件
+     * @return 签名
+     */
+    public static String sha512(File file) {
+        return sign(file, HashMessageDigest.SHA512);
+    }
+
+    /**
+     * 文件 SHA512 签名
+     *
+     * @param file 文件
+     * @return 签名
+     */
+    public static String sha512(String file) {
+        return sign(new File(file), HashMessageDigest.SHA512);
+    }
+
+    /**
+     * 文件散列签名
+     *
+     * @param file 文件
+     * @param type 加密类型 MD5 SHA-1 SHA-224 SHA-256 SHA-384 SHA-512
+     * @return 签名
+     */
+    public static String sign(File file, HashMessageDigest type) {
         if (file == null || !file.exists() || !file.isFile()) {
             return null;
         }
@@ -3500,6 +3600,87 @@ public class Files1 {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    /**
+     * 文件散列签名
+     *
+     * @param file 文件
+     * @param type 加密类型 MD5 SHA-1 SHA-224 SHA-256 SHA-384 SHA-512
+     * @return 签名
+     */
+    public static String sign(String file, HashMessageDigest type) {
+        return sign(new File(file), type);
+    }
+
+    // -------------------------------- 文件流类型 --------------------------------
+
+    /**
+     * 通过文件头推算文件类型 不准确
+     *
+     * @param file 文件
+     * @return 类型
+     */
+    public static String getFileType(String file) {
+        return getFileType(new File(file));
+    }
+
+    /**
+     * 通过文件头推算文件类型 不准确
+     *
+     * @param file 文件
+     * @return 类型
+     */
+    public static String getFileType(File file) {
+        String type = null;
+        byte[] b = new byte[20];
+        FileInputStream in = null;
+        try {
+            in = openInputStream(file);
+            if (in.read(b) != -1) {
+                type = getFileType(b);
+            }
+        } catch (IOException e) {
+            // ignore
+        } finally {
+            Streams.close(in);
+        }
+        return type;
+    }
+
+    /**
+     * 通过文件头推算文件类型 不准确
+     *
+     * @param in 文件
+     * @return 类型
+     */
+    public static String getFileType(InputStream in) {
+        String type = null;
+        byte[] b = new byte[20];
+        try {
+            if (in.read(b) != -1) {
+                type = getFileType(b);
+            }
+        } catch (IOException e) {
+            // ignore
+        }
+        return type;
+    }
+
+    /**
+     * 通过文件头推算文件类型 不准确
+     *
+     * @param b 文件头
+     * @return 类型
+     */
+    public static String getFileType(byte[] b) {
+        for (Map.Entry<String, String> entry : FILE_HEAD_MAP.entrySet()) {
+            String hexValue = entry.getValue();
+            if (String.valueOf(Hex.bytesToHex(b)).toUpperCase().startsWith(hexValue)) {
+                return entry.getKey();
+            }
+        }
+        return null;
     }
 
 }

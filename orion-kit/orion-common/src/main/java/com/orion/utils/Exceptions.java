@@ -3,6 +3,8 @@ package com.orion.utils;
 import com.orion.exception.*;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 
 /**
@@ -23,92 +25,47 @@ public class Exceptions {
 
     // ------------------ throw ------------------
 
-    public static void throwIO() throws IOException {
-        throw new IOException();
+    /**
+     * 获取异常栈内信息
+     *
+     * @param t 异常
+     * @return 栈
+     */
+    public static List<Stacks.StackTrace> getStackTrace(Throwable t) {
+        return Stacks.toStackTraces(t.getStackTrace());
     }
 
-    public static void throwIO(String s) throws IOException {
-        throw new IOException(s);
+    /**
+     * 获取异常栈内信息
+     *
+     * @param t 异常
+     * @return 栈信息
+     */
+    public static String getStackTraceAsString(Throwable t) {
+        StringWriter stringWriter = new StringWriter();
+        t.printStackTrace(new PrintWriter(stringWriter));
+        return stringWriter.toString();
     }
 
-    public static void throwIO(Throwable t) throws IOException {
-        throw new IOException(t);
-    }
-
-    public static void throwIO(String s, Throwable t) throws IOException {
-        throw new IOException(s, t);
-    }
-
-    public static void throwNullPoint() {
-        throw new NullPointerException();
-    }
-
-    public static void throwNullPoint(String s) {
-        throw new NullPointerException(s);
-    }
-
-    public static void throwArgument() {
-        throw new IllegalArgumentException();
-    }
-
-    public static void throwArgument(String s) {
-        throw new IllegalArgumentException(s);
-    }
-
-    public static void throwIndex() {
-        throw new IndexOutOfBoundsException();
-    }
-
-    public static void throwIndex(String s) {
-        throw new IndexOutOfBoundsException(s);
-    }
-
-    public static void throwException() throws Exception {
-        throw new Exception();
-    }
-
-    public static void throwException(Throwable t) throws Exception {
-        throw new Exception(t);
-    }
-
-    public static void throwException(String s) throws Exception {
-        throw new Exception(s);
-    }
-
-    public static void throwException(String s, Throwable t) throws Exception {
-        throw new Exception(s, t);
-    }
-
-    public static void throwRuntime() {
-        throw new RuntimeException();
-    }
-
-    public static void throwRuntime(Throwable t) {
-        throw new RuntimeException(t);
-    }
-
-    public static void throwRuntime(String s) {
-        throw new RuntimeException(s);
-    }
-
-    public static void throwRuntime(String s, Throwable t) {
-        throw new RuntimeException(s, t);
-    }
-
-    public static void throwError() {
-        throw new Error();
-    }
-
-    public static void throwError(Throwable t) {
-        throw new Error(t);
-    }
-
-    public static void throwError(String s) {
-        throw new Error(s);
-    }
-
-    public static void throwError(String s, Throwable t) {
-        throw new Error(s, t);
+    /**
+     * 判断异常是否由某些底层的异常引起
+     *
+     * @param r                     异常
+     * @param causeThrowableClasses checkClass
+     * @return ignore
+     */
+    @SafeVarargs
+    public static boolean isCausedBy(Throwable r, Class<? extends Exception>... causeThrowableClasses) {
+        Throwable cause = r.getCause();
+        while (cause != null) {
+            for (Class<? extends Exception> causeClass : causeThrowableClasses) {
+                if (causeClass.isInstance(cause)) {
+                    return true;
+                }
+            }
+            cause = cause.getCause();
+        }
+        return false;
     }
 
     // ------------------ new ------------------
@@ -305,19 +262,19 @@ public class Exceptions {
         return new IORuntimeException(s, t);
     }
 
-    public static UnsupportedEncodingRuntimeException unEnding() {
+    public static UnsupportedEncodingRuntimeException unCoding() {
         return new UnsupportedEncodingRuntimeException();
     }
 
-    public static UnsupportedEncodingRuntimeException unEnding(Throwable t) {
+    public static UnsupportedEncodingRuntimeException unCoding(Throwable t) {
         return new UnsupportedEncodingRuntimeException(t);
     }
 
-    public static TimeoutRuntimeException unEnding(String s) {
+    public static TimeoutRuntimeException unCoding(String s) {
         return new TimeoutRuntimeException(s);
     }
 
-    public static TimeoutRuntimeException unEnding(String s, Throwable t) {
+    public static TimeoutRuntimeException unCoding(String s, Throwable t) {
         return new TimeoutRuntimeException(s, t);
     }
 
@@ -463,16 +420,6 @@ public class Exceptions {
 
     public static Error error(String s, Throwable t) {
         return new Error(s, t);
-    }
-
-    /**
-     * 获取异常栈内信息
-     *
-     * @param t 异常
-     * @return 栈
-     */
-    public static List<Stacks.StackTrace> getStackTrace(Throwable t) {
-        return Stacks.toStackTraces(t.getStackTrace());
     }
 
 }

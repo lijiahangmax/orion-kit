@@ -1,6 +1,8 @@
 package com.orion.utils.ext;
 
 import com.orion.utils.*;
+import com.orion.utils.crypto.Base64s;
+import com.orion.utils.crypto.Signatures;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -14,7 +16,7 @@ import java.util.Date;
  * @version 1.0.0
  * @since 2020/3/13 14:11
  */
-public class StringExt implements Serializable {
+public class StringExt implements CharSequence, Serializable {
 
     private static final long serialVersionUID = 8675244107435484L;
 
@@ -155,6 +157,16 @@ public class StringExt implements Serializable {
      */
     public StringExt trim() {
         s = s.trim();
+        return this;
+    }
+
+    /**
+     * 去除特殊符号
+     *
+     * @return this
+     */
+    public StringExt trimPunct() {
+        s = Strings.trimPunct(s);
         return this;
     }
 
@@ -646,7 +658,7 @@ public class StringExt implements Serializable {
         try {
             return s.getBytes(charset);
         } catch (Exception e) {
-            throw Exceptions.unEnding(e);
+            throw Exceptions.unCoding(e);
         }
     }
 
@@ -657,16 +669,6 @@ public class StringExt implements Serializable {
      */
     public char[] toChars() {
         return s.toCharArray();
-    }
-
-    /**
-     * 转为string
-     *
-     * @return string
-     */
-    @Override
-    public String toString() {
-        return s;
     }
 
     /**
@@ -731,7 +733,7 @@ public class StringExt implements Serializable {
      * @return 签名
      */
     public String md5() {
-        return Encrypts.md5(s);
+        return Signatures.md5(s);
     }
 
     /**
@@ -741,7 +743,7 @@ public class StringExt implements Serializable {
      * @return 签名
      */
     public String sign(String sign) {
-        return Encrypts.sign(s, sign);
+        return Signatures.sign(s, sign);
     }
 
     /**
@@ -750,7 +752,7 @@ public class StringExt implements Serializable {
      * @return base64
      */
     public String encodeBase64() {
-        return Encrypts.base64Encode(s);
+        return Base64s.base64Encode(s);
     }
 
     /**
@@ -759,7 +761,7 @@ public class StringExt implements Serializable {
      * @return string
      */
     public String decodeBase64() {
-        return Encrypts.base64Decode(s);
+        return Base64s.base64Decode(s);
     }
 
     /**
@@ -767,7 +769,7 @@ public class StringExt implements Serializable {
      *
      * @return string
      */
-    public String cleanXSS() {
+    public String cleanXss() {
         return Xsses.clean(s);
     }
 
@@ -776,8 +778,33 @@ public class StringExt implements Serializable {
      *
      * @return string
      */
-    public String recodeXSS() {
+    public String recodeXss() {
         return Xsses.recode(s);
+    }
+
+    @Override
+    public int length() {
+        return s.length();
+    }
+
+    @Override
+    public char charAt(int index) {
+        return s.charAt(index);
+    }
+
+    @Override
+    public CharSequence subSequence(int start, int end) {
+        return s.subSequence(start, end);
+    }
+
+    /**
+     * 转为string
+     *
+     * @return string
+     */
+    @Override
+    public String toString() {
+        return s;
     }
 
 }

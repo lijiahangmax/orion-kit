@@ -40,7 +40,8 @@ public class Converts {
     private static final Conversion TO_BYTE = Converts::toByte, TO_SHORT = Converts::toShort, TO_INT = Converts::toInt, TO_LONG = Converts::toLong,
             TO_FLOAT = Converts::toFloat, TO_DOUBLE = Converts::toDouble, TO_BOOLEAN = Converts::toBoolean, TO_CHAR = Converts::toChar,
             TO_BIG_DECIMAL = BigDecimals::toBigDecimal, TO_BIG_INTEGER = BigIntegers::toBigInteger,
-            TO_DATE = Dates::date, TO_LOCAL_DATE_TIME = Dates::localDateTime, TO_LOCAL_DATE = Dates::localDate, TO_STRING = Converts::toString;
+            TO_DATE = Dates::date, TO_LOCAL_DATE_TIME = Dates::localDateTime, TO_LOCAL_DATE = Dates::localDate,
+            TO_STRING = Converts::toString;
 
     // -------------------- convert --------------------
 
@@ -65,11 +66,7 @@ public class Converts {
         boolean check = false;
         if (Classes.isBaseClass(rc)) {
             check = true;
-            rc = Classes.getWrapClass(rc);
-        }
-        if (Classes.isBaseClass(tc)) {
-            check = true;
-            tc = Classes.getWrapClass(tc);
+            rc = (Class<R>) Classes.getWrapClass(rc);
         }
         if (check && rc.equals(tc)) {
             return (R) t;

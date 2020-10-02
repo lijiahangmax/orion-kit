@@ -1,5 +1,9 @@
 package com.orion.utils;
 
+import java.text.DecimalFormat;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * 数字工具类
  *
@@ -9,7 +13,23 @@ package com.orion.utils;
  */
 public class Numbers {
 
+    /**
+     * 无小数点
+     */
+    private static final DecimalFormat NO_DECIMAL = new DecimalFormat("#");
+
+    /**
+     * 格式化
+     */
+    private static final Map<Integer, DecimalFormat> DECIMAL_FORMAT_MAP = new ConcurrentHashMap<>();
+
     private Numbers() {
+    }
+
+    static {
+        DECIMAL_FORMAT_MAP.put(0, NO_DECIMAL);
+        DECIMAL_FORMAT_MAP.put(1, new DecimalFormat("#.#"));
+        DECIMAL_FORMAT_MAP.put(2, new DecimalFormat("#.##"));
     }
 
     // -------------------- isZero --------------------
@@ -604,51 +624,27 @@ public class Numbers {
      * @return -1 0 1
      */
     public static int compare(byte x, byte y) {
-        if (x == y) {
-            return 0;
-        } else {
-            return x < y ? -1 : 1;
-        }
+        return Byte.compare(x, y);
     }
 
     public static int compare(short x, short y) {
-        if (x == y) {
-            return 0;
-        } else {
-            return x < y ? -1 : 1;
-        }
+        return Short.compare(x, y);
     }
 
     public static int compare(int x, int y) {
-        if (x == y) {
-            return 0;
-        } else {
-            return x < y ? -1 : 1;
-        }
+        return Integer.compare(x, y);
     }
 
     public static int compare(long x, long y) {
-        if (x == y) {
-            return 0;
-        } else {
-            return x < y ? -1 : 1;
-        }
+        return Long.compare(x, y);
     }
 
     public static int compare(float x, float y) {
-        if (x == y) {
-            return 0;
-        } else {
-            return x < y ? -1 : 1;
-        }
+        return Float.compare(x, y);
     }
 
     public static int compare(double x, double y) {
-        if (x == y) {
-            return 0;
-        } else {
-            return x < y ? -1 : 1;
-        }
+        return Double.compare(x, y);
     }
 
     // -------------------- min --------------------
@@ -798,6 +794,32 @@ public class Numbers {
             }
         }
         return max;
+    }
+
+    /**
+     * 清空小数
+     *
+     * @param d double
+     * @return string
+     */
+    public static String cleanDecimal(double d) {
+        return NO_DECIMAL.format(d);
+    }
+
+    /**
+     * 设置小数位
+     *
+     * @param d          double
+     * @param decimalLen 小数位
+     * @return string
+     */
+    public static String setScale(double d, int decimalLen) {
+        DecimalFormat format = DECIMAL_FORMAT_MAP.get(decimalLen);
+        if (format == null) {
+            format = new DecimalFormat("#." + Strings.repeat('#', decimalLen));
+            DECIMAL_FORMAT_MAP.put(decimalLen, format);
+        }
+        return format.format(d);
     }
 
 }

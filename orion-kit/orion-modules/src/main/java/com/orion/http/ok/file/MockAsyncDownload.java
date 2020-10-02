@@ -403,7 +403,7 @@ public class MockAsyncDownload {
             try {
                 this.body = body.getBytes(this.charset);
             } catch (Exception e) {
-                throw Exceptions.unEnding(e);
+                throw Exceptions.unCoding(e);
             }
         } else {
             this.body = body.getBytes();

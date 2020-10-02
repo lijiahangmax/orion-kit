@@ -1518,7 +1518,7 @@ public class FtpInstance {
         try {
             return new String(Files1.getPath(chars).getBytes(), config.getRemoteFileNameCharset());
         } catch (UnsupportedEncodingException e) {
-            throw Exceptions.unEnding(e);
+            throw Exceptions.unCoding(e);
         }
     }
 
@@ -1532,7 +1532,7 @@ public class FtpInstance {
         try {
             return new String(Files1.getPath(chars).getBytes(), config.getLocalFileNameCharset());
         } catch (UnsupportedEncodingException e) {
-            throw Exceptions.unEnding(e);
+            throw Exceptions.unCoding(e);
         }
     }
 

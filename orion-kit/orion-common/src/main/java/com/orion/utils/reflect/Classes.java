@@ -38,12 +38,12 @@ public class Classes {
     /**
      * 基本类型的class
      */
-    private static final Class[] BASE_CLASS = new Class[]{byte.class, short.class, int.class, long.class, float.class, double.class, boolean.class, char.class};
+    private static final Class<?>[] BASE_CLASS = new Class<?>[]{byte.class, short.class, int.class, long.class, float.class, double.class, boolean.class, char.class};
 
     /**
      * 包装类型的class
      */
-    private static final Class[] WRAP_CLASS = new Class[]{Byte.class, Short.class, Integer.class, Long.class, Float.class, Double.class, Boolean.class, Character.class};
+    private static final Class<?>[] WRAP_CLASS = new Class<?>[]{Byte.class, Short.class, Integer.class, Long.class, Float.class, Double.class, Boolean.class, Character.class};
 
     static {
         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
@@ -231,7 +231,7 @@ public class Classes {
      * @param argClass     argClass
      * @return true 是实现类或本类
      */
-    public static boolean isImplClass(Class requireClass, Class argClass) {
+    public static boolean isImplClass(Class<?> requireClass, Class<?> argClass) {
         Valid.notNull(requireClass, "RequireClass is null");
         Valid.notNull(argClass, "ArgClass is null");
         if (requireClass.equals(argClass) || requireClass.equals(Object.class)) {
@@ -250,7 +250,7 @@ public class Classes {
      * @param clazz class
      * @return true数组
      */
-    public static boolean isArray(Class clazz) {
+    public static boolean isArray(Class<?> clazz) {
         Valid.notNull(clazz, "Class is null");
         return clazz.isArray();
     }
@@ -261,9 +261,9 @@ public class Classes {
      * @param clazz class
      * @return 基本类型true
      */
-    public static boolean isBaseClass(Class clazz) {
+    public static boolean isBaseClass(Class<?> clazz) {
         Valid.notNull(clazz, "Class is null");
-        for (Class baseClass : BASE_CLASS) {
+        for (Class<?> baseClass : BASE_CLASS) {
             if (clazz.equals(baseClass)) {
                 return true;
             }
@@ -277,9 +277,9 @@ public class Classes {
      * @param clazz class
      * @return 包装类型true
      */
-    public static boolean isWrapClass(Class clazz) {
+    public static boolean isWrapClass(Class<?> clazz) {
         Valid.notNull(clazz, "Class is null");
-        for (Class wrapClass : WRAP_CLASS) {
+        for (Class<?> wrapClass : WRAP_CLASS) {
             if (clazz.equals(wrapClass)) {
                 return true;
             }
@@ -293,7 +293,7 @@ public class Classes {
      * @param clazz class
      * @return class
      */
-    public static Class getWrapClass(Class clazz) {
+    public static Class<?> getWrapClass(Class<?> clazz) {
         Valid.notNull(clazz, "Class is null");
         for (int i = 0; i < BASE_CLASS.length; i++) {
             if (clazz.equals(BASE_CLASS[i])) {
@@ -301,6 +301,40 @@ public class Classes {
             }
         }
         return clazz;
+    }
+
+    /**
+     * 判断class是否是数字类型
+     *
+     * @param clazz class
+     * @return true number
+     */
+    public static boolean isNumberClass(Class<?> clazz) {
+        Valid.notNull(clazz, "Class is null");
+        boolean n = clazz == byte.class || clazz == short.class ||
+                clazz == int.class || clazz == long.class ||
+                clazz == float.class || clazz == double.class ||
+                clazz == Number.class;
+        if (n) {
+            return n;
+        }
+        for (Class<?> superClass = clazz.getSuperclass(); superClass != null && superClass != Object.class; superClass = superClass.getSuperclass()) {
+            if (superClass == Number.class) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 判断对象是否是数字类型
+     *
+     * @param o object
+     * @return true number
+     */
+    public static boolean isNumberClass(Object o) {
+        Valid.notNull(o, "object is null");
+        return o instanceof Number;
     }
 
 }

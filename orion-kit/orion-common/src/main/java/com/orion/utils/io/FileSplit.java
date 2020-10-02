@@ -95,7 +95,7 @@ public class FileSplit implements Callable<String[]> {
         }
         this.file = file;
         double size = (double) file.length() / (double) blockCount;
-        if (size == ((int) size)) {
+        if (Double.compare(size, (int) size) == 0) {
             this.blockSize = (long) size;
         } else {
             this.blockSize = (long) size + 1;

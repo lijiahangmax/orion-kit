@@ -2,11 +2,11 @@ package com.orion.test.remote;
 
 import ch.ethz.ssh2.SFTPv3Client;
 import com.orion.exception.AuthenticationException;
-import com.orion.remote.RemoteConnection;
-import com.orion.remote.sftp.FileAttribute;
-import com.orion.remote.sftp.SftpExecutor;
-import com.orion.remote.sftp.bigfile.SftpDownload;
-import com.orion.remote.sftp.bigfile.SftpUpload;
+import com.orion.remote.connection.RemoteConnection;
+import com.orion.remote.connection.sftp.FileAttribute;
+import com.orion.remote.connection.sftp.SftpExecutor;
+import com.orion.remote.connection.sftp.bigfile.SftpDownload;
+import com.orion.remote.connection.sftp.bigfile.SftpUpload;
 import com.orion.utils.Threads;
 import org.junit.Test;
 

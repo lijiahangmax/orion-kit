@@ -58,7 +58,7 @@ public class Excels {
                     value = Dates.format(DateUtil.getJavaDate(cell.getNumericCellValue()));
                 } else {
                     // 纯数字
-                    BigDecimal big = new BigDecimal(cell.getNumericCellValue());
+                    BigDecimal big = BigDecimal.valueOf(cell.getNumericCellValue());
                     value = big.toString();
                     if (null != value && !"".equals(value.trim())) {
                         String[] item = value.split("[.]");

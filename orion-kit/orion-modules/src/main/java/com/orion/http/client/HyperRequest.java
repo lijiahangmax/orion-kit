@@ -344,7 +344,7 @@ public class HyperRequest implements Awaitable<HyperResponse> {
             try {
                 this.body = body.getBytes(this.charset);
             } catch (Exception e) {
-                throw Exceptions.unEnding(e);
+                throw Exceptions.unCoding(e);
             }
         } else {
             this.body = body.getBytes();
@@ -639,7 +639,7 @@ public class HyperRequest implements Awaitable<HyperResponse> {
                     return new UrlEncodedFormEntity(pairs, Charset.forName(charset));
                 }
             } catch (Exception e) {
-                throw Exceptions.unEnding(e);
+                throw Exceptions.unCoding(e);
             }
         }
         return null;

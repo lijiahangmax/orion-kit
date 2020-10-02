@@ -1116,7 +1116,7 @@ public class Strings {
         if (isBlank(s)) {
             return s;
         }
-        return s.replaceAll("[\\pP\\p{Punct}]", "");
+        return s.replaceAll("[\\pP\\p{Punct}]", "").replaceAll("￥", "");
     }
 
     /**

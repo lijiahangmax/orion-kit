@@ -361,7 +361,7 @@ public class MockRequest implements Awaitable<MockResponse>, Asyncable<Consumer<
             try {
                 this.body = body.getBytes(this.charset);
             } catch (Exception e) {
-                throw Exceptions.unEnding(e);
+                throw Exceptions.unCoding(e);
             }
         }
         this.bodyOffset = 0;

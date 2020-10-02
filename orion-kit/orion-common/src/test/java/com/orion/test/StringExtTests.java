@@ -63,8 +63,8 @@ public class StringExtTests {
         System.out.println(e.isNull());
         System.out.println(e.isNotNull());
         System.out.println(e.set("<123{}"));
-        System.out.println(e.cleanXSS());
-        System.out.println(e.recodeXSS());
+        System.out.println(e.cleanXss());
+        System.out.println(e.recodeXss());
         System.out.println(e.urlDecode());
         System.out.println(e.urlDecode());
         System.out.println(e.sign("SHA1"));

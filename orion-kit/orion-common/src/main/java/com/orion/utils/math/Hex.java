@@ -80,4 +80,12 @@ public class Hex {
         return result;
     }
 
+    public static String encode(String s) {
+        return bytesToHex(s.getBytes());
+    }
+
+    public static String decode(String s) {
+        return new String(hexToBytes(s));
+    }
+
 }

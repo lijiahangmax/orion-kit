@@ -75,7 +75,6 @@ public class FileMerge implements Callable<String> {
         try {
             return mergeFile(file.getAbsolutePath(), fl.getArg1(), fl.getArg2());
         } catch (Exception e) {
-            e.printStackTrace();
             return "error: " + e.getMessage();
         }
     }
@@ -141,7 +140,6 @@ public class FileMerge implements Callable<String> {
             fo.flush();
             return wf.getAbsolutePath();
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException("merge error: " + e.getMessage());
         } finally {
             Streams.close(fo);

@@ -311,7 +311,7 @@ public class IPs {
                 result.put(address.getHostAddress().split("%")[0], address.getHostName());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            // ignore
         }
         return result;
     }

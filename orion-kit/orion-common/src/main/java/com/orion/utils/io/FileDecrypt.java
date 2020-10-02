@@ -1,7 +1,7 @@
 package com.orion.utils.io;
 
-import com.orion.utils.Encrypts;
 import com.orion.utils.Exceptions;
+import com.orion.utils.crypto.AES;
 
 import javax.crypto.SecretKey;
 import java.io.*;
@@ -80,11 +80,11 @@ public class FileDecrypt implements Callable<Boolean> {
 
     @Override
     public Boolean call() {
-        SecretKey secretKey = Encrypts.generatorAESKey(password);
+        SecretKey secretKey = AES.generatorKey(password);
         try {
             String line;
             while ((line = reader.readLine()) != null) {
-                byte[] d = Encrypts.aesDecrypt(line.getBytes(), secretKey);
+                byte[] d = AES.decrypt(line.getBytes(), secretKey);
                 out.write(d);
             }
             out.flush();
