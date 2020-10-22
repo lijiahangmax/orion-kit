@@ -148,7 +148,7 @@ public class CommandExecutor extends BaseExecutor {
         }
         Valid.isTrue(isConnected(), "not connected");
         if (run) {
-            throw Exceptions.runtime("A thread can only be executed once");
+            throw Exceptions.runtime("this executor can only be executed once");
         }
         run = true;
         if (lineHandler != null) {
