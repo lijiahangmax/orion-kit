@@ -1,5 +1,7 @@
 package com.orion.csv.core;
 
+import com.orion.able.SafeCloseable;
+
 import java.io.*;
 import java.nio.charset.Charset;
 
@@ -11,7 +13,7 @@ import java.nio.charset.Charset;
  * @since 2020/4/1 23:23
  */
 @SuppressWarnings("ALL")
-public class CsvWriter implements Closeable {
+public class CsvWriter implements SafeCloseable {
 
     private PrintWriter outputStream;
     private String fileName;
@@ -244,6 +246,7 @@ public class CsvWriter implements Closeable {
         this.outputStream.flush();
     }
 
+    @Override
     public void close() {
         if (!this.closed) {
             this.close(true);

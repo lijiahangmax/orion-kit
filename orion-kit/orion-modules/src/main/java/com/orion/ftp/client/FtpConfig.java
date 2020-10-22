@@ -1,6 +1,6 @@
 package com.orion.ftp.client;
 
-import com.orion.able.Jsonable;
+import com.orion.able.JsonAble;
 
 import java.io.Serializable;
 
@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @version 1.0.0
  * @since 2020/3/17 16:00
  */
-public class FtpConfig implements Serializable, Jsonable {
+public class FtpConfig implements Serializable, JsonAble {
 
     /**
      * host

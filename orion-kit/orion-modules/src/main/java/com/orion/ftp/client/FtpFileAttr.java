@@ -1,6 +1,6 @@
 package com.orion.ftp.client;
 
-import com.orion.able.Jsonable;
+import com.orion.able.JsonAble;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -12,8 +12,7 @@ import java.util.Date;
  * @version 1.0.0
  * @since 2020/3/17 15:56
  */
-@SuppressWarnings("ALL")
-public class FtpFileAttr implements Serializable, Jsonable {
+public class FtpFileAttr implements Serializable, JsonAble {
 
     private static final long serialVersionUID = -83262527027527775L;
 

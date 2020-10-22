@@ -1,8 +1,8 @@
 package com.orion.dom;
 
-import com.orion.able.Jsonable;
-import com.orion.lang.collect.ConvertArrayList;
-import com.orion.lang.collect.ConvertHashMap;
+import com.orion.able.JsonAble;
+import com.orion.lang.collect.MutableArrayList;
+import com.orion.lang.collect.MutableHashMap;
 
 import java.io.Serializable;
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.Map;
  * @since 2020/3/26 21:41
  */
 @SuppressWarnings("ALL")
-public class DomNode implements Serializable, Jsonable {
+public class DomNode implements Serializable, JsonAble {
 
     /**
      * 值
@@ -36,17 +36,17 @@ public class DomNode implements Serializable, Jsonable {
         return value.getClass();
     }
 
-    public ConvertHashMap getMapValue() {
+    public MutableHashMap getMapValue() {
         if (value instanceof Map) {
-            return new ConvertHashMap(((Map) value));
+            return new MutableHashMap(((Map) value));
         } else {
             return null;
         }
     }
 
-    public ConvertArrayList getListValue() {
+    public MutableArrayList getListValue() {
         if (value instanceof List) {
-            return new ConvertArrayList(((List) value));
+            return new MutableArrayList(((List) value));
         } else {
             return null;
         }

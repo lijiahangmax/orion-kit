@@ -81,11 +81,11 @@ public class SpringHolder {
         return applicationContext.isSingleton(beanName);
     }
 
-    public static Class getType(String beanName) {
+    public static Class<?> getType(String beanName) {
         return applicationContext.getType(beanName);
     }
 
-    public static boolean isType(String beanName, Class beanType) {
+    public static boolean isType(String beanName, Class<?> beanType) {
         return applicationContext.isTypeMatch(beanName, beanType);
     }
 
@@ -100,7 +100,7 @@ public class SpringHolder {
     }
 
     public static void refresh() {
-        Valid.isInstanceOf(ConfigurableApplicationContext.class, applicationContext);
+        Valid.isInstanceOf(applicationContext, ConfigurableApplicationContext.class);
         ConfigurableApplicationContext applicationContext = (ConfigurableApplicationContext) SpringHolder.applicationContext;
         applicationContext.refresh();
     }

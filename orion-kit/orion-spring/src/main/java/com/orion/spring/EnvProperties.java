@@ -1,7 +1,7 @@
 package com.orion.spring;
 
-import com.orion.lang.collect.ConvertHashMap;
-import com.orion.lang.collect.ConvertHashSet;
+import com.orion.lang.collect.MutableHashMap;
+import com.orion.lang.collect.MutableHashSet;
 import com.orion.utils.ext.PropertiesExt;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -53,11 +53,11 @@ public class EnvProperties {
         return propertiesExt.getValue(key, def);
     }
 
-    public static ConvertHashMap getValues() {
+    public static MutableHashMap getValues() {
         return propertiesExt.getValues();
     }
 
-    public static ConvertHashSet getKeys() {
+    public static MutableHashSet getKeys() {
         return propertiesExt.getKeys();
     }
 

@@ -1,6 +1,6 @@
 package com.orion.test.tail;
 
-import com.orion.tail.Tracker;
+import com.orion.tail.DelayTracker;
 import com.orion.utils.Spells;
 import com.orion.utils.Strings;
 import com.orion.utils.Threads;
@@ -23,10 +23,10 @@ public class TailTests {
     public static void main(String[] args) throws IOException {
         String r = Streams.readLines(new RandomAccessFile(new File("C:\\Users\\ljh15\\Desktop\\tmp\\tail.txt"), "r"));
         System.out.println(r);
-        Tracker tracker = new Tracker(new File("C:\\Users\\ljh15\\Desktop\\tmp\\tail.txt"), (s, l, t) -> {
+        DelayTracker delayTracker = new DelayTracker(new File("C:\\Users\\ljh15\\Desktop\\tmp\\tail.txt"), (s, l, t) -> {
             System.out.println(l + ": " + s + " " + Spells.isMessyCode(s));
         }).tailStartPos(121);
-        tracker.run();
+        delayTracker.run();
     }
 
 

@@ -76,11 +76,6 @@ public class FtpUpload implements Runnable {
     private boolean openNowRate = false;
 
     /**
-     * 实时速率线程
-     */
-    private Thread nowRateThread;
-
-    /**
      * 是否已完成
      */
     private volatile boolean done;
@@ -97,18 +92,17 @@ public class FtpUpload implements Runnable {
         this.startTime = System.currentTimeMillis();
         InputStream in = null;
         OutputStream out = null;
+        RandomAccessFile random = null;
         size = local.length();
         try {
             if (openNowRate) {
-                nowRateThread = new Thread(() -> {
-                    while (getProgress() != 1) {
+                Threads.start(() -> {
+                    while (!done) {
                         long size = now;
-                        Threads.sleep(950);
+                        Threads.sleep(1000);
                         nowRate = now - size;
                     }
                 });
-                nowRateThread.setDaemon(true);
-                nowRateThread.start();
             }
             FtpFileAttr fileAttr = instance.getFileAttr(remote);
             if (local.exists() && lock.checkLock()) {
@@ -118,7 +112,7 @@ public class FtpUpload implements Runnable {
                     lock.unLock();
                     return;
                 }
-                RandomAccessFile random = new RandomAccessFile(local, "r");
+                random = new RandomAccessFile(local, "r");
                 random.seek(startSize);
                 out = instance.client().appendFileStream(instance.serverCharset(instance.config().getRemoteBaseDir() + remote));
                 int read;
@@ -151,10 +145,11 @@ public class FtpUpload implements Runnable {
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         } finally {
+            done = true;
             this.endTime = System.currentTimeMillis();
             Streams.close(in);
             Streams.close(out);
-            done = true;
+            Streams.close(random);
             try {
                 if (out != null) {
                     instance.client().completePendingCommand();
@@ -227,6 +222,10 @@ public class FtpUpload implements Runnable {
 
     public long getStartSize() {
         return startSize;
+    }
+
+    public long getUseTime() {
+        return endTime - startTime;
     }
 
     public long getSize() {

@@ -1,6 +1,6 @@
 package com.orion.dom;
 
-import com.orion.able.Builderable;
+import com.orion.able.BuilderAble;
 import com.orion.utils.Exceptions;
 import com.orion.utils.collect.Lists;
 import com.orion.utils.collect.Maps;
@@ -25,7 +25,7 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2020/3/24 12:58
  */
-public class DomBuilder implements Builderable<DomBuilder> {
+public class DomBuilder implements BuilderAble<DomBuilder> {
 
     /**
      * 构建xml信息

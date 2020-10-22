@@ -988,7 +988,7 @@ public class FtpInstance {
             out = client.appendFileStream(serverCharset(config.getRemoteBaseDir() + file));
             for (String line : lines) {
                 out.write(line.getBytes());
-                out.write(13);
+                out.write('\n');
             }
         } finally {
             Streams.close(out);

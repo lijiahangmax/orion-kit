@@ -11,11 +11,11 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2019/8/19 20:03
  */
-public interface Mapable {
+public interface Mapable<K, V> {
 
-    Map toMap();
+    Map<K, V> toMap();
 
-    default Map<String, Object> toMaped() {
+    default Map<String, Object> asMap() {
         return BeanWrapper.toMap(this);
     }
 

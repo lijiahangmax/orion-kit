@@ -1,10 +1,9 @@
 package com.orion.process;
 
-import com.orion.process.handler.ErrorHandler;
+import com.orion.utils.Exceptions;
 import com.orion.utils.io.Files1;
 
 import java.io.File;
-import java.util.*;
 
 /**
  * 异步进程执行器
@@ -13,18 +12,7 @@ import java.util.*;
  * @version 1.0.0
  * @since 2020/4/17 13:44
  */
-@SuppressWarnings("ALL")
-public class ProcessAsyncExecutor {
-
-    /**
-     * 命令
-     */
-    private String[] command;
-
-    /**
-     * 命令执行文件夹
-     */
-    private String dir;
+public class ProcessAsyncExecutor extends BaseProcessExecutor {
 
     /**
      * ProcessBuilder
@@ -42,19 +30,14 @@ public class ProcessAsyncExecutor {
     private File inputFile;
 
     /**
-     * 错误流转存文件
-     */
-    private File errFile;
-
-    /**
-     * 是否拼接输出到文件
-     */
-    private boolean errAppend;
-
-    /**
      * 输出流转存文件
      */
     private File outputFile;
+
+    /**
+     * 错误流转存文件
+     */
+    private File errorFile;
 
     /**
      * 是否拼接输出到文件
@@ -62,34 +45,9 @@ public class ProcessAsyncExecutor {
     private boolean outAppend;
 
     /**
-     * 是否将异常流合并到标准流
+     * 是否拼接输出到文件
      */
-    private boolean redirectErr;
-
-    /**
-     * 当前环境
-     */
-    private Map<String, String> env;
-
-    /**
-     * 新增环境变量
-     */
-    private Map<String, String> addEnv;
-
-    /**
-     * 删除环境变量
-     */
-    private List<String> removeEnv;
-
-    /**
-     * 异常信息
-     */
-    private Exception exception;
-
-    /**
-     * 错误处理器
-     */
-    private ErrorHandler<ProcessAsyncExecutor> errorHandler;
+    private boolean errAppend;
 
     public ProcessAsyncExecutor(String command) {
         this(new String[]{command}, null);
@@ -104,99 +62,22 @@ public class ProcessAsyncExecutor {
     }
 
     public ProcessAsyncExecutor(String[] command, String dir) {
-        this.command = command;
-        this.dir = dir;
+        super(command, dir);
     }
 
     /**
-     * 命名使用系统 terminal 执行
-     * 如果进程不会自动停止不可以使用, 因为destroy杀死的不是terminal执行的进程, 而是terminal
+     * 设置标准流文件
      *
+     * @param inputFile 标准流文件
      * @return this
      */
-    public ProcessAsyncExecutor terminal() {
-        List<String> c = EnvCommand.getCommand();
-        for (String s : this.command) {
-            c.add(s.replaceAll("\n", EnvCommand.SPACE).replaceAll("\r", EnvCommand.SPACE));
-        }
-        this.command = c.toArray(new String[0]);
+    public ProcessAsyncExecutor inputFile(String inputFile) {
+        this.inputFile = new File(inputFile);
         return this;
     }
 
     /**
-     * 设置命令执行的文件夹
-     *
-     * @param dir 文件夹
-     * @return this
-     */
-    public ProcessAsyncExecutor dir(String dir) {
-        this.dir = dir;
-        return this;
-    }
-
-    /**
-     * 添加环境变量
-     *
-     * @param key   key
-     * @param value value
-     * @return this
-     */
-    public ProcessAsyncExecutor addEnv(String key, String value) {
-        if (this.addEnv == null) {
-            this.addEnv = new HashMap<>();
-        }
-        this.addEnv.put(key, value);
-        return this;
-    }
-
-    /**
-     * 添加环境变量
-     *
-     * @param env 环境变量
-     * @return this
-     */
-    public ProcessAsyncExecutor addEnv(Map<String, String> env) {
-        if (this.addEnv == null) {
-            this.addEnv = new HashMap<>();
-        }
-        this.addEnv.putAll(env);
-        return this;
-    }
-
-    /**
-     * 删除环境变量
-     *
-     * @param keys key
-     * @return this
-     */
-    public ProcessAsyncExecutor removeEnv(String... keys) {
-        if (this.removeEnv == null) {
-            this.removeEnv = new ArrayList<>();
-        }
-        if (keys != null) {
-            this.removeEnv.addAll(Arrays.asList(keys));
-        }
-        return this;
-    }
-
-    /**
-     * 删除环境变量
-     *
-     * @param keys key
-     * @return this
-     */
-    public ProcessAsyncExecutor removeEnv(List<String> keys) {
-        if (this.removeEnv == null) {
-            this.removeEnv = new ArrayList<>();
-        }
-        if (keys != null) {
-            this.removeEnv.addAll(keys);
-        }
-        return this;
-    }
-
-    /**
-     * #async 设置标准流文件
+     * 设置标准流文件
      *
      * @param inputFile 标准流文件
      * @return this
@@ -207,31 +88,66 @@ public class ProcessAsyncExecutor {
     }
 
     /**
-     * #async 设置错误流文件
+     * 设置错误流文件
      *
-     * @param errFile 错误流文件
+     * @param errorFile 错误流文件
      * @return this
      */
-    public ProcessAsyncExecutor errFile(File errFile) {
-        this.errFile = errFile;
+    public ProcessAsyncExecutor errorFile(String errorFile) {
+        this.errorFile = new File(errorFile);
         return this;
     }
 
     /**
-     * #async 设置错误流文件
+     * 设置错误流文件
      *
-     * @param errFile 错误流文件
-     * @param append  是否拼接
+     * @param errorFile 错误流文件
      * @return this
      */
-    public ProcessAsyncExecutor errFile(File errFile, boolean append) {
-        this.errFile = errFile;
+    public ProcessAsyncExecutor errorFile(File errorFile) {
+        this.errorFile = errorFile;
+        return this;
+    }
+
+    /**
+     * 设置错误流文件
+     *
+     * @param errorFile 错误流文件
+     * @param append    是否拼接
+     * @return this
+     */
+    public ProcessAsyncExecutor errorFile(String errorFile, boolean append) {
+        this.errorFile = new File(errorFile);
         this.errAppend = append;
         return this;
     }
 
     /**
-     * #async 设置标准流输出的文件
+     * 设置错误流文件
+     *
+     * @param errorFile 错误流文件
+     * @param append    是否拼接
+     * @return this
+     */
+    public ProcessAsyncExecutor errorFile(File errorFile, boolean append) {
+        this.errorFile = errorFile;
+        this.errAppend = append;
+        return this;
+    }
+
+    /**
+     * 设置标准流输出的文件
+     *
+     * @param outputFile 标准流输出的文件
+     * @return this
+     */
+    public ProcessAsyncExecutor outputFile(String outputFile) {
+        this.outputFile = new File(outputFile);
+        return this;
+    }
+
+    /**
+     * 设置标准流输出的文件
      *
      * @param outputFile 标准流输出的文件
      * @return this
@@ -242,7 +158,20 @@ public class ProcessAsyncExecutor {
     }
 
     /**
-     * #async 设置标准流输出的文件
+     * 设置标准流输出的文件
+     *
+     * @param outputFile 标准流输出的文件
+     * @param append     是否拼接
+     * @return this
+     */
+    public ProcessAsyncExecutor outputFile(String outputFile, boolean append) {
+        this.outputFile = new File(outputFile);
+        this.outAppend = append;
+        return this;
+    }
+
+    /**
+     * 设置标准流输出的文件
      *
      * @param outputFile 标准流输出的文件
      * @param append     是否拼接
@@ -254,28 +183,8 @@ public class ProcessAsyncExecutor {
         return this;
     }
 
-    /**
-     * 合并err流到标准流
-     *
-     * @return this
-     */
-    public ProcessAsyncExecutor redirectErr() {
-        this.redirectErr = true;
-        return this;
-    }
-
-    /**
-     * 错误处理器
-     *
-     * @param errorHandler errorHandler
-     * @return this
-     */
-    public ProcessAsyncExecutor errorHandler(ErrorHandler<ProcessAsyncExecutor> errorHandler) {
-        this.errorHandler = errorHandler;
-        return this;
-    }
-
-    public void async() {
+    @Override
+    public void exec() {
         try {
             this.pb = new ProcessBuilder(command);
             this.env = this.pb.environment();
@@ -289,20 +198,20 @@ public class ProcessAsyncExecutor {
             }
             this.pb.directory(dir == null ? null : new File(dir));
             // 是否将错误流合并到输出流
-            this.pb.redirectErrorStream(this.redirectErr);
+            this.pb.redirectErrorStream(this.redirectError);
             if (this.inputFile != null) {
                 Files1.touch(this.inputFile);
                 this.pb.redirectInput(this.inputFile);
             } else {
                 this.pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
             }
-            if (!this.redirectErr) {
-                if (this.errFile != null) {
-                    Files1.touch(this.errFile);
+            if (!this.redirectError) {
+                if (this.errorFile != null) {
+                    Files1.touch(this.errorFile);
                     if (this.errAppend) {
-                        this.pb.redirectError(ProcessBuilder.Redirect.appendTo(this.errFile));
+                        this.pb.redirectError(ProcessBuilder.Redirect.appendTo(this.errorFile));
                     } else {
-                        this.pb.redirectError(ProcessBuilder.Redirect.to(this.errFile));
+                        this.pb.redirectError(ProcessBuilder.Redirect.to(this.errorFile));
                     }
                 } else {
                     this.pb.redirectError(ProcessBuilder.Redirect.INHERIT);
@@ -320,16 +229,14 @@ public class ProcessAsyncExecutor {
             }
             this.process = pb.start();
         } catch (Exception e) {
-            this.exception = e;
-            if (this.errorHandler != null) {
-                this.errorHandler.onError(this, e);
-            }
+            throw Exceptions.runtime(e);
         }
     }
 
     /**
      * 关闭进程
      */
+    @Override
     public void close() {
         this.process.destroy();
     }
@@ -339,6 +246,7 @@ public class ProcessAsyncExecutor {
      *
      * @return true执行中
      */
+    @Override
     public boolean isAlive() {
         return this.process.isAlive();
     }
@@ -348,6 +256,7 @@ public class ProcessAsyncExecutor {
      *
      * @return -1 未执行完毕  0 成功  1 失败
      */
+    @Override
     public int getExitCode() {
         if (!this.process.isAlive()) {
             return this.process.exitValue();
@@ -355,18 +264,12 @@ public class ProcessAsyncExecutor {
         return -1;
     }
 
-    public String[] getCommand() {
-        return command;
-    }
-
-    public String getDir() {
-        return dir;
-    }
-
+    @Override
     public ProcessBuilder getProcessBuilder() {
         return pb;
     }
 
+    @Override
     public Process getProcess() {
         return process;
     }
@@ -375,28 +278,12 @@ public class ProcessAsyncExecutor {
         return inputFile;
     }
 
-    public File getErrFile() {
-        return errFile;
+    public File getErrorFile() {
+        return errorFile;
     }
 
     public File getOutputFile() {
         return outputFile;
-    }
-
-    public boolean isRedirectErr() {
-        return redirectErr;
-    }
-
-    public Exception getException() {
-        return exception;
-    }
-
-    public boolean isError() {
-        return exception != null;
-    }
-
-    public Map<String, String> getEnv() {
-        return env;
     }
 
 }

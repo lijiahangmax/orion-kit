@@ -17,6 +17,6 @@ public interface LineHandler {
      * @param index   当前行
      * @param tracker 追踪器
      */
-    void readLine(String line, long index, Tracker tracker);
+    void readLine(String line, long index, DelayTracker tracker);
 
 }

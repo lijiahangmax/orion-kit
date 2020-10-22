@@ -1,5 +1,6 @@
 package com.orion;
 
+import com.orion.lang.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,10 +17,10 @@ public class Tests {
     private static final Logger LOGGER = LoggerFactory.getLogger(Tests.class);
 
     public static void main(String[] args) throws Exception {
-        long start = System.currentTimeMillis();
+        StopWatch w = StopWatch.begin();
 
-        long end = System.currentTimeMillis();
-        System.out.println("used: " + (end - start));
+        w.stop();
+        System.out.println("\n\n\n\n\n" + w);
     }
 
 }

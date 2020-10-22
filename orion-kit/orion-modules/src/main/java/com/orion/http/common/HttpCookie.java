@@ -1,6 +1,6 @@
 package com.orion.http.common;
 
-import com.orion.lang.collect.ConvertHashMap;
+import com.orion.lang.collect.MutableHashMap;
 import com.orion.utils.Converts;
 import com.orion.utils.Valid;
 import com.orion.utils.time.Dates;
@@ -33,7 +33,7 @@ public class HttpCookie implements Serializable {
     /**
      * 键值对
      */
-    private ConvertHashMap<String, String> values;
+    private MutableHashMap<String, String> values;
 
     /**
      * 过期时间
@@ -97,7 +97,7 @@ public class HttpCookie implements Serializable {
                     break;
                 default:
                     if (values == null) {
-                        values = new ConvertHashMap<>();
+                        values = new MutableHashMap<>();
                     }
                     values.put(key, null);
                     break;
@@ -119,7 +119,7 @@ public class HttpCookie implements Serializable {
                     break;
                 default:
                     if (values == null) {
-                        values = new ConvertHashMap<>();
+                        values = new MutableHashMap<>();
                     }
                     values.put(key, value);
                     break;
@@ -127,18 +127,18 @@ public class HttpCookie implements Serializable {
         }
     }
 
-    public ConvertHashMap<String, String> getValues() {
+    public MutableHashMap<String, String> getValues() {
         return values;
     }
 
-    public HttpCookie setValues(ConvertHashMap<String, String> values) {
+    public HttpCookie setValues(MutableHashMap<String, String> values) {
         this.values = values;
         return this;
     }
 
     public HttpCookie addValue(String key, String value) {
         if (this.values == null) {
-            this.values = new ConvertHashMap<>();
+            this.values = new MutableHashMap<>();
         }
         this.values.put(key, value);
         return this;

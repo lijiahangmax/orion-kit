@@ -81,7 +81,7 @@ public enum HttpMethod {
             }
         }
         if (!opt) {
-            throw Exceptions.unsupport("the method is not supported");
+            throw Exceptions.unSupport("the method is not supported");
         }
     }
 

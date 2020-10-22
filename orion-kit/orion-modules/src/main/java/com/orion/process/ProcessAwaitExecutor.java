@@ -1,16 +1,13 @@
 package com.orion.process;
 
-import com.orion.able.Awaitable;
-import com.orion.process.handler.ErrorHandler;
-import com.orion.process.handler.StreamHandler;
+import com.orion.lang.thread.HookRunnable;
+import com.orion.utils.Exceptions;
+import com.orion.utils.Threads;
 import com.orion.utils.io.Streams;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.*;
+import java.io.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiConsumer;
 
 /**
  * 同步进程执行器
@@ -19,17 +16,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0.0
  * @since 2020/4/17 13:44
  */
-public class ProcessAwaitExecutor implements Awaitable<ProcessAwaitExecutor> {
-
-    /**
-     * 命令
-     */
-    private String[] command;
-
-    /**
-     * 命令执行文件夹
-     */
-    private String dir;
+public class ProcessAwaitExecutor extends BaseProcessExecutor {
 
     /**
      * ProcessBuilder
@@ -44,27 +31,22 @@ public class ProcessAwaitExecutor implements Awaitable<ProcessAwaitExecutor> {
     /**
      * 输入流
      */
-    private InputStream in;
+    private InputStream inputStream;
 
     /**
      * 错误流
      */
-    private InputStream err;
+    private InputStream errorStream;
 
     /**
      * 输出流
      */
-    private OutputStream out;
+    private OutputStream outputStream;
 
     /**
      * 是否合并流到系统流
      */
-    private boolean inheritIO;
-
-    /**
-     * 是否将异常流合并到标准流
-     */
-    private boolean redirectErr;
+    private boolean inherit;
 
     /**
      * 是否等待命令执行
@@ -72,34 +54,29 @@ public class ProcessAwaitExecutor implements Awaitable<ProcessAwaitExecutor> {
     private long waitFor = -1L;
 
     /**
-     * 异常信息
-     */
-    private Exception exception;
-
-    /**
      * 流处理器
      */
-    private StreamHandler streamHandler;
+    private BiConsumer<ProcessAwaitExecutor, InputStream> streamHandler;
 
     /**
-     * 当前环境
+     * 行处理器
      */
-    private Map<String, String> env;
+    private BiConsumer<ProcessAwaitExecutor, String> lineHandler;
 
     /**
-     * 新增环境变量
+     * 行处理器编码
      */
-    private Map<String, String> addEnv;
+    private String lineCharset;
 
     /**
-     * 删除环境变量
+     * 是否已完成
      */
-    private List<String> removeEnv;
+    private volatile boolean done;
 
     /**
-     * 错误处理器
+     * 是否已关闭
      */
-    private ErrorHandler<ProcessAwaitExecutor> errorHandler;
+    private boolean close;
 
     public ProcessAwaitExecutor(String command) {
         this(new String[]{command}, null);
@@ -114,114 +91,17 @@ public class ProcessAwaitExecutor implements Awaitable<ProcessAwaitExecutor> {
     }
 
     public ProcessAwaitExecutor(String[] command, String dir) {
-        this.command = command;
-        this.dir = dir;
+        super(command, dir);
+        this.streamHandler = streamHandler;
     }
 
     /**
-     * 命名使用系统 terminal 执行
-     * 如果进程不会自动停止不可以使用, 因为destroy杀死的不是terminal执行的进程, 而是terminal
+     * 合并子流到系统流
      *
      * @return this
      */
-    public ProcessAwaitExecutor terminal() {
-        List<String> c = EnvCommand.getCommand();
-        for (String s : this.command) {
-            c.add(s.replaceAll("\n", EnvCommand.SPACE).replaceAll("\r", EnvCommand.SPACE));
-        }
-        this.command = c.toArray(new String[0]);
-        return this;
-    }
-
-    /**
-     * 设置命令执行的文件夹
-     *
-     * @param dir 文件夹
-     * @return this
-     */
-    public ProcessAwaitExecutor dir(String dir) {
-        this.dir = dir;
-        return this;
-    }
-
-    /**
-     * 添加环境变量
-     *
-     * @param key   key
-     * @param value value
-     * @return this
-     */
-    public ProcessAwaitExecutor addEnv(String key, String value) {
-        if (this.addEnv == null) {
-            this.addEnv = new HashMap<>();
-        }
-        this.addEnv.put(key, value);
-        return this;
-    }
-
-    /**
-     * 添加环境变量
-     *
-     * @param env 环境变量
-     * @return this
-     */
-    public ProcessAwaitExecutor addEnv(Map<String, String> env) {
-        if (this.addEnv == null) {
-            this.addEnv = new HashMap<>();
-        }
-        this.addEnv.putAll(env);
-        return this;
-    }
-
-    /**
-     * 删除环境变量
-     *
-     * @param keys key
-     * @return this
-     */
-    public ProcessAwaitExecutor removeEnv(String... keys) {
-        if (this.removeEnv == null) {
-            this.removeEnv = new ArrayList<>();
-        }
-        if (keys != null) {
-            this.removeEnv.addAll(Arrays.asList(keys));
-        }
-        return this;
-    }
-
-    /**
-     * 删除环境变量
-     *
-     * @param keys key
-     * @return this
-     */
-    public ProcessAwaitExecutor removeEnv(List<String> keys) {
-        if (this.removeEnv == null) {
-            this.removeEnv = new ArrayList<>();
-        }
-        if (keys != null) {
-            this.removeEnv.addAll(keys);
-        }
-        return this;
-    }
-
-    /**
-     * #await 合并子流到系统流
-     *
-     * @return this
-     */
-    public ProcessAwaitExecutor inheritIO() {
-        this.inheritIO = true;
-        return this;
-    }
-
-    /**
-     * 合并err流到标准流
-     *
-     * @return this
-     */
-    public ProcessAwaitExecutor redirectErr() {
-        this.redirectErr = true;
+    public ProcessAwaitExecutor inherit() {
+        this.inherit = true;
         return this;
     }
 
@@ -236,7 +116,7 @@ public class ProcessAwaitExecutor implements Awaitable<ProcessAwaitExecutor> {
     }
 
     /**
-     * #await 是否等待命令执行完毕
+     * 是否等待命令执行完毕
      *
      * @param timeout 超时时间
      * @return this
@@ -247,29 +127,91 @@ public class ProcessAwaitExecutor implements Awaitable<ProcessAwaitExecutor> {
     }
 
     /**
-     * #await 流处理器
+     * 设置命令输出处理器
      *
-     * @param streamHandler streamHandler
+     * @param streamHandler 命令输出处理器
      * @return this
      */
-    public ProcessAwaitExecutor streamHandler(StreamHandler streamHandler) {
+    public ProcessAwaitExecutor streamHandler(BiConsumer<ProcessAwaitExecutor, InputStream> streamHandler) {
         this.streamHandler = streamHandler;
         return this;
     }
 
     /**
-     * 错误处理器
+     * 设置行处理器
      *
-     * @param errorHandler errorHandler
+     * @param lineHandler 行处理器
      * @return this
      */
-    public ProcessAwaitExecutor errorHandler(ErrorHandler<ProcessAwaitExecutor> errorHandler) {
-        this.errorHandler = errorHandler;
+    public ProcessAwaitExecutor lineHandler(BiConsumer<ProcessAwaitExecutor, String> lineHandler) {
+        this.lineHandler = lineHandler;
+        return this;
+    }
+
+    /**
+     * 设置行处理器
+     *
+     * @param lineHandler 行处理器
+     * @param lineCharset 行编码
+     * @return this
+     */
+    public ProcessAwaitExecutor lineHandler(BiConsumer<ProcessAwaitExecutor, String> lineHandler, String lineCharset) {
+        this.lineHandler = lineHandler;
+        this.lineCharset = lineCharset;
+        return this;
+    }
+
+    /**
+     * 写入命令
+     *
+     * @param command command
+     * @return this
+     */
+    public ProcessAwaitExecutor write(String command) {
+        return this.write(command.getBytes());
+    }
+
+    /**
+     * 写入命令
+     *
+     * @param command command
+     * @param charset 编码格式
+     * @return this
+     */
+    public ProcessAwaitExecutor write(String command, String charset) {
+        try {
+            if (charset == null) {
+                return this.write(command.getBytes());
+            } else {
+                return this.write(command.getBytes(charset));
+            }
+        } catch (UnsupportedEncodingException e) {
+            throw Exceptions.unCoding(e);
+        }
+    }
+
+    /**
+     * 写入命令
+     *
+     * @param command command
+     * @return this
+     */
+    public ProcessAwaitExecutor write(byte[] command) {
+        try {
+            this.outputStream.write(command);
+            this.outputStream.write('\n');
+            this.outputStream.flush();
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
+        }
         return this;
     }
 
     @Override
-    public ProcessAwaitExecutor await() {
+    public void exec() {
+        if (lineHandler == null && streamHandler == null) {
+            throw Exceptions.runtime("lineHandler and streamHandler is null");
+        }
         try {
             this.pb = new ProcessBuilder(command);
             this.env = this.pb.environment();
@@ -282,18 +224,41 @@ public class ProcessAwaitExecutor implements Awaitable<ProcessAwaitExecutor> {
                 }
             }
             this.pb.directory(this.dir == null ? null : new File(this.dir));
-            if (this.inheritIO) {
+            if (this.inherit) {
                 this.pb.inheritIO();
             }
             // 是否将错误流合并到输出流
-            this.process = this.pb.redirectErrorStream(this.redirectErr).start();
-            this.out = this.process.getOutputStream();
-            this.in = this.process.getInputStream();
-            this.err = this.process.getErrorStream();
+            this.process = this.pb.redirectErrorStream(this.redirectError).start();
+            this.outputStream = this.process.getOutputStream();
+            this.inputStream = this.process.getInputStream();
+            this.errorStream = this.process.getErrorStream();
 
             // 如果流不处理可能会阻塞
-            if (this.streamHandler != null) {
-                this.streamHandler.handler(this, this.in, this.err, this.out);
+            if (streamHandler != null) {
+                Threads.start(new HookRunnable(() -> {
+                    streamHandler.accept(this, this.inputStream);
+                }, () -> {
+                    this.done = true;
+                }, true));
+            } else if (lineHandler != null) {
+                Threads.start(new HookRunnable(() -> {
+                    try {
+                        BufferedReader bufferedReader;
+                        if (lineCharset == null) {
+                            bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                        } else {
+                            bufferedReader = new BufferedReader(new InputStreamReader(inputStream, lineCharset));
+                        }
+                        String line;
+                        while ((line = bufferedReader.readLine()) != null && !close) {
+                            lineHandler.accept(this, line);
+                        }
+                    } catch (Exception e) {
+                        throw Exceptions.ioRuntime(e);
+                    }
+                }, () -> {
+                    this.done = true;
+                }, true));
             }
 
             if (this.waitFor != -1) {
@@ -304,29 +269,14 @@ public class ProcessAwaitExecutor implements Awaitable<ProcessAwaitExecutor> {
                 }
             }
         } catch (Exception e) {
-            this.exception = e;
-            if (this.errorHandler != null) {
-                this.errorHandler.onError(this, e);
-            }
+            throw Exceptions.runtime(e);
         }
-        return this;
-    }
-
-    /**
-     * 键入命令
-     *
-     * @param bs bs
-     * @throws IOException IOException
-     */
-    public void write(byte[] bs) throws IOException {
-        this.out.write(bs);
-        this.out.write('\n');
-        this.out.flush();
     }
 
     /**
      * 关闭进程
      */
+    @Override
     public void close() {
         close(false);
     }
@@ -337,23 +287,20 @@ public class ProcessAwaitExecutor implements Awaitable<ProcessAwaitExecutor> {
      * @param exit 是否键入exit
      */
     public void close(boolean exit) {
-        try {
-            if (exit && this.out != null) {
-                try {
-                    this.write("exit".getBytes());
-                } catch (Exception e1) {
-                    // ignore
-                }
+        this.close = true;
+        if (exit && this.outputStream != null) {
+            try {
+                this.write("exit".getBytes());
+            } catch (Exception e1) {
+                // ignore
             }
-            if (this.process != null) {
-                this.process.destroy();
-            }
-            Streams.close(this.in);
-            Streams.close(this.out);
-            Streams.close(this.err);
-        } catch (Exception e) {
-            // ignore
         }
+        if (this.process != null) {
+            this.process.destroy();
+        }
+        Streams.close(this.inputStream);
+        Streams.close(this.outputStream);
+        Streams.close(this.errorStream);
     }
 
     /**
@@ -361,6 +308,7 @@ public class ProcessAwaitExecutor implements Awaitable<ProcessAwaitExecutor> {
      *
      * @return true执行中
      */
+    @Override
     public boolean isAlive() {
         return this.process.isAlive();
     }
@@ -370,6 +318,7 @@ public class ProcessAwaitExecutor implements Awaitable<ProcessAwaitExecutor> {
      *
      * @return -1 未执行完毕  0 成功  1 失败
      */
+    @Override
     public int getExitCode() {
         if (!this.process.isAlive()) {
             return this.process.exitValue();
@@ -377,56 +326,42 @@ public class ProcessAwaitExecutor implements Awaitable<ProcessAwaitExecutor> {
         return -1;
     }
 
-    public String[] getCommand() {
-        return command;
-    }
-
-    public String getDir() {
-        return dir;
-    }
-
-    public ProcessBuilder getProcessBuilder() {
-        return pb;
-    }
-
+    @Override
     public Process getProcess() {
         return process;
     }
 
-    public InputStream getIn() {
-        return in;
+    @Override
+    public ProcessBuilder getProcessBuilder() {
+        return pb;
     }
 
-    public InputStream getErr() {
-        return err;
+    public InputStream getInputStream() {
+        return inputStream;
     }
 
-    public OutputStream getOut() {
-        return out;
+    public InputStream getErrorStream() {
+        return errorStream;
     }
 
-    public boolean isInheritIO() {
-        return inheritIO;
+    public OutputStream getOutputStream() {
+        return outputStream;
     }
 
-    public boolean isRedirectErr() {
-        return redirectErr;
+    public boolean isInherit() {
+        return inherit;
     }
 
     public long getWaitFor() {
         return waitFor;
     }
 
-    public Exception getException() {
-        return exception;
+    public boolean isDone() {
+        return done;
     }
 
-    public boolean isError() {
-        return exception != null;
-    }
-
-    public Map<String, String> getEnv() {
-        return env;
+    public boolean isClose() {
+        return close;
     }
 
 }

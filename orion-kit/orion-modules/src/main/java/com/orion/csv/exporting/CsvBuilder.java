@@ -1,6 +1,6 @@
 package com.orion.csv.exporting;
 
-import com.orion.able.Builderable;
+import com.orion.able.BuilderAble;
 import com.orion.csv.core.CsvWriter;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
@@ -24,7 +24,7 @@ import java.util.List;
  * @version 1.0.0
  * @since 2020/4/2 0:57
  */
-public class CsvBuilder implements Builderable<CsvBuilder> {
+public class CsvBuilder implements BuilderAble<CsvBuilder> {
 
     /**
      * 头

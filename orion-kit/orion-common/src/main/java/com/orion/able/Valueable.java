@@ -9,6 +9,6 @@ package com.orion.able;
  */
 public interface Valueable<T> {
 
-    T value();
+    T getValue();
 
 }

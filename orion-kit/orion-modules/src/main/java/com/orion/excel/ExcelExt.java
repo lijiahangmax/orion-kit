@@ -117,7 +117,7 @@ public class ExcelExt {
      */
     public ExcelReader sheetReader() {
         if (streaming) {
-            throw Exceptions.unsupport("ExcelReader can't be used streaming");
+            throw Exceptions.unSupport("ExcelReader can't be used streaming");
         }
         return new ExcelReader(workbook.getSheetAt(0));
     }
@@ -130,7 +130,7 @@ public class ExcelExt {
      */
     public ExcelReader sheetReader(int[] columns) {
         if (streaming) {
-            throw Exceptions.unsupport("ExcelReader can't be used streaming");
+            throw Exceptions.unSupport("ExcelReader can't be used streaming");
         }
         return new ExcelReader(workbook.getSheetAt(0), columns);
     }
@@ -143,7 +143,7 @@ public class ExcelExt {
      */
     public ExcelReader sheetReader(int sheetIndex) {
         if (streaming) {
-            throw Exceptions.unsupport("ExcelReader can't be used streaming");
+            throw Exceptions.unSupport("ExcelReader can't be used streaming");
         }
         return new ExcelReader(workbook.getSheetAt(sheetIndex));
     }
@@ -157,7 +157,7 @@ public class ExcelExt {
      */
     public ExcelReader sheetReader(int sheetIndex, int[] columns) {
         if (streaming) {
-            throw Exceptions.unsupport("ExcelReader can't be used streaming");
+            throw Exceptions.unSupport("ExcelReader can't be used streaming");
         }
         return new ExcelReader(workbook.getSheetAt(sheetIndex), columns);
     }

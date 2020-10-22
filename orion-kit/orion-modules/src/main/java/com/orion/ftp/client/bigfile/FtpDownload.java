@@ -76,11 +76,6 @@ public class FtpDownload implements Runnable {
     private boolean openNowRate = false;
 
     /**
-     * 实时速率线程
-     */
-    private Thread nowRateThread;
-
-    /**
      * 是否已完成
      */
     private volatile boolean done;
@@ -99,15 +94,13 @@ public class FtpDownload implements Runnable {
         OutputStream out = null;
         try {
             if (openNowRate) {
-                nowRateThread = new Thread(() -> {
-                    while (getProgress() != 1) {
+                Threads.start(() -> {
+                    while (!done) {
                         long size = now;
-                        Threads.sleep(950);
+                        Threads.sleep(1000);
                         nowRate = now - size;
                     }
                 });
-                nowRateThread.setDaemon(true);
-                nowRateThread.start();
             }
             FtpFileAttr fileAttr = instance.getFileAttr(remote);
             size = fileAttr.getSize();
@@ -147,8 +140,8 @@ public class FtpDownload implements Runnable {
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            this.endTime = System.currentTimeMillis();
             this.done = true;
+            this.endTime = System.currentTimeMillis();
             Streams.close(in);
             Streams.close(out);
             instance.client().setRestartOffset(0);
@@ -224,6 +217,10 @@ public class FtpDownload implements Runnable {
 
     public long getStartSize() {
         return startSize;
+    }
+
+    public long getUseTime() {
+        return endTime - startTime;
     }
 
     public long getSize() {

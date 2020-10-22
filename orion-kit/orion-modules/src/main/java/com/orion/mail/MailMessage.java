@@ -1,6 +1,6 @@
 package com.orion.mail;
 
-import com.orion.able.Jsonable;
+import com.orion.able.JsonAble;
 
 import java.io.File;
 import java.io.Serializable;
@@ -15,7 +15,7 @@ import java.util.List;
  * @since 2020/3/15 18:27
  */
 @SuppressWarnings("ALL")
-public class MailMessage implements Serializable, Jsonable {
+public class MailMessage implements Serializable, JsonAble {
 
     private static final String CHARSET = "UTF-8";
     private static final String HTML = "text/html";
