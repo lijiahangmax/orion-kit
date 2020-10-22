@@ -1,7 +1,7 @@
 package com.orion.utils.ext;
 
-import com.orion.lang.collect.ConvertHashMap;
-import com.orion.lang.collect.ConvertHashSet;
+import com.orion.lang.collect.MutableHashMap;
+import com.orion.lang.collect.MutableHashSet;
 import com.orion.utils.Exceptions;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiConsumer;
 
 /**
  * yml 配置文件提取
@@ -25,13 +26,13 @@ import java.util.Set;
 @SuppressWarnings("unchecked")
 public class YmlExt {
 
-    private ConvertHashMap<String, Object> convertHashMap;
+    private MutableHashMap<String, Object> mutableHashMap;
 
     public YmlExt(String path) {
         InputStream in = null;
         try {
             in = PropertiesExt.class.getClassLoader().getResourceAsStream(path);
-            convertHashMap = Yaml.loadType(in, ConvertHashMap.class);
+            mutableHashMap = Yaml.loadType(in, MutableHashMap.class);
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         } catch (Exception e) {
@@ -45,7 +46,7 @@ public class YmlExt {
         FileInputStream in = null;
         try {
             in = Files1.openInputStream(file);
-            convertHashMap = Yaml.loadType(in, ConvertHashMap.class);
+            mutableHashMap = Yaml.loadType(in, MutableHashMap.class);
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         } catch (Exception e) {
@@ -57,7 +58,7 @@ public class YmlExt {
 
     public YmlExt(InputStream in) {
         try {
-            convertHashMap = Yaml.loadType(in, ConvertHashMap.class);
+            mutableHashMap = Yaml.loadType(in, MutableHashMap.class);
         } catch (Exception e) {
             throw Exceptions.runtime(e);
         }
@@ -74,16 +75,16 @@ public class YmlExt {
      */
     public static YmlExt toYmlExt(String yml) {
         YmlExt ymlExt = new YmlExt();
-        ymlExt.convertHashMap = Yaml.loadType(yml, ConvertHashMap.class);
+        ymlExt.mutableHashMap = Yaml.loadType(yml, MutableHashMap.class);
         return ymlExt;
     }
 
-    public ConvertHashSet getKeys() {
-        return new ConvertHashSet(convertHashMap.keySet());
+    public MutableHashSet<String> getKeys() {
+        return new MutableHashSet<>(mutableHashMap.keySet());
     }
 
-    public ConvertHashMap getValues() {
-        return convertHashMap;
+    public MutableHashMap<String, Object> getValues() {
+        return mutableHashMap;
     }
 
     /**
@@ -99,7 +100,7 @@ public class YmlExt {
             int len = nodes.length;
             for (int i = 0; i < len; i++) {
                 if (i == 0) {
-                    value = (Map) convertHashMap.getObject(nodes[0]);
+                    value = mutableHashMap.getObject(nodes[0]);
                 } else {
                     value = ((Map) value.get(nodes[i]));
                 }
@@ -123,7 +124,7 @@ public class YmlExt {
             int len = nodes.length;
             for (int i = 0; i < len; i++) {
                 if (i == 0) {
-                    map = (Map) convertHashMap.getObject(nodes[0]);
+                    map = mutableHashMap.getObject(nodes[0]);
                 } else if (len - 1 > i) {
                     map = ((Map) map.get(nodes[i]));
                 }
@@ -161,9 +162,9 @@ public class YmlExt {
             for (int i = 0; i < len; i++) {
                 if (i == 0) {
                     if (len == 1) {
-                        value = convertHashMap.getObject(nodes[0]).toString();
+                        value = mutableHashMap.getObject(nodes[0]).toString();
                     } else {
-                        map = (Map) convertHashMap.getObject(nodes[0]);
+                        map = mutableHashMap.getObject(nodes[0]);
                     }
                 } else if (len - 1 > i) {
                     map = (Map) map.get(nodes[i]);
@@ -177,7 +178,12 @@ public class YmlExt {
         }
     }
 
-    public ConvertHashMap<String, Object> getMap() {
-        return convertHashMap;
+    public MutableHashMap<String, Object> getMap() {
+        return mutableHashMap;
     }
+
+    public void forEach(BiConsumer<Object, Object> action) {
+        this.mutableHashMap.forEach(action);
+    }
+
 }

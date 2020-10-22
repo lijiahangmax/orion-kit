@@ -1,15 +1,15 @@
 package com.orion.lang.wrapper;
 
-import com.orion.lang.collect.MultiHashMap;
+import com.orion.lang.collect.MultiConcurrentHashMap;
 import com.orion.utils.Objects1;
 import com.orion.utils.Strings;
 import com.orion.utils.reflect.Methods;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.function.Predicate;
 
 /**
@@ -22,7 +22,7 @@ import java.util.function.Predicate;
  */
 public class GroupList<V> {
 
-    private static final MultiHashMap<Class, String, Method> METHOD_CACHE = new MultiHashMap<>(true);
+    private static final MultiConcurrentHashMap<Class<?>, String, Method> METHOD_CACHE = new MultiConcurrentHashMap<>();
 
     private List<V> list;
 
@@ -58,13 +58,13 @@ public class GroupList<V> {
      * @param f     Predicate
      * @return ignore
      */
-    public List<V> group(String field, Predicate<Object> f) {
+    public List<V> group(String field, Predicate<V> f) {
         List<V> groupList = new ArrayList<>();
         for (V v : list) {
             if (v == null) {
                 continue;
             }
-            Object val = Methods.invokeMethod(v, getGetterMethod(v.getClass(), field));
+            V val = Methods.invokeMethod(v, getGetterMethod(v.getClass(), field));
             if (f.test(val)) {
                 groupList.add(v);
             }
@@ -80,7 +80,7 @@ public class GroupList<V> {
      * @return ignore
      */
     public <E> Map<E, List<V>> group(String field) {
-        Map<E, List<V>> map = new TreeMap<>();
+        Map<E, List<V>> map = new LinkedHashMap<>();
         for (V v : list) {
             if (v == null) {
                 continue;
@@ -99,7 +99,7 @@ public class GroupList<V> {
      * @param field field
      * @return getter
      */
-    private static Method getGetterMethod(Class clazz, String field) {
+    private static Method getGetterMethod(Class<?> clazz, String field) {
         Method method = METHOD_CACHE.get(clazz, field);
         if (method == null) {
             method = Methods.getAccessibleMethod(clazz, "get" + Strings.firstUpper(field), 0);

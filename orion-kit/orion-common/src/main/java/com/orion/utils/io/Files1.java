@@ -17,9 +17,9 @@ import static com.orion.utils.io.Streams.close;
 /**
  * 文件工具类
  *
- * @author:Li
- * @time: 2019/10/9 12:01
- * @version: 1.0.0
+ * @author Li
+ * @version 1.0.0
+ * @since 2019/10/9 12:01
  */
 @SuppressWarnings("ALL")
 public class Files1 {
@@ -2342,7 +2342,7 @@ public class Files1 {
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            Streams.close(in);
+            close(in);
             close(r);
         }
     }
@@ -2545,16 +2545,13 @@ public class Files1 {
                     useBuffer = false;
                 }
             }
-            for (int i = 0, size = lines.size(); i < size; i++) {
-                String line = lines.get(i);
-                if (i != 0) {
-                    line = "\n" + line;
-                }
+            for (String line : lines) {
                 if (charset == null) {
                     r.write(line.getBytes());
                 } else {
                     r.write(line.getBytes(charset));
                 }
+                r.write('\n');
             }
             if (!append) {
                 if (useBuffer) {
@@ -2570,7 +2567,7 @@ public class Files1 {
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            Streams.close(in);
+            close(in);
             close(r);
         }
     }
@@ -2934,10 +2931,13 @@ public class Files1 {
         if (fileLen - rangeEnd <= BUFFER_SIZE) {
             endBuffer = true;
         }
+        List<Closeable> close = new ArrayList<>();
         try {
             if (startBuffer && endBuffer) {
-                byte[] s = Streams.read(new RandomAccessFile(file, "r"), 0, rangeStart);
-                byte[] e = Streams.read(new RandomAccessFile(file, "r"), rangeEnd, fileLen);
+                RandomAccessFile r = new RandomAccessFile(file, "r");
+                close.add(r);
+                byte[] s = Streams.read(r, 0, rangeStart);
+                byte[] e = Streams.read(r, rangeEnd, fileLen);
                 byte[] re = Arrays1.newBytes(s.length + e.length + len);
                 int i = 0;
                 System.arraycopy(s, 0, re, 0, s.length);
@@ -2948,7 +2948,9 @@ public class Files1 {
                 write(file, re);
             } else {
                 if (startBuffer) {
-                    byte[] s = Streams.read(new RandomAccessFile(file, "r"), 0, rangeStart);
+                    RandomAccessFile r = new RandomAccessFile(file, "r");
+                    close.add(r);
+                    byte[] s = Streams.read(r, 0, rangeStart);
                     byte[] n = new byte[s.length + len];
                     int i = 0;
                     File endFile = touchIOTempFile(true);
@@ -2958,32 +2960,36 @@ public class Files1 {
                     write(file, n);
                     mergeFile(endFile, file);
                 } else if (endBuffer) {
-                    byte[] e = Streams.read(new RandomAccessFile(file, "r"), rangeEnd, fileLen);
+                    RandomAccessFile r = new RandomAccessFile(file, "r");
+                    close.add(r);
+                    byte[] e = Streams.read(r, rangeEnd, fileLen);
                     byte[] n = new byte[e.length + len];
                     System.arraycopy(bytes, off, n, 0, len);
                     System.arraycopy(e, 0, n, len, e.length);
-                    RandomAccessFile r = new RandomAccessFile(file, "rw");
-                    r.seek(rangeStart);
-                    r.write(n);
-                    close(r);
+                    RandomAccessFile rw = new RandomAccessFile(file, "rw");
+                    close.add(rw);
+                    rw.seek(rangeStart);
+                    rw.write(n);
                 } else {
                     File endFile = touchIOTempFile(true);
                     writeToFile(file, Long.valueOf(rangeEnd), endFile);
-                    RandomAccessFile r = new RandomAccessFile(file, "rw");
-                    r.seek(rangeStart);
-                    r.write(bytes, off, len);
+                    RandomAccessFile rw = new RandomAccessFile(file, "rw");
+                    close.add(rw);
+                    rw.seek(rangeStart);
+                    rw.write(bytes, off, len);
                     int read;
                     byte[] bs = new byte[BUFFER_SIZE];
                     FileInputStream in = openInputStream(endFile);
+                    close.add(in);
                     while (-1 != (read = in.read(bs))) {
-                        r.write(bs, 0, read);
+                        rw.write(bs, 0, read);
                     }
-                    close(r);
-                    Streams.close(in);
                 }
             }
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
+        } finally {
+            close.forEach(Streams::close);
         }
     }
 
@@ -3103,7 +3109,7 @@ public class Files1 {
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            Streams.close(in);
+            close(in);
         }
     }
 
@@ -3164,7 +3170,7 @@ public class Files1 {
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            Streams.close(reader);
+            close(reader);
         }
     }
 
@@ -3264,7 +3270,7 @@ public class Files1 {
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            Streams.close(reader);
+            close(reader);
         }
     }
 
@@ -3346,7 +3352,7 @@ public class Files1 {
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            Streams.close(reader);
+            close(reader);
         }
     }
 
@@ -3458,7 +3464,7 @@ public class Files1 {
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            Streams.close(reader);
+            close(reader);
         }
     }
 
@@ -3643,7 +3649,7 @@ public class Files1 {
         } catch (IOException e) {
             // ignore
         } finally {
-            Streams.close(in);
+            close(in);
         }
         return type;
     }

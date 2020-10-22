@@ -1,8 +1,11 @@
 package com.orion.utils.collect;
 
-import com.orion.lang.MapEntry;
-import com.orion.lang.collect.ConvertHashMap;
+import com.orion.lang.collect.ConcurrentReferenceHashMap;
+import com.orion.lang.collect.EmptyMap;
+import com.orion.lang.collect.MutableHashMap;
+import com.orion.lang.collect.SingletonMap;
 import com.orion.lang.wrapper.Args;
+import com.orion.lang.wrapper.Pair;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Randoms;
 import com.orion.utils.Valid;
@@ -87,19 +90,19 @@ public class Maps {
         return new ConcurrentHashMap<>(m);
     }
 
-    public static <K, V> ConvertHashMap<K, V> newConvertMap() {
-        return new ConvertHashMap<>(16);
+    public static <K, V> MutableHashMap<K, V> newMutableMap() {
+        return new MutableHashMap<>(16);
     }
 
-    public static <K, V> ConvertHashMap<K, V> newConvertMap(int capacity) {
-        return new ConvertHashMap<>(capacity);
+    public static <K, V> MutableHashMap<K, V> newMutableMap(int capacity) {
+        return new MutableHashMap<>(capacity);
     }
 
-    public static <K, V> ConvertHashMap<K, V> newConvertMap(Map<? extends K, ? extends V> m) {
+    public static <K, V> MutableHashMap<K, V> newMutableMap(Map<? extends K, ? extends V> m) {
         if (m == null) {
-            return new ConvertHashMap<>(16);
+            return new MutableHashMap<>(16);
         }
-        return new ConvertHashMap<>(m);
+        return new MutableHashMap<>(m);
     }
 
     public static <K, V> IdentityHashMap<K, V> newIdentityHashMap() {
@@ -132,6 +135,22 @@ public class Maps {
         return new WeakHashMap<>(m);
     }
 
+    public static <K, V> ConcurrentReferenceHashMap<K, V> newConcurrentWeakHashMap() {
+        return new ConcurrentReferenceHashMap<>(16, ConcurrentReferenceHashMap.ReferenceType.WEAK);
+    }
+
+    public static <K, V> ConcurrentReferenceHashMap<K, V> newConcurrentWeakHashMap(int capacity) {
+        return new ConcurrentReferenceHashMap<>(capacity, ConcurrentReferenceHashMap.ReferenceType.WEAK);
+    }
+
+    public static <K, V> ConcurrentReferenceHashMap<K, V> newConcurrentSoftHashMap() {
+        return new ConcurrentReferenceHashMap<>(16, ConcurrentReferenceHashMap.ReferenceType.SOFT);
+    }
+
+    public static <K, V> ConcurrentReferenceHashMap<K, V> newConcurrentSoftHashMap(int capacity) {
+        return new ConcurrentReferenceHashMap<>(capacity, ConcurrentReferenceHashMap.ReferenceType.SOFT);
+    }
+
     public static <K, V> Map<K, V> newSynchronizedMap() {
         return Collections.synchronizedMap(new HashMap<>(16));
     }
@@ -143,10 +162,17 @@ public class Maps {
         return Collections.synchronizedMap(m);
     }
 
+    public static <K, V> Map<K, V> singleton(K k, V v) {
+        return new SingletonMap<>(k, v);
+    }
+
+    public static <K, V> Map<K, V> empty() {
+        return (Map<K, V>) EmptyMap.EMPTY;
+    }
 
     // --------------- function ---------------
 
-    public static <K, V> Map<K, V> of(MapEntry<K, V>... entries) {
+    public static <K, V> Map<K, V> of(Pair<K, V>... entries) {
         int len = Arrays1.length(entries);
         if (len == 0) {
             return new HashMap<>(16);
@@ -320,15 +346,15 @@ public class Maps {
      * @param <V> ignore
      * @return 元素
      */
-    public static <K, V> MapEntry<K, V> random(Map<K, V> map) {
+    public static <K, V> Pair<K, V> random(Map<K, V> map) {
         int size = size(map);
         if (size == 0) {
             return null;
         } else if (size == 1) {
-            return MapEntry.toMapEntry(map.entrySet().iterator().next());
+            return Pair.toMapEntry(map.entrySet().iterator().next());
         } else {
             Object randomKey = map.keySet().toArray()[Randoms.RANDOM.nextInt(size)];
-            return new MapEntry(randomKey, map.get(randomKey));
+            return new Pair(randomKey, map.get(randomKey));
         }
     }
 

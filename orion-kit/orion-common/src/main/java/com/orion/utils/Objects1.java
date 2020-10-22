@@ -74,7 +74,19 @@ public class Objects1 {
      * @return true相等
      */
     public static boolean eq(Object o1, Object o2) {
-        return (o1 == o2) || (o1 != null && o1.equals(o2));
+        if (o1 == o2) {
+            return true;
+        }
+        if (o1 == null || o2 == null) {
+            return false;
+        }
+        if (o1.equals(o2)) {
+            return true;
+        }
+        if (o1.getClass().isArray() && o2.getClass().isArray()) {
+            return Arrays1.arrayEquals(o1, o2);
+        }
+        return false;
     }
 
     /**
@@ -227,8 +239,8 @@ public class Objects1 {
      * @param c class
      * @return true为void
      */
-    public static boolean isVoids(Class c) {
-        return "void".equals(c.toString()) || c == com.orion.lang.Void.class || c == Void.class;
+    public static boolean isVoids(Class<?> c) {
+        return Void.TYPE.equals(c) || Void.class.equals(c) || c == com.orion.lang.Void.class;
     }
 
     /**
@@ -237,7 +249,7 @@ public class Objects1 {
      * @param c class
      * @return true不为void
      */
-    public static boolean isNotVoids(Class c) {
+    public static boolean isNotVoids(Class<?> c) {
         return !isVoids(c);
     }
 
@@ -353,5 +365,57 @@ public class Objects1 {
             return o.toString();
         }
     }
+
+    /**
+     * 获取对象标识 包含 class
+     *
+     * @param obj 对象
+     * @return 对象标识
+     */
+    public static String getObjectIdentity(Object obj) {
+        if (obj == null) {
+            return "";
+        }
+        return obj.getClass().getName() + "@" + getIdentity(obj);
+    }
+
+    /**
+     * 获取对象标识
+     *
+     * @param obj 对象
+     * @return 对象标识
+     */
+    public static String getIdentity(Object obj) {
+        return Integer.toHexString(System.identityHashCode(obj));
+    }
+
+    public static int hashCode(Object obj) {
+        if (obj == null) {
+            return 0;
+        }
+        if (obj.getClass().isArray()) {
+            if (obj instanceof Object[]) {
+                return Arrays1.hashCode((Object[]) obj);
+            } else if (obj instanceof byte[]) {
+                return Arrays1.hashCode((byte[]) obj);
+            } else if (obj instanceof short[]) {
+                return Arrays1.hashCode((short[]) obj);
+            } else if (obj instanceof int[]) {
+                return Arrays1.hashCode((int[]) obj);
+            } else if (obj instanceof long[]) {
+                return Arrays1.hashCode((long[]) obj);
+            } else if (obj instanceof float[]) {
+                return Arrays1.hashCode((float[]) obj);
+            } else if (obj instanceof double[]) {
+                return Arrays1.hashCode((double[]) obj);
+            } else if (obj instanceof boolean[]) {
+                return Arrays1.hashCode((boolean[]) obj);
+            } else if (obj instanceof char[]) {
+                return Arrays1.hashCode((char[]) obj);
+            }
+        }
+        return obj.hashCode();
+    }
+
 
 }

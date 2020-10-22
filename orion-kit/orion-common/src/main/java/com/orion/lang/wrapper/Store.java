@@ -1,4 +1,6 @@
-package com.orion.lang;
+package com.orion.lang.wrapper;
+
+import com.orion.lang.support.CloneSupport;
 
 import java.io.Serializable;
 
@@ -9,7 +11,7 @@ import java.io.Serializable;
  * @version 1.0.0
  * @since 2020/8/30 23:53
  */
-public class Store<T> implements Serializable {
+public class Store<T> extends CloneSupport<Store<T>> implements Serializable {
 
     private static final long serialVersionUID = -885690364340775L;
 

@@ -197,7 +197,7 @@ public class SnowFlakes {
      *
      * @return id
      */
-    public static Long createId() {
+    public static Long next() {
         return idWorker.nextId();
     }
 

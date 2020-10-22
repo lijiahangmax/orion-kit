@@ -1,6 +1,6 @@
 package com.orion.utils.image;
 
-import com.orion.able.Executorable;
+import com.orion.able.ExecutorAble;
 import com.orion.utils.Colors;
 
 import java.awt.*;
@@ -15,7 +15,7 @@ import java.io.InputStream;
  * @version 1.0.0
  * @since 2020/7/15 11:11
  */
-public class ImageDrawStream implements Executorable {
+public class ImageDrawStream implements ExecutorAble {
 
     /**
      * 设置字体时默认字体名称

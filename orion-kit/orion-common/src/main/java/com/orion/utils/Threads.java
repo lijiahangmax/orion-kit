@@ -1,7 +1,9 @@
 package com.orion.utils;
 
+import com.orion.lang.Console;
 import com.orion.lang.thread.ConcurrentCallable;
 import com.orion.lang.thread.ConcurrentRunnable;
+import com.orion.lang.thread.ExecutorBuilder;
 import com.orion.lang.thread.NamedThreadFactory;
 import com.orion.utils.collect.Lists;
 
@@ -18,6 +20,18 @@ import java.util.concurrent.*;
  */
 public class Threads {
 
+    /**
+     * 全局线程池
+     */
+    private static final ExecutorService GLOBAL_EXECUTOR = Executors.newCachedThreadPool();
+    private static final ExecutorService GLOBAL_EXECUTOR1 = ExecutorBuilder.create()
+            .setNamedThreadFactory("orion-global-thread-")
+            .setCorePoolSize(2)
+            .setMaxPoolSize(32)
+            .setKeepAliveTime(60 * 1000)
+            .setWorkQueue(new LinkedBlockingQueue<>())
+            .build();
+
     private Threads() {
     }
 
@@ -25,12 +39,9 @@ public class Threads {
      * 执行线程
      *
      * @param r ignore
-     * @return 线程
      */
-    public static Thread start(Runnable r) {
-        Thread thread = new Thread(r);
-        thread.start();
-        return thread;
+    public static void start(Runnable r) {
+        GLOBAL_EXECUTOR.execute(r);
     }
 
     /**
@@ -41,10 +52,19 @@ public class Threads {
      */
     public static void start(Runnable r, ExecutorService pool) {
         if (pool == null) {
-            start(r);
-        } else {
-            pool.execute(r);
+            pool = GLOBAL_EXECUTOR;
         }
+        pool.execute(r);
+    }
+
+    /**
+     * 执行线程
+     *
+     * @param rs         线程
+     * @param concurrent true并发执行
+     */
+    public static void start(List<Runnable> rs, boolean concurrent) {
+        start(rs, GLOBAL_EXECUTOR, concurrent);
     }
 
     /**
@@ -55,7 +75,9 @@ public class Threads {
      * @param concurrent true并发执行
      */
     public static void start(List<Runnable> rs, ExecutorService pool, boolean concurrent) {
-        Valid.notNull(pool, "ThreadPool is null");
+        if (pool == null) {
+            pool = GLOBAL_EXECUTOR;
+        }
         if (concurrent) {
             concurrentRunnable(rs, pool);
         } else {
@@ -79,9 +101,7 @@ public class Threads {
      * @return Future
      */
     public static <V> Future<V> call(Callable<V> c) {
-        FutureTask<V> futureTask = new FutureTask<>(c);
-        futureTask.run();
-        return futureTask;
+        return GLOBAL_EXECUTOR.submit(c);
     }
 
     /**
@@ -93,9 +113,20 @@ public class Threads {
      */
     public static <V> Future<V> call(Callable<V> c, ExecutorService pool) {
         if (pool == null) {
-            return call(c);
+            pool = GLOBAL_EXECUTOR;
         }
         return pool.submit(c);
+    }
+
+    /**
+     * 执行线程
+     *
+     * @param cs         ignore
+     * @param concurrent true并发
+     * @return Future
+     */
+    public static <V> List<Future<V>> call(List<Callable<V>> cs, boolean concurrent) {
+        return call(cs, GLOBAL_EXECUTOR, concurrent);
     }
 
     /**
@@ -107,7 +138,9 @@ public class Threads {
      * @return Future
      */
     public static <V> List<Future<V>> call(List<Callable<V>> cs, ExecutorService pool, boolean concurrent) {
-        Valid.notNull(pool, "ThreadPool is null");
+        if (pool == null) {
+            pool = GLOBAL_EXECUTOR;
+        }
         if (concurrent) {
             return concurrentCallable(cs, pool);
         } else {
@@ -155,13 +188,17 @@ public class Threads {
 
     /**
      * 并发多次单个线程
+     * <p>
+     * 线程池的核心线程数必须大于等于并发次数
      *
      * @param count 并发次数
      * @param pool  线程池
      * @param r     runnable
      */
     public static void concurrent(int count, ExecutorService pool, Runnable r) {
-        Valid.notNull(pool, "ThreadPool is null");
+        if (pool == null) {
+            pool = GLOBAL_EXECUTOR;
+        }
         CyclicBarrier cb = new CyclicBarrier(count);
         ConcurrentRunnable cr = new ConcurrentRunnable(r, cb);
         for (int i = 0; i < count; i++) {
@@ -171,6 +208,8 @@ public class Threads {
 
     /**
      * 并发多次单个线程
+     * <p>
+     * 线程池的核心线程数必须大于等于并发次数
      *
      * @param count 并发次数
      * @param pool  线程池
@@ -178,7 +217,9 @@ public class Threads {
      * @return Future
      */
     public static <V> List<Future<V>> concurrent(int count, ExecutorService pool, Callable<V> c) {
-        Valid.notNull(pool, "ThreadPool is null");
+        if (pool == null) {
+            pool = GLOBAL_EXECUTOR;
+        }
         List<Future<V>> list = new ArrayList<>(count);
         CyclicBarrier cb = new CyclicBarrier(count);
         ConcurrentCallable<V> cc = new ConcurrentCallable<>(c, cb);
@@ -190,12 +231,16 @@ public class Threads {
 
     /**
      * 并发多个线程
+     * <p>
+     * 线程池的核心线程数必须大于等于并发线程的长度
      *
-     * @param pool 线程池
      * @param rs   线程
+     * @param pool 线程池
      */
     public static void concurrentRunnable(List<Runnable> rs, ExecutorService pool) {
-        Valid.notNull(pool, "ThreadPool is null");
+        if (pool == null) {
+            pool = GLOBAL_EXECUTOR;
+        }
         int size = Lists.size(rs);
         if (size >= 1) {
             Lists.compact(rs);
@@ -212,13 +257,14 @@ public class Threads {
 
     /**
      * 并发多个线程
+     * <p>
+     * 线程池的核心线程数必须大于等于并发线程的长度
      *
      * @param cs   线程
      * @param pool 线程池
      * @return Future
      */
     public static <V> List<Future<V>> concurrentCallable(List<Callable<V>> cs, ExecutorService pool) {
-        Valid.notNull(pool, "ThreadPool is null");
         List<Future<V>> list = new ArrayList<>();
         int size = Lists.size(cs);
         if (size >= 1) {
@@ -250,7 +296,7 @@ public class Threads {
             if (!pool.awaitTermination(shutdownTimeout, timeUnit)) {
                 pool.shutdownNow();
                 if (!pool.awaitTermination(shutdownNowTimeout, timeUnit)) {
-                    System.err.println("Pool did not terminated");
+                    Console.error("Pool did not terminated");
                 }
             }
         } catch (InterruptedException ie) {
@@ -269,7 +315,7 @@ public class Threads {
         try {
             pool.shutdownNow();
             if (!pool.awaitTermination(timeout, TimeUnit.MILLISECONDS)) {
-                System.err.println("Pool did not terminated");
+                Console.error("Pool did not terminated");
             }
         } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
@@ -287,7 +333,7 @@ public class Threads {
         try {
             pool.shutdownNow();
             if (!pool.awaitTermination(timeout, timeUnit)) {
-                System.err.println("Pool did not terminated");
+                Console.error("Pool did not terminated");
             }
         } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();

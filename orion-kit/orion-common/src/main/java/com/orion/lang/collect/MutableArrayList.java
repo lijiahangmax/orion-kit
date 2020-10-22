@@ -22,17 +22,17 @@ import java.util.function.Function;
  * @since 2020/2/29 16:29
  */
 @SuppressWarnings("unchecked")
-public class ConvertArrayList<E> extends ArrayList<E> {
+public class MutableArrayList<E> extends ArrayList<E> {
 
-    public ConvertArrayList() {
+    public MutableArrayList() {
         super();
     }
 
-    public ConvertArrayList(int initialCapacity) {
+    public MutableArrayList(int initialCapacity) {
         super(initialCapacity);
     }
 
-    public ConvertArrayList(Collection<? extends E> c) {
+    public MutableArrayList(Collection<? extends E> c) {
         super(c);
     }
 

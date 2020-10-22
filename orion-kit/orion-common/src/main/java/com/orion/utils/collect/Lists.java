@@ -1,6 +1,8 @@
 package com.orion.utils.collect;
 
-import com.orion.lang.collect.ConvertArrayList;
+import com.orion.lang.collect.EmptyList;
+import com.orion.lang.collect.MutableArrayList;
+import com.orion.lang.collect.SingletonList;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Objects1;
 import com.orion.utils.Randoms;
@@ -51,19 +53,19 @@ public class Lists extends Collections {
         return new LinkedList<>(c);
     }
 
-    public static <E> ConvertArrayList<E> newConvertList() {
-        return new ConvertArrayList<>();
+    public static <E> MutableArrayList<E> newMutableList() {
+        return new MutableArrayList<>();
     }
 
-    public static <E> ConvertArrayList<E> newConvertList(int capacity) {
-        return new ConvertArrayList<>(capacity);
+    public static <E> MutableArrayList<E> newMutableList(int capacity) {
+        return new MutableArrayList<>(capacity);
     }
 
-    public static <E> ConvertArrayList<E> newConvertList(Collection<? extends E> c) {
+    public static <E> MutableArrayList<E> newMutableList(Collection<? extends E> c) {
         if (c == null) {
-            return new ConvertArrayList<>();
+            return new MutableArrayList<>();
         }
-        return new ConvertArrayList<>(c);
+        return new MutableArrayList<>(c);
     }
 
     public static <E> List<E> newCopyOnWriteList() {
@@ -90,6 +92,14 @@ public class Lists extends Collections {
             return java.util.Collections.synchronizedList(new ArrayList<>());
         }
         return java.util.Collections.synchronizedList(c);
+    }
+
+    public static <E> List<E> singleton(E e) {
+        return new SingletonList<>(e);
+    }
+
+    public static <E> List<E> empty() {
+        return (List<E>) EmptyList.EMPTY;
     }
 
     // --------------- function ---------------
@@ -121,6 +131,26 @@ public class Lists extends Collections {
         }
         for (V v : l) {
             list.add(f.apply(v));
+        }
+        return list;
+    }
+
+    public static <E> List<E> as(Iterator<E> iter) {
+        List<E> list = new ArrayList<>();
+        if (null != iter) {
+            while (iter.hasNext()) {
+                list.add(iter.next());
+            }
+        }
+        return list;
+    }
+
+    public static <E> List<E> as(Enumeration<E> iter) {
+        List<E> list = new ArrayList<>();
+        if (null != iter) {
+            while (iter.hasMoreElements()) {
+                list.add(iter.nextElement());
+            }
         }
         return list;
     }

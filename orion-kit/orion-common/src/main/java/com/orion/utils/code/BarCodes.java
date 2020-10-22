@@ -162,7 +162,7 @@ public class BarCodes {
      * @return 条形码文件
      */
     public File encodeToFile(String content) {
-        return encodeAndWordsToFile(content, null, Sequences.createId() + "");
+        return encodeAndWordsToFile(content, null, Sequences.next() + "");
     }
 
     /**
@@ -184,7 +184,7 @@ public class BarCodes {
      * @return 条形码文件
      */
     public File encodeAndWordsToFile(String content, String words) {
-        return encodeAndWordsToFile(content, words, Sequences.createId() + "");
+        return encodeAndWordsToFile(content, words, Sequences.next() + "");
     }
 
     /**

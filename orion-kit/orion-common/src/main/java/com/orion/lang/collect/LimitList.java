@@ -11,7 +11,6 @@ import java.util.List;
  * @version 1.0.0
  * @since 2019/11/18 14:48
  */
-@SuppressWarnings("ALL")
 public class LimitList<E> extends ArrayList<E> {
 
     /**

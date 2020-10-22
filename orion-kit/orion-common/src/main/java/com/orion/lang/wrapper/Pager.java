@@ -1,11 +1,15 @@
 package com.orion.lang.wrapper;
 
-import com.orion.able.Jsonable;
+import com.orion.able.JsonAble;
+import com.orion.lang.support.CloneSupport;
 import com.orion.utils.collect.Lists;
 import com.orion.utils.json.Jsons;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
 /**
  * 分页信息
@@ -15,7 +19,7 @@ import java.util.List;
  * @since 2019/5/30 22:52
  */
 @SuppressWarnings("ALL")
-public class Pager<T> implements Serializable, Jsonable {
+public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, JsonAble, Iterable<T> {
 
     private static final long serialVersionUID = 6354348839019830L;
 
@@ -263,17 +267,22 @@ public class Pager<T> implements Serializable, Jsonable {
 
     @Override
     public String toString() {
-        return "Pager{" +
-                "page=" + page +
-                ", limit=" + limit +
-                ", rows=" + rows +
-                ", offset=" + offset +
-                ", pages=" + pages +
-                ", total=" + total +
-                ", prePage=" + prePage +
-                ", nextPage=" + nextPage +
-                ", sql='" + sql + '\'' +
-                '}';
+        return sql;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return rows.iterator();
+    }
+
+    @Override
+    public void forEach(Consumer<? super T> action) {
+        rows.forEach(action);
+    }
+
+    @Override
+    public Spliterator<T> spliterator() {
+        return rows.spliterator();
     }
 
 }

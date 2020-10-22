@@ -1,6 +1,6 @@
 package com.orion.utils.reflect;
 
-import com.orion.lang.collect.MultiHashMap;
+import com.orion.lang.collect.MultiConcurrentHashMap;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Objects1;
 import com.orion.utils.Strings;
@@ -24,11 +24,11 @@ import java.util.concurrent.ConcurrentHashMap;
 @SuppressWarnings("unchecked")
 public class BeanWrapper {
 
-    private static final Map<Class<?>, Constructor> CONSTRUCTOR_CACHE = new ConcurrentHashMap<>(16);
+    private static final Map<Class<?>, Constructor<?>> CONSTRUCTOR_CACHE = new ConcurrentHashMap<>(16);
     private static final Map<Class<?>, List<Method>> ALL_SET_METHOD_CACHE = new ConcurrentHashMap<>(16);
     private static final Map<Class<?>, List<Method>> ALL_GET_METHOD_CACHE = new ConcurrentHashMap<>(16);
     private static final Map<Class<?>, List<Class<?>>> ALL_INTERFACE_CACHE = new ConcurrentHashMap<>(16);
-    private static final MultiHashMap<Class<?>, String, Method> METHOD_CACHE = new MultiHashMap<>(true);
+    private static final MultiConcurrentHashMap<Class<?>, String, Method> METHOD_CACHE = new MultiConcurrentHashMap<>();
 
     private BeanWrapper() {
     }
@@ -503,12 +503,12 @@ public class BeanWrapper {
      * @return constructor
      */
     private static <T> Constructor<T> getConstructor(Class<T> clazz) {
-        Constructor<T> constructor = CONSTRUCTOR_CACHE.get(clazz);
+        Constructor<?> constructor = CONSTRUCTOR_CACHE.get(clazz);
         if (constructor == null) {
             constructor = Constructors.getDefaultConstructor(clazz);
             CONSTRUCTOR_CACHE.put(clazz, constructor);
         }
-        return constructor;
+        return (Constructor<T>) constructor;
     }
 
 }

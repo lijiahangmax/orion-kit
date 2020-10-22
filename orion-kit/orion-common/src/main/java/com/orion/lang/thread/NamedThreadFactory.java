@@ -1,7 +1,9 @@
 package com.orion.lang.thread;
 
 import com.orion.utils.Strings;
+import com.orion.utils.Valid;
 
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -37,32 +39,20 @@ public class NamedThreadFactory implements ThreadFactory {
     /**
      * 优先级
      */
-    private Integer priority;
+    private int priority = 5;
+
+    /**
+     * 线程组
+     */
+    private ThreadGroup group;
 
     /**
      * 异常处理器
      */
-    private Thread.UncaughtExceptionHandler handler;
+    private UncaughtExceptionHandler handler;
 
     public NamedThreadFactory(String prefix) {
         this.prefix = Strings.def(prefix);
-    }
-
-    @Override
-    public Thread newThread(Runnable r) {
-        Thread thread = new Thread(r);
-        thread.setName(prefix + counter.getAndIncrement());
-        if (classLoader != null) {
-            thread.setContextClassLoader(classLoader);
-        }
-        thread.setDaemon(daemon);
-        if (priority != null) {
-            thread.setPriority(priority);
-        }
-        if (handler != null) {
-            thread.setUncaughtExceptionHandler(handler);
-        }
-        return thread;
     }
 
     public NamedThreadFactory setClassLoader(ClassLoader classLoader) {
@@ -75,14 +65,46 @@ public class NamedThreadFactory implements ThreadFactory {
         return this;
     }
 
-    public NamedThreadFactory setPriority(Integer priority) {
+    public NamedThreadFactory setPriority(int priority) {
+        Valid.gte(priority, 1, "priority must greater than or eq 1");
+        Valid.lte(priority, 10, "priority must less than or eq 10");
         this.priority = priority;
         return this;
     }
 
-    public NamedThreadFactory setHandler(Thread.UncaughtExceptionHandler handler) {
+    public NamedThreadFactory setHandler(UncaughtExceptionHandler handler) {
         this.handler = handler;
         return this;
+    }
+
+    public NamedThreadFactory setGroup(String groupName) {
+        this.group = new ThreadGroup(groupName);
+        return this;
+    }
+
+    public NamedThreadFactory setGroup(ThreadGroup group) {
+        this.group = group;
+        return this;
+    }
+
+    @Override
+    public Thread newThread(Runnable r) {
+        Thread thread;
+        if (group == null) {
+            thread = new Thread(r);
+        } else {
+            thread = new Thread(group, r);
+        }
+        thread.setName(prefix + counter.getAndIncrement());
+        if (classLoader != null) {
+            thread.setContextClassLoader(classLoader);
+        }
+        thread.setDaemon(daemon);
+        thread.setPriority(priority);
+        if (handler != null) {
+            thread.setUncaughtExceptionHandler(handler);
+        }
+        return thread;
     }
 
 }

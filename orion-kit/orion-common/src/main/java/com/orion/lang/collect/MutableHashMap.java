@@ -1,7 +1,7 @@
 package com.orion.lang.collect;
 
-import com.orion.lang.MapEntry;
 import com.orion.lang.wrapper.Args;
+import com.orion.lang.wrapper.Pair;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Converts;
 import com.orion.utils.Valid;
@@ -17,32 +17,28 @@ import java.util.*;
 import java.util.function.Function;
 
 /**
- * 可转换的LinkedHashMap
+ * 可转换的HashMap
  *
  * @author ljh15
  * @version 1.0.0
- * @since 2020/9/15 10:34
+ * @since 2020/2/27 1:03
  */
 @SuppressWarnings("unchecked")
-public class ConvertLinkedHashMap<K, V> extends LinkedHashMap<K, V> {
+public class MutableHashMap<K, V> extends HashMap<K, V> {
 
-    public ConvertLinkedHashMap(int initialCapacity, float loadFactor, boolean accessOrder) {
-        super(initialCapacity, loadFactor, accessOrder);
-    }
-
-    public ConvertLinkedHashMap(int initialCapacity, float loadFactor) {
+    public MutableHashMap(int initialCapacity, float loadFactor) {
         super(initialCapacity, loadFactor);
     }
 
-    public ConvertLinkedHashMap(int initialCapacity) {
+    public MutableHashMap(int initialCapacity) {
         super(initialCapacity);
     }
 
-    public ConvertLinkedHashMap() {
+    public MutableHashMap() {
         super();
     }
 
-    public ConvertLinkedHashMap(Map<? extends K, ? extends V> m) {
+    public MutableHashMap(Map<? extends K, ? extends V> m) {
         super(m);
     }
 
@@ -53,14 +49,14 @@ public class ConvertLinkedHashMap<K, V> extends LinkedHashMap<K, V> {
         }
     }
 
-    public void puts(Map.Entry<K, V>... es) {
+    public void puts(Entry<K, V>... es) {
         int length = Arrays1.length(es);
         for (int i = 0; i < length; i++) {
             put(es[i].getKey(), es[i].getValue());
         }
     }
 
-    public void puts(MapEntry<K, V>... es) {
+    public void puts(Pair<K, V>... es) {
         int length = Arrays1.length(es);
         for (int i = 0; i < length; i++) {
             put(es[i].getKey(), es[i].getValue());
@@ -512,7 +508,6 @@ public class ConvertLinkedHashMap<K, V> extends LinkedHashMap<K, V> {
             return def;
         }
         return v;
-
     }
 
 }

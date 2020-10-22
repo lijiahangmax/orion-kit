@@ -1,7 +1,5 @@
 package com.orion.utils;
 
-import com.orion.enums.VariableStyleEnum;
-
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -10,8 +8,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.StringJoiner;
 import java.util.function.Consumer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * String 工具类
@@ -22,11 +18,6 @@ import java.util.regex.Pattern;
  */
 @SuppressWarnings("ALL")
 public class Strings {
-
-    /**
-     * 大驼峰
-     */
-    private static final Pattern BIG_HUMP = Pattern.compile("[A-Z]([a-z\\d]+)?");
 
     private static final String UTF8 = "UTF-8";
 
@@ -585,7 +576,6 @@ public class Strings {
      * @return ignore
      */
     public static String join(String... strs) {
-        System.out.println(Arrays1.length(strs));
         if (Arrays1.length(strs) == 0) {
             return "";
         }
@@ -599,11 +589,11 @@ public class Strings {
     /**
      * 连接字符串
      *
-     * @param strs 自串支付付出
+     * @param strs   连接字符串
+     * @param symbol symbol
      * @return ignore
      */
     public static String joinSymbol(String symbol, String... strs) {
-        System.out.println(Arrays1.length(strs));
         if (Arrays1.length(strs) == 0) {
             return "";
         }
@@ -632,13 +622,15 @@ public class Strings {
     /**
      * 连接字符串
      *
-     * @param list   需要处理的列表
+     * @param list   连接字符串
      * @param symbol symbol
      * @param prefix 前缀
      * @param suffix 后缀
      * @return 连接后的字符串
      */
     public static String join(List<String> list, String symbol, String prefix, String suffix) {
+        prefix = isBlank(prefix) ? "" : prefix;
+        suffix = isBlank(suffix) ? "" : suffix;
         StringJoiner sj = new StringJoiner(symbol, prefix, suffix);
         list.forEach(sj::add);
         return sj.toString();
@@ -1466,125 +1458,6 @@ public class Strings {
             index += Character.charCount(result[i]);
         }
         return result;
-    }
-
-    /**
-     * 转化变量命名风格
-     *
-     * @param variable 变量
-     * @param e        命名风格
-     * @return 变量
-     */
-    public static String convertVariableStyle(String variable, VariableStyleEnum e) {
-        if (isBlank(variable)) {
-            return variable;
-        }
-        int styleType = VariableStyleEnum.getType(variable).getStyleType();
-        if (e.getStyleType() == styleType) {
-            return variable;
-        }
-        switch (styleType) {
-            case 1:
-                switch (e.getStyleType()) {
-                    case 2:
-                        return styleConvert(variable, 0);
-                    case 3:
-                        return styleConvert(variable, "_");
-                    case 4:
-                        return styleConvert(variable, "-");
-                    default:
-                        return variable;
-                }
-            case 2:
-                switch (e.getStyleType()) {
-                    case 1:
-                        return styleConvert(variable, 1);
-                    case 3:
-                        return styleConvert(variable, "_");
-                    case 4:
-                        return styleConvert(variable, "-");
-                    default:
-                        return variable;
-                }
-            case 3:
-                switch (e.getStyleType()) {
-                    case 1:
-                        return styleConvert(variable, true);
-                    case 2:
-                        return styleConvert(variable, false);
-                    case 4:
-                        return styleConvert(variable, "_", "-");
-                    default:
-                        return variable;
-                }
-            case 4:
-                switch (e.getStyleType()) {
-                    case 1:
-                        return styleConvert(variable, true);
-                    case 2:
-                        return styleConvert(variable, false);
-                    case 3:
-                        return styleConvert(variable, "-", "_");
-                    default:
-                        return variable;
-                }
-            default:
-                return variable;
-        }
-    }
-
-    // --------------- 转化格式私有方法 ---------------
-
-    private static String styleConvert(String variable, String before, String after) {
-        return variable.toLowerCase().replaceAll(before, after);
-    }
-
-    private static String styleConvert(String variable, String tokenizer) {
-        variable = String.valueOf(variable.charAt(0)).toUpperCase().concat(variable.substring(1));
-        StringBuilder sb = new StringBuilder();
-        Matcher matcher = BIG_HUMP.matcher(variable);
-        while (matcher.find()) {
-            sb.append(matcher.group().toLowerCase())
-                    .append(matcher.end() == variable.length() ? "" : tokenizer);
-        }
-        return sb.toString();
-    }
-
-    private static String styleConvert(String variable, boolean small) {
-        String tokenizer;
-        if (variable.contains("-")) {
-            tokenizer = "-";
-        } else {
-            tokenizer = "_";
-        }
-        String patternRegex = "-".equals(tokenizer) ? "([A-Za-z\\d]+)(-)?" : "([A-Za-z\\d]+)(_)?";
-        StringBuilder sb = new StringBuilder();
-        Pattern pattern = Pattern.compile(patternRegex);
-        Matcher matcher = pattern.matcher(variable);
-        int i = 0;
-        while (matcher.find()) {
-            String word = matcher.group();
-            if (++i == 1 && small) {
-                sb.append(Character.toLowerCase(word.charAt(0)));
-            } else {
-                sb.append(Character.toUpperCase(word.charAt(0)));
-            }
-            int index = word.lastIndexOf(tokenizer);
-            if (index > 0) {
-                sb.append(word.substring(1, index));
-            } else {
-                sb.append(word.substring(1));
-            }
-        }
-        return sb.toString();
-    }
-
-    private static String styleConvert(String variable, int t) {
-        if (t == 0) {
-            return Character.toUpperCase(variable.charAt(0)) + variable.substring(1);
-        } else {
-            return Character.toLowerCase(variable.charAt(0)) + variable.substring(1);
-        }
     }
 
 }

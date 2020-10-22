@@ -1,6 +1,6 @@
 package com.orion.utils.reflect;
 
-import com.orion.lang.collect.ConvertHashMap;
+import com.orion.lang.collect.MutableHashMap;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Valid;
 
@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version 1.0.0
  * @since 2020/9/9 1:57
  */
-public class BeanMap<T> extends ConvertHashMap<String, Object> {
+public class BeanMap extends MutableHashMap<String, Object> {
 
     /**
      * getter方法缓存
@@ -26,7 +26,7 @@ public class BeanMap<T> extends ConvertHashMap<String, Object> {
     /**
      * 对象
      */
-    private T o;
+    private Object o;
 
     /**
      * 忽略的字段
@@ -38,11 +38,11 @@ public class BeanMap<T> extends ConvertHashMap<String, Object> {
      */
     private boolean addNull;
 
-    public BeanMap(T o, String... ignoreFields) {
+    public BeanMap(Object o, String... ignoreFields) {
         this(o, false, ignoreFields);
     }
 
-    public BeanMap(T o, boolean addNull, String... ignoreFields) {
+    public BeanMap(Object o, boolean addNull, String... ignoreFields) {
         Valid.notNull(o, "object is null");
         this.o = o;
         this.addNull = addNull;
@@ -103,8 +103,9 @@ public class BeanMap<T> extends ConvertHashMap<String, Object> {
         return false;
     }
 
-    public T getValue() {
-        return o;
+    @SuppressWarnings("unchecked")
+    public <T> T getValue() {
+        return (T) o;
     }
 
 }

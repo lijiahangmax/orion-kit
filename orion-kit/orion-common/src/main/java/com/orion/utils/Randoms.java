@@ -2,6 +2,7 @@ package com.orion.utils;
 
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * 随机工具类
@@ -20,6 +21,14 @@ public class Randoms {
     private static final String ALL = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String LETTER = "abcdefghijkllmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String NUMBER = "0123456789";
+
+    public static Random getRandom() {
+        return RANDOM;
+    }
+
+    public static Random getRandom(boolean threadLocal) {
+        return threadLocal ? ThreadLocalRandom.current() : RANDOM;
+    }
 
     /**
      * 随机一个字符
@@ -55,7 +64,7 @@ public class Randoms {
      * @param length 长度
      * @return ignore
      */
-    public static String randomASCII(int length) {
+    public static String randomAscii(int length) {
         StringBuilder sb = new StringBuilder();
         Random random = new Random();
         for (int i = 0; i < length; i++) {

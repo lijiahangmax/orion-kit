@@ -1,9 +1,10 @@
 package com.orion.lang.wrapper;
 
-import com.orion.able.Jsonable;
-import com.orion.able.Logable;
+import com.orion.able.JsonAble;
+import com.orion.able.LogAble;
 import com.orion.able.Mapable;
 import com.orion.id.UUIds;
+import com.orion.lang.support.CloneSupport;
 import com.orion.utils.Objects1;
 import com.orion.utils.Strings;
 import com.orion.utils.json.Jsons;
@@ -20,7 +21,7 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2019/5/29 11:27
  */
-public class RpcWrapper<T> implements Wrapper<T>, Jsonable, Logable, Mapable {
+public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrapper<T>, JsonAble, LogAble, Mapable<String, Object> {
 
     private static final long serialVersionUID = 7940497300629314L;
 
@@ -295,7 +296,7 @@ public class RpcWrapper<T> implements Wrapper<T>, Jsonable, Logable, Mapable {
     }
 
     @Override
-    public Map toMap() {
+    public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>(8);
         map.put("code", code);
         map.put("msg", msg);

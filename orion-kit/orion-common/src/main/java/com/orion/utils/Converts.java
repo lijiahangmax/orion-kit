@@ -1,8 +1,8 @@
 package com.orion.utils;
 
 import com.orion.function.Conversion;
-import com.orion.lang.MapEntry;
-import com.orion.lang.collect.MultiHashMap;
+import com.orion.lang.collect.MultiConcurrentHashMap;
+import com.orion.lang.wrapper.Pair;
 import com.orion.utils.math.BigDecimals;
 import com.orion.utils.math.BigIntegers;
 import com.orion.utils.reflect.Classes;
@@ -31,9 +31,9 @@ public class Converts {
     private Converts() {
     }
 
-    private static final MultiHashMap<Class<?>, Class<?>, Conversion> CONVERT_MULTI_MAP = MultiHashMap.newMultiHashMap(true);
+    private static final MultiConcurrentHashMap<Class<?>, Class<?>, Conversion> CONVERT_MULTI_MAP = new MultiConcurrentHashMap<>();
 
-    private static final ConcurrentHashMap<MapEntry<Class<?>, Class<?>>, Boolean> IMPL_MAP = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Pair<Class<?>, Class<?>>, Boolean> IMPL_MAP = new ConcurrentHashMap<>();
 
     private static boolean loadByte, loadShort, loadInt, loadLong, loadFloat, loadDouble, loadBoolean, loadChar, loadString;
 
@@ -94,7 +94,7 @@ public class Converts {
      * @return ignore
      */
     private static boolean checkImpl(Class<?> require, Class<?> target) {
-        MapEntry<Class<?>, Class<?>> e = new MapEntry<>(require, target);
+        Pair<Class<?>, Class<?>> e = new Pair<>(require, target);
         Boolean b = IMPL_MAP.get(e);
         if (b == null) {
             boolean i = Classes.isImplClass(require, target);

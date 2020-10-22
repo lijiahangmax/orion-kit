@@ -1,8 +1,9 @@
 package com.orion.lang.wrapper;
 
-import com.orion.able.Jsonable;
-import com.orion.able.Logable;
+import com.orion.able.JsonAble;
+import com.orion.able.LogAble;
 import com.orion.able.Mapable;
+import com.orion.lang.support.CloneSupport;
 import com.orion.utils.Objects1;
 import com.orion.utils.json.Jsons;
 
@@ -17,7 +18,7 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2019/5/30 22:52
  */
-public class UrlWrapper<T> implements Wrapper<T>, Jsonable, Logable, Mapable {
+public class UrlWrapper<T> extends CloneSupport<UrlWrapper<T>> implements Wrapper<T>, JsonAble, LogAble, Mapable<String, Object> {
 
     private static final long serialVersionUID = 4250545197688197L;
 
@@ -82,17 +83,17 @@ public class UrlWrapper<T> implements Wrapper<T>, Jsonable, Logable, Mapable {
         return new UrlWrapper<>(url, 3, data);
     }
 
-    public UrlWrapper url(String url) {
+    public UrlWrapper<T> url(String url) {
         this.url = url;
         return this;
     }
 
-    public UrlWrapper type(Integer type) {
+    public UrlWrapper<T> type(Integer type) {
         this.type = type;
         return this;
     }
 
-    public UrlWrapper data(T data) {
+    public UrlWrapper<T> data(T data) {
         this.data = data;
         return this;
     }
@@ -101,7 +102,7 @@ public class UrlWrapper<T> implements Wrapper<T>, Jsonable, Logable, Mapable {
         return url;
     }
 
-    public UrlWrapper setUrl(String url) {
+    public UrlWrapper<T> setUrl(String url) {
         this.url = url;
         return this;
     }
@@ -110,7 +111,7 @@ public class UrlWrapper<T> implements Wrapper<T>, Jsonable, Logable, Mapable {
         return type;
     }
 
-    public UrlWrapper setType(Integer type) {
+    public UrlWrapper<T> setType(Integer type) {
         this.type = type;
         return this;
     }
@@ -119,7 +120,7 @@ public class UrlWrapper<T> implements Wrapper<T>, Jsonable, Logable, Mapable {
         return data;
     }
 
-    public UrlWrapper setData(T data) {
+    public UrlWrapper<T> setData(T data) {
         this.data = data;
         return this;
     }
@@ -148,7 +149,7 @@ public class UrlWrapper<T> implements Wrapper<T>, Jsonable, Logable, Mapable {
     }
 
     @Override
-    public Map toMap() {
+    public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>(8);
         map.put("url", url);
         map.put("type", type);

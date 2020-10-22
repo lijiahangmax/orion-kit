@@ -1,4 +1,6 @@
-package com.orion.lang;
+package com.orion.lang.wrapper;
+
+import com.orion.lang.support.CloneSupport;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -10,17 +12,17 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2019/8/23 10:40
  */
-public class MapEntry<K, V> implements Map.Entry<K, V>, Serializable {
+public class Pair<K, V> extends CloneSupport<Pair<K, V>> implements Map.Entry<K, V>, Serializable {
 
     private static final long serialVersionUID = 3797556461612462L;
 
     private K key;
     private V value;
 
-    public MapEntry() {
+    public Pair() {
     }
 
-    public MapEntry(K key, V value) {
+    public Pair(K key, V value) {
         this.key = key;
         this.value = value;
     }
@@ -33,8 +35,8 @@ public class MapEntry<K, V> implements Map.Entry<K, V>, Serializable {
      * @param <V>   value
      * @return MapEntry
      */
-    public static <K, V> MapEntry<K, V> toMapEntry(Map.Entry<K, V> entry) {
-        return new MapEntry<>(entry.getKey(), entry.getValue());
+    public static <K, V> Pair<K, V> toMapEntry(Map.Entry<K, V> entry) {
+        return new Pair<>(entry.getKey(), entry.getValue());
     }
 
     @Override
@@ -42,7 +44,7 @@ public class MapEntry<K, V> implements Map.Entry<K, V>, Serializable {
         return key;
     }
 
-    public MapEntry<K, V> setKey(K key) {
+    public Pair<K, V> setKey(K key) {
         this.key = key;
         return this;
     }

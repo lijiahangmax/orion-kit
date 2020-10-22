@@ -27,7 +27,6 @@ public class ConcurrentCallable<V> implements Callable<V> {
         this.cd = cd;
     }
 
-
     @Override
     public V call() throws Exception {
         if (c != null) {

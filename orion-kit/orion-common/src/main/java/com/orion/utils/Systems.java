@@ -1,6 +1,7 @@
 package com.orion.utils;
 
 import java.io.File;
+import java.lang.management.ManagementFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,6 +79,11 @@ public class Systems {
      */
     public static final String HOST_NAME;
 
+    /**
+     * 进程PID
+     */
+    public static final int PID;
+
     static {
         LINE_SEPARATOR = System.getProperty("line.separator", "\n");
         FILE_SEPARATOR = File.separator;
@@ -101,6 +107,8 @@ public class Systems {
             beAndroid = false;
         }
         BE_ANDROID = beAndroid;
+        String processName = ManagementFactory.getRuntimeMXBean().getName();
+        PID = Integer.parseInt(processName.substring(0, processName.indexOf('@')));
     }
 
     /**

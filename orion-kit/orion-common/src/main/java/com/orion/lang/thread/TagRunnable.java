@@ -1,7 +1,7 @@
 package com.orion.lang.thread;
 
 /**
- * 具有tag的runnable
+ * 具有tag的Runnable
  *
  * @author ljh15
  * @version 1.0.0

@@ -767,4 +767,14 @@ public class BigDecimals {
         return Objects1.eq(d1, d2);
     }
 
+    /**
+     * 是否有小数位
+     *
+     * @param d BigDecimal
+     * @return true有
+     */
+    public static boolean isDecimal(BigDecimal d) {
+        return Double.compare(d.doubleValue(), ((double) d.longValueExact())) != 0;
+    }
+
 }

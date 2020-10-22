@@ -1,5 +1,6 @@
 package com.orion.lang.wrapper;
 
+import com.orion.lang.support.CloneSupport;
 import com.orion.utils.Xsses;
 
 /**
@@ -9,7 +10,7 @@ import com.orion.utils.Xsses;
  * @version 1.0.0
  * @since 2020/1/2 18:00
  */
-public class TextWrapper implements Wrapper<String> {
+public class TextWrapper extends CloneSupport<TextWrapper> implements Wrapper<String> {
 
     private static final long serialVersionUID = 5693256198048111L;
 

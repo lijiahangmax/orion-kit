@@ -1,7 +1,7 @@
 package com.orion.utils.ext;
 
-import com.orion.lang.collect.ConvertHashMap;
-import com.orion.lang.collect.ConvertHashSet;
+import com.orion.lang.collect.MutableHashMap;
+import com.orion.lang.collect.MutableHashSet;
 import com.orion.utils.Exceptions;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
+import java.util.function.BiConsumer;
 
 /**
  * properties配置文件提取
@@ -107,8 +108,8 @@ public class PropertiesExt {
      *
      * @return values
      */
-    public ConvertHashMap getValues() {
-        return new ConvertHashMap(properties);
+    public MutableHashMap getValues() {
+        return new MutableHashMap(properties);
     }
 
     /**
@@ -116,8 +117,8 @@ public class PropertiesExt {
      *
      * @return values
      */
-    public ConvertHashSet getKeys() {
-        return new ConvertHashSet(properties.keySet());
+    public MutableHashSet getKeys() {
+        return new MutableHashSet(properties.keySet());
     }
 
     /**
@@ -184,6 +185,10 @@ public class PropertiesExt {
             System.setProperty(String.valueOf(entry.getKey()), String.valueOf(entry.getValue()));
         }
         return this;
+    }
+
+    public void forEach(BiConsumer<Object, Object> action) {
+        this.properties.forEach(action);
     }
 
 }

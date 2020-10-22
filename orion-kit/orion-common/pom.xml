@@ -107,13 +107,6 @@
             <version>${yaml.version}</version>
         </dependency>
 
-        <!-- apache lang3 -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${apache.lang3.version}</version>
-        </dependency>
-
     </dependencies>
 
 </project>

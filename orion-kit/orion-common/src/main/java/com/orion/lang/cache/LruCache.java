@@ -1,4 +1,4 @@
-package com.orion.lang.collect;
+package com.orion.lang.cache;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

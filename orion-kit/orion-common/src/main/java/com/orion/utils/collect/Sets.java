@@ -1,7 +1,9 @@
 package com.orion.utils.collect;
 
 import com.orion.lang.collect.ConcurrentHashSet;
-import com.orion.lang.collect.ConvertHashSet;
+import com.orion.lang.collect.EmptySet;
+import com.orion.lang.collect.MutableHashSet;
+import com.orion.lang.collect.SingletonSet;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Randoms;
 import com.orion.utils.Valid;
@@ -52,19 +54,19 @@ public class Sets extends Collections {
         return new TreeSet<>(c);
     }
 
-    public static <E> ConvertHashSet<E> newConvertSet() {
-        return new ConvertHashSet<>();
+    public static <E> MutableHashSet<E> newMutableSet() {
+        return new MutableHashSet<>();
     }
 
-    public static <E> ConvertHashSet<E> newConvertSet(int capacity) {
-        return new ConvertHashSet<>(capacity);
+    public static <E> MutableHashSet<E> newMutableSet(int capacity) {
+        return new MutableHashSet<>(capacity);
     }
 
-    public static <E> ConvertHashSet<E> newConvertSet(Collection<? extends E> c) {
+    public static <E> MutableHashSet<E> newMutableSet(Collection<? extends E> c) {
         if (c == null) {
-            return new ConvertHashSet<>();
+            return new MutableHashSet<>();
         }
-        return new ConvertHashSet<>(c);
+        return new MutableHashSet<>(c);
     }
 
     public static <E> Set<E> newSynchronizedSet() {
@@ -119,6 +121,14 @@ public class Sets extends Collections {
         return new ConcurrentHashSet<>(m);
     }
 
+    public static <E> Set<E> singleton(E e) {
+        return new SingletonSet<>(e);
+    }
+
+    public static <E> Set<E> empty() {
+        return (Set<E>) EmptySet.EMPTY;
+    }
+
     // --------------- function ---------------
 
     public static <E> Set<E> of(E... e) {
@@ -150,6 +160,26 @@ public class Sets extends Collections {
             set.add(f.apply(v));
         }
         return set;
+    }
+
+    public static <E> Set<E> as(Iterator<E> iter) {
+        Set<E> list = new HashSet<>();
+        if (null != iter) {
+            while (iter.hasNext()) {
+                list.add(iter.next());
+            }
+        }
+        return list;
+    }
+
+    public static <E> Set<E> as(Enumeration<E> iter) {
+        Set<E> list = new HashSet<>();
+        if (null != iter) {
+            while (iter.hasMoreElements()) {
+                list.add(iter.nextElement());
+            }
+        }
+        return list;
     }
 
     /**

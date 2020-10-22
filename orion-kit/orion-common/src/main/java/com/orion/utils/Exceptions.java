@@ -1,6 +1,10 @@
 package com.orion.utils;
 
 import com.orion.exception.*;
+import com.orion.exception.argument.IndexArgumentException;
+import com.orion.exception.argument.InvalidArgumentException;
+import com.orion.exception.argument.NotFoundArgumentException;
+import com.orion.exception.argument.NullArgumentException;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -214,22 +218,6 @@ public class Exceptions {
         return new InitializeException(s, t);
     }
 
-    public static NotFoundException notFound() {
-        return new NotFoundException();
-    }
-
-    public static NotFoundException notFound(Throwable t) {
-        return new NotFoundException(t);
-    }
-
-    public static NotFoundException notFound(String s) {
-        return new NotFoundException(s);
-    }
-
-    public static NotFoundException notFound(String s, Throwable t) {
-        return new NotFoundException(s, t);
-    }
-
     public static LockException lock() {
         return new LockException();
     }
@@ -326,6 +314,22 @@ public class Exceptions {
         return new FTPException(s, t);
     }
 
+    public static SFTPException sftp() {
+        return new SFTPException();
+    }
+
+    public static SFTPException sftp(Throwable t) {
+        return new SFTPException(t);
+    }
+
+    public static SFTPException sftp(String s) {
+        return new SFTPException(s);
+    }
+
+    public static SFTPException sftp(String s, Throwable t) {
+        return new SFTPException(s, t);
+    }
+
     public static ParseRuntimeException parse() {
         return new ParseRuntimeException();
     }
@@ -390,20 +394,52 @@ public class Exceptions {
         return new ConvertException(s, t);
     }
 
-    public static UnsupportedOperationException unsupport() {
+    public static UnsupportedOperationException unSupport() {
         return new UnsupportedOperationException();
     }
 
-    public static UnsupportedOperationException unsupport(Throwable t) {
+    public static UnsupportedOperationException unSupport(Throwable t) {
         return new UnsupportedOperationException(t);
     }
 
-    public static UnsupportedOperationException unsupport(String s) {
+    public static UnsupportedOperationException unSupport(String s) {
         return new UnsupportedOperationException(s);
     }
 
-    public static UnsupportedOperationException unsupport(String s, Throwable t) {
+    public static UnsupportedOperationException unSupport(String s, Throwable t) {
         return new UnsupportedOperationException(s, t);
+    }
+
+    public static IllegalStateException state() {
+        return new IllegalStateException();
+    }
+
+    public static IllegalStateException state(Throwable t) {
+        return new IllegalStateException(t);
+    }
+
+    public static IllegalStateException state(String s) {
+        return new IllegalStateException(s);
+    }
+
+    public static IllegalStateException state(String s, Throwable t) {
+        return new IllegalStateException(s, t);
+    }
+
+    public static NotFoundArgumentException notFound() {
+        return new NotFoundArgumentException();
+    }
+
+    public static NotFoundArgumentException notFound(Throwable t) {
+        return new NotFoundArgumentException(t);
+    }
+
+    public static NotFoundArgumentException notFound(String s) {
+        return new NotFoundArgumentException(s);
+    }
+
+    public static NotFoundArgumentException notFound(String s, Throwable t) {
+        return new NotFoundArgumentException(s, t);
     }
 
     public static Error error() {
@@ -420,6 +456,56 @@ public class Exceptions {
 
     public static Error error(String s, Throwable t) {
         return new Error(s, t);
+    }
+
+    // ------------------------ ValidException ------------------------
+
+    public static InvalidArgumentException invalidArgument() {
+        return new InvalidArgumentException();
+    }
+
+    public static InvalidArgumentException invalidArgument(Throwable t) {
+        return new InvalidArgumentException(t);
+    }
+
+    public static InvalidArgumentException invalidArgument(String s) {
+        return new InvalidArgumentException(s);
+    }
+
+    public static InvalidArgumentException invalidArgument(String s, Throwable t) {
+        return new InvalidArgumentException(s, t);
+    }
+
+    public static NullArgumentException nullArgument() {
+        return new NullArgumentException();
+    }
+
+    public static NullArgumentException nullArgument(Throwable t) {
+        return new NullArgumentException(t);
+    }
+
+    public static NullArgumentException nullArgument(String s) {
+        return new NullArgumentException(s);
+    }
+
+    public static NullArgumentException nullArgument(String s, Throwable t) {
+        return new NullArgumentException(s, t);
+    }
+
+    public static IndexArgumentException indexArgument() {
+        return new IndexArgumentException();
+    }
+
+    public static IndexArgumentException indexArgument(Throwable t) {
+        return new IndexArgumentException(t);
+    }
+
+    public static IndexArgumentException indexArgument(String s) {
+        return new IndexArgumentException(s);
+    }
+
+    public static IndexArgumentException indexArgument(String s, Throwable t) {
+        return new IndexArgumentException(s, t);
     }
 
 }

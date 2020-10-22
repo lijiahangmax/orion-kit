@@ -237,12 +237,12 @@ public class Streams {
         }
     }
 
-    public static void close(Closeable c) {
+    public static void close(AutoCloseable c) {
         try {
             if (c != null) {
                 c.close();
             }
-        } catch (IOException ioe) {
+        } catch (Exception ioe) {
             // ignore
         }
     }

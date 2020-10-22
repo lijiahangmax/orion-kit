@@ -1,5 +1,6 @@
 package com.orion.lang;
 
+import com.orion.utils.Numbers;
 import com.orion.utils.Strings;
 import com.orion.utils.time.Dates;
 
@@ -8,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * 秒表
+ * 计时器
  *
  * @author Li
  * @version 1.0.0
@@ -16,20 +17,27 @@ import java.util.List;
  */
 public class StopWatch {
 
-    private boolean nano;
-
     private long from;
 
     private long to;
+
+    private boolean nano;
 
     private List<StopTag> tags;
 
     private StopTag lastTag;
 
+    public StopWatch() {
+    }
+
+    public StopWatch(boolean nano) {
+        this.nano = nano;
+    }
+
     /**
-     * 秒表开始计时, 计时时间的最小单位是毫秒
+     * 计时器开始计时
      *
-     * @return 开始计时的秒表对象
+     * @return StopWatch
      */
     public static StopWatch begin() {
         StopWatch sw = new StopWatch();
@@ -38,37 +46,42 @@ public class StopWatch {
     }
 
     /**
-     * 秒表开始计时, 计时时间的最小单位是毫微秒
+     * 计时器开始计时
      *
-     * @return 开始计时的秒表对象
+     * @param nano 是否精确到纳秒
+     * @return StopWatch
      */
-    public static StopWatch beginNano() {
-        StopWatch sw = new StopWatch();
-        sw.nano = true;
+    public static StopWatch begin(boolean nano) {
+        StopWatch sw = new StopWatch(nano);
         sw.start();
         return sw;
     }
 
     /**
-     * 创建一个秒表对象, 该对象的计时时间的最小单位是毫秒
+     * 创建一个计时器
      *
-     * @return 秒表对象
+     * @return StopWatch
      */
     public static StopWatch create() {
         return new StopWatch();
     }
 
     /**
-     * 创建一个秒表对象, 该对象的计时时间的最小单位是毫微秒
+     * 创建一个计时器
      *
-     * @return 秒表对象
+     * @param nano 是否精确到纳秒
+     * @return StopWatch
      */
-    public static StopWatch createNano() {
-        StopWatch sw = new StopWatch();
-        sw.nano = true;
-        return sw;
+    public static StopWatch create(boolean nano) {
+        return new StopWatch(nano);
     }
 
+    /**
+     * 计时运行
+     *
+     * @param r runnable
+     * @return StopWatch
+     */
     public static StopWatch run(Runnable r) {
         StopWatch sw = begin();
         r.run();
@@ -76,57 +89,58 @@ public class StopWatch {
         return sw;
     }
 
-    public static StopWatch runNano(Runnable r) {
-        StopWatch sw = beginNano();
+    /**
+     * 计时运行
+     *
+     * @param r runnable
+     * @return StopWatch
+     */
+    public static StopWatch run(Runnable r, boolean nano) {
+        StopWatch sw = new StopWatch(nano);
         r.run();
         sw.stop();
         return sw;
     }
 
     /**
-     * 开始计时, 并返回开始计时的时间, 该时间最小单位由创建秒表时确定
+     * 开始计时
      *
      * @return 开始计时的时间
      */
     public long start() {
-        from = currentTime();
+        from = current();
         to = from;
         return from;
     }
 
     /**
-     * @return 当前时间
-     */
-    private long currentTime() {
-        return nano ? System.nanoTime() : System.currentTimeMillis();
-    }
-
-    /**
-     * 记录停止时间, 该时间最小单位由创建秒表时确定
+     * 停止记时
      *
-     * @return 自身以便链式赋值
+     * @return 结束时间
      */
     public long stop() {
-        to = currentTime();
+        to = current();
         return to;
     }
 
     /**
-     * @return 计时结果(ms)
+     * @return 计时结果(ms / ns)
      */
     public long getDuration() {
         return to - from;
     }
 
     /**
-     * @return 计时结果(ms)
+     * 是否纳秒计算
+     *
+     * @return ignore
      */
-    public long du() {
-        return to - from;
+    public boolean isNano() {
+        return nano;
     }
 
     /**
-     * 开始计时的时间, 该时间最小单位由创建秒表时确定
+     * 开始计时的时间
      *
      * @return 开始计时的时间
      */
@@ -135,7 +149,7 @@ public class StopWatch {
     }
 
     /**
-     * 停止计时的时间, 该时间最小单位由创建秒表时确定
+     * 停止计时的时间
      *
      * @return 停止计时的时间
      */
@@ -144,31 +158,22 @@ public class StopWatch {
     }
 
     /**
-     * 返回格式为 Total: [计时时间][计时时间单位] : [计时开始时间] => [计时结束时间] 的字符串
+     * 获取tag使用的时间半分比
      *
-     * @return 格式为 Total: [计时时间][计时时间单位] : [计时开始时间] => [计时结束时间] 的字符串
+     * @param tag tag
+     * @return use%
      */
-    @Override
-    public String toString() {
-        String prefix = String.format("Total: %d%s : [%s] => [%s]",
-                this.getDuration(),
-                (nano ? "ns" : "ms"),
-                Dates.format(new Date(from), "yyyy-MM-dd HH:mm:ss.SSS"),
-                Dates.format(new Date(to), "yyyy-MM-dd HH:mm:ss.SSS"));
-        if (tags == null) {
-            return prefix;
-        }
-        StringBuilder sb = new StringBuilder(prefix).append("\n");
-        for (int i = 0; i < tags.size(); i++) {
-            StopTag tag = tags.get(i);
-            sb.append(String.format("  -> %5s: %dms",
-                    tag.name == null ? "TAG" + i : tag.name,
-                    tag.du()));
-            if (i < tags.size() - 1) {
-                sb.append("\n");
-            }
-        }
-        return sb.toString();
+    private String getUse(StopTag tag) {
+        return Numbers.setScale(((double) tag.getDuration() / (double) (to - from)) * 100, 7);
+    }
+
+    /**
+     * 当前时间
+     *
+     * @return now
+     */
+    private long current() {
+        return nano ? System.nanoTime() : System.currentTimeMillis();
     }
 
     /**
@@ -186,7 +191,7 @@ public class StopWatch {
         if (tags == null) {
             tags = new LinkedList<>();
         }
-        lastTag = new StopTag(name, System.currentTimeMillis(), lastTag);
+        lastTag = new StopTag(name, current(), lastTag);
         tags.add(lastTag);
         return lastTag;
     }
@@ -202,9 +207,44 @@ public class StopWatch {
         return tag(Strings.format(tpl, args));
     }
 
-    class StopTag {
+    /**
+     * @return 格式为 Total: [计时时间][计时时间单位] : [计时开始时间] => [计时结束时间] 的字符串
+     */
+    @Override
+    public String toString() {
+        String prefix = String.format("Total: %d%s : [%s] => [%s]",
+                this.getDuration(),
+                nano ? "ns" : "ms",
+                nano ? from : Dates.format(new Date(from), "yyyy-MM-dd HH:mm:ss.SSS"),
+                nano ? to : Dates.format(new Date(to), "yyyy-MM-dd HH:mm:ss.SSS"));
+        if (tags == null) {
+            return prefix;
+        }
+        StringBuilder sb = new StringBuilder(prefix).append("\n");
+        for (int i = 0; i < tags.size(); i++) {
+            StopTag tag = tags.get(i);
+            sb.append(String.format("  -> %5s: %d%s  %5s%%",
+                    tag.name == null ? "TAG" + i : tag.name,
+                    tag.getDuration(),
+                    nano ? "ns" : "ms",
+                    this.getUse(tag)
+            ));
+            if (i < tags.size() - 1) {
+                sb.append("\n");
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * TAG
+     */
+    public class StopTag {
+
         private String name;
+
         private long tm;
+
         private StopTag pre;
 
         public StopTag(String name, long tm, StopTag pre) {
@@ -214,47 +254,41 @@ public class StopWatch {
             this.pre = pre;
         }
 
-        public long du() {
+        public long getDuration() {
             if (pre == null) {
                 return tm - from;
             }
             return tm - pre.tm;
         }
 
-        public String getName() {
-            return name;
+        private long getStart() {
+            if (pre == null) {
+                return from;
+            }
+            return pre.tm;
         }
 
-        public StopTag setName(String name) {
-            this.name = name;
-            return this;
+        public String getName() {
+            return name;
         }
 
         public long getTm() {
             return tm;
         }
 
-        public StopTag setTm(long tm) {
-            this.tm = tm;
-            return this;
-        }
-
         public StopTag getPre() {
             return pre;
         }
 
-        public StopTag setPre(StopTag pre) {
-            this.pre = pre;
-            return this;
-        }
-
         @Override
         public String toString() {
-            return "StopTag{" +
-                    "name='" + name + '\'' +
-                    ", tm=" + tm +
-                    ", pre=" + pre +
-                    '}';
+            return String.format("%s: [%d] => [%s] %2d%s",
+                    name == null ? "TAG" : name,
+                    this.getStart(),
+                    tm,
+                    this.getDuration(),
+                    nano ? "ns" : "ms");
         }
     }
+
 }

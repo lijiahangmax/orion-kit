@@ -1,6 +1,12 @@
 package com.orion.lang.wrapper;
 
+import com.orion.lang.iterator.ArrayIterator;
+import com.orion.lang.support.CloneSupport;
+
 import java.io.Serializable;
+import java.util.Iterator;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
 /**
  * 多参数工具
@@ -76,20 +82,40 @@ public class Args implements Serializable {
         return new One<>();
     }
 
+    public static <A1> One<A1> one(A1 a1) {
+        return new One<>(a1);
+    }
+
     public static <A1, A2> Two<A1, A2> two() {
         return new Two<>();
+    }
+
+    public static <A1, A2> Two<A1, A2> two(A1 a1, A2 a2) {
+        return new Two<>(a1, a2);
     }
 
     public static <A1, A2, A3> Three<A1, A2, A3> three() {
         return new Three<>();
     }
 
+    public static <A1, A2, A3> Three<A1, A2, A3> three(A1 a1, A2 a2, A3 a3) {
+        return new Three<>(a1, a2, a3);
+    }
+
     public static <A1, A2, A3, A4> Four<A1, A2, A3, A4> four() {
         return new Four<>();
     }
 
+    public static <A1, A2, A3, A4> Four<A1, A2, A3, A4> four(A1 a1, A2 a2, A3 a3, A4 a4) {
+        return new Four<>(a1, a2, a3, a4);
+    }
+
     public static <A1, A2, A3, A4, A5> Five<A1, A2, A3, A4, A5> five() {
         return new Five<>();
+    }
+
+    public static <A1, A2, A3, A4, A5> Five<A1, A2, A3, A4, A5> five(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5) {
+        return new Five<>(a1, a2, a3, a4, a5);
     }
 
     public static Zero of() {
@@ -116,7 +142,7 @@ public class Args implements Serializable {
         return new Five<>(arg1, arg2, arg3, arg4, arg5);
     }
 
-    public static class Entry<K, V> implements Serializable {
+    public static class Entry<K, V> extends CloneSupport<Entry<K, V>> implements Serializable {
 
         private static final long serialVersionUID = -2036635494283534L;
 
@@ -152,15 +178,12 @@ public class Args implements Serializable {
 
         @Override
         public String toString() {
-            return "Entry{" +
-                    "key=" + key +
-                    ", value=" + value +
-                    '}';
+            return key + "=" + value;
         }
 
     }
 
-    public static class Zero implements Serializable {
+    public static class Zero extends CloneSupport<Zero> implements Serializable, Iterable<Object> {
 
         private static final long serialVersionUID = -4911462478280805L;
 
@@ -182,7 +205,22 @@ public class Args implements Serializable {
             }
         }
 
-        private Zero() {
+        public Zero() {
+        }
+
+        @Override
+        public Iterator<Object> iterator() {
+            return new ArrayIterator<>(toArray(this)).iterator();
+        }
+
+        @Override
+        public void forEach(Consumer<? super Object> action) {
+            new ArrayIterator<>(toArray(this)).forEach(action);
+        }
+
+        @Override
+        public Spliterator<Object> spliterator() {
+            return new ArrayIterator<>(toArray(this)).spliterator();
         }
 
     }
@@ -191,12 +229,12 @@ public class Args implements Serializable {
 
         private static final long serialVersionUID = -8485735532097524L;
 
-        private A1 arg1;
+        protected A1 arg1;
 
         private One() {
         }
 
-        private One(A1 arg1) {
+        public One(A1 arg1) {
             this.arg1 = arg1;
         }
 
@@ -221,12 +259,12 @@ public class Args implements Serializable {
 
         private static final long serialVersionUID = -4818468600715154L;
 
-        private A2 arg2;
+        protected A2 arg2;
 
         private Two() {
         }
 
-        private Two(A1 arg1, A2 arg2) {
+        public Two(A1 arg1, A2 arg2) {
             super(arg1);
             this.arg2 = arg2;
         }
@@ -253,12 +291,12 @@ public class Args implements Serializable {
 
         private static final long serialVersionUID = -9254528388442463L;
 
-        private A3 arg3;
+        protected A3 arg3;
 
         private Three() {
         }
 
-        private Three(A1 arg1, A2 arg2, A3 arg3) {
+        public Three(A1 arg1, A2 arg2, A3 arg3) {
             super(arg1, arg2);
             this.arg3 = arg3;
         }
@@ -286,12 +324,12 @@ public class Args implements Serializable {
 
         private static final long serialVersionUID = -6218493405659150L;
 
-        private A4 arg4;
+        protected A4 arg4;
 
         private Four() {
         }
 
-        private Four(A1 arg1, A2 arg2, A3 arg3, A4 arg4) {
+        public Four(A1 arg1, A2 arg2, A3 arg3, A4 arg4) {
             super(arg1, arg2, arg3);
             this.arg4 = arg4;
         }
@@ -320,12 +358,12 @@ public class Args implements Serializable {
 
         private static final long serialVersionUID = -1861791979844559L;
 
-        private A5 arg5;
+        protected A5 arg5;
 
         private Five() {
         }
 
-        private Five(A1 arg1, A2 arg2, A3 arg3, A4 arg4, A5 arg5) {
+        public Five(A1 arg1, A2 arg2, A3 arg3, A4 arg4, A5 arg5) {
             super(arg1, arg2, arg3, arg4);
             this.arg5 = arg5;
         }

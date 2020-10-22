@@ -22,21 +22,21 @@ import java.util.function.Function;
  * @since 2020/2/29 20:50
  */
 @SuppressWarnings("unchecked")
-public class ConvertHashSet<E> extends HashSet<E> {
+public class MutableHashSet<E> extends HashSet<E> {
 
-    public ConvertHashSet() {
+    public MutableHashSet() {
         super();
     }
 
-    public ConvertHashSet(Collection<? extends E> c) {
+    public MutableHashSet(Collection<? extends E> c) {
         super(c);
     }
 
-    public ConvertHashSet(int initialCapacity, float loadFactor) {
+    public MutableHashSet(int initialCapacity, float loadFactor) {
         super(initialCapacity, loadFactor);
     }
 
-    public ConvertHashSet(int initialCapacity) {
+    public MutableHashSet(int initialCapacity) {
         super(initialCapacity);
     }
 

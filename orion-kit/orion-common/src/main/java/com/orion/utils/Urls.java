@@ -1,6 +1,6 @@
 package com.orion.utils;
 
-import com.orion.lang.collect.ConvertHashMap;
+import com.orion.lang.collect.MutableHashMap;
 import com.orion.utils.ext.StringExt;
 import com.orion.utils.io.Streams;
 
@@ -130,8 +130,8 @@ public class Urls {
      * @param url url
      * @return 参数
      */
-    public static ConvertHashMap<String, String> getQueryString(String url) {
-        ConvertHashMap<String, String> map = new ConvertHashMap<>();
+    public static MutableHashMap<String, String> getQueryString(String url) {
+        MutableHashMap<String, String> map = new MutableHashMap<>();
         if (Strings.isBlank(url)) {
             return map;
         }
@@ -191,9 +191,9 @@ public class Urls {
      * @param keys keys
      * @return values
      */
-    public static ConvertHashMap<String, String> querys(String url, String... keys) {
+    public static MutableHashMap<String, String> querys(String url, String... keys) {
         Map<String, String> queryString = getQueryString(url);
-        ConvertHashMap<String, String> res = new ConvertHashMap<>();
+        MutableHashMap<String, String> res = new MutableHashMap<>();
         if (keys != null) {
             for (String key : keys) {
                 res.put(key, queryString.get(key));

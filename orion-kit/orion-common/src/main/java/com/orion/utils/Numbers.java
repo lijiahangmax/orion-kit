@@ -796,6 +796,18 @@ public class Numbers {
         return max;
     }
 
+    // -------------------- scale --------------------
+
+    /**
+     * 清空小数
+     *
+     * @param f float
+     * @return string
+     */
+    public static String cleanDecimal(float f) {
+        return NO_DECIMAL.format(f);
+    }
+
     /**
      * 清空小数
      *
@@ -820,6 +832,42 @@ public class Numbers {
             DECIMAL_FORMAT_MAP.put(decimalLen, format);
         }
         return format.format(d);
+    }
+
+    /**
+     * 设置小数位
+     *
+     * @param f          float
+     * @param decimalLen 小数位
+     * @return string
+     */
+    public static String setScale(float f, int decimalLen) {
+        DecimalFormat format = DECIMAL_FORMAT_MAP.get(decimalLen);
+        if (format == null) {
+            format = new DecimalFormat("#." + Strings.repeat('#', decimalLen));
+            DECIMAL_FORMAT_MAP.put(decimalLen, format);
+        }
+        return format.format(f);
+    }
+
+    /**
+     * 是否有小数位
+     *
+     * @param f float
+     * @return true有
+     */
+    public static boolean isDecimal(float f) {
+        return Float.compare(f, ((float) (int) f)) != 0;
+    }
+
+    /**
+     * 是否有小数位
+     *
+     * @param d double
+     * @return true有
+     */
+    public static boolean isDecimal(double d) {
+        return Double.compare(d, ((double) (long) d)) != 0;
     }
 
 }

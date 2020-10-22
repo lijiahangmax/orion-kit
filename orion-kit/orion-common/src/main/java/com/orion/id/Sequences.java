@@ -12,7 +12,6 @@ import java.util.concurrent.ThreadLocalRandom;
  * @version 1.0.0
  * @since 2019/07/23 19:15
  */
-@SuppressWarnings("ALL")
 public class Sequences {
 
     /**
@@ -65,17 +64,17 @@ public class Sequences {
     private final ThreadLocalRandom tlr = ThreadLocalRandom.current();
 
     public Sequences(long dataCenterId) {
-        this(dataCenterId, 0x000000FF & getLastIPAddress(), false, 5L, false);
+        this(dataCenterId, 0x000000FF & getLastAddress(), false, 5L, false);
     }
 
     public Sequences(long dataCenterId, boolean clock, boolean randomSequence) {
-        this(dataCenterId, 0x000000FF & getLastIPAddress(), clock, 5L, randomSequence);
+        this(dataCenterId, 0x000000FF & getLastAddress(), clock, 5L, randomSequence);
     }
 
     private static Sequences idWorker;
 
     static {
-        idWorker = new Sequences(getLastIPAddress());
+        idWorker = new Sequences(getLastAddress());
     }
 
     /**
@@ -192,7 +191,7 @@ public class Sequences {
      *
      * @return last IP
      */
-    private static byte getLastIPAddress() {
+    private static byte getLastAddress() {
         if (LAST_IP != 0) {
             return LAST_IP;
         }
@@ -203,13 +202,14 @@ public class Sequences {
         } catch (Exception e) {
             throw new RuntimeException("Unknown Host Exception", e);
         }
-        return (byte) (LAST_IP % 3);
+        int i = LAST_IP % 3;
+        return i < 0 ? (byte) -i : (byte) i;
     }
 
     /**
      * id生成器
      */
-    public static Long createId() {
+    public static Long next() {
         return idWorker.nextId();
     }
 

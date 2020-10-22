@@ -1,4 +1,4 @@
-package com.orion.lang.collect;
+package com.orion.lang.cache;
 
 import com.orion.utils.Exceptions;
 import com.orion.utils.io.Files1;

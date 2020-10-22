@@ -1,12 +1,16 @@
 package com.orion.lang.wrapper;
 
-import com.orion.able.Jsonable;
+import com.orion.able.JsonAble;
+import com.orion.lang.support.CloneSupport;
 import com.orion.utils.collect.Lists;
 import com.orion.utils.json.Jsons;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
 /**
  * DataGrid模型
@@ -15,7 +19,7 @@ import java.util.List;
  * @version 1.0.0
  * @since 2019/5/30 22:52
  */
-public class DataGrid<T> implements Serializable, Jsonable {
+public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializable, JsonAble, Iterable<T> {
 
     private static final long serialVersionUID = 3787662930250625L;
 
@@ -54,7 +58,6 @@ public class DataGrid<T> implements Serializable, Jsonable {
 
     public DataGrid(List<T> rows) {
         this.rows = rows;
-        this.limit = 10;
         this.size = Lists.size(this.rows);
     }
 
@@ -64,7 +67,6 @@ public class DataGrid<T> implements Serializable, Jsonable {
         if (total != 0) {
             pages = total % limit == 0 ? total / limit : (total / limit + 1);
         }
-        this.limit = 10;
         this.size = Lists.size(this.rows);
     }
 
@@ -72,7 +74,6 @@ public class DataGrid<T> implements Serializable, Jsonable {
         this.rows = rows;
         this.total = total;
         this.pages = pages;
-        this.limit = 10;
         this.size = Lists.size(this.rows);
     }
 
@@ -198,19 +199,27 @@ public class DataGrid<T> implements Serializable, Jsonable {
 
     @Override
     public String toString() {
-        return "DataGrid{" +
-                "total=" + total +
-                ", rows=" + rows +
-                ", page=" + page +
-                ", limit=" + limit +
-                ", pages=" + pages +
-                ", size=" + size +
-                '}';
+        return String.valueOf(rows);
     }
 
     @Override
     public String toJsonString() {
         return Jsons.toJSONWriteNull(this);
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return rows.iterator();
+    }
+
+    @Override
+    public void forEach(Consumer<? super T> action) {
+        rows.forEach(action);
+    }
+
+    @Override
+    public Spliterator<T> spliterator() {
+        return rows.spliterator();
     }
 
 }

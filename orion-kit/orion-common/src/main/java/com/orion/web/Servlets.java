@@ -1,6 +1,6 @@
 package com.orion.web;
 
-import com.orion.lang.collect.ConvertHashMap;
+import com.orion.lang.collect.MutableHashMap;
 import com.orion.utils.Urls;
 import com.orion.utils.ext.StringExt;
 import com.orion.utils.io.Streams;
@@ -51,8 +51,8 @@ public class Servlets {
      * @param keys    keys
      * @return stringExt
      */
-    public static ConvertHashMap<String, String> getParameters(HttpServletRequest request, String... keys) {
-        ConvertHashMap<String, String> map = new ConvertHashMap<>();
+    public static MutableHashMap<String, String> getParameters(HttpServletRequest request, String... keys) {
+        MutableHashMap<String, String> map = new MutableHashMap<>();
         for (String key : keys) {
             map.put(key, request.getParameter(key));
         }
@@ -65,9 +65,9 @@ public class Servlets {
      * @param request request
      * @return stringExt
      */
-    public static ConvertHashMap<String, String> getParameterMap(HttpServletRequest request) {
+    public static MutableHashMap<String, String> getParameterMap(HttpServletRequest request) {
         Map<String, String[]> parameterMap = request.getParameterMap();
-        ConvertHashMap<String, String> map = new ConvertHashMap<>();
+        MutableHashMap<String, String> map = new MutableHashMap<>();
         for (Map.Entry<String, String[]> es : parameterMap.entrySet()) {
             map.put(es.getKey(), es.getValue()[0]);
         }
@@ -102,8 +102,8 @@ public class Servlets {
      * @param keys    keys
      * @return 请求头
      */
-    public static ConvertHashMap<String, String> getHeaders(HttpServletRequest request, String... keys) {
-        ConvertHashMap<String, String> map = new ConvertHashMap<>();
+    public static MutableHashMap<String, String> getHeaders(HttpServletRequest request, String... keys) {
+        MutableHashMap<String, String> map = new MutableHashMap<>();
         for (String key : keys) {
             map.put(key, request.getHeader(key));
         }
@@ -116,8 +116,8 @@ public class Servlets {
      * @param request request
      * @return 请求头
      */
-    public static ConvertHashMap<String, String> getHeaderMap(HttpServletRequest request) {
-        ConvertHashMap<String, String> map = new ConvertHashMap<>();
+    public static MutableHashMap<String, String> getHeaderMap(HttpServletRequest request) {
+        MutableHashMap<String, String> map = new MutableHashMap<>();
         Enumeration<String> it = request.getHeaderNames();
         while (it.hasMoreElements()) {
             String key = it.nextElement();
@@ -186,7 +186,7 @@ public class Servlets {
      * @param request request
      * @return url请求参数
      */
-    public static ConvertHashMap<String, String> getQueryStringMap(HttpServletRequest request) {
+    public static MutableHashMap<String, String> getQueryStringMap(HttpServletRequest request) {
         return Urls.getQueryString(request.getQueryString());
     }
 
@@ -433,8 +433,8 @@ public class Servlets {
      * @param keys     keys
      * @return 请求头
      */
-    public static ConvertHashMap<String, String> getHeaders(HttpServletResponse response, String... keys) {
-        ConvertHashMap<String, String> map = new ConvertHashMap<>();
+    public static MutableHashMap<String, String> getHeaders(HttpServletResponse response, String... keys) {
+        MutableHashMap<String, String> map = new MutableHashMap<>();
         for (String key : keys) {
             map.put(key, response.getHeader(key));
         }
@@ -447,8 +447,8 @@ public class Servlets {
      * @param response response
      * @return 请求头
      */
-    public static ConvertHashMap<String, String> getHeaderMap(HttpServletResponse response) {
-        ConvertHashMap<String, String> map = new ConvertHashMap<>();
+    public static MutableHashMap<String, String> getHeaderMap(HttpServletResponse response) {
+        MutableHashMap<String, String> map = new MutableHashMap<>();
         Collection<String> headerNames = response.getHeaderNames();
         for (String headerName : headerNames) {
             map.put(headerName, response.getHeader(headerName));

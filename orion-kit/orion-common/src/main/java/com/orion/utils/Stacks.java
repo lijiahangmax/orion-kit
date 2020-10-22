@@ -168,6 +168,10 @@ public class Stacks {
             return nativeMethod;
         }
 
+        public String toRawString() {
+            return e.toString();
+        }
+
         @Override
         public String toString() {
             return e + "\n\t className ==> '" + className + '\'' +

@@ -418,7 +418,7 @@ public class RSA {
      */
     public static RSAPrivateKey getPrivateKey(String key) {
         try {
-            byte[] bytes = key.getBytes(StandardCharsets.ISO_8859_1);
+            byte[] bytes = key.getBytes();
             PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(base64Decode(bytes));
             return (RSAPrivateKey) RSA_KEY_FACTORY.generatePrivate(spec);
         } catch (Exception e) {

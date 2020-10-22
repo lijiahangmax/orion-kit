@@ -3,8 +3,7 @@ package com.orion.utils.time;
 import com.orion.utils.Converts;
 import com.orion.utils.Strings;
 import com.orion.utils.Valid;
-import org.apache.commons.lang3.time.DateFormatUtils;
-import org.apache.commons.lang3.time.FastDateFormat;
+import com.orion.utils.time.format.FastDateFormat;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -66,7 +65,9 @@ public class Dates {
         if (o == null) {
             return null;
         }
-        if (o instanceof Long) {
+        if (o instanceof Integer) {
+            return date((int) o * MILLI);
+        } else if (o instanceof Long) {
             long l = (long) o;
             if (isMilli(l)) {
                 return date(l);
@@ -151,7 +152,7 @@ public class Dates {
      * @param c c
      * @return ignore
      */
-    public static boolean isDateClass(Class c) {
+    public static boolean isDateClass(Class<?> c) {
         return c == long.class || c == Long.class || c == Date.class || c == Calendar.class ||
                 c == LocalDate.class || c == LocalDateTime.class || c == Instant.class;
     }
@@ -583,7 +584,7 @@ public class Dates {
      * @return 当前时间
      */
     public static String current() {
-        return DateFormatUtils.format(new Date(), YMDHMS);
+        return FastDateFormat.getInstance(YMDHMS).format(new Date());
     }
 
     /**
@@ -593,7 +594,7 @@ public class Dates {
      * @return 当前时间
      */
     public static String current(String pattern) {
-        return DateFormatUtils.format(new Date(), pattern);
+        return FastDateFormat.getInstance(pattern).format(new Date());
     }
 
     /**
@@ -1449,6 +1450,10 @@ public class Dates {
 
     public static Date date() {
         return new Date();
+    }
+
+    public static Date date(int ms) {
+        return new Date(ms * 1000);
     }
 
     public static Date date(long ms) {
