@@ -1,5 +1,6 @@
 package com.orion.spring;
 
+import com.orion.lang.Console;
 import com.orion.lang.collect.MutableHashMap;
 import com.orion.lang.collect.MutableHashSet;
 import com.orion.utils.ext.PropertiesExt;
@@ -87,16 +88,16 @@ public class EnvProperties {
 
         public InitializeProperties(String propertiesPath) {
             this.propertiesPath = propertiesPath;
-            System.out.println("EnvProperties: load env properties file: " + propertiesPath);
+            Console.log("EnvProperties: load env properties file: " + propertiesPath);
         }
 
         @Override
         public void afterPropertiesSet() {
             try {
                 EnvProperties.propertiesExt = new PropertiesExt(this.propertiesPath);
-                System.out.println("EnvProperties: load env properties success...");
+                Console.log("EnvProperties: load env properties success...");
             } catch (Exception e) {
-                System.err.println("EnvProperties: load env properties fail...");
+                Console.error("EnvProperties: load env properties fail...");
                 throw new RuntimeException(e);
             }
         }

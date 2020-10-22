@@ -223,6 +223,11 @@ public class Args implements Serializable {
             return new ArrayIterator<>(toArray(this)).spliterator();
         }
 
+        @Override
+        public String toString() {
+            return "";
+        }
+
     }
 
     public static class One<A1> extends Zero {
@@ -249,10 +254,9 @@ public class Args implements Serializable {
 
         @Override
         public String toString() {
-            return "One{" +
-                    "arg1=" + arg1 +
-                    '}';
+            return "arg1=" + arg1;
         }
+
     }
 
     public static class Two<A1, A2> extends One<A1> {
@@ -280,11 +284,10 @@ public class Args implements Serializable {
 
         @Override
         public String toString() {
-            return "Two{" +
-                    "arg1=" + getArg1() +
-                    ", arg2=" + arg2 +
-                    '}';
+            return "arg1=" + arg1 + "\n" +
+                    "arg2=" + arg2;
         }
+
     }
 
     public static class Three<A1, A2, A3> extends Two<A1, A2> {
@@ -310,14 +313,14 @@ public class Args implements Serializable {
             return this;
         }
 
+
         @Override
         public String toString() {
-            return "Three{" +
-                    "arg1=" + getArg1() +
-                    ", arg2=" + getArg2() +
-                    ", arg3=" + arg3 +
-                    '}';
+            return "arg1=" + arg1 + "\n" +
+                    "arg2=" + arg2 + "\n" +
+                    "arg3=" + arg3;
         }
+
     }
 
     public static class Four<A1, A2, A3, A4> extends Three<A1, A2, A3> {
@@ -345,13 +348,12 @@ public class Args implements Serializable {
 
         @Override
         public String toString() {
-            return "Four{" +
-                    "arg1=" + getArg1() +
-                    ", arg2=" + getArg2() +
-                    ", arg3=" + getArg3() +
-                    ", arg4=" + arg4 +
-                    '}';
+            return "arg1=" + arg1 + "\n" +
+                    "arg2=" + arg2 + "\n" +
+                    "arg3=" + arg3 + "\n" +
+                    "arg4=" + arg4;
         }
+
     }
 
     public static class Five<A1, A2, A3, A4, A5> extends Four<A1, A2, A3, A4> {
@@ -377,16 +379,16 @@ public class Args implements Serializable {
             return this;
         }
 
+
         @Override
         public String toString() {
-            return "Five{" +
-                    "arg1=" + getArg1() +
-                    ", arg2=" + getArg2() +
-                    ", arg3=" + getArg3() +
-                    ", arg4=" + getArg4() +
-                    ", arg5=" + arg5 +
-                    '}';
+            return "arg1=" + arg1 + "\n" +
+                    "arg2=" + arg2 + "\n" +
+                    "arg3=" + arg3 + "\n" +
+                    "arg4=" + arg4 + "\n" +
+                    "arg5=" + arg5;
         }
+
     }
 
 }

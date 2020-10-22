@@ -3,7 +3,6 @@ package com.orion.spring;
 import com.orion.utils.Strings;
 import com.orion.utils.io.Streams;
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -125,8 +124,8 @@ public class MultipartFiles {
     public static MultipartFile toMultiPartFile(InputStream in, String charset, String field, String fileName) {
         OutputStream os = null;
         try {
-            FileItemFactory factory = new DiskFileItemFactory(16, null);
-            ((DiskFileItemFactory) factory).setDefaultCharset(charset);
+            DiskFileItemFactory factory = new DiskFileItemFactory(16, null);
+            factory.setDefaultCharset(charset);
             FileItem item = factory.createItem(field, FILE_CONTENT_TYPE, true, fileName);
             int bytesRead;
             byte[] buffer = new byte[BUFFER_SIZE];

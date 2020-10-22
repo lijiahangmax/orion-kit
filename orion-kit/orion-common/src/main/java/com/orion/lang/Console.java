@@ -111,6 +111,19 @@ public class Console {
     }
 
     /**
+     * 输出 trace
+     */
+    public static void trace(Object... os) {
+        StringBuilder sb = new StringBuilder();
+        if (os != null) {
+            for (Object o : os) {
+                sb.append(o).append(" ");
+            }
+        }
+        out.println(sb);
+    }
+
+    /**
      * @return 返回当前栈位置
      */
     public static String where() {

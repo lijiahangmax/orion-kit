@@ -1,5 +1,6 @@
 package com.orion.spring;
 
+import com.orion.lang.Console;
 import com.orion.utils.Valid;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
@@ -31,13 +32,13 @@ public class SpringHolder {
 
         @Override
         public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-            System.out.println("SpringHolder: Inject ApplicationContext");
+            Console.log("SpringHolder: Inject ApplicationContext");
             SpringHolder.applicationContext = applicationContext;
         }
 
         @Override
         public void postProcessBeanFactory(ConfigurableListableBeanFactory configurableListableBeanFactory) throws BeansException {
-            System.out.println("SpringHolder: Inject BeanFactory");
+            Console.log("SpringHolder: Inject BeanFactory");
             SpringHolder.beanFactory = configurableListableBeanFactory;
         }
 
