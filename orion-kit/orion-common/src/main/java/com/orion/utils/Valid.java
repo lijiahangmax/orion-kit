@@ -2,7 +2,6 @@ package com.orion.utils;
 
 import com.orion.exception.argument.InvalidArgumentException;
 
-import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
@@ -517,36 +516,6 @@ public abstract class Valid {
     public static void notNaN(double value, String message, Object... values) {
         if (Double.isNaN(value)) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
-        }
-    }
-
-    public static void notFound(File value) {
-        notFound(value, "The validated file is not found");
-    }
-
-    public static void notFound(File value, String message, Object... values) {
-        if (value == null || !value.exists()) {
-            throw Exceptions.notFound(Strings.format(message, values));
-        }
-    }
-
-    public static void notFile(File value) {
-        notFile(value, "The validated file is not file");
-    }
-
-    public static void notFile(File value, String message, Object... values) {
-        if (value == null || !value.exists() || !value.isFile()) {
-            throw Exceptions.notFound(Strings.format(message, values));
-        }
-    }
-
-    public static void notDirectory(File value) {
-        notDirectory(value, "The validated file is not directory");
-    }
-
-    public static void notDirectory(File value, String message, Object... values) {
-        if (value == null || !value.exists() || !value.isDirectory()) {
-            throw Exceptions.notFound(Strings.format(message, values));
         }
     }
 

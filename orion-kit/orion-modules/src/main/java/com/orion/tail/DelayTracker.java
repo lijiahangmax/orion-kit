@@ -1,14 +1,17 @@
 package com.orion.tail;
 
+import com.orion.tail.mode.FileMinusMode;
+import com.orion.tail.mode.FileNotFoundMode;
 import com.orion.utils.Exceptions;
+import com.orion.utils.Strings;
 import com.orion.utils.Threads;
+import com.orion.utils.Valid;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 延时文件追踪器
@@ -32,89 +35,68 @@ public class DelayTracker implements Tracker {
     /**
      * 延迟时间
      */
-    private long delayMillis = 1000;
+    private int delayMillis;
 
     /**
      * 编码集
      */
-    private String charset = "UTF-8";
+    private String charset;
 
     /**
-     * 已读取的行数
+     * 读取的行
      */
-    private AtomicLong readLines = new AtomicLong();
+    private int accessCount;
 
     /**
-     * 开始监听的起始位置
-     * > 0 fileSize - tailStartPos 可能会导致第一个字符为乱码
-     * 0 全部读取
+     * 开始监听的文件起始位置
      */
-    private long tailStartPos;
-
-    /**
-     * 文件大小减少操作 并且当前位置大于等于文件大小
-     * 0 从头开始读取
-     * 1 从fileSize - tailStartPos读取
-     * 2 从文件当前位置读取
-     * 3 关闭
-     */
-    private int fileMinusMode;
-
-    /**
-     * 0 关闭
-     * 1 继续监听
-     * 2 等待到指定次数如果还不存在则关闭
-     */
-    private int fileNotFoundMode;
-
-    /**
-     * 文件找不到等待次数
-     */
-    private int fileNotFoundWaitTimes = 10;
+    private long offset;
 
     /**
      * 运行flag
      */
-    private volatile boolean run = true;
+    private volatile boolean run;
 
     /**
      * 行处理器
      */
     private LineHandler handler;
 
+    /**
+     * 启动时 文件未找到文件 处理模式
+     */
+    private FileNotFoundMode notFoundMode = FileNotFoundMode.CLOSE;
+
+    /**
+     * 未找到文件 处理次数
+     */
+    private int notFountTimes;
+
+    /**
+     * 运行时 文件减少 处理模式
+     */
+    private FileMinusMode minusMode = FileMinusMode.CLOSE;
+
+    public DelayTracker(String tailFile, LineHandler handler) {
+        this(new File(tailFile), handler);
+    }
+
     public DelayTracker(File tailFile, LineHandler handler) {
+        Valid.notNull(handler, "LineHandler is null");
         this.tailFile = tailFile;
         this.handler = handler;
-    }
-
-    public DelayTracker(File tailFile, String charset, LineHandler handler) {
-        this.tailFile = tailFile;
-        this.charset = charset;
-        this.handler = handler;
-    }
-
-    public DelayTracker(File tailFile, long delayMillis, LineHandler handler) {
-        this.tailFile = tailFile;
-        this.delayMillis = delayMillis;
-        this.handler = handler;
-    }
-
-    public DelayTracker(File tailFile, long delayMillis, String charset, LineHandler handler) {
-        this.tailFile = tailFile;
-        this.delayMillis = delayMillis;
-        this.charset = charset;
-        this.handler = handler;
+        this.delayMillis = 1000;
+        this.charset = "UTF-8";
     }
 
     @Override
     public void run() {
         try {
-            boolean init = init();
-            if (init) {
-                setSeek();
-            } else {
+            if (!init()) {
                 return;
             }
+            run = true;
+            this.setSeek();
             // 上次检查文件更改的时间
             long lastMod = 0;
             // 上次文件大小
@@ -132,7 +114,12 @@ public class DelayTracker implements Tracker {
                             s = s.replaceAll("\r\n", "\n").replaceAll("\r", "\n");
                             String[] ls = s.split("\n");
                             for (String l : ls) {
-                                handler.readLine(l, readLines.getAndIncrement(), this);
+                                if (accessCount == 0) {
+                                    // skip
+                                    handler.readLine(l.substring(1), accessCount++, this);
+                                } else {
+                                    handler.readLine(l, accessCount++, this);
+                                }
                             }
                         }
                     }
@@ -144,7 +131,9 @@ public class DelayTracker implements Tracker {
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         } finally {
+            accessCount = 0;
             Streams.close(reader);
+            reader = null;
         }
     }
 
@@ -156,29 +145,62 @@ public class DelayTracker implements Tracker {
      */
     private boolean init() throws IOException {
         if (!tailFile.exists() || tailFile.isDirectory()) {
-            if (fileNotFoundMode == 1) {
-                while (run) {
-                    Threads.sleep(delayMillis);
-                    if (tailFile.exists() && tailFile.isFile()) {
-                        reader = Files1.openRandomAccess(tailFile, "r");
-                        return true;
+            switch (notFoundMode) {
+                case WAIT:
+                    run = true;
+                    while (run) {
+                        Threads.sleep(delayMillis);
+                        if (tailFile.exists() && tailFile.isFile()) {
+                            reader = Files1.openRandomAccess(tailFile, "r");
+                            return true;
+                        }
                     }
-                }
-            } else if (fileNotFoundMode == 2) {
-                for (int i = 0; i < fileNotFoundWaitTimes; i++) {
-                    Threads.sleep(delayMillis);
-                    if (run && tailFile.exists() && tailFile.isFile()) {
-                        reader = Files1.openRandomAccess(tailFile, "r");
-                        return true;
+                    return run = false;
+                case WAIT_TIMES:
+                    int fi = 1, fd = notFountTimes, last = notFountTimes;
+                    if (notFountTimes > delayMillis) {
+                        long s = notFountTimes / delayMillis;
+                        long m = notFountTimes % delayMillis;
+                        fd = delayMillis;
+                        if (m == 0) {
+                            last = delayMillis;
+                            fi = (int) s;
+                        } else {
+                            last = (int) m;
+                            fi += (int) s;
+                        }
                     }
-                }
+                    for (int i = 0; i < fi; i++) {
+                        if (i == fi - 1) {
+                            Threads.sleep(last);
+                        } else {
+                            Threads.sleep(fd);
+                        }
+                        if (run && tailFile.exists() && tailFile.isFile()) {
+                            reader = Files1.openRandomAccess(tailFile, "r");
+                            return true;
+                        }
+                    }
+                    return false;
+                case WAIT_COUNT:
+                    for (int i = 0; i < notFountTimes; i++) {
+                        Threads.sleep(delayMillis);
+                        if (run && tailFile.exists() && tailFile.isFile()) {
+                            reader = Files1.openRandomAccess(tailFile, "r");
+                            return true;
+                        }
+                    }
+                    return false;
+                case THROWS:
+                    throw Exceptions.notFound(Strings.format("tail file {} not found", tailFile.getAbsolutePath()));
+                case CLOSE:
+                default:
+                    return false;
             }
         } else {
             reader = Files1.openRandomAccess(tailFile, "r");
             return true;
         }
-        run = false;
-        return false;
     }
 
     /**
@@ -186,9 +208,13 @@ public class DelayTracker implements Tracker {
      */
     private void setSeek() throws IOException {
         long length = tailFile.length();
-        long s = length - tailStartPos;
-        if (s > 0) {
-            reader.seek(s);
+        if (offset == -1) {
+            reader.seek(length);
+        } else if (offset > 0) {
+            long s = length - offset;
+            if (s > 0) {
+                reader.seek(s);
+            }
         }
     }
 
@@ -196,186 +222,88 @@ public class DelayTracker implements Tracker {
      * 重新设置初始化位置
      */
     private void resetSeek() throws IOException {
-        if (fileMinusMode == 0) {
-            reader.seek(0);
-        } else if (fileMinusMode == 1) {
-            long length = tailFile.length();
-            long s = length - tailStartPos;
-            if (s > 0) {
-                reader.seek(s);
-            } else {
+        switch (minusMode) {
+            case CLOSE:
+                run = false;
+                return;
+            case CURRENT:
+                reader.seek(tailFile.length());
+                return;
+            case OFFSET:
+                long length = tailFile.length();
+                long s = length - offset;
+                if (s > 0) {
+                    reader.seek(s);
+                } else {
+                    reader.seek(0);
+                }
+                return;
+            case RESUME:
                 reader.seek(0);
-            }
-        } else if (fileMinusMode == 2) {
-            reader.seek(tailFile.length());
-        } else {
-            run = false;
+                return;
+            case THROWS:
+                throw Exceptions.state(Strings.format("tail file {} minus", tailFile.getAbsolutePath()));
+            default:
         }
     }
 
     /**
      * 关闭监听
      */
+    @Override
     public void stop() {
         run = false;
     }
 
     /**
-     * 设置读取间隔
+     * 设置初始读取偏移量
      *
-     * @param delayMillis 间隔 ms
+     * @param offset 偏移量
+     *               -1文件当前位置
+     *               0起始位置
+     *               其他为 文件长度 - offset 可能第一个字符为
      * @return this
      */
-    public DelayTracker delayMillis(long delayMillis) {
+    public DelayTracker offset(long offset) {
+        this.offset = offset;
+        return this;
+    }
+
+    public DelayTracker delayMillis(int delayMillis) {
         this.delayMillis = delayMillis;
         return this;
     }
 
-    /**
-     * 设置读取编码格式
-     *
-     * @param charset 编码格式
-     * @return this
-     */
     public DelayTracker charset(String charset) {
         this.charset = charset;
         return this;
     }
 
-    /**
-     * 设置读取偏移量
-     *
-     * @param tailStartPos 偏移量
-     * @return this
-     */
-    public DelayTracker tailStartPos(long tailStartPos) {
-        this.tailStartPos = tailStartPos;
+    public DelayTracker notFoundMode(FileNotFoundMode notFoundMode) {
+        return notFoundMode(notFoundMode, 0);
+    }
+
+    public DelayTracker notFoundMode(FileNotFoundMode notFoundMode, int notFountTimes) {
+        this.notFoundMode = notFoundMode;
+        this.notFountTimes = notFountTimes;
+        if (notFoundMode == FileNotFoundMode.WAIT_TIMES || notFoundMode == FileNotFoundMode.WAIT_COUNT) {
+            Valid.gte(notFountTimes, 0, "not fount times has to be greater than or equal to 0");
+        }
         return this;
     }
 
-    /**
-     * 设置文件减少操作
-     *
-     * @param fileMinusMode 文件减少操作
-     * @return this
-     */
-    public DelayTracker fileMinusMode(int fileMinusMode) {
-        this.fileMinusMode = fileMinusMode;
+    public DelayTracker minusMode(FileMinusMode minusMode) {
+        this.minusMode = minusMode;
         return this;
-    }
-
-    /**
-     * 设置文件不存在操作
-     *
-     * @param fileNotFoundMode 文件不存在操作
-     * @return this
-     */
-    public DelayTracker fileNotFoundMode(int fileNotFoundMode) {
-        this.fileNotFoundMode = fileNotFoundMode;
-        return this;
-    }
-
-    /**
-     * 设置等待次数
-     *
-     * @param fileNotFoundWaitTimes 等待次数
-     * @return this
-     */
-    public DelayTracker fileNotFoundWaitTimes(int fileNotFoundWaitTimes) {
-        this.fileNotFoundWaitTimes = fileNotFoundWaitTimes;
-        return this;
-    }
-
-    /**
-     * 设置文件未找到 进行关闭
-     *
-     * @return this
-     */
-    public DelayTracker fileNotFoundClose() {
-        fileNotFoundMode = 0;
-        return this;
-    }
-
-    /**
-     * 设置文件未找到 进行等待
-     *
-     * @return this
-     */
-    public DelayTracker fileNotFoundWait() {
-        fileNotFoundMode = 1;
-        return this;
-    }
-
-    /**
-     * 设置文件未找到 进行有次数的等待
-     *
-     * @param times 次数
-     * @return this
-     */
-    public DelayTracker fileNotFoundWait(int times) {
-        fileNotFoundMode = 3;
-        fileNotFoundWaitTimes = times;
-        return this;
-    }
-
-    /**
-     * 文件减少后从头读取
-     *
-     * @return this
-     */
-    public DelayTracker fileMinusReadHead() {
-        fileMinusMode = 0;
-        return this;
-    }
-
-    /**
-     * 文件减少后从头 fileSize - tailStartPos 开始读取
-     *
-     * @return this
-     */
-    public DelayTracker fileMinusReadPos() {
-        fileMinusMode = 1;
-        return this;
-    }
-
-    /**
-     * 文件减少后从当前位置读取
-     *
-     * @return this
-     */
-    public DelayTracker fileMinusReadCurrent() {
-        fileMinusMode = 2;
-        return this;
-    }
-
-    /**
-     * 文件减少后关闭
-     *
-     * @return this
-     */
-    public DelayTracker fileMinusReadClose() {
-        fileMinusMode = 3;
-        return this;
-    }
-
-    public File getTailFile() {
-        return tailFile;
-    }
-
-    public long getDelayMillis() {
-        return delayMillis;
-    }
-
-    public String getCharset() {
-        return charset;
-    }
-
-    public long getReadLines() {
-        return readLines.get();
     }
 
     public boolean isRun() {
         return run;
+    }
+
+    @Override
+    public String toString() {
+        return tailFile.toString();
     }
 
 }

@@ -3,7 +3,6 @@ package com.orion.utils;
 import com.orion.exception.*;
 import com.orion.exception.argument.IndexArgumentException;
 import com.orion.exception.argument.InvalidArgumentException;
-import com.orion.exception.argument.NotFoundArgumentException;
 import com.orion.exception.argument.NullArgumentException;
 
 import java.io.IOException;
@@ -426,20 +425,20 @@ public class Exceptions {
         return new IllegalStateException(s, t);
     }
 
-    public static NotFoundArgumentException notFound() {
-        return new NotFoundArgumentException();
+    public static NotFoundException notFound() {
+        return new NotFoundException();
     }
 
-    public static NotFoundArgumentException notFound(Throwable t) {
-        return new NotFoundArgumentException(t);
+    public static NotFoundException notFound(Throwable t) {
+        return new NotFoundException(t);
     }
 
-    public static NotFoundArgumentException notFound(String s) {
-        return new NotFoundArgumentException(s);
+    public static NotFoundException notFound(String s) {
+        return new NotFoundException(s);
     }
 
-    public static NotFoundArgumentException notFound(String s, Throwable t) {
-        return new NotFoundArgumentException(s, t);
+    public static NotFoundException notFound(String s, Throwable t) {
+        return new NotFoundException(s, t);
     }
 
     public static Error error() {

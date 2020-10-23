@@ -1761,7 +1761,7 @@ public class Files1 {
      * @param suffix  后缀
      * @return 文件
      */
-    private static List<File> listFilesSuffix(File dirPath, String suffix) {
+    public static List<File> listFilesSuffix(File dirPath, String suffix) {
         return listFilesSearch(dirPath, suffix, null, null, 1, true, false);
     }
 
@@ -1773,7 +1773,7 @@ public class Files1 {
      * @param child   是否递归
      * @return 文件
      */
-    private static List<File> listFilesSuffix(File dirPath, String suffix, boolean child) {
+    public static List<File> listFilesSuffix(File dirPath, String suffix, boolean child) {
         return listFilesSearch(dirPath, suffix, null, null, 1, child, false);
     }
 
@@ -1784,7 +1784,7 @@ public class Files1 {
      * @param suffix  后缀
      * @return 文件
      */
-    private static List<File> listFilesAndDirSuffix(File dirPath, String suffix) {
+    public static List<File> listFilesAndDirSuffix(File dirPath, String suffix) {
         return listFilesSearch(dirPath, suffix, null, null, 1, true, true);
     }
 
@@ -1796,7 +1796,7 @@ public class Files1 {
      * @param child   是否递归
      * @return 文件
      */
-    private static List<File> listFilesAndDirSuffix(File dirPath, String suffix, boolean child) {
+    public static List<File> listFilesAndDirSuffix(File dirPath, String suffix, boolean child) {
         return listFilesSearch(dirPath, suffix, null, null, 1, child, true);
     }
 
@@ -1807,7 +1807,7 @@ public class Files1 {
      * @param suffix  后缀
      * @return 文件
      */
-    private static List<File> listFilesSuffix(String dirPath, String suffix) {
+    public static List<File> listFilesSuffix(String dirPath, String suffix) {
         return listFilesSearch(new File(dirPath), suffix, null, null, 1, true, false);
     }
 
@@ -1819,7 +1819,7 @@ public class Files1 {
      * @param child   是否递归
      * @return 文件
      */
-    private static List<File> listFilesSuffix(String dirPath, String suffix, boolean child) {
+    public static List<File> listFilesSuffix(String dirPath, String suffix, boolean child) {
         return listFilesSearch(new File(dirPath), suffix, null, null, 1, child, false);
     }
 
@@ -1830,7 +1830,7 @@ public class Files1 {
      * @param suffix  后缀
      * @return 文件
      */
-    private static List<File> listFilesAndDirSuffix(String dirPath, String suffix) {
+    public static List<File> listFilesAndDirSuffix(String dirPath, String suffix) {
         return listFilesSearch(new File(dirPath), suffix, null, null, 1, true, true);
     }
 
@@ -1842,7 +1842,7 @@ public class Files1 {
      * @param child   是否递归
      * @return 文件
      */
-    private static List<File> listFilesAndDirSuffix(String dirPath, String suffix, boolean child) {
+    public static List<File> listFilesAndDirSuffix(String dirPath, String suffix, boolean child) {
         return listFilesSearch(new File(dirPath), suffix, null, null, 1, child, true);
     }
 
@@ -1853,7 +1853,7 @@ public class Files1 {
      * @param name    搜索
      * @return 文件
      */
-    private static List<File> listFilesMatch(File dirPath, String name) {
+    public static List<File> listFilesMatch(File dirPath, String name) {
         return listFilesSearch(dirPath, name, null, null, 2, true, false);
     }
 
@@ -1865,7 +1865,7 @@ public class Files1 {
      * @param child   是否递归
      * @return 文件
      */
-    private static List<File> listFilesMatch(File dirPath, String name, boolean child) {
+    public static List<File> listFilesMatch(File dirPath, String name, boolean child) {
         return listFilesSearch(dirPath, name, null, null, 2, child, false);
     }
 
@@ -1876,7 +1876,7 @@ public class Files1 {
      * @param name    搜索
      * @return 文件
      */
-    private static List<File> listFilesAndDirMatch(File dirPath, String name) {
+    public static List<File> listFilesAndDirMatch(File dirPath, String name) {
         return listFilesSearch(dirPath, name, null, null, 2, true, true);
     }
 
@@ -1888,7 +1888,7 @@ public class Files1 {
      * @param child   是否递归
      * @return 文件
      */
-    private static List<File> listFilesAndDirMatch(File dirPath, String name, boolean child) {
+    public static List<File> listFilesAndDirMatch(File dirPath, String name, boolean child) {
         return listFilesSearch(dirPath, name, null, null, 2, child, true);
     }
 
@@ -1899,7 +1899,7 @@ public class Files1 {
      * @param name    搜索
      * @return 文件
      */
-    private static List<File> listFilesMatch(String dirPath, String name) {
+    public static List<File> listFilesMatch(String dirPath, String name) {
         return listFilesSearch(new File(dirPath), name, null, null, 2, true, false);
     }
 
@@ -1911,7 +1911,7 @@ public class Files1 {
      * @param child   是否递归
      * @return 文件
      */
-    private static List<File> listFilesMatch(String dirPath, String name, boolean child) {
+    public static List<File> listFilesMatch(String dirPath, String name, boolean child) {
         return listFilesSearch(new File(dirPath), name, null, null, 2, child, false);
     }
 
@@ -1922,7 +1922,7 @@ public class Files1 {
      * @param name    搜索
      * @return 文件
      */
-    private static List<File> listFilesAndDirMatch(String dirPath, String name) {
+    public static List<File> listFilesAndDirMatch(String dirPath, String name) {
         return listFilesSearch(new File(dirPath), name, null, null, 2, true, true);
     }
 
@@ -1934,7 +1934,7 @@ public class Files1 {
      * @param child   是否递归
      * @return 文件
      */
-    private static List<File> listFilesAndDirMatch(String dirPath, String name, boolean child) {
+    public static List<File> listFilesAndDirMatch(String dirPath, String name, boolean child) {
         return listFilesSearch(new File(dirPath), name, null, null, 2, child, true);
     }
 
@@ -1945,7 +1945,7 @@ public class Files1 {
      * @param pattern 正则
      * @return 文件
      */
-    private static List<File> listFilesPattern(File dirPath, Pattern pattern) {
+    public static List<File> listFilesPattern(File dirPath, Pattern pattern) {
         return listFilesSearch(dirPath, null, pattern, null, 3, true, false);
     }
 
@@ -1957,7 +1957,7 @@ public class Files1 {
      * @param child   是否递归
      * @return 文件
      */
-    private static List<File> listFilesPattern(File dirPath, Pattern pattern, boolean child) {
+    public static List<File> listFilesPattern(File dirPath, Pattern pattern, boolean child) {
         return listFilesSearch(dirPath, null, pattern, null, 3, child, false);
     }
 
@@ -1968,7 +1968,7 @@ public class Files1 {
      * @param pattern 正则
      * @return 文件
      */
-    private static List<File> listFilesAndDirPattern(File dirPath, Pattern pattern) {
+    public static List<File> listFilesAndDirPattern(File dirPath, Pattern pattern) {
         return listFilesSearch(dirPath, null, pattern, null, 3, true, true);
     }
 
@@ -1980,7 +1980,7 @@ public class Files1 {
      * @param child   是否递归
      * @return 文件
      */
-    private static List<File> listFilesAndDirPattern(File dirPath, Pattern pattern, boolean child) {
+    public static List<File> listFilesAndDirPattern(File dirPath, Pattern pattern, boolean child) {
         return listFilesSearch(dirPath, null, pattern, null, 3, child, true);
     }
 
@@ -1991,7 +1991,7 @@ public class Files1 {
      * @param pattern 正则
      * @return 文件
      */
-    private static List<File> listFilesPattern(String dirPath, Pattern pattern) {
+    public static List<File> listFilesPattern(String dirPath, Pattern pattern) {
         return listFilesSearch(new File(dirPath), null, pattern, null, 3, true, false);
     }
 
@@ -2003,7 +2003,7 @@ public class Files1 {
      * @param child   是否递归
      * @return 文件
      */
-    private static List<File> listFilesPattern(String dirPath, Pattern pattern, boolean child) {
+    public static List<File> listFilesPattern(String dirPath, Pattern pattern, boolean child) {
         return listFilesSearch(new File(dirPath), null, pattern, null, 3, child, false);
     }
 
@@ -2014,7 +2014,7 @@ public class Files1 {
      * @param pattern 正则
      * @return 文件
      */
-    private static List<File> listFilesAndDirPattern(String dirPath, Pattern pattern) {
+    public static List<File> listFilesAndDirPattern(String dirPath, Pattern pattern) {
         return listFilesSearch(new File(dirPath), null, pattern, null, 3, true, true);
     }
 
@@ -2026,7 +2026,7 @@ public class Files1 {
      * @param child   是否递归
      * @return 文件
      */
-    private static List<File> listFilesAndDirPattern(String dirPath, Pattern pattern, boolean child) {
+    public static List<File> listFilesAndDirPattern(String dirPath, Pattern pattern, boolean child) {
         return listFilesSearch(new File(dirPath), null, pattern, null, 3, child, true);
     }
 
@@ -2037,7 +2037,7 @@ public class Files1 {
      * @param filter  过滤器
      * @return 文件
      */
-    private static List<File> listFilesFilter(File dirPath, FilenameFilter filter) {
+    public static List<File> listFilesFilter(File dirPath, FilenameFilter filter) {
         return listFilesSearch(dirPath, null, null, filter, 4, true, false);
     }
 
@@ -2049,7 +2049,7 @@ public class Files1 {
      * @param child   是否递归
      * @return 文件
      */
-    private static List<File> listFilesFilter(File dirPath, FilenameFilter filter, boolean child) {
+    public static List<File> listFilesFilter(File dirPath, FilenameFilter filter, boolean child) {
         return listFilesSearch(dirPath, null, null, filter, 4, child, false);
     }
 
@@ -2060,7 +2060,7 @@ public class Files1 {
      * @param filter  过滤器
      * @return 文件
      */
-    private static List<File> listFilesAndDirFilter(File dirPath, FilenameFilter filter) {
+    public static List<File> listFilesAndDirFilter(File dirPath, FilenameFilter filter) {
         return listFilesSearch(dirPath, null, null, filter, 4, true, true);
     }
 
@@ -2072,7 +2072,7 @@ public class Files1 {
      * @param child   是否递归
      * @return 文件
      */
-    private static List<File> listFilesAndDirFilter(File dirPath, FilenameFilter filter, boolean child) {
+    public static List<File> listFilesAndDirFilter(File dirPath, FilenameFilter filter, boolean child) {
         return listFilesSearch(dirPath, null, null, filter, 4, child, true);
     }
 
@@ -2083,7 +2083,7 @@ public class Files1 {
      * @param filter  过滤器
      * @return 文件
      */
-    private static List<File> listFilesFilter(String dirPath, FilenameFilter filter) {
+    public static List<File> listFilesFilter(String dirPath, FilenameFilter filter) {
         return listFilesSearch(new File(dirPath), null, null, filter, 4, true, false);
     }
 
@@ -2095,7 +2095,7 @@ public class Files1 {
      * @param child   是否递归
      * @return 文件
      */
-    private static List<File> listFilesFilter(String dirPath, FilenameFilter filter, boolean child) {
+    public static List<File> listFilesFilter(String dirPath, FilenameFilter filter, boolean child) {
         return listFilesSearch(new File(dirPath), null, null, filter, 4, child, false);
     }
 
@@ -2106,7 +2106,7 @@ public class Files1 {
      * @param filter  过滤器
      * @return 文件
      */
-    private static List<File> listFilesAndDirFilter(String dirPath, FilenameFilter filter) {
+    public static List<File> listFilesAndDirFilter(String dirPath, FilenameFilter filter) {
         return listFilesSearch(new File(dirPath), null, null, filter, 4, true, true);
     }
 
@@ -2118,7 +2118,7 @@ public class Files1 {
      * @param child   是否递归
      * @return 文件
      */
-    private static List<File> listFilesAndDirFilter(String dirPath, FilenameFilter filter, boolean child) {
+    public static List<File> listFilesAndDirFilter(String dirPath, FilenameFilter filter, boolean child) {
         return listFilesSearch(new File(dirPath), null, null, filter, 4, child, true);
     }
 
