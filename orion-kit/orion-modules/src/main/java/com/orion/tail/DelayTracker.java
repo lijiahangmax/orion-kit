@@ -1,5 +1,6 @@
 package com.orion.tail;
 
+import com.orion.tail.handler.LineHandler;
 import com.orion.tail.mode.FileMinusMode;
 import com.orion.tail.mode.FileNotFoundMode;
 import com.orion.utils.Exceptions;
@@ -20,7 +21,7 @@ import java.io.RandomAccessFile;
  * @version 1.0.0
  * @since 2020/5/14 16:13
  */
-public class DelayTracker implements Tracker {
+public class DelayTracker extends Tracker {
 
     /**
      * 追踪的文件
@@ -90,7 +91,7 @@ public class DelayTracker implements Tracker {
     }
 
     @Override
-    public void run() {
+    public void tail() {
         try {
             if (!init()) {
                 return;

@@ -1,4 +1,6 @@
-package com.orion.tail;
+package com.orion.tail.handler;
+
+import com.orion.tail.Tracker;
 
 /**
  * 读取到行的操作

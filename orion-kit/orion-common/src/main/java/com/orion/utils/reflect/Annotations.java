@@ -17,7 +17,6 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2020/5/15 13:18
  */
-@SuppressWarnings("ALL")
 public class Annotations {
 
     private Annotations() {
@@ -43,6 +42,7 @@ public class Annotations {
      * @param annotatedClasses 注解类
      * @return ignore
      */
+    @SafeVarargs
     public static boolean classHasAnnotated(Class<?> clazz, Class<? extends Annotation>... annotatedClasses) {
         Valid.notNull(clazz, "Class is null");
         Valid.notEmpty(annotatedClasses, "AnnotatedClasses length is 0");
@@ -60,7 +60,7 @@ public class Annotations {
      * @param annotatedClass 注解类
      * @return ignore
      */
-    public static boolean constructorHasAnnotated(Constructor constructor, Class<? extends Annotation> annotatedClass) {
+    public static boolean constructorHasAnnotated(Constructor<?> constructor, Class<? extends Annotation> annotatedClass) {
         Valid.notNull(constructor, "Constructor is null");
         Valid.notNull(annotatedClass, "AnnotatedClass is null");
         return constructor.getDeclaredAnnotation(annotatedClass) != null;
@@ -73,7 +73,8 @@ public class Annotations {
      * @param annotatedClasses 注解类
      * @return ignore
      */
-    public static boolean constructorHasAnnotated(Constructor constructor, Class<? extends Annotation>... annotatedClasses) {
+    @SafeVarargs
+    public static boolean constructorHasAnnotated(Constructor<?> constructor, Class<? extends Annotation>... annotatedClasses) {
         Valid.notNull(constructor, "Constructor is null");
         Valid.notEmpty(annotatedClasses, "AnnotatedClasses length is 0");
         if (annotatedClasses.length == 1) {
@@ -103,6 +104,7 @@ public class Annotations {
      * @param annotatedClasses 注解类
      * @return ignore
      */
+    @SafeVarargs
     public static boolean methodHasAnnotated(Method method, Class<? extends Annotation>... annotatedClasses) {
         Valid.notNull(method, "Method is null");
         Valid.notEmpty(annotatedClasses, "AnnotatedClasses length is 0");
@@ -133,6 +135,7 @@ public class Annotations {
      * @param annotatedClasses 注解类
      * @return ignore
      */
+    @SafeVarargs
     public static boolean fieldHasAnnotated(Field field, Class<? extends Annotation>... annotatedClasses) {
         Valid.notNull(field, "Field is null");
         Valid.notEmpty(annotatedClasses, "AnnotatedClasses length is 0");

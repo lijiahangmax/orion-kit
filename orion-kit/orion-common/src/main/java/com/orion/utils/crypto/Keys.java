@@ -15,7 +15,7 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 
-import static com.orion.utils.crypto.Base64s.base64Encode;
+import static com.orion.utils.codec.Base64s.encode;
 
 /**
  * key工具类
@@ -155,7 +155,7 @@ public class Keys {
      * @return StringKey
      */
     public static String getPublicKey(PublicKey key) {
-        return new String(base64Encode(key.getEncoded()));
+        return new String(encode(key.getEncoded()));
     }
 
     /**
@@ -165,7 +165,7 @@ public class Keys {
      * @return StringKey
      */
     public static String getPrivateKey(PrivateKey key) {
-        return new String(base64Encode(key.getEncoded()));
+        return new String(encode(key.getEncoded()));
     }
 
     /**
@@ -175,7 +175,7 @@ public class Keys {
      * @return StringKey
      */
     public static String getSecretKey(SecretKey key) {
-        return new String(base64Encode(key.getEncoded()));
+        return new String(encode(key.getEncoded()));
     }
 
     /**

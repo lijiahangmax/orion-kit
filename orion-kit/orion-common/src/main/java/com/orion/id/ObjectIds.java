@@ -1,11 +1,9 @@
 package com.orion.id;
 
 import com.orion.utils.Randoms;
+import com.orion.utils.Systems;
 
-import java.lang.management.ManagementFactory;
-import java.net.NetworkInterface;
 import java.nio.ByteBuffer;
-import java.util.Enumeration;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -20,9 +18,9 @@ public class ObjectIds {
     private ObjectIds() {
     }
 
-    private static final AtomicInteger NEXT_INC = new AtomicInteger(Randoms.randomInt());
+    private static final AtomicInteger NEXT_SEQ_INCR = new AtomicInteger(Randoms.randomInt());
 
-    private static final int MACHINE = getMachinePiece() | getProcessPiece();
+    private static final int MACHINE = Systems.getMachineCode() | Systems.getProcessCode();
 
     /**
      * 判断objectId是否有效
@@ -66,7 +64,7 @@ public class ObjectIds {
         ByteBuffer bb = ByteBuffer.wrap(new byte[12]);
         bb.putInt((int) System.currentTimeMillis() / 1000);
         bb.putInt(MACHINE);
-        bb.putInt(NEXT_INC.getAndIncrement());
+        bb.putInt(NEXT_SEQ_INCR.getAndIncrement());
         return bb.array();
     }
 
@@ -101,53 +99,6 @@ public class ObjectIds {
 
         }
         return buf.toString();
-    }
-
-    /**
-     * 获取机器码
-     *
-     * @return 机器码
-     */
-    private static int getMachinePiece() {
-        int machinePiece;
-        try {
-            StringBuilder netSb = new StringBuilder();
-            Enumeration<NetworkInterface> e = NetworkInterface.getNetworkInterfaces();
-            while (e.hasMoreElements()) {
-                NetworkInterface ni = e.nextElement();
-                netSb.append(ni.toString());
-            }
-            machinePiece = netSb.toString().hashCode() << 16;
-        } catch (Throwable e) {
-            machinePiece = (Randoms.randomInt()) << 16;
-        }
-        return machinePiece;
-    }
-
-    /**
-     * 获取进程码
-     *
-     * @return 进程码
-     */
-    private static int getProcessPiece() {
-        int processPiece;
-        int processId;
-        try {
-            // 获取进程ID
-            String processName = ManagementFactory.getRuntimeMXBean().getName();
-            int atIndex = processName.indexOf('@');
-            if (atIndex > 0) {
-                processId = Integer.parseInt(processName.substring(0, atIndex));
-            } else {
-                processId = processName.hashCode();
-            }
-        } catch (Throwable t) {
-            processId = Randoms.randomInt();
-        }
-        int loaderId = System.identityHashCode(ObjectIds.class.getClassLoader());
-        String processSb = Integer.toHexString(processId) + Integer.toHexString(loaderId);
-        processPiece = processSb.hashCode() & 0xFFFF;
-        return processPiece;
     }
 
 }

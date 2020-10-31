@@ -1,6 +1,6 @@
 package com.orion.utils.reflect;
 
-import com.orion.lang.collect.MutableHashMap;
+import com.orion.lang.collect.MutableLinkedHashMap;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Valid;
 
@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version 1.0.0
  * @since 2020/9/9 1:57
  */
-public class BeanMap extends MutableHashMap<String, Object> {
+public class BeanMap extends MutableLinkedHashMap<String, Object> {
 
     /**
      * getter方法缓存
@@ -48,6 +48,29 @@ public class BeanMap extends MutableHashMap<String, Object> {
         this.addNull = addNull;
         this.ignoreFields = ignoreFields;
         this.parseClass();
+    }
+
+    /**
+     * 创建  BeanMap
+     *
+     * @param o            object
+     * @param ignoreFields 跳过的属性名称
+     * @return BeanMap
+     */
+    public static BeanMap create(Object o, String... ignoreFields) {
+        return new BeanMap(o, ignoreFields);
+    }
+
+    /**
+     * 创建  BeanMap
+     *
+     * @param o            object
+     * @param addNull      是否添加为null的属性
+     * @param ignoreFields 跳过的属性名称
+     * @return BeanMap
+     */
+    public static BeanMap create(Object o, boolean addNull, String... ignoreFields) {
+        return new BeanMap(o, addNull, ignoreFields);
     }
 
     /**

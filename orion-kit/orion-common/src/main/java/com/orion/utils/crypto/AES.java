@@ -11,8 +11,8 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import java.security.SecureRandom;
 
-import static com.orion.utils.crypto.Base64s.base64Decode;
-import static com.orion.utils.crypto.Base64s.base64Encode;
+import static com.orion.utils.codec.Base64s.decode;
+import static com.orion.utils.codec.Base64s.encode;
 
 /**
  * AES 工具类
@@ -115,7 +115,7 @@ public class AES {
                 cipher = CipherAlgorithm.AES.getCipher(ivWorkingMode, paddingMode);
                 cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(Arrays1.resize(iv, 16)));
             }
-            return base64Encode(cipher.doFinal(bs));
+            return encode(cipher.doFinal(bs));
         } catch (Exception e) {
             return null;
         }
@@ -193,7 +193,7 @@ public class AES {
                 cipher = CipherAlgorithm.AES.getCipher(ivWorkingMode, paddingMode);
                 cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(Arrays1.resize(iv, 16)));
             }
-            return cipher.doFinal(base64Decode(bs));
+            return cipher.doFinal(decode(bs));
         } catch (Exception e) {
             return null;
         }
@@ -282,7 +282,7 @@ public class AES {
      * @return SecretKey
      */
     public static SecretKey getSecretKey(String key) {
-        return SecretKeySpecMode.AES.getSecretKeySpec(base64Decode(getBytes(key)));
+        return SecretKeySpecMode.AES.getSecretKeySpec(decode(getBytes(key)));
     }
 
     /**
@@ -292,7 +292,7 @@ public class AES {
      * @return SecretKey
      */
     public static SecretKey getSecretKey(byte[] key) {
-        return SecretKeySpecMode.AES.getSecretKeySpec(base64Decode(key));
+        return SecretKeySpecMode.AES.getSecretKeySpec(decode(key));
     }
 
     // ------------------ SETTING ------------------

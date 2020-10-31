@@ -257,28 +257,28 @@ public class Exceptions {
         return new UnsupportedEncodingRuntimeException(t);
     }
 
-    public static TimeoutRuntimeException unCoding(String s) {
-        return new TimeoutRuntimeException(s);
+    public static TimeoutException unCoding(String s) {
+        return new TimeoutException(s);
     }
 
-    public static TimeoutRuntimeException unCoding(String s, Throwable t) {
-        return new TimeoutRuntimeException(s, t);
+    public static TimeoutException unCoding(String s, Throwable t) {
+        return new TimeoutException(s, t);
     }
 
-    public static TimeoutRuntimeException timeout() {
-        return new TimeoutRuntimeException();
+    public static TimeoutException timeout() {
+        return new TimeoutException();
     }
 
-    public static TimeoutRuntimeException timeout(Throwable t) {
-        return new TimeoutRuntimeException(t);
+    public static TimeoutException timeout(Throwable t) {
+        return new TimeoutException(t);
     }
 
-    public static TimeoutRuntimeException timeout(String s) {
-        return new TimeoutRuntimeException(s);
+    public static TimeoutException timeout(String s) {
+        return new TimeoutException(s);
     }
 
-    public static TimeoutRuntimeException timeout(String s, Throwable t) {
-        return new TimeoutRuntimeException(s, t);
+    public static TimeoutException timeout(String s, Throwable t) {
+        return new TimeoutException(s, t);
     }
 
     public static ConnectionRuntimeException connection() {
@@ -439,6 +439,22 @@ public class Exceptions {
 
     public static NotFoundException notFound(String s, Throwable t) {
         return new NotFoundException(s, t);
+    }
+
+    public static WatchException watch() {
+        return new WatchException();
+    }
+
+    public static WatchException watch(Throwable t) {
+        return new WatchException(t);
+    }
+
+    public static WatchException watch(String s) {
+        return new WatchException(s);
+    }
+
+    public static WatchException watch(String s, Throwable t) {
+        return new WatchException(s, t);
     }
 
     public static Error error() {

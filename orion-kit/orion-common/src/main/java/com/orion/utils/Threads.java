@@ -23,13 +23,13 @@ public class Threads {
     /**
      * 全局线程池
      */
-    private static final ExecutorService GLOBAL_EXECUTOR = Executors.newCachedThreadPool();
-    private static final ExecutorService GLOBAL_EXECUTOR1 = ExecutorBuilder.create()
+    private static final ExecutorService GLOBAL_EXECUTOR = ExecutorBuilder.create()
             .setNamedThreadFactory("orion-global-thread-")
             .setCorePoolSize(2)
             .setMaxPoolSize(32)
             .setKeepAliveTime(60 * 1000)
             .setWorkQueue(new LinkedBlockingQueue<>())
+            .setAllowCoreThreadTimeOut(true)
             .build();
 
     private Threads() {

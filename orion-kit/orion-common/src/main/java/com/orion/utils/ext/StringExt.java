@@ -1,7 +1,7 @@
 package com.orion.utils.ext;
 
 import com.orion.utils.*;
-import com.orion.utils.crypto.Base64s;
+import com.orion.utils.codec.Base64s;
 import com.orion.utils.crypto.Signatures;
 
 import java.io.Serializable;
@@ -752,7 +752,7 @@ public class StringExt implements CharSequence, Serializable {
      * @return base64
      */
     public String encodeBase64() {
-        return Base64s.base64Encode(s);
+        return Base64s.encode(s);
     }
 
     /**
@@ -761,7 +761,7 @@ public class StringExt implements CharSequence, Serializable {
      * @return string
      */
     public String decodeBase64() {
-        return Base64s.base64Decode(s);
+        return Base64s.decode(s);
     }
 
     /**

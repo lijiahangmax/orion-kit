@@ -129,7 +129,7 @@ public class FtpInstance {
      * @return 文件列表
      */
     public List<FtpFile> listFiles() {
-        return listFiles("", true, false);
+        return listFiles("", false, false);
     }
 
     /**
@@ -145,11 +145,22 @@ public class FtpInstance {
     /**
      * 文件列表
      *
+     * @param child 是否遍历文件夹
+     * @param dir   是否添加文件夹
+     * @return 文件列表
+     */
+    public List<FtpFile> listFiles(boolean child, boolean dir) {
+        return listFiles("", child, dir);
+    }
+
+    /**
+     * 文件列表
+     *
      * @param path 路径
      * @return 文件列表
      */
     public List<FtpFile> listFiles(String path) {
-        return listFiles(path, true, false);
+        return listFiles(path, false, false);
     }
 
     /**
@@ -161,6 +172,38 @@ public class FtpInstance {
      */
     public List<FtpFile> listFiles(String path, boolean child) {
         return listFiles(path, child, false);
+    }
+
+    /**
+     * 文件和文件夹列表
+     *
+     * @param path  路径
+     * @param child 是否遍历子目录
+     * @param dir   是否添加文件夹
+     * @return 文件列表
+     */
+    private List<FtpFile> listFiles(String path, boolean child, boolean dir) {
+        String base = config.getRemoteBaseDir();
+        List<FtpFile> list = new ArrayList<>();
+        try {
+            FTPFile[] files = client.listFiles(serverCharset(base + path));
+            for (FTPFile file : files) {
+                String t = Files1.getPath(serverCharset(path + SYMBOL + file.getName()));
+                if (file.isFile()) {
+                    list.add(new FtpFile(t, file));
+                } else if (file.isDirectory()) {
+                    if (dir) {
+                        list.add(new FtpFile(t, file));
+                    }
+                    if (child) {
+                        list.addAll(listFiles(t + SYMBOL, true, dir));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            // ignore
+        }
+        return list;
     }
 
     /**
@@ -207,81 +250,9 @@ public class FtpInstance {
             for (FTPFile file : files) {
                 String t = Files1.getPath(path + SYMBOL + file.getName());
                 if (file.isDirectory()) {
-                    list.add(toFtpFile(t, file));
+                    list.add(new FtpFile(t, file));
                     if (child) {
                         list.addAll(listDirs(Files1.getPath(t + SYMBOL), true));
-                    }
-                }
-            }
-        } catch (IOException e) {
-            // ignore
-        }
-        return list;
-    }
-
-    /**
-     * 文件和文件夹列表
-     *
-     * @return 文件列表
-     */
-    public List<FtpFile> listFilesAndDirs() {
-        return listFiles("", true, true);
-    }
-
-    /**
-     * 文件和文件夹列表
-     *
-     * @param child 是否遍历文件夹
-     * @return 文件列表
-     */
-    public List<FtpFile> listFilesAndDirs(boolean child) {
-        return listFiles("", child, true);
-    }
-
-    /**
-     * 文件和文件夹列表
-     *
-     * @param path 路径
-     * @return 文件列表
-     */
-    public List<FtpFile> listFilesAndDirs(String path) {
-        return listFiles(path, true, true);
-    }
-
-    /**
-     * 文件和文件夹列表
-     *
-     * @param path  路径
-     * @param child 是否遍历子文件夹
-     * @return 文件列表
-     */
-    public List<FtpFile> listFilesAndDirs(String path, boolean child) {
-        return listFiles(path, child, true);
-    }
-
-    /**
-     * 文件和文件夹列表
-     *
-     * @param path  路径
-     * @param child 是否遍历子目录
-     * @param dir   是否添加文件夹
-     * @return 文件列表
-     */
-    private List<FtpFile> listFiles(String path, boolean child, boolean dir) {
-        String base = config.getRemoteBaseDir();
-        List<FtpFile> list = new ArrayList<>();
-        try {
-            FTPFile[] files = client.listFiles(serverCharset(base + path));
-            for (FTPFile file : files) {
-                String t = Files1.getPath(path + SYMBOL + file.getName());
-                if (file.isFile()) {
-                    list.add(toFtpFile(t, file));
-                } else if (file.isDirectory()) {
-                    if (dir) {
-                        list.add(toFtpFile(t, file));
-                    }
-                    if (child) {
-                        list.addAll(listFiles(t + SYMBOL, true, dir));
                     }
                 }
             }
@@ -298,7 +269,30 @@ public class FtpInstance {
      * @return 文件
      */
     public List<FtpFile> listFilesSuffix(String suffix) {
-        return this.listFilesSearch("", suffix, null, null, 1, true, false);
+        return this.listFilesSearch("", suffix, null, null, 1, false, false);
+    }
+
+    /**
+     * 列出根目录下的文件
+     *
+     * @param suffix 后缀
+     * @param child  是否递归子文件夹
+     * @return 文件
+     */
+    public List<FtpFile> listFilesSuffix(String suffix, boolean child) {
+        return this.listFilesSearch("", suffix, null, null, 1, child, false);
+    }
+
+    /**
+     * 列出根目录下的文件
+     *
+     * @param suffix 后缀
+     * @param child  是否递归子文件夹
+     * @param dir    是否添加文件夹
+     * @return 文件
+     */
+    public List<FtpFile> listFilesSuffix(String suffix, boolean child, boolean dir) {
+        return this.listFilesSearch("", suffix, null, null, 1, child, dir);
     }
 
     /**
@@ -309,18 +303,7 @@ public class FtpInstance {
      * @return 文件
      */
     public List<FtpFile> listFilesSuffix(String path, String suffix) {
-        return this.listFilesSearch(path, suffix, null, null, 1, true, false);
-    }
-
-    /**
-     * 列出根目录下的文件
-     *
-     * @param suffix 后缀
-     * @param child  是否递归
-     * @return 文件
-     */
-    public List<FtpFile> listFilesSuffix(String suffix, boolean child) {
-        return this.listFilesSearch("", suffix, null, null, 1, child, false);
+        return this.listFilesSearch(path, suffix, null, null, 1, false, false);
     }
 
     /**
@@ -328,7 +311,7 @@ public class FtpInstance {
      *
      * @param path   目录
      * @param suffix 后缀
-     * @param child  是否递归
+     * @param child  是否递归子文件夹
      * @return 文件
      */
     public List<FtpFile> listFilesSuffix(String path, String suffix, boolean child) {
@@ -336,47 +319,16 @@ public class FtpInstance {
     }
 
     /**
-     * 列出根目录下的文件和文件夹
-     *
-     * @param suffix 后缀
-     * @return 文件
-     */
-    public List<FtpFile> listFilesAndDirSuffix(String suffix) {
-        return this.listFilesSearch("", suffix, null, null, 1, true, true);
-    }
-
-    /**
-     * 列出目录下的文件和文件夹
+     * 列出目录下的文件
      *
      * @param path   目录
      * @param suffix 后缀
+     * @param child  是否递归子文件夹
+     * @param dir    是否添加文件夹
      * @return 文件
      */
-    public List<FtpFile> listFilesAndDirSuffix(String path, String suffix) {
-        return this.listFilesSearch(path, suffix, null, null, 1, true, true);
-    }
-
-    /**
-     * 列出根目录下的文件和文件夹
-     *
-     * @param suffix 后缀
-     * @param child  是否递归
-     * @return 文件
-     */
-    public List<FtpFile> listFilesAndDirSuffix(String suffix, boolean child) {
-        return this.listFilesSearch("", suffix, null, null, 1, child, true);
-    }
-
-    /**
-     * 列出目录下的文件和文件夹
-     *
-     * @param path   目录
-     * @param suffix 后缀
-     * @param child  是否递归
-     * @return 文件
-     */
-    public List<FtpFile> listFilesAndDirSuffix(String path, String suffix, boolean child) {
-        return this.listFilesSearch(path, suffix, null, null, 1, child, true);
+    public List<FtpFile> listFilesSuffix(String path, String suffix, boolean child, boolean dir) {
+        return this.listFilesSearch(path, suffix, null, null, 1, child, dir);
     }
 
     /**
@@ -386,7 +338,30 @@ public class FtpInstance {
      * @return 文件
      */
     public List<FtpFile> listFilesMatch(String match) {
-        return this.listFilesSearch("", match, null, null, 2, true, false);
+        return this.listFilesSearch("", match, null, null, 2, false, false);
+    }
+
+    /**
+     * 列出根目录下的文件
+     *
+     * @param match 名称
+     * @param child 是否递归子文件夹
+     * @return 文件
+     */
+    public List<FtpFile> listFilesMatch(String match, boolean child) {
+        return this.listFilesSearch("", match, null, null, 2, child, false);
+    }
+
+    /**
+     * 列出根目录下的文件
+     *
+     * @param match 名称
+     * @param child 是否递归子文件夹
+     * @param dir   是否添加文件夹
+     * @return 文件
+     */
+    public List<FtpFile> listFilesMatch(String match, boolean child, boolean dir) {
+        return this.listFilesSearch("", match, null, null, 2, child, dir);
     }
 
     /**
@@ -397,18 +372,7 @@ public class FtpInstance {
      * @return 文件
      */
     public List<FtpFile> listFilesMatch(String path, String match) {
-        return this.listFilesSearch(path, match, null, null, 2, true, false);
-    }
-
-    /**
-     * 列出根目录下的文件
-     *
-     * @param match 名称
-     * @param child 是否递归
-     * @return 文件
-     */
-    public List<FtpFile> listFilesMatch(String match, boolean child) {
-        return this.listFilesSearch("", match, null, null, 2, child, false);
+        return this.listFilesSearch(path, match, null, null, 2, false, false);
     }
 
     /**
@@ -416,7 +380,7 @@ public class FtpInstance {
      *
      * @param path  目录
      * @param match 名称
-     * @param child 是否递归
+     * @param child 是否递归子文件夹
      * @return 文件
      */
     public List<FtpFile> listFilesMatch(String path, String match, boolean child) {
@@ -424,47 +388,16 @@ public class FtpInstance {
     }
 
     /**
-     * 列出根目录下的文件和文件夹
-     *
-     * @param match 名称
-     * @return 文件
-     */
-    public List<FtpFile> listFilesAndDirMatch(String match) {
-        return this.listFilesSearch("", match, null, null, 2, true, true);
-    }
-
-    /**
-     * 列出目录下的文件和文件夹
+     * 列出目录下的文件
      *
      * @param path  目录
      * @param match 名称
+     * @param child 是否递归子文件夹
+     * @param dir   是否添加文件夹
      * @return 文件
      */
-    public List<FtpFile> listFilesAndDirMatch(String path, String match) {
-        return this.listFilesSearch(path, match, null, null, 2, true, true);
-    }
-
-    /**
-     * 列出根目录下的文件和文件夹
-     *
-     * @param match 名称
-     * @param child 是否递归
-     * @return 文件
-     */
-    public List<FtpFile> listFilesAndDirMatch(String match, boolean child) {
-        return this.listFilesSearch("", match, null, null, 2, child, true);
-    }
-
-    /**
-     * 列出目录下的文件和文件夹
-     *
-     * @param path  目录
-     * @param match 名称
-     * @param child 是否递归
-     * @return 文件
-     */
-    public List<FtpFile> listFilesAndDirMatch(String path, String match, boolean child) {
-        return this.listFilesSearch(path, match, null, null, 2, child, true);
+    public List<FtpFile> listFilesMatch(String path, String match, boolean child, boolean dir) {
+        return this.listFilesSearch(path, match, null, null, 2, child, dir);
     }
 
     /**
@@ -474,7 +407,30 @@ public class FtpInstance {
      * @return 文件
      */
     public List<FtpFile> listFilesPattern(Pattern pattern) {
-        return this.listFilesSearch("", null, pattern, null, 3, true, false);
+        return this.listFilesSearch("", null, pattern, null, 3, false, false);
+    }
+
+    /**
+     * 列出根目录下的文件
+     *
+     * @param pattern 正则
+     * @param child   是否递归子文件夹
+     * @return 文件
+     */
+    public List<FtpFile> listFilesPattern(Pattern pattern, boolean child) {
+        return this.listFilesSearch("", null, pattern, null, 3, child, false);
+    }
+
+    /**
+     * 列出根目录下的文件
+     *
+     * @param pattern 正则
+     * @param child   是否递归子文件夹
+     * @param dir     是否添加文件夹
+     * @return 文件
+     */
+    public List<FtpFile> listFilesPattern(Pattern pattern, boolean child, boolean dir) {
+        return this.listFilesSearch("", null, pattern, null, 3, child, dir);
     }
 
     /**
@@ -485,18 +441,7 @@ public class FtpInstance {
      * @return 文件
      */
     public List<FtpFile> listFilesPattern(String path, Pattern pattern) {
-        return this.listFilesSearch(path, null, pattern, null, 3, true, false);
-    }
-
-    /**
-     * 列出根目录下的文件
-     *
-     * @param pattern 正则
-     * @param child   是否递归
-     * @return 文件
-     */
-    public List<FtpFile> listFilesPattern(Pattern pattern, boolean child) {
-        return this.listFilesSearch("", null, pattern, null, 3, child, false);
+        return this.listFilesSearch(path, null, pattern, null, 3, false, false);
     }
 
     /**
@@ -504,7 +449,7 @@ public class FtpInstance {
      *
      * @param path    目录
      * @param pattern 正则
-     * @param child   是否递归
+     * @param child   是否递归子文件夹
      * @return 文件
      */
     public List<FtpFile> listFilesPattern(String path, Pattern pattern, boolean child) {
@@ -512,47 +457,16 @@ public class FtpInstance {
     }
 
     /**
-     * 列出根目录下的文件和文件夹
-     *
-     * @param pattern 正则
-     * @return 文件
-     */
-    public List<FtpFile> listFilesAndDirPattern(Pattern pattern) {
-        return this.listFilesSearch("", null, pattern, null, 3, true, true);
-    }
-
-    /**
-     * 列出目录下的文件和文件夹
+     * 列出目录下的文件
      *
      * @param path    目录
      * @param pattern 正则
+     * @param child   是否递归子文件夹
+     * @param dir     是否添加文件夹
      * @return 文件
      */
-    public List<FtpFile> listFilesAndDirPattern(String path, Pattern pattern) {
-        return this.listFilesSearch(path, null, pattern, null, 3, true, true);
-    }
-
-    /**
-     * 列出根目录下的文件和文件夹
-     *
-     * @param pattern 正则
-     * @param child   是否递归
-     * @return 文件
-     */
-    public List<FtpFile> listFilesAndDirPattern(Pattern pattern, boolean child) {
-        return this.listFilesSearch("", null, pattern, null, 3, child, true);
-    }
-
-    /**
-     * 列出目录下的文件和文件夹
-     *
-     * @param path    目录
-     * @param pattern 正则
-     * @param child   是否递归
-     * @return 文件
-     */
-    public List<FtpFile> listFilesAndDirPattern(String path, Pattern pattern, boolean child) {
-        return this.listFilesSearch(path, null, pattern, null, 3, child, true);
+    public List<FtpFile> listFilesPattern(String path, Pattern pattern, boolean child, boolean dir) {
+        return this.listFilesSearch(path, null, pattern, null, 3, child, dir);
     }
 
     /**
@@ -562,7 +476,30 @@ public class FtpInstance {
      * @return 文件
      */
     public List<FtpFile> listFilesFilter(FTPFileFilter filter) {
-        return this.listFilesSearch("", null, null, filter, 4, true, false);
+        return this.listFilesSearch("", null, null, filter, 4, false, false);
+    }
+
+    /**
+     * 列出根目录下的文件
+     *
+     * @param filter 过滤器
+     * @param child  是否递归子文件夹
+     * @return 文件
+     */
+    public List<FtpFile> listFilesFilter(FTPFileFilter filter, boolean child) {
+        return this.listFilesSearch("", null, null, filter, 4, child, false);
+    }
+
+    /**
+     * 列出根目录下的文件
+     *
+     * @param filter 过滤器
+     * @param child  是否递归子文件夹
+     * @param dir    是否添加文件夹
+     * @return 文件
+     */
+    public List<FtpFile> listFilesFilter(FTPFileFilter filter, boolean child, boolean dir) {
+        return this.listFilesSearch("", null, null, filter, 4, child, dir);
     }
 
     /**
@@ -573,18 +510,7 @@ public class FtpInstance {
      * @return 文件
      */
     public List<FtpFile> listFilesFilter(String path, FTPFileFilter filter) {
-        return this.listFilesSearch(path, null, null, filter, 4, true, false);
-    }
-
-    /**
-     * 列出根目录下的文件
-     *
-     * @param filter 过滤器
-     * @param child  是否递归
-     * @return 文件
-     */
-    public List<FtpFile> listFilesFilter(FTPFileFilter filter, boolean child) {
-        return this.listFilesSearch("", null, null, filter, 4, child, false);
+        return this.listFilesSearch(path, null, null, filter, 4, false, false);
     }
 
     /**
@@ -592,7 +518,7 @@ public class FtpInstance {
      *
      * @param path   目录
      * @param filter 过滤器
-     * @param child  是否递归
+     * @param child  是否递归子文件夹
      * @return 文件
      */
     public List<FtpFile> listFilesFilter(String path, FTPFileFilter filter, boolean child) {
@@ -600,47 +526,16 @@ public class FtpInstance {
     }
 
     /**
-     * 列出根目录下的文件和文件夹
-     *
-     * @param filter 过滤器
-     * @return 文件
-     */
-    public List<FtpFile> listFilesAndDirFilter(FTPFileFilter filter) {
-        return this.listFilesSearch("", null, null, filter, 4, true, true);
-    }
-
-    /**
-     * 列出目录下的文件和文件夹
+     * 列出目录下的文件
      *
      * @param path   目录
      * @param filter 过滤器
+     * @param child  是否递归子文件夹
+     * @param dir    是否添加文件夹
      * @return 文件
      */
-    public List<FtpFile> listFilesAndDirFilter(String path, FTPFileFilter filter) {
-        return this.listFilesSearch(path, null, null, filter, 4, true, true);
-    }
-
-    /**
-     * 列出根目录下的文件和文件夹
-     *
-     * @param filter 过滤器
-     * @param child  是否递归
-     * @return 文件
-     */
-    public List<FtpFile> listFilesAndDirFilter(FTPFileFilter filter, boolean child) {
-        return this.listFilesSearch("", null, null, filter, 4, child, true);
-    }
-
-    /**
-     * 列出目录下的文件和文件夹
-     *
-     * @param path   目录
-     * @param filter 过滤器
-     * @param child  是否递归
-     * @return 文件
-     */
-    public List<FtpFile> listFilesAndDirFilter(String path, FTPFileFilter filter, boolean child) {
-        return this.listFilesSearch(path, null, null, filter, 4, child, true);
+    public List<FtpFile> listFilesFilter(String path, FTPFileFilter filter, boolean child, boolean dir) {
+        return this.listFilesSearch(path, null, null, filter, 4, child, dir);
     }
 
     /**
@@ -651,7 +546,7 @@ public class FtpInstance {
      * @param pattern 正则
      * @param filter  过滤器
      * @param type    类型 1后缀 2匹配 3正则 4过滤器
-     * @param child   是否递归
+     * @param child   是否递归子文件夹
      * @param dir     是否添加文件夹
      * @return 匹配的列表
      */
@@ -676,7 +571,7 @@ public class FtpInstance {
                         add = true;
                     }
                     if (add) {
-                        list.add(toFtpFile(t, file));
+                        list.add(new FtpFile(t, file));
                     }
                 }
                 if (isDir && child) {
@@ -687,31 +582,6 @@ public class FtpInstance {
             // ignore
         }
         return list;
-    }
-
-    /**
-     * FTPFile -> FtpFile
-     *
-     * @param path    文件路径
-     * @param ftpFile FTPFile
-     * @return FtpFile
-     */
-    private FtpFile toFtpFile(String path, FTPFile ftpFile) {
-        FtpFile f = new FtpFile().setDate(ftpFile.getTimestamp())
-                .setGroup(ftpFile.getGroup()).setHardLinkCount(ftpFile.getHardLinkCount())
-                .setLink(ftpFile.getLink()).setName(ftpFile.getName()).setPath(path)
-                .setRawListing(ftpFile.getRawListing()).setSize(ftpFile.getSize())
-                .setType(ftpFile.getType()).setUser(ftpFile.getUser());
-        f.getPermission()[0] = ftpFile.hasPermission(0, 0);
-        f.getPermission()[1] = ftpFile.hasPermission(0, 1);
-        f.getPermission()[2] = ftpFile.hasPermission(0, 2);
-        f.getPermission()[3] = ftpFile.hasPermission(1, 0);
-        f.getPermission()[4] = ftpFile.hasPermission(1, 1);
-        f.getPermission()[5] = ftpFile.hasPermission(1, 2);
-        f.getPermission()[6] = ftpFile.hasPermission(2, 0);
-        f.getPermission()[7] = ftpFile.hasPermission(2, 1);
-        f.getPermission()[8] = ftpFile.hasPermission(2, 2);
-        return f;
     }
 
     /**
@@ -733,29 +603,29 @@ public class FtpInstance {
     }
 
     /**
-     * 获取文件属性列表 递归
+     * 获取文件属性列表
      *
      * @return 属性列表
      */
     public Map<String, FtpFileAttr> listFilesAttr() {
-        return listFilesAttr("", true);
+        return listFilesAttr("", false);
     }
 
     /**
-     * 获取文件属性列表 递归
+     * 获取文件属性列表
      *
      * @param path 路径
      * @return 属性列表
      */
     public Map<String, FtpFileAttr> listFilesAttr(String path) {
-        return listFilesAttr(path, true);
+        return listFilesAttr(path, false);
     }
 
     /**
      * 获取文件属性列表
      *
      * @param path  路径
-     * @param child 是否递归
+     * @param child 是否递归子文件夹
      * @return 属性列表
      */
     public Map<String, FtpFileAttr> listFilesAttr(String path, boolean child) {
@@ -783,13 +653,25 @@ public class FtpInstance {
     }
 
     /**
-     * 下载文件
+     * 获取大文件下载器
      *
-     * @param file      远程文件路径
-     * @param localFile 本地文件路径
+     * @param remote    远程文件
+     * @param localFile 本地文件
+     * @return FtpDownload
      */
-    public void download(String file, String localFile) {
-        download(file, new File(localFile));
+    public FtpDownload download(String remote, String localFile) {
+        return new FtpDownload(this, remote, localFile);
+    }
+
+    /**
+     * 获取大文件下载器
+     *
+     * @param remote    远程文件
+     * @param localFile 本地文件
+     * @return FtpDownload
+     */
+    public FtpDownload download(String remote, File localFile) {
+        return new FtpDownload(this, remote, localFile);
     }
 
     /**
@@ -798,7 +680,17 @@ public class FtpInstance {
      * @param file      远程文件路径
      * @param localFile 本地文件路径
      */
-    public void download(String file, File localFile) {
+    public void downloadFile(String file, String localFile) {
+        downloadFile(file, new File(localFile));
+    }
+
+    /**
+     * 下载文件
+     *
+     * @param file      远程文件路径
+     * @param localFile 本地文件路径
+     */
+    public void downloadFile(String file, File localFile) {
         OutputStream out = null;
         try {
             Files1.touch(localFile);
@@ -826,18 +718,18 @@ public class FtpInstance {
      *
      * @param dir      远程文件夹
      * @param localDir 本地文件夹
-     * @param child    是否递归下载
+     * @param child    是否递归子文件夹下载
      */
     public void downloadDir(String dir, String localDir, boolean child) {
         if (!child) {
             List<FtpFile> list = listFiles(dir, false);
             for (FtpFile s : list) {
-                download(s.getPath(), Files1.getPath(localDir + "/" + Files1.getFileName(s.getPath())));
+                downloadFile(s.getPath(), Files1.getPath(localDir + "/" + Files1.getFileName(s.getPath())));
             }
         } else {
             List<FtpFile> list = listFiles(dir, true);
             for (FtpFile s : list) {
-                download(s.getPath(), Files1.getPath(localDir + "/" + s.getPath()));
+                downloadFile(s.getPath(), Files1.getPath(localDir + "/" + s.getPath()));
             }
             list = listDirs(dir, true);
             for (FtpFile s : list) {
@@ -847,13 +739,25 @@ public class FtpInstance {
     }
 
     /**
-     * 上传文件
+     * 获取大文件上传器
      *
-     * @param localFile  本地文件
-     * @param remoteFile 远程文件
+     * @param remote    远程文件
+     * @param localFile 本地文件
+     * @return FtpUpload
      */
-    public void upload(String localFile, String remoteFile) {
-        upload(new File(localFile), remoteFile);
+    public FtpUpload upload(String remote, String localFile) {
+        return new FtpUpload(this, remote, localFile);
+    }
+
+    /**
+     * 获取大文件上传器
+     *
+     * @param remote    远程文件
+     * @param localFile 本地文件
+     * @return FtpUpload
+     */
+    public FtpUpload upload(String remote, File localFile) {
+        return new FtpUpload(this, remote, localFile);
     }
 
     /**
@@ -862,7 +766,17 @@ public class FtpInstance {
      * @param localFile  本地文件
      * @param remoteFile 远程文件
      */
-    public void upload(File localFile, String remoteFile) {
+    public void uploadFile(String localFile, String remoteFile) {
+        uploadFile(new File(localFile), remoteFile);
+    }
+
+    /**
+     * 上传文件
+     *
+     * @param localFile  本地文件
+     * @param remoteFile 远程文件
+     */
+    public void uploadFile(File localFile, String remoteFile) {
         InputStream in = null;
         try {
             String parentPath = Files1.getParentPath(remoteFile);
@@ -903,7 +817,7 @@ public class FtpInstance {
         for (File file : files) {
             String path = Files1.getPath(remoteDir + localPrefix + (file.getAbsolutePath().substring(localDir.length())));
             change(Files1.getParentPath(path));
-            upload(file, path);
+            uploadFile(file, path);
         }
     }
 
@@ -972,7 +886,7 @@ public class FtpInstance {
      * @throws IOException IOException
      */
     public void appendLine(String file, String line) throws IOException {
-        appendLines(file, Lists.of(line));
+        appendLines(file, Lists.singleton(line));
     }
 
     /**
@@ -1063,7 +977,7 @@ public class FtpInstance {
      * @throws IOException IOException
      */
     public void writeLine(String file, String line) throws IOException {
-        writeLines(file, Lists.of(line));
+        writeLines(file, Lists.singleton(line));
     }
 
     /**

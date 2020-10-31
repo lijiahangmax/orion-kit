@@ -42,7 +42,7 @@ public class SftpExecutorTests {
             System.out.println(a);
         }
         System.out.println("---------");
-        for (FileAttribute a : e.listFilesAndDirSuffix("/root", "g", true)) {
+        for (FileAttribute a : e.listFilesSuffix("/root", "g", true, true)) {
             System.out.println(a);
         }
         System.out.println("---------");

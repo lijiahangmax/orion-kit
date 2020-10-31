@@ -225,7 +225,7 @@ public class EmojiExt {
      * @param str 包含表情的字符串
      * @return 表情列表
      */
-    public static List<String> extractEmojis(String str) {
+    public static List<String> extractEmoji(String str) {
         return EmojiParser.extractEmojis(str);
     }
 

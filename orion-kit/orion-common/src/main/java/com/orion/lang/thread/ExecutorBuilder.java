@@ -52,7 +52,12 @@ public class ExecutorBuilder implements BuilderAble<ThreadPoolExecutor> {
     /**
      * 线程执行超时后是否回收线程
      */
-    private Boolean allowCoreThreadTimeOut;
+    private boolean allowCoreThreadTimeOut;
+
+    /**
+     * 预开启所有的核心线程
+     */
+    private boolean preStartAllCoreThreads;
 
     /**
      * 设置初始池大小, 默认0
@@ -193,6 +198,17 @@ public class ExecutorBuilder implements BuilderAble<ThreadPoolExecutor> {
     }
 
     /**
+     * 预开启所有的核心线程
+     *
+     * @param preStartAllCoreThreads 是否预开启所有的核心线程
+     * @return this
+     */
+    public ExecutorBuilder setPreStartAllCoreThreads(boolean preStartAllCoreThreads) {
+        this.preStartAllCoreThreads = preStartAllCoreThreads;
+        return this;
+    }
+
+    /**
      * 创建ExecutorBuilder
      *
      * @return this
@@ -232,8 +248,9 @@ public class ExecutorBuilder implements BuilderAble<ThreadPoolExecutor> {
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(corePoolSize, maxPoolSize,
                 keepAliveTime, TimeUnit.MILLISECONDS,
                 workQueue, threadFactory, handler);
-        if (null != builder.allowCoreThreadTimeOut) {
-            threadPoolExecutor.allowCoreThreadTimeOut(builder.allowCoreThreadTimeOut);
+        threadPoolExecutor.allowCoreThreadTimeOut(builder.allowCoreThreadTimeOut);
+        if (builder.preStartAllCoreThreads) {
+            threadPoolExecutor.prestartAllCoreThreads();
         }
         return threadPoolExecutor;
     }

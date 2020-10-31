@@ -16,8 +16,8 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
-import static com.orion.utils.crypto.Base64s.base64Decode;
-import static com.orion.utils.crypto.Base64s.base64Encode;
+import static com.orion.utils.codec.Base64s.decode;
+import static com.orion.utils.codec.Base64s.encode;
 import static com.orion.utils.crypto.Keys.getKey;
 
 /**
@@ -101,7 +101,7 @@ public class RSA {
         try {
             Cipher cipher = CipherAlgorithm.RSA.getCipher();
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-            return base64Encode(cipher.doFinal(bs));
+            return encode(cipher.doFinal(bs));
         } catch (Exception e) {
             return null;
         }
@@ -161,7 +161,7 @@ public class RSA {
         try {
             Cipher cipher = CipherAlgorithm.RSA.getCipher();
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
-            return cipher.doFinal(base64Decode(bs));
+            return cipher.doFinal(decode(bs));
         } catch (Exception e) {
             return null;
         }
@@ -277,7 +277,7 @@ public class RSA {
             Signature signature = signModel.getSignature();
             signature.initSign(privateKey);
             signature.update(bs);
-            return base64Encode(signature.sign());
+            return encode(signature.sign());
         } catch (Exception e) {
             return null;
         }
@@ -386,7 +386,7 @@ public class RSA {
             Signature signature = signModel.getSignature();
             signature.initVerify(publicKey);
             signature.update(bs);
-            return signature.verify(base64Decode(sign));
+            return signature.verify(decode(sign));
         } catch (Exception e) {
             return false;
         }
@@ -403,7 +403,7 @@ public class RSA {
     public static RSAPrivateKey getPrivateKey(File file) {
         try {
             byte[] bytes = getKey(file).getBytes(StandardCharsets.ISO_8859_1);
-            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(base64Decode(bytes));
+            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(decode(bytes));
             return (RSAPrivateKey) RSA_KEY_FACTORY.generatePrivate(spec);
         } catch (Exception e) {
             return null;
@@ -419,7 +419,7 @@ public class RSA {
     public static RSAPrivateKey getPrivateKey(String key) {
         try {
             byte[] bytes = key.getBytes();
-            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(base64Decode(bytes));
+            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(decode(bytes));
             return (RSAPrivateKey) RSA_KEY_FACTORY.generatePrivate(spec);
         } catch (Exception e) {
             return null;
@@ -434,7 +434,7 @@ public class RSA {
      */
     public static RSAPrivateKey getPrivateKey(byte[] key) {
         try {
-            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(base64Decode(key));
+            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(decode(key));
             return (RSAPrivateKey) RSA_KEY_FACTORY.generatePrivate(spec);
         } catch (Exception e) {
             return null;
@@ -450,7 +450,7 @@ public class RSA {
     public static RSAPublicKey getPublicKey(File file) {
         try {
             byte[] bytes = getKey(file).getBytes(StandardCharsets.ISO_8859_1);
-            X509EncodedKeySpec spec = new X509EncodedKeySpec(base64Decode(bytes));
+            X509EncodedKeySpec spec = new X509EncodedKeySpec(decode(bytes));
             return (RSAPublicKey) RSA_KEY_FACTORY.generatePublic(spec);
         } catch (Exception e) {
             return null;
@@ -466,7 +466,7 @@ public class RSA {
     public static RSAPublicKey getPublicKey(String key) {
         try {
             byte[] bytes = key.getBytes(StandardCharsets.ISO_8859_1);
-            X509EncodedKeySpec spec = new X509EncodedKeySpec(base64Decode(bytes));
+            X509EncodedKeySpec spec = new X509EncodedKeySpec(decode(bytes));
             return (RSAPublicKey) RSA_KEY_FACTORY.generatePublic(spec);
         } catch (Exception e) {
             return null;
@@ -481,7 +481,7 @@ public class RSA {
      */
     public static RSAPublicKey getPublicKey(byte[] key) {
         try {
-            X509EncodedKeySpec spec = new X509EncodedKeySpec(base64Decode(key));
+            X509EncodedKeySpec spec = new X509EncodedKeySpec(decode(key));
             return (RSAPublicKey) RSA_KEY_FACTORY.generatePublic(spec);
         } catch (Exception e) {
             return null;

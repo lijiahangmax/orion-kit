@@ -570,7 +570,7 @@ public class Servlets {
      */
     public static void transfer(HttpServletResponse response, InputStream in) throws IOException {
         response.setContentType("application/octet-stream");
-        Streams.copy(in, response.getOutputStream());
+        Streams.transfer(in, response.getOutputStream());
     }
 
     /**
@@ -584,7 +584,7 @@ public class Servlets {
     public static void transfer(HttpServletResponse response, InputStream in, String fileName) throws IOException {
         response.setContentType("application/octet-stream");
         response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
-        Streams.copy(in, response.getOutputStream());
+        Streams.transfer(in, response.getOutputStream());
     }
 
     /**
@@ -596,7 +596,7 @@ public class Servlets {
      */
     public static void transfer(HttpServletResponse response, Reader reader) throws IOException {
         response.setContentType("application/octet-stream");
-        Streams.copy(reader, response.getWriter());
+        Streams.transfer(reader, response.getWriter());
     }
 
     /**
@@ -610,7 +610,7 @@ public class Servlets {
     public static void transfer(HttpServletResponse response, Reader reader, String fileName) throws IOException {
         response.setContentType("application/octet-stream");
         response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
-        Streams.copy(reader, response.getWriter());
+        Streams.transfer(reader, response.getWriter());
     }
 
     /**

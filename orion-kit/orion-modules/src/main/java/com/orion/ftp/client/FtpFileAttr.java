@@ -29,7 +29,7 @@ public class FtpFileAttr implements Serializable, JsonAble {
     /**
      * 文件大小
      */
-    private Long size;
+    private long size;
 
     /**
      * 权限
@@ -54,11 +54,11 @@ public class FtpFileAttr implements Serializable, JsonAble {
         return this;
     }
 
-    public Long getSize() {
+    public long getSize() {
         return size;
     }
 
-    public FtpFileAttr setSize(Long size) {
+    public FtpFileAttr setSize(long size) {
         this.size = size;
         return this;
     }

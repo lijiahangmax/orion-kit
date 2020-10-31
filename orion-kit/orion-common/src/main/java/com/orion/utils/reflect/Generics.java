@@ -4,6 +4,7 @@ import com.orion.utils.Valid;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -25,7 +26,7 @@ public class Generics {
      * @param clazz class
      * @return 第一个泛型 默认 Object.class
      */
-    public static Class getClassGenericType(Class clazz) {
+    public static Class<?> getClassGenericType(Class<?> clazz) {
         return getClassGenericType(clazz, 0);
     }
 
@@ -36,7 +37,7 @@ public class Generics {
      * @param index 泛型索引
      * @return 泛型 默认 Object.class
      */
-    public static Class getClassGenericType(Class clazz, int index) {
+    public static Class<?> getClassGenericType(Class<?> clazz, int index) {
         Valid.notNull(clazz, "target class is null");
         Valid.gte(index, 0, "index must greater than or equal 0");
         Type genType = clazz.getGenericSuperclass();
@@ -49,7 +50,7 @@ public class Generics {
         if (!(arguments[index] instanceof Class)) {
             return Object.class;
         }
-        return (Class) arguments[index];
+        return (Class<?>) arguments[index];
     }
 
     /**
@@ -58,7 +59,7 @@ public class Generics {
      * @param clazz class
      * @return 泛型  默认 Object.class
      */
-    public static Class[] getClassGenericTypes(Class clazz) {
+    public static Class<?>[] getClassGenericTypes(Class<?> clazz) {
         Valid.notNull(clazz, "target class is null");
         Type genType = clazz.getGenericSuperclass();
         if (!(genType instanceof ParameterizedType)) {
@@ -66,12 +67,12 @@ public class Generics {
         }
         Type[] arguments = ((ParameterizedType) genType).getActualTypeArguments();
         int argumentsLength = arguments.length;
-        Class[] classes = new Class[argumentsLength];
+        Class<?>[] classes = new Class[argumentsLength];
         for (int i = 0; i < argumentsLength; i++) {
             if (!(arguments[i] instanceof Class)) {
                 classes[i] = Object.class;
             } else {
-                classes[i] = (Class) arguments[i];
+                classes[i] = (Class<?>) arguments[i];
             }
         }
         return classes;
@@ -83,7 +84,7 @@ public class Generics {
      * @param clazz class
      * @return 泛型 第1个接口 第1个泛型  默认 Object.class
      */
-    public static Class getInterfaceGenericType(Class clazz) {
+    public static Class<?> getInterfaceGenericType(Class<?> clazz) {
         return getInterfaceGenericType(clazz, 0, 0);
     }
 
@@ -94,7 +95,7 @@ public class Generics {
      * @param interfaceIndex 接口索引
      * @return 泛型 第1个泛型  默认 Object.class
      */
-    public static Class getInterfaceGenericType(Class clazz, int interfaceIndex) {
+    public static Class<?> getInterfaceGenericType(Class<?> clazz, int interfaceIndex) {
         return getInterfaceGenericType(clazz, interfaceIndex, 0);
     }
 
@@ -106,7 +107,7 @@ public class Generics {
      * @param genericIndex   泛型索引
      * @return 泛型  默认 Object.class
      */
-    public static Class getInterfaceGenericType(Class clazz, int interfaceIndex, int genericIndex) {
+    public static Class<?> getInterfaceGenericType(Class<?> clazz, int interfaceIndex, int genericIndex) {
         Valid.notNull(clazz, "target class is null");
         Valid.gte(interfaceIndex, 0, "class index must greater than or equal 0");
         Valid.gte(genericIndex, 0, "generic class must greater than or equal 0");
@@ -123,7 +124,7 @@ public class Generics {
         if (!(arguments[genericIndex] instanceof Class)) {
             return Object.class;
         }
-        return (Class) arguments[genericIndex];
+        return (Class<?>) arguments[genericIndex];
     }
 
     /**
@@ -133,7 +134,7 @@ public class Generics {
      * @param interfaceClazz 接口class
      * @return 泛型 第1个 默认 Object.class
      */
-    public static Class getInterfaceGenericType(Class clazz, Class interfaceClazz) {
+    public static Class<?> getInterfaceGenericType(Class<?> clazz, Class<?> interfaceClazz) {
         return getInterfaceGenericType(clazz, interfaceClazz, 0);
     }
 
@@ -145,7 +146,7 @@ public class Generics {
      * @param genericIndex   泛型索引
      * @return 泛型 默认 Object.class
      */
-    public static Class getInterfaceGenericType(Class clazz, Class interfaceClazz, int genericIndex) {
+    public static Class<?> getInterfaceGenericType(Class<?> clazz, Class<?> interfaceClazz, int genericIndex) {
         Valid.notNull(clazz, "target class is null");
         Valid.notNull(interfaceClazz, "interface class is null");
         Valid.gte(genericIndex, 0, "generic class must greater than or equal 0");
@@ -175,7 +176,7 @@ public class Generics {
         if (!(arguments[genericIndex] instanceof Class)) {
             return Object.class;
         }
-        return (Class) arguments[genericIndex];
+        return (Class<?>) arguments[genericIndex];
     }
 
     /**
@@ -185,7 +186,7 @@ public class Generics {
      * @param interfaceIndex interfaceIndex
      * @return 泛型 默认 Object.class
      */
-    public static Class[] getInterfaceGenericTypes(Class clazz, int interfaceIndex) {
+    public static Class<?>[] getInterfaceGenericTypes(Class<?> clazz, int interfaceIndex) {
         Valid.notNull(clazz, "target class is null");
         Valid.gte(interfaceIndex, 0, "class index must greater than or equal 0");
         Type[] genTypes = clazz.getGenericInterfaces();
@@ -193,16 +194,16 @@ public class Generics {
         Valid.lt(interfaceIndex, genTypesLength, "interface length: {}, index : {}", interfaceIndex, genTypesLength);
         Type genType = genTypes[interfaceIndex];
         if (!(genType instanceof ParameterizedType)) {
-            return new Class[0];
+            return new Class<?>[0];
         }
         Type[] arguments = ((ParameterizedType) genType).getActualTypeArguments();
         int argumentsLength = arguments.length;
-        Class[] classes = new Class[argumentsLength];
+        Class<?>[] classes = new Class[argumentsLength];
         for (int i = 0; i < argumentsLength; i++) {
             if (!(arguments[i] instanceof Class)) {
                 classes[i] = Object.class;
             } else {
-                classes[i] = (Class) arguments[i];
+                classes[i] = (Class<?>) arguments[i];
             }
         }
         return classes;
@@ -215,7 +216,7 @@ public class Generics {
      * @param interfaceClazz interfaceClass
      * @return 泛型 默认 Object.class
      */
-    public static Class[] getInterfaceGenericTypes(Class clazz, Class interfaceClazz) {
+    public static Class<?>[] getInterfaceGenericTypes(Class<?> clazz, Class<?> interfaceClazz) {
         Valid.notNull(clazz, "target class is null");
         Valid.notNull(interfaceClazz, "interface class is null");
         Type[] genTypes = clazz.getGenericInterfaces();
@@ -240,12 +241,12 @@ public class Generics {
         Valid.notNull(genType, "interface class not found");
         Type[] arguments = ((ParameterizedType) genType).getActualTypeArguments();
         int argumentsLength = arguments.length;
-        Class[] classes = new Class[argumentsLength];
+        Class<?>[] classes = new Class[argumentsLength];
         for (int i = 0; i < argumentsLength; i++) {
             if (!(arguments[i] instanceof Class)) {
                 classes[i] = Object.class;
             } else {
-                classes[i] = (Class) arguments[i];
+                classes[i] = (Class<?>) arguments[i];
             }
         }
         return classes;
@@ -257,29 +258,35 @@ public class Generics {
      * @param clazz class
      * @return 泛型 默认 Object.class Key: interfaceClass Value: genericClasses
      */
-    public static Map<Class, Class[]> getInterfaceGenericTypes(Class clazz) {
+    public static Map<Class<?>, Class<?>[]> getInterfaceGenericTypes(Class<?> clazz) {
         Valid.notNull(clazz, "target class is null");
         Type[] genTypes = clazz.getGenericInterfaces();
-        Map<Class, Class[]> map = new LinkedHashMap<>();
+        Map<Class<?>, Class<?>[]> map = new LinkedHashMap<>();
         for (Type genType : genTypes) {
             if (genType instanceof ParameterizedType) {
                 ParameterizedType parameterizedType = (ParameterizedType) genType;
                 Type[] arguments = parameterizedType.getActualTypeArguments();
-                Class[] classes = new Class[arguments.length];
+                Class<?>[] classes = new Class[arguments.length];
                 int argumentsLength = arguments.length;
                 for (int i = 0; i < argumentsLength; i++) {
                     if (!(arguments[i] instanceof Class)) {
                         classes[i] = Object.class;
                     } else {
-                        classes[i] = (Class) arguments[i];
+                        classes[i] = (Class<?>) arguments[i];
                     }
                 }
-                map.put((Class) parameterizedType.getRawType(), classes);
+                map.put((Class<?>) parameterizedType.getRawType(), classes);
             } else if (genType instanceof Class) {
-                map.put((Class) genType, new Class[0]);
+                map.put((Class<?>) genType, new Class[0]);
             }
         }
         return map;
+    }
+
+    public static void main(String[] args) {
+        ArrayList<String> strings = new ArrayList<String>();
+        strings.add("as");
+        System.out.println(getClassGenericType(strings.getClass()));
     }
 
 }

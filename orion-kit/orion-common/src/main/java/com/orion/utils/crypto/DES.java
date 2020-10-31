@@ -13,8 +13,8 @@ import javax.crypto.spec.DESedeKeySpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import static com.orion.utils.crypto.Base64s.base64Decode;
-import static com.orion.utils.crypto.Base64s.base64Encode;
+import static com.orion.utils.codec.Base64s.decode;
+import static com.orion.utils.codec.Base64s.encode;
 
 /**
  * DES 3DES 工具类
@@ -168,7 +168,7 @@ public class DES {
                 cipher = mode.getCipher(ivWorkingMode, paddingMode);
                 cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(Arrays1.resize(iv, 8)));
             }
-            return base64Encode(cipher.doFinal(bs));
+            return encode(cipher.doFinal(bs));
         } catch (Exception e) {
             return null;
         }
@@ -295,7 +295,7 @@ public class DES {
                 cipher = mode.getCipher(ivWorkingMode, paddingMode);
                 cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(Arrays1.resize(iv, 8)));
             }
-            return cipher.doFinal(base64Decode(bs));
+            return cipher.doFinal(decode(bs));
         } catch (Exception e) {
             return null;
         }
@@ -368,7 +368,7 @@ public class DES {
      * @return SecretKey
      */
     public static SecretKey getSecretKey(String key) {
-        return SecretKeySpecMode.DES.getSecretKeySpec(base64Decode(getBytes(key)));
+        return SecretKeySpecMode.DES.getSecretKeySpec(decode(getBytes(key)));
     }
 
     /**
@@ -379,7 +379,7 @@ public class DES {
      * @return SecretKey
      */
     public static SecretKey getSecretKey(String key, CipherAlgorithm mode) {
-        return new SecretKeySpec(base64Decode(getBytes(key)), mode.getMode());
+        return new SecretKeySpec(decode(getBytes(key)), mode.getMode());
     }
 
     /**
@@ -389,7 +389,7 @@ public class DES {
      * @return SecretKey
      */
     public static SecretKey getSecretKey(byte[] key) {
-        return SecretKeySpecMode.DES.getSecretKeySpec(base64Decode(key));
+        return SecretKeySpecMode.DES.getSecretKeySpec(decode(key));
     }
 
     /**
@@ -400,7 +400,7 @@ public class DES {
      * @return SecretKey
      */
     public static SecretKey getSecretKey(byte[] key, CipherAlgorithm mode) {
-        return new SecretKeySpec(base64Decode(key), mode.getMode());
+        return new SecretKeySpec(decode(key), mode.getMode());
     }
 
     // ------------------ SETTING ------------------

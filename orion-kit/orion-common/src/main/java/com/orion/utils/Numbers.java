@@ -32,6 +32,21 @@ public class Numbers {
         DECIMAL_FORMAT_MAP.put(2, new DecimalFormat("#.##"));
     }
 
+
+    /**
+     * 将给定的数除余为指定区间中的数
+     *
+     * @param num        num
+     * @param startRange 区间开始
+     * @param endRange   区间结束
+     * @return %
+     */
+    public static int getRangeNum(int num, int startRange, int endRange) {
+        Valid.gte(startRange, 0, "start range must greater than or equal 0");
+        Valid.gt(endRange, startRange, "end range must greater than start range");
+        return startRange + (num % (endRange - startRange));
+    }
+
     // -------------------- isZero --------------------
 
     /**

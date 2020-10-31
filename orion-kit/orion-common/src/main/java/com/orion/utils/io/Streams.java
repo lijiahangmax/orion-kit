@@ -1,5 +1,6 @@
 package com.orion.utils.io;
 
+import com.orion.lang.iterator.LineIterator;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Systems;
@@ -8,7 +9,9 @@ import com.orion.utils.crypto.enums.HashMessageDigest;
 import java.io.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -249,15 +252,15 @@ public class Streams {
 
     // -------------------------------- 复制流 --------------------------------
 
-    public static int copy(RandomAccessFile access, OutputStream output) throws IOException {
-        long count = copyLarge(access, output);
+    public static int transfer(RandomAccessFile access, OutputStream output) throws IOException {
+        long count = transferLarge(access, output);
         if (count > Integer.MAX_VALUE) {
             return -1;
         }
         return (int) count;
     }
 
-    public static long copyLarge(RandomAccessFile access, OutputStream output) throws IOException {
+    public static long transferLarge(RandomAccessFile access, OutputStream output) throws IOException {
         byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
         long count = 0;
         int n = 0;
@@ -268,15 +271,15 @@ public class Streams {
         return count;
     }
 
-    public static int copy(InputStream input, OutputStream output) throws IOException {
-        long count = copyLarge(input, output);
+    public static int transfer(InputStream input, OutputStream output) throws IOException {
+        long count = transferLarge(input, output);
         if (count > Integer.MAX_VALUE) {
             return -1;
         }
         return (int) count;
     }
 
-    public static long copyLarge(InputStream input, OutputStream output) throws IOException {
+    public static long transferLarge(InputStream input, OutputStream output) throws IOException {
         byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
         long count = 0;
         int n = 0;
@@ -287,29 +290,29 @@ public class Streams {
         return count;
     }
 
-    public static void copy(InputStream input, Writer output) throws IOException {
+    public static void transfer(InputStream input, Writer output) throws IOException {
         InputStreamReader in = new InputStreamReader(input);
-        copy(in, output);
+        transfer(in, output);
     }
 
-    public static void copy(InputStream input, Writer output, String chaset) throws IOException {
+    public static void transfer(InputStream input, Writer output, String chaset) throws IOException {
         if (chaset == null) {
-            copy(input, output);
+            transfer(input, output);
         } else {
             InputStreamReader in = new InputStreamReader(input, chaset);
-            copy(in, output);
+            transfer(in, output);
         }
     }
 
-    public static int copy(Reader input, Writer output) throws IOException {
-        long count = copyLarge(input, output);
+    public static int transfer(Reader input, Writer output) throws IOException {
+        long count = transferLarge(input, output);
         if (count > Integer.MAX_VALUE) {
             return -1;
         }
         return (int) count;
     }
 
-    public static long copyLarge(Reader input, Writer output) throws IOException {
+    public static long transferLarge(Reader input, Writer output) throws IOException {
         char[] buffer = new char[DEFAULT_BUFFER_SIZE];
         long count = 0;
         int n;
@@ -320,18 +323,18 @@ public class Streams {
         return count;
     }
 
-    public static void copy(Reader input, OutputStream output) throws IOException {
+    public static void transfer(Reader input, OutputStream output) throws IOException {
         OutputStreamWriter out = new OutputStreamWriter(output);
-        copy(input, out);
+        transfer(input, out);
         out.flush();
     }
 
-    public static void copy(Reader input, OutputStream output, String chaset) throws IOException {
+    public static void transfer(Reader input, OutputStream output, String chaset) throws IOException {
         if (chaset == null) {
-            copy(input, output);
+            transfer(input, output);
         } else {
             OutputStreamWriter out = new OutputStreamWriter(output, chaset);
-            copy(input, out);
+            transfer(input, out);
             out.flush();
         }
     }
@@ -488,55 +491,55 @@ public class Streams {
 
     public static byte[] toByteArray(InputStream input) throws IOException {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
-        copy(input, output);
+        transfer(input, output);
         return output.toByteArray();
     }
 
     public static byte[] toByteArray(Reader input) throws IOException {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
-        copy(input, output);
+        transfer(input, output);
         return output.toByteArray();
     }
 
     public static byte[] toByteArray(Reader input, String chaset) throws IOException {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
-        copy(input, output, chaset);
+        transfer(input, output, chaset);
         return output.toByteArray();
     }
 
     public static char[] toCharArray(InputStream is) throws IOException {
         CharArrayWriter output = new CharArrayWriter();
-        copy(is, output);
+        transfer(is, output);
         return output.toCharArray();
     }
 
     public static char[] toCharArray(InputStream is, String chaset) throws IOException {
         CharArrayWriter output = new CharArrayWriter();
-        copy(is, output, chaset);
+        transfer(is, output, chaset);
         return output.toCharArray();
     }
 
     public static char[] toCharArray(Reader input) throws IOException {
         CharArrayWriter sw = new CharArrayWriter();
-        copy(input, sw);
+        transfer(input, sw);
         return sw.toCharArray();
     }
 
     public static String toString(InputStream input) throws IOException {
         StringWriter sw = new StringWriter();
-        copy(input, sw);
+        transfer(input, sw);
         return sw.toString();
     }
 
     public static String toString(InputStream input, String chaset) throws IOException {
         StringWriter sw = new StringWriter();
-        copy(input, sw, chaset);
+        transfer(input, sw, chaset);
         return sw.toString();
     }
 
     public static String toString(Reader input) throws IOException {
         StringWriter sw = new StringWriter();
-        copy(input, sw);
+        transfer(input, sw);
         return sw.toString();
     }
 
@@ -702,80 +705,6 @@ public class Streams {
 
     public static LineIterator lineIterator(InputStream input, String chaset) throws IOException {
         return new LineIterator(new InputStreamReader(input, chaset));
-    }
-
-    public static class LineIterator implements Iterator {
-
-        private final BufferedReader bufferedReader;
-        private String line;
-        private boolean finished = false;
-
-        private LineIterator(Reader reader) throws IllegalArgumentException {
-            if (reader == null) {
-                throw new IllegalArgumentException("Reader must not be null");
-            }
-            if (reader instanceof BufferedReader) {
-                bufferedReader = (BufferedReader) reader;
-            } else {
-                bufferedReader = new BufferedReader(reader);
-            }
-        }
-
-        @Override
-        public boolean hasNext() {
-            if (line != null) {
-                return true;
-            } else if (finished) {
-                return false;
-            } else {
-                try {
-                    for (; ; ) {
-                        String line = bufferedReader.readLine();
-                        if (line == null) {
-                            finished = true;
-                            return false;
-                        } else {
-                            this.line = line;
-                            return true;
-                        }
-                    }
-                } catch (IOException ioe) {
-                    close();
-                    throw new IllegalStateException(ioe.toString());
-                }
-            }
-        }
-
-        @Override
-        public Object next() {
-            return nextLine();
-        }
-
-        public String nextLine() {
-            if (!hasNext()) {
-                throw new NoSuchElementException("No more lines");
-            }
-            String currentLine = line;
-            line = null;
-            return currentLine;
-        }
-
-        public void close() {
-            finished = true;
-            Streams.close(bufferedReader);
-            line = null;
-        }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException("Remove unsupported on LineIterator");
-        }
-
-        public static void close(LineIterator iterator) {
-            if (iterator != null) {
-                iterator.close();
-            }
-        }
     }
 
 }

@@ -172,6 +172,14 @@ public class Maps {
 
     // --------------- function ---------------
 
+    public static <K, V> Map<K, V> def(Map<K, V> map) {
+        return isEmpty(map) ? new HashMap<>() : map;
+    }
+
+    public static <K, V> Map<K, V> def(Map<K, V> map, Map<K, V> def) {
+        return isEmpty(map) ? def : map;
+    }
+
     public static <K, V> Map<K, V> of(Pair<K, V>... entries) {
         int len = Arrays1.length(entries);
         if (len == 0) {

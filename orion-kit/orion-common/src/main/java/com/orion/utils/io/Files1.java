@@ -1,18 +1,24 @@
 package com.orion.utils.io;
 
 import com.orion.id.UUIds;
-import com.orion.utils.*;
-import com.orion.utils.collect.Lists;
+import com.orion.utils.Exceptions;
+import com.orion.utils.Matches;
+import com.orion.utils.Strings;
+import com.orion.utils.Systems;
 import com.orion.utils.crypto.enums.HashMessageDigest;
-import com.orion.utils.math.Hex;
 
 import java.io.*;
+import java.net.URI;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.regex.Pattern;
-
-import static com.orion.utils.io.Streams.close;
 
 /**
  * 文件工具类
@@ -21,7 +27,6 @@ import static com.orion.utils.io.Streams.close;
  * @version 1.0.0
  * @since 2019/10/9 12:01
  */
-@SuppressWarnings("ALL")
 public class Files1 {
 
     private Files1() {
@@ -37,62 +42,58 @@ public class Files1 {
      */
     private static final String IO_TEMP_DIR = File.separator + ".io.temp" + File.separator;
 
-    private static final String[] DATA_UNIT = {"K", "KB", "M", "MB", "MBPS", "G", "GB", "T", "TB", "B"};
+    private static final String[] SIZE_UNIT = {"K", "KB", "M", "MB", "MBPS", "G", "GB", "T", "TB", "B"};
 
-    private static final long[] DATA_UNIT_EFFECT = {1000, 1024, 1000 * 1000, 1024 * 1024, 1024 * 128, 1000 * 1000 * 1000, 1024 * 1024 * 1024, 1000 * 1000 * 1000 * 1000, 1024 * 1024 * 1024 * 1024, 1};
+    private static final long[] SIZE_UNIT_EFFECT = {1000, 1024, 1000 * 1000, 1024 * 1024, 1024 * 128, 1000 * 1000 * 1000, 1024 * 1024 * 1024, 1000 * 1000 * 1000 * 1000L, 1024 * 1024 * 1024 * 1024L, 1};
+
+    // -------------------- attr --------------------
 
     /**
-     * 头文件
+     * 获取文件属性
+     *
+     * @param file 文件
+     * @return FileAttribute
      */
-    private static final Map<String, String> FILE_HEAD_MAP = new LinkedHashMap<>();
+    public static FileAttribute getAttribute(String file) {
+        return getAttribute(Paths.get(file));
+    }
 
-    static {
-        FILE_HEAD_MAP.put("doc", "D0CF11E0A1B11AE10000000000000000");
-        FILE_HEAD_MAP.put("xls", "D0CF11E0A1B11AE10000000000000000");
-        FILE_HEAD_MAP.put("exe", "4D5A90000300000004000000FFFF0000");
-        FILE_HEAD_MAP.put("dll", "4D5A90000300000004000000FFFF0000");
-        FILE_HEAD_MAP.put("png", "89504E470D0A1A0A0000000D49484452");
-        FILE_HEAD_MAP.put("lnk", "4C0000000114020000000000C0000000");
-        FILE_HEAD_MAP.put("xsd", "3C3F786D6C2076657273696F6E3D2231");
-        FILE_HEAD_MAP.put("rmvb", "2E524D46000000120001000000000000");
-        FILE_HEAD_MAP.put("avi", "5249464616BD5301415649204C495354");
-        FILE_HEAD_MAP.put("mkv", "1A45DFA3A34286810142F7810142F281");
-        FILE_HEAD_MAP.put("gif", "474946383961E0010E01E70000000000");
-        FILE_HEAD_MAP.put("wmv", "3026B2758E66CF11A6D900AA0062CE6C");
-        FILE_HEAD_MAP.put("eml", "52656365697665643A2066726F6D2073");
-        FILE_HEAD_MAP.put("psd", "38425053000100000000000000030000");
-        FILE_HEAD_MAP.put("xmind", "504B0304140008080800");
-        FILE_HEAD_MAP.put("mdb", "5374616E64617264204A");
-        FILE_HEAD_MAP.put("eps", "252150532D41646F6265");
-        FILE_HEAD_MAP.put("ps", "252150532D41646F6265");
-        FILE_HEAD_MAP.put("asf", "3026B2758E66CF11");
-        FILE_HEAD_MAP.put("dbx", "CFAD12FEC5FD746F");
-        FILE_HEAD_MAP.put("7z", "377ABCAF271C0004");
-        FILE_HEAD_MAP.put("pdf", "255044462D312E3");
-        FILE_HEAD_MAP.put("zip", "504B03040A00000");
-        FILE_HEAD_MAP.put("rar", "526172211A070");
-        FILE_HEAD_MAP.put("rtf", "7B5C727466");
-        FILE_HEAD_MAP.put("tif", "49492A00");
-        FILE_HEAD_MAP.put("dwg", "41433130");
-        FILE_HEAD_MAP.put("pst", "2142444E");
-        FILE_HEAD_MAP.put("docx", "504B0304");
-        FILE_HEAD_MAP.put("xlsx", "504B0304");
-        FILE_HEAD_MAP.put("jar", "504B0304");
-        FILE_HEAD_MAP.put("war", "504B0304");
-        FILE_HEAD_MAP.put("wpd", "FF575043");
-        FILE_HEAD_MAP.put("class", "CAFEBABE");
-        FILE_HEAD_MAP.put("ram", "2E7261FD");
-        FILE_HEAD_MAP.put("qdf", "AC9EBD8F");
-        FILE_HEAD_MAP.put("pwl", "E3828596");
-        FILE_HEAD_MAP.put("rm", "2E524D46");
-        FILE_HEAD_MAP.put("html", "3C21444F");
-        FILE_HEAD_MAP.put("mpg", "000001BA");
-        FILE_HEAD_MAP.put("mov", "6D6F6F76");
-        FILE_HEAD_MAP.put("mid", "4D546864");
-        FILE_HEAD_MAP.put("jpg", "FFD8FFE");
-        FILE_HEAD_MAP.put("mp4", "000000");
-        FILE_HEAD_MAP.put("bmp", "424D");
-        FILE_HEAD_MAP.put("xml", "3C");
+    /**
+     * 获取文件属性
+     *
+     * @param file 文件
+     * @return FileAttribute
+     */
+    public static FileAttribute getAttribute(File file) {
+        return getAttribute(Paths.get(file.getAbsolutePath()));
+    }
+
+    /**
+     * 获取文件属性
+     *
+     * @param file 文件
+     * @return FileAttribute
+     */
+    public static FileAttribute getAttribute(URI file) {
+        return getAttribute(Paths.get(file));
+    }
+
+    /**
+     * 获取文件属性
+     *
+     * @param file 文件
+     * @return FileAttribute 文件不存在或报错返回null
+     */
+    public static FileAttribute getAttribute(Path file) {
+        if (!Files.exists(file)) {
+            return null;
+        }
+        try {
+            BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
+            return new FileAttribute(file, attr);
+        } catch (IOException e) {
+            return null;
+        }
     }
 
     // -------------------- file --------------------
@@ -137,14 +138,14 @@ public class Files1 {
      */
     public static String getSize(long size) {
         String s;
-        if (size / (DATA_UNIT_EFFECT[1] * DATA_UNIT_EFFECT[1] * DATA_UNIT_EFFECT[1]) > 0) {
-            s = String.valueOf(size / (DATA_UNIT_EFFECT[1] * DATA_UNIT_EFFECT[1] * DATA_UNIT_EFFECT[1])) + " GB";
-        } else if (size / (DATA_UNIT_EFFECT[1] * DATA_UNIT_EFFECT[1]) > 0) {
-            s = String.valueOf(size / (DATA_UNIT_EFFECT[1] * DATA_UNIT_EFFECT[1])) + " MB";
-        } else if (size / DATA_UNIT_EFFECT[1] > 0) {
-            s = String.valueOf(size / DATA_UNIT_EFFECT[1]) + " KB";
+        if (size / (SIZE_UNIT_EFFECT[1] * SIZE_UNIT_EFFECT[1] * SIZE_UNIT_EFFECT[1]) > 0) {
+            s = size / (SIZE_UNIT_EFFECT[1] * SIZE_UNIT_EFFECT[1] * SIZE_UNIT_EFFECT[1]) + " GB";
+        } else if (size / (SIZE_UNIT_EFFECT[1] * SIZE_UNIT_EFFECT[1]) > 0) {
+            s = size / (SIZE_UNIT_EFFECT[1] * SIZE_UNIT_EFFECT[1]) + " MB";
+        } else if (size / SIZE_UNIT_EFFECT[1] > 0) {
+            s = size / SIZE_UNIT_EFFECT[1] + " KB";
         } else {
-            s = String.valueOf(size) + " bytes";
+            s = size + " bytes";
         }
         return s;
     }
@@ -162,18 +163,18 @@ public class Files1 {
         int effectIndex = -1;
         int unitLen = 0;
         size = size.toUpperCase();
-        for (int i = 0; i < DATA_UNIT.length; i++) {
-            if (size.endsWith(DATA_UNIT[i])) {
+        for (int i = 0; i < SIZE_UNIT.length; i++) {
+            if (size.endsWith(SIZE_UNIT[i])) {
                 effectIndex = i;
-                unitLen = DATA_UNIT[i].length();
+                unitLen = SIZE_UNIT[i].length();
                 break;
             }
         }
         if (effectIndex == -1) {
             return 0L;
         }
-        Double d = Double.valueOf(size.substring(0, size.length() - unitLen).trim());
-        return (long) (d * DATA_UNIT_EFFECT[effectIndex]);
+        double d = Double.parseDouble(size.substring(0, size.length() - unitLen).trim());
+        return (long) (d * SIZE_UNIT_EFFECT[effectIndex]);
     }
 
     /**
@@ -183,10 +184,9 @@ public class Files1 {
      * @param childDir 子文件夹
      * @param charset  编码格式
      * @param force    如果存在是否覆盖
-     * @return 文件路径
+     * @return 文件路径 null未找到资源
      */
     public static String resourceToFile(String source, String childDir, String charset, boolean force) {
-        InputStream in = null;
         File file = new File(getRootPathFile(childDir, source));
         boolean write = false;
         if (file.exists() && file.isFile()) {
@@ -198,10 +198,11 @@ public class Files1 {
             write = true;
         }
         if (write) {
-            in = Files1.class.getClassLoader().getResourceAsStream(source);
-            OutputStream out = null;
-            try {
-                out = openOutputStream(file);
+            InputStream in = Files1.class.getClassLoader().getResourceAsStream(source);
+            if (in == null) {
+                return null;
+            }
+            try (OutputStream out = openOutputStream(file)) {
                 byte[] bs = new byte[BUFFER_SIZE];
                 int read;
                 while (-1 != (read = in.read(bs))) {
@@ -212,7 +213,6 @@ public class Files1 {
                 throw Exceptions.ioRuntime(e);
             } finally {
                 Streams.close(in);
-                Streams.close(out);
             }
         }
         return file.getAbsolutePath();
@@ -269,9 +269,7 @@ public class Files1 {
      */
     public static String streamToFile(InputStream in, File file) {
         touch(file);
-        OutputStream out = null;
-        try {
-            out = openOutputStream(file);
+        try (OutputStream out = openOutputStream(file)) {
             byte[] bs = new byte[BUFFER_SIZE];
             int read;
             while (-1 != (read = in.read(bs))) {
@@ -280,8 +278,6 @@ public class Files1 {
             out.flush();
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
-        } finally {
-            Streams.close(out);
         }
         return file.getAbsolutePath();
     }
@@ -346,10 +342,8 @@ public class Files1 {
      * @param target 合并的文件
      */
     public static void mergeFile(File source, File target) {
-        InputStream in = null;
         OutputStream out = null;
-        try {
-            in = openInputStream(source);
+        try (InputStream in = openInputStream(source)) {
             out = new FileOutputStream(target, true);
             byte[] bytes = new byte[BUFFER_SIZE];
             int read;
@@ -360,7 +354,6 @@ public class Files1 {
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            Streams.close(in);
             Streams.close(out);
         }
     }
@@ -415,13 +408,8 @@ public class Files1 {
      * @param target 目标文件
      */
     public static void copy(File source, File target) {
-        FileInputStream in = null;
-        FileOutputStream out = null;
-        try {
-            in = openInputStream(source);
-            out = openOutputStream(target);
-            FileChannel inc = in.getChannel();
-            FileChannel outc = out.getChannel();
+        try (FileChannel inc = openInputStream(source).getChannel();
+             FileChannel outc = openOutputStream(target).getChannel()) {
             ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE);
             while (inc.read(buffer) != -1) {
                 buffer.flip();
@@ -430,9 +418,6 @@ public class Files1 {
             }
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
-        } finally {
-            Streams.close(in);
-            Streams.close(out);
         }
     }
 
@@ -551,7 +536,7 @@ public class Files1 {
      *
      * @return io临时文件路径
      */
-    public static String getIOTempFilePath() {
+    public static String getTempFilePath() {
         return Systems.HOME_DIR + IO_TEMP_DIR + UUIds.random32() + ".temp";
     }
 
@@ -560,8 +545,8 @@ public class Files1 {
      *
      * @return io临时文件路径
      */
-    public static File touchIOTempFile() {
-        String path = getIOTempFilePath();
+    public static File touchTempFile() {
+        String path = getTempFilePath();
         touch(path);
         return new File(path);
     }
@@ -572,8 +557,8 @@ public class Files1 {
      * @param exitDelete 是否退出删除
      * @return io临时文件路径
      */
-    public static File touchIOTempFile(boolean exitDelete) {
-        String path = getIOTempFilePath();
+    public static File touchTempFile(boolean exitDelete) {
+        String path = getTempFilePath();
         touch(path);
         File file = new File(path);
         if (exitDelete) {
@@ -656,14 +641,12 @@ public class Files1 {
      * @param file 文件夹
      */
     public static void deleteDir(File file) {
-        List<File> files = listFilesAndDirs(file);
-        if (files != null) {
-            for (File f : files) {
-                if (f.isDirectory()) {
-                    deleteDir(f);
-                } else {
-                    deleteFile(f);
-                }
+        List<File> files = listFiles(file, true, true);
+        for (File f : files) {
+            if (f.isDirectory()) {
+                deleteDir(f);
+            } else {
+                deleteFile(f);
             }
         }
         file.delete();
@@ -839,9 +822,7 @@ public class Files1 {
      * @return \n \r \r\n null
      */
     public static String getFileEndLineSeparator(File file) {
-        RandomAccessFile r = null;
-        try {
-            r = new RandomAccessFile(file, "r");
+        try (RandomAccessFile r = new RandomAccessFile(file, "r")) {
             long length = r.length();
             if (length == 0) {
                 return "\n";
@@ -867,8 +848,6 @@ public class Files1 {
             }
         } catch (IOException e) {
             // ignore
-        } finally {
-            Streams.close(r);
         }
         return null;
     }
@@ -890,9 +869,7 @@ public class Files1 {
      * @return true 是 \n \r \r\n结尾
      */
     public static boolean hasEndLineSeparator(File file) {
-        RandomAccessFile r = null;
-        try {
-            r = new RandomAccessFile(file, "r");
+        try (RandomAccessFile r = new RandomAccessFile(file, "r")) {
             long length = r.length();
             if (length == 0) {
                 return true;
@@ -905,8 +882,6 @@ public class Files1 {
             }
         } catch (IOException e) {
             // ignore
-        } finally {
-            Streams.close(r);
         }
         return false;
     }
@@ -1114,7 +1089,7 @@ public class Files1 {
      * @param file file
      * @param mode r rw rws rwd
      * @return RandomAccessFile
-     * @throws IOException
+     * @throws IOException IOException
      */
     public static RandomAccessFile openRandomAccess(String file, String mode) throws IOException {
         return openRandomAccess(new File(file), mode);
@@ -1126,7 +1101,7 @@ public class Files1 {
      * @param file file
      * @param mode r rw rws rwd
      * @return RandomAccessFile
-     * @throws IOException
+     * @throws IOException IOException
      */
     public static RandomAccessFile openRandomAccess(File file, String mode) throws IOException {
         if (file.exists()) {
@@ -1173,136 +1148,6 @@ public class Files1 {
         }
     }
 
-    // -------------------- charset --------------------
-
-    /**
-     * 通过文件头获取编码格式
-     *
-     * @param file 文件
-     * @return GBK UTF-16LE UTF-16BE UTF-8 默认GBK
-     */
-    public static String getCharset(String file) {
-        return getCharset(new File(file));
-    }
-
-    /**
-     * 通过文件头获取编码格式
-     *
-     * @param file 文件
-     * @return GBK UTF-16LE UTF-16BE UTF-8 默认GBK
-     */
-    public static String getCharset(File file) {
-        String charset = "GBK";
-        byte[] first3Bytes = new byte[3];
-        BufferedInputStream bis = null;
-        try {
-            boolean checked = false;
-            bis = new BufferedInputStream(openInputStream(file));
-            bis.mark(0);
-            // bis.mark(100);
-            int read = bis.read(first3Bytes, 0, 3);
-            if (read == -1) {
-                bis.close();
-                return charset;
-            } else if (first3Bytes[0] == (byte) 0xFF && first3Bytes[1] == (byte) 0xFE) {
-                charset = "UTF-16LE";
-                checked = true;
-            } else if (first3Bytes[0] == (byte) 0xFE && first3Bytes[1] == (byte) 0xFF) {
-                charset = "UTF-16BE";
-                checked = true;
-            } else if (first3Bytes[0] == (byte) 0xEF && first3Bytes[1] == (byte) 0xBB && first3Bytes[2] == (byte) 0xBF) {
-                charset = "UTF-8";
-                checked = true;
-            }
-            bis.reset();
-            if (!checked) {
-                while ((read = bis.read()) != -1) {
-                    if (read >= 0xF0) {
-                        break;
-                    }
-                    if (0x80 <= read && read <= 0xBF) {
-                        break;
-                    }
-                    if (0xC0 <= read && read <= 0xDF) {
-                        read = bis.read();
-                        if (!(0x80 <= read && read <= 0xBF)) {
-                            break;
-                        }
-                    } else if (0xE0 <= read) {
-                        read = bis.read();
-                        if (0x80 <= read && read <= 0xBF) {
-                            read = bis.read();
-                            if (0x80 <= read && read <= 0xBF) {
-                                charset = "UTF-8";
-                                break;
-                            } else {
-                                break;
-                            }
-                        } else {
-                            break;
-                        }
-                    }
-                }
-            }
-            bis.close();
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
-        } finally {
-            Streams.close(bis);
-        }
-        return charset;
-    }
-
-    /**
-     * 转换文件编码格式
-     *
-     * @param file        文件
-     * @param fromCharset 原编码
-     * @param toCharset   新编码
-     */
-    public static void convertCharset(String file, String fromCharset, String toCharset) {
-        convertCharset(new File(file), fromCharset, toCharset);
-    }
-
-    /**
-     * 转换文件编码格式
-     *
-     * @param file        文件
-     * @param fromCharset 原编码
-     * @param toCharset   新编码
-     */
-    public static void convertCharset(File file, String fromCharset, String toCharset) {
-        // read
-        InputStreamReader reader = null;
-        String s = "";
-        try {
-            reader = new InputStreamReader(openInputStream(file), fromCharset);
-            char[] cs = new char[10];
-            char[] t = new char[10];
-            int index = 0;
-            int read;
-            while (-1 != (read = reader.read(t))) {
-                cs = Arrays1.arraycopy(t, 0, cs, index, read);
-                index += read;
-            }
-            s = new String(cs, 0, index);
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
-        } finally {
-            Streams.close(reader);
-        }
-
-        // write
-        OutputStreamWriter write = null;
-        try {
-            write = new OutputStreamWriter(openOutputStream(file), toCharset);
-            write.write(s);
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
-        } finally {
-            Streams.close(write);
-        }
-    }
 
     // -------------------- path --------------------
 
@@ -1545,7 +1390,7 @@ public class Files1 {
      * 统一化路径
      *
      * @param path 路径 /home/.././etc --> /etc
-     * @return
+     * @return 统一化路径
      */
     public static String normalize(String path) {
         String[] paths = path.split(":");
@@ -1566,7 +1411,7 @@ public class Files1 {
         for (int i = 0; i < ps.length; i++) {
             String s = ps[i];
             if (Strings.isBlank(s) || ".".equals(s)) {
-                continue;
+                // ignore
             } else if ("..".equals(s)) {
                 sb.delete(getParentPath(sb.toString()).length(), sb.length());
             } else {
@@ -1582,1889 +1427,6 @@ public class Files1 {
             return sb.deleteCharAt(len - 1).toString();
         } else {
             return sb.toString();
-        }
-    }
-
-    // -------------------- list --------------------
-
-    /**
-     * 获取路径下的全部文件夹 递归
-     *
-     * @param path 需要处理的文件夹
-     * @return 文件夹
-     */
-    public static List<File> listDirs(File path) {
-        return listDirs(path, true);
-    }
-
-    /**
-     * 获取路径下的全部文件夹 递归
-     *
-     * @param path 需要处理的文件夹
-     * @return 文件夹
-     */
-    public static List<File> listDirs(String path) {
-        return listDirs(new File(path), true);
-    }
-
-    /**
-     * 获取路径下的全部文件夹
-     *
-     * @param path  文件夹
-     * @param child 是否递归
-     * @return 文件夹
-     */
-    public static List<File> listDirs(String path, boolean child) {
-        return listDirs(new File(path), child);
-    }
-
-    /**
-     * 获取路径下的全部文件夹
-     *
-     * @param path  文件夹
-     * @param child 是否递归
-     * @return 文件夹
-     */
-    public static List<File> listDirs(File path, boolean child) {
-        List<File> list = new ArrayList<>();
-        File[] files = path.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                if (file.isDirectory()) {
-                    list.add(file);
-                    if (child) {
-                        list.addAll(listDirs(file, true));
-                    }
-                }
-            }
-        }
-        return list;
-    }
-
-    /**
-     * 获取路径下的全部文件 递归
-     *
-     * @param path 需要处理的文件
-     * @return 文件
-     */
-    public static List<File> listFiles(File path) {
-        return listFiles(path, true, false);
-    }
-
-    /**
-     * 获取路径下的全部文件 递归
-     *
-     * @param path 需要处理的文件
-     * @return 文件
-     */
-    public static List<File> listFiles(String path) {
-        return listFiles(new File(path), true, false);
-    }
-
-    /**
-     * 获取路径下的全部文件
-     *
-     * @param path  文件夹
-     * @param child 是否递归
-     * @return 文件
-     */
-    public static List<File> listFiles(String path, boolean child) {
-        return listFiles(new File(path), child, false);
-    }
-
-    /**
-     * 获取路径下的全部文件
-     *
-     * @param path  文件夹
-     * @param child 是否递归
-     * @return 文件
-     */
-    public static List<File> listFiles(File path, boolean child) {
-        return listFiles(path, child, false);
-    }
-
-    /**
-     * 获取路径下的全部文件包括文件夹 递归
-     *
-     * @param path 文件夹
-     * @return 文件和文件夹
-     */
-    public static List<File> listFilesAndDirs(File path) {
-        return listFiles(path, true, true);
-    }
-
-    /**
-     * 获取路径下的全部文件包括文件夹 递归
-     *
-     * @param path 文件夹
-     * @return 文件和文件夹
-     */
-    public static List<File> listFilesAndDirs(String path) {
-        return listFiles(new File(path), true, true);
-    }
-
-    /**
-     * 获取路径下的全部文件包括文件夹 递归
-     *
-     * @param path  文件夹
-     * @param child 是否递归
-     * @return 文件和文件夹
-     */
-    public static List<File> listFilesAndDirs(String path, boolean child) {
-        return listFiles(new File(path), child, true);
-    }
-
-    /**
-     * 获取路径下的全部文件包括文件夹
-     *
-     * @param path  文件夹
-     * @param child 是否递归
-     * @return 文件和文件夹
-     */
-    public static List<File> listFilesAndDirs(File path, boolean child) {
-        return listFiles(path, child, true);
-    }
-
-    /**
-     * 获取路径下的全部文件包括文件夹
-     *
-     * @param path  文件夹
-     * @param child 是否递归
-     * @param dir   是否添加文件夹
-     * @return 文件
-     */
-    private static List<File> listFiles(File path, boolean child, boolean dir) {
-        List<File> list = new ArrayList<>();
-        File[] files = path.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                if (file.isFile()) {
-                    list.add(file);
-                } else if (file.isDirectory()) {
-                    if (dir) {
-                        list.add(file);
-                    }
-                    if (child) {
-                        list.addAll(listFiles(file, true, dir));
-                    }
-                }
-            }
-        }
-        return list;
-    }
-
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param suffix  后缀
-     * @return 文件
-     */
-    public static List<File> listFilesSuffix(File dirPath, String suffix) {
-        return listFilesSearch(dirPath, suffix, null, null, 1, true, false);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param suffix  后缀
-     * @param child   是否递归
-     * @return 文件
-     */
-    public static List<File> listFilesSuffix(File dirPath, String suffix, boolean child) {
-        return listFilesSearch(dirPath, suffix, null, null, 1, child, false);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param suffix  后缀
-     * @return 文件
-     */
-    public static List<File> listFilesAndDirSuffix(File dirPath, String suffix) {
-        return listFilesSearch(dirPath, suffix, null, null, 1, true, true);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param suffix  后缀
-     * @param child   是否递归
-     * @return 文件
-     */
-    public static List<File> listFilesAndDirSuffix(File dirPath, String suffix, boolean child) {
-        return listFilesSearch(dirPath, suffix, null, null, 1, child, true);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param suffix  后缀
-     * @return 文件
-     */
-    public static List<File> listFilesSuffix(String dirPath, String suffix) {
-        return listFilesSearch(new File(dirPath), suffix, null, null, 1, true, false);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param suffix  后缀
-     * @param child   是否递归
-     * @return 文件
-     */
-    public static List<File> listFilesSuffix(String dirPath, String suffix, boolean child) {
-        return listFilesSearch(new File(dirPath), suffix, null, null, 1, child, false);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param suffix  后缀
-     * @return 文件
-     */
-    public static List<File> listFilesAndDirSuffix(String dirPath, String suffix) {
-        return listFilesSearch(new File(dirPath), suffix, null, null, 1, true, true);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param suffix  后缀
-     * @param child   是否递归
-     * @return 文件
-     */
-    public static List<File> listFilesAndDirSuffix(String dirPath, String suffix, boolean child) {
-        return listFilesSearch(new File(dirPath), suffix, null, null, 1, child, true);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param name    搜索
-     * @return 文件
-     */
-    public static List<File> listFilesMatch(File dirPath, String name) {
-        return listFilesSearch(dirPath, name, null, null, 2, true, false);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param name    搜索
-     * @param child   是否递归
-     * @return 文件
-     */
-    public static List<File> listFilesMatch(File dirPath, String name, boolean child) {
-        return listFilesSearch(dirPath, name, null, null, 2, child, false);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param name    搜索
-     * @return 文件
-     */
-    public static List<File> listFilesAndDirMatch(File dirPath, String name) {
-        return listFilesSearch(dirPath, name, null, null, 2, true, true);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param name    搜索
-     * @param child   是否递归
-     * @return 文件
-     */
-    public static List<File> listFilesAndDirMatch(File dirPath, String name, boolean child) {
-        return listFilesSearch(dirPath, name, null, null, 2, child, true);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param name    搜索
-     * @return 文件
-     */
-    public static List<File> listFilesMatch(String dirPath, String name) {
-        return listFilesSearch(new File(dirPath), name, null, null, 2, true, false);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param name    搜索
-     * @param child   是否递归
-     * @return 文件
-     */
-    public static List<File> listFilesMatch(String dirPath, String name, boolean child) {
-        return listFilesSearch(new File(dirPath), name, null, null, 2, child, false);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param name    搜索
-     * @return 文件
-     */
-    public static List<File> listFilesAndDirMatch(String dirPath, String name) {
-        return listFilesSearch(new File(dirPath), name, null, null, 2, true, true);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param name    搜索
-     * @param child   是否递归
-     * @return 文件
-     */
-    public static List<File> listFilesAndDirMatch(String dirPath, String name, boolean child) {
-        return listFilesSearch(new File(dirPath), name, null, null, 2, child, true);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param pattern 正则
-     * @return 文件
-     */
-    public static List<File> listFilesPattern(File dirPath, Pattern pattern) {
-        return listFilesSearch(dirPath, null, pattern, null, 3, true, false);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param pattern 正则
-     * @param child   是否递归
-     * @return 文件
-     */
-    public static List<File> listFilesPattern(File dirPath, Pattern pattern, boolean child) {
-        return listFilesSearch(dirPath, null, pattern, null, 3, child, false);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param pattern 正则
-     * @return 文件
-     */
-    public static List<File> listFilesAndDirPattern(File dirPath, Pattern pattern) {
-        return listFilesSearch(dirPath, null, pattern, null, 3, true, true);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param pattern 正则
-     * @param child   是否递归
-     * @return 文件
-     */
-    public static List<File> listFilesAndDirPattern(File dirPath, Pattern pattern, boolean child) {
-        return listFilesSearch(dirPath, null, pattern, null, 3, child, true);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param pattern 正则
-     * @return 文件
-     */
-    public static List<File> listFilesPattern(String dirPath, Pattern pattern) {
-        return listFilesSearch(new File(dirPath), null, pattern, null, 3, true, false);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param pattern 正则
-     * @param child   是否递归
-     * @return 文件
-     */
-    public static List<File> listFilesPattern(String dirPath, Pattern pattern, boolean child) {
-        return listFilesSearch(new File(dirPath), null, pattern, null, 3, child, false);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param pattern 正则
-     * @return 文件
-     */
-    public static List<File> listFilesAndDirPattern(String dirPath, Pattern pattern) {
-        return listFilesSearch(new File(dirPath), null, pattern, null, 3, true, true);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param pattern 正则
-     * @param child   是否递归
-     * @return 文件
-     */
-    public static List<File> listFilesAndDirPattern(String dirPath, Pattern pattern, boolean child) {
-        return listFilesSearch(new File(dirPath), null, pattern, null, 3, child, true);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param filter  过滤器
-     * @return 文件
-     */
-    public static List<File> listFilesFilter(File dirPath, FilenameFilter filter) {
-        return listFilesSearch(dirPath, null, null, filter, 4, true, false);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param filter  过滤器
-     * @param child   是否递归
-     * @return 文件
-     */
-    public static List<File> listFilesFilter(File dirPath, FilenameFilter filter, boolean child) {
-        return listFilesSearch(dirPath, null, null, filter, 4, child, false);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param filter  过滤器
-     * @return 文件
-     */
-    public static List<File> listFilesAndDirFilter(File dirPath, FilenameFilter filter) {
-        return listFilesSearch(dirPath, null, null, filter, 4, true, true);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param filter  过滤器
-     * @param child   是否递归
-     * @return 文件
-     */
-    public static List<File> listFilesAndDirFilter(File dirPath, FilenameFilter filter, boolean child) {
-        return listFilesSearch(dirPath, null, null, filter, 4, child, true);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param filter  过滤器
-     * @return 文件
-     */
-    public static List<File> listFilesFilter(String dirPath, FilenameFilter filter) {
-        return listFilesSearch(new File(dirPath), null, null, filter, 4, true, false);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param filter  过滤器
-     * @param child   是否递归
-     * @return 文件
-     */
-    public static List<File> listFilesFilter(String dirPath, FilenameFilter filter, boolean child) {
-        return listFilesSearch(new File(dirPath), null, null, filter, 4, child, false);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param filter  过滤器
-     * @return 文件
-     */
-    public static List<File> listFilesAndDirFilter(String dirPath, FilenameFilter filter) {
-        return listFilesSearch(new File(dirPath), null, null, filter, 4, true, true);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param filter  过滤器
-     * @param child   是否递归
-     * @return 文件
-     */
-    public static List<File> listFilesAndDirFilter(String dirPath, FilenameFilter filter, boolean child) {
-        return listFilesSearch(new File(dirPath), null, null, filter, 4, child, true);
-    }
-
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param search  搜索
-     * @param pattern 正则
-     * @param filter  过滤器
-     * @param type    类型 1后缀 2匹配 3正则 4过滤器
-     * @param child   是否递归
-     * @param dir     是否添加文件夹
-     * @return 文件
-     */
-    private static List<File> listFilesSearch(File dirPath, String search, Pattern pattern, FilenameFilter filter, int type, boolean child, boolean dir) {
-        List<File> list = new ArrayList<>();
-        File[] files = dirPath.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                boolean isDir = file.isDirectory();
-                if (!isDir || dir) {
-                    String fn = file.getName();
-                    if (type == 1 && fn.toLowerCase().endsWith(search.toLowerCase())) {
-                        list.add(file);
-                    } else if (type == 2 && fn.toLowerCase().contains(search.toLowerCase())) {
-                        list.add(file);
-                    } else if (type == 3 && Matches.test(fn, pattern)) {
-                        list.add(file);
-                    } else if (type == 4 && filter.accept(file, fn)) {
-                        list.add(file);
-                    }
-                }
-                if (isDir && child) {
-                    list.addAll(listFilesSearch(file, search, pattern, filter, type, true, dir));
-                }
-            }
-        }
-        return list;
-    }
-
-    // -------------------- write --------------------
-
-    /**
-     * 拼接到文件最后一行
-     *
-     * @param file 文件
-     * @param bs   bytes
-     */
-    public static void append(File file, byte[] bs) {
-        append(file, bs, 0, bs.length);
-    }
-
-    /**
-     * 拼接到文件最后一行
-     *
-     * @param file 文件
-     * @param bs   bytes
-     */
-    public static void append(String file, byte[] bs) {
-        append(new File(file), bs, 0, bs.length);
-    }
-
-    /**
-     * 拼接到文件最后一行
-     *
-     * @param file 文件
-     * @param bs   bytes
-     * @param off  offset
-     * @param len  length
-     */
-    public static void append(String file, byte[] bs, int off, int len) {
-        append(new File(file), bs, off, len);
-    }
-
-    /**
-     * 拼接到文件最后一行
-     *
-     * @param file 文件
-     * @param bs   bytes
-     * @param off  offset
-     * @param len  length
-     */
-    public static void append(File file, byte[] bs, int off, int len) {
-        RandomAccessFile r = null;
-        try {
-            r = new RandomAccessFile(file, "rw");
-            r.seek(r.length());
-            r.write(bs, off, len);
-        } catch (IOException e) {
-            throw Exceptions.ioRuntime(e);
-        } finally {
-            Streams.close(r);
-        }
-    }
-
-    /**
-     * 拼接到文件最后一行
-     *
-     * @param file 文件
-     * @param s    string
-     */
-    public static void append(File file, String s) {
-        append(file, s.getBytes());
-    }
-
-    /**
-     * 拼接到文件最后一行
-     *
-     * @param file 文件
-     * @param s    string
-     */
-    public static void append(String file, String s) {
-        append(new File(file), s.getBytes());
-    }
-
-    /**
-     * 拼接到文件最后一行
-     *
-     * @param file    文件
-     * @param s       string
-     * @param charset 编码格式
-     */
-    public static void append(File file, String s, String charset) {
-        try {
-            append(file, s.getBytes(charset));
-        } catch (UnsupportedEncodingException e) {
-            throw Exceptions.unCoding(e);
-        }
-    }
-
-    /**
-     * 拼接到文件最后一行
-     *
-     * @param file    文件
-     * @param s       string
-     * @param charset 编码格式
-     */
-    public static void append(String file, String s, String charset) {
-        try {
-            append(new File(file), s.getBytes(charset));
-        } catch (UnsupportedEncodingException e) {
-            throw Exceptions.unCoding(e);
-        }
-    }
-
-    /**
-     * 拼接到偏移处
-     *
-     * @param file   文件
-     * @param offset 拼接偏移量
-     * @param bytes  bytes
-     */
-    public static void append(String file, long offset, byte[] bytes) {
-        append(new File(file), offset, bytes, 0, bytes.length);
-    }
-
-    /**
-     * 拼接到偏移处
-     *
-     * @param file   文件
-     * @param offset 拼接偏移量
-     * @param bytes  bytes
-     */
-    public static void append(File file, long offset, byte[] bytes) {
-        append(file, offset, bytes, 0, bytes.length);
-    }
-
-    /**
-     * 拼接到偏移处
-     *
-     * @param file   文件
-     * @param offset 拼接偏移量
-     * @param bytes  bytes
-     * @param off    偏移量
-     * @param len    长度
-     */
-    public static void append(String file, long offset, byte[] bytes, int off, int len) {
-        append(new File(file), offset, bytes, off, len);
-    }
-
-    /**
-     * 拼接到偏移处
-     *
-     * @param file   文件
-     * @param offset 拼接偏移量
-     * @param bytes  bytes
-     * @param off    偏移量
-     * @param len    长度
-     */
-    public static void append(File file, long offset, byte[] bytes, int off, int len) {
-        long fileLen = file.length();
-        if (offset >= fileLen) {
-            append(file, bytes, off, len);
-            return;
-        }
-        FileInputStream in = null;
-        RandomAccessFile r = null;
-        try {
-            if (fileLen - offset <= BUFFER_SIZE) {
-                byte[] bs = new byte[((int) (fileLen - offset + len))];
-                System.arraycopy(bytes, 0, bs, 0, len);
-                r = new RandomAccessFile(file, "rw");
-                r.seek(offset);
-                r.read(bs, len, bs.length - len);
-                r.seek(offset);
-                r.write(bs);
-            } else {
-                r = new RandomAccessFile(file, "rw");
-                File endFile = touchIOTempFile(true);
-                writeToFile(file, offset, endFile);
-                r.seek(offset);
-                r.write(bytes, off, len);
-                in = openInputStream(endFile);
-                byte[] buf = new byte[BUFFER_SIZE];
-                int read;
-                while (-1 != (read = in.read(buf))) {
-                    r.write(buf, 0, read);
-                }
-            }
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
-        } finally {
-            close(in);
-            close(r);
-        }
-    }
-
-    /**
-     * 拼接一行
-     *
-     * @param file 文件
-     * @param str  string
-     */
-    public static void appendLine(File file, String str) {
-        appendLines(file, Lists.of(str), null);
-    }
-
-    /**
-     * 拼接一行
-     *
-     * @param file 文件
-     * @param str  string
-     */
-    public static void appendLine(String file, String str) {
-        appendLines(new File(file), Lists.of(str), null);
-    }
-
-    /**
-     * 拼接一行
-     *
-     * @param file    文件
-     * @param str     string
-     * @param charset 编码格式
-     */
-    public static void appendLine(File file, String str, String charset) {
-        appendLines(file, Lists.of(str), charset);
-    }
-
-    /**
-     * 拼接一行
-     *
-     * @param file    文件
-     * @param str     string
-     * @param charset 编码格式
-     */
-    public static void appendLine(String file, String str, String charset) {
-        appendLines(new File(file), Lists.of(str), charset);
-    }
-
-    /**
-     * 拼接多行
-     *
-     * @param file 文件
-     * @param list strings
-     */
-    public static void appendLines(File file, List<String> list) {
-        appendLines(file, list, null);
-    }
-
-    /**
-     * 拼接多行
-     *
-     * @param file 文件
-     * @param list strings
-     */
-    public static void appendLines(String file, List<String> list) {
-        appendLines(new File(file), list, null);
-    }
-
-    /**
-     * 拼接多行
-     *
-     * @param file    文件
-     * @param list    strings
-     * @param charset 编码格式
-     */
-    public static void appendLines(String file, List<String> list, String charset) {
-        writeLines(new File(file), list, charset, true);
-    }
-
-    /**
-     * 拼接多行
-     *
-     * @param file    文件
-     * @param list    strings
-     * @param charset 编码格式
-     */
-    public static void appendLines(File file, List<String> list, String charset) {
-        writeLines(file, list, charset, true);
-    }
-
-    /**
-     * 拼接行到偏移处 不拼接 \n
-     *
-     * @param file   文件
-     * @param offset 拼接偏移量
-     * @param line   行
-     */
-    public static void appendLines(String file, long offset, String line) {
-        appendLines(new File(file), offset, Lists.of(line), null);
-    }
-
-    /**
-     * 拼接行到偏移处 不拼接 \n
-     *
-     * @param file   文件
-     * @param offset 拼接偏移量
-     * @param line   行
-     */
-    public static void appendLines(File file, long offset, String line) {
-        appendLines(file, offset, Lists.of(line), null);
-    }
-
-    /**
-     * 拼接行到偏移处 不拼接 \n
-     *
-     * @param file    文件
-     * @param offset  拼接偏移量
-     * @param line    行
-     * @param charset 编码格式
-     */
-    public static void appendLines(String file, long offset, String line, String charset) {
-        appendLines(new File(file), offset, Lists.of(line), charset);
-    }
-
-    /**
-     * 拼接行到偏移处 不拼接 \n
-     *
-     * @param file    文件
-     * @param offset  拼接偏移量
-     * @param line    行
-     * @param charset 编码格式
-     */
-    public static void appendLines(File file, long offset, String line, String charset) {
-        appendLines(file, offset, Lists.of(line), charset);
-    }
-
-    /**
-     * 拼接行到偏移处 首尾不拼接 \n
-     *
-     * @param file   文件
-     * @param offset 拼接偏移量
-     * @param lines  行
-     */
-    public static void appendLines(File file, long offset, List<String> lines) {
-        appendLines(file, offset, lines, null);
-    }
-
-    /**
-     * 拼接行到偏移处 首尾不拼接 \n
-     *
-     * @param file   文件
-     * @param offset 拼接偏移量
-     * @param lines  行
-     */
-    public static void appendLines(String file, long offset, List<String> lines) {
-        appendLines(new File(file), offset, lines, null);
-    }
-
-    /**
-     * 拼接行到偏移处 首尾不拼接 \n
-     *
-     * @param file    文件
-     * @param offset  拼接偏移量
-     * @param lines   行
-     * @param charset 编码格式
-     */
-    public static void appendLines(String file, long offset, List<String> lines, String charset) {
-        appendLines(new File(file), offset, lines, charset);
-    }
-
-    /**
-     * 拼接行到偏移处 首尾不拼接 \n
-     *
-     * @param file    文件
-     * @param offset  拼接偏移量
-     * @param lines   行
-     * @param charset 编码格式
-     */
-    public static void appendLines(File file, long offset, List<String> lines, String charset) {
-        long fileLen = file.length();
-        boolean append = false;
-        if (offset >= fileLen) {
-            append = true;
-        }
-        FileInputStream in = null;
-        RandomAccessFile r = null;
-        try {
-            r = new RandomAccessFile(file, "rw");
-            boolean useBuffer = true;
-            byte[] bs = null;
-            int read = 0;
-            File endFile = null;
-            if (!append) {
-                if (fileLen - offset <= BUFFER_SIZE) {
-                    bs = new byte[((int) (fileLen - offset))];
-                    r.seek(offset);
-                    read = r.read(bs);
-                } else {
-                    endFile = touchIOTempFile(true);
-                    writeToFile(file, offset, endFile);
-                    r.seek(offset);
-                    useBuffer = false;
-                }
-            }
-            for (String line : lines) {
-                if (charset == null) {
-                    r.write(line.getBytes());
-                } else {
-                    r.write(line.getBytes(charset));
-                }
-                r.write('\n');
-            }
-            if (!append) {
-                if (useBuffer) {
-                    r.write(bs, 0, read);
-                } else {
-                    in = openInputStream(endFile);
-                    bs = new byte[BUFFER_SIZE];
-                    while (-1 != (read = in.read(bs))) {
-                        r.write(bs, 0, read);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
-        } finally {
-            close(in);
-            close(r);
-        }
-    }
-
-    /**
-     * 写入到文件
-     *
-     * @param file 文件
-     * @param bs   bytes
-     */
-    public static void write(File file, byte[] bs) {
-        write(file, bs, 0, bs.length);
-    }
-
-    /**
-     * 写入到文件
-     *
-     * @param file 文件
-     * @param bs   bytes
-     */
-    public static void write(String file, byte[] bs) {
-        write(new File(file), bs, 0, bs.length);
-    }
-
-    /**
-     * 写入到文件
-     *
-     * @param file 文件
-     * @param bs   bytes
-     * @param off  offset
-     * @param len  length
-     */
-    public static void write(String file, byte[] bs, int off, int len) {
-        write(new File(file), bs, off, len);
-    }
-
-    /**
-     * 写入到文件
-     *
-     * @param file 文件
-     * @param bs   bytes
-     * @param off  offset
-     * @param len  length
-     */
-    public static void write(File file, byte[] bs, int off, int len) {
-        FileOutputStream out = null;
-        try {
-            out = openOutputStream(file);
-            out.write(bs, off, len);
-        } catch (IOException e) {
-            throw Exceptions.ioRuntime(e);
-        } finally {
-            Streams.close(out);
-        }
-    }
-
-    /**
-     * 写入到文件
-     *
-     * @param file 文件
-     * @param s    string
-     */
-    public static void write(File file, String s) {
-        write(file, s.getBytes());
-    }
-
-    /**
-     * 写入到文件
-     *
-     * @param file 文件
-     * @param s    string
-     */
-    public static void write(String file, String s) {
-        write(new File(file), s.getBytes());
-    }
-
-    /**
-     * 写入到文件
-     *
-     * @param file    文件
-     * @param s       string
-     * @param charset 编码格式
-     */
-    public static void write(File file, String s, String charset) {
-        try {
-            write(file, s.getBytes(charset));
-        } catch (UnsupportedEncodingException e) {
-            throw Exceptions.unCoding(e);
-        }
-    }
-
-    /**
-     * 写入到文件
-     *
-     * @param file    文件
-     * @param s       string
-     * @param charset 编码格式
-     */
-    public static void write(String file, String s, String charset) {
-        try {
-            write(new File(file), s.getBytes(charset));
-        } catch (UnsupportedEncodingException e) {
-            throw Exceptions.unCoding(e);
-        }
-    }
-
-    /**
-     * 写入一行
-     *
-     * @param file 文件
-     * @param str  string
-     */
-    public static void writeLine(File file, String str) {
-        writeLines(file, Lists.of(str), null);
-    }
-
-    /**
-     * 写入一行
-     *
-     * @param file 文件
-     * @param str  string
-     */
-    public static void writeLine(String file, String str) {
-        writeLines(new File(file), Lists.of(str), null);
-    }
-
-    /**
-     * 写入一行
-     *
-     * @param file    文件
-     * @param str     string
-     * @param charset 编码格式
-     */
-    public static void writeLine(File file, String str, String charset) {
-        writeLines(file, Lists.of(str), charset);
-    }
-
-    /**
-     * 写入一行
-     *
-     * @param file    文件
-     * @param str     string
-     * @param charset 编码格式
-     */
-    public static void writeLine(String file, String str, String charset) {
-        writeLines(new File(file), Lists.of(str), charset);
-    }
-
-    /**
-     * 写入多行
-     *
-     * @param file 文件
-     * @param list strings
-     */
-    public static void writeLines(File file, List<String> list) {
-        writeLines(file, list, null);
-    }
-
-    /**
-     * 写入多行
-     *
-     * @param file    文件
-     * @param list    strings
-     * @param charset 编码格式
-     */
-    public static void writeLines(File file, List<String> list, String charset) {
-        writeLines(file, list, charset, false);
-    }
-
-    /**
-     * 写入多行
-     *
-     * @param file    文件
-     * @param list    strings
-     * @param charset 编码格式
-     */
-    public static void writeLines(String file, List<String> list, String charset) {
-        writeLines(new File(file), list, charset, false);
-    }
-
-    /**
-     * 写入多行
-     *
-     * @param file    文件
-     * @param list    strings
-     * @param charset 编码格式
-     * @param append  true 拼接
-     */
-    private static void writeLines(File file, List<String> list, String charset, boolean append) {
-        String lineSeparator = getFileEndLineSeparator(file);
-        boolean before = false;
-        if (lineSeparator == null) {
-            lineSeparator = "\n";
-            if (append) {
-                before = true;
-            }
-        }
-        RandomAccessFile rw = null;
-        try {
-            rw = new RandomAccessFile(file, "rw");
-            if (append) {
-                rw.seek(rw.length());
-            }
-            if (before) {
-                rw.write(lineSeparator.getBytes());
-            }
-            if (charset == null) {
-                for (String str : list) {
-                    str += lineSeparator;
-                    rw.write(str.getBytes());
-                }
-            } else {
-                for (String str : list) {
-                    str += lineSeparator;
-                    rw.write(str.getBytes(charset));
-                }
-            }
-        } catch (IOException e) {
-            throw Exceptions.ioRuntime(e);
-        } finally {
-            close(rw);
-        }
-    }
-
-    /**
-     * 写入到文件
-     *
-     * @param file      文件
-     * @param skipBytes 跳过前几位
-     * @param bs        写入数组
-     */
-    public static void write(String file, int skipBytes, byte[] bs) {
-        write(new File(file), skipBytes, bs, 0, bs.length);
-    }
-
-    /**
-     * 写入到文件
-     *
-     * @param file      文件
-     * @param skipBytes 跳过前几位
-     * @param bs        写入数组
-     */
-    public static void write(File file, int skipBytes, byte[] bs) {
-        write(file, skipBytes, bs, 0, bs.length);
-    }
-
-    /**
-     * 写入到文件
-     *
-     * @param file      文件
-     * @param skipBytes 跳过前几位
-     * @param bs        写入数组
-     * @param off       偏移量
-     * @param len       写入长度
-     */
-    public static void write(String file, int skipBytes, byte[] bs, int off, int len) {
-        write(new File(file), skipBytes, bs, off, len);
-    }
-
-    /**
-     * 写入到文件
-     *
-     * @param file      文件
-     * @param skipBytes 跳过前几位
-     * @param bs        写入数组
-     * @param off       偏移量
-     * @param len       写入长度
-     */
-    public static void write(File file, int skipBytes, byte[] bs, int off, int len) {
-        if (skipBytes > 0) {
-            FileInputStream in = null;
-            try {
-                in = openInputStream(file);
-                byte[] skips = new byte[skipBytes];
-                int read = in.read(skips);
-                skips = Arrays1.arraycopy(bs, off, skips, read, len);
-                write(file, skips, 0, len + read);
-            } catch (Exception e) {
-                throw Exceptions.ioRuntime(e);
-            } finally {
-                Streams.close(in);
-            }
-        } else {
-            write(file, bs, off, len);
-        }
-    }
-
-    /**
-     * 写入到文件
-     *
-     * @param file       文件
-     * @param rangeStart 写入指定区域开始
-     * @param rangeEnd   写入指定区域结束
-     * @param bytes      数据
-     */
-    public static void write(String file, int rangeStart, int rangeEnd, byte[] bytes) {
-        write(new File(file), rangeStart, rangeEnd, bytes, 0, bytes.length);
-    }
-
-    /**
-     * 写入到文件
-     *
-     * @param file       文件
-     * @param rangeStart 写入指定区域开始
-     * @param rangeEnd   写入指定区域结束
-     * @param bytes      数据
-     */
-    public static void write(File file, int rangeStart, int rangeEnd, byte[] bytes) {
-        write(file, rangeStart, rangeEnd, bytes, 0, bytes.length);
-    }
-
-    /**
-     * 写入到文件
-     *
-     * @param file       文件
-     * @param rangeStart 写入指定区域开始
-     * @param rangeEnd   写入指定区域结束
-     * @param bytes      数据
-     * @param off        偏移量
-     * @param len        长度
-     */
-    public static void write(String file, int rangeStart, int rangeEnd, byte[] bytes, int off, int len) {
-        write(new File(file), rangeStart, rangeEnd, bytes, off, len);
-    }
-
-    /**
-     * 写入到文件
-     *
-     * @param file       文件
-     * @param rangeStart 写入指定区域开始
-     * @param rangeEnd   写入指定区域结束
-     * @param bytes      数据
-     * @param off        偏移量
-     * @param len        长度
-     */
-    public static void write(File file, int rangeStart, int rangeEnd, byte[] bytes, int off, int len) {
-        long fileLen = file.length();
-        boolean append = false;
-        if (rangeStart < 0 || rangeEnd < 0) {
-            throw Exceptions.argument("rangeStart and rangeEnd Not less than 0");
-        }
-        if (rangeStart > rangeEnd) {
-            int tmpStart = rangeStart;
-            rangeStart = rangeEnd;
-            rangeEnd = tmpStart;
-        }
-        if (rangeStart >= fileLen) {
-            append = true;
-        } else if (rangeEnd > fileLen) {
-            rangeEnd = (int) fileLen;
-        }
-        if (append) {
-            append(file, bytes, off, len);
-            return;
-        }
-        boolean startBuffer = false;
-        boolean endBuffer = false;
-        if (rangeStart <= BUFFER_SIZE) {
-            startBuffer = true;
-        }
-        if (fileLen - rangeEnd <= BUFFER_SIZE) {
-            endBuffer = true;
-        }
-        List<Closeable> close = new ArrayList<>();
-        try {
-            if (startBuffer && endBuffer) {
-                RandomAccessFile r = new RandomAccessFile(file, "r");
-                close.add(r);
-                byte[] s = Streams.read(r, 0, rangeStart);
-                byte[] e = Streams.read(r, rangeEnd, fileLen);
-                byte[] re = Arrays1.newBytes(s.length + e.length + len);
-                int i = 0;
-                System.arraycopy(s, 0, re, 0, s.length);
-                i += s.length;
-                System.arraycopy(bytes, off, re, i, len);
-                i += len;
-                System.arraycopy(e, 0, re, i, e.length);
-                write(file, re);
-            } else {
-                if (startBuffer) {
-                    RandomAccessFile r = new RandomAccessFile(file, "r");
-                    close.add(r);
-                    byte[] s = Streams.read(r, 0, rangeStart);
-                    byte[] n = new byte[s.length + len];
-                    int i = 0;
-                    File endFile = touchIOTempFile(true);
-                    writeToFile(file, Long.valueOf(rangeEnd), endFile);
-                    System.arraycopy(s, 0, n, 0, i += s.length);
-                    System.arraycopy(bytes, off, n, i, len);
-                    write(file, n);
-                    mergeFile(endFile, file);
-                } else if (endBuffer) {
-                    RandomAccessFile r = new RandomAccessFile(file, "r");
-                    close.add(r);
-                    byte[] e = Streams.read(r, rangeEnd, fileLen);
-                    byte[] n = new byte[e.length + len];
-                    System.arraycopy(bytes, off, n, 0, len);
-                    System.arraycopy(e, 0, n, len, e.length);
-                    RandomAccessFile rw = new RandomAccessFile(file, "rw");
-                    close.add(rw);
-                    rw.seek(rangeStart);
-                    rw.write(n);
-                } else {
-                    File endFile = touchIOTempFile(true);
-                    writeToFile(file, Long.valueOf(rangeEnd), endFile);
-                    RandomAccessFile rw = new RandomAccessFile(file, "rw");
-                    close.add(rw);
-                    rw.seek(rangeStart);
-                    rw.write(bytes, off, len);
-                    int read;
-                    byte[] bs = new byte[BUFFER_SIZE];
-                    FileInputStream in = openInputStream(endFile);
-                    close.add(in);
-                    while (-1 != (read = in.read(bs))) {
-                        rw.write(bs, 0, read);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
-        } finally {
-            close.forEach(Streams::close);
-        }
-    }
-
-    /**
-     * 写入文件到临时文件
-     *
-     * @param file 文件
-     * @param off  文件偏移量
-     * @param temp 临时文件
-     */
-    public static void writeToFile(File file, long off, File temp) {
-        writeToFile(file, off, ((int) (file.length() - off)), temp);
-    }
-
-    /**
-     * 写入文件到临时文件
-     *
-     * @param file 文件
-     * @param len  写入长度
-     * @param temp 临时文件
-     */
-    public static void writeToFile(File file, int len, File temp) {
-        writeToFile(file, 0, len, temp);
-    }
-
-    /**
-     * 写入文件到临时文件
-     *
-     * @param file 文件
-     * @param off  文件偏移量
-     * @param len  写入长度
-     * @param temp 临时文件
-     */
-    public static void writeToFile(File file, long off, int len, File temp) {
-        FileInputStream in = null;
-        FileOutputStream out = null;
-        try {
-            if (off <= 0 && len >= file.length()) {
-                copy(file, temp);
-                return;
-            }
-            in = openInputStream(file);
-            if (in.skip(off) < off) {
-                // all skip
-                return;
-            }
-            out = openOutputStream(temp);
-            int read;
-            byte[] buf = new byte[BUFFER_SIZE];
-            while (-1 != (read = in.read(buf))) {
-                out.write(buf, 0, read);
-            }
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
-        } finally {
-            Streams.close(in);
-            Streams.close(out);
-        }
-    }
-
-    // -------------------- read --------------------
-
-    /**
-     * 读取文件
-     *
-     * @param file  文件
-     * @param bytes 读取的数组
-     * @return 读取的长度
-     */
-    public static int read(String file, byte[] bytes) {
-        return read(new File(file), bytes);
-    }
-
-    /**
-     * 读取文件
-     *
-     * @param file  文件
-     * @param bytes 读取的数组
-     * @return 读取的长度
-     */
-    public static int read(File file, byte[] bytes) {
-        try {
-            return openInputStream(file).read(bytes);
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
-        }
-    }
-
-    /**
-     * 读取文件
-     *
-     * @param file     文件
-     * @param bytes    读取的数组
-     * @param skipByte 文件起始偏移量
-     * @return 读取的长度
-     */
-    public static int read(String file, byte[] bytes, long skipByte) {
-        return read(new File(file), bytes, skipByte);
-    }
-
-    /**
-     * 读取文件
-     *
-     * @param file     文件
-     * @param bytes    读取的数组
-     * @param skipByte 文件起始偏移量
-     * @return 读取的长度
-     */
-    public static int read(File file, byte[] bytes, long skipByte) {
-        FileInputStream in = null;
-        try {
-            in = openInputStream(file);
-            if (skipByte > 0) {
-                in.skip(skipByte);
-            }
-            return in.read(bytes);
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
-        } finally {
-            close(in);
-        }
-    }
-
-    /**
-     * 读取一行
-     *
-     * @param file     文件
-     * @param skipByte 偏移量
-     * @return 行
-     */
-    public static String readLine(String file, long skipByte) {
-        return readLine(new File(file), skipByte, null);
-    }
-
-    /**
-     * 读取一行
-     *
-     * @param file     文件
-     * @param skipByte 偏移量
-     * @return 行
-     */
-    public static String readLine(File file, long skipByte) {
-        return readLine(file, skipByte, null);
-    }
-
-    /**
-     * 读取一行
-     *
-     * @param file     文件
-     * @param skipByte 偏移量
-     * @param charset  编码格式
-     * @return 行
-     */
-    public static String readLine(String file, long skipByte, String charset) {
-        return readLine(new File(file), skipByte, charset);
-    }
-
-    /**
-     * 读取一行
-     *
-     * @param file     文件
-     * @param skipByte 偏移量
-     * @param charset  编码格式
-     * @return 行
-     */
-    public static String readLine(File file, long skipByte, String charset) {
-        BufferedReader reader = null;
-        try {
-            if (charset == null) {
-                reader = new BufferedReader(new InputStreamReader(openInputStream(file)));
-            } else {
-                reader = new BufferedReader(new InputStreamReader(openInputStream(file), charset));
-            }
-            if (skipByte > 0) {
-                reader.skip(skipByte);
-            }
-            return reader.readLine();
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
-        } finally {
-            close(reader);
-        }
-    }
-
-    /**
-     * 读取文件
-     *
-     * @param file     文件
-     * @param skipByte 文件偏移量
-     * @return 行
-     */
-    public static List<String> readLines(File file, long skipByte) {
-        return readLines(file, skipByte, -1, null);
-    }
-
-    /**
-     * 读取文件
-     *
-     * @param file     文件
-     * @param skipByte 文件偏移量
-     * @return 行
-     */
-    public static List<String> readLines(String file, long skipByte) {
-        return readLines(new File(file), skipByte, -1, null);
-    }
-
-    /**
-     * 读取文件
-     *
-     * @param file      文件
-     * @param skipByte  文件偏移量
-     * @param readLines 读取多少行 <= 0 所有行
-     * @return 行
-     */
-    public static List<String> readLines(File file, long skipByte, int readLines) {
-        return readLines(file, skipByte, readLines, null);
-    }
-
-    /**
-     * 读取文件
-     *
-     * @param file      文件
-     * @param skipByte  文件偏移量
-     * @param readLines 读取多少行 <= 0 所有行
-     * @return 行
-     */
-    public static List<String> readLines(String file, long skipByte, int readLines) {
-        return readLines(new File(file), skipByte, readLines, null);
-    }
-
-    /**
-     * 读取文件
-     *
-     * @param file      文件
-     * @param skipByte  文件偏移量
-     * @param readLines 读取多少行  <= 0 所有行
-     * @param charset   编码格式
-     * @return 行
-     */
-    public static List<String> readLines(String file, long skipByte, int readLines, String charset) {
-        return readLines(new File(file), skipByte, readLines, charset);
-    }
-
-    /**
-     * 读取文件
-     *
-     * @param file      文件
-     * @param skipByte  文件偏移量
-     * @param readLines 读取多少行  <= 0 所有行
-     * @param charset   编码格式
-     * @return 行
-     */
-    public static List<String> readLines(File file, long skipByte, int readLines, String charset) {
-        BufferedReader reader = null;
-        try {
-            if (charset == null) {
-                reader = new BufferedReader(new InputStreamReader(openInputStream(file)));
-            } else {
-                reader = new BufferedReader(new InputStreamReader(openInputStream(file), charset));
-            }
-            if (skipByte > 0) {
-                reader.skip(skipByte);
-            }
-            List<String> list = new ArrayList<>();
-            if (readLines <= 0) {
-                String line;
-                while (null != (line = reader.readLine())) {
-                    list.add(line);
-                }
-            } else {
-                String line;
-                int i = 0;
-                while (null != (line = reader.readLine()) && ++i <= readLines) {
-                    list.add(line);
-                }
-            }
-            return list;
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
-        } finally {
-            close(reader);
-        }
-    }
-
-    /**
-     * 读取文件
-     *
-     * @param file      文件
-     * @param skipLine  文件偏移行
-     * @param readLines 读取多少行  <=0 所有行
-     * @return 行
-     */
-    public static List<String> readLines(File file, int skipLine, int readLines) {
-        return readLines(file, skipLine, readLines, null);
-    }
-
-    /**
-     * 读取文件
-     *
-     * @param file      文件
-     * @param skipLine  文件偏移行
-     * @param readLines 读取多少行  <=0 所有行
-     * @return 行
-     */
-    public static List<String> readLines(String file, int skipLine, int readLines) {
-        return readLines(new File(file), skipLine, readLines, null);
-    }
-
-    /**
-     * 读取文件
-     *
-     * @param file      文件
-     * @param skipLine  文件偏移行
-     * @param readLines 读取多少行  <=0 所有行
-     * @param charset   编码格式
-     * @return 行
-     */
-    public static List<String> readLines(String file, int skipLine, int readLines, String charset) {
-        return readLines(new File(file), skipLine, readLines, charset);
-    }
-
-    /**
-     * 读取文件
-     *
-     * @param file      文件
-     * @param skipLine  文件偏移行
-     * @param readLines 读取多少行  <=0 所有行
-     * @param charset   编码格式
-     * @return 行
-     */
-    public static List<String> readLines(File file, int skipLine, int readLines, String charset) {
-        BufferedReader reader = null;
-        try {
-            if (charset == null) {
-                reader = new BufferedReader(new InputStreamReader(openInputStream(file)));
-            } else {
-                reader = new BufferedReader(new InputStreamReader(openInputStream(file), charset));
-            }
-            List<String> list = new ArrayList<>();
-            if (skipLine > 0) {
-                for (int i = 0; i < skipLine; i++) {
-                    if (reader.readLine() == null) {
-                        return list;
-                    }
-                }
-            }
-            if (readLines <= 0) {
-                String line;
-                while (null != (line = reader.readLine())) {
-                    list.add(line);
-                }
-            } else {
-                String line;
-                int i = 0;
-                while (null != (line = reader.readLine()) && ++i <= readLines) {
-                    list.add(line);
-                }
-            }
-            return list;
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
-        } finally {
-            close(reader);
-        }
-    }
-
-    /**
-     * 读取文件的所有行
-     *
-     * @param file 文件
-     * @return 行
-     */
-    public static List<String> readLines(String file) {
-        return readLines(new File(file), 0, null);
-    }
-
-    /**
-     * 读取文件的所有行
-     *
-     * @param file 文件
-     * @return 行
-     */
-    public static List<String> readLines(File file) {
-        return readLines(file, 0, null);
-    }
-
-    /**
-     * 读取文件的所有行
-     *
-     * @param file    文件
-     * @param charset 编码格式
-     * @return 行
-     */
-    public static List<String> readLines(String file, String charset) {
-        return readLines(new File(file), 0, charset);
-    }
-
-    /**
-     * 读取文件的所有行
-     *
-     * @param file    文件
-     * @param charset 编码格式
-     * @return 行
-     */
-    public static List<String> readLines(File file, String charset) {
-        return readLines(file, 0, charset);
-    }
-
-    /**
-     * 读取文件到指定行
-     *
-     * @param file    文件
-     * @param endLine 行
-     * @return 行
-     */
-    public static List<String> readLines(String file, int endLine) {
-        return readLines(new File(file), endLine, null);
-    }
-
-    /**
-     * 读取文件到指定行
-     *
-     * @param file    文件
-     * @param endLine 行
-     * @return 行
-     */
-    public static List<String> readLines(File file, int endLine) {
-        return readLines(file, endLine, null);
-    }
-
-    /**
-     * 读取文件到指定行
-     *
-     * @param file    文件
-     * @param endLine 行
-     * @param charset 编码格式
-     * @return 行
-     */
-    public static List<String> readLines(String file, int endLine, String charset) {
-        return readLines(new File(file), endLine, charset);
-    }
-
-    /**
-     * 读取文件到指定行
-     *
-     * @param file    文件
-     * @param endLine 行
-     * @param charset 编码格式
-     * @return 行
-     */
-    public static List<String> readLines(File file, int endLine, String charset) {
-        BufferedReader reader = null;
-        try {
-            if (charset == null) {
-                reader = new BufferedReader(new InputStreamReader(openInputStream(file)));
-            } else {
-                reader = new BufferedReader(new InputStreamReader(openInputStream(file), charset));
-            }
-            List<String> list = new ArrayList<>();
-            String line;
-            if (endLine <= 0) {
-                while ((line = reader.readLine()) != null) {
-                    list.add(line);
-                }
-            } else {
-                int i = 0;
-                while ((line = reader.readLine()) != null && ++i <= endLine) {
-                    list.add(line);
-                }
-            }
-            return list;
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
-        } finally {
-            close(reader);
         }
     }
 
@@ -3597,15 +1559,8 @@ public class Files1 {
      * @param type 加密类型 MD5 SHA-1 SHA-224 SHA-256 SHA-384 SHA-512
      * @return 签名
      */
-    public static String sign(File file, HashMessageDigest type) {
-        if (file == null || !file.exists() || !file.isFile()) {
-            return null;
-        }
-        try {
-            return Streams.sign(openInputStream(file), type);
-        } catch (Exception e) {
-            return null;
-        }
+    public static String sign(String file, HashMessageDigest type) {
+        return sign(new File(file), type);
     }
 
     /**
@@ -3615,78 +1570,479 @@ public class Files1 {
      * @param type 加密类型 MD5 SHA-1 SHA-224 SHA-256 SHA-384 SHA-512
      * @return 签名
      */
-    public static String sign(String file, HashMessageDigest type) {
-        return sign(new File(file), type);
-    }
-
-    // -------------------------------- 文件流类型 --------------------------------
-
-    /**
-     * 通过文件头推算文件类型 不准确
-     *
-     * @param file 文件
-     * @return 类型
-     */
-    public static String getFileType(String file) {
-        return getFileType(new File(file));
-    }
-
-    /**
-     * 通过文件头推算文件类型 不准确
-     *
-     * @param file 文件
-     * @return 类型
-     */
-    public static String getFileType(File file) {
-        String type = null;
-        byte[] b = new byte[20];
-        FileInputStream in = null;
-        try {
-            in = openInputStream(file);
-            if (in.read(b) != -1) {
-                type = getFileType(b);
-            }
-        } catch (IOException e) {
-            // ignore
-        } finally {
-            close(in);
+    public static String sign(File file, HashMessageDigest type) {
+        if (file == null || !file.exists() || !file.isFile()) {
+            return null;
         }
-        return type;
-    }
-
-    /**
-     * 通过文件头推算文件类型 不准确
-     *
-     * @param in 文件
-     * @return 类型
-     */
-    public static String getFileType(InputStream in) {
-        String type = null;
-        byte[] b = new byte[20];
-        try {
-            if (in.read(b) != -1) {
-                type = getFileType(b);
-            }
-        } catch (IOException e) {
-            // ignore
+        try (FileInputStream in = openInputStream(file)) {
+            return Streams.sign(in, type);
+        } catch (Exception e) {
+            return null;
         }
-        return type;
+    }
+
+    // -------------------- list --------------------
+
+    /**
+     * 获取路径下的全部文件夹 递归
+     *
+     * @param path 需要处理的文件夹
+     * @return 文件夹
+     */
+    public static List<File> listDirs(File path) {
+        return listDirs(path, false);
     }
 
     /**
-     * 通过文件头推算文件类型 不准确
+     * 获取路径下的全部文件夹 递归
      *
-     * @param b 文件头
-     * @return 类型
+     * @param path 需要处理的文件夹
+     * @return 文件夹
      */
-    public static String getFileType(byte[] b) {
-        for (Map.Entry<String, String> entry : FILE_HEAD_MAP.entrySet()) {
-            String hexValue = entry.getValue();
-            if (String.valueOf(Hex.bytesToHex(b)).toUpperCase().startsWith(hexValue)) {
-                return entry.getKey();
+    public static List<File> listDirs(String path) {
+        return listDirs(new File(path), false);
+    }
+
+    /**
+     * 获取路径下的全部文件夹
+     *
+     * @param path  文件夹
+     * @param child 是否递归子文件夹
+     * @return 文件夹
+     */
+    public static List<File> listDirs(String path, boolean child) {
+        return listDirs(new File(path), child);
+    }
+
+    /**
+     * 获取路径下的全部文件夹
+     *
+     * @param path  文件夹
+     * @param child 是否递归子文件夹
+     * @return 文件夹
+     */
+    public static List<File> listDirs(File path, boolean child) {
+        List<File> list = new ArrayList<>();
+        File[] files = path.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    list.add(file);
+                    if (child) {
+                        list.addAll(listDirs(file, true));
+                    }
+                }
             }
         }
-        return null;
+        return list;
+    }
+
+    /**
+     * 获取路径下的全部文件 递归
+     *
+     * @param path 需要处理的文件
+     * @return 文件
+     */
+    public static List<File> listFiles(File path) {
+        return listFiles(path, false, false);
+    }
+
+    /**
+     * 获取路径下的全部文件 递归
+     *
+     * @param path 需要处理的文件
+     * @return 文件
+     */
+    public static List<File> listFiles(String path) {
+        return listFiles(new File(path), false, false);
+    }
+
+    /**
+     * 获取路径下的全部文件
+     *
+     * @param path  文件夹
+     * @param child 是否递归子文件夹
+     * @return 文件
+     */
+    public static List<File> listFiles(String path, boolean child) {
+        return listFiles(new File(path), child, false);
+    }
+
+    /**
+     * 获取路径下的全部文件
+     *
+     * @param path  文件夹
+     * @param child 是否递归子文件夹
+     * @return 文件
+     */
+    public static List<File> listFiles(File path, boolean child) {
+        return listFiles(path, child, false);
+    }
+
+    /**
+     * 获取路径下的全部文件包括文件夹
+     *
+     * @param path  文件夹
+     * @param child 是否递归子文件夹
+     * @param dir   是否添加文件夹
+     * @return 文件
+     */
+    public static List<File> listFiles(String path, boolean child, boolean dir) {
+        return listFiles(new File(path), child, dir);
+    }
+
+    /**
+     * 获取路径下的全部文件包括文件夹
+     *
+     * @param path  文件夹
+     * @param child 是否递归子文件夹
+     * @param dir   是否添加文件夹
+     * @return 文件
+     */
+    public static List<File> listFiles(File path, boolean child, boolean dir) {
+        List<File> list = new ArrayList<>();
+        File[] files = path.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    list.add(file);
+                } else if (file.isDirectory()) {
+                    if (dir) {
+                        list.add(file);
+                    }
+                    if (child) {
+                        list.addAll(listFiles(file, true, dir));
+                    }
+                }
+            }
+        }
+        return list;
+    }
+
+    /**
+     * 搜索文件
+     *
+     * @param dirPath 文件夹
+     * @param suffix  后缀
+     * @return 文件
+     */
+    public static List<File> listFilesSuffix(File dirPath, String suffix) {
+        return listFilesSearch(dirPath, suffix, null, null, 1, false, false);
+    }
+
+    /**
+     * 搜索文件
+     *
+     * @param dirPath 文件夹
+     * @param suffix  后缀
+     * @param child   是否递归子文件夹
+     * @return 文件
+     */
+    public static List<File> listFilesSuffix(File dirPath, String suffix, boolean child) {
+        return listFilesSearch(dirPath, suffix, null, null, 1, child, false);
+    }
+
+    /**
+     * 搜索文件
+     *
+     * @param dirPath 文件夹
+     * @param suffix  后缀
+     * @param child   是否递归子文件夹
+     * @param dir     是否包含文件夹
+     * @return 文件
+     */
+    public static List<File> listFilesSuffix(File dirPath, String suffix, boolean child, boolean dir) {
+        return listFilesSearch(dirPath, suffix, null, null, 1, child, dir);
+    }
+
+    /**
+     * 搜索文件
+     *
+     * @param dirPath 文件夹
+     * @param suffix  后缀
+     * @return 文件
+     */
+    public static List<File> listFilesSuffix(String dirPath, String suffix) {
+        return listFilesSearch(new File(dirPath), suffix, null, null, 1, false, false);
+    }
+
+    /**
+     * 搜索文件
+     *
+     * @param dirPath 文件夹
+     * @param suffix  后缀
+     * @param child   是否递归子文件夹
+     * @return 文件
+     */
+    public static List<File> listFilesSuffix(String dirPath, String suffix, boolean child) {
+        return listFilesSearch(new File(dirPath), suffix, null, null, 1, child, false);
+    }
+
+    /**
+     * 搜索文件
+     *
+     * @param dirPath 文件夹
+     * @param suffix  后缀
+     * @param child   是否递归子文件夹
+     * @param dir     是否包含文件夹
+     * @return 文件
+     */
+    public static List<File> listFilesSuffix(String dirPath, String suffix, boolean child, boolean dir) {
+        return listFilesSearch(new File(dirPath), suffix, null, null, 1, child, dir);
+    }
+
+    /**
+     * 搜索文件
+     *
+     * @param dirPath 文件夹
+     * @param name    搜索
+     * @return 文件
+     */
+    public static List<File> listFilesMatch(File dirPath, String name) {
+        return listFilesSearch(dirPath, name, null, null, 2, false, false);
+    }
+
+    /**
+     * 搜索文件
+     *
+     * @param dirPath 文件夹
+     * @param name    搜索
+     * @param child   是否递归子文件夹
+     * @return 文件
+     */
+    public static List<File> listFilesMatch(File dirPath, String name, boolean child) {
+        return listFilesSearch(dirPath, name, null, null, 2, child, false);
+    }
+
+    /**
+     * 搜索文件
+     *
+     * @param dirPath 文件夹
+     * @param name    搜索
+     * @param child   是否递归子文件夹
+     * @param dir     是否包含文件夹
+     * @return 文件
+     */
+    public static List<File> listFilesMatch(File dirPath, String name, boolean child, boolean dir) {
+        return listFilesSearch(dirPath, name, null, null, 2, child, dir);
+    }
+
+    /**
+     * 搜索文件
+     *
+     * @param dirPath 文件夹
+     * @param name    搜索
+     * @return 文件
+     */
+    public static List<File> listFilesMatch(String dirPath, String name) {
+        return listFilesSearch(new File(dirPath), name, null, null, 2, false, false);
+    }
+
+    /**
+     * 搜索文件
+     *
+     * @param dirPath 文件夹
+     * @param name    搜索
+     * @param child   是否递归子文件夹
+     * @return 文件
+     */
+    public static List<File> listFilesMatch(String dirPath, String name, boolean child) {
+        return listFilesSearch(new File(dirPath), name, null, null, 2, child, false);
+    }
+
+    /**
+     * 搜索文件
+     *
+     * @param dirPath 文件夹
+     * @param name    搜索
+     * @param child   是否递归子文件夹
+     * @param dir     是否包含文件夹
+     * @return 文件
+     */
+    public static List<File> listFilesMatch(String dirPath, String name, boolean child, boolean dir) {
+        return listFilesSearch(new File(dirPath), name, null, null, 2, child, dir);
+    }
+
+    /**
+     * 搜索文件
+     *
+     * @param dirPath 文件夹
+     * @param pattern 正则
+     * @return 文件
+     */
+    public static List<File> listFilesPattern(File dirPath, Pattern pattern) {
+        return listFilesSearch(dirPath, null, pattern, null, 3, false, false);
+    }
+
+    /**
+     * 搜索文件
+     *
+     * @param dirPath 文件夹
+     * @param pattern 正则
+     * @param child   是否递归子文件夹
+     * @return 文件
+     */
+    public static List<File> listFilesPattern(File dirPath, Pattern pattern, boolean child) {
+        return listFilesSearch(dirPath, null, pattern, null, 3, child, false);
+    }
+
+    /**
+     * 搜索文件
+     *
+     * @param dirPath 文件夹
+     * @param pattern 正则
+     * @param child   是否递归子文件夹
+     * @param dir     是否包含文件夹
+     * @return 文件
+     */
+    public static List<File> listFilesPattern(File dirPath, Pattern pattern, boolean child, boolean dir) {
+        return listFilesSearch(dirPath, null, pattern, null, 3, child, dir);
+    }
+
+    /**
+     * 搜索文件
+     *
+     * @param dirPath 文件夹
+     * @param pattern 正则
+     * @return 文件
+     */
+    public static List<File> listFilesPattern(String dirPath, Pattern pattern) {
+        return listFilesSearch(new File(dirPath), null, pattern, null, 3, false, false);
+    }
+
+    /**
+     * 搜索文件
+     *
+     * @param dirPath 文件夹
+     * @param pattern 正则
+     * @param child   是否递归子文件夹
+     * @return 文件
+     */
+    public static List<File> listFilesPattern(String dirPath, Pattern pattern, boolean child) {
+        return listFilesSearch(new File(dirPath), null, pattern, null, 3, child, false);
+    }
+
+    /**
+     * 搜索文件
+     *
+     * @param dirPath 文件夹
+     * @param pattern 正则
+     * @param child   是否递归子文件夹
+     * @param dir     是否包含文件夹
+     * @return 文件
+     */
+    public static List<File> listFilesPattern(String dirPath, Pattern pattern, boolean child, boolean dir) {
+        return listFilesSearch(new File(dirPath), null, pattern, null, 3, child, dir);
+    }
+
+    /**
+     * 搜索文件
+     *
+     * @param dirPath 文件夹
+     * @param filter  过滤器
+     * @return 文件
+     */
+    public static List<File> listFilesFilter(File dirPath, FilenameFilter filter) {
+        return listFilesSearch(dirPath, null, null, filter, 4, false, false);
+    }
+
+    /**
+     * 搜索文件
+     *
+     * @param dirPath 文件夹
+     * @param filter  过滤器
+     * @param child   是否递归子文件夹
+     * @return 文件
+     */
+    public static List<File> listFilesFilter(File dirPath, FilenameFilter filter, boolean child) {
+        return listFilesSearch(dirPath, null, null, filter, 4, child, false);
+    }
+
+    /**
+     * 搜索文件
+     *
+     * @param dirPath 文件夹
+     * @param filter  过滤器
+     * @param child   是否递归子文件夹
+     * @param dir     是否包含文件夹
+     * @return 文件
+     */
+    public static List<File> listFilesFilter(File dirPath, FilenameFilter filter, boolean child, boolean dir) {
+        return listFilesSearch(dirPath, null, null, filter, 4, child, dir);
+    }
+
+    /**
+     * 搜索文件
+     *
+     * @param dirPath 文件夹
+     * @param filter  过滤器
+     * @return 文件
+     */
+    public static List<File> listFilesFilter(String dirPath, FilenameFilter filter) {
+        return listFilesSearch(new File(dirPath), null, null, filter, 4, false, false);
+    }
+
+    /**
+     * 搜索文件
+     *
+     * @param dirPath 文件夹
+     * @param filter  过滤器
+     * @param child   是否递归子文件夹
+     * @return 文件
+     */
+    public static List<File> listFilesFilter(String dirPath, FilenameFilter filter, boolean child) {
+        return listFilesSearch(new File(dirPath), null, null, filter, 4, child, false);
+    }
+
+    /**
+     * 搜索文件
+     *
+     * @param dirPath 文件夹
+     * @param filter  过滤器
+     * @param child   是否递归子文件夹
+     * @param dir     是否包含文件夹
+     * @return 文件
+     */
+    public static List<File> listFilesFilter(String dirPath, FilenameFilter filter, boolean child, boolean dir) {
+        return listFilesSearch(new File(dirPath), null, null, filter, 4, child, dir);
+    }
+
+    /**
+     * 搜索文件
+     *
+     * @param dirPath 文件夹
+     * @param search  搜索
+     * @param pattern 正则
+     * @param filter  过滤器
+     * @param type    类型 1后缀 2匹配 3正则 4过滤器
+     * @param child   是否递归子文件夹
+     * @param dir     是否包含文件夹
+     * @return 文件
+     */
+    private static List<File> listFilesSearch(File dirPath, String search, Pattern pattern, FilenameFilter filter, int type, boolean child, boolean dir) {
+        List<File> list = new ArrayList<>();
+        File[] files = dirPath.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                boolean isDir = file.isDirectory();
+                if (!isDir || dir) {
+                    String fn = file.getName();
+                    if (type == 1 && fn.toLowerCase().endsWith(search.toLowerCase())) {
+                        list.add(file);
+                    } else if (type == 2 && fn.toLowerCase().contains(search.toLowerCase())) {
+                        list.add(file);
+                    } else if (type == 3 && Matches.test(fn, pattern)) {
+                        list.add(file);
+                    } else if (type == 4 && filter.accept(file, fn)) {
+                        list.add(file);
+                    }
+                }
+                if (isDir && child) {
+                    list.addAll(listFilesSearch(file, search, pattern, filter, type, true, dir));
+                }
+            }
+        }
+        return list;
     }
 
 }

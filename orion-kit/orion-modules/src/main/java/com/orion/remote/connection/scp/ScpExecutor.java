@@ -90,9 +90,9 @@ public class ScpExecutor {
         InputStream in = this.getFileInputStream(remoteFile);
         try {
             if (out != null) {
-                Streams.copy(in, out);
+                Streams.transfer(in, out);
             } else {
-                Streams.copy(in, writer);
+                Streams.transfer(in, writer);
             }
         } finally {
             Streams.close(in);
@@ -236,7 +236,7 @@ public class ScpExecutor {
         OutputStream out = null;
         try {
             out = this.client.put(remoteFileName, len, remoteDir, "0600");
-            Streams.copy(in, out);
+            Streams.transfer(in, out);
             out.flush();
         } finally {
             Streams.close(out);

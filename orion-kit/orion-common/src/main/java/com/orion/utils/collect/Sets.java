@@ -131,6 +131,14 @@ public class Sets extends Collections {
 
     // --------------- function ---------------
 
+    public static <E> Set<E> def(Set<E> set) {
+        return isEmpty(set) ? new HashSet<>() : set;
+    }
+
+    public static <E> Set<E> def(Set<E> set, Set<E> def) {
+        return isEmpty(set) ? def : set;
+    }
+
     public static <E> Set<E> of(E... e) {
         Set<E> set = new HashSet<>();
         int length = Arrays1.length(e);

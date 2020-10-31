@@ -80,6 +80,10 @@ public class FtpUpload implements Runnable {
      */
     private volatile boolean done;
 
+    public FtpUpload(FtpInstance instance, String remote, String local) {
+        this(instance, remote, new File(local));
+    }
+
     public FtpUpload(FtpInstance instance, String remote, File local) {
         this.instance = instance;
         this.remote = remote;

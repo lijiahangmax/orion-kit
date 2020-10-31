@@ -1,6 +1,6 @@
 package com.orion.utils.image;
 
-import com.orion.utils.crypto.Base64s;
+import com.orion.utils.codec.Base64s;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
 
@@ -186,7 +186,7 @@ public class Images {
      */
     public static BufferedImage getImageBase64(byte[] bs) {
         try {
-            return ImageIO.read(Streams.toInputStream(Base64s.base64Decode(bs)));
+            return ImageIO.read(Streams.toInputStream(Base64s.decode(bs)));
         } catch (IOException e) {
             return null;
         }

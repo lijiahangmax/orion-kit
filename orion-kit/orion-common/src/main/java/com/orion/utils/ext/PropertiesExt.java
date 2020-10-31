@@ -21,7 +21,6 @@ import java.util.function.BiConsumer;
  * @version 1.0.0
  * @since 2020/3/6 12:40
  */
-@SuppressWarnings("ALL")
 public class PropertiesExt {
 
     private Properties properties = new Properties();
@@ -108,8 +107,8 @@ public class PropertiesExt {
      *
      * @return values
      */
-    public MutableHashMap getValues() {
-        return new MutableHashMap(properties);
+    public MutableHashMap<Object, Object> getValues() {
+        return new MutableHashMap<>(properties);
     }
 
     /**
@@ -117,8 +116,8 @@ public class PropertiesExt {
      *
      * @return values
      */
-    public MutableHashSet getKeys() {
-        return new MutableHashSet(properties.keySet());
+    public MutableHashSet<Object> getKeys() {
+        return new MutableHashSet<>(properties.keySet());
     }
 
     /**
@@ -158,7 +157,7 @@ public class PropertiesExt {
      * @param file xml
      * @throws IOException IOException
      */
-    public void writeToXML(File file) throws IOException {
+    public void writeToXml(File file) throws IOException {
         Files1.touch(file);
         properties.storeToXML(Files1.openOutputStream(file), "#");
     }
@@ -170,7 +169,7 @@ public class PropertiesExt {
      * @param charset 编码格式
      * @throws IOException IOException
      */
-    public void writeToXML(File file, String charset) throws IOException {
+    public void writeToXml(File file, String charset) throws IOException {
         Files1.touch(file);
         properties.storeToXML(Files1.openOutputStream(file), "#", charset);
     }

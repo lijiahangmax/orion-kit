@@ -3,10 +3,8 @@ package com.orion.utils;
 import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.net.NetworkInterface;
+import java.util.*;
 
 /**
  * 系统工具类
@@ -90,6 +88,11 @@ public class Systems {
      */
     public static final String SPEC_VERSION;
 
+    /**
+     * 虚拟机处理器数量
+     */
+    public static final int VM_PROCESS_NUM;
+
     static {
         LINE_SEPARATOR = System.getProperty("line.separator", "\n");
         FILE_SEPARATOR = File.separator;
@@ -113,10 +116,86 @@ public class Systems {
             beAndroid = false;
         }
         BE_ANDROID = beAndroid;
-        RuntimeMXBean runtime = ManagementFactory.getRuntimeMXBean();
-        String processName = runtime.getName();
-        PID = Integer.parseInt(processName.substring(0, processName.indexOf('@')));
-        SPEC_VERSION = runtime.getSpecVersion();
+        RuntimeMXBean runtimeBean = ManagementFactory.getRuntimeMXBean();
+        String processName = runtimeBean.getName();
+        int si = processName.indexOf('@');
+        if (si != -1) {
+            processName = processName.substring(0, si);
+        }
+        PID = Integer.parseInt(processName);
+        SPEC_VERSION = runtimeBean.getSpecVersion();
+        Runtime runtime = Runtime.getRuntime();
+        VM_PROCESS_NUM = runtime.availableProcessors();
+    }
+
+    /**
+     * 获取机器码
+     *
+     * @param startRange 开始区间
+     * @param endRange   结束区间
+     * @return 机器码
+     */
+    public static int getMachineCode(int startRange, int endRange) {
+        return Numbers.getRangeNum(getMachineCode(), startRange, endRange);
+    }
+
+    /**
+     * 获取机器码
+     *
+     * @return 机器码
+     */
+    public static int getMachineCode() {
+        try {
+            StringBuilder sb = new StringBuilder();
+            Enumeration<NetworkInterface> e = NetworkInterface.getNetworkInterfaces();
+            while (e.hasMoreElements()) {
+                NetworkInterface ni = e.nextElement();
+                sb.append(ni.toString());
+            }
+            return sb.toString().hashCode() << 16;
+        } catch (Throwable e) {
+            return (Randoms.randomInt()) << 16;
+        }
+    }
+
+    /**
+     * 获取进程码
+     *
+     * @param startRange 开始区间
+     * @param endRange   结束区间
+     * @return 进程码
+     */
+    public static int getProcessCode(int startRange, int endRange) {
+        return Numbers.getRangeNum(getProcessCode(), startRange, endRange);
+    }
+
+    /**
+     * 获取进程码
+     *
+     * @return 进程码
+     */
+    public static int getProcessCode() {
+        int loaderId = System.identityHashCode(Systems.class.getClassLoader());
+        String processLoaderId = Integer.toHexString(PID) + Integer.toHexString(loaderId);
+        return processLoaderId.hashCode() & 0xFFFF;
+    }
+
+    /**
+     * 退出进程
+     *
+     * @param code exit code
+     */
+    public static void exit(int code) {
+        System.exit(code);
+    }
+
+    /**
+     * 强制 关闭进程
+     *
+     * @param status exit code
+     */
+    public static void halt(int status) {
+        Runtime.getRuntime().halt(status);
     }
 
     /**

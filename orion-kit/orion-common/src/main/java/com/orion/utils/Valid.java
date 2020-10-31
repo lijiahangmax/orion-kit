@@ -48,218 +48,74 @@ public abstract class Valid {
         }
     }
 
-    public static void lt(int i1, int i2) {
-        lt(i1, i2, "The validated numbers not less than");
+    public static <T extends Comparable<T>> void compareEq(T t1, T t2) {
+        compareEq(t1, t2, "The validated numbers not compare equal");
     }
 
-    public static void lt(int i1, int i2, String message, Object... values) {
-        if (i1 >= i2) {
+    public static <T extends Comparable<T>> void compareEq(T t1, T t2, String message, Object... values) {
+        notNull(t1);
+        notNull(t2);
+        if (t1.compareTo(t2) != 0) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
     }
 
-    public static void lt(long i1, long i2) {
-        lt(i1, i2, "The validated numbers not less than");
+    public static <T extends Comparable<T>> void compareNeq(T t1, T t2) {
+        compareNeq(t1, t2, "The validated numbers is compare equal");
     }
 
-    public static void lt(long i1, long i2, String message, Object... values) {
-        if (i1 >= i2) {
+    public static <T extends Comparable<T>> void compareNeq(T t1, T t2, String message, Object... values) {
+        notNull(t1);
+        notNull(t2);
+        if (t1.compareTo(t2) == 0) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
     }
 
-    public static void lt(double i1, double i2) {
-        lt(i1, i2, "The validated numbers not less than");
+    public static <T extends Comparable<T>> void lt(T t1, T t2) {
+        lt(t1, t2, "The validated numbers not less than");
     }
 
-    public static void lt(double i1, double i2, String message, Object... values) {
-        if (i1 >= i2) {
+    public static <T extends Comparable<T>> void lt(T t1, T t2, String message, Object... values) {
+        notNull(t1);
+        notNull(t2);
+        if (t1.compareTo(t2) >= 0) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
     }
 
-    public static void lt(BigDecimal i1, BigDecimal i2) {
-        lt(i1, i2, "The validated numbers not less than");
+    public static <T extends Comparable<T>> void lte(T t1, T t2) {
+        lte(t1, t2, "The validated numbers not less than or equal");
     }
 
-    public static void lt(BigDecimal i1, BigDecimal i2, String message, Object... values) {
-        notNull(i1);
-        notNull(i2);
-        if (i1.compareTo(i2) >= 0) {
+    public static <T extends Comparable<T>> void lte(T t1, T t2, String message, Object... values) {
+        notNull(t1);
+        notNull(t2);
+        if (t1.compareTo(t2) > 0) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
     }
 
-    public static void lt(BigInteger i1, BigInteger i2) {
-        lt(i1, i2, "The validated numbers not less than");
+    public static <T extends Comparable<T>> void gt(T t1, T t2) {
+        gt(t1, t2, "The validated numbers not greater than");
     }
 
-    public static void lt(BigInteger i1, BigInteger i2, String message, Object... values) {
-        notNull(i1);
-        notNull(i2);
-        if (i1.compareTo(i2) >= 0) {
+    public static <T extends Comparable<T>> void gt(T t1, T t2, String message, Object... values) {
+        notNull(t1);
+        notNull(t2);
+        if (t1.compareTo(t2) <= 0) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
     }
 
-    public static void lte(int i1, int i2) {
-        lte(i1, i2, "The validated numbers not less than or equal");
+    public static <T extends Comparable<T>> void gte(T t1, T t2) {
+        gte(t1, t2, "The validated numbers not greater than or equal");
     }
 
-    public static void lte(int i1, int i2, String message, Object... values) {
-        if (i1 > i2) {
-            throw Exceptions.invalidArgument(Strings.format(message, values));
-        }
-    }
-
-    public static void lte(long i1, long i2) {
-        lte(i1, i2, "The validated numbers not less than or equal");
-    }
-
-    public static void lte(long i1, long i2, String message, Object... values) {
-        if (i1 > i2) {
-            throw Exceptions.invalidArgument(Strings.format(message, values));
-        }
-    }
-
-    public static void lte(double i1, double i2) {
-        lte(i1, i2, "The validated numbers not less than or equal");
-    }
-
-    public static void lte(double i1, double i2, String message, Object... values) {
-        if (i1 > i2) {
-            throw Exceptions.invalidArgument(Strings.format(message, values));
-        }
-    }
-
-    public static void lte(BigDecimal i1, BigDecimal i2) {
-        lte(i1, i2, "The validated numbers not less than or equal");
-    }
-
-    public static void lte(BigDecimal i1, BigDecimal i2, String message, Object... values) {
-        notNull(i1);
-        notNull(i2);
-        if (i1.compareTo(i2) > 0) {
-            throw Exceptions.invalidArgument(Strings.format(message, values));
-        }
-    }
-
-    public static void lte(BigInteger i1, BigInteger i2) {
-        lte(i1, i2, "The validated numbers not less than or equal");
-    }
-
-    public static void lte(BigInteger i1, BigInteger i2, String message, Object... values) {
-        notNull(i1);
-        notNull(i2);
-        if (i1.compareTo(i2) > 0) {
-            throw Exceptions.invalidArgument(Strings.format(message, values));
-        }
-    }
-
-    public static void gt(int i1, int i2) {
-        gt(i1, i2, "The validated numbers not greater than");
-    }
-
-    public static void gt(int i1, int i2, String message, Object... values) {
-        if (i1 <= i2) {
-            throw Exceptions.invalidArgument(Strings.format(message, values));
-        }
-    }
-
-    public static void gt(long i1, long i2) {
-        gt(i1, i2, "The validated numbers not greater than");
-    }
-
-    public static void gt(long i1, long i2, String message, Object... values) {
-        if (i1 <= i2) {
-            throw Exceptions.invalidArgument(Strings.format(message, values));
-        }
-    }
-
-    public static void gt(double i1, double i2) {
-        gt(i1, i2, "The validated numbers not greater than");
-    }
-
-    public static void gt(double i1, double i2, String message, Object... values) {
-        if (i1 <= i2) {
-            throw Exceptions.invalidArgument(Strings.format(message, values));
-        }
-    }
-
-    public static void gt(BigDecimal i1, BigDecimal i2) {
-        gt(i1, i2, "The validated numbers not greater than");
-    }
-
-    public static void gt(BigDecimal i1, BigDecimal i2, String message, Object... values) {
-        notNull(i1);
-        notNull(i2);
-        if (i1.compareTo(i2) <= 0) {
-            throw Exceptions.invalidArgument(Strings.format(message, values));
-        }
-    }
-
-    public static void gt(BigInteger i1, BigInteger i2) {
-        gt(i1, i2, "The validated numbers not greater than");
-    }
-
-    public static void gt(BigInteger i1, BigInteger i2, String message, Object... values) {
-        notNull(i1);
-        notNull(i2);
-        if (i1.compareTo(i2) <= 0) {
-            throw Exceptions.invalidArgument(Strings.format(message, values));
-        }
-    }
-
-    public static void gte(int i1, int i2) {
-        gte(i1, i2, "The validated numbers not greater than or equal");
-    }
-
-    public static void gte(int i1, int i2, String message, Object... values) {
-        if (i1 < i2) {
-            throw Exceptions.invalidArgument(Strings.format(message, values));
-        }
-    }
-
-    public static void gte(long i1, long i2) {
-        gte(i1, i2, "The validated numbers not greater than or equal");
-    }
-
-    public static void gte(long i1, long i2, String message, Object... values) {
-        if (i1 < i2) {
-            throw Exceptions.invalidArgument(Strings.format(message, values));
-        }
-    }
-
-    public static void gte(double i1, double i2) {
-        gte(i1, i2, "The validated numbers not greater than or equal");
-    }
-
-    public static void gte(double i1, double i2, String message, Object... values) {
-        if (i1 < i2) {
-            throw Exceptions.invalidArgument(Strings.format(message, values));
-        }
-    }
-
-    public static void gte(BigDecimal i1, BigDecimal i2) {
-        gte(i1, i2, "The validated numbers not greater than or equal");
-    }
-
-    public static void gte(BigDecimal i1, BigDecimal i2, String message, Object... values) {
-        notNull(i1);
-        notNull(i2);
-        if (i1.compareTo(i2) < 0) {
-            throw Exceptions.invalidArgument(Strings.format(message, values));
-        }
-    }
-
-    public static void gte(BigInteger i1, BigInteger i2) {
-        gte(i1, i2, "The validated numbers not greater than or equal");
-    }
-
-    public static void gte(BigInteger i1, BigInteger i2, String message, Object... values) {
-        notNull(i1);
-        notNull(i2);
-        if (i1.compareTo(i2) < 0) {
+    public static <T extends Comparable<T>> void gte(T t1, T t2, String message, Object... values) {
+        notNull(t1);
+        notNull(t2);
+        if (t1.compareTo(t2) < 0) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
     }

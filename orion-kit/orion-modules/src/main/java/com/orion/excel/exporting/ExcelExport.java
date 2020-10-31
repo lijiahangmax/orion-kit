@@ -626,7 +626,7 @@ public class ExcelExport<T> {
                 headers = new String[1];
             }
             if (index > headers.length - 1) {
-                headers = Arrays1.resize(headers, index + 1);
+                headers = Arrays1.resize(headers, index + 1, String[]::new);
             }
             headers[index] = header;
         }

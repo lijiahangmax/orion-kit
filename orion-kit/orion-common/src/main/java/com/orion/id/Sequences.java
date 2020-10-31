@@ -202,8 +202,7 @@ public class Sequences {
         } catch (Exception e) {
             throw new RuntimeException("Unknown Host Exception", e);
         }
-        int i = LAST_IP % 3;
-        return i < 0 ? (byte) -i : (byte) i;
+        return (byte) Math.abs(LAST_IP % 3);
     }
 
     /**

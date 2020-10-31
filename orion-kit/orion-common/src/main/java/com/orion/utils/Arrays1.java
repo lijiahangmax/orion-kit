@@ -1032,10 +1032,6 @@ public class Arrays1 {
         return i;
     }
 
-    public static String[] of(String... i) {
-        return i;
-    }
-
     /**
      * 不可接收基本类型的数组, 可以使用包装类 否则会返回 T[][]
      *
@@ -1043,7 +1039,7 @@ public class Arrays1 {
      * @param <T> t
      * @return array
      */
-    public static <T> T[] oft(T... t) {
+    public static <T> T[] of(T... t) {
         return t;
     }
 
@@ -1083,7 +1079,7 @@ public class Arrays1 {
         return o == null || (isArray(o) && Array.getLength(o) == 0);
     }
 
-    public static boolean isEmpty(Object[] o) {
+    public static <T> boolean isEmpty(T[] o) {
         return o == null || length(o) == 0;
     }
 
@@ -1131,7 +1127,7 @@ public class Arrays1 {
         return !isEmpties(o);
     }
 
-    public static boolean isNotEmpty(Object[] o) {
+    public static <T> boolean isNotEmpty(T[] o) {
         return !isEmpty(o);
     }
 
@@ -1165,6 +1161,50 @@ public class Arrays1 {
 
     public static boolean isNotEmpty(char[] o) {
         return !isEmpty(o);
+    }
+
+    // ------------------ def ------------------
+
+    /**
+     * 如果数组为空返回默认数组
+     *
+     * @param o o
+     * @return array
+     */
+    public static <T> T[] def(T[] o, T[] def) {
+        return (o == null || length(o) == 0) ? def : o;
+    }
+
+    public static byte[] def(byte[] o, byte[] def) {
+        return (o == null || length(o) == 0) ? def : o;
+    }
+
+    public static short[] def(short[] o, short[] def) {
+        return (o == null || length(o) == 0) ? def : o;
+    }
+
+    public static int[] def(int[] o, int[] def) {
+        return (o == null || length(o) == 0) ? def : o;
+    }
+
+    public static long[] def(long[] o, long[] def) {
+        return (o == null || length(o) == 0) ? def : o;
+    }
+
+    public static float[] def(float[] o, float[] def) {
+        return (o == null || length(o) == 0) ? def : o;
+    }
+
+    public static double[] def(double[] o, double[] def) {
+        return (o == null || length(o) == 0) ? def : o;
+    }
+
+    public static boolean[] def(boolean[] o, boolean[] def) {
+        return (o == null || length(o) == 0) ? def : o;
+    }
+
+    public static char[] def(char[] o, char[] def) {
+        return (o == null || length(o) == 0) ? def : o;
     }
 
     // ------------------ length ------------------
@@ -1355,16 +1395,16 @@ public class Arrays1 {
         return arr;
     }
 
-    public static String[] resize(String[] arr, int newSize) {
+    public static Object[] resize(Object[] arr, int newSize) {
         if (newSize <= 0) {
-            return new String[0];
+            return new Object[0];
         }
         if (arr.length < newSize) {
-            String[] nbs = new String[newSize];
+            Object[] nbs = new Object[newSize];
             System.arraycopy(arr, 0, nbs, 0, arr.length);
             return nbs;
         } else if (arr.length > newSize) {
-            String[] nbs = new String[newSize];
+            Object[] nbs = new Object[newSize];
             System.arraycopy(arr, 0, nbs, 0, newSize);
             return nbs;
         }
@@ -1567,7 +1607,7 @@ public class Arrays1 {
 
     // ------------------ length ------------------
 
-    public static int length(Object[] arr) {
+    public static <T> int length(T[] arr) {
         return arr == null ? 0 : arr.length;
     }
 

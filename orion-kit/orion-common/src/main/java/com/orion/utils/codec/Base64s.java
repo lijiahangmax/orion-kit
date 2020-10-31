@@ -1,4 +1,4 @@
-package com.orion.utils.crypto;
+package com.orion.utils.codec;
 
 import java.util.Base64;
 
@@ -32,7 +32,7 @@ public class Base64s {
      * @return base64
      */
     public static String img64Encode(byte[] bs, String type) {
-        return "data:image/" + type + ";base64," + new String(base64Encode(bs));
+        return "data:image/" + type + ";base64," + new String(encode(bs));
     }
 
     /**
@@ -45,7 +45,7 @@ public class Base64s {
         // int i = s.indexOf("base64");
         // return base64Decode(s.substring(i + 7, s.length()).getBytes());
         String[] b = s.split(",");
-        return base64Decode(b[b.length - 1].getBytes());
+        return decode(b[b.length - 1].getBytes());
     }
 
     /**
@@ -54,7 +54,7 @@ public class Base64s {
      * @param s ignore
      * @return ignore
      */
-    public static String base64Encode(String s) {
+    public static String encode(String s) {
         return new String(Base64.getEncoder().encode(s.getBytes()));
     }
 
@@ -64,7 +64,7 @@ public class Base64s {
      * @param b ignore
      * @return ignore
      */
-    public static byte[] base64Encode(byte[] b) {
+    public static byte[] encode(byte[] b) {
         return Base64.getEncoder().encode(b);
     }
 
@@ -74,7 +74,7 @@ public class Base64s {
      * @param s ignore
      * @return ignore
      */
-    public static String base64Decode(String s) {
+    public static String decode(String s) {
         return new String(Base64.getDecoder().decode(s));
     }
 
@@ -84,7 +84,7 @@ public class Base64s {
      * @param b ignore
      * @return ignore
      */
-    public static byte[] base64Decode(byte[] b) {
+    public static byte[] decode(byte[] b) {
         return Base64.getDecoder().decode(b);
     }
 

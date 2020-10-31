@@ -1,7 +1,9 @@
 package com.orion.ftp.client;
 
+import org.apache.commons.net.ftp.FTPFile;
+
 import java.io.Serializable;
-import java.util.Calendar;
+import java.util.Date;
 
 /**
  * FTP文件
@@ -10,10 +12,49 @@ import java.util.Calendar;
  * @version 1.0.0
  * @since 2020/5/9 21:22
  */
-@SuppressWarnings("ALL")
 public class FtpFile implements Serializable {
 
     private static final long serialVersionUID = -8231234702679455L;
+
+    public FtpFile(String path, FTPFile ftpFile) {
+        this.ftpFile = ftpFile;
+        this.path = path;
+        this.name = ftpFile.getName();
+        this.size = ftpFile.getSize();
+        this.type = ftpFile.getType();
+        this.user = ftpFile.getUser();
+        this.group = ftpFile.getGroup();
+        this.link = ftpFile.getLink();
+        this.hardLinkCount = ftpFile.getHardLinkCount();
+        this.modifyTime = ftpFile.getTimestamp().getTime();
+        this.rawListing = ftpFile.getRawListing();
+        this.permission[0] = ftpFile.hasPermission(0, 0);
+        this.permission[1] = ftpFile.hasPermission(0, 1);
+        this.permission[2] = ftpFile.hasPermission(0, 2);
+        this.permission[3] = ftpFile.hasPermission(1, 0);
+        this.permission[4] = ftpFile.hasPermission(1, 1);
+        this.permission[5] = ftpFile.hasPermission(1, 2);
+        this.permission[6] = ftpFile.hasPermission(2, 0);
+        this.permission[7] = ftpFile.hasPermission(2, 1);
+        this.permission[8] = ftpFile.hasPermission(2, 2);
+    }
+
+    private FTPFile ftpFile;
+
+    /**
+     * 文件路径
+     */
+    private String path;
+
+    /**
+     * 文件名称
+     */
+    private String name;
+
+    /**
+     * 文件大小
+     */
+    private long size;
 
     /**
      * 文件类型
@@ -23,21 +64,6 @@ public class FtpFile implements Serializable {
      * 3: 未知类型
      */
     private int type;
-
-    /**
-     * 文件连接数
-     */
-    private int hardLinkCount;
-
-    /**
-     * 文件大小
-     */
-    private long size;
-
-    /**
-     * 文件详情
-     */
-    private String rawListing;
 
     /**
      * 文件所属用户
@@ -50,24 +76,24 @@ public class FtpFile implements Serializable {
     private String group;
 
     /**
-     * 文件名称
-     */
-    private String name;
-
-    /**
      * 连接指向的文件
      */
     private String link;
 
     /**
-     * 文件路径
+     * 文件连接数
      */
-    private String path;
+    private int hardLinkCount;
 
     /**
      * 文件最后一次更改的时间
      */
-    private Calendar date;
+    private Date modifyTime;
+
+    /**
+     * 文件详情
+     */
+    private String rawListing;
 
     /**
      * 012 user: rwx
@@ -157,12 +183,12 @@ public class FtpFile implements Serializable {
         return this;
     }
 
-    public Calendar getDate() {
-        return date;
+    public Date getModifyTime() {
+        return modifyTime;
     }
 
-    public FtpFile setDate(Calendar date) {
-        this.date = date;
+    public FtpFile setModifyTime(Date modifyTime) {
+        this.modifyTime = modifyTime;
         return this;
     }
 
@@ -173,6 +199,38 @@ public class FtpFile implements Serializable {
     public FtpFile setPermission(boolean[] permission) {
         this.permission = permission;
         return this;
+    }
+
+    public FTPFile getFtpFile() {
+        return ftpFile;
+    }
+
+    /**
+     * @return 是否为普通文件
+     */
+    public boolean isFile() {
+        return this.type == 0;
+    }
+
+    /**
+     * @return 是否为文件夹
+     */
+    public boolean isDirectory() {
+        return this.type == 1;
+    }
+
+    /**
+     * @return 是否为连接文件
+     */
+    public boolean isSymbolicLink() {
+        return this.type == 2;
+    }
+
+    /**
+     * @return 是否为未知文件
+     */
+    public boolean isUnknown() {
+        return this.type == 3;
     }
 
     @Override

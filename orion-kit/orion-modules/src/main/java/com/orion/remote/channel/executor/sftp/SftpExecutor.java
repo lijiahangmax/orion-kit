@@ -842,14 +842,14 @@ public class SftpExecutor extends BaseExecutor {
      * @return 文件列表
      */
     public List<FileAttribute> listFiles(String path) {
-        return this.listFiles(path, true, false);
+        return this.listFiles(path, false, false);
     }
 
     /**
      * 文件列表
      *
      * @param path  文件夹绝对路径
-     * @param child 是否递归
+     * @param child 是否递归子文件夹
      * @return 文件列表
      */
     public List<FileAttribute> listFiles(String path, boolean child) {
@@ -857,35 +857,14 @@ public class SftpExecutor extends BaseExecutor {
     }
 
     /**
-     * 文件和文件夹列表 递归
-     *
-     * @param path 文件夹绝对路径
-     * @return 文件列表
-     */
-    public List<FileAttribute> listFilesAndDir(String path) {
-        return this.listFiles(path, true, true);
-    }
-
-    /**
-     * 文件和文件夹列表
-     *
-     * @param path  文件夹绝对路径
-     * @param child 是否递归
-     * @return 文件列表
-     */
-    public List<FileAttribute> listFilesAndDir(String path, boolean child) {
-        return this.listFiles(path, child, true);
-    }
-
-    /**
      * 文件列表
      *
      * @param path  文件夹绝对路径
-     * @param child 是否递归
+     * @param child 是否递归子文件夹
      * @param dir   是否添加文件夹
      * @return 文件列表
      */
-    private List<FileAttribute> listFiles(String path, boolean child, boolean dir) {
+    public List<FileAttribute> listFiles(String path, boolean child, boolean dir) {
         List<FileAttribute> list = new ArrayList<>();
         try {
             List<FileAttribute> ls = this.ll(path);
@@ -950,7 +929,7 @@ public class SftpExecutor extends BaseExecutor {
      * @return 文件
      */
     public List<FileAttribute> listFilesSuffix(String path, String suffix) {
-        return this.listFilesSearch(path, suffix, null, null, 1, true, false);
+        return this.listFilesSearch(path, suffix, null, null, 1, false, false);
     }
 
     /**
@@ -958,7 +937,7 @@ public class SftpExecutor extends BaseExecutor {
      *
      * @param path   文件夹绝对路径
      * @param suffix 后缀
-     * @param child  是否递归
+     * @param child  是否递归子文件夹
      * @return 文件
      */
     public List<FileAttribute> listFilesSuffix(String path, String suffix, boolean child) {
@@ -966,26 +945,16 @@ public class SftpExecutor extends BaseExecutor {
     }
 
     /**
-     * 搜索文件和文件夹
+     * 搜索文件
      *
      * @param path   文件夹绝对路径
      * @param suffix 后缀
+     * @param child  是否递归子文件夹
+     * @param dir    是否添加文件夹
      * @return 文件
      */
-    public List<FileAttribute> listFilesAndDirSuffix(String path, String suffix) {
-        return this.listFilesSearch(path, suffix, null, null, 1, true, true);
-    }
-
-    /**
-     * 搜索文件和文件夹
-     *
-     * @param path   文件夹绝对路径
-     * @param suffix 后缀
-     * @param child  是否递归
-     * @return 文件
-     */
-    public List<FileAttribute> listFilesAndDirSuffix(String path, String suffix, boolean child) {
-        return this.listFilesSearch(path, suffix, null, null, 1, child, true);
+    public List<FileAttribute> listFilesSuffix(String path, String suffix, boolean child, boolean dir) {
+        return this.listFilesSearch(path, suffix, null, null, 1, child, dir);
     }
 
     /**
@@ -996,7 +965,7 @@ public class SftpExecutor extends BaseExecutor {
      * @return 文件
      */
     public List<FileAttribute> listFilesMatch(String path, String match) {
-        return this.listFilesSearch(path, match, null, null, 2, true, false);
+        return this.listFilesSearch(path, match, null, null, 2, false, false);
     }
 
     /**
@@ -1004,7 +973,7 @@ public class SftpExecutor extends BaseExecutor {
      *
      * @param path  文件夹绝对路径
      * @param match 匹配
-     * @param child 是否递归
+     * @param child 是否递归子文件夹
      * @return 文件
      */
     public List<FileAttribute> listFilesMatch(String path, String match, boolean child) {
@@ -1012,26 +981,16 @@ public class SftpExecutor extends BaseExecutor {
     }
 
     /**
-     * 搜索文件和文件夹
+     * 搜索文件
      *
      * @param path  文件夹绝对路径
      * @param match 匹配
+     * @param child 是否递归子文件夹
+     * @param dir   是否添加文件夹
      * @return 文件
      */
-    public List<FileAttribute> listFilesAndDirMatch(String path, String match) {
-        return this.listFilesSearch(path, match, null, null, 2, true, true);
-    }
-
-    /**
-     * 搜索文件和文件夹
-     *
-     * @param path  文件夹绝对路径
-     * @param match 匹配
-     * @param child 是否递归
-     * @return 文件
-     */
-    public List<FileAttribute> listFilesAndDirMatch(String path, String match, boolean child) {
-        return this.listFilesSearch(path, match, null, null, 2, child, true);
+    public List<FileAttribute> listFilesMatch(String path, String match, boolean child, boolean dir) {
+        return this.listFilesSearch(path, match, null, null, 2, child, dir);
     }
 
     /**
@@ -1042,7 +1001,7 @@ public class SftpExecutor extends BaseExecutor {
      * @return 文件
      */
     public List<FileAttribute> listFilesPattern(String path, Pattern pattern) {
-        return this.listFilesSearch(path, null, pattern, null, 3, true, false);
+        return this.listFilesSearch(path, null, pattern, null, 3, false, false);
     }
 
     /**
@@ -1050,7 +1009,7 @@ public class SftpExecutor extends BaseExecutor {
      *
      * @param path    文件夹绝对路径
      * @param pattern 正则
-     * @param child   是否递归
+     * @param child   是否递归子文件夹
      * @return 文件
      */
     public List<FileAttribute> listFilesPattern(String path, Pattern pattern, boolean child) {
@@ -1058,26 +1017,16 @@ public class SftpExecutor extends BaseExecutor {
     }
 
     /**
-     * 搜索文件和文件夹
+     * 搜索文件
      *
      * @param path    文件夹绝对路径
      * @param pattern 正则
+     * @param child   是否递归子文件夹
+     * @param dir     是否添加文件夹
      * @return 文件
      */
-    public List<FileAttribute> listFilesAndDirPattern(String path, Pattern pattern) {
-        return this.listFilesSearch(path, null, pattern, null, 3, true, true);
-    }
-
-    /**
-     * 搜索文件和文件夹
-     *
-     * @param path    文件夹绝对路径
-     * @param pattern 正则
-     * @param child   是否递归
-     * @return 文件
-     */
-    public List<FileAttribute> listFilesAndDirPattern(String path, Pattern pattern, boolean child) {
-        return this.listFilesSearch(path, null, pattern, null, 3, child, true);
+    public List<FileAttribute> listFilesPattern(String path, Pattern pattern, boolean child, boolean dir) {
+        return this.listFilesSearch(path, null, pattern, null, 3, child, dir);
     }
 
     /**
@@ -1088,7 +1037,7 @@ public class SftpExecutor extends BaseExecutor {
      * @return 文件
      */
     public List<FileAttribute> listFilesFilter(String path, FileAttributeFilter filter) {
-        return this.listFilesSearch(path, null, null, filter, 4, true, false);
+        return this.listFilesSearch(path, null, null, filter, 4, false, false);
     }
 
     /**
@@ -1096,7 +1045,7 @@ public class SftpExecutor extends BaseExecutor {
      *
      * @param path   文件夹绝对路径
      * @param filter 过滤器
-     * @param child  是否递归
+     * @param child  是否递归子文件夹
      * @return 文件
      */
     public List<FileAttribute> listFilesFilter(String path, FileAttributeFilter filter, boolean child) {
@@ -1104,26 +1053,16 @@ public class SftpExecutor extends BaseExecutor {
     }
 
     /**
-     * 搜索文件和文件夹
+     * 搜索文件
      *
      * @param path   文件夹绝对路径
      * @param filter 过滤器
+     * @param child  是否递归子文件夹
+     * @param dir    是否添加文件夹
      * @return 文件
      */
-    public List<FileAttribute> listFilesAndDirFilter(String path, FileAttributeFilter filter) {
-        return this.listFilesSearch(path, null, null, filter, 4, true, true);
-    }
-
-    /**
-     * 搜索文件和文件夹
-     *
-     * @param path   文件夹绝对路径
-     * @param filter 过滤器
-     * @param child  是否递归
-     * @return 文件
-     */
-    public List<FileAttribute> listFilesAndDirFilter(String path, FileAttributeFilter filter, boolean child) {
-        return this.listFilesSearch(path, null, null, filter, 4, child, true);
+    public List<FileAttribute> listFilesFilter(String path, FileAttributeFilter filter, boolean child, boolean dir) {
+        return this.listFilesSearch(path, null, null, filter, 4, child, dir);
     }
 
     /**

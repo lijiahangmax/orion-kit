@@ -104,6 +104,14 @@ public class Lists extends Collections {
 
     // --------------- function ---------------
 
+    public static <E> List<E> def(List<E> list) {
+        return isEmpty(list) ? new ArrayList<>() : list;
+    }
+
+    public static <E> List<E> def(List<E> list, List<E> def) {
+        return isEmpty(list) ? def : list;
+    }
+
     public static <E> List<E> of(E... e) {
         List<E> list = new ArrayList<>();
         int length = Arrays1.length(e);
