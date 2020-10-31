@@ -1,5 +1,6 @@
 package com.orion.utils.crypto;
 
+import com.orion.utils.Strings;
 import com.orion.utils.crypto.enums.HashMessageDigest;
 import com.orion.utils.crypto.enums.SecretKeySpecMode;
 
@@ -29,7 +30,7 @@ public class Signatures {
      * @return 签名
      */
     public static String md5(String s) {
-        return hashSign(getBytes(s), HashMessageDigest.MD5.getMessageDigest());
+        return hashSign(Strings.bytes(s), HashMessageDigest.MD5.getMessageDigest());
     }
 
     /**
@@ -73,7 +74,7 @@ public class Signatures {
      * @return 签名
      */
     public static String md5(String s, String salt, int times) {
-        return md5(getBytes(s), getBytes(salt), times);
+        return md5(Strings.bytes(s), Strings.bytes(salt), times);
     }
 
     /**
@@ -104,7 +105,7 @@ public class Signatures {
      * @return 签名
      */
     public static String sha1(String s) {
-        return hashSign(getBytes(s), HashMessageDigest.SHA1.getMessageDigest());
+        return hashSign(Strings.bytes(s), HashMessageDigest.SHA1.getMessageDigest());
     }
 
     /**
@@ -124,7 +125,7 @@ public class Signatures {
      * @return 签名
      */
     public static String sha224(String s) {
-        return hashSign(getBytes(s), HashMessageDigest.SHA224.getMessageDigest());
+        return hashSign(Strings.bytes(s), HashMessageDigest.SHA224.getMessageDigest());
     }
 
     /**
@@ -144,7 +145,7 @@ public class Signatures {
      * @return 签名
      */
     public static String sha256(String s) {
-        return hashSign(getBytes(s), HashMessageDigest.SHA256.getMessageDigest());
+        return hashSign(Strings.bytes(s), HashMessageDigest.SHA256.getMessageDigest());
     }
 
     /**
@@ -164,7 +165,7 @@ public class Signatures {
      * @return 签名
      */
     public static String sha384(String s) {
-        return hashSign(getBytes(s), HashMessageDigest.SHA384.getMessageDigest());
+        return hashSign(Strings.bytes(s), HashMessageDigest.SHA384.getMessageDigest());
     }
 
     /**
@@ -184,7 +185,7 @@ public class Signatures {
      * @return 签名
      */
     public static String sha512(String s) {
-        return hashSign(getBytes(s), HashMessageDigest.SHA512.getMessageDigest());
+        return hashSign(Strings.bytes(s), HashMessageDigest.SHA512.getMessageDigest());
     }
 
     /**
@@ -205,7 +206,7 @@ public class Signatures {
      * @return 签名
      */
     public static String sign(String s, String type) {
-        return hashSign(getBytes(s), HashMessageDigest.getMessageDigest(type));
+        return hashSign(Strings.bytes(s), HashMessageDigest.getMessageDigest(type));
     }
 
     /**
@@ -244,7 +245,7 @@ public class Signatures {
      * @return 密文
      */
     public static String hmacMd5(String s, String key) {
-        return hmacHashSign(getBytes(s), getBytes(key), SecretKeySpecMode.HMAC_MD5);
+        return hmacHashSign(Strings.bytes(s), Strings.bytes(key), SecretKeySpecMode.HMAC_MD5);
     }
 
     /**
@@ -266,7 +267,7 @@ public class Signatures {
      * @return 密文
      */
     public static String hmacSha1(String s, String key) {
-        return hmacHashSign(getBytes(s), getBytes(key), SecretKeySpecMode.HMAC_SHA1);
+        return hmacHashSign(Strings.bytes(s), Strings.bytes(key), SecretKeySpecMode.HMAC_SHA1);
     }
 
     /**
@@ -288,7 +289,7 @@ public class Signatures {
      * @return 密文
      */
     public static String hmacSha224(String s, String key) {
-        return hmacHashSign(getBytes(s), getBytes(key), SecretKeySpecMode.HMAC_SHA224);
+        return hmacHashSign(Strings.bytes(s), Strings.bytes(key), SecretKeySpecMode.HMAC_SHA224);
     }
 
     /**
@@ -310,7 +311,7 @@ public class Signatures {
      * @return 密文
      */
     public static String hmacSha256(String s, String key) {
-        return hmacHashSign(getBytes(s), getBytes(key), SecretKeySpecMode.HMAC_SHA256);
+        return hmacHashSign(Strings.bytes(s), Strings.bytes(key), SecretKeySpecMode.HMAC_SHA256);
     }
 
     /**
@@ -332,7 +333,7 @@ public class Signatures {
      * @return 密文
      */
     public static String hmacSha384(String s, String key) {
-        return hmacHashSign(getBytes(s), getBytes(key), SecretKeySpecMode.HMAC_SHA384);
+        return hmacHashSign(Strings.bytes(s), Strings.bytes(key), SecretKeySpecMode.HMAC_SHA384);
     }
 
     /**
@@ -354,7 +355,7 @@ public class Signatures {
      * @return 密文
      */
     public static String hmacSha512(String s, String key) {
-        return hmacHashSign(getBytes(s), getBytes(key), SecretKeySpecMode.HMAC_SHA512);
+        return hmacHashSign(Strings.bytes(s), Strings.bytes(key), SecretKeySpecMode.HMAC_SHA512);
     }
 
     /**
@@ -377,7 +378,7 @@ public class Signatures {
      * @return 密文
      */
     public static String hmacSign(String s, String key, SecretKeySpecMode mode) {
-        return hmacHashSign(getBytes(s), getBytes(key), mode);
+        return hmacHashSign(Strings.bytes(s), Strings.bytes(key), mode);
     }
 
     /**
@@ -409,10 +410,6 @@ public class Signatures {
         } catch (Exception e) {
             return null;
         }
-    }
-
-    private static byte[] getBytes(String s) {
-        return s == null ? null : s.getBytes();
     }
 
 }

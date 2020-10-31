@@ -1,5 +1,7 @@
 package com.orion.utils.codec;
 
+import com.orion.utils.Strings;
+
 /**
  * Base32工具类
  *
@@ -39,7 +41,7 @@ public class Base32s {
      * @return base32
      */
     public static String encode(String s) {
-        return encode(s.getBytes());
+        return encode(Strings.bytes(s));
     }
 
     /**

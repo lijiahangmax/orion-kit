@@ -3,6 +3,7 @@ package com.orion.utils;
 import com.orion.lang.Null;
 import com.orion.utils.collect.Lists;
 import com.orion.utils.collect.Maps;
+import com.orion.utils.hash.Hashes;
 import com.orion.utils.reflect.Methods;
 
 import java.io.*;
@@ -389,33 +390,14 @@ public class Objects1 {
         return Integer.toHexString(System.identityHashCode(obj));
     }
 
+    /**
+     * 获取对象的hash值
+     *
+     * @param obj obj
+     * @return hashCode
+     */
     public static int hashCode(Object obj) {
-        if (obj == null) {
-            return 0;
-        }
-        if (obj.getClass().isArray()) {
-            if (obj instanceof Object[]) {
-                return Arrays1.hashCode((Object[]) obj);
-            } else if (obj instanceof byte[]) {
-                return Arrays1.hashCode((byte[]) obj);
-            } else if (obj instanceof short[]) {
-                return Arrays1.hashCode((short[]) obj);
-            } else if (obj instanceof int[]) {
-                return Arrays1.hashCode((int[]) obj);
-            } else if (obj instanceof long[]) {
-                return Arrays1.hashCode((long[]) obj);
-            } else if (obj instanceof float[]) {
-                return Arrays1.hashCode((float[]) obj);
-            } else if (obj instanceof double[]) {
-                return Arrays1.hashCode((double[]) obj);
-            } else if (obj instanceof boolean[]) {
-                return Arrays1.hashCode((boolean[]) obj);
-            } else if (obj instanceof char[]) {
-                return Arrays1.hashCode((char[]) obj);
-            }
-        }
-        return obj.hashCode();
+        return Hashes.hashCode(obj);
     }
-
 
 }

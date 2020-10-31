@@ -1,6 +1,7 @@
 package com.orion.utils.codec;
 
 import com.orion.utils.Arrays1;
+import com.orion.utils.Strings;
 
 import java.io.ByteArrayOutputStream;
 
@@ -68,11 +69,11 @@ public class Base62s {
      * @return ignore
      */
     public static String encode(String s) {
-        return new String(encode(s.getBytes(), true));
+        return new String(encode(Strings.bytes(s), true));
     }
 
     public static String encode(String s, boolean gmp) {
-        return new String(encode(s.getBytes(), gmp));
+        return new String(encode(Strings.bytes(s), gmp));
     }
 
     public static byte[] encode(byte[] bs) {
@@ -90,11 +91,11 @@ public class Base62s {
      * @return ignore
      */
     public static String decode(String s) {
-        return new String(decode(s.getBytes(), true));
+        return new String(decode(Strings.bytes(s), true));
     }
 
     public static String decode(String s, boolean gmp) {
-        return new String(decode(s.getBytes(), gmp));
+        return new String(decode(Strings.bytes(s), gmp));
     }
 
     public static byte[] decode(byte[] bs) {

@@ -6,6 +6,7 @@ import ch.ethz.ssh2.StreamGobbler;
 import com.orion.able.ExecutorAble;
 import com.orion.able.SafeCloseable;
 import com.orion.utils.Exceptions;
+import com.orion.utils.Strings;
 import com.orion.utils.Threads;
 import com.orion.utils.io.Streams;
 
@@ -152,7 +153,7 @@ public class CommandExecutor implements ExecutorAble, SafeCloseable {
      * @return this
      */
     public CommandExecutor write(String command) {
-        return this.write(command.getBytes());
+        return this.write(Strings.bytes(command));
     }
 
     /**
@@ -163,14 +164,10 @@ public class CommandExecutor implements ExecutorAble, SafeCloseable {
      * @return this
      */
     public CommandExecutor write(String command, String charset) {
-        try {
-            if (charset == null) {
-                return this.write(command.getBytes());
-            } else {
-                return this.write(command.getBytes(charset));
-            }
-        } catch (UnsupportedEncodingException e) {
-            throw Exceptions.unCoding(e);
+        if (charset == null) {
+            return this.write(Strings.bytes(command));
+        } else {
+            return this.write(Strings.bytes(command, charset));
         }
     }
 
@@ -197,7 +194,7 @@ public class CommandExecutor implements ExecutorAble, SafeCloseable {
      * @return this
      */
     public CommandExecutor exit() {
-        return this.write("exit 0".getBytes());
+        return this.write(Strings.bytes("exit 0"));
     }
 
     /**

@@ -3,6 +3,7 @@ package com.orion.test.remote.channel;
 import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
+import com.orion.utils.Strings;
 import com.orion.utils.Threads;
 import com.orion.utils.io.Streams;
 
@@ -41,7 +42,7 @@ public class ShellTests {
         channelShell.setInputStream(commandInput);
         channelShell.setOutputStream(resultOutput);
         channelShell.connect(2000);
-        commandOutput.write("ls -la /\n".getBytes());
+        commandOutput.write(Strings.bytes("ls -la /\n"));
         Threads.start(() -> {
             try {
                 Streams.lineConsumer(resultInput, System.out::println);

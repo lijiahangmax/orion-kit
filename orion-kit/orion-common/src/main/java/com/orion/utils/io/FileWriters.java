@@ -2,6 +2,7 @@ package com.orion.utils.io;
 
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
+import com.orion.utils.Strings;
 import com.orion.utils.collect.Lists;
 
 import java.io.*;
@@ -83,7 +84,7 @@ public class FileWriters {
      * @param s    string
      */
     public static void append(File file, String s) {
-        append(file, s.getBytes());
+        append(file, Strings.bytes(s));
     }
 
     /**
@@ -93,7 +94,7 @@ public class FileWriters {
      * @param s    string
      */
     public static void append(String file, String s) {
-        append(new File(file), s.getBytes());
+        append(new File(file), Strings.bytes(s));
     }
 
     /**
@@ -104,11 +105,7 @@ public class FileWriters {
      * @param charset 编码格式
      */
     public static void append(File file, String s, String charset) {
-        try {
-            append(file, s.getBytes(charset));
-        } catch (UnsupportedEncodingException e) {
-            throw Exceptions.unCoding(e);
-        }
+        append(file, Strings.bytes(s, charset));
     }
 
     /**
@@ -119,11 +116,7 @@ public class FileWriters {
      * @param charset 编码格式
      */
     public static void append(String file, String s, String charset) {
-        try {
-            append(new File(file), s.getBytes(charset));
-        } catch (UnsupportedEncodingException e) {
-            throw Exceptions.unCoding(e);
-        }
+        append(new File(file), Strings.bytes(s, charset));
     }
 
     /**
@@ -410,9 +403,9 @@ public class FileWriters {
             for (int i = 0, size = lines.size(); i < size; i++) {
                 String line = lines.get(i);
                 if (charset == null) {
-                    r.write(line.getBytes());
+                    r.write(Strings.bytes(line));
                 } else {
-                    r.write(line.getBytes(charset));
+                    r.write(Strings.bytes(line, charset));
                 }
                 if (i != size - 1) {
                     r.write('\n');
@@ -492,7 +485,7 @@ public class FileWriters {
      * @param s    string
      */
     public static void write(File file, String s) {
-        write(file, s.getBytes());
+        write(file, Strings.bytes(s));
     }
 
     /**
@@ -502,7 +495,7 @@ public class FileWriters {
      * @param s    string
      */
     public static void write(String file, String s) {
-        write(new File(file), s.getBytes());
+        write(new File(file), Strings.bytes(s));
     }
 
     /**
@@ -513,11 +506,7 @@ public class FileWriters {
      * @param charset 编码格式
      */
     public static void write(File file, String s, String charset) {
-        try {
-            write(file, s.getBytes(charset));
-        } catch (UnsupportedEncodingException e) {
-            throw Exceptions.unCoding(e);
-        }
+        write(file, Strings.bytes(s, charset));
     }
 
     /**
@@ -528,11 +517,7 @@ public class FileWriters {
      * @param charset 编码格式
      */
     public static void write(String file, String s, String charset) {
-        try {
-            write(new File(file), s.getBytes(charset));
-        } catch (UnsupportedEncodingException e) {
-            throw Exceptions.unCoding(e);
-        }
+        write(new File(file), Strings.bytes(s, charset));
     }
 
     /**
@@ -639,17 +624,17 @@ public class FileWriters {
         }
         try (OutputStream out = openOutputStream(file, append)) {
             if (beforeAppend) {
-                out.write(lineSeparator.getBytes());
+                out.write(Strings.bytes(lineSeparator));
             }
             if (charset == null) {
                 for (String str : list) {
                     str += lineSeparator;
-                    out.write(str.getBytes());
+                    out.write(Strings.bytes(str));
                 }
             } else {
                 for (String str : list) {
                     str += lineSeparator;
-                    out.write(str.getBytes(charset));
+                    out.write(Strings.bytes(str, charset));
                 }
             }
         } catch (IOException e) {

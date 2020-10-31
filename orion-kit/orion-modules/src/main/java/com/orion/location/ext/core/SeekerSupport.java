@@ -1,5 +1,7 @@
 package com.orion.location.ext.core;
 
+import com.orion.utils.Strings;
+
 import java.io.UnsupportedEncodingException;
 
 /**
@@ -42,7 +44,7 @@ public class SeekerSupport {
      */
     public static String getString(String s, String srcEncoding, String destEncoding) {
         try {
-            return new String(s.getBytes(srcEncoding), destEncoding);
+            return new String(Strings.bytes(s, srcEncoding), destEncoding);
         } catch (UnsupportedEncodingException e) {
             return s;
         }

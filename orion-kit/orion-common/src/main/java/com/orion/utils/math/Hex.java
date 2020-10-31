@@ -1,5 +1,7 @@
 package com.orion.utils.math;
 
+import com.orion.utils.Strings;
+
 /**
  * 进制转换
  *
@@ -81,7 +83,7 @@ public class Hex {
     }
 
     public static String encode(String s) {
-        return bytesToHex(s.getBytes());
+        return bytesToHex(Strings.bytes(s));
     }
 
     public static String decode(String s) {

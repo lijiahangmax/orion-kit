@@ -5,7 +5,6 @@ import com.orion.able.Awaitable;
 import com.orion.http.common.HttpContent;
 import com.orion.http.common.HttpCookie;
 import com.orion.http.common.HttpMethod;
-import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.Urls;
 import com.orion.utils.Valid;
@@ -356,13 +355,9 @@ public class OkRequest implements Awaitable<OkResponse>, Asyncable<Consumer<OkRe
             return this;
         }
         if (!useCharset) {
-            this.body = body.getBytes();
+            this.body = Strings.bytes(body);
         } else {
-            try {
-                this.body = body.getBytes(this.charset);
-            } catch (Exception e) {
-                throw Exceptions.unCoding(e);
-            }
+            this.body = Strings.bytes(body, this.charset);
         }
         this.bodyOffset = 0;
         this.bodyLen = this.body.length;

@@ -2,6 +2,7 @@ package com.orion.utils.crypto;
 
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
+import com.orion.utils.Strings;
 import com.orion.utils.crypto.enums.CipherAlgorithm;
 import com.orion.utils.crypto.enums.SecretKeySpecMode;
 
@@ -46,7 +47,7 @@ public class AES {
     // ------------------ ENC ------------------
 
     public static String encrypt(String s, String key) {
-        byte[] bs = encrypt(getBytes(s), null, getBytes(key), null);
+        byte[] bs = encrypt(Strings.bytes(s), null, Strings.bytes(key), null);
         if (bs != null) {
             return new String(bs);
         }
@@ -54,7 +55,7 @@ public class AES {
     }
 
     public static String encrypt(String s, String key, String iv) {
-        byte[] bs = encrypt(getBytes(s), null, getBytes(key), getBytes(iv));
+        byte[] bs = encrypt(Strings.bytes(s), null, Strings.bytes(key), Strings.bytes(iv));
         if (bs != null) {
             return new String(bs);
         }
@@ -70,7 +71,7 @@ public class AES {
     }
 
     public static String encrypt(String s, SecretKey key) {
-        byte[] bs = encrypt(getBytes(s), key, null);
+        byte[] bs = encrypt(Strings.bytes(s), key, null);
         if (bs != null) {
             return new String(bs);
         }
@@ -78,7 +79,7 @@ public class AES {
     }
 
     public static String encrypt(String s, SecretKey key, String iv) {
-        byte[] bs = encrypt(getBytes(s), key, null, getBytes(iv));
+        byte[] bs = encrypt(Strings.bytes(s), key, null, Strings.bytes(iv));
         if (bs != null) {
             return new String(bs);
         }
@@ -124,7 +125,7 @@ public class AES {
     // ------------------ DEC ------------------
 
     public static String decrypt(String s, String key) {
-        byte[] bs = decrypt(getBytes(s), null, getBytes(key), null);
+        byte[] bs = decrypt(Strings.bytes(s), null, Strings.bytes(key), null);
         if (bs != null) {
             return new String(bs);
         }
@@ -132,7 +133,7 @@ public class AES {
     }
 
     public static String decrypt(String s, String key, String iv) {
-        byte[] bs = decrypt(getBytes(s), null, getBytes(key), getBytes(iv));
+        byte[] bs = decrypt(Strings.bytes(s), null, Strings.bytes(key), Strings.bytes(iv));
         if (bs != null) {
             return new String(bs);
         }
@@ -148,7 +149,7 @@ public class AES {
     }
 
     public static String decrypt(String s, SecretKey key) {
-        byte[] bs = decrypt(getBytes(s), key, null, null);
+        byte[] bs = decrypt(Strings.bytes(s), key, null, null);
         if (bs != null) {
             return new String(bs);
         }
@@ -156,7 +157,7 @@ public class AES {
     }
 
     public static String decrypt(String s, SecretKey key, String iv) {
-        byte[] bs = decrypt(getBytes(s), key, null, getBytes(iv));
+        byte[] bs = decrypt(Strings.bytes(s), key, null, Strings.bytes(iv));
         if (bs != null) {
             return new String(bs);
         }
@@ -210,7 +211,7 @@ public class AES {
     public static SecretKey generatorKey(String key) {
         try {
             KeyGenerator keyGenerator = KeyGenerator.getInstance(AES);
-            SecureRandom random = new SecureRandom(getBytes(key));
+            SecureRandom random = new SecureRandom(Strings.bytes(key));
             keyGenerator.init(128, random);
             return SecretKeySpecMode.AES.getSecretKeySpec(keyGenerator.generateKey().getEncoded());
         } catch (Exception e) {
@@ -229,7 +230,7 @@ public class AES {
     public static SecretKey generatorKey(String key, int size) {
         try {
             KeyGenerator keyGenerator = KeyGenerator.getInstance(AES);
-            SecureRandom random = new SecureRandom(getBytes(key));
+            SecureRandom random = new SecureRandom(Strings.bytes(key));
             keyGenerator.init(size, random);
             return SecretKeySpecMode.AES.getSecretKeySpec(keyGenerator.generateKey().getEncoded());
         } catch (Exception e) {
@@ -282,7 +283,7 @@ public class AES {
      * @return SecretKey
      */
     public static SecretKey getSecretKey(String key) {
-        return SecretKeySpecMode.AES.getSecretKeySpec(decode(getBytes(key)));
+        return SecretKeySpecMode.AES.getSecretKeySpec(decode(Strings.bytes(key)));
     }
 
     /**
@@ -296,10 +297,6 @@ public class AES {
     }
 
     // ------------------ SETTING ------------------
-
-    private static byte[] getBytes(String s) {
-        return s == null ? null : s.getBytes();
-    }
 
     public static void setIvWorkingMode(String mode) {
         ivWorkingMode = mode;

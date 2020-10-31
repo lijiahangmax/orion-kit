@@ -10,6 +10,7 @@ import com.orion.remote.connection.sftp.bigfile.SftpDownload;
 import com.orion.remote.connection.sftp.bigfile.SftpUpload;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Matches;
+import com.orion.utils.Strings;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
 
@@ -573,19 +574,19 @@ public class SftpExecutor implements SafeCloseable {
     }
 
     public void writeLine(String path, String line) throws IOException {
-        this.write(path, 0, null, new StreamEntry((line + "\n").getBytes()), null, null, false);
+        this.write(path, 0, null, new StreamEntry(Strings.bytes(line + "\n")), null, null, false);
     }
 
     public void writeLine(String path, String line, String charset) throws IOException {
-        this.write(path, 0, null, new StreamEntry((line + "\n").getBytes(charset)), null, null, false);
+        this.write(path, 0, null, new StreamEntry(Strings.bytes(line + "\n", charset)), null, null, false);
     }
 
     public void writeLine(String path, long fileOffset, String line) throws IOException {
-        this.write(path, fileOffset, null, new StreamEntry((line + "\n").getBytes()), null, null, false);
+        this.write(path, fileOffset, null, new StreamEntry(Strings.bytes(line + "\n")), null, null, false);
     }
 
     public void writeLine(String path, long fileOffset, String line, String charset) throws IOException {
-        this.write(path, fileOffset, null, new StreamEntry((line + "\n").getBytes(charset)), null, null, false);
+        this.write(path, fileOffset, null, new StreamEntry(Strings.bytes(line + "\n", charset)), null, null, false);
     }
 
     public void writeLines(String path, List<String> lines) throws IOException {
@@ -617,11 +618,11 @@ public class SftpExecutor implements SafeCloseable {
     }
 
     public void appendLine(String path, String line) throws IOException {
-        this.write(path, 0, null, new StreamEntry((line + "\n").getBytes()), null, null, true);
+        this.write(path, 0, null, new StreamEntry(Strings.bytes(line + "\n")), null, null, true);
     }
 
     public void appendLine(String path, String line, String charset) throws IOException {
-        this.write(path, 0, null, new StreamEntry((line + "\n").getBytes(charset)), null, null, true);
+        this.write(path, 0, null, new StreamEntry(Strings.bytes(line + "\n", charset)), null, null, true);
     }
 
     public void appendLines(String path, List<String> lines) throws IOException {
@@ -664,9 +665,9 @@ public class SftpExecutor implements SafeCloseable {
             for (String line : lines) {
                 byte[] bytes;
                 if (charset == null) {
-                    bytes = (line + "\n").getBytes();
+                    bytes = Strings.bytes(line + "\n");
                 } else {
-                    bytes = (line + "\n").getBytes(charset);
+                    bytes = Strings.bytes((line + "\n"), charset);
                 }
                 client.write(handle, fileOffset, bytes, 0, bytes.length);
                 fileOffset += bytes.length;

@@ -341,13 +341,9 @@ public class ApacheRequest implements Awaitable<ApacheResponse> {
             return this;
         }
         if (useCharset) {
-            try {
-                this.body = body.getBytes(this.charset);
-            } catch (Exception e) {
-                throw Exceptions.unCoding(e);
-            }
+            this.body = Strings.bytes(body, this.charset);
         } else {
-            this.body = body.getBytes();
+            this.body = Strings.bytes(body);
         }
         this.bodyOffset = 0;
         this.bodyLen = this.body.length;

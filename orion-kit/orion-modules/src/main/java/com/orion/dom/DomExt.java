@@ -1,6 +1,7 @@
 package com.orion.dom;
 
 import com.orion.utils.Exceptions;
+import com.orion.utils.Strings;
 import com.orion.utils.collect.Lists;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
@@ -293,7 +294,7 @@ public class DomExt {
      */
     public static Document toDocument(String xml) {
         try {
-            return reader.read(new ByteArrayInputStream(xml.getBytes()));
+            return reader.read(new ByteArrayInputStream(Strings.bytes(xml)));
         } catch (Exception e) {
             throw Exceptions.argument("XML Parse To Document Error " + e.getMessage());
         }
@@ -591,7 +592,7 @@ public class DomExt {
         FileOutputStream out = null;
         try {
             out = Files1.openOutputStream(file);
-            out.write(format(xml).getBytes());
+            out.write(Strings.bytes(format(xml)));
         } finally {
             Streams.close(out);
         }
@@ -608,7 +609,7 @@ public class DomExt {
         FileOutputStream out = null;
         try {
             out = Files1.openOutputStream(file);
-            out.write(format(document.asXML()).getBytes());
+            out.write(Strings.bytes(format(document.asXML())));
         } finally {
             Streams.close(out);
         }
@@ -625,7 +626,7 @@ public class DomExt {
         FileOutputStream out = null;
         try {
             out = Files1.openOutputStream(file);
-            out.write(format("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + element.asXML()).getBytes());
+            out.write(Strings.bytes(format("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + element.asXML())));
         } finally {
             Streams.close(out);
         }

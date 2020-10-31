@@ -33,7 +33,7 @@ public class TailTests {
     public void testAdd() throws IOException {
         FileOutputStream outputStream = Files1.openOutputStream(new File("C:\\Users\\ljh15\\Desktop\\tail.txt"), true);
         while (true) {
-            outputStream.write(Strings.randomChars(10).getBytes());
+            outputStream.write(Strings.bytes(Strings.randomChars(10)));
             outputStream.write(13);
             Threads.sleep(1000);
         }

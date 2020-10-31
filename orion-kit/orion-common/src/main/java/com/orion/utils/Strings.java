@@ -1209,7 +1209,7 @@ public class Strings {
     public static String charset(String s, String oldCharset, String newCharset) {
         if (!isBlank(s)) {
             try {
-                byte[] bytes = s.getBytes(oldCharset);
+                byte[] bytes = Strings.bytes(s, oldCharset);
                 return new String(bytes, newCharset);
             } catch (Exception e) {
                 return s;
@@ -1228,8 +1228,7 @@ public class Strings {
     public static String charset(String s, String charset) {
         if (!isBlank(s)) {
             try {
-                byte[] bytes = s.getBytes();
-                return new String(bytes, charset);
+                return new String(Strings.bytes(s), charset);
             } catch (Exception e) {
                 return s;
             }
@@ -1458,6 +1457,42 @@ public class Strings {
             index += Character.charCount(result[i]);
         }
         return result;
+    }
+
+    /**
+     * 获取byte[]
+     *
+     * @param s s
+     * @return byte[]
+     */
+    public static byte[] bytes(String s) {
+        return s.getBytes();
+    }
+
+    /**
+     * 获取byte[]
+     *
+     * @param s       s
+     * @param charset charset
+     * @return byte[]
+     */
+    public static byte[] bytes(String s, Charset charset) {
+        return s.getBytes(charset);
+    }
+
+    /**
+     * 获取byte[]
+     *
+     * @param s       s
+     * @param charset charset
+     * @return byte[]
+     */
+    public static byte[] bytes(String s, String charset) {
+        try {
+            return s.getBytes(charset);
+        } catch (UnsupportedEncodingException e) {
+            throw Exceptions.unCoding(e);
+        }
     }
 
 }

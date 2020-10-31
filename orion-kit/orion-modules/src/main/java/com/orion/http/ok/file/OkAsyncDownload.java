@@ -396,12 +396,12 @@ public class OkAsyncDownload {
         }
         if (useCharset) {
             try {
-                this.body = body.getBytes(this.charset);
+                this.body = Strings.bytes(body, this.charset);
             } catch (Exception e) {
                 throw Exceptions.unCoding(e);
             }
         } else {
-            this.body = body.getBytes();
+            this.body = Strings.bytes(body);
         }
         this.bodyOffset = 0;
         this.bodyLen = this.body.length;

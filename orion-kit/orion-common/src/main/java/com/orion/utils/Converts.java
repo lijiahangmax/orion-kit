@@ -1162,7 +1162,7 @@ public class Converts {
     }
 
     public static byte[] toBytes(String bs) {
-        return bs.getBytes();
+        return Strings.bytes(bs);
     }
 
     public static byte[] toBytes(String[] bs) {

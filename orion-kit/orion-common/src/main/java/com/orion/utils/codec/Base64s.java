@@ -1,5 +1,7 @@
 package com.orion.utils.codec;
 
+import com.orion.utils.Strings;
+
 import java.util.Base64;
 
 /**
@@ -43,9 +45,9 @@ public class Base64s {
      */
     public static byte[] img64Decode(String s) {
         // int i = s.indexOf("base64");
-        // return base64Decode(s.substring(i + 7, s.length()).getBytes());
+        // return decode(Strings.bytes(s.substring(i + 7)));
         String[] b = s.split(",");
-        return decode(b[b.length - 1].getBytes());
+        return decode(Strings.bytes(b[b.length - 1]));
     }
 
     /**
@@ -55,7 +57,7 @@ public class Base64s {
      * @return ignore
      */
     public static String encode(String s) {
-        return new String(Base64.getEncoder().encode(s.getBytes()));
+        return new String(Base64.getEncoder().encode(Strings.bytes(s)));
     }
 
     /**
@@ -95,7 +97,7 @@ public class Base64s {
      * @return ignore
      */
     public static String url64Encode(String s) {
-        return new String(Base64.getUrlEncoder().encode(s.getBytes()));
+        return new String(Base64.getUrlEncoder().encode(Strings.bytes(s)));
     }
 
     /**

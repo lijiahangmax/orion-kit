@@ -1,6 +1,7 @@
 package com.orion.test.encrypt;
 
 import com.orion.lang.wrapper.Args;
+import com.orion.utils.Strings;
 import com.orion.utils.crypto.Keys;
 import com.orion.utils.crypto.RSA;
 import com.orion.utils.crypto.enums.RSASignature;
@@ -22,8 +23,8 @@ public class RsaTests {
     private static String pri = "MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAKEPNyPD+taAXCfG6dsqnv/h7zD9SZfHaOTqoQSfr23o3ZHWL8uZzINPXGv9PYAcY6Jc1DlXxbiIJpp41rCLtolpGG1XHW44f/ZTfvx+xwQRIQbxcOqWXQYJ8HX9OMojZqK1VLNc61GzyRiAZTvx/tWYM2BciWTeB2GfOH66gRDLAgMBAAECgYBp4qTvoJKynuT3SbDJY/XwaEtmu768SF9P0GlXrtwYuDWjAVue0VhBI9WxMWZTaVafkcP8hxX4QZqPh84td0zjcq3jDLOegAFJkIorGzq5FyK7ydBoU1TLjFV459c8dTZMTu+LgsOTD11/V/Jr4NJxIudoMBQ3c4cHmOoYv4uzkQJBANR+7Fc3e6oZgqTOesqPSPqljbsdF9E4x4eDFuOecCkJDvVLOOoAzvtHfAiUp+H3fk4hXRpALiNBEHiIdhIuX2UCQQDCCHiPHFd4gC58yyCM6Leqkmoa+6YpfRb3oxykLBXcWx7DtbX+ayKy5OQmnkEG+MW8XB8wAdiUl0/tb6cQFaRvAkBhvP94Hk0DMDinFVHlWYJ3xy4pongSA8vCyMj+aSGtvjzjFnZXK4gIjBjA2Z9ekDfIOBBawqp2DLdGuX2VXz8BAkByMuIh+KBSv76cnEDwLhfLQJlKgEnvqTvXTB0TUw8avlaBAXW34/5sI+NUB1hmbgyTK/T/IFcEPXpBWLGO+e3pAkAGWLpnH0ZhFae7oAqkMAd3xCNY6ec180tAe57hZ6kS+SYLKwb4gGzYaCxc22vMtYksXHtUeamo1NMLzI2ZfUoX";
     private static File pubFile = new File("C:\\Users\\ljh15\\Desktop\\key\\rsa_public.pem");
     private static File priFile = new File("C:\\Users\\ljh15\\Desktop\\key\\rsa_private_pkcs8.pem");
-    private static RSAPublicKey publicKey = RSA.getPublicKey(pub.getBytes());
-    private static RSAPrivateKey privateKey = RSA.getPrivateKey(pri.getBytes());
+    private static RSAPublicKey publicKey = RSA.getPublicKey(Strings.bytes(pub));
+    private static RSAPrivateKey privateKey = RSA.getPrivateKey(Strings.bytes(pri));
     private static RSAPublicKey publicKey1 = RSA.getPublicKey(pubFile);
     private static RSAPrivateKey privateKey1 = RSA.getPrivateKey(priFile);
     private static Args.Two<RSAPublicKey, RSAPrivateKey> keys = RSA.generatorKeys();

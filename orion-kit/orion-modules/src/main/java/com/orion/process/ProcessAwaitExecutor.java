@@ -2,6 +2,7 @@ package com.orion.process;
 
 import com.orion.lang.thread.HookRunnable;
 import com.orion.utils.Exceptions;
+import com.orion.utils.Strings;
 import com.orion.utils.Threads;
 import com.orion.utils.io.Streams;
 
@@ -168,7 +169,7 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
      * @return this
      */
     public ProcessAwaitExecutor write(String command) {
-        return this.write(command.getBytes());
+        return this.write(Strings.bytes(command));
     }
 
     /**
@@ -179,14 +180,10 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
      * @return this
      */
     public ProcessAwaitExecutor write(String command, String charset) {
-        try {
-            if (charset == null) {
-                return this.write(command.getBytes());
-            } else {
-                return this.write(command.getBytes(charset));
-            }
-        } catch (UnsupportedEncodingException e) {
-            throw Exceptions.unCoding(e);
+        if (charset == null) {
+            return this.write(Strings.bytes(command));
+        } else {
+            return this.write(Strings.bytes(command, charset));
         }
     }
 
@@ -290,7 +287,7 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
         this.close = true;
         if (exit && this.outputStream != null) {
             try {
-                this.write("exit".getBytes());
+                this.write(Strings.bytes("exit 0"));
             } catch (Exception e1) {
                 // ignore
             }

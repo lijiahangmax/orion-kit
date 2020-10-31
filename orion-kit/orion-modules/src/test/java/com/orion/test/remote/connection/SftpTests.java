@@ -1,6 +1,7 @@
 package com.orion.test.remote.connection;
 
 import com.orion.remote.connection.ConnectionStore;
+import com.orion.utils.Strings;
 import com.orion.utils.collect.Lists;
 
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class SftpTests {
         new ConnectionStore("192.168.146.230")
                 .auth("root", "admin123")
                 .getSftpExecutor()
-                .append("/root/a", "23".getBytes());
+                .append("/root/a", Strings.bytes("23"));
     }
 
     public static void appendLines() throws IOException {
@@ -34,7 +35,7 @@ public class SftpTests {
         new ConnectionStore("192.168.146.230")
                 .auth("root", "admin123")
                 .getSftpExecutor()
-                .write("/root/a", "99999999999".getBytes());
+                .write("/root/a", Strings.bytes("99999999999"));
     }
 
     public static void writeLines() throws IOException {

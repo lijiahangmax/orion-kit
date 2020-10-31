@@ -2,6 +2,7 @@ package com.orion.utils.crypto;
 
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
+import com.orion.utils.Strings;
 import com.orion.utils.crypto.enums.CipherAlgorithm;
 import com.orion.utils.crypto.enums.SecretKeySpecMode;
 
@@ -50,7 +51,7 @@ public class DES {
     // ------------------ ENC ------------------
 
     public static String encrypt(String s, String key) {
-        byte[] bytes = encrypt(getBytes(s), null, getBytes(key), null, CipherAlgorithm.DES);
+        byte[] bytes = encrypt(Strings.bytes(s), null, Strings.bytes(key), null, CipherAlgorithm.DES);
         if (bytes != null) {
             return new String(bytes);
         }
@@ -58,7 +59,7 @@ public class DES {
     }
 
     public static String encrypt(String s, String key, String iv) {
-        byte[] bytes = encrypt(getBytes(s), null, getBytes(key), getBytes(iv), CipherAlgorithm.DES);
+        byte[] bytes = encrypt(Strings.bytes(s), null, Strings.bytes(key), Strings.bytes(iv), CipherAlgorithm.DES);
         if (bytes != null) {
             return new String(bytes);
         }
@@ -66,7 +67,7 @@ public class DES {
     }
 
     public static String encrypt(String s, String key, CipherAlgorithm mode) {
-        byte[] bytes = encrypt(getBytes(s), null, getBytes(key), null, mode);
+        byte[] bytes = encrypt(Strings.bytes(s), null, Strings.bytes(key), null, mode);
         if (bytes != null) {
             return new String(bytes);
         }
@@ -74,7 +75,7 @@ public class DES {
     }
 
     public static String encrypt(String s, String key, String iv, CipherAlgorithm mode) {
-        byte[] bytes = encrypt(getBytes(s), null, getBytes(key), getBytes(iv), mode);
+        byte[] bytes = encrypt(Strings.bytes(s), null, Strings.bytes(key), Strings.bytes(iv), mode);
         if (bytes != null) {
             return new String(bytes);
         }
@@ -98,7 +99,7 @@ public class DES {
     }
 
     public static String encrypt(String s, SecretKey key) {
-        byte[] bytes = encrypt(getBytes(s), key, null, null, CipherAlgorithm.DES);
+        byte[] bytes = encrypt(Strings.bytes(s), key, null, null, CipherAlgorithm.DES);
         if (bytes != null) {
             return new String(bytes);
         }
@@ -106,7 +107,7 @@ public class DES {
     }
 
     public static String encrypt(String s, SecretKey key, String iv) {
-        byte[] bytes = encrypt(getBytes(s), key, null, getBytes(iv), CipherAlgorithm.DES);
+        byte[] bytes = encrypt(Strings.bytes(s), key, null, Strings.bytes(iv), CipherAlgorithm.DES);
         if (bytes != null) {
             return new String(bytes);
         }
@@ -114,7 +115,7 @@ public class DES {
     }
 
     public static String encrypt(String s, SecretKey key, CipherAlgorithm mode) {
-        byte[] bytes = encrypt(getBytes(s), key, null, null, mode);
+        byte[] bytes = encrypt(Strings.bytes(s), key, null, null, mode);
         if (bytes != null) {
             return new String(bytes);
         }
@@ -122,7 +123,7 @@ public class DES {
     }
 
     public static String encrypt(String s, SecretKey key, String iv, CipherAlgorithm mode) {
-        byte[] bytes = encrypt(getBytes(s), key, null, getBytes(iv), mode);
+        byte[] bytes = encrypt(Strings.bytes(s), key, null, Strings.bytes(iv), mode);
         if (bytes != null) {
             return new String(bytes);
         }
@@ -177,7 +178,7 @@ public class DES {
     // ------------------ DEC ------------------
 
     public static String decrypt(String s, String key) {
-        byte[] bytes = decrypt(getBytes(s), null, getBytes(key), null, CipherAlgorithm.DES);
+        byte[] bytes = decrypt(Strings.bytes(s), null, Strings.bytes(key), null, CipherAlgorithm.DES);
         if (bytes != null) {
             return new String(bytes);
         }
@@ -185,7 +186,7 @@ public class DES {
     }
 
     public static String decrypt(String s, String key, String iv) {
-        byte[] bytes = decrypt(getBytes(s), null, getBytes(key), getBytes(iv), CipherAlgorithm.DES);
+        byte[] bytes = decrypt(Strings.bytes(s), null, Strings.bytes(key), Strings.bytes(iv), CipherAlgorithm.DES);
         if (bytes != null) {
             return new String(bytes);
         }
@@ -193,7 +194,7 @@ public class DES {
     }
 
     public static String decrypt(String s, String key, CipherAlgorithm mode) {
-        byte[] bytes = decrypt(getBytes(s), null, getBytes(key), null, mode);
+        byte[] bytes = decrypt(Strings.bytes(s), null, Strings.bytes(key), null, mode);
         if (bytes != null) {
             return new String(bytes);
         }
@@ -201,7 +202,7 @@ public class DES {
     }
 
     public static String decrypt(String s, String key, String iv, CipherAlgorithm mode) {
-        byte[] bytes = decrypt(getBytes(s), null, getBytes(key), getBytes(iv), mode);
+        byte[] bytes = decrypt(Strings.bytes(s), null, Strings.bytes(key), Strings.bytes(iv), mode);
         if (bytes != null) {
             return new String(bytes);
         }
@@ -225,7 +226,7 @@ public class DES {
     }
 
     public static String decrypt(String s, SecretKey key) {
-        byte[] bytes = decrypt(getBytes(s), key, null, null, CipherAlgorithm.DES);
+        byte[] bytes = decrypt(Strings.bytes(s), key, null, null, CipherAlgorithm.DES);
         if (bytes != null) {
             return new String(bytes);
         }
@@ -233,7 +234,7 @@ public class DES {
     }
 
     public static String decrypt(String s, SecretKey key, String iv) {
-        byte[] bytes = decrypt(getBytes(s), key, null, getBytes(iv), CipherAlgorithm.DES);
+        byte[] bytes = decrypt(Strings.bytes(s), key, null, Strings.bytes(iv), CipherAlgorithm.DES);
         if (bytes != null) {
             return new String(bytes);
         }
@@ -241,7 +242,7 @@ public class DES {
     }
 
     public static String decrypt(String s, SecretKey key, CipherAlgorithm mode) {
-        byte[] bytes = decrypt(getBytes(s), key, null, null, mode);
+        byte[] bytes = decrypt(Strings.bytes(s), key, null, null, mode);
         if (bytes != null) {
             return new String(bytes);
         }
@@ -249,7 +250,7 @@ public class DES {
     }
 
     public static String decrypt(String s, SecretKey key, String iv, CipherAlgorithm mode) {
-        byte[] bytes = decrypt(getBytes(s), key, null, getBytes(iv), mode);
+        byte[] bytes = decrypt(Strings.bytes(s), key, null, Strings.bytes(iv), mode);
         if (bytes != null) {
             return new String(bytes);
         }
@@ -347,7 +348,7 @@ public class DES {
      * @return SecretKey
      */
     public static SecretKey generatorKey(String key) {
-        return generatorKey(getBytes(key));
+        return generatorKey(Strings.bytes(key));
     }
 
     /**
@@ -358,7 +359,7 @@ public class DES {
      * @return SecretKey
      */
     public static SecretKey generatorKey(String key, CipherAlgorithm mode) {
-        return generatorKey(getBytes(key), mode);
+        return generatorKey(Strings.bytes(key), mode);
     }
 
     /**
@@ -368,7 +369,7 @@ public class DES {
      * @return SecretKey
      */
     public static SecretKey getSecretKey(String key) {
-        return SecretKeySpecMode.DES.getSecretKeySpec(decode(getBytes(key)));
+        return SecretKeySpecMode.DES.getSecretKeySpec(decode(Strings.bytes(key)));
     }
 
     /**
@@ -379,7 +380,7 @@ public class DES {
      * @return SecretKey
      */
     public static SecretKey getSecretKey(String key, CipherAlgorithm mode) {
-        return new SecretKeySpec(decode(getBytes(key)), mode.getMode());
+        return new SecretKeySpec(decode(Strings.bytes(key)), mode.getMode());
     }
 
     /**
@@ -404,10 +405,6 @@ public class DES {
     }
 
     // ------------------ SETTING ------------------
-
-    private static byte[] getBytes(String s) {
-        return s == null ? null : s.getBytes();
-    }
 
     public static void setIvWorkingMode(String mode) {
         ivWorkingMode = mode;

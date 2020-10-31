@@ -4,6 +4,7 @@ import com.orion.ftp.client.bigfile.FtpDownload;
 import com.orion.ftp.client.bigfile.FtpUpload;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Matches;
+import com.orion.utils.Strings;
 import com.orion.utils.collect.Lists;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
@@ -901,7 +902,7 @@ public class FtpInstance {
         try {
             out = client.appendFileStream(serverCharset(config.getRemoteBaseDir() + file));
             for (String line : lines) {
-                out.write(line.getBytes());
+                out.write(Strings.bytes(line));
                 out.write('\n');
             }
         } finally {
@@ -992,7 +993,7 @@ public class FtpInstance {
         try {
             out = client.storeFileStream(serverCharset(config.getRemoteBaseDir() + file));
             for (String line : lines) {
-                out.write(line.getBytes());
+                out.write(Strings.bytes(line));
                 out.write(13);
             }
         } finally {
@@ -1388,7 +1389,7 @@ public class FtpInstance {
      */
     public String getStatus(String path) {
         try {
-            return client.getStatus(new String(Files1.getPath(config.getRemoteBaseDir() + path).getBytes(), config.getRemoteFileNameCharset()));
+            return client.getStatus(new String(Strings.bytes(Files1.getPath(config.getRemoteBaseDir() + path)), config.getRemoteFileNameCharset()));
         } catch (IOException e) {
             throw Exceptions.ftp(e);
         }
@@ -1430,7 +1431,7 @@ public class FtpInstance {
      */
     public String serverCharset(String chars) {
         try {
-            return new String(Files1.getPath(chars).getBytes(), config.getRemoteFileNameCharset());
+            return new String(Strings.bytes(Files1.getPath(chars)), config.getRemoteFileNameCharset());
         } catch (UnsupportedEncodingException e) {
             throw Exceptions.unCoding(e);
         }
@@ -1444,7 +1445,7 @@ public class FtpInstance {
      */
     public String localCharset(String chars) {
         try {
-            return new String(Files1.getPath(chars).getBytes(), config.getLocalFileNameCharset());
+            return new String(Strings.bytes(Files1.getPath(chars)), config.getLocalFileNameCharset());
         } catch (UnsupportedEncodingException e) {
             throw Exceptions.unCoding(e);
         }

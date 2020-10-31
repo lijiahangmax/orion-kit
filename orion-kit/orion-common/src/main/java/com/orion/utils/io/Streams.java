@@ -3,6 +3,7 @@ package com.orion.utils.io;
 import com.orion.lang.iterator.LineIterator;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
+import com.orion.utils.Strings;
 import com.orion.utils.Systems;
 import com.orion.utils.crypto.enums.HashMessageDigest;
 
@@ -396,16 +397,16 @@ public class Streams {
 
     public static void write(char[] data, OutputStream output) throws IOException {
         if (data != null) {
-            output.write(new String(data).getBytes());
+            output.write(Strings.bytes(new String(data)));
         }
     }
 
     public static void write(char[] data, OutputStream output, String chaset) throws IOException {
         if (data != null) {
             if (chaset == null) {
-                output.write(new String(data).getBytes());
+                output.write(Strings.bytes(new String(data)));
             } else {
-                output.write(new String(data).getBytes(chaset));
+                output.write(Strings.bytes(new String(data)));
             }
         }
     }
@@ -418,16 +419,16 @@ public class Streams {
 
     public static void write(String data, OutputStream output) throws IOException {
         if (data != null) {
-            output.write(data.getBytes());
+            output.write(Strings.bytes(data));
         }
     }
 
     public static void write(String data, OutputStream output, String chaset) throws IOException {
         if (data != null) {
             if (chaset == null) {
-                output.write(data.getBytes());
+                output.write(Strings.bytes(data));
             } else {
-                output.write(data.getBytes(chaset));
+                output.write(Strings.bytes(data, chaset));
             }
         }
     }
@@ -447,15 +448,15 @@ public class Streams {
         }
         for (Object line : lines) {
             if (line != null) {
-                output.write(line.toString().getBytes());
+                output.write(Strings.bytes(line.toString()));
             }
-            output.write(eof.getBytes());
+            output.write(Strings.bytes(eof));
         }
     }
 
-    public static void writeLines(Collection lines, String eof, OutputStream output, String chaset) throws IOException {
-        if (chaset == null) {
-            writeLines(lines, chaset, output);
+    public static void writeLines(Collection lines, String eof, OutputStream output, String charset) throws IOException {
+        if (charset == null) {
+            writeLines(lines, charset, output);
         } else {
             if (lines == null) {
                 return;
@@ -465,9 +466,9 @@ public class Streams {
             }
             for (Object line : lines) {
                 if (line != null) {
-                    output.write(line.toString().getBytes(chaset));
+                    output.write(Strings.bytes(line.toString(), charset));
                 }
-                output.write(eof.getBytes(chaset));
+                output.write(Strings.bytes(eof, charset));
             }
         }
     }
@@ -566,11 +567,11 @@ public class Streams {
     }
 
     public static InputStream toInputStream(String input) {
-        return new ByteArrayInputStream(input.getBytes());
+        return new ByteArrayInputStream(Strings.bytes(input));
     }
 
     public static InputStream toInputStream(String input, String chaset) throws IOException {
-        byte[] bytes = chaset != null ? input.getBytes(chaset) : input.getBytes();
+        byte[] bytes = chaset != null ? Strings.bytes(input, chaset) : Strings.bytes(input);
         return new ByteArrayInputStream(bytes);
     }
 

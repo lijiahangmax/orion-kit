@@ -2,6 +2,7 @@ package com.orion.utils.crypto;
 
 import com.orion.lang.wrapper.Args;
 import com.orion.utils.Exceptions;
+import com.orion.utils.Strings;
 import com.orion.utils.crypto.enums.CipherAlgorithm;
 import com.orion.utils.crypto.enums.RSASignature;
 
@@ -55,7 +56,7 @@ public class RSA {
      * @return 密文
      */
     public static String encrypt(String s, String publicKey) {
-        byte[] bytes = encrypt(s.getBytes(), getPublicKey(publicKey));
+        byte[] bytes = encrypt(Strings.bytes(s), getPublicKey(publicKey));
         if (bytes != null) {
             return new String(bytes);
         } else {
@@ -71,7 +72,7 @@ public class RSA {
      * @return 密文
      */
     public static String encrypt(String s, PublicKey publicKey) {
-        byte[] bytes = encrypt(s.getBytes(), publicKey);
+        byte[] bytes = encrypt(Strings.bytes(s), publicKey);
         if (bytes != null) {
             return new String(bytes);
         } else {
@@ -117,7 +118,7 @@ public class RSA {
      * @return 明文
      */
     public static String decrypt(String s, String privateKey) {
-        byte[] bytes = decrypt(s.getBytes(), getPrivateKey(privateKey));
+        byte[] bytes = decrypt(Strings.bytes(s), getPrivateKey(privateKey));
         if (bytes != null) {
             return new String(bytes);
         }
@@ -132,7 +133,7 @@ public class RSA {
      * @return 明文
      */
     public static String decrypt(String s, PrivateKey privateKey) {
-        byte[] bytes = decrypt(s.getBytes(), privateKey);
+        byte[] bytes = decrypt(Strings.bytes(s), privateKey);
         if (bytes != null) {
             return new String(bytes);
         }
@@ -177,7 +178,7 @@ public class RSA {
      * @return 签名
      */
     public static String sign(String s, String privateKey) {
-        byte[] bytes = sign(s.getBytes(), getPrivateKey(privateKey), RSASignature.MD5);
+        byte[] bytes = sign(Strings.bytes(s), getPrivateKey(privateKey), RSASignature.MD5);
         if (bytes != null) {
             return new String(bytes);
         }
@@ -192,7 +193,7 @@ public class RSA {
      * @return 签名
      */
     public static String sign(String s, PrivateKey privateKey) {
-        byte[] bytes = sign(s.getBytes(), privateKey, RSASignature.MD5);
+        byte[] bytes = sign(Strings.bytes(s), privateKey, RSASignature.MD5);
         if (bytes != null) {
             return new String(bytes);
         }
@@ -229,7 +230,7 @@ public class RSA {
      * @return 签名
      */
     public static String sign(String s, String privateKey, RSASignature signModel) {
-        byte[] bytes = sign(s.getBytes(), getPrivateKey(privateKey), signModel);
+        byte[] bytes = sign(Strings.bytes(s), getPrivateKey(privateKey), signModel);
         if (bytes != null) {
             return new String(bytes);
         }
@@ -245,7 +246,7 @@ public class RSA {
      * @return 签名
      */
     public static String sign(String s, PrivateKey privateKey, RSASignature signModel) {
-        byte[] bytes = sign(s.getBytes(), privateKey, signModel);
+        byte[] bytes = sign(Strings.bytes(s), privateKey, signModel);
         if (bytes != null) {
             return new String(bytes);
         }
@@ -294,7 +295,7 @@ public class RSA {
      * @return true验证成功
      */
     public static boolean verify(String s, String publicKey, String sign) {
-        return verify(s.getBytes(), getPublicKey(publicKey), sign.getBytes(), RSASignature.MD5);
+        return verify(Strings.bytes(s), getPublicKey(publicKey), Strings.bytes(sign), RSASignature.MD5);
     }
 
     /**
@@ -306,7 +307,7 @@ public class RSA {
      * @return true验证成功
      */
     public static boolean verify(String s, PublicKey publicKey, String sign) {
-        return verify(s.getBytes(), publicKey, sign.getBytes(), RSASignature.MD5);
+        return verify(Strings.bytes(s), publicKey, Strings.bytes(sign), RSASignature.MD5);
     }
 
     /**
@@ -343,7 +344,7 @@ public class RSA {
      * @return true验证成功
      */
     public static boolean verify(String s, String publicKey, String sign, RSASignature signModel) {
-        return verify(s.getBytes(), getPublicKey(publicKey), sign.getBytes(), signModel);
+        return verify(Strings.bytes(s), getPublicKey(publicKey), Strings.bytes(sign), signModel);
     }
 
     /**
@@ -356,7 +357,7 @@ public class RSA {
      * @return true验证成功
      */
     public static boolean verify(String s, PublicKey publicKey, String sign, RSASignature signModel) {
-        return verify(s.getBytes(), publicKey, sign.getBytes(), signModel);
+        return verify(Strings.bytes(s), publicKey, Strings.bytes(sign), signModel);
     }
 
     /**
@@ -402,7 +403,7 @@ public class RSA {
      */
     public static RSAPrivateKey getPrivateKey(File file) {
         try {
-            byte[] bytes = getKey(file).getBytes(StandardCharsets.ISO_8859_1);
+            byte[] bytes = Strings.bytes(getKey(file), StandardCharsets.ISO_8859_1);
             PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(decode(bytes));
             return (RSAPrivateKey) RSA_KEY_FACTORY.generatePrivate(spec);
         } catch (Exception e) {
@@ -418,7 +419,7 @@ public class RSA {
      */
     public static RSAPrivateKey getPrivateKey(String key) {
         try {
-            byte[] bytes = key.getBytes();
+            byte[] bytes = Strings.bytes(key);
             PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(decode(bytes));
             return (RSAPrivateKey) RSA_KEY_FACTORY.generatePrivate(spec);
         } catch (Exception e) {
@@ -449,7 +450,7 @@ public class RSA {
      */
     public static RSAPublicKey getPublicKey(File file) {
         try {
-            byte[] bytes = getKey(file).getBytes(StandardCharsets.ISO_8859_1);
+            byte[] bytes = Strings.bytes(getKey(file), StandardCharsets.ISO_8859_1);
             X509EncodedKeySpec spec = new X509EncodedKeySpec(decode(bytes));
             return (RSAPublicKey) RSA_KEY_FACTORY.generatePublic(spec);
         } catch (Exception e) {
@@ -465,7 +466,7 @@ public class RSA {
      */
     public static RSAPublicKey getPublicKey(String key) {
         try {
-            byte[] bytes = key.getBytes(StandardCharsets.ISO_8859_1);
+            byte[] bytes = Strings.bytes(key, StandardCharsets.ISO_8859_1);
             X509EncodedKeySpec spec = new X509EncodedKeySpec(decode(bytes));
             return (RSAPublicKey) RSA_KEY_FACTORY.generatePublic(spec);
         } catch (Exception e) {

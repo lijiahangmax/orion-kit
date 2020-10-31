@@ -645,7 +645,7 @@ public class StringExt implements CharSequence, Serializable {
      * @return byte[]
      */
     public byte[] toBytes() {
-        return s.getBytes();
+        return Strings.bytes(s);
     }
 
     /**
@@ -655,11 +655,7 @@ public class StringExt implements CharSequence, Serializable {
      * @return byte[]
      */
     public byte[] toBytes(String charset) {
-        try {
-            return s.getBytes(charset);
-        } catch (Exception e) {
-            throw Exceptions.unCoding(e);
-        }
+        return Strings.bytes(s, charset);
     }
 
     /**

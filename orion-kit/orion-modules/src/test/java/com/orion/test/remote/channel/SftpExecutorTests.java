@@ -4,6 +4,7 @@ import com.orion.remote.channel.SessionFactory;
 import com.orion.remote.channel.SessionLogger;
 import com.orion.remote.channel.executor.sftp.FileAttribute;
 import com.orion.remote.channel.executor.sftp.SftpExecutor;
+import com.orion.utils.Strings;
 import com.orion.utils.collect.Lists;
 import org.junit.After;
 import org.junit.Before;
@@ -73,14 +74,14 @@ public class SftpExecutorTests {
 
     @Test
     public void write() throws IOException {
-        e.write("/root/file2", "a".getBytes());
+        e.write("/root/file2", Strings.bytes("a"));
         e.writeLine("/root/file3", "123");
         e.writeLines("/root/file4", Lists.of("123", "345"));
     }
 
     @Test
     public void append() throws IOException {
-        e.append("/root/file2", "a".getBytes());
+        e.append("/root/file2", Strings.bytes("a"));
         e.appendLine("/root/file3", "123");
         e.appendLines("/root/file4", Lists.of("123", "345"));
     }
