@@ -69,7 +69,7 @@ public class Strings {
      * @param s 字符串
      * @return 长度
      */
-    public static int length(String s) {
+    public static int length(CharSequence s) {
         return s == null ? 0 : s.length();
     }
 
