@@ -1,5 +1,9 @@
 package com.orion.utils.time;
 
+import com.orion.lang.support.CloneSupport;
+import com.orion.utils.Valid;
+
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -12,32 +16,66 @@ import java.util.TimeZone;
  * @version 1.0.0
  * @since 2020/10/31 21:38
  */
-public class DateStream {
+public class DateStream extends CloneSupport<DateStream> implements Serializable {
+
+    private static final long serialVersionUID = -21831208940539450L;
 
     private Calendar c;
 
+    public DateStream() {
+        this.c = Calendar.getInstance();
+    }
+
     public DateStream(Date date) {
+        Valid.notNull(date, "date is null");
         this.c = Calendar.getInstance();
         this.c.setTime(date);
     }
 
     public DateStream(Date date, TimeZone timeZone) {
+        Valid.notNull(date, "date is null");
+        Valid.notNull(timeZone, "time zone is null");
         this.c = Calendar.getInstance(timeZone);
         this.c.setTime(date);
     }
 
     public DateStream(Date date, Locale locale) {
+        Valid.notNull(date, "date is null");
+        Valid.notNull(locale, "locale is null");
         this.c = Calendar.getInstance(locale);
         this.c.setTime(date);
     }
 
     public DateStream(Date date, TimeZone timeZone, Locale locale) {
+        Valid.notNull(date, "date is null");
+        Valid.notNull(timeZone, "time zone is null");
+        Valid.notNull(locale, "locale is null");
         this.c = Calendar.getInstance(timeZone, locale);
         this.c.setTime(date);
     }
 
     public DateStream(Calendar c) {
         this.c = c;
+    }
+
+    public static DateStream of(Object o) {
+        return new DateStream(Dates.date(o));
+    }
+
+    public static DateStream of(Object o, TimeZone timeZone) {
+        return new DateStream(Dates.date(o), timeZone);
+    }
+
+    public static DateStream of(Object o, Locale locale) {
+        return new DateStream(Dates.date(o), locale);
+    }
+
+    public static DateStream of(Object o, TimeZone timeZone, Locale locale) {
+        return new DateStream(Dates.date(o), timeZone, locale);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(of(System.currentTimeMillis() - 100000).before(new Date()));
     }
 
     // ---------- Year ----------
@@ -208,14 +246,12 @@ public class DateStream {
         return c.get(Calendar.MILLISECOND);
     }
 
-    // ---------- global ----------
-
     public DateStream add(int type, int v) {
         c.add(type, v);
         return this;
     }
 
-    public DateStream sub(int type, int v) {
+    public DateStream subtract(int type, int v) {
         c.add(type, -v);
         return this;
     }
@@ -227,16 +263,82 @@ public class DateStream {
 
     // ---------- Result ----------
 
-    public int get(int type) {
-        return c.get(type);
-    }
-
     public String format() {
         return Dates.format(this.c.getTime());
     }
 
     public String format(String pattern) {
         return Dates.format(this.c.getTime(), pattern);
+    }
+
+    public String format(Locale locale) {
+        return Dates.format(this.c.getTime(), locale);
+    }
+
+    public String format(String pattern, Locale locale) {
+        return Dates.format(this.c.getTime(), pattern, locale);
+    }
+
+    public String format(TimeZone timeZone) {
+        return Dates.format(this.c.getTime(), timeZone);
+    }
+
+    public String format(String pattern, TimeZone timeZone) {
+        return Dates.format(this.c.getTime(), pattern, timeZone);
+    }
+
+    public String format(TimeZone timeZone, Locale locale) {
+        return Dates.format(this.c.getTime(), timeZone, locale);
+    }
+
+    public String format(String pattern, TimeZone timeZone, Locale locale) {
+        return Dates.format(this.c.getTime(), pattern, timeZone, locale);
+    }
+
+    /**
+     * 是否在时间区间内
+     *
+     * @param start 开始区间
+     * @param end   结束区间
+     * @return true包含
+     */
+    public boolean include(Date start, Date end) {
+        return DateRanges.include(this.c.getTime(), start, end);
+    }
+
+    /**
+     * 是否不在时间区间内
+     *
+     * @param start 开始区间
+     * @param end   结束区间
+     * @return true不包含
+     */
+    public boolean exclude(Date start, Date end) {
+        return DateRanges.exclude(this.c.getTime(), start, end);
+    }
+
+    /**
+     * 判断实际是否在 d 之前
+     *
+     * @param d d
+     * @return true之前
+     */
+    public boolean before(Date d) {
+        return DateRanges.before(this.c.getTime(), d);
+    }
+
+    /**
+     * 判断实际是否在 d 之后
+     *
+     * @param d d
+     * @return true之后
+     */
+    public boolean after(Date d) {
+        return DateRanges.after(this.c.getTime(), d);
+    }
+
+    public int get(int type) {
+        return c.get(type);
     }
 
     public Date date() {

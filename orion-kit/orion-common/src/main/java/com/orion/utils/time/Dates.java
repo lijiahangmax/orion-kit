@@ -235,8 +235,8 @@ public class Dates {
      *
      * @return 清除后的时间
      */
-    public static Date clearHMS() {
-        return clearHMS(new Date());
+    public static Date clearHms() {
+        return clearHms(Calendar.getInstance());
     }
 
     /**
@@ -245,9 +245,19 @@ public class Dates {
      * @param d 时间
      * @return 清除后的时间
      */
-    public static Date clearHMS(Date d) {
+    public static Date clearHms(Date d) {
         Calendar c = Calendar.getInstance();
         c.setTime(d);
+        return clearHms(c);
+    }
+
+    /**
+     * 清除时分秒
+     *
+     * @param c 时间
+     * @return 清除后的时间
+     */
+    public static Date clearHms(Calendar c) {
         c.set(Calendar.HOUR_OF_DAY, 0);
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 0);
@@ -261,7 +271,7 @@ public class Dates {
      * @return 时间
      */
     public static Date clearDay() {
-        return clearDay(new Date(), false);
+        return clearDay(Calendar.getInstance(), false);
     }
 
     /**
@@ -269,8 +279,8 @@ public class Dates {
      *
      * @return 时间
      */
-    public static Date clearDayHMS() {
-        return clearDay(new Date(), true);
+    public static Date clearDayHms() {
+        return clearDay(Calendar.getInstance(), true);
     }
 
     /**
@@ -289,8 +299,28 @@ public class Dates {
      * @param d 时间
      * @return 时间
      */
-    public static Date clearDayHMS(Date d) {
+    public static Date clearDayHms(Date d) {
         return clearDay(d, true);
+    }
+
+    /**
+     * 清除时间为1号
+     *
+     * @param c 时间
+     * @return 时间
+     */
+    public static Date clearDay(Calendar c) {
+        return clearDay(c, false);
+    }
+
+    /**
+     * 清除时间为1号, 清除HMS
+     *
+     * @param c 时间
+     * @return 时间
+     */
+    public static Date clearDayHms(Calendar c) {
+        return clearDay(c, true);
     }
 
     /**
@@ -303,6 +333,17 @@ public class Dates {
     private static Date clearDay(Date d, boolean clearHMS) {
         Calendar c = Calendar.getInstance();
         c.setTime(d);
+        return clearDay(c, clearHMS);
+    }
+
+    /**
+     * 清除时间为当月1号
+     *
+     * @param c        时间
+     * @param clearHMS 是否清除HMS
+     * @return 时间
+     */
+    private static Date clearDay(Calendar c, boolean clearHMS) {
         c.set(Calendar.DAY_OF_MONTH, 1);
         if (clearHMS) {
             c.set(Calendar.HOUR_OF_DAY, 0);
@@ -319,7 +360,7 @@ public class Dates {
      * @return 23:59:59
      */
     public static Date dayEnd() {
-        return dayEnd(new Date());
+        return dayEnd(Calendar.getInstance());
     }
 
     /**
@@ -331,6 +372,16 @@ public class Dates {
     public static Date dayEnd(Date d) {
         Calendar c = Calendar.getInstance();
         c.setTime(d);
+        return dayEnd(c);
+    }
+
+    /**
+     * 日期的  23:59:59
+     *
+     * @param c 时间
+     * @return 23:59:59
+     */
+    public static Date dayEnd(Calendar c) {
         c.set(Calendar.HOUR_OF_DAY, 23);
         c.set(Calendar.MINUTE, 59);
         c.set(Calendar.SECOND, 59);
@@ -358,6 +409,16 @@ public class Dates {
     }
 
     /**
+     * 月份的最后一天
+     *
+     * @param c 时间
+     * @return 时间
+     */
+    public static Date monthEnd(Calendar c) {
+        return monthDayEnd(c, false);
+    }
+
+    /**
      * 当前月份的最后一天 时间的最后一秒
      *
      * @return 时间
@@ -377,6 +438,16 @@ public class Dates {
     }
 
     /**
+     * 月份的最后一天 时间的最后一秒
+     *
+     * @param c 时间
+     * @return 时间
+     */
+    public static Date monthDayEnd(Calendar c) {
+        return monthDayEnd(c, true);
+    }
+
+    /**
      * 月份的最后一天
      *
      * @param d      时间
@@ -386,6 +457,17 @@ public class Dates {
     private static Date monthDayEnd(Date d, boolean dayEnd) {
         Calendar c = Calendar.getInstance();
         c.setTime(d);
+        return monthDayEnd(c, dayEnd);
+    }
+
+    /**
+     * 月份的最后一天
+     *
+     * @param c      时间
+     * @param dayEnd 是否将时间 转化为 23:59:59
+     * @return 时间
+     */
+    private static Date monthDayEnd(Calendar c, boolean dayEnd) {
         c.set(Calendar.DAY_OF_MONTH, getMonthLastDay(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1));
         if (dayEnd) {
             c.set(Calendar.HOUR_OF_DAY, 23);
@@ -393,188 +475,6 @@ public class Dates {
             c.set(Calendar.SECOND, 59);
             c.set(Calendar.MILLISECOND, 999);
         }
-        return c.getTime();
-    }
-
-    /**
-     * 对秒进行偏移
-     *
-     * @param off 偏移量
-     * @return 偏移量
-     */
-    public static Date offsetSecond(int off) {
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.SECOND, off);
-        return c.getTime();
-    }
-
-    /**
-     * 对秒进行偏移
-     *
-     * @param d   时间
-     * @param off 偏移量
-     * @return 偏移量
-     */
-    public static Date offsetSecond(Date d, int off) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(d);
-        c.add(Calendar.SECOND, off);
-        return c.getTime();
-    }
-
-    /**
-     * 对分进行偏移
-     *
-     * @param off 偏移量
-     * @return 偏移量
-     */
-    public static Date offsetMinute(int off) {
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.MINUTE, off);
-        return c.getTime();
-    }
-
-    /**
-     * 对分进行偏移
-     *
-     * @param d   时间
-     * @param off 偏移量
-     * @return 偏移量
-     */
-    public static Date offsetMinute(Date d, int off) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(d);
-        c.add(Calendar.MINUTE, off);
-        return c.getTime();
-    }
-
-    /**
-     * 对时进行偏移
-     *
-     * @param off 偏移量
-     * @return 偏移量
-     */
-    public static Date offsetHour(int off) {
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.HOUR_OF_DAY, off);
-        return c.getTime();
-    }
-
-    /**
-     * 对时进行偏移
-     *
-     * @param d   时间
-     * @param off 偏移量
-     * @return 偏移量
-     */
-    public static Date offsetHour(Date d, int off) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(d);
-        c.add(Calendar.HOUR_OF_DAY, off);
-        return c.getTime();
-    }
-
-    /**
-     * 对天进行偏移
-     *
-     * @param off 偏移量
-     * @return 偏移量
-     */
-    public static Date offsetDay(int off) {
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.DAY_OF_MONTH, off);
-        return c.getTime();
-    }
-
-    /**
-     * 对天进行偏移
-     *
-     * @param d   时间
-     * @param off 偏移量
-     * @return 偏移量
-     */
-    public static Date offsetDay(Date d, int off) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(d);
-        c.add(Calendar.DAY_OF_MONTH, off);
-        return c.getTime();
-    }
-
-    /**
-     * 对周进行偏移
-     *
-     * @param off 偏移量
-     * @return 偏移量
-     */
-    public static Date offsetWeek(int off) {
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.WEEK_OF_MONTH, off);
-        return c.getTime();
-    }
-
-    /**
-     * 对周进行偏移
-     *
-     * @param d   时间
-     * @param off 偏移量
-     * @return 偏移量
-     */
-    public static Date offsetWeek(Date d, int off) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(d);
-        c.add(Calendar.WEEK_OF_MONTH, off);
-        return c.getTime();
-    }
-
-    /**
-     * 对月进行偏移
-     *
-     * @param off 偏移量
-     * @return 偏移量
-     */
-    public static Date offsetMonth(int off) {
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.MONTH, off);
-        return c.getTime();
-    }
-
-    /**
-     * 对月进行偏移
-     *
-     * @param d   时间
-     * @param off 偏移量
-     * @return 偏移量
-     */
-    public static Date offsetMonth(Date d, int off) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(d);
-        c.add(Calendar.MONTH, off);
-        return c.getTime();
-    }
-
-    /**
-     * 对年进行偏移
-     *
-     * @param off 偏移量
-     * @return 偏移量
-     */
-    public static Date offsetYear(int off) {
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.YEAR, off);
-        return c.getTime();
-    }
-
-    /**
-     * 对年进行偏移
-     *
-     * @param d   时间
-     * @param off 偏移量
-     * @return 偏移量
-     */
-    public static Date offsetYear(Date d, int off) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(d);
-        c.add(Calendar.YEAR, off);
         return c.getTime();
     }
 
@@ -1012,7 +912,6 @@ public class Dates {
      * @param d 对比的时间
      * @return 结果
      */
-    @Deprecated
     public static String dateAgo(Date d) {
         return dateAgo(new Date(), d, true);
     }
@@ -1024,7 +923,6 @@ public class Dates {
      * @param d      对比的时间
      * @return 结果
      */
-    @Deprecated
     public static String dateAgo(Date source, Date d) {
         return dateAgo(source, d, true);
     }
@@ -1037,7 +935,6 @@ public class Dates {
      * @param strict 是否使用精确时间 如: 23小时前/昨天
      * @return 结果
      */
-    @Deprecated
     public static String dateAgo(Date source, Date d, boolean strict) {
         DateStream ss = stream(source);
         // 目标时间
@@ -1200,8 +1097,8 @@ public class Dates {
      * @param date2 时间2
      * @return 时差
      */
-    public static long intervalMS(Date date1, Date date2) {
-        return date1.getTime() - date2.getTime();
+    public static long intervalMs(Date date1, Date date2) {
+        return Math.abs(date1.getTime() - date2.getTime());
     }
 
     /**
@@ -1211,9 +1108,9 @@ public class Dates {
      * @param date2 时间2
      * @return 时差 [天,时,分,秒]
      */
-    public static long[] intervalanalysis(Date date1, Date date2) {
+    public static long[] intervalAnalysis(Date date1, Date date2) {
         long d1 = date1.getTime(), d2 = date2.getTime();
-        return intervalanalysis((d1 - d2) > 0 ? d1 - d2 : d2 - d1);
+        return intervalAnalysis((d1 - d2) > 0 ? d1 - d2 : d2 - d1);
     }
 
     /**
@@ -1249,7 +1146,7 @@ public class Dates {
      * @param ms 时间戳毫秒
      * @return 时差 [天,时,分,秒]
      */
-    public static long[] intervalanalysis(long ms) {
+    public static long[] intervalAnalysis(long ms) {
         long distanceDay = ms / DAY_STAMP;
         long distanceHour = ms % DAY_STAMP / HOUR_STAMP;
         long distanceMinute = ms % DAY_STAMP % HOUR_STAMP / MINUTE_STAMP;
@@ -1387,6 +1284,68 @@ public class Dates {
         } else {
             return 30;
         }
+    }
+
+    /**
+     * 是否为上午
+     *
+     * @return ignore
+     */
+    public boolean isAm() {
+        return isAm(Calendar.getInstance());
+    }
+
+    /**
+     * 是否为下午
+     *
+     * @return ignore
+     */
+    public boolean isPm() {
+        return isPm(Calendar.getInstance());
+    }
+
+    /**
+     * 是否为上午
+     *
+     * @param d d
+     * @return ignore
+     */
+    public boolean isAm(Date d) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(d);
+        return isAm(c);
+    }
+
+    /**
+     * 是否为下午
+     *
+     * @param d d
+     * @return ignore
+     */
+    public boolean isPm(Date d) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(d);
+        return isPm(c);
+    }
+
+    /**
+     * 是否为上午
+     *
+     * @param c c
+     * @return ignore
+     */
+    public boolean isAm(Calendar c) {
+        return Calendar.AM == c.get(Calendar.AM_PM);
+    }
+
+    /**
+     * 是否为下午
+     *
+     * @param c c
+     * @return ignore
+     */
+    public boolean isPm(Calendar c) {
+        return Calendar.PM == c.get(Calendar.AM_PM);
     }
 
     // ---------- JDK8 ----------
@@ -1612,7 +1571,7 @@ public class Dates {
         return LocalDateTime.of(d, t);
     }
 
-    public static LocalDateTime clearHMS(LocalDateTime d) {
+    public static LocalDateTime clearHms(LocalDateTime d) {
         return LocalDateTime.of(d.toLocalDate(), LocalTime.of(0, 0, 0, 0));
     }
 
@@ -1620,7 +1579,7 @@ public class Dates {
         return d.withDayOfMonth(1);
     }
 
-    public static LocalDateTime clearDayHMS(LocalDateTime d) {
+    public static LocalDateTime clearDayHms(LocalDateTime d) {
         return LocalDateTime.of(d.toLocalDate().withDayOfMonth(1), LocalTime.of(0, 0, 0, 0));
     }
 

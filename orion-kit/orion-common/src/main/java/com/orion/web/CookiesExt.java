@@ -213,7 +213,7 @@ public class CookiesExt {
      * @param domain   域名
      */
     public static void set(HttpServletResponse response, String key, String value, Date expire, String path, String domain) {
-        set(response, key, value, (int) (Dates.intervalMS(expire, new Date()) / 1000), path, domain);
+        set(response, key, value, (int) (Dates.intervalMs(expire, new Date()) / 1000), path, domain);
     }
 
     /**
@@ -282,7 +282,7 @@ public class CookiesExt {
      * @param domain   域名
      */
     public static void sets(HttpServletResponse response, Map<String, String> map, Date expire, String path, String domain) {
-        sets(response, map, (int) (Dates.intervalMS(expire, new Date()) / 1000), path, domain);
+        sets(response, map, (int) (Dates.intervalMs(expire, new Date()) / 1000), path, domain);
     }
 
     /**

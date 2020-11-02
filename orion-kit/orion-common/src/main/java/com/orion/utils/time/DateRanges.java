@@ -82,4 +82,26 @@ public class DateRanges {
         return ds >= rs && ds <= re && de >= rs && de <= re;
     }
 
+    /**
+     * 判断 d1 是否在 d2 之前
+     *
+     * @param d1 d1
+     * @param d2 d2
+     * @return true 之前
+     */
+    public static boolean before(Date d1, Date d2) {
+        return d1.compareTo(d2) < 0;
+    }
+
+    /**
+     * 判断 d1 是否在 d2 之后
+     *
+     * @param d1 d1
+     * @param d2 d2
+     * @return true 之后
+     */
+    public static boolean after(Date d1, Date d2) {
+        return d1.compareTo(d2) > 0;
+    }
+
 }
