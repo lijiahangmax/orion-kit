@@ -1,5 +1,6 @@
 package com.orion.utils.crypto.asymmetric;
 
+import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.crypto.enums.CipherAlgorithm;
 import com.orion.utils.crypto.enums.PaddingMode;
@@ -80,6 +81,7 @@ public class GcmAsymmetric extends BaseAsymmetric {
                 return encode(cipher.doFinal(bs));
             }
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -131,6 +133,7 @@ public class GcmAsymmetric extends BaseAsymmetric {
             cipher.updateAAD(aad);
             return cipher.doFinal(decode(bs));
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }

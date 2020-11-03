@@ -167,7 +167,7 @@ public class SftpDownload implements Runnable, SafeCloseable {
                     readHandler.getClient().closeFile(readHandler);
                 }
             } catch (IOException e) {
-                // ignore
+                Exceptions.printStacks(e);
             }
         }
     }

@@ -6,6 +6,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.orion.id.Sequences;
+import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.Systems;
 import com.orion.utils.io.Files1;
@@ -137,6 +138,7 @@ public class QRCodes {
             }
             return image;
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -267,6 +269,7 @@ public class QRCodes {
             ImageIO.write(image, suffix, out);
             return file;
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         } finally {
             Streams.close(out);
@@ -301,7 +304,7 @@ public class QRCodes {
             }
             ImageIO.write(image, suffix, out);
         } catch (Exception e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
         return this;
     }
@@ -315,6 +318,7 @@ public class QRCodes {
         try {
             return decode(ImageIO.read(new File(file)));
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -328,6 +332,7 @@ public class QRCodes {
         try {
             return decode(ImageIO.read(file));
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -341,6 +346,7 @@ public class QRCodes {
         try {
             return decode(ImageIO.read(in));
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -358,6 +364,7 @@ public class QRCodes {
             hint.put(DecodeHintType.CHARACTER_SET, "UTF-8");
             return new MultiFormatReader().decode(bitmap, hint).getText();
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -401,6 +408,7 @@ public class QRCodes {
         try {
             return this.setLogo(ImageIO.read(new File(file)));
         } catch (IOException e) {
+            Exceptions.printStacks(e);
             return this;
         }
     }
@@ -409,6 +417,7 @@ public class QRCodes {
         try {
             return this.setLogo(ImageIO.read(file));
         } catch (IOException e) {
+            Exceptions.printStacks(e);
             return this;
         }
     }
@@ -417,6 +426,7 @@ public class QRCodes {
         try {
             return this.setLogo(ImageIO.read(in));
         } catch (IOException e) {
+            Exceptions.printStacks(e);
             return this;
         }
     }
@@ -425,6 +435,7 @@ public class QRCodes {
         try {
             return this.setLogo(ImageIO.read(Streams.toInputStream(bs)));
         } catch (IOException e) {
+            Exceptions.printStacks(e);
             return this;
         }
     }

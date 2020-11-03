@@ -4,7 +4,6 @@ import com.orion.utils.Valid;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -281,12 +280,6 @@ public class Generics {
             }
         }
         return map;
-    }
-
-    public static void main(String[] args) {
-        ArrayList<String> strings = new ArrayList<String>();
-        strings.add("as");
-        System.out.println(getClassGenericType(strings.getClass()));
     }
 
 }

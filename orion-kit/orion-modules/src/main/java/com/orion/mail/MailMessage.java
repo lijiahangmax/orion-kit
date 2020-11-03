@@ -14,7 +14,6 @@ import java.util.List;
  * @version 1.0.0
  * @since 2020/3/15 18:27
  */
-@SuppressWarnings("ALL")
 public class MailMessage implements Serializable, JsonAble {
 
     private static final String CHARSET = "UTF-8";

@@ -110,6 +110,7 @@ public class SftpExecutor implements SafeCloseable {
         try {
             return client.canonicalPath(path) != null;
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -124,6 +125,7 @@ public class SftpExecutor implements SafeCloseable {
         try {
             return client.canonicalPath(path);
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -138,6 +140,7 @@ public class SftpExecutor implements SafeCloseable {
         try {
             return client.readLink(path);
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -154,6 +157,7 @@ public class SftpExecutor implements SafeCloseable {
             client.setstat(path, attr.getAttrs());
             return true;
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -185,6 +189,7 @@ public class SftpExecutor implements SafeCloseable {
             }
             return new FileAttribute(path, attr);
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -201,6 +206,7 @@ public class SftpExecutor implements SafeCloseable {
             clear.getClient().closeFile(clear);
             return true;
         } catch (IOException e) {
+            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -220,6 +226,7 @@ public class SftpExecutor implements SafeCloseable {
                 return -1;
             }
         } catch (IOException e) {
+            Exceptions.printStacks(e);
             return -1;
         }
     }
@@ -243,6 +250,7 @@ public class SftpExecutor implements SafeCloseable {
             }
             return list;
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -284,6 +292,7 @@ public class SftpExecutor implements SafeCloseable {
                 try {
                     client.mkdir(parentPath, permissions);
                 } catch (Exception e1) {
+                    Exceptions.printStacks(e1);
                     return false;
                 }
             }
@@ -302,6 +311,7 @@ public class SftpExecutor implements SafeCloseable {
             client.rmdir(path);
             return true;
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -317,6 +327,7 @@ public class SftpExecutor implements SafeCloseable {
             client.rm(path);
             return true;
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -348,6 +359,7 @@ public class SftpExecutor implements SafeCloseable {
             }
             return true;
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -394,6 +406,7 @@ public class SftpExecutor implements SafeCloseable {
                 return false;
             }
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -413,6 +426,7 @@ public class SftpExecutor implements SafeCloseable {
             }
             return false;
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -435,6 +449,7 @@ public class SftpExecutor implements SafeCloseable {
             }
             return true;
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -769,7 +784,7 @@ public class SftpExecutor implements SafeCloseable {
                 }
             }
         } catch (Exception e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
         return list;
     }
@@ -805,7 +820,7 @@ public class SftpExecutor implements SafeCloseable {
                 }
             }
         } catch (Exception e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
         return list;
     }
@@ -994,7 +1009,7 @@ public class SftpExecutor implements SafeCloseable {
                 }
             }
         } catch (Exception e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
         return list;
     }
@@ -1012,6 +1027,7 @@ public class SftpExecutor implements SafeCloseable {
             client.closeFile(handle);
             return true;
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return false;
         }
     }

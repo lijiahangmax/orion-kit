@@ -1,5 +1,6 @@
 package com.orion.utils.reflect;
 
+import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
 import com.orion.utils.collect.Lists;
 
@@ -80,6 +81,7 @@ public class Classes {
         try {
             return Class.forName(className);
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -95,6 +97,7 @@ public class Classes {
         try {
             return Class.forName(className, init, CURRENT_CLASS_LOADER);
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -111,6 +114,7 @@ public class Classes {
         try {
             return Class.forName(className, init, classLoader);
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }

@@ -1,6 +1,7 @@
 package com.orion.utils.io;
 
 import com.orion.utils.Arrays1;
+import com.orion.utils.Exceptions;
 import com.orion.utils.crypto.AES;
 import com.orion.utils.crypto.Keys;
 import com.orion.utils.crypto.enums.CipherAlgorithm;
@@ -82,6 +83,7 @@ public class FileEncrypt implements Callable<Boolean> {
             out.flush();
             return true;
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return false;
         } finally {
             if (autoClose) {

@@ -1,5 +1,6 @@
 package com.orion.spring;
 
+import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.io.Streams;
 import org.apache.commons.fileupload.FileItem;
@@ -59,6 +60,7 @@ public class MultipartFiles {
             }
             return toMultiPartFile(new FileInputStream(file), charset, field, fileName);
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -96,6 +98,7 @@ public class MultipartFiles {
             }
             return toMultiPartFile(MultipartFiles.class.getClassLoader().getResourceAsStream(src), charset, field, fileName);
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -137,10 +140,12 @@ public class MultipartFiles {
                 os.close();
                 in.close();
             } catch (IOException e) {
+                Exceptions.printStacks(e);
                 return null;
             }
             return new CommonsMultipartFile(item);
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         } finally {
             Streams.close(in);

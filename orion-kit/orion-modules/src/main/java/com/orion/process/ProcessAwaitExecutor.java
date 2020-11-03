@@ -289,7 +289,7 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
             try {
                 this.write(Strings.bytes("exit 0"));
             } catch (Exception e1) {
-                // ignore
+                Exceptions.printStacks(e1);
             }
         }
         if (this.process != null) {

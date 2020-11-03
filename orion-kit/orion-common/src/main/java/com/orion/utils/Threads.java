@@ -168,7 +168,7 @@ public class Threads {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
     }
 
@@ -182,7 +182,7 @@ public class Threads {
         try {
             unit.sleep(duration);
         } catch (InterruptedException e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
     }
 

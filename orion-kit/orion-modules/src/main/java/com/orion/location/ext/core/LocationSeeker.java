@@ -1,6 +1,7 @@
 package com.orion.location.ext.core;
 
 import com.orion.location.region.core.Region;
+import com.orion.utils.Exceptions;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -121,7 +122,7 @@ public class LocationSeeker {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Exceptions.printStacks(e);
         }
         return ret;
     }
@@ -379,7 +380,7 @@ public class LocationSeeker {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Exceptions.printStacks(e);
         }
         return info;
     }
@@ -471,7 +472,7 @@ public class LocationSeeker {
             ip[1] = ip[2];
             ip[2] = temp;
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            Exceptions.printStacks(e);
         }
     }
 
@@ -615,6 +616,7 @@ public class LocationSeeker {
             }
             return loc;
         } catch (IOException e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -707,7 +709,7 @@ public class LocationSeeker {
                 return SeekerSupport.getString(buf, 0, i, "GBK");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Exceptions.printStacks(e);
         }
         return "";
     }
@@ -725,7 +727,7 @@ public class LocationSeeker {
                 return SeekerSupport.getString(buf, 0, i, "GBK");
             }
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            Exceptions.printStacks(e);
         }
         return "";
     }

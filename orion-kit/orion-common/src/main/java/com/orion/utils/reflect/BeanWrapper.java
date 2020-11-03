@@ -204,7 +204,7 @@ public class BeanWrapper {
                             Methods.invokeMethodInfer(t, setterMethod, new Object[]{value});
                         }
                     } catch (Exception e) {
-                        // ignore
+                        Exceptions.printStacks(e);
                     }
                     break;
                 }
@@ -252,7 +252,7 @@ public class BeanWrapper {
                     }
                 }
             } catch (Exception e) {
-                // ignore
+                Exceptions.printStacks(e);
             }
         }
         return t;

@@ -58,7 +58,6 @@ public enum RSASignature {
         try {
             return Signature.getInstance(model);
         } catch (Exception e) {
-            // impossible
             throw Exceptions.runtime(e);
         }
     }

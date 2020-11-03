@@ -6,6 +6,7 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.orion.id.Sequences;
+import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.Systems;
 import com.orion.utils.io.Files1;
@@ -96,6 +97,7 @@ public class BarCodes {
             BitMatrix bitMatrix = WRITER.encode(content, BarcodeFormat.CODE_128, width, height, null);
             return MatrixToImageWriter.toBufferedImage(bitMatrix);
         } catch (WriterException e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -210,6 +212,7 @@ public class BarCodes {
             ImageIO.write(image, suffix, out);
             return file;
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         } finally {
             Streams.close(out);
@@ -243,7 +246,7 @@ public class BarCodes {
             }
             ImageIO.write(image, suffix, out);
         } catch (Exception e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
     }
 
@@ -257,6 +260,7 @@ public class BarCodes {
         try {
             return decode(ImageIO.read(new File(imagePath)));
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -271,6 +275,7 @@ public class BarCodes {
         try {
             return decode(ImageIO.read(imageFile));
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -285,6 +290,7 @@ public class BarCodes {
         try {
             return decode(ImageIO.read(in));
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         } finally {
             Streams.close(in);
@@ -305,6 +311,7 @@ public class BarCodes {
             result = new MultiFormatReader().decode(bitmap, null);
             return result.getText();
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }

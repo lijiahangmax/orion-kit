@@ -48,7 +48,6 @@ public enum CipherAlgorithm {
         try {
             return Cipher.getInstance(mode);
         } catch (Exception e) {
-            // impossible
             throw Exceptions.runtime(e);
         }
     }

@@ -3,7 +3,9 @@ package com.orion.location.ext;
 import com.orion.location.ext.core.LocationSeeker;
 import com.orion.location.region.LocationRegions;
 import com.orion.location.region.core.Region;
+import com.orion.utils.Exceptions;
 import com.orion.utils.Systems;
+import com.orion.utils.io.Streams;
 import com.orion.utils.net.IPs;
 
 import java.io.*;
@@ -95,11 +97,7 @@ public class LocationExt {
                 e.printStackTrace();
                 throw new RuntimeException("regionExt 服务初始化异常");
             } finally {
-                try {
-                    in.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                Streams.close(in);
             }
         } else {
             try {
@@ -107,7 +105,7 @@ public class LocationExt {
                     initDatFile();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                Exceptions.printStacks(e);
             }
         }
     }
@@ -123,7 +121,7 @@ public class LocationExt {
             } catch (Exception e) {
                 init = false;
                 System.out.println("regionExt 服务未初始失败");
-                e.printStackTrace();
+                Exceptions.printStacks(e);
             }
         }
     }
@@ -156,7 +154,7 @@ public class LocationExt {
         try {
             return seeker.getCountry(ip);
         } catch (Exception e) {
-            e.printStackTrace();
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -177,7 +175,7 @@ public class LocationExt {
         try {
             return seeker.getAddress(ip);
         } catch (Exception e) {
-            e.printStackTrace();
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -198,7 +196,7 @@ public class LocationExt {
         try {
             return seeker.getArea(ip);
         } catch (Exception e) {
-            e.printStackTrace();
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -219,7 +217,7 @@ public class LocationExt {
         try {
             return seeker.getIpLocation(ip);
         } catch (Exception e) {
-            e.printStackTrace();
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -240,6 +238,7 @@ public class LocationExt {
         try {
             return seeker.getRegion(ip);
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }

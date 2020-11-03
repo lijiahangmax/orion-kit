@@ -1,6 +1,7 @@
 package com.orion.csv.importing;
 
 import com.orion.csv.core.CsvReader;
+import com.orion.utils.Exceptions;
 import com.orion.utils.reflect.BeanWrapper;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class CsvStream {
         try {
             reader.readHeaders();
         } catch (Exception e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
         return this;
     }
@@ -54,7 +55,7 @@ public class CsvStream {
                 reader.readHeaders();
             }
         } catch (Exception e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
         return this;
     }
@@ -68,7 +69,7 @@ public class CsvStream {
         try {
             reader.skipRecord();
         } catch (Exception e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
         return this;
     }
@@ -87,7 +88,7 @@ public class CsvStream {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Exceptions.printStacks(e);
         }
         return this;
     }
@@ -106,7 +107,7 @@ public class CsvStream {
                 lines.add(line);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Exceptions.printStacks(e);
         }
         return this;
     }
@@ -124,7 +125,7 @@ public class CsvStream {
                 lines.add(reader.getValues());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Exceptions.printStacks(e);
         }
         return this;
     }
@@ -140,7 +141,7 @@ public class CsvStream {
                 lines.add(reader.getValues());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Exceptions.printStacks(e);
         }
         return this;
     }
@@ -188,7 +189,7 @@ public class CsvStream {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Exceptions.printStacks(e);
         }
         return headers;
     }

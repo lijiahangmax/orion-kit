@@ -72,6 +72,7 @@ public class Zips {
             generateFile(zos, file, "");
             return dest;
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         } finally {
             Streams.close(zos);
@@ -107,7 +108,7 @@ public class Zips {
                 in.close();
             }
         } catch (Exception e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
     }
 
@@ -166,6 +167,7 @@ public class Zips {
             }
             return destPath;
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         } finally {
             Streams.close(zipFile);

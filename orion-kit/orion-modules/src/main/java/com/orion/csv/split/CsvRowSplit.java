@@ -226,7 +226,6 @@ public class CsvRowSplit {
                     .build()
                     .close();
         } catch (Exception e) {
-            e.printStackTrace();
             throw Exceptions.ioRuntime(e);
         }
     }

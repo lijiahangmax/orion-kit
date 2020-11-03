@@ -111,6 +111,7 @@ public class SftpExecutor extends BaseExecutor {
             channel.setFilenameEncoding(charset);
             return true;
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -126,6 +127,7 @@ public class SftpExecutor extends BaseExecutor {
             channel.realpath(path);
             return true;
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -214,6 +216,7 @@ public class SftpExecutor extends BaseExecutor {
             channel.setStat(attribute.getPath(), attribute.getAttrs());
             return true;
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -230,6 +233,7 @@ public class SftpExecutor extends BaseExecutor {
             channel.setMtime(path, (int) (date.getTime() / 1000));
             return true;
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -246,6 +250,7 @@ public class SftpExecutor extends BaseExecutor {
             channel.chmod(permission, file);
             return true;
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -262,6 +267,7 @@ public class SftpExecutor extends BaseExecutor {
             channel.chown(gid, file);
             return true;
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -278,6 +284,7 @@ public class SftpExecutor extends BaseExecutor {
             channel.chgrp(gid, file);
             return true;
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -292,6 +299,7 @@ public class SftpExecutor extends BaseExecutor {
         try {
             return this.touchTruncate(path);
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -310,6 +318,7 @@ public class SftpExecutor extends BaseExecutor {
             }
             return attr.getSize();
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return -1;
         }
     }
@@ -333,7 +342,7 @@ public class SftpExecutor extends BaseExecutor {
                 list.add(new FileAttribute(Files1.getPath(path + "/" + filename), ls.getLongname(), ls.getAttrs()));
             }
         } catch (Exception e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
         return list;
     }
@@ -364,6 +373,7 @@ public class SftpExecutor extends BaseExecutor {
                 try {
                     channel.mkdir(parentPath);
                 } catch (Exception e1) {
+                    Exceptions.printStacks(e1);
                     return false;
                 }
             }
@@ -411,6 +421,7 @@ public class SftpExecutor extends BaseExecutor {
                 Streams.close(t);
                 return true;
             } catch (Exception e) {
+                Exceptions.printStacks(e);
                 return false;
             }
         } else {
@@ -461,6 +472,7 @@ public class SftpExecutor extends BaseExecutor {
                 return false;
             }
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -476,6 +488,7 @@ public class SftpExecutor extends BaseExecutor {
             channel.rmdir(path);
             return true;
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -882,7 +895,7 @@ public class SftpExecutor extends BaseExecutor {
                 }
             }
         } catch (Exception e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
         return list;
     }
@@ -917,7 +930,7 @@ public class SftpExecutor extends BaseExecutor {
                 }
             }
         } catch (Exception e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
         return list;
     }
@@ -1107,7 +1120,7 @@ public class SftpExecutor extends BaseExecutor {
                 }
             }
         } catch (Exception e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
         return list;
     }

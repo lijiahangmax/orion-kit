@@ -1,6 +1,7 @@
 package com.orion.lang.wrapper;
 
 import com.orion.utils.Converts;
+import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.json.Jsons;
 
@@ -168,7 +169,7 @@ public class WrapperAdapter {
                         return Jsons.toBean(Jsons.toJSON(data), dataClass);
                     }
                 } catch (Exception e) {
-                    // ignore
+                    Exceptions.printStacks(e);
                 }
             }
         }

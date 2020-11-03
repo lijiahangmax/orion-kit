@@ -209,7 +209,7 @@ public class ExcelImport<T> {
             try {
                 Methods.invokeMethodInfer(t, setMethod, new Object[]{value});
             } catch (Exception e) {
-                // ignore
+                Exceptions.printStacks(e);
             }
         }
         rows.add(t);

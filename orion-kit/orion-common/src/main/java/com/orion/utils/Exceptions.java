@@ -27,7 +27,14 @@ public class Exceptions {
         throw new RuntimeException("Impossible exceptions...");
     }
 
-    // ------------------ throw ------------------
+    /**
+     * 打印异常
+     *
+     * @param t Throwable
+     */
+    public static void printStacks(Throwable t) {
+        t.printStackTrace(System.err);
+    }
 
     /**
      * 获取异常栈内信息

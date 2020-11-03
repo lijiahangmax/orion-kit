@@ -214,7 +214,8 @@ public class Annotations {
             Method method = annotated.annotationType().getDeclaredMethod(attributeName);
             method.setAccessible(true);
             return method.invoke(annotated);
-        } catch (Exception ex) {
+        } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -262,7 +263,8 @@ public class Annotations {
             Method method = annotatedClass.getDeclaredMethod(attributeName);
             method.setAccessible(true);
             return method.getDefaultValue();
-        } catch (Exception ex) {
+        } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }

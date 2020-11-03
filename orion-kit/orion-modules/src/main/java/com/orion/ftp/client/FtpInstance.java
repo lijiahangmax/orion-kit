@@ -202,7 +202,7 @@ public class FtpInstance {
                 }
             }
         } catch (IOException e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
         return list;
     }
@@ -258,7 +258,7 @@ public class FtpInstance {
                 }
             }
         } catch (IOException e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
         return list;
     }
@@ -580,7 +580,7 @@ public class FtpInstance {
                 }
             }
         } catch (IOException e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
         return list;
     }
@@ -648,7 +648,7 @@ public class FtpInstance {
                 }
             }
         } catch (IOException e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
         return map;
     }

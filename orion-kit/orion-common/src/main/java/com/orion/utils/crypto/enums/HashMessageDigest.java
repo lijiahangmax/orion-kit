@@ -58,7 +58,6 @@ public enum HashMessageDigest {
         try {
             return MessageDigest.getInstance(digest);
         } catch (Exception e) {
-            // impossible
             throw Exceptions.runtime(e);
         }
     }

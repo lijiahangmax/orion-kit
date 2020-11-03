@@ -62,7 +62,7 @@ public class FtpClientPool {
                 addClient();
             }
         } catch (Exception e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
 
     }
@@ -111,7 +111,7 @@ public class FtpClientPool {
                 }
             }
         } catch (Exception e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
     }
 
@@ -122,7 +122,7 @@ public class FtpClientPool {
         try {
             pool.offer(factory.getClient(), DEFAULT_TIMEOUT, TimeUnit.SECONDS);
         } catch (Exception e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
     }
 

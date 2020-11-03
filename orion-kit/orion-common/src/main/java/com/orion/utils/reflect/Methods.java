@@ -259,7 +259,7 @@ public class Methods {
                 setAccessible(method);
                 return method;
             } catch (Exception e) {
-                // ignore
+                Exceptions.printStacks(e);
             }
         }
         return null;

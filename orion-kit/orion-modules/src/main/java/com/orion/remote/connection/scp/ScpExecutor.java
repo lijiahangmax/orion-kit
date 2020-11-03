@@ -1,6 +1,7 @@
 package com.orion.remote.connection.scp;
 
 import ch.ethz.ssh2.SCPClient;
+import com.orion.utils.Exceptions;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
 
@@ -51,6 +52,7 @@ public class ScpExecutor {
             this.downloadFile(remoteFile, Files1.openOutputStream(localFile), null, true);
             return true;
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -193,6 +195,7 @@ public class ScpExecutor {
             this.uploadFile(Files1.openInputStream(localFile), localFile.length(), remoteDir, remoteFileName, true);
             return true;
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return false;
         }
     }

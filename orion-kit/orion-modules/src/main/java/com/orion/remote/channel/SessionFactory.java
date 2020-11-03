@@ -2,6 +2,7 @@ package com.orion.remote.channel;
 
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Logger;
+import com.orion.utils.Exceptions;
 
 import java.io.InputStream;
 
@@ -71,7 +72,7 @@ public class SessionFactory {
         try {
             CH.addIdentity(keyPath, password);
         } catch (Exception e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
     }
 
@@ -85,7 +86,7 @@ public class SessionFactory {
         try {
             CH.addIdentity(keyPath, password);
         } catch (Exception e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
     }
 
@@ -98,7 +99,7 @@ public class SessionFactory {
         try {
             CH.addIdentity(keyPath);
         } catch (Exception e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
     }
 
@@ -111,7 +112,7 @@ public class SessionFactory {
         try {
             CH.setKnownHosts(filePath);
         } catch (Exception e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
     }
 
@@ -124,7 +125,7 @@ public class SessionFactory {
         try {
             CH.setKnownHosts(inputStream);
         } catch (Exception e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
     }
 

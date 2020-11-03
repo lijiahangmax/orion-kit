@@ -1,5 +1,7 @@
 package com.orion.utils.io;
 
+import com.orion.utils.Exceptions;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.RandomAccessFile;
@@ -171,7 +173,7 @@ public class FileSplit implements Callable<String[]> {
             outputStream.write(buffer, 0, accessFile.read(buffer));
             outputStream.flush();
         } catch (Exception e) {
-            e.printStackTrace();
+            Exceptions.printStacks(e);
         } finally {
             Streams.close(outputStream);
             Streams.close(accessFile);

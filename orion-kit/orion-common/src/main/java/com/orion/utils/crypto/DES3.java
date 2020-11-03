@@ -8,7 +8,7 @@ import com.orion.utils.crypto.enums.WorkingMode;
 import javax.crypto.SecretKey;
 
 /**
- * DES 工具类
+ * 3DES 工具类
  *
  * @author ljh15
  * @version 1.0.0

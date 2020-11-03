@@ -1,6 +1,7 @@
 package com.orion.http.apache;
 
 import com.orion.lang.DefaultX509TrustManager;
+import com.orion.utils.Exceptions;
 import com.orion.utils.io.Streams;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -28,7 +29,7 @@ public class ApacheClient {
                     .sslSocketFactory(new SSLConnectionSocketFactory(sc))
                     .logInterceptor());
         } catch (Exception e) {
-            e.printStackTrace();
+            Exceptions.printStacks(e);
         }
     }
 

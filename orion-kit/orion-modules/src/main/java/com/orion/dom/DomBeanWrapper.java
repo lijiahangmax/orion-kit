@@ -1,6 +1,7 @@
 package com.orion.dom;
 
 import com.orion.utils.Converts;
+import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.collect.Lists;
 import com.orion.utils.reflect.Classes;
@@ -139,7 +140,7 @@ class DomBeanWrapper {
                         try {
                             paramValue = Converts.convert(element.element(entry.getKey()).getStringValue(), String.class);
                         } catch (Exception e) {
-                            // ignore
+                            Exceptions.printStacks(e);
                         }
                     }
                     if (paramValue != null) {

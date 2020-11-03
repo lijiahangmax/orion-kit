@@ -1,5 +1,6 @@
 package com.orion.utils.reflect;
 
+import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
 import com.orion.utils.io.Files1;
 
@@ -50,7 +51,7 @@ public class Jars {
             try {
                 return ((JarURLConnection) targetURL.openConnection()).getJarFile();
             } catch (Exception e) {
-                // ignore
+                Exceptions.printStacks(e);
             }
         }
         return null;
@@ -66,6 +67,7 @@ public class Jars {
         try {
             return new JarFile(file);
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -88,6 +90,7 @@ public class Jars {
                     return null;
             }
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -104,7 +107,7 @@ public class Jars {
         try (JarFile jarFile = new JarFile(jarPath)) {
             return getClassByJar(jarFile);
         } catch (IOException e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
         return classes;
     }
@@ -146,7 +149,7 @@ public class Jars {
                 }
             }
         } catch (IOException e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
         return sources;
     }
@@ -189,7 +192,7 @@ public class Jars {
                 }
             }
         } catch (IOException e) {
-            // ignore
+            Exceptions.printStacks(e);
         }
         return sources;
     }

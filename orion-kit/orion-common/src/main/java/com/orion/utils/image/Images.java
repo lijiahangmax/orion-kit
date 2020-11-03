@@ -1,5 +1,6 @@
 package com.orion.utils.image;
 
+import com.orion.utils.Exceptions;
 import com.orion.utils.codec.Base64s;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
@@ -118,6 +119,7 @@ public class Images {
         try {
             return ImageIO.read(new File(path));
         } catch (IOException e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -132,6 +134,7 @@ public class Images {
         try {
             return ImageIO.read(file);
         } catch (IOException e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -146,6 +149,7 @@ public class Images {
         try {
             return ImageIO.read(Streams.toInputStream(bs));
         } catch (IOException e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -160,6 +164,7 @@ public class Images {
         try {
             return ImageIO.read(in);
         } catch (IOException e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -174,6 +179,7 @@ public class Images {
         try {
             return ImageIO.read(Streams.toInputStream(Base64s.img64Decode(base64)));
         } catch (IOException e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -188,6 +194,7 @@ public class Images {
         try {
             return ImageIO.read(Streams.toInputStream(Base64s.decode(bs)));
         } catch (IOException e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -225,6 +232,7 @@ public class Images {
             ImageIO.write(img, format, stream);
             return stream.toByteArray();
         } catch (IOException e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }

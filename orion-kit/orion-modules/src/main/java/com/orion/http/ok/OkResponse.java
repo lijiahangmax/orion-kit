@@ -2,6 +2,7 @@ package com.orion.http.ok;
 
 import com.orion.http.common.HttpCookie;
 import com.orion.utils.Arrays1;
+import com.orion.utils.Exceptions;
 import com.orion.utils.ext.StringExt;
 import okhttp3.Call;
 import okhttp3.Request;
@@ -129,7 +130,7 @@ public class OkResponse implements Serializable {
                         this.body = b.bytes();
                     }
                 } catch (IOException e) {
-                    // ignore
+                    Exceptions.printStacks(e);
                 }
             }
         }
@@ -197,7 +198,7 @@ public class OkResponse implements Serializable {
                         this.body = b.bytes();
                     }
                 } catch (IOException e) {
-                    // ignore
+                    Exceptions.printStacks(e);
                 }
             }
         }

@@ -4,6 +4,7 @@ import com.orion.location.region.block.DataBlock;
 import com.orion.location.region.config.DbConfig;
 import com.orion.location.region.core.DbSearcher;
 import com.orion.location.region.core.Region;
+import com.orion.utils.Exceptions;
 import com.orion.utils.Systems;
 import com.orion.utils.io.Streams;
 import com.orion.utils.net.IPs;
@@ -195,6 +196,7 @@ public class LocationRegions {
                 return "未知|未知|未知|未知|未知";
             }
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }

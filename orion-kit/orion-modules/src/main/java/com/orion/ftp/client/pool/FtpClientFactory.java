@@ -86,6 +86,7 @@ public class FtpClientFactory {
             try {
                 return client.sendNoOp();
             } catch (Exception e) {
+                Exceptions.printStacks(e);
                 return false;
             }
         }

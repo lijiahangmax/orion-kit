@@ -74,10 +74,6 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
         return new DateStream(Dates.date(o), timeZone, locale);
     }
 
-    public static void main(String[] args) {
-        System.out.println(of(System.currentTimeMillis() - 100000).before(new Date()));
-    }
-
     // ---------- Year ----------
 
     public DateStream addYear(int y) {

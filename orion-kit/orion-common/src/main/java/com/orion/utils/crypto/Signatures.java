@@ -1,5 +1,6 @@
 package com.orion.utils.crypto;
 
+import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.crypto.enums.HashMessageDigest;
 import com.orion.utils.crypto.enums.SecretKeySpecMode;
@@ -94,6 +95,7 @@ public class Signatures {
             }
             return new BigInteger(1, digest.digest()).toString(16);
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -231,6 +233,7 @@ public class Signatures {
         try {
             return new BigInteger(1, digest.digest(bs)).toString(16);
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }

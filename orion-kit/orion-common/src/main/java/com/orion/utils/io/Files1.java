@@ -92,6 +92,7 @@ public class Files1 {
             BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
             return new FileAttribute(file, attr);
         } catch (IOException e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }

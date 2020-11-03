@@ -1,6 +1,7 @@
 package com.orion.mail;
 
 import com.orion.able.SendAble;
+import com.orion.utils.Exceptions;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -101,7 +102,7 @@ public class MailSender implements SendAble<MailMessage> {
             Transport.send(mimeMessage);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            Exceptions.printStacks(e);
             return true;
         }
     }

@@ -184,7 +184,7 @@ public class SftpUpload implements Runnable, SafeCloseable {
                 try {
                     writeHandler.getClient().closeFile(writeHandler);
                 } catch (IOException e) {
-                    // ignore
+                    Exceptions.printStacks(e);
                 }
             }
         }

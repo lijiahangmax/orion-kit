@@ -117,15 +117,11 @@ public class FileLocks {
                     return true;
                 }
             } catch (Exception e) {
+                Exceptions.printStacks(e);
                 return false;
             } finally {
                 if (!success) {
-                    if (channel != null) {
-                        try {
-                            channel.close();
-                        } catch (IOException ignored) {
-                        }
-                    }
+                    Streams.close(channel);
                 }
             }
             return false;
@@ -140,13 +136,7 @@ public class FileLocks {
             } catch (IOException e) {
                 throw Exceptions.ioRuntime(e);
             } finally {
-                if (channel != null) {
-                    try {
-                        channel.close();
-                    } catch (IOException e) {
-                        // ignore
-                    }
-                }
+                Streams.close(channel);
             }
         }
 

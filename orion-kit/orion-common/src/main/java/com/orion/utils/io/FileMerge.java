@@ -1,6 +1,7 @@
 package com.orion.utils.io;
 
 import com.orion.lang.wrapper.Args;
+import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 
 import java.io.File;
@@ -75,6 +76,7 @@ public class FileMerge implements Callable<String> {
         try {
             return mergeFile(file.getAbsolutePath(), fl.getArg1(), fl.getArg2());
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return "error: " + e.getMessage();
         }
     }

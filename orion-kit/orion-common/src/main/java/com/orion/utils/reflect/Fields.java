@@ -221,7 +221,7 @@ public class Fields {
                 setAccessible(field);
                 return field;
             } catch (NoSuchFieldException e) {
-                // ignore
+                Exceptions.printStacks(e);
             }
         }
         return null;

@@ -125,7 +125,7 @@ public class Enums {
                 method.setAccessible(true);
                 v = method.invoke(e);
             } catch (IllegalAccessException | InvocationTargetException e1) {
-                throw new RuntimeException("NoSuchMethod");
+                throw new RuntimeException("No Such Method");
             }
             if (value instanceof Number && v instanceof Number && new BigDecimal(String.valueOf(value)).compareTo(new BigDecimal(String.valueOf(v))) == 0) {
                 return e;

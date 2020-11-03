@@ -654,6 +654,7 @@ public class Streams {
             }
             return new BigInteger(1, m.digest()).toString(16);
         } catch (Exception e) {
+            Exceptions.printStacks(e);
             return null;
         }
     }

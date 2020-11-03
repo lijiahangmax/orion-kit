@@ -3,6 +3,7 @@ package com.orion.test.remote.channel;
 import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
+import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.Threads;
 import com.orion.utils.io.Streams;
@@ -47,7 +48,7 @@ public class ShellTests {
             try {
                 Streams.lineConsumer(resultInput, System.out::println);
             } catch (IOException e) {
-                e.printStackTrace();
+                Exceptions.printStacks(e);
             }
         });
         System.out.println(1);
