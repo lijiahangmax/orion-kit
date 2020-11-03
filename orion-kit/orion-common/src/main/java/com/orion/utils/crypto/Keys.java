@@ -1,20 +1,31 @@
 package com.orion.utils.crypto;
 
 import com.orion.lang.wrapper.Args;
+import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
+import com.orion.utils.Strings;
+import com.orion.utils.crypto.enums.CipherAlgorithm;
+import com.orion.utils.crypto.enums.SecretKeySpecMode;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
 
+import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.DESKeySpec;
+import javax.crypto.spec.DESedeKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.SecureRandom;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 
+import static com.orion.utils.codec.Base64s.decode;
 import static com.orion.utils.codec.Base64s.encode;
 
 /**
@@ -248,6 +259,101 @@ public class Keys {
             if (close) {
                 Streams.close(reader);
             }
+        }
+    }
+
+    // ------------------ AES DES 3DES KEY ------------------
+
+    /**
+     * StringKey -> SecretKey
+     *
+     * @param key  StringKey
+     * @param mode CipherAlgorithm
+     * @return SecretKey
+     */
+    public static SecretKey getSecretKey(byte[] key, CipherAlgorithm mode) {
+        return new SecretKeySpec(decode(key), mode.getMode());
+    }
+
+    /**
+     * StringKey -> SecretKey
+     *
+     * @param key  StringKey
+     * @param mode CipherAlgorithm
+     * @return SecretKey
+     */
+    public static SecretKey getSecretKey(String key, CipherAlgorithm mode) {
+        return new SecretKeySpec(decode(Strings.bytes(key)), mode.getMode());
+    }
+
+    /**
+     * String -> SecretKey
+     *
+     * @param key  key
+     * @param mode CipherAlgorithm
+     * @return SecretKey
+     */
+    public static SecretKey generatorKey(String key, CipherAlgorithm mode) {
+        return generatorKey(Strings.bytes(key), 128, mode);
+    }
+
+    /**
+     * String -> SecretKey
+     *
+     * @param key  key
+     * @param mode CipherAlgorithm
+     * @return SecretKey
+     */
+    public static SecretKey generatorKey(byte[] key, CipherAlgorithm mode) {
+        return generatorKey(key, 128, mode);
+    }
+
+    /**
+     * String -> SecretKey
+     *
+     * @param key     key
+     * @param keySize AES key 位数  128 192 256
+     * @param mode    CipherAlgorithm
+     * @return SecretKey
+     */
+    public static SecretKey generatorKey(String key, int keySize, CipherAlgorithm mode) {
+        return generatorKey(Strings.bytes(key), keySize, mode);
+    }
+
+    /**
+     * String -> SecretKey
+     *
+     * @param key     key
+     * @param keySize key 位数
+     *                AES 128 192 256
+     *                DES 8
+     *                3DES 14 ~ 21
+     * @param mode    CipherAlgorithm
+     * @return SecretKey
+     */
+    public static SecretKey generatorKey(byte[] key, int keySize, CipherAlgorithm mode) {
+        try {
+            switch (mode) {
+                case AES:
+                    KeyGenerator keyGenerator = KeyGenerator.getInstance(mode.getMode());
+                    SecureRandom random = new SecureRandom(key);
+                    keyGenerator.init(keySize, random);
+                    return SecretKeySpecMode.AES.getSecretKeySpec(keyGenerator.generateKey().getEncoded());
+                case DES:
+                    if (key.length < keySize) {
+                        key = Arrays1.resize(key, keySize);
+                    }
+                    return SecretKeyFactory.getInstance(mode.getMode()).generateSecret(new DESKeySpec(key));
+                case DES3:
+                    if (key.length < keySize) {
+                        key = Arrays1.resize(key, keySize);
+                    }
+                    return SecretKeyFactory.getInstance(mode.getMode()).generateSecret(new DESedeKeySpec(key));
+                default:
+                    return null;
+            }
+        } catch (Exception e) {
+            throw Exceptions.runtime(e);
         }
     }
 

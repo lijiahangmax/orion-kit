@@ -1,8 +1,7 @@
 package com.orion.test.encrypt;
 
-
 import com.orion.utils.crypto.DES;
-import com.orion.utils.crypto.enums.CipherAlgorithm;
+import com.orion.utils.crypto.DES3;
 
 /**
  * @author ljh15
@@ -11,19 +10,19 @@ import com.orion.utils.crypto.enums.CipherAlgorithm;
  */
 public class DesTests {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         String e = DES.encrypt("123", "a", "1");
         String e1 = DES.encrypt("123", "a");
-        String e2 = DES.encrypt("123", "a", "1", CipherAlgorithm.DES3);
-        String e3 = DES.encrypt("123", "a", CipherAlgorithm.DES3);
-        String d = DES.decrypt(e, "a", "1");
-        String d1 = DES.decrypt(e1, "a");
-        String d2 = DES.decrypt(e2, "a", "1", CipherAlgorithm.DES3);
-        String d3 = DES.decrypt(e3, "a", CipherAlgorithm.DES3);
+        String e2 = DES3.encrypt("123", "a", "1");
+        String e3 = DES3.encrypt("123", "a");
         System.out.println(e);
         System.out.println(e1);
         System.out.println(e2);
         System.out.println(e3);
+        String d = DES.decrypt(e, "a", "1");
+        String d1 = DES.decrypt(e1, "a");
+        String d2 = DES3.decrypt(e2, "a", "1");
+        String d3 = DES3.decrypt(e3, "a");
         System.out.println(d);
         System.out.println(d1);
         System.out.println(d2);

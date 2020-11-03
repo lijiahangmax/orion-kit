@@ -4,6 +4,7 @@ import com.orion.exception.*;
 import com.orion.exception.argument.IndexArgumentException;
 import com.orion.exception.argument.InvalidArgumentException;
 import com.orion.exception.argument.NullArgumentException;
+import com.orion.exception.argument.UnMatchArgumentException;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -457,6 +458,22 @@ public class Exceptions {
         return new WatchException(s, t);
     }
 
+    public static SignInvalidException sign() {
+        return new SignInvalidException();
+    }
+
+    public static SignInvalidException sign(Throwable t) {
+        return new SignInvalidException(t);
+    }
+
+    public static SignInvalidException sign(String s) {
+        return new SignInvalidException(s);
+    }
+
+    public static SignInvalidException sign(String s, Throwable t) {
+        return new SignInvalidException(s, t);
+    }
+
     public static Error error() {
         return new Error();
     }
@@ -521,6 +538,22 @@ public class Exceptions {
 
     public static IndexArgumentException indexArgument(String s, Throwable t) {
         return new IndexArgumentException(s, t);
+    }
+
+    public static UnMatchArgumentException unMatch() {
+        return new UnMatchArgumentException();
+    }
+
+    public static UnMatchArgumentException unMatch(Throwable t) {
+        return new UnMatchArgumentException(t);
+    }
+
+    public static UnMatchArgumentException unMatch(String s) {
+        return new UnMatchArgumentException(s);
+    }
+
+    public static UnMatchArgumentException unMatch(String s, Throwable t) {
+        return new UnMatchArgumentException(s, t);
     }
 
 }

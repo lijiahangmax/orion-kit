@@ -14,13 +14,13 @@ import javax.crypto.SecretKey;
  * @version 1.0.0
  * @since 2020/9/27 18:54
  */
-public class DES {
+public class DES3 {
 
-    private static final EcbAsymmetric ECB = new EcbAsymmetric(CipherAlgorithm.DES);
+    private static final EcbAsymmetric ECB = new EcbAsymmetric(CipherAlgorithm.DES3);
 
-    private static final IvAsymmetric CBC = new IvAsymmetric(CipherAlgorithm.DES, WorkingMode.CBC);
+    private static final IvAsymmetric CBC = new IvAsymmetric(CipherAlgorithm.DES3, WorkingMode.CBC);
 
-    private DES() {
+    private DES3() {
     }
 
     // ------------------ ENC ------------------

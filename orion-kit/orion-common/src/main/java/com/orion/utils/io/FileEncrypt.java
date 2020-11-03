@@ -2,6 +2,8 @@ package com.orion.utils.io;
 
 import com.orion.utils.Arrays1;
 import com.orion.utils.crypto.AES;
+import com.orion.utils.crypto.Keys;
+import com.orion.utils.crypto.enums.CipherAlgorithm;
 
 import javax.crypto.SecretKey;
 import java.io.File;
@@ -68,7 +70,7 @@ public class FileEncrypt implements Callable<Boolean> {
 
     @Override
     public Boolean call() {
-        SecretKey secretKey = AES.generatorKey(password);
+        SecretKey secretKey = Keys.generatorKey(password, CipherAlgorithm.AES);
         try {
             byte[] bs = new byte[bufferSize];
             int read;

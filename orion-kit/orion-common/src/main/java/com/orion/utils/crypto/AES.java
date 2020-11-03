@@ -1,19 +1,11 @@
 package com.orion.utils.crypto;
 
-import com.orion.utils.Arrays1;
-import com.orion.utils.Exceptions;
-import com.orion.utils.Strings;
+import com.orion.utils.crypto.asymmetric.EcbAsymmetric;
+import com.orion.utils.crypto.asymmetric.IvAsymmetric;
 import com.orion.utils.crypto.enums.CipherAlgorithm;
-import com.orion.utils.crypto.enums.SecretKeySpecMode;
+import com.orion.utils.crypto.enums.WorkingMode;
 
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
-import java.security.SecureRandom;
-
-import static com.orion.utils.codec.Base64s.decode;
-import static com.orion.utils.codec.Base64s.encode;
 
 /**
  * AES 工具类
@@ -24,22 +16,9 @@ import static com.orion.utils.codec.Base64s.encode;
  */
 public class AES {
 
-    private static final String AES = "AES";
+    private static final EcbAsymmetric ECB = new EcbAsymmetric(CipherAlgorithm.AES);
 
-    /**
-     * 默认工作模式
-     */
-    private static final String DEFAULT_WORKING_MODE = "ECB";
-
-    /**
-     * 使用向量 工作模式
-     */
-    private static String ivWorkingMode = "CBC";
-
-    /**
-     * 默认填充方式
-     */
-    private static String paddingMode = "PKCS5Padding";
+    private static final IvAsymmetric CBC = new IvAsymmetric(CipherAlgorithm.AES, WorkingMode.CBC);
 
     private AES() {
     }
@@ -47,263 +26,69 @@ public class AES {
     // ------------------ ENC ------------------
 
     public static String encrypt(String s, String key) {
-        byte[] bs = encrypt(Strings.bytes(s), null, Strings.bytes(key), null);
-        if (bs != null) {
-            return new String(bs);
-        }
-        return null;
+        return ECB.encrypt(s, key);
     }
 
     public static String encrypt(String s, String key, String iv) {
-        byte[] bs = encrypt(Strings.bytes(s), null, Strings.bytes(key), Strings.bytes(iv));
-        if (bs != null) {
-            return new String(bs);
-        }
-        return null;
+        return CBC.encrypt(s, key, iv);
     }
 
     public static byte[] encrypt(byte[] bs, byte[] key) {
-        return encrypt(bs, null, key, null);
+        return ECB.encrypt(bs, key);
     }
 
     public static byte[] encrypt(byte[] bs, byte[] key, byte[] iv) {
-        return encrypt(bs, null, key, iv);
+        return CBC.encrypt(bs, key, iv);
     }
 
     public static String encrypt(String s, SecretKey key) {
-        byte[] bs = encrypt(Strings.bytes(s), key, null);
-        if (bs != null) {
-            return new String(bs);
-        }
-        return null;
+        return ECB.encrypt(s, key);
     }
 
     public static String encrypt(String s, SecretKey key, String iv) {
-        byte[] bs = encrypt(Strings.bytes(s), key, null, Strings.bytes(iv));
-        if (bs != null) {
-            return new String(bs);
-        }
-        return null;
+        return CBC.encrypt(s, key, iv);
     }
 
     public static byte[] encrypt(byte[] bs, SecretKey key) {
-        return encrypt(bs, key, null, null);
+        return ECB.encrypt(bs, key);
     }
 
     public static byte[] encrypt(byte[] bs, SecretKey key, byte[] iv) {
-        return encrypt(bs, key, null, iv);
-    }
-
-    /**
-     * AES加密
-     *
-     * @param bs  明文
-     * @param key key
-     * @param k   StringKey
-     * @param iv  向量 16位置 不足用0填充
-     * @return 密文
-     */
-    private static byte[] encrypt(byte[] bs, SecretKey key, byte[] k, byte[] iv) {
-        try {
-            if (key == null) {
-                key = generatorKey(k);
-            }
-            Cipher cipher;
-            if (iv == null) {
-                cipher = CipherAlgorithm.AES.getCipher(DEFAULT_WORKING_MODE, paddingMode);
-                cipher.init(Cipher.ENCRYPT_MODE, key);
-            } else {
-                cipher = CipherAlgorithm.AES.getCipher(ivWorkingMode, paddingMode);
-                cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(Arrays1.resize(iv, 16)));
-            }
-            return encode(cipher.doFinal(bs));
-        } catch (Exception e) {
-            return null;
-        }
+        return CBC.encrypt(bs, key, iv);
     }
 
     // ------------------ DEC ------------------
 
     public static String decrypt(String s, String key) {
-        byte[] bs = decrypt(Strings.bytes(s), null, Strings.bytes(key), null);
-        if (bs != null) {
-            return new String(bs);
-        }
-        return null;
+        return ECB.decrypt(s, key);
     }
 
     public static String decrypt(String s, String key, String iv) {
-        byte[] bs = decrypt(Strings.bytes(s), null, Strings.bytes(key), Strings.bytes(iv));
-        if (bs != null) {
-            return new String(bs);
-        }
-        return null;
+        return CBC.encrypt(s, key, iv);
     }
 
     public static byte[] decrypt(byte[] bs, byte[] key) {
-        return decrypt(bs, null, key, null);
+        return ECB.decrypt(bs, key);
     }
 
     public static byte[] decrypt(byte[] bs, byte[] key, byte[] iv) {
-        return decrypt(bs, null, key, iv);
+        return CBC.encrypt(bs, key, iv);
     }
 
     public static String decrypt(String s, SecretKey key) {
-        byte[] bs = decrypt(Strings.bytes(s), key, null, null);
-        if (bs != null) {
-            return new String(bs);
-        }
-        return null;
+        return ECB.decrypt(s, key);
     }
 
     public static String decrypt(String s, SecretKey key, String iv) {
-        byte[] bs = decrypt(Strings.bytes(s), key, null, Strings.bytes(iv));
-        if (bs != null) {
-            return new String(bs);
-        }
-        return null;
+        return CBC.encrypt(s, key, iv);
     }
 
     public static byte[] decrypt(byte[] bs, SecretKey key) {
-        return decrypt(bs, key, null, null);
+        return ECB.decrypt(bs, key);
     }
 
     public static byte[] decrypt(byte[] bs, SecretKey key, byte[] iv) {
-        return decrypt(bs, key, null, iv);
-    }
-
-    /**
-     * AES解密
-     *
-     * @param bs  密文
-     * @param key key
-     * @param k   StringKey
-     * @param iv  向量 16位 不足用0填充
-     * @return 明文
-     */
-    private static byte[] decrypt(byte[] bs, SecretKey key, byte[] k, byte[] iv) {
-        try {
-            if (key == null) {
-                key = generatorKey(k);
-            }
-            Cipher cipher;
-            if (iv == null) {
-                cipher = CipherAlgorithm.AES.getCipher(DEFAULT_WORKING_MODE, paddingMode);
-                cipher.init(Cipher.DECRYPT_MODE, key);
-            } else {
-                cipher = CipherAlgorithm.AES.getCipher(ivWorkingMode, paddingMode);
-                cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(Arrays1.resize(iv, 16)));
-            }
-            return cipher.doFinal(decode(bs));
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    // ------------------ KEY ------------------
-
-    /**
-     * String -> SecretKey
-     *
-     * @param key String
-     * @return SecretKey
-     */
-    public static SecretKey generatorKey(String key) {
-        try {
-            KeyGenerator keyGenerator = KeyGenerator.getInstance(AES);
-            SecureRandom random = new SecureRandom(Strings.bytes(key));
-            keyGenerator.init(128, random);
-            return SecretKeySpecMode.AES.getSecretKeySpec(keyGenerator.generateKey().getEncoded());
-        } catch (Exception e) {
-            // impossible
-            throw Exceptions.runtime(e);
-        }
-    }
-
-    /**
-     * String -> SecretKey
-     *
-     * @param size size  128 192 256
-     * @param key  String
-     * @return SecretKey
-     */
-    public static SecretKey generatorKey(String key, int size) {
-        try {
-            KeyGenerator keyGenerator = KeyGenerator.getInstance(AES);
-            SecureRandom random = new SecureRandom(Strings.bytes(key));
-            keyGenerator.init(size, random);
-            return SecretKeySpecMode.AES.getSecretKeySpec(keyGenerator.generateKey().getEncoded());
-        } catch (Exception e) {
-            // impossible
-            throw Exceptions.runtime(e);
-        }
-    }
-
-    /**
-     * String -> SecretKey
-     *
-     * @param key String
-     * @return SecretKey
-     */
-    public static SecretKey generatorKey(byte[] key) {
-        try {
-            KeyGenerator keyGenerator = KeyGenerator.getInstance(AES);
-            SecureRandom random = new SecureRandom(key);
-            keyGenerator.init(128, random);
-            return SecretKeySpecMode.AES.getSecretKeySpec(keyGenerator.generateKey().getEncoded());
-        } catch (Exception e) {
-            // impossible
-            throw Exceptions.runtime(e);
-        }
-    }
-
-    /**
-     * String -> SecretKey
-     *
-     * @param size size  128 192 256
-     * @param key  String
-     * @return SecretKey
-     */
-    public static SecretKey generatorKey(byte[] key, int size) {
-        try {
-            KeyGenerator keyGenerator = KeyGenerator.getInstance(AES);
-            SecureRandom random = new SecureRandom(key);
-            keyGenerator.init(size, random);
-            return SecretKeySpecMode.AES.getSecretKeySpec(keyGenerator.generateKey().getEncoded());
-        } catch (Exception e) {
-            // impossible
-            throw Exceptions.runtime(e);
-        }
-    }
-
-    /**
-     * StringKey -> SecretKey
-     *
-     * @param key StringKey
-     * @return SecretKey
-     */
-    public static SecretKey getSecretKey(String key) {
-        return SecretKeySpecMode.AES.getSecretKeySpec(decode(Strings.bytes(key)));
-    }
-
-    /**
-     * StringKey -> SecretKey
-     *
-     * @param key StringKey
-     * @return SecretKey
-     */
-    public static SecretKey getSecretKey(byte[] key) {
-        return SecretKeySpecMode.AES.getSecretKeySpec(decode(key));
-    }
-
-    // ------------------ SETTING ------------------
-
-    public static void setIvWorkingMode(String mode) {
-        ivWorkingMode = mode;
-    }
-
-    public static void setPaddingMode(String mode) {
-        paddingMode = mode;
+        return CBC.encrypt(bs, key, iv);
     }
 
 }

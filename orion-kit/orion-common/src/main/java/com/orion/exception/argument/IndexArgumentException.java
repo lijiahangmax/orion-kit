@@ -1,7 +1,7 @@
 package com.orion.exception.argument;
 
 /**
- * 索引异常
+ * 对象验证索引异常
  *
  * @author ljh15
  * @version 1.0.0

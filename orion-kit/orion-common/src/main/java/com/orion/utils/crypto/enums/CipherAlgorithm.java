@@ -54,7 +54,6 @@ public enum CipherAlgorithm {
     }
 
     /**
-     * 如: DES/ECB/PKCS5Padding
      * 解密算法/工作模式/填充方式
      *
      * @param work    工作模式
@@ -65,7 +64,21 @@ public enum CipherAlgorithm {
         try {
             return Cipher.getInstance(mode + "/" + work + "/" + padding);
         } catch (Exception e) {
-            // impossible
+            throw Exceptions.runtime(e);
+        }
+    }
+
+    /**
+     * 解密算法/工作模式/填充方式
+     *
+     * @param work    工作模式
+     * @param padding 填充方式
+     * @return Cipher
+     */
+    public Cipher getCipher(WorkingMode work, PaddingMode padding) {
+        try {
+            return Cipher.getInstance(mode + "/" + work.getMode() + "/" + padding.getMode());
+        } catch (Exception e) {
             throw Exceptions.runtime(e);
         }
     }

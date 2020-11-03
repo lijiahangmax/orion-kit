@@ -1,6 +1,8 @@
 package com.orion.test.encrypt;
 
 import com.orion.utils.crypto.AES;
+import com.orion.utils.crypto.Keys;
+import com.orion.utils.crypto.enums.CipherAlgorithm;
 
 import javax.crypto.SecretKey;
 
@@ -52,8 +54,8 @@ public class AesTests {
         System.out.println("d7 = " + d7);
         System.out.println("d8 = " + d8);
 
-        SecretKey g1 = AES.generatorKey("qa");
-        SecretKey g2 = AES.generatorKey("qa", 192);
+        SecretKey g1 = Keys.generatorKey("qa", CipherAlgorithm.AES);
+        SecretKey g2 = Keys.generatorKey("qa", 192, CipherAlgorithm.AES);
         System.out.println();
         System.out.println("g1 = " + g1);
         System.out.println("g2 = " + g2);
