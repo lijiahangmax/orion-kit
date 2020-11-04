@@ -13,8 +13,8 @@ public interface JsonAble {
 
     String toJsonString();
 
-    default String toJSON() {
-        return Jsons.toJSON(this);
+    default String toJson() {
+        return Jsons.toJson(this);
     }
 
 }

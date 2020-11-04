@@ -1,17 +1,11 @@
 package com.orion.utils.json;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.JSONPObject;
+import com.alibaba.fastjson.*;
 import com.alibaba.fastjson.parser.Feature;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.orion.utils.Strings;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.alibaba.fastjson.serializer.SerializerFeature.PrettyFormat;
 import static com.alibaba.fastjson.serializer.SerializerFeature.WriteMapNullValue;
@@ -34,7 +28,7 @@ public class Jsons {
      * @param bean 对象
      * @return ignore
      */
-    public static String toJSON(Object bean) {
+    public static String toJson(Object bean) {
         if (bean == null) {
             return "";
         }
@@ -47,7 +41,7 @@ public class Jsons {
      * @param bean 对象
      * @return ignore
      */
-    public static String toJSONLog(Object bean) {
+    public static String toJsonLog(Object bean) {
         if (bean == null) {
             return "";
         }
@@ -60,7 +54,7 @@ public class Jsons {
      * @param bean 对象
      * @return ignore
      */
-    public static String toJSONWriteNull(Object bean) {
+    public static String toJsonWriteNull(Object bean) {
         if (bean == null) {
             return "";
         }
@@ -74,7 +68,7 @@ public class Jsons {
      * @param features ignore
      * @return ignore
      */
-    public static String toJSON(Object bean, SerializerFeature... features) {
+    public static String toJson(Object bean, SerializerFeature... features) {
         if (null == bean) {
             return "";
         } else {
@@ -98,11 +92,7 @@ public class Jsons {
         if (Strings.isBlank(json)) {
             return null;
         }
-        try {
-            return JSON.parseObject(json, targetClass);
-        } catch (Exception e) {
-            return null;
-        }
+        return JSON.parseObject(json, targetClass);
     }
 
     /**
@@ -118,11 +108,7 @@ public class Jsons {
         if (Strings.isBlank(json)) {
             return null;
         }
-        try {
-            return JSON.parseObject(json, targetClass, features);
-        } catch (Exception e) {
-            return null;
-        }
+        return JSON.parseObject(json, targetClass, features);
     }
 
     /**
@@ -137,11 +123,23 @@ public class Jsons {
         if (Strings.isBlank(json)) {
             return new ArrayList<>();
         }
-        try {
-            return JSON.parseArray(json, targetClass);
-        } catch (Exception e) {
-            return null;
+        return JSON.parseArray(json, targetClass);
+    }
+
+    /**
+     * json -> set
+     *
+     * @param json  json
+     * @param clazz clazz
+     * @param <T>   T
+     * @return ignore
+     */
+    public static <T> Set<T> toSet(String json, Class<T> clazz) {
+        if (Strings.isBlank(json)) {
+            return new HashSet<>(16);
         }
+        return JSON.parseObject(json, new TypeReference<Set<T>>(clazz) {
+        });
     }
 
     /**
@@ -154,11 +152,25 @@ public class Jsons {
         if (Strings.isBlank(json)) {
             return new HashMap<>(16);
         }
-        try {
-            return JSON.parseObject(json).getInnerMap();
-        } catch (Exception e) {
-            return null;
+        return JSON.parseObject(json).getInnerMap();
+    }
+
+    /**
+     * json -> map
+     *
+     * @param json json
+     * @param kc   key class
+     * @param vc   value class
+     * @param <K>  K
+     * @param <V>  V
+     * @return ignore
+     */
+    public static <K, V> Map<K, V> toMap(String json, Class<K> kc, Class<V> vc) {
+        if (Strings.isBlank(json)) {
+            return new HashMap<>(16);
         }
+        return JSON.parseObject(json, new TypeReference<Map<K, V>>(kc, vc) {
+        });
     }
 
     /**
@@ -167,15 +179,11 @@ public class Jsons {
      * @param json json
      * @return ignore
      */
-    public static JSONObject toJSONObject(String json) {
+    public static JSONObject toJsonObject(String json) {
         if (Strings.isBlank(json)) {
             return new JSONObject();
         }
-        try {
-            return JSON.parseObject(json);
-        } catch (Exception e) {
-            return null;
-        }
+        return JSON.parseObject(json);
     }
 
     /**
@@ -184,21 +192,17 @@ public class Jsons {
      * @param json json
      * @return ignore
      */
-    public static JSONArray toJSONArray(String json) {
+    public static JSONArray toJsonArray(String json) {
         if (Strings.isBlank(json)) {
             return new JSONArray();
         }
-        try {
-            return JSON.parseArray(json);
-        } catch (Exception e) {
-            return null;
-        }
+        return JSON.parseArray(json);
     }
 
     /**
      * 创建jsonp
      */
-    public static String createJSONP(String function, Object... params) {
+    public static String createJsonp(String function, Object... params) {
         JSONPObject call = new JSONPObject();
         call.setFunction(function);
         if (params != null) {
@@ -223,8 +227,7 @@ public class Jsons {
         if (Strings.isBlank(json)) {
             return "";
         }
-        json = json.substring(1, json.length() - 1);
-        return json;
+        return json.substring(1, json.length() - 1);
     }
 
     /**

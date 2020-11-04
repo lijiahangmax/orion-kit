@@ -245,12 +245,12 @@ public class FtpConfig implements Serializable, JsonAble {
 
     @Override
     public String toJsonString() {
-        return toJSON();
+        return toJson();
     }
 
     @Override
     public String toString() {
-        return toJSON();
+        return toJson();
     }
 
 }

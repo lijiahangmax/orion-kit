@@ -193,7 +193,7 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
 
     @Override
     public String toJsonString() {
-        return Jsons.toJSONWriteNull(this);
+        return Jsons.toJsonWriteNull(this);
     }
 
     @Override

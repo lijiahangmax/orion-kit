@@ -258,14 +258,14 @@ public class CityHash {
         v.setLowValue(v.getLowValue() * K_0);
 
         // If 0 < len < 128, hash up to 4 chunks of 32 bytes each from the end of s.
-        for (int tail_done = 0; tail_done < len; ) {
-            tail_done += 32;
+        for (int tailDone = 0; tailDone < len; ) {
+            tailDone += 32;
             y = rotate(x + y, 42) * K_0 + v.getHighValue();
-            w.setLowValue(w.getLowValue() + fetch64(byteArray, pos + len - tail_done + 16));
+            w.setLowValue(w.getLowValue() + fetch64(byteArray, pos + len - tailDone + 16));
             x = x * K_0 + w.getLowValue();
-            z += w.getHighValue() + fetch64(byteArray, pos + len - tail_done);
+            z += w.getHighValue() + fetch64(byteArray, pos + len - tailDone);
             w.setHighValue(w.getHighValue() + v.getLowValue());
-            v = weakHashLen32WithSeeds(byteArray, pos + len - tail_done, v.getLowValue() + z, v.getHighValue());
+            v = weakHashLen32WithSeeds(byteArray, pos + len - tailDone, v.getLowValue() + z, v.getHighValue());
             v.setLowValue(v.getLowValue() * K_0);
         }
         // At this point our 56 bytes of state should contain more than

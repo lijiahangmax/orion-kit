@@ -327,25 +327,25 @@ public class Dates {
      * 清除时间为当月1号
      *
      * @param d        时间
-     * @param clearHMS 是否清除HMS
+     * @param clearHms 是否清除HMS
      * @return 时间
      */
-    private static Date clearDay(Date d, boolean clearHMS) {
+    private static Date clearDay(Date d, boolean clearHms) {
         Calendar c = Calendar.getInstance();
         c.setTime(d);
-        return clearDay(c, clearHMS);
+        return clearDay(c, clearHms);
     }
 
     /**
      * 清除时间为当月1号
      *
      * @param c        时间
-     * @param clearHMS 是否清除HMS
+     * @param clearHms 是否清除HMS
      * @return 时间
      */
-    private static Date clearDay(Calendar c, boolean clearHMS) {
+    private static Date clearDay(Calendar c, boolean clearHms) {
         c.set(Calendar.DAY_OF_MONTH, 1);
-        if (clearHMS) {
+        if (clearHms) {
             c.set(Calendar.HOUR_OF_DAY, 0);
             c.set(Calendar.MINUTE, 0);
             c.set(Calendar.SECOND, 0);

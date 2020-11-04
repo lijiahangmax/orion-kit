@@ -48,12 +48,12 @@ public class FastDatePrinter implements DatePrinter, Serializable {
         DateFormatSymbols symbols = new DateFormatSymbols(mLocale);
         List<Rule> rules = new ArrayList<>();
 
-        String[] ERAs = symbols.getEras();
+        String[] eras = symbols.getEras();
         String[] months = symbols.getMonths();
         String[] shortMonths = symbols.getShortMonths();
         String[] weekdays = symbols.getWeekdays();
         String[] shortWeekdays = symbols.getShortWeekdays();
-        String[] AmPmStrings = symbols.getAmPmStrings();
+        String[] amPmStrings = symbols.getAmPmStrings();
 
         int length = mPattern.length();
         int[] indexRef = new int[1];
@@ -73,7 +73,7 @@ public class FastDatePrinter implements DatePrinter, Serializable {
 
             switch (c) {
                 case 'G': // era designator (text)
-                    rule = new TextField(Calendar.ERA, ERAs);
+                    rule = new TextField(Calendar.ERA, eras);
                     break;
                 case 'y': // year (number)
                 case 'Y': // week year
@@ -134,7 +134,7 @@ public class FastDatePrinter implements DatePrinter, Serializable {
                     rule = selectNumberRule(Calendar.WEEK_OF_MONTH, tokenLen);
                     break;
                 case 'a': // am/pm marker (text)
-                    rule = new TextField(Calendar.AM_PM, AmPmStrings);
+                    rule = new TextField(Calendar.AM_PM, amPmStrings);
                     break;
                 case 'k': // hour in day (1..24)
                     rule = new TwentyFourHourField(selectNumberRule(Calendar.HOUR_OF_DAY, tokenLen));
@@ -143,7 +143,7 @@ public class FastDatePrinter implements DatePrinter, Serializable {
                     rule = selectNumberRule(Calendar.HOUR, tokenLen);
                     break;
                 case 'X': // ISO 8601
-                    rule = Iso8601_Rule.getRule(tokenLen);
+                    rule = Iso8601Rule.getRule(tokenLen);
                     break;
                 case 'z': // time zone (text)
                     if (tokenLen >= 4) {
@@ -156,7 +156,7 @@ public class FastDatePrinter implements DatePrinter, Serializable {
                     if (tokenLen == 1) {
                         rule = TimeZoneNumberRule.INSTANCE_NO_COLON;
                     } else if (tokenLen == 2) {
-                        rule = Iso8601_Rule.ISO8601_HOURS_COLON_MINUTES;
+                        rule = Iso8601Rule.ISO8601_HOURS_COLON_MINUTES;
                     } else {
                         rule = TimeZoneNumberRule.INSTANCE_COLON;
                     }
@@ -890,14 +890,14 @@ public class FastDatePrinter implements DatePrinter, Serializable {
         }
     }
 
-    private static final ConcurrentMap<TimeZoneDisplayKey, String> cTimeZoneDisplayCache = new ConcurrentHashMap<>(7);
+    private static final ConcurrentMap<TimeZoneDisplayKey, String> C_TIME_ZONE_DISPLAY_CACHE = new ConcurrentHashMap<>(7);
 
     static String getTimeZoneDisplay(TimeZone tz, boolean daylight, int style, Locale locale) {
         TimeZoneDisplayKey key = new TimeZoneDisplayKey(tz, daylight, style, locale);
-        String value = cTimeZoneDisplayCache.get(key);
+        String value = C_TIME_ZONE_DISPLAY_CACHE.get(key);
         if (value == null) {
             value = tz.getDisplayName(daylight, style, locale);
-            String prior = cTimeZoneDisplayCache.putIfAbsent(key, value);
+            String prior = C_TIME_ZONE_DISPLAY_CACHE.putIfAbsent(key, value);
             if (prior != null) {
                 value = prior;
             }
@@ -985,14 +985,14 @@ public class FastDatePrinter implements DatePrinter, Serializable {
         }
     }
 
-    private static class Iso8601_Rule implements Rule {
+    private static class Iso8601Rule implements Rule {
 
         // Sign TwoDigitHours or Z
-        static Iso8601_Rule ISO8601_HOURS = new Iso8601_Rule(3);
+        static Iso8601Rule ISO8601_HOURS = new Iso8601Rule(3);
         // Sign TwoDigitHours Minutes or Z
-        static Iso8601_Rule ISO8601_HOURS_MINUTES = new Iso8601_Rule(5);
+        static Iso8601Rule ISO8601_HOURS_MINUTES = new Iso8601Rule(5);
         // Sign TwoDigitHours : Minutes or Z
-        static Iso8601_Rule ISO8601_HOURS_COLON_MINUTES = new Iso8601_Rule(6);
+        static Iso8601Rule ISO8601_HOURS_COLON_MINUTES = new Iso8601Rule(6);
 
         /**
          * Factory method for Iso8601_Rules.
@@ -1001,7 +1001,7 @@ public class FastDatePrinter implements DatePrinter, Serializable {
          * @return a Iso8601_Rule that can format TimeZone String of length {@code tokenLen}. If no such
          * rule exists, an IllegalArgumentException will be thrown.
          */
-        static Iso8601_Rule getRule(int tokenLen) {
+        static Iso8601Rule getRule(int tokenLen) {
             switch (tokenLen) {
                 case 1:
                     return ISO8601_HOURS;
@@ -1021,7 +1021,7 @@ public class FastDatePrinter implements DatePrinter, Serializable {
          *
          * @param length The number of characters in output (unless Z is output)
          */
-        Iso8601_Rule(int length) {
+        Iso8601Rule(int length) {
             this.length = length;
         }
 

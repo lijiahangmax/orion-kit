@@ -204,7 +204,7 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
 
     @Override
     public String toJsonString() {
-        return Jsons.toJSONWriteNull(this);
+        return Jsons.toJsonWriteNull(this);
     }
 
     @Override

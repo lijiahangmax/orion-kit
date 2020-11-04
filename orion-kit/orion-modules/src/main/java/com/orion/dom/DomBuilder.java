@@ -181,7 +181,7 @@ public class DomBuilder implements BuilderAble<DomBuilder> {
      *
      * @return XML
      */
-    public String getXML() {
+    public String getXml() {
         return document.asXML();
     }
 
@@ -190,7 +190,7 @@ public class DomBuilder implements BuilderAble<DomBuilder> {
      *
      * @return XML
      */
-    public String getFormatXML() {
+    public String getFormatXml() {
         return DomExt.format(document.asXML());
     }
 

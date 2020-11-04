@@ -2,14 +2,11 @@ package com.orion.utils.json;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orion.utils.Strings;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * jackson 工具类
@@ -20,9 +17,28 @@ import java.util.Map;
  */
 public class JackSons {
 
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper(new JsonFactory());
-
     private JackSons() {
+    }
+
+    /**
+     * 单例Mapper对象
+     */
+    private static class MapperInstant {
+        private static ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
+    }
+
+    /**
+     * 获得Mapper对象
+     */
+    public static ObjectMapper get() {
+        return MapperInstant.objectMapper;
+    }
+
+    /**
+     * 修改Mapper对象
+     */
+    public static ObjectMapper set(ObjectMapper objectMapper) {
+        return (MapperInstant.objectMapper = objectMapper);
     }
 
     /**
@@ -31,12 +47,12 @@ public class JackSons {
      * @param bean 对象
      * @return ignore
      */
-    public static String toJSON(Object bean) {
+    public static String toJson(Object bean) {
         if (bean == null) {
             return "";
         }
         try {
-            return OBJECT_MAPPER.writeValueAsString(bean);
+            return MapperInstant.objectMapper.writeValueAsString(bean);
         } catch (JsonProcessingException e) {
             return null;
         }
@@ -55,7 +71,7 @@ public class JackSons {
             return null;
         }
         try {
-            return OBJECT_MAPPER.readValue(json, targetClass);
+            return MapperInstant.objectMapper.readValue(json, targetClass);
         } catch (Exception e) {
             return null;
         }
@@ -63,19 +79,37 @@ public class JackSons {
 
     /**
      * json -> list
-     * value 为 LinkedHashMap
      *
-     * @param json json
-     * @param <T>  ignore
+     * @param json  json
+     * @param clazz clazz
+     * @param <T>   ignore
      * @return ignore
      */
-    public static <T> List<T> toList(String json) {
+    public static <T> List<T> toList(String json, Class<T> clazz) {
         if (Strings.isEmpty(json)) {
             return new ArrayList<>();
         }
         try {
-            return OBJECT_MAPPER.readValue(json, new TypeReference<List<T>>() {
-            });
+            return MapperInstant.objectMapper.readValue(json, getJavaType(List.class, clazz));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * json -> set
+     *
+     * @param json  json
+     * @param clazz clazz
+     * @param <T>   ignore
+     * @return ignore
+     */
+    public static <T> Set<T> toSet(String json, Class<T> clazz) {
+        if (Strings.isEmpty(json)) {
+            return new HashSet<>();
+        }
+        try {
+            return MapperInstant.objectMapper.readValue(json, getJavaType(Set.class, clazz));
         } catch (Exception e) {
             return null;
         }
@@ -83,25 +117,51 @@ public class JackSons {
 
     /**
      * json -> map
-     * value 为 LinkedHashMap
      *
      * @param json json
+     * @param ks   key class
+     * @param vs   value class
+     * @param <K>  K
+     * @param <V>  V
      * @return ignore
      */
-    public static Map<String, Object> toMap(String json) {
+    public static <K, V> Map<K, V> toMap(String json, Class<K> ks, Class<V> vs) {
         if (Strings.isEmpty(json)) {
             return new HashMap<>(16);
         }
         try {
-            return OBJECT_MAPPER.readValue(json, new TypeReference<Map<String, Object>>() {
-            });
+            return MapperInstant.objectMapper.readValue(json, getJavaType(Map.class, ks, vs));
         } catch (Exception e) {
             return null;
         }
     }
 
-    public static ObjectMapper getObjectMapper() {
-        return OBJECT_MAPPER;
+    /**
+     * json -> object
+     *
+     * @param json           json
+     * @param ownClass       class
+     * @param genericClasses 泛型class
+     * @param <T>            T
+     * @return T
+     */
+    public static <T> T toObject(String json, Class<?> ownClass, Class<?>... genericClasses) {
+        try {
+            return MapperInstant.objectMapper.readValue(json, getJavaType(ownClass, genericClasses));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * 获取带泛型的类型
+     *
+     * @param ownClass       class
+     * @param genericClasses 泛型class
+     * @return JavaType
+     */
+    public static JavaType getJavaType(Class<?> ownClass, Class<?>... genericClasses) {
+        return MapperInstant.objectMapper.getTypeFactory().constructParametricType(ownClass, genericClasses);
     }
 
 }

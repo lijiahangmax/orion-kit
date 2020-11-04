@@ -48,7 +48,7 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
     /**
      * 会话追踪标识
      */
-    private String traceID = this.createTrace();
+    private String traceId = this.createTrace();
 
     private RpcWrapper() {
     }
@@ -203,7 +203,7 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
     }
 
     public RpcWrapper<T> trace(Object object) {
-        traceID = TRACE_PREFIX + object;
+        traceId = TRACE_PREFIX + object;
         return this;
     }
 
@@ -251,17 +251,17 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
         return this;
     }
 
-    public String getTraceID() {
-        return traceID;
+    public String getTraceId() {
+        return traceId;
     }
 
-    public RpcWrapper<T> setTraceID(String traceID) {
-        this.traceID = TRACE_PREFIX + traceID;
+    public RpcWrapper<T> setTraceId(String traceId) {
+        this.traceId = TRACE_PREFIX + traceId;
         return this;
     }
 
     private String createTrace() {
-        return traceID = TRACE_PREFIX + UUIds.random32();
+        return traceId = TRACE_PREFIX + UUIds.random32();
     }
 
     @Override
@@ -271,13 +271,13 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
                 ", msg='" + msg + '\'' +
                 ", data=" + Objects1.toString(data) +
                 ", errorMsg=" + errorMsg +
-                ", traceID='" + traceID + '\'' +
+                ", traceID='" + traceId + '\'' +
                 '}';
     }
 
     @Override
     public String toJsonString() {
-        return Jsons.toJSONWriteNull(this);
+        return Jsons.toJsonWriteNull(this);
     }
 
     @Override
@@ -285,10 +285,10 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
         StringBuilder builder = new StringBuilder();
         boolean ok = isSuccess();
         builder.append("RpcWrapper:\n\tisSuccess ==> ").append(ok).append("\n\t")
-                .append("traceID ==> ").append(traceID).append("\n\t")
+                .append("traceID ==> ").append(traceId).append("\n\t")
                 .append("code ==> ").append(code).append("\n\t")
                 .append("msg ==> ").append(msg).append("\n\t")
-                .append("data ==> ").append(Jsons.toJSONWriteNull(data));
+                .append("data ==> ").append(Jsons.toJsonWriteNull(data));
         if (!ok) {
             builder.append("errorMsg ==> ").append(errorMsg);
         }
@@ -301,7 +301,7 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
         map.put("code", code);
         map.put("msg", msg);
         map.put("data", data);
-        map.put("traceID", traceID);
+        map.put("traceID", traceId);
         map.put("errorMsg", errorMsg);
         return map;
     }

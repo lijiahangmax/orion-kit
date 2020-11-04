@@ -262,7 +262,7 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, Js
 
     @Override
     public String toJsonString() {
-        return Jsons.toJSONWriteNull(this);
+        return Jsons.toJsonWriteNull(this);
     }
 
     @Override

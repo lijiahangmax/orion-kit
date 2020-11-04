@@ -23,108 +23,116 @@ public class Gsons {
      * 单例gson对象
      */
     private static class GsonInstant {
-        private static Gson GSON = new Gson();
+        private static Gson gson = new Gson();
     }
 
     /**
      * 获得gson对象
      */
     public static Gson get() {
-        return GsonInstant.GSON;
+        return GsonInstant.gson;
     }
 
     /**
      * 修改gson对象
      */
     public static Gson set(GsonBuilder builder) {
-        return (GsonInstant.GSON = builder.create());
+        return (GsonInstant.gson = builder.create());
     }
 
     /**
      * 修改gson对象
      */
     public static Gson set(Gson gson) {
-        return (GsonInstant.GSON = gson);
+        return (GsonInstant.gson = gson);
     }
 
     /**
-     * json序列化对象
+     * bean -> json
+     *
+     * @param o bean
+     * @return json
      */
-    public static String toJSON(Object o) {
+    public static String toJson(Object o) {
         if (o == null) {
             return "";
         }
-        return get().toJson(o);
+        return GsonInstant.gson.toJson(o);
     }
 
     /**
-     * json反序列化对象
+     * json -> bean
+     *
+     * @param json  json
+     * @param clazz bean class
+     * @param <T>   T
+     * @return bean
      */
     public static <T> T toBean(String json, Class<T> clazz) {
         if (Strings.isBlank(json)) {
             return null;
         }
-        return get().fromJson(json, clazz);
+        return GsonInstant.gson.fromJson(json, clazz);
     }
 
     /**
-     * json序列化list
-     */
-    public static String toJSON(List l) {
-        if (l == null) {
-            return "";
-        }
-        return get().toJson(l, TypeToken.get(List.class).getType());
-    }
-
-    /**
-     * json反序列化list
+     * json -> list
+     *
+     * @param json  json
+     * @param clazz T class
+     * @param <T>   T
+     * @return list
      */
     public static <T> List<T> toList(String json, Class<T> clazz) {
         if (Strings.isBlank(json)) {
             return new ArrayList<>();
         }
-        return get().fromJson(json, TypeToken.getParameterized(List.class, clazz).getType());
+        return GsonInstant.gson.fromJson(json, TypeToken.getParameterized(List.class, clazz).getType());
     }
 
     /**
-     * json序列化set
-     */
-    public static String toJSON(Set s) {
-        if (s == null) {
-            return "";
-        }
-        return get().toJson(s, TypeToken.get(Set.class).getType());
-    }
-
-    /**
-     * json反序列化set
+     * json -> set
+     *
+     * @param json  json
+     * @param clazz T class
+     * @param <T>   T
+     * @return set
      */
     public static <T> Set<T> toSet(String json, Class<T> clazz) {
         if (Strings.isBlank(json)) {
             return new HashSet<>();
         }
-        return get().fromJson(json, TypeToken.getParameterized(Set.class, clazz).getType());
+        return GsonInstant.gson.fromJson(json, TypeToken.getParameterized(Set.class, clazz).getType());
     }
 
     /**
-     * json序列化map
-     */
-    public static String toJSON(Map map) {
-        if (map == null) {
-            return "";
-        }
-        return get().toJson(map, TypeToken.get(Map.class).getType());
-    }
-
-    /**
-     * json反序列化集合
+     * json -> map
+     *
+     * @param json     json
+     * @param keyClass K class
+     * @param valClass V class
+     * @param <K>      K
+     * @param <V>      V
+     * @return map
      */
     public static <K, V> Map<K, V> toMap(String json, Class<K> keyClass, Class<V> valClass) {
         if (Strings.isBlank(json)) {
             return new HashMap<>();
         }
-        return get().fromJson(json, TypeToken.getParameterized(Map.class, keyClass, valClass).getType());
+        return GsonInstant.gson.fromJson(json, TypeToken.getParameterized(Map.class, keyClass, valClass).getType());
+    }
+
+    /**
+     * json -> object
+     *
+     * @param json           json
+     * @param ownClass       class
+     * @param genericClasses 泛型class
+     * @param <T>            T
+     * @return T
+     */
+    public static <T> T toObject(String json, Class<?> ownClass, Class<?>... genericClasses) {
+        return GsonInstant.gson.fromJson(json, TypeToken.getParameterized(ownClass, genericClasses).getType());
     }
 
 }

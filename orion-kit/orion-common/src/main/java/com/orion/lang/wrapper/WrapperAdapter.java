@@ -17,6 +17,9 @@ import java.util.Map;
  */
 public class WrapperAdapter {
 
+    private WrapperAdapter() {
+    }
+
     /**
      * 转换为wrapper的key
      */
@@ -33,31 +36,31 @@ public class WrapperAdapter {
         return (HttpWrapper<Object>) toWrapper(json, Object.class, true);
     }
 
-    public static HttpWrapper<Object> toHttp(Map map) {
+    public static HttpWrapper<Object> toHttp(Map<?, ?> map) {
         return (HttpWrapper<Object>) toWrapper(map, Object.class, true);
-    }
-
-    public static RpcWrapper<Object> toRpc(String json) {
-        return (RpcWrapper<Object>) toWrapper(json, Object.class, false);
-    }
-
-    public static RpcWrapper<Object> toRpc(Map map) {
-        return (RpcWrapper<Object>) toWrapper(map, Object.class, false);
     }
 
     public static <T> HttpWrapper<T> toHttp(String json, Class<T> dataClass) {
         return (HttpWrapper<T>) toWrapper(json, dataClass, true);
     }
 
-    public static <T> HttpWrapper<T> toHttp(Map map, Class<T> dataClass) {
+    public static <T> HttpWrapper<T> toHttp(Map<?, ?> map, Class<T> dataClass) {
         return (HttpWrapper<T>) toWrapper(map, dataClass, true);
+    }
+
+    public static RpcWrapper<Object> toRpc(String json) {
+        return (RpcWrapper<Object>) toWrapper(json, Object.class, false);
+    }
+
+    public static RpcWrapper<Object> toRpc(Map<?, ?> map) {
+        return (RpcWrapper<Object>) toWrapper(map, Object.class, false);
     }
 
     public static <T> RpcWrapper<T> toRpc(String json, Class<T> dataClass) {
         return (RpcWrapper<T>) toWrapper(json, dataClass, false);
     }
 
-    public static <T> RpcWrapper<T> toRpc(Map map, Class<T> dataClass) {
+    public static <T> RpcWrapper<T> toRpc(Map<?, ?> map, Class<T> dataClass) {
         return (RpcWrapper<T>) toWrapper(map, dataClass, false);
     }
 
@@ -72,7 +75,7 @@ public class WrapperAdapter {
         return toWrapper(Jsons.toMap(json), dataClass, http);
     }
 
-    private static <T> Wrapper<T> toWrapper(Map map, Class<T> dataClass, boolean http) {
+    private static <T> Wrapper<T> toWrapper(Map<?, ?> map, Class<T> dataClass, boolean http) {
         if (map == null) {
             if (http) {
                 return HttpWrapper.get();
@@ -145,28 +148,28 @@ public class WrapperAdapter {
         for (Object data : ds) {
             if (data != null) {
                 try {
-                    if (dataClass == byte.class || dataClass == Byte.class) {
+                    if (dataClass == Byte.class) {
                         return (T) ((Byte) Converts.toByte(data));
-                    } else if (dataClass == short.class || dataClass == Short.class) {
+                    } else if (dataClass == Short.class) {
                         return (T) ((Short) Converts.toShort(data));
-                    } else if (dataClass == int.class || dataClass == Integer.class) {
+                    } else if (dataClass == Integer.class) {
                         return (T) ((Integer) Converts.toInt(data));
-                    } else if (dataClass == long.class || dataClass == Long.class) {
+                    } else if (dataClass == Long.class) {
                         return (T) ((Long) Converts.toLong(data));
-                    } else if (dataClass == float.class || dataClass == Float.class) {
+                    } else if (dataClass == Float.class) {
                         return (T) ((Float) Converts.toFloat(data));
-                    } else if (dataClass == double.class || dataClass == Double.class) {
+                    } else if (dataClass == Double.class) {
                         return (T) ((Double) Converts.toDouble(data));
-                    } else if (dataClass == boolean.class || dataClass == Boolean.class) {
+                    } else if (dataClass == Boolean.class) {
                         return (T) ((Boolean) Converts.toBoolean(data));
-                    } else if (dataClass == char.class || dataClass == Character.class) {
+                    } else if (dataClass == Character.class) {
                         return (T) ((Character) Converts.toChar(data));
                     } else if (dataClass == Date.class) {
                         return (T) Converts.toDate(data);
                     } else if (dataClass == String.class) {
                         return (T) data.toString();
                     } else {
-                        return Jsons.toBean(Jsons.toJSON(data), dataClass);
+                        return Jsons.toBean(Jsons.toJson(data), dataClass);
                     }
                 } catch (Exception e) {
                     Exceptions.printStacks(e);

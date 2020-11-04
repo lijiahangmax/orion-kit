@@ -136,7 +136,7 @@ public class UrlWrapper<T> extends CloneSupport<UrlWrapper<T>> implements Wrappe
 
     @Override
     public String toJsonString() {
-        return Jsons.toJSONWriteNull(this);
+        return Jsons.toJsonWriteNull(this);
     }
 
     @Override
@@ -144,7 +144,7 @@ public class UrlWrapper<T> extends CloneSupport<UrlWrapper<T>> implements Wrappe
         return new StringBuilder()
                 .append("UrlWrapper:\n\turl ==> ").append(url).append("\n\t")
                 .append("type ==> ").append(type).append("\n\t")
-                .append("data ==> ").append(Jsons.toJSONWriteNull(data))
+                .append("data ==> ").append(Jsons.toJsonWriteNull(data))
                 .toString();
     }
 
