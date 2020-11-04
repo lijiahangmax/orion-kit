@@ -15,7 +15,6 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2020/3/25 14:04
  */
-@SuppressWarnings("ALL")
 public class DomTag implements Serializable {
 
     /**

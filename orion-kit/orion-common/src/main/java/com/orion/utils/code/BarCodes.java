@@ -26,7 +26,6 @@ import java.io.OutputStream;
  * @version 1.0.0
  * @since 2020/7/8 17:15
  */
-@SuppressWarnings("ALL")
 public class BarCodes {
 
     public BarCodes() {

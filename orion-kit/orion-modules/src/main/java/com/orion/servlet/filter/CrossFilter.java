@@ -1,4 +1,4 @@
-package com.orion.web.filter;
+package com.orion.servlet.filter;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;

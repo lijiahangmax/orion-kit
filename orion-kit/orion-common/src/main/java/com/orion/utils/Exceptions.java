@@ -305,36 +305,36 @@ public class Exceptions {
         return new ConnectionRuntimeException(s, t);
     }
 
-    public static FTPException ftp() {
-        return new FTPException();
+    public static FtpException ftp() {
+        return new FtpException();
     }
 
-    public static FTPException ftp(Throwable t) {
-        return new FTPException(t);
+    public static FtpException ftp(Throwable t) {
+        return new FtpException(t);
     }
 
-    public static FTPException ftp(String s) {
-        return new FTPException(s);
+    public static FtpException ftp(String s) {
+        return new FtpException(s);
     }
 
-    public static FTPException ftp(String s, Throwable t) {
-        return new FTPException(s, t);
+    public static FtpException ftp(String s, Throwable t) {
+        return new FtpException(s, t);
     }
 
-    public static SFTPException sftp() {
-        return new SFTPException();
+    public static SftpException sftp() {
+        return new SftpException();
     }
 
-    public static SFTPException sftp(Throwable t) {
-        return new SFTPException(t);
+    public static SftpException sftp(Throwable t) {
+        return new SftpException(t);
     }
 
-    public static SFTPException sftp(String s) {
-        return new SFTPException(s);
+    public static SftpException sftp(String s) {
+        return new SftpException(s);
     }
 
-    public static SFTPException sftp(String s, Throwable t) {
-        return new SFTPException(s, t);
+    public static SftpException sftp(String s, Throwable t) {
+        return new SftpException(s, t);
     }
 
     public static ParseRuntimeException parse() {

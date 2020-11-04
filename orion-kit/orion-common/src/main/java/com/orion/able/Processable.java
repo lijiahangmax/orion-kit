@@ -1,7 +1,7 @@
 package com.orion.able;
 
 /**
- * 执行接口
+ * 执行处理接口
  *
  * @author Li
  * @version 1.0.0
@@ -9,6 +9,12 @@ package com.orion.able;
  */
 public interface Processable<T, R> {
 
+    /**
+     * 执行处理
+     *
+     * @param t t
+     * @return r
+     */
     R execute(T t);
 
 }

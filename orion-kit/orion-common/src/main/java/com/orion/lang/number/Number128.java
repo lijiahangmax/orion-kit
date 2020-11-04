@@ -18,8 +18,6 @@ public class Number128 implements Serializable {
     private long highValue;
 
     /**
-     * 构造
-     *
      * @param lowValue  低位
      * @param highValue 高位
      */

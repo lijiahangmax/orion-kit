@@ -9,6 +9,9 @@ package com.orion.able;
  */
 public interface Watchable {
 
+    /**
+     * 观察
+     */
     void watch();
 
 }

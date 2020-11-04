@@ -12,7 +12,7 @@ import java.util.HashMap;
  * @version 1.0.0
  * @since 2020/4/1 23:21
  */
-@SuppressWarnings(value = {"unchecked", "all"})
+@SuppressWarnings(value = {"UNCHECKED", "ALL"})
 public class CsvReader {
 
     private Reader inputStream;

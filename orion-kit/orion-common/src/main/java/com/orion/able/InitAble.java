@@ -1,7 +1,7 @@
 package com.orion.able;
 
 /**
- * 初始化
+ * 初始化接口
  *
  * @author ljh15
  * @version 1.0.0
@@ -9,6 +9,9 @@ package com.orion.able;
  */
 public interface InitAble {
 
+    /**
+     * 初始化
+     */
     void init();
 
 }

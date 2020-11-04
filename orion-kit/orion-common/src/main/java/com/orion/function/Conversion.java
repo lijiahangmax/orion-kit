@@ -10,6 +10,12 @@ package com.orion.function;
 @FunctionalInterface
 public interface Conversion<T, R> {
 
+    /**
+     * 转化
+     *
+     * @param t t
+     * @return R
+     */
     R apply(T t);
 
 }

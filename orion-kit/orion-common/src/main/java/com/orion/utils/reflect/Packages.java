@@ -7,7 +7,6 @@ package com.orion.utils.reflect;
  * @version 1.0.0
  * @since 2020/5/15 13:19
  */
-@SuppressWarnings("ALL")
 public class Packages {
 
     private Packages() {

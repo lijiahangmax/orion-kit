@@ -78,6 +78,7 @@ public enum HttpMethod {
             HttpMethod m = values()[i];
             if (m.getMethod().equals(method)) {
                 opt = true;
+                break;
             }
         }
         if (!opt) {

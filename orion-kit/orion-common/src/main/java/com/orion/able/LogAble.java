@@ -9,6 +9,11 @@ package com.orion.able;
  */
 public interface LogAble {
 
+    /**
+     * 转为日志
+     *
+     * @return logString
+     */
     String toLogString();
 
 }

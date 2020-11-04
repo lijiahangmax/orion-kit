@@ -9,6 +9,11 @@ package com.orion.able;
  */
 public interface Adaptable<N> {
 
+    /**
+     * 适配为新对象
+     *
+     * @return N
+     */
     N forNew();
 
 }

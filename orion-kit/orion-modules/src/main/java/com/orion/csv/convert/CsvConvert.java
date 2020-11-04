@@ -13,6 +13,9 @@ import com.orion.csv.importing.CsvStream;
  */
 public class CsvConvert {
 
+    private CsvConvert() {
+    }
+
     /**
      * Excel 适配器
      *

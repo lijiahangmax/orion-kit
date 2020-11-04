@@ -9,6 +9,11 @@ package com.orion.able;
  */
 public interface Valueable<T> {
 
+    /**
+     * 获取 value
+     *
+     * @return value
+     */
     T getValue();
 
 }

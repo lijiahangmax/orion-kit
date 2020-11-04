@@ -13,8 +13,18 @@ import java.util.Map;
  */
 public interface Mapable<K, V> {
 
+    /**
+     * 转为 map
+     *
+     * @return map
+     */
     Map<K, V> toMap();
 
+    /**
+     * 转为 map
+     *
+     * @return map
+     */
     default Map<String, Object> asMap() {
         return BeanWrapper.toMap(this);
     }

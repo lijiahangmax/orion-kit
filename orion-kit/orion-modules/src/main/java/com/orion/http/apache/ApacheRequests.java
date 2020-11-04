@@ -17,6 +17,9 @@ import java.util.Map;
  */
 public class ApacheRequests {
 
+    private ApacheRequests() {
+    }
+
     /**
      * get
      *

@@ -13,7 +13,6 @@ import java.util.concurrent.locks.ReentrantLock;
  * @version 1.0.0
  * @since 2019/8/22 20:54
  */
-@SuppressWarnings("ALL")
 public class LruCache<K, V> extends LinkedHashMap<K, V> {
 
     /**

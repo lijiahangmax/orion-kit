@@ -9,6 +9,9 @@ package com.orion.able;
  */
 public interface Errorable {
 
-    void error(Exception e);
+    /**
+     * 异常处理
+     */
+    void error();
 
 }

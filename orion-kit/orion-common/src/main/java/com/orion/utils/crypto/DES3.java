@@ -29,28 +29,28 @@ public class DES3 {
         return ECB.encrypt(s, key);
     }
 
-    public static String encrypt(String s, String key, String iv) {
-        return CBC.encrypt(s, key, iv);
+    public static String encrypt(String s, SecretKey key) {
+        return ECB.encrypt(s, key);
     }
 
     public static byte[] encrypt(byte[] bs, byte[] key) {
         return ECB.encrypt(bs, key);
     }
 
-    public static byte[] encrypt(byte[] bs, byte[] key, byte[] iv) {
-        return CBC.encrypt(bs, key, iv);
+    public static byte[] encrypt(byte[] bs, SecretKey key) {
+        return ECB.encrypt(bs, key);
     }
 
-    public static String encrypt(String s, SecretKey key) {
-        return ECB.encrypt(s, key);
+    public static String encrypt(String s, String key, String iv) {
+        return CBC.encrypt(s, key, iv);
     }
 
     public static String encrypt(String s, SecretKey key, String iv) {
         return CBC.encrypt(s, key, iv);
     }
 
-    public static byte[] encrypt(byte[] bs, SecretKey key) {
-        return ECB.encrypt(bs, key);
+    public static byte[] encrypt(byte[] bs, byte[] key, byte[] iv) {
+        return CBC.encrypt(bs, key, iv);
     }
 
     public static byte[] encrypt(byte[] bs, SecretKey key, byte[] iv) {
@@ -63,28 +63,28 @@ public class DES3 {
         return ECB.decrypt(s, key);
     }
 
-    public static String decrypt(String s, String key, String iv) {
-        return CBC.encrypt(s, key, iv);
+    public static String decrypt(String s, SecretKey key) {
+        return ECB.decrypt(s, key);
     }
 
     public static byte[] decrypt(byte[] bs, byte[] key) {
         return ECB.decrypt(bs, key);
     }
 
-    public static byte[] decrypt(byte[] bs, byte[] key, byte[] iv) {
-        return CBC.encrypt(bs, key, iv);
+    public static byte[] decrypt(byte[] bs, SecretKey key) {
+        return ECB.decrypt(bs, key);
     }
 
-    public static String decrypt(String s, SecretKey key) {
-        return ECB.decrypt(s, key);
+    public static String decrypt(String s, String key, String iv) {
+        return CBC.encrypt(s, key, iv);
     }
 
     public static String decrypt(String s, SecretKey key, String iv) {
         return CBC.encrypt(s, key, iv);
     }
 
-    public static byte[] decrypt(byte[] bs, SecretKey key) {
-        return ECB.decrypt(bs, key);
+    public static byte[] decrypt(byte[] bs, byte[] key, byte[] iv) {
+        return CBC.encrypt(bs, key, iv);
     }
 
     public static byte[] decrypt(byte[] bs, SecretKey key, byte[] iv) {

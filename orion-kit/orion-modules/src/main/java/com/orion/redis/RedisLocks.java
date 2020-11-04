@@ -14,6 +14,9 @@ public class RedisLocks {
 
     private static Jedis redisTemplate;
 
+    private RedisLocks() {
+    }
+
     /**
      * 默认锁过期时间
      */

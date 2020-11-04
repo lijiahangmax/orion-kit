@@ -43,7 +43,7 @@ public class ApacheClientConfig implements Serializable {
     private boolean logInterceptor;
 
     /**
-     * 同意域名下同时访问支持的次数
+     * 同一域名下同时访问支持的次数
      */
     private int route = 10;
 

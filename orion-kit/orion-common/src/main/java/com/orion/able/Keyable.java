@@ -9,6 +9,11 @@ package com.orion.able;
  */
 public interface Keyable<T> {
 
+    /**
+     * 获取 key
+     *
+     * @return key
+     */
     T getKey();
 
 }

@@ -7,6 +7,7 @@ package com.orion.function;
  * @version 1.0.0
  * @since 2019/9/9 14:16
  */
+@FunctionalInterface
 public interface Mapper<I, O> {
 
     /**

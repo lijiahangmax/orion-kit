@@ -9,6 +9,9 @@ package com.orion.able;
  */
 public interface DoneAble {
 
+    /**
+     * 完成回调
+     */
     void done();
 
 }

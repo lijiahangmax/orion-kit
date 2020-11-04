@@ -10,8 +10,10 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2020/3/17 15:53
  */
-@SuppressWarnings("ALL")
 public class FtpConst {
+
+    private FtpConst() {
+    }
 
     /**
      * FTP状态码及其描述

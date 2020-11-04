@@ -9,6 +9,9 @@ package com.orion.able;
  */
 public interface StopAble {
 
+    /**
+     * 停止
+     */
     void stop();
 
 }

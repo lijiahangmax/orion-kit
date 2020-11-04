@@ -20,6 +20,9 @@ public class Urls {
 
     private static final String DEFAULT_CHARSET = "UTF-8";
 
+    private Urls() {
+    }
+
     /**
      * 将map参数拼接为url
      *
@@ -103,6 +106,7 @@ public class Urls {
                 for (String skipField : skipFields) {
                     if (skipField != null && fieldName != null && skipField.trim().equals(fieldName.trim())) {
                         skip = true;
+                        break;
                     }
                 }
             }

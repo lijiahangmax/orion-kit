@@ -11,8 +11,18 @@ import com.orion.utils.json.Jsons;
  */
 public interface JsonAble {
 
+    /**
+     * 对象转json
+     *
+     * @return jsonString
+     */
     String toJsonString();
 
+    /**
+     * 对象转json
+     *
+     * @return jsonString
+     */
     default String toJson() {
         return Jsons.toJson(this);
     }

@@ -21,6 +21,9 @@ import java.util.Map;
  */
 public class OkRequests {
 
+    private OkRequests() {
+    }
+
     /**
      * get
      *

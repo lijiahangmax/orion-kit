@@ -1217,7 +1217,7 @@ public class Arrays1 {
      * <p>
      * 在默认情况下, 如果可变参数o, 传参是基本类型的数组, 使用length属性判断, o.length = 1
      */
-    @SuppressWarnings("all")
+    @SuppressWarnings("ALL")
     public static int lengths(Object... arr) {
         if (arr == null) {
             return 0;

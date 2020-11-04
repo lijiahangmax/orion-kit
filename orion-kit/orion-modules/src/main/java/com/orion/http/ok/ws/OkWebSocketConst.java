@@ -7,7 +7,6 @@ package com.orion.http.ok.ws;
  * @version 1.0.0
  * @since 2020/4/10 11:25
  */
-@SuppressWarnings("ALL")
 public class OkWebSocketConst {
 
     public static final String CLIENT_SESSION_ID_HEADER = "Mock-Client-Session-Id";

@@ -9,6 +9,12 @@ package com.orion.able;
  */
 public interface SendAble<T> {
 
+    /**
+     * 发送接口
+     *
+     * @param msg msg
+     * @return send result
+     */
     boolean send(T msg);
 
 }

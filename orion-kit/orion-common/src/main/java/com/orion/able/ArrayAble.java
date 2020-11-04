@@ -9,6 +9,11 @@ package com.orion.able;
  */
 public interface ArrayAble<E> {
 
+    /**
+     * 转化为数组接口
+     *
+     * @return 数组
+     */
     E[] toArray();
 
 }

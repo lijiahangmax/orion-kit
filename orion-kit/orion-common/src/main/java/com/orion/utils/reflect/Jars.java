@@ -21,7 +21,6 @@ import java.util.jar.JarFile;
  * @version 1.0.0
  * @since 2020/5/15 13:17
  */
-@SuppressWarnings("ALL")
 public class Jars {
 
     private Jars() {

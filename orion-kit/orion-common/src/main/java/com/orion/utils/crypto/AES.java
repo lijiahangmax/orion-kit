@@ -1,6 +1,7 @@
 package com.orion.utils.crypto;
 
 import com.orion.utils.crypto.asymmetric.EcbAsymmetric;
+import com.orion.utils.crypto.asymmetric.GcmAsymmetric;
 import com.orion.utils.crypto.asymmetric.IvAsymmetric;
 import com.orion.utils.crypto.enums.CipherAlgorithm;
 import com.orion.utils.crypto.enums.WorkingMode;
@@ -20,6 +21,8 @@ public class AES {
 
     private static final IvAsymmetric CBC = new IvAsymmetric(CipherAlgorithm.AES, WorkingMode.CBC);
 
+    private static final GcmAsymmetric GCM = new GcmAsymmetric();
+
     private AES() {
     }
 
@@ -29,32 +32,48 @@ public class AES {
         return ECB.encrypt(s, key);
     }
 
-    public static String encrypt(String s, String key, String iv) {
-        return CBC.encrypt(s, key, iv);
+    public static String encrypt(String s, SecretKey key) {
+        return ECB.encrypt(s, key);
     }
 
     public static byte[] encrypt(byte[] bs, byte[] key) {
         return ECB.encrypt(bs, key);
     }
 
-    public static byte[] encrypt(byte[] bs, byte[] key, byte[] iv) {
-        return CBC.encrypt(bs, key, iv);
+    public static byte[] encrypt(byte[] bs, SecretKey key) {
+        return ECB.encrypt(bs, key);
     }
 
-    public static String encrypt(String s, SecretKey key) {
-        return ECB.encrypt(s, key);
+    public static String encrypt(String s, String key, String iv) {
+        return CBC.encrypt(s, key, iv);
     }
 
     public static String encrypt(String s, SecretKey key, String iv) {
         return CBC.encrypt(s, key, iv);
     }
 
-    public static byte[] encrypt(byte[] bs, SecretKey key) {
-        return ECB.encrypt(bs, key);
+    public static byte[] encrypt(byte[] bs, byte[] key, byte[] iv) {
+        return CBC.encrypt(bs, key, iv);
     }
 
     public static byte[] encrypt(byte[] bs, SecretKey key, byte[] iv) {
         return CBC.encrypt(bs, key, iv);
+    }
+
+    public static String encrypt(String s, String key, String iv, String aad) {
+        return GCM.encrypt(s, key, iv, aad);
+    }
+
+    public static String encrypt(String s, SecretKey key, String iv, String aad) {
+        return GCM.encrypt(s, key, iv, aad);
+    }
+
+    public static byte[] encrypt(byte[] bs, byte[] key, byte[] iv, byte[] aad) {
+        return GCM.encrypt(bs, key, iv, aad);
+    }
+
+    public static byte[] encrypt(byte[] bs, SecretKey key, byte[] iv, byte[] aad) {
+        return GCM.encrypt(bs, key, iv, aad);
     }
 
     // ------------------ DEC ------------------
@@ -63,32 +82,48 @@ public class AES {
         return ECB.decrypt(s, key);
     }
 
-    public static String decrypt(String s, String key, String iv) {
-        return CBC.encrypt(s, key, iv);
+    public static String decrypt(String s, SecretKey key) {
+        return ECB.decrypt(s, key);
     }
 
     public static byte[] decrypt(byte[] bs, byte[] key) {
         return ECB.decrypt(bs, key);
     }
 
-    public static byte[] decrypt(byte[] bs, byte[] key, byte[] iv) {
-        return CBC.encrypt(bs, key, iv);
+    public static byte[] decrypt(byte[] bs, SecretKey key) {
+        return ECB.decrypt(bs, key);
     }
 
-    public static String decrypt(String s, SecretKey key) {
-        return ECB.decrypt(s, key);
+    public static String decrypt(String s, String key, String iv) {
+        return CBC.encrypt(s, key, iv);
     }
 
     public static String decrypt(String s, SecretKey key, String iv) {
         return CBC.encrypt(s, key, iv);
     }
 
-    public static byte[] decrypt(byte[] bs, SecretKey key) {
-        return ECB.decrypt(bs, key);
+    public static byte[] decrypt(byte[] bs, byte[] key, byte[] iv) {
+        return CBC.encrypt(bs, key, iv);
     }
 
     public static byte[] decrypt(byte[] bs, SecretKey key, byte[] iv) {
         return CBC.encrypt(bs, key, iv);
+    }
+
+    public static String decrypt(String s, String key, String iv, String aad) {
+        return GCM.encrypt(s, key, iv, aad);
+    }
+
+    public static String decrypt(String s, SecretKey key, String iv, String aad) {
+        return GCM.encrypt(s, key, iv, aad);
+    }
+
+    public static byte[] decrypt(byte[] bs, byte[] key, byte[] iv, byte[] aad) {
+        return GCM.encrypt(bs, key, iv, aad);
+    }
+
+    public static byte[] decrypt(byte[] bs, SecretKey key, byte[] iv, byte[] aad) {
+        return GCM.encrypt(bs, key, iv, aad);
     }
 
 }

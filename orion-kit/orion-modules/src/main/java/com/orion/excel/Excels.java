@@ -41,6 +41,9 @@ public class Excels {
      */
     private static final int STREAMING_BUFFER = 4096;
 
+    private Excels() {
+    }
+
     /**
      * 获取String的值
      *

@@ -9,6 +9,11 @@ package com.orion.able;
  */
 public interface BuilderAble<T> {
 
+    /**
+     * 构建
+     *
+     * @return T
+     */
     T build();
 
 }
