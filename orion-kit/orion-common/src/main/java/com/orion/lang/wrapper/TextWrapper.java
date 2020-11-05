@@ -76,4 +76,9 @@ public class TextWrapper extends CloneSupport<TextWrapper> implements Wrapper<St
         return sb.toString();
     }
 
+    @Override
+    public String toString() {
+        return sb.toString();
+    }
+
 }

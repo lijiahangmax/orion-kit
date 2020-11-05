@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Hyper 文件下载
+ * Apache 文件下载
  *
  * @author ljh15
  * @version 1.0.0

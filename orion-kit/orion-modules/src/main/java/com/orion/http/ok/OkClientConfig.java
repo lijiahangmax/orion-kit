@@ -1,6 +1,8 @@
 package com.orion.http.ok;
 
+import okhttp3.ConnectionSpec;
 import okhttp3.CookieJar;
+import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
 
 import javax.net.ssl.SSLSocketFactory;
@@ -8,10 +10,13 @@ import javax.net.ssl.X509TrustManager;
 import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Mock 配置类
+ * OkHttp 配置类
  *
  * @author ljh15
  * @version 1.0.0
@@ -22,7 +27,7 @@ public class OkClientConfig implements Serializable {
     /**
      * call超时时间
      */
-    private long callTimeout = 3000;
+    private long callTimeout = 15000;
 
     /**
      * 连接超时时间
@@ -59,9 +64,31 @@ public class OkClientConfig implements Serializable {
      */
     private int proxyPort;
 
+    /**
+     * 同一域名下同时访问支持的次数
+     */
+    private int maxRoute = 12;
+
+    /**
+     * 最大请求数量
+     */
+    private int maxRequest = 64;
+
+    /**
+     * 调度器线程池
+     */
+    private ExecutorService dispatcherPool;
+
+    /**
+     * 调度器
+     */
+    private Dispatcher dispatcher;
+
     private SSLSocketFactory sslSocketFactory;
 
     private X509TrustManager trustManager;
+
+    private List<ConnectionSpec> connectionSpecs;
 
     public OkClientConfig proxy(String host, int port) {
         this.proxyHost = host;
@@ -109,6 +136,43 @@ public class OkClientConfig implements Serializable {
         return this;
     }
 
+    public OkClientConfig maxRoute(int maxRoute) {
+        this.maxRoute = maxRoute;
+        return this;
+    }
+
+    public OkClientConfig maxRequest(int maxRequest) {
+        this.maxRequest = maxRequest;
+        return this;
+    }
+
+    public OkClientConfig dispatcherPool(ExecutorService dispatcherPool) {
+        this.dispatcherPool = dispatcherPool;
+        return this;
+    }
+
+    public OkClientConfig dispatcher(Dispatcher dispatcher) {
+        this.dispatcher = dispatcher;
+        return this;
+    }
+
+    public OkClientConfig connectionSpecs(List<ConnectionSpec> connectionSpecs) {
+        if (this.connectionSpecs == null) {
+            this.connectionSpecs = connectionSpecs;
+        } else {
+            this.connectionSpecs.addAll(connectionSpecs);
+        }
+        return this;
+    }
+
+    public OkClientConfig connectionSpecs(ConnectionSpec connectionSpec) {
+        if (this.connectionSpecs == null) {
+            this.connectionSpecs = new ArrayList<>();
+        }
+        this.connectionSpecs.add(connectionSpec);
+        return this;
+    }
+
     public long getCallTimeout() {
         return callTimeout;
     }
@@ -141,6 +205,22 @@ public class OkClientConfig implements Serializable {
         return proxyPort;
     }
 
+    public int getMaxRoute() {
+        return maxRoute;
+    }
+
+    public int getMaxRequest() {
+        return maxRequest;
+    }
+
+    public ExecutorService getDispatcherPool() {
+        return dispatcherPool;
+    }
+
+    public Dispatcher getDispatcher() {
+        return dispatcher;
+    }
+
     public SSLSocketFactory getSslSocketFactory() {
         return sslSocketFactory;
     }
@@ -149,42 +229,65 @@ public class OkClientConfig implements Serializable {
         return trustManager;
     }
 
-    public OkHttpClient.Builder createClientBuilder() {
-        return createClientBuilder(false);
+    public List<ConnectionSpec> getConnectionSpecs() {
+        return connectionSpecs;
     }
 
-    public OkHttpClient.Builder createClientBuilder(boolean ssl) {
-        OkHttpClient.Builder client = new OkHttpClient.Builder()
+    public OkHttpClient.Builder buildClientBuilder() {
+        return buildClientBuilder(false);
+    }
+
+    public OkHttpClient.Builder buildClientBuilder(boolean ssl) {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .callTimeout(this.callTimeout, TimeUnit.MILLISECONDS)
                 .connectTimeout(this.connectTimeout, TimeUnit.MILLISECONDS)
                 .readTimeout(this.readTimeout, TimeUnit.MILLISECONDS)
                 .writeTimeout(this.writeTimeout, TimeUnit.MILLISECONDS);
+        if (this.dispatcher != null) {
+            builder.dispatcher(this.dispatcher);
+        } else {
+            if (this.dispatcherPool != null || this.maxRoute != 0 || this.maxRequest != 0) {
+                if (this.dispatcherPool != null) {
+                    this.dispatcher = new Dispatcher(this.dispatcherPool);
+                } else {
+                    this.dispatcher = new Dispatcher();
+                }
+                if (this.maxRoute != 0) {
+                    this.dispatcher.setMaxRequestsPerHost(this.maxRoute);
+                }
+                if (this.maxRequest != 0) {
+                    this.dispatcher.setMaxRequests(this.maxRequest);
+                }
+                builder.dispatcher(this.dispatcher);
+            }
+        }
         if (this.logInterceptor) {
-            client.addInterceptor(new OkLoggerInterceptor());
+            builder.addInterceptor(new OkLoggerInterceptor());
         }
         if (this.proxyHost != null && this.proxyPort != 0) {
-            client.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(this.proxyHost, this.proxyPort)));
+            builder.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(this.proxyHost, this.proxyPort)));
         }
         if (this.cookies != null) {
-            client.cookieJar(this.cookies);
+            builder.cookieJar(this.cookies);
         }
         if (ssl) {
-            client.sslSocketFactory(sslSocketFactory, trustManager);
+            builder.sslSocketFactory(this.sslSocketFactory, this.trustManager)
+                    .connectionSpecs(this.connectionSpecs);
         }
-        return client;
+        return builder;
     }
 
-    public OkHttpClient createClient() {
-        return this.createClientBuilder(false).build();
+    public OkHttpClient buildClient() {
+        return this.buildClientBuilder(false).build();
     }
 
-    public OkHttpClient createClient(boolean ssl) {
-        return this.createClientBuilder(ssl).build();
+    public OkHttpClient buildClient(boolean ssl) {
+        return this.buildClientBuilder(ssl).build();
     }
 
     @Override
     public String toString() {
-        return "MockConfig{" +
+        return "OkHttpConfig{" +
                 "callTimeout=" + callTimeout +
                 ", connectTimeout=" + connectTimeout +
                 ", readTimeout=" + readTimeout +

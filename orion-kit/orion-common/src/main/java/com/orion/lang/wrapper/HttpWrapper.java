@@ -184,11 +184,7 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
 
     @Override
     public String toString() {
-        return "HttpWrapper{" +
-                "code=" + code +
-                ", msg='" + msg + '\'' +
-                ", data=" + Objects1.toString(data) +
-                '}';
+        return toLogString();
     }
 
     @Override
@@ -200,7 +196,7 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
     public String toLogString() {
         return "HttpWrapper:\n\tcode ==> " + code + "\n\t" +
                 "msg ==> " + msg + "\n\t" +
-                "data ==> " + data;
+                "data ==> " + Objects1.toString(data);
     }
 
     @Override

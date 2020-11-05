@@ -20,7 +20,7 @@ import java.nio.charset.Charset;
 import java.util.*;
 
 /**
- * Mock 异步下载文件
+ * OkHttp 异步下载文件
  * 支持断点下载和进度 前提是服务器支持
  * 支持实时下载速率以及平均下载速率
  *

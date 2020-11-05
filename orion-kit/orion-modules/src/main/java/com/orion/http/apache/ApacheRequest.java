@@ -8,7 +8,6 @@ import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.Urls;
 import com.orion.utils.Valid;
-import com.orion.utils.io.Streams;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -23,7 +22,7 @@ import java.nio.charset.Charset;
 import java.util.*;
 
 /**
- * Hyper HttpClient 请求
+ * Apache HttpClient 请求
  *
  * @author ljh15
  * @version 1.0.0
@@ -579,13 +578,11 @@ public class ApacheRequest implements Awaitable<ApacheResponse> {
     private void execute() {
         Valid.notNull(this.url, "Request url is null");
         this.buildRequest();
-        try {
-            CloseableHttpResponse execute = this.client.execute(this.request);
-            this.response = new ApacheResponse(this.request, execute)
+        try (CloseableHttpResponse response = this.client.execute(this.request)) {
+            this.response = new ApacheResponse(this.request, response)
                     .url(this.url)
                     .method(this.method);
             this.request.releaseConnection();
-            Streams.close(execute);
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         }

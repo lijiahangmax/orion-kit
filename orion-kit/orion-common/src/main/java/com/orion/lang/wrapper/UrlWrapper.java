@@ -4,7 +4,6 @@ import com.orion.able.JsonAble;
 import com.orion.able.LogAble;
 import com.orion.able.Mapable;
 import com.orion.lang.support.CloneSupport;
-import com.orion.utils.Objects1;
 import com.orion.utils.json.Jsons;
 
 import java.util.HashMap;
@@ -127,11 +126,7 @@ public class UrlWrapper<T> extends CloneSupport<UrlWrapper<T>> implements Wrappe
 
     @Override
     public String toString() {
-        return "UrlWrapper{" +
-                "url='" + url + '\'' +
-                ", type=" + type +
-                ", data=" + Objects1.toString(data) +
-                '}';
+        return toLogString();
     }
 
     @Override
@@ -141,11 +136,9 @@ public class UrlWrapper<T> extends CloneSupport<UrlWrapper<T>> implements Wrappe
 
     @Override
     public String toLogString() {
-        return new StringBuilder()
-                .append("UrlWrapper:\n\turl ==> ").append(url).append("\n\t")
-                .append("type ==> ").append(type).append("\n\t")
-                .append("data ==> ").append(Jsons.toJsonWriteNull(data))
-                .toString();
+        return "UrlWrapper:\n\turl ==> " + url + "\n\t" +
+                "type ==> " + type + "\n\t" +
+                "data ==> " + Jsons.toJsonWriteNull(data);
     }
 
     @Override

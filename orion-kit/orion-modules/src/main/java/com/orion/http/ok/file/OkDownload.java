@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Mock 下载文件
+ * OkHttp 下载文件
  *
  * @author ljh15
  * @version 1.0.0

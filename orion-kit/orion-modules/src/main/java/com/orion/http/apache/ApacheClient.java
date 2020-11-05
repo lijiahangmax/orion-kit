@@ -5,13 +5,12 @@ import com.orion.utils.Exceptions;
 import com.orion.utils.io.Streams;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 
 /**
- * Hyper HttpClient
+ * Apache HttpClient
  *
  * @author ljh15
  * @version 1.0.0
@@ -61,12 +60,7 @@ public class ApacheClient {
      * @return Client
      */
     public static CloseableHttpClient getClient() {
-        CloseableHttpClient client = ClientInstance.client;
-        if (client == null) {
-            ClientInstance.init(null);
-            client = ClientInstance.client;
-        }
-        return client;
+        return ClientInstance.client;
     }
 
     /**
@@ -75,12 +69,7 @@ public class ApacheClient {
      * @return Client
      */
     public static CloseableHttpClient getSslClient() {
-        CloseableHttpClient client = ClientInstance.sslClient;
-        if (client == null) {
-            ClientInstance.initSsl(null);
-            client = ClientInstance.sslClient;
-        }
-        return client;
+        return ClientInstance.sslClient;
     }
 
     /**
@@ -136,18 +125,10 @@ public class ApacheClient {
         }
 
         private static void init(ApacheClientConfig config, boolean ssl) {
-            if (config == null) {
-                if (ssl) {
-                    sslClient = HttpClients.custom().build();
-                } else {
-                    client = HttpClients.custom().build();
-                }
+            if (ssl) {
+                ClientInstance.sslClient = config.buildClient(true);
             } else {
-                if (ssl) {
-                    ClientInstance.sslClient = config.createClient(true);
-                } else {
-                    ClientInstance.client = config.createClient(false);
-                }
+                ClientInstance.client = config.buildClient(false);
             }
         }
     }

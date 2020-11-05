@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Mock Cookie
+ * OkHttp Cookie
  *
  * @author ljh15
  * @version 1.0.0

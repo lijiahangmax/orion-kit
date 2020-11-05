@@ -16,7 +16,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 /**
- * Mock 请求
+ * OkHttp 请求
  *
  * @author ljh15
  * @version 1.0.0
@@ -131,7 +131,7 @@ public class OkRequest implements Awaitable<OkResponse>, Asyncable<Consumer<OkRe
     private OkHttpClient client;
 
     /**
-     * MockResponse
+     * OkHttp Response
      */
     private OkResponse response;
 
@@ -562,7 +562,7 @@ public class OkRequest implements Awaitable<OkResponse>, Asyncable<Consumer<OkRe
     /**
      * 同步调用
      *
-     * @return MockResult
+     * @return OkHttp Response
      */
     @Override
     public OkResponse await() {
@@ -658,7 +658,7 @@ public class OkRequest implements Awaitable<OkResponse>, Asyncable<Consumer<OkRe
         this.buildRequest();
         this.call = this.client.newCall(this.request);
         if (this.async) {
-            this.response = new OkResponse().request(this.request).mockRequest(this);
+            this.response = new OkResponse().request(this.request).okRequest(this);
             this.call.enqueue(new Callback() {
                 @Override
                 public void onResponse(Call call, Response res) {
@@ -676,9 +676,9 @@ public class OkRequest implements Awaitable<OkResponse>, Asyncable<Consumer<OkRe
             });
         } else {
             try {
-                this.response = new OkResponse(this.request, this.call.execute()).call(this.call).mockRequest(this);
+                this.response = new OkResponse(this.request, this.call.execute()).call(this.call).okRequest(this);
             } catch (IOException e) {
-                this.response = new OkResponse(this.request, e).call(this.call).mockRequest(this);
+                this.response = new OkResponse(this.request, e).call(this.call).okRequest(this);
             }
         }
     }

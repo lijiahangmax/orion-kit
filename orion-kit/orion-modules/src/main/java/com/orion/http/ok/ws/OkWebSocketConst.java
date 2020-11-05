@@ -1,7 +1,7 @@
 package com.orion.http.ok.ws;
 
 /**
- * Mock WebSocket常量
+ * OkHttp WebSocket常量
  *
  * @author ljh15
  * @version 1.0.0

@@ -4,7 +4,9 @@ import org.apache.http.HttpHost;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.client.CookieStore;
+import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -12,9 +14,10 @@ import org.apache.http.impl.client.HttpClients;
 
 import javax.net.ssl.SSLContext;
 import java.io.Serializable;
+import java.util.concurrent.TimeUnit;
 
 /**
- * Hyper HttpClient 配置
+ * Apache HttpClient 配置
  *
  * @author ljh15
  * @version 1.0.0
@@ -45,7 +48,22 @@ public class ApacheClientConfig implements Serializable {
     /**
      * 同一域名下同时访问支持的次数
      */
-    private int route = 10;
+    private int maxRoute = 12;
+
+    /**
+     * 最大连接数
+     */
+    private int maxRequest = 64;
+
+    /**
+     * 连接存活时间
+     */
+    private long connTimeToLive = -1;
+
+    /**
+     * 连接存活时间单位
+     */
+    private TimeUnit connTimeToLiveTimeUnit = TimeUnit.MILLISECONDS;
 
     /**
      * UA
@@ -66,6 +84,16 @@ public class ApacheClientConfig implements Serializable {
      * cookie
      */
     private CookieStore cookies;
+
+    /**
+     * connection manager
+     */
+    private HttpClientConnectionManager connectionManager;
+
+    /**
+     * 重试策略
+     */
+    private HttpRequestRetryHandler requestRetryHandler;
 
     /**
      * SSL Context
@@ -103,8 +131,24 @@ public class ApacheClientConfig implements Serializable {
         return this;
     }
 
-    public ApacheClientConfig route(int route) {
-        this.route = route;
+    public ApacheClientConfig maxRoute(int route) {
+        this.maxRoute = route;
+        return this;
+    }
+
+    public ApacheClientConfig maxRequest(int maxRequest) {
+        this.maxRequest = maxRequest;
+        return this;
+    }
+
+    public ApacheClientConfig connTimeToLive(long connTimeToLive) {
+        this.connTimeToLive = connTimeToLive;
+        return this;
+    }
+
+    public ApacheClientConfig connTimeToLive(long connTimeToLive, TimeUnit connTimeToLiveTimeUnit) {
+        this.connTimeToLive = connTimeToLive;
+        this.connTimeToLiveTimeUnit = connTimeToLiveTimeUnit;
         return this;
     }
 
@@ -115,6 +159,26 @@ public class ApacheClientConfig implements Serializable {
 
     public ApacheClientConfig cookies(CookieStore cookies) {
         this.cookies = cookies;
+        return this;
+    }
+
+    public ApacheClientConfig connectionManager(HttpClientConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
+        return this;
+    }
+
+    public ApacheClientConfig noRetry() {
+        this.requestRetryHandler = ApacheClientRetryPolicy.NO_RETRY.getHandler();
+        return this;
+    }
+
+    public ApacheClientConfig requestRetryHandler(HttpRequestRetryHandler requestRetryHandler) {
+        this.requestRetryHandler = requestRetryHandler;
+        return this;
+    }
+
+    public ApacheClientConfig requestRetryHandler(ApacheClientRetryPolicy policy) {
+        this.requestRetryHandler = policy.getHandler();
         return this;
     }
 
@@ -144,8 +208,20 @@ public class ApacheClientConfig implements Serializable {
         return logInterceptor;
     }
 
-    public int getRoute() {
-        return route;
+    public int getMaxRoute() {
+        return maxRoute;
+    }
+
+    public int getMaxRequest() {
+        return maxRequest;
+    }
+
+    public long getConnTimeToLive() {
+        return connTimeToLive;
+    }
+
+    public TimeUnit getConnTimeToLiveTimeUnit() {
+        return connTimeToLiveTimeUnit;
     }
 
     public String getUserAgent() {
@@ -164,6 +240,14 @@ public class ApacheClientConfig implements Serializable {
         return cookies;
     }
 
+    public HttpClientConnectionManager getConnectionManager() {
+        return connectionManager;
+    }
+
+    public HttpRequestRetryHandler getRequestRetryHandler() {
+        return requestRetryHandler;
+    }
+
     public SSLContext getSslContext() {
         return sslContext;
     }
@@ -172,27 +256,34 @@ public class ApacheClientConfig implements Serializable {
         return sslSocketFactory;
     }
 
-    public HttpClientBuilder createClientBuilder() {
-        return this.createClientBuilder(false);
+    public HttpClientBuilder buildClientBuilder() {
+        return this.buildClientBuilder(false);
     }
 
-    public HttpClientBuilder createClientBuilder(boolean ssl) {
+    public HttpClientBuilder buildClientBuilder(boolean ssl) {
         RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectTimeout(this.connectTimeout)
                 .setSocketTimeout(this.socketTimeout)
                 .setConnectionRequestTimeout(this.requestTimeout)
                 .build();
         HttpClientBuilder builder = HttpClients.custom()
-                .setMaxConnPerRoute(this.route)
+                .setConnectionTimeToLive(this.connTimeToLive, this.connTimeToLiveTimeUnit)
+                .setMaxConnTotal(this.maxRequest)
+                .setMaxConnPerRoute(this.maxRoute)
                 .setDefaultRequestConfig(requestConfig);
-        String userAgent = this.userAgent;
-        if (userAgent != null) {
-            builder.setUserAgent(userAgent);
+        if (this.connectionManager != null) {
+            builder.setConnectionManager(this.connectionManager);
+        }
+        if (this.requestRetryHandler != null) {
+            builder.setRetryHandler(this.requestRetryHandler);
+        }
+        if (this.userAgent != null) {
+            builder.setUserAgent(this.userAgent);
         }
         if (this.logInterceptor) {
             ApacheLoggerInterceptor loggerInterceptor = new ApacheLoggerInterceptor();
             builder.addInterceptorFirst((HttpRequestInterceptor) loggerInterceptor)
-                    .addInterceptorFirst((HttpResponseInterceptor) loggerInterceptor);
+                    .addInterceptorLast((HttpResponseInterceptor) loggerInterceptor);
         }
         if (this.proxyHost != null && this.proxyPort != 0) {
             builder.setProxy(new HttpHost(this.proxyHost, this.proxyPort));
@@ -207,22 +298,22 @@ public class ApacheClientConfig implements Serializable {
         return builder;
     }
 
-    public CloseableHttpClient createClient() {
-        return this.createClientBuilder(false).build();
+    public CloseableHttpClient buildClient() {
+        return this.buildClientBuilder(false).build();
     }
 
-    public CloseableHttpClient createClient(boolean ssl) {
-        return this.createClientBuilder(ssl).build();
+    public CloseableHttpClient buildClient(boolean ssl) {
+        return this.buildClientBuilder(ssl).build();
     }
 
     @Override
     public String toString() {
-        return "HyperConfig{" +
+        return "ApacheConfig{" +
                 "connectTimeout=" + connectTimeout +
                 ", socketTimeout=" + socketTimeout +
                 ", requestTimeout=" + requestTimeout +
                 ", logInterceptor=" + logInterceptor +
-                ", route=" + route +
+                ", route=" + maxRoute +
                 ", userAgent='" + userAgent + '\'' +
                 ", proxyHost='" + proxyHost + '\'' +
                 ", proxyPort=" + proxyPort +

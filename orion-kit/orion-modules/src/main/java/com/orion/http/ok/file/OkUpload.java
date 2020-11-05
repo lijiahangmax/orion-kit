@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Mock 上传文件
+ * OkHttp 上传文件
  *
  * @author ljh15
  * @version 1.0.0

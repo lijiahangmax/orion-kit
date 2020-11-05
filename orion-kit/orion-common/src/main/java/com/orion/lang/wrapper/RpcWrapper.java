@@ -5,7 +5,6 @@ import com.orion.able.LogAble;
 import com.orion.able.Mapable;
 import com.orion.id.UUIds;
 import com.orion.lang.support.CloneSupport;
-import com.orion.utils.Objects1;
 import com.orion.utils.Strings;
 import com.orion.utils.json.Jsons;
 
@@ -266,13 +265,7 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
 
     @Override
     public String toString() {
-        return "RpcWrapper{" +
-                "code=" + code +
-                ", msg='" + msg + '\'' +
-                ", data=" + Objects1.toString(data) +
-                ", errorMsg=" + errorMsg +
-                ", traceID='" + traceId + '\'' +
-                '}';
+        return toLogString();
     }
 
     @Override

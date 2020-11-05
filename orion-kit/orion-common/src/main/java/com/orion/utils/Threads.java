@@ -285,6 +285,38 @@ public class Threads {
     /**
      * 关闭线程池
      *
+     * @param pool            线程池
+     * @param shutdownTimeout 终止时间
+     */
+    public static void shutdownPool(ExecutorService pool, int shutdownTimeout) {
+        shutdownPool(pool, shutdownTimeout, shutdownTimeout, TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * 关闭线程池
+     *
+     * @param pool            线程池
+     * @param shutdownTimeout 终止时间
+     * @param timeUnit        时间单位
+     */
+    public static void shutdownPool(ExecutorService pool, int shutdownTimeout, TimeUnit timeUnit) {
+        shutdownPool(pool, shutdownTimeout, shutdownTimeout, timeUnit);
+    }
+
+    /**
+     * 关闭线程池
+     *
+     * @param pool               线程池
+     * @param shutdownTimeout    终止时间
+     * @param shutdownNowTimeout 如果调用终止超时, 取消队列中的Pending的任务, 中断阻塞的时间
+     */
+    public static void shutdownPool(ExecutorService pool, int shutdownTimeout, int shutdownNowTimeout) {
+        shutdownPool(pool, shutdownTimeout, shutdownNowTimeout, TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * 关闭线程池
+     *
      * @param pool               线程池
      * @param shutdownTimeout    终止时间
      * @param shutdownNowTimeout 如果调用终止超时, 取消队列中的Pending的任务, 中断阻塞的时间
@@ -306,12 +338,12 @@ public class Threads {
     }
 
     /**
-     * 关闭线程池
+     * 立即关闭线程池
      *
      * @param pool    线程池
      * @param timeout 取消队列中的Pending的任务, 中断阻塞的时间毫秒
      */
-    public static void shutdownPool(ExecutorService pool, int timeout) {
+    public static void shutdownPoolNow(ExecutorService pool, int timeout) {
         try {
             pool.shutdownNow();
             if (!pool.awaitTermination(timeout, TimeUnit.MILLISECONDS)) {
@@ -323,13 +355,13 @@ public class Threads {
     }
 
     /**
-     * 关闭线程池
+     * 立即关闭线程池
      *
      * @param pool     线程池
      * @param timeout  取消队列中的Pending的任务, 中断阻塞的时间
      * @param timeUnit 时间单位
      */
-    public static void shutdownPool(ExecutorService pool, int timeout, TimeUnit timeUnit) {
+    public static void shutdownPoolNow(ExecutorService pool, int timeout, TimeUnit timeUnit) {
         try {
             pool.shutdownNow();
             if (!pool.awaitTermination(timeout, timeUnit)) {

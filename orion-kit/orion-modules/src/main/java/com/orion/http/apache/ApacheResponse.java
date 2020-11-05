@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Hyper HttpClient 响应
+ * Apache HttpClient 响应
  *
  * @author ljh15
  * @version 1.0.0
@@ -172,7 +172,7 @@ public class ApacheResponse implements Serializable {
 
     @Override
     public String toString() {
-        return "HyperResponse{" +
+        return "ApacheResponse{" +
                 "code=" + code +
                 ", message='" + message + '\'' +
                 ", bodyLength=" + Arrays1.length(body) +

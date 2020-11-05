@@ -13,7 +13,7 @@ import java.net.InetAddress;
 import java.util.Map;
 
 /**
- * Mock 调用工具
+ * OkHttp 调用工具
  *
  * @author ljh15
  * @version 1.0.0

@@ -9,7 +9,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import java.util.Map;
 
 /**
- * Hyper 调用工具
+ * Apache 调用工具
  *
  * @author ljh15
  * @version 1.0.0

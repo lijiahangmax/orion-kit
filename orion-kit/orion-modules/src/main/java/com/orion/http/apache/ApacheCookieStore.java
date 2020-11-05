@@ -6,7 +6,7 @@ import org.apache.http.impl.cookie.BasicClientCookie;
 import java.util.Map;
 
 /**
- * Hyper Cookie
+ * Apache Cookie
  *
  * @author ljh15
  * @version 1.0.0

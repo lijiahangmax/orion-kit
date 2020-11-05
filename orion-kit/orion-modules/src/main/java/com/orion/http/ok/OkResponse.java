@@ -1,9 +1,11 @@
 package com.orion.http.ok;
 
+import com.orion.able.SafeCloseable;
 import com.orion.http.common.HttpCookie;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
 import com.orion.utils.ext.StringExt;
+import com.orion.utils.io.Streams;
 import okhttp3.Call;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -16,13 +18,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Mock 结果
+ * OkHttp Response
  *
  * @author ljh15
  * @version 1.0.0
  * @since 2020/4/7 23:52
  */
-public class OkResponse implements Serializable {
+public class OkResponse implements Serializable, SafeCloseable {
 
     /**
      * 状态码
@@ -85,7 +87,7 @@ public class OkResponse implements Serializable {
     private Exception exception;
 
     /**
-     * mockRequest
+     * OkHttp Request
      */
     private OkRequest okRequest;
 
@@ -239,12 +241,12 @@ public class OkResponse implements Serializable {
     }
 
     /**
-     * mockRequest
+     * OkHttp Request
      *
-     * @param okRequest mockRequest
+     * @param okRequest OkHttp Request
      * @return this
      */
-    public OkResponse mockRequest(OkRequest okRequest) {
+    public OkResponse okRequest(OkRequest okRequest) {
         this.okRequest = okRequest;
         return this;
     }
@@ -329,8 +331,13 @@ public class OkResponse implements Serializable {
     }
 
     @Override
+    public void close() {
+        Streams.close(this.response);
+    }
+
+    @Override
     public String toString() {
-        return "MockResult{" +
+        return "OkHttpResult{" +
                 "code=" + code +
                 ", message='" + message + '\'' +
                 ", bodyLength=" + Arrays1.length(body) +
@@ -343,5 +350,4 @@ public class OkResponse implements Serializable {
                 ", done=" + done +
                 '}';
     }
-
 }

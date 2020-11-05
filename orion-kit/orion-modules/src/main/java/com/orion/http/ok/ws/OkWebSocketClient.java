@@ -14,7 +14,7 @@ import java.net.ConnectException;
 import java.net.SocketException;
 
 /**
- * Mock WebSocket客户端
+ * OkHttp WebSocket客户端
  *
  * @author ljh15
  * @version 1.0.0

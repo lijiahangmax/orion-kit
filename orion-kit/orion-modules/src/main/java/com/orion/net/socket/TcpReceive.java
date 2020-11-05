@@ -90,7 +90,7 @@ public class TcpReceive {
     }
 
     public void close() {
-        Threads.shutdownPool(acceptThreadPool, 6, TimeUnit.SECONDS);
+        Threads.shutdownPoolNow(acceptThreadPool, 6, TimeUnit.SECONDS);
         Streams.close(serverSocket);
     }
 

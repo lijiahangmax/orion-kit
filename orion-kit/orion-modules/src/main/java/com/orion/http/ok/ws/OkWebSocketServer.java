@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Mock WebSocket服务端
+ * OkHttp WebSocket服务端
  *
  * @author ljh15
  * @version 1.0.0
@@ -33,7 +33,7 @@ public class OkWebSocketServer {
     private static final Logger LOGGER = LoggerFactory.getLogger(OkWebSocketServer.class);
 
     /**
-     * mockServer
+     * OkHttp WebSocket Server
      */
     private final MockWebServer MOCK_WEB_SERVER;
 

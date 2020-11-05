@@ -1,12 +1,13 @@
 package com.orion.http.ok;
 
 import com.orion.lang.DefaultX509TrustManager;
+import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
 
 import javax.net.ssl.SSLSocketFactory;
 
 /**
- * Mock Client
+ * OkHttp Client
  *
  * @author ljh15
  * @version 1.0.0
@@ -19,6 +20,7 @@ public class OkClient {
         ClientInstance.initSsl(new OkClientConfig()
                 .sslSocketFactory((SSLSocketFactory) SSLSocketFactory.getDefault())
                 .trustManager(DefaultX509TrustManager.DEFAULT_X509_TRUST_MANAGER)
+                .connectionSpecs(ConnectionSpec.COMPATIBLE_TLS)
                 .logInterceptor());
     }
 
@@ -50,12 +52,7 @@ public class OkClient {
      * @return Client
      */
     public static OkHttpClient getClient() {
-        OkHttpClient client = ClientInstance.client;
-        if (client == null) {
-            ClientInstance.init(null);
-            client = ClientInstance.client;
-        }
-        return client;
+        return ClientInstance.client;
     }
 
     /**
@@ -64,12 +61,7 @@ public class OkClient {
      * @return Client
      */
     public static OkHttpClient getSslClient() {
-        OkHttpClient client = ClientInstance.sslClient;
-        if (client == null) {
-            ClientInstance.initSsl(null);
-            client = ClientInstance.sslClient;
-        }
-        return client;
+        return ClientInstance.sslClient;
     }
 
     /**
@@ -111,18 +103,10 @@ public class OkClient {
         }
 
         private static void init(OkClientConfig okClientConfig, boolean ssl) {
-            if (okClientConfig == null) {
-                if (ssl) {
-                    ClientInstance.sslClient = new OkHttpClient();
-                } else {
-                    ClientInstance.client = new OkHttpClient();
-                }
+            if (ssl) {
+                ClientInstance.sslClient = okClientConfig.buildClient(true);
             } else {
-                if (ssl) {
-                    ClientInstance.sslClient = okClientConfig.createClient(true);
-                } else {
-                    ClientInstance.client = okClientConfig.createClient(false);
-                }
+                ClientInstance.client = okClientConfig.buildClient(false);
             }
         }
     }

@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.util.*;
 
 /**
- * Hyper 文件上传
+ * Apache 文件上传
  *
  * @author ljh15
  * @version 1.0.0

@@ -2,6 +2,7 @@ package com.orion.lang.thread;
 
 import com.orion.able.BuilderAble;
 import com.orion.utils.Objects1;
+import com.orion.utils.Systems;
 
 import java.util.concurrent.*;
 
@@ -25,9 +26,9 @@ public class ExecutorBuilder implements BuilderAble<ThreadPoolExecutor> {
     private int corePoolSize;
 
     /**
-     * 最大池大小（允许同时执行的最大线程数）
+     * 最大池大小（允许同时执行的最大线程数） 默认: 核心数 * 2
      */
-    private int maxPoolSize = Integer.MAX_VALUE;
+    private int maxPoolSize = Systems.VM_PROCESS_NUM * 2;
 
     /**
      * 线程存活时间, 即当池中线程多于初始大小时, 多出的线程保留的时长
