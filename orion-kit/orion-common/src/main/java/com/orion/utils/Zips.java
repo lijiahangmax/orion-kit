@@ -21,14 +21,16 @@ public class Zips {
     private Zips() {
     }
 
+    private static final String DEFAULT_FORMAT = "zip";
+
     /**
      * 压缩文件
      *
      * @param path 要压缩的文件路径
      * @return 压缩文件目录 null压缩失败
      */
-    public static String doCompress(String path) {
-        return doCompress(path, null, "zip");
+    public static String compress(String path) {
+        return compress(path, null, DEFAULT_FORMAT);
     }
 
     /**
@@ -38,8 +40,8 @@ public class Zips {
      * @param format 生成的格式
      * @return 压缩文件目录 null压缩失败
      */
-    public static String doCompress(String path, String format) {
-        return doCompress(path, null, format);
+    public static String compress(String path, String format) {
+        return compress(path, null, format);
     }
 
     /**
@@ -50,32 +52,24 @@ public class Zips {
      * @param format 生成的格式
      * @return 压缩文件目录 null压缩失败
      */
-    public static String doCompress(String path, String dest, String format) {
-        if (Strings.isBlank(path)) {
-            throw new RuntimeException("File been not null");
-        }
-        if (Strings.isBlank(format)) {
-            format = "zip";
-        }
+    public static String compress(String path, String dest, String format) {
+        Valid.notNull(path, "path is null");
+        format = Strings.def(format, DEFAULT_FORMAT);
         File file = new File(path);
         if (!file.exists()) {
-            throw new RuntimeException("File not found " + path);
+            throw Exceptions.runtime("File not found " + path);
         }
         if (Strings.isBlank(dest)) {
             dest = file.getAbsolutePath() + "." + format;
         } else {
             dest += file.getName() + "." + format;
         }
-        ZipOutputStream zos = null;
-        try {
-            zos = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(dest)));
+        try (ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(dest)))) {
             generateFile(zos, file, "");
             return dest;
         } catch (Exception e) {
             Exceptions.printStacks(e);
             return null;
-        } finally {
-            Streams.close(zos);
         }
     }
 
@@ -86,29 +80,21 @@ public class Zips {
      * @param file 压缩文件
      * @param dir  压缩文件内的文件夹
      */
-    private static void generateFile(ZipOutputStream out, File file, String dir) {
-        try {
-            if (file.isDirectory()) {
-                File[] files = file.listFiles();
-                out.putNextEntry(new ZipEntry(dir + "/"));
-                dir = dir.length() == 0 ? "" : dir + "/";
-                if (files != null && files.length != 0) {
-                    for (File file1 : files) {
-                        generateFile(out, file1, dir + file1.getName());
-                    }
+    private static void generateFile(ZipOutputStream out, File file, String dir) throws IOException {
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            out.putNextEntry(new ZipEntry(dir + "/"));
+            dir = dir.length() == 0 ? "" : dir + "/";
+            if (files != null && files.length != 0) {
+                for (File file1 : files) {
+                    generateFile(out, file1, dir + file1.getName());
                 }
-            } else {
-                FileInputStream in = new FileInputStream(file);
-                out.putNextEntry(new ZipEntry(dir));
-                int len;
-                byte[] bytes = new byte[2048];
-                while ((len = in.read(bytes)) > 0) {
-                    out.write(bytes, 0, len);
-                }
-                in.close();
             }
-        } catch (Exception e) {
-            Exceptions.printStacks(e);
+        } else {
+            try (FileInputStream in = new FileInputStream(file)) {
+                out.putNextEntry(new ZipEntry(dir));
+                Streams.transfer(in, out);
+            }
         }
     }
 
@@ -130,20 +116,16 @@ public class Zips {
      * @return 解压后的路径
      */
     public static String unCompress(String src, String destPath) {
-        if (Strings.isBlank(src)) {
-            throw new RuntimeException("File been not null");
-        }
+        Valid.notNull(src, "path is null");
         File file = new File(src);
         if (!file.exists()) {
-            throw new RuntimeException("File not found " + src);
+            throw Exceptions.runtime("File not found " + src);
         }
         if (Strings.isBlank(destPath)) {
             String name = file.getName();
             destPath = file.getParent() + File.separator + (name.substring(0, name.lastIndexOf(".")));
         }
-        ZipFile zipFile = null;
-        try {
-            zipFile = new ZipFile(file);
+        try (ZipFile zipFile = new ZipFile(file)) {
             Enumeration<?> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = (ZipEntry) entries.nextElement();
@@ -154,23 +136,16 @@ public class Zips {
                 } else {
                     File targetFile = new File(destPath + File.separator + entry.getName());
                     Files1.touch(targetFile);
-                    InputStream is = zipFile.getInputStream(entry);
-                    FileOutputStream fos = new FileOutputStream(targetFile);
-                    int len;
-                    byte[] buf = new byte[2048];
-                    while ((len = is.read(buf)) != -1) {
-                        fos.write(buf, 0, len);
+                    try (InputStream in = zipFile.getInputStream(entry);
+                         FileOutputStream out = new FileOutputStream(targetFile)) {
+                        Streams.transfer(in, out);
                     }
-                    fos.close();
-                    is.close();
                 }
             }
             return destPath;
         } catch (Exception e) {
             Exceptions.printStacks(e);
             return null;
-        } finally {
-            Streams.close(zipFile);
         }
     }
 

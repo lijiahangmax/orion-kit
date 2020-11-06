@@ -112,6 +112,7 @@ public class Lists extends Collections {
         return isEmpty(list) ? def : list;
     }
 
+    @SafeVarargs
     public static <E> List<E> of(E... e) {
         List<E> list = new ArrayList<>();
         int length = Arrays1.length(e);
@@ -121,6 +122,7 @@ public class Lists extends Collections {
         return list;
     }
 
+    @SafeVarargs
     public static <E, V> List<E> of(Function<V, E> f, V... e) {
         Valid.notNull(f, "convert function is null");
         List<E> list = new ArrayList<>();
@@ -316,7 +318,7 @@ public class Lists extends Collections {
      * @param l2 ignore
      * @return true 相等
      */
-    public static boolean eq(List l1, List l2) {
+    public static boolean eq(List<?> l1, List<?> l2) {
         if (l1 == null && l2 == null) {
             return true;
         }

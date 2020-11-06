@@ -1,9 +1,9 @@
 package com.orion.utils.crypto;
 
-import com.orion.utils.crypto.asymmetric.EcbAsymmetric;
-import com.orion.utils.crypto.asymmetric.IvAsymmetric;
 import com.orion.utils.crypto.enums.CipherAlgorithm;
 import com.orion.utils.crypto.enums.WorkingMode;
+import com.orion.utils.crypto.symmetric.EcbSymmetric;
+import com.orion.utils.crypto.symmetric.IvSymmetric;
 
 import javax.crypto.SecretKey;
 
@@ -16,9 +16,9 @@ import javax.crypto.SecretKey;
  */
 public class DES3 {
 
-    private static final EcbAsymmetric ECB = new EcbAsymmetric(CipherAlgorithm.DES3);
+    private static final EcbSymmetric ECB = new EcbSymmetric(CipherAlgorithm.DES3);
 
-    private static final IvAsymmetric CBC = new IvAsymmetric(CipherAlgorithm.DES3, WorkingMode.CBC);
+    private static final IvSymmetric CBC = new IvSymmetric(CipherAlgorithm.DES3, WorkingMode.CBC);
 
     private DES3() {
     }

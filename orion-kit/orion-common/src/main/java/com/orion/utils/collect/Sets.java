@@ -139,6 +139,7 @@ public class Sets extends Collections {
         return isEmpty(set) ? def : set;
     }
 
+    @SafeVarargs
     public static <E> Set<E> of(E... e) {
         Set<E> set = new HashSet<>();
         int length = Arrays1.length(e);
@@ -148,6 +149,7 @@ public class Sets extends Collections {
         return set;
     }
 
+    @SafeVarargs
     public static <E, V> Set<E> of(Function<V, E> f, V... e) {
         Valid.notNull(f, "convert function is null");
         Set<E> list = new HashSet<>();
@@ -198,6 +200,7 @@ public class Sets extends Collections {
      * @param <E> ignore
      * @return 合并后的set
      */
+    @SafeVarargs
     public static <E> Set<E> merge(Set<E> set, Set<E>... ms) {
         if (set == null) {
             set = new HashSet<>();

@@ -1,6 +1,6 @@
 package com.orion.lang.thread;
 
-import com.orion.able.BuilderAble;
+import com.orion.able.Buildable;
 import com.orion.utils.Objects1;
 import com.orion.utils.Systems;
 
@@ -13,7 +13,7 @@ import java.util.concurrent.*;
  * @version 1.0.0
  * @since 2020/10/17 13:58
  */
-public class ExecutorBuilder implements BuilderAble<ThreadPoolExecutor> {
+public class ExecutorBuilder implements Buildable<ThreadPoolExecutor> {
 
     /**
      * 默认的等待队列容量

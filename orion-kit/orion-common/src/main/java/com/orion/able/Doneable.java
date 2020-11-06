@@ -7,7 +7,7 @@ package com.orion.able;
  * @version 1.0.0
  * @since 2019/11/18 18:25
  */
-public interface DoneAble {
+public interface Doneable {
 
     /**
      * 完成回调

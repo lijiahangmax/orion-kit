@@ -1,6 +1,6 @@
 package com.orion.process;
 
-import com.orion.able.ExecutorAble;
+import com.orion.able.Executable;
 import com.orion.able.SafeCloseable;
 import com.orion.utils.Systems;
 import com.orion.utils.collect.Lists;
@@ -12,7 +12,7 @@ import java.util.*;
  * @version 1.0.0
  * @since 2020/10/12 15:59
  */
-public abstract class BaseProcessExecutor implements ExecutorAble, SafeCloseable {
+public abstract class BaseProcessExecutor implements Executable, SafeCloseable {
 
     /**
      * 系统命令

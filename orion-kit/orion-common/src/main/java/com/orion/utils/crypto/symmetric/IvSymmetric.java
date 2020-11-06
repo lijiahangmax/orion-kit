@@ -1,4 +1,4 @@
-package com.orion.utils.crypto.asymmetric;
+package com.orion.utils.crypto.symmetric;
 
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
@@ -20,13 +20,13 @@ import static com.orion.utils.codec.Base64s.encode;
  * @version 1.0.0
  * @since 2020/11/3 16:22
  */
-public class IvAsymmetric extends BaseAsymmetric {
+public class IvSymmetric extends BaseSymmetric {
 
-    public IvAsymmetric(CipherAlgorithm algorithm, WorkingMode workingMode) {
+    public IvSymmetric(CipherAlgorithm algorithm, WorkingMode workingMode) {
         super(algorithm, workingMode, PaddingMode.PKCS5_PADDING);
     }
 
-    public IvAsymmetric(CipherAlgorithm algorithm, WorkingMode workingMode, PaddingMode paddingMode) {
+    public IvSymmetric(CipherAlgorithm algorithm, WorkingMode workingMode, PaddingMode paddingMode) {
         super(algorithm, workingMode, paddingMode);
     }
 

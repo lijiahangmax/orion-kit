@@ -1,10 +1,10 @@
 package com.orion.utils.crypto;
 
-import com.orion.utils.crypto.asymmetric.EcbAsymmetric;
-import com.orion.utils.crypto.asymmetric.GcmAsymmetric;
-import com.orion.utils.crypto.asymmetric.IvAsymmetric;
 import com.orion.utils.crypto.enums.CipherAlgorithm;
 import com.orion.utils.crypto.enums.WorkingMode;
+import com.orion.utils.crypto.symmetric.EcbSymmetric;
+import com.orion.utils.crypto.symmetric.GcmSymmetric;
+import com.orion.utils.crypto.symmetric.IvSymmetric;
 
 import javax.crypto.SecretKey;
 
@@ -17,11 +17,11 @@ import javax.crypto.SecretKey;
  */
 public class AES {
 
-    private static final EcbAsymmetric ECB = new EcbAsymmetric(CipherAlgorithm.AES);
+    private static final EcbSymmetric ECB = new EcbSymmetric(CipherAlgorithm.AES);
 
-    private static final IvAsymmetric CBC = new IvAsymmetric(CipherAlgorithm.AES, WorkingMode.CBC);
+    private static final IvSymmetric CBC = new IvSymmetric(CipherAlgorithm.AES, WorkingMode.CBC);
 
-    private static final GcmAsymmetric GCM = new GcmAsymmetric();
+    private static final GcmSymmetric GCM = new GcmSymmetric();
 
     private AES() {
     }

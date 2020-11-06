@@ -12,8 +12,8 @@ public class ZipTests {
 
     @Test
     public void zip() {
-        System.out.println(Zips.doCompress("C:\\Users\\ljh15\\Desktop\\tmp", "zip"));
-        System.out.println(Zips.doCompress("C:\\Users\\ljh15\\Desktop\\tmp", "gz"));
+        System.out.println(Zips.compress("C:\\Users\\ljh15\\Desktop\\tmp", "zip"));
+        System.out.println(Zips.compress("C:\\Users\\ljh15\\Desktop\\tmp", "gz"));
     }
 
     @Test

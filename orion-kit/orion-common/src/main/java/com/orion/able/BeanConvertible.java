@@ -9,7 +9,7 @@ import com.orion.utils.reflect.BeanWrapper;
  * @version 1.0.0
  * @since 2020/4/30 17:11
  */
-public interface BeanConvertAble {
+public interface BeanConvertible {
 
     /**
      * sourceBean -> targetBean

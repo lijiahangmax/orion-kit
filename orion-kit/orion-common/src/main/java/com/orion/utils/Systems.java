@@ -86,7 +86,12 @@ public class Systems {
     /**
      * JDK版本
      */
-    public static final String SPEC_VERSION;
+    public static final String JAVA_SPEC_VERSION;
+
+    /**
+     * Java Home
+     */
+    public static final String JAVA_HOME;
 
     /**
      * 虚拟机处理器数量
@@ -104,6 +109,7 @@ public class Systems {
         THIS_DIR = System.getProperty("user.dir", "/");
         TEMP_DIR = System.getProperty("java.io.tmpdir", "/");
         OS_NAME = System.getProperty("os.name", "unknown");
+        JAVA_HOME = System.getProperty("java.home", "/");
         if (BE_WINDOWS) {
             HOST_NAME = System.getenv("COMPUTERNAME");
         } else {
@@ -123,7 +129,7 @@ public class Systems {
             processName = processName.substring(0, si);
         }
         PID = Integer.parseInt(processName);
-        SPEC_VERSION = runtimeBean.getSpecVersion();
+        JAVA_SPEC_VERSION = runtimeBean.getSpecVersion();
         Runtime runtime = Runtime.getRuntime();
         VM_PROCESS_NUM = runtime.availableProcessors();
     }

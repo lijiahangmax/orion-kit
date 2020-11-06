@@ -2,7 +2,7 @@ package com.orion.remote.channel.executor;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.Session;
-import com.orion.able.ExecutorAble;
+import com.orion.able.Executable;
 import com.orion.able.SafeCloseable;
 import com.orion.utils.Exceptions;
 
@@ -13,7 +13,7 @@ import com.orion.utils.Exceptions;
  * @version 1.0.0
  * @since 2020/10/5 23:37
  */
-public abstract class BaseExecutor implements ExecutorAble, SafeCloseable {
+public abstract class BaseExecutor implements Executable, SafeCloseable {
 
     /**
      * 正常退出嘛

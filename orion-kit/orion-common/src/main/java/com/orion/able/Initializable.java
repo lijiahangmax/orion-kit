@@ -7,7 +7,7 @@ package com.orion.able;
  * @version 1.0.0
  * @since 2020/10/27 12:14
  */
-public interface InitializeAble {
+public interface Initializable {
 
     /**
      * 初始化

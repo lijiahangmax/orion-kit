@@ -7,7 +7,7 @@ package com.orion.able;
  * @version 1.0.0
  * @since 2019/11/18 18:09
  */
-public interface BuilderAble<T> {
+public interface Buildable<T> {
 
     /**
      * 构建

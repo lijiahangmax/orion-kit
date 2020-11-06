@@ -1,6 +1,6 @@
 package com.orion.watch.file;
 
-import com.orion.able.StopAble;
+import com.orion.able.Stoppable;
 import com.orion.able.Watchable;
 
 /**
@@ -10,7 +10,7 @@ import com.orion.able.Watchable;
  * @version 1.0.0
  * @since 2020/10/28 16:40
  */
-public abstract class FileWatcher implements Watchable, Runnable, StopAble {
+public abstract class FileWatcher implements Watchable, Runnable, Stoppable {
 
     @Override
     public void run() {

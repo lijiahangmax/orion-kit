@@ -1,4 +1,4 @@
-package com.orion.utils.crypto.asymmetric;
+package com.orion.utils.crypto.symmetric;
 
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
@@ -19,13 +19,13 @@ import static com.orion.utils.codec.Base64s.encode;
  * @version 1.0.0
  * @since 2020/11/3 14:07
  */
-public class EcbAsymmetric extends BaseAsymmetric {
+public class EcbSymmetric extends BaseSymmetric {
 
-    public EcbAsymmetric(CipherAlgorithm algorithm) {
+    public EcbSymmetric(CipherAlgorithm algorithm) {
         super(algorithm, WorkingMode.ECB, PaddingMode.PKCS5_PADDING);
     }
 
-    public EcbAsymmetric(CipherAlgorithm algorithm, PaddingMode paddingMode) {
+    public EcbSymmetric(CipherAlgorithm algorithm, PaddingMode paddingMode) {
         super(algorithm, WorkingMode.ECB, paddingMode);
     }
 

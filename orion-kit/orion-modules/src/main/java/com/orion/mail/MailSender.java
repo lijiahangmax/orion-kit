@@ -1,6 +1,6 @@
 package com.orion.mail;
 
-import com.orion.able.SendAble;
+import com.orion.able.Sendable;
 import com.orion.utils.Exceptions;
 
 import javax.activation.DataHandler;
@@ -19,7 +19,7 @@ import java.util.Properties;
  * @version 1.0.0
  * @since 2020/3/15 18:25
  */
-public class MailSender implements SendAble<MailMessage> {
+public class MailSender implements Sendable<MailMessage> {
 
     public static MailSender getInstance() {
         return SenderInstance.MAIL_SENDER;

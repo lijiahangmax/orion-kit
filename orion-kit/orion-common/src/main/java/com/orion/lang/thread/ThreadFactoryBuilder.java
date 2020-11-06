@@ -1,6 +1,6 @@
 package com.orion.lang.thread;
 
-import com.orion.able.BuilderAble;
+import com.orion.able.Buildable;
 import com.orion.utils.Valid;
 
 import java.lang.Thread.UncaughtExceptionHandler;
@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @version 1.0.0
  * @since 2020/10/17 14:35
  */
-public class ThreadFactoryBuilder implements BuilderAble<ThreadFactory> {
+public class ThreadFactoryBuilder implements Buildable<ThreadFactory> {
 
     /**
      * 前缀

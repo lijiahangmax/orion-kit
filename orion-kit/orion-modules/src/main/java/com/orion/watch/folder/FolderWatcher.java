@@ -1,7 +1,7 @@
 package com.orion.watch.folder;
 
 import com.orion.able.SafeCloseable;
-import com.orion.able.StopAble;
+import com.orion.able.Stoppable;
 import com.orion.able.Watchable;
 import com.orion.exception.IORuntimeException;
 import com.orion.utils.Arrays1;
@@ -26,7 +26,7 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2020/10/31 11:16
  */
-public abstract class FolderWatcher implements Runnable, Watchable, StopAble, SafeCloseable {
+public abstract class FolderWatcher implements Runnable, Watchable, Stoppable, SafeCloseable {
 
     protected WatchHandler handler;
 

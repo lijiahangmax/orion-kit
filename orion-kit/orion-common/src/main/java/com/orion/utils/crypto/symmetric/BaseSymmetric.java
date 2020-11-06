@@ -1,4 +1,4 @@
-package com.orion.utils.crypto.asymmetric;
+package com.orion.utils.crypto.symmetric;
 
 import com.orion.utils.Arrays1;
 import com.orion.utils.crypto.Keys;
@@ -18,7 +18,7 @@ import javax.crypto.spec.IvParameterSpec;
  * @version 1.0.0
  * @since 2020/11/2 18:27
  */
-public abstract class BaseAsymmetric {
+public abstract class BaseSymmetric {
 
     protected CipherAlgorithm algorithm;
 
@@ -68,7 +68,7 @@ public abstract class BaseAsymmetric {
      */
     protected int des3IvLen = 8;
 
-    protected BaseAsymmetric(CipherAlgorithm algorithm, WorkingMode workingMode, PaddingMode paddingMode) {
+    protected BaseSymmetric(CipherAlgorithm algorithm, WorkingMode workingMode, PaddingMode paddingMode) {
         this.algorithm = algorithm;
         this.workingMode = workingMode;
         this.paddingMode = paddingMode;
@@ -143,37 +143,37 @@ public abstract class BaseAsymmetric {
         return new GCMParameterSpec(this.gcmSpecLen, iv);
     }
 
-    public BaseAsymmetric setGcmSpecLen(int gcmSpecLen) {
+    public BaseSymmetric setGcmSpecLen(int gcmSpecLen) {
         this.gcmSpecLen = gcmSpecLen;
         return this;
     }
 
-    public BaseAsymmetric setAesKeyLen(int aesKeyLen) {
+    public BaseSymmetric setAesKeyLen(int aesKeyLen) {
         this.aesKeyLen = aesKeyLen;
         return this;
     }
 
-    public BaseAsymmetric setDesKeyLen(int desKeyLen) {
+    public BaseSymmetric setDesKeyLen(int desKeyLen) {
         this.desKeyLen = desKeyLen;
         return this;
     }
 
-    public BaseAsymmetric setDes3KeyLen(int des3KeyLen) {
+    public BaseSymmetric setDes3KeyLen(int des3KeyLen) {
         this.des3KeyLen = des3KeyLen;
         return this;
     }
 
-    public BaseAsymmetric setAesIvLen(int aesIvLen) {
+    public BaseSymmetric setAesIvLen(int aesIvLen) {
         this.aesIvLen = aesIvLen;
         return this;
     }
 
-    public BaseAsymmetric setDesIvLen(int desIvLen) {
+    public BaseSymmetric setDesIvLen(int desIvLen) {
         this.desIvLen = desIvLen;
         return this;
     }
 
-    public BaseAsymmetric setDes3IvLen(int des3IvLen) {
+    public BaseSymmetric setDes3IvLen(int des3IvLen) {
         this.des3IvLen = des3IvLen;
         return this;
     }

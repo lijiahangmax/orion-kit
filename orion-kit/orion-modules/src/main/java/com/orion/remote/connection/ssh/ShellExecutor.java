@@ -2,7 +2,7 @@ package com.orion.remote.connection.ssh;
 
 import ch.ethz.ssh2.Session;
 import ch.ethz.ssh2.StreamGobbler;
-import com.orion.able.ExecutorAble;
+import com.orion.able.Executable;
 import com.orion.able.SafeCloseable;
 import com.orion.lang.thread.HookRunnable;
 import com.orion.utils.Exceptions;
@@ -20,7 +20,7 @@ import java.util.function.BiConsumer;
  * @version 1.0.0
  * @since 2020/4/15 22:26
  */
-public class ShellExecutor implements ExecutorAble, SafeCloseable {
+public class ShellExecutor implements Executable, SafeCloseable {
 
     /**
      * 会话

@@ -7,7 +7,7 @@ package com.orion.able;
  * @version 1.0.0
  * @since 2020/4/16 18:03
  */
-public interface ExecutorAble {
+public interface Executable {
 
     /**
      * 执行

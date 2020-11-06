@@ -1,4 +1,4 @@
-package com.orion.utils.crypto.asymmetric;
+package com.orion.utils.crypto.symmetric;
 
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
@@ -20,13 +20,13 @@ import static com.orion.utils.codec.Base64s.encode;
  * @version 1.0.0
  * @since 2020/11/3 14:45
  */
-public class GcmAsymmetric extends BaseAsymmetric {
+public class GcmSymmetric extends BaseSymmetric {
 
-    public GcmAsymmetric() {
+    public GcmSymmetric() {
         super(CipherAlgorithm.AES, WorkingMode.GCM, PaddingMode.NO_PADDING);
     }
 
-    public GcmAsymmetric(PaddingMode paddingMode) {
+    public GcmSymmetric(PaddingMode paddingMode) {
         super(CipherAlgorithm.AES, WorkingMode.GCM, paddingMode);
     }
 
