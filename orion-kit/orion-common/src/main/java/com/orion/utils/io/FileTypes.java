@@ -1,11 +1,16 @@
 package com.orion.utils.io;
 
+import com.orion.utils.Exceptions;
+import com.orion.utils.Strings;
 import com.orion.utils.math.Hex;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -157,6 +162,40 @@ public class FileTypes {
             }
         }
         return null;
+    }
+
+    /**
+     * 获取文件内容类型 默认 text/plain
+     *
+     * @param file 文件
+     * @return 文件类型
+     */
+    public static String getContentType(String file) {
+        return getContentType(Paths.get(file));
+    }
+
+    /**
+     * 获取文件内容类型 默认 text/plain
+     *
+     * @param file 文件
+     * @return 文件类型
+     */
+    public static String getContentType(File file) {
+        return getContentType(Paths.get(file.getAbsolutePath()));
+    }
+
+    /**
+     * 获取文件内容类型 默认 text/plain
+     *
+     * @param file 文件
+     * @return 文件类型
+     */
+    public static String getContentType(Path file) {
+        try {
+            return Strings.def(Files.probeContentType(file), "text/plain");
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
+        }
     }
 
 }

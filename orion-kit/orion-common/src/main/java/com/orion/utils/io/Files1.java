@@ -14,6 +14,7 @@ import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,6 +28,7 @@ import java.util.regex.Pattern;
  * @version 1.0.0
  * @since 2019/10/9 12:01
  */
+@SuppressWarnings("ALL")
 public class Files1 {
 
     private Files1() {
@@ -96,6 +98,474 @@ public class Files1 {
             return null;
         }
     }
+
+    /**
+     * 文件是否可执行
+     *
+     * @param file 文件
+     * @return 可执行true
+     */
+    public static boolean isExecutable(String file) {
+        return new File(file).canExecute();
+    }
+
+    /**
+     * 文件是否可执行
+     *
+     * @param file 文件
+     * @return 可执行true
+     */
+    public static boolean isExecutable(File file) {
+        return file.canExecute();
+    }
+
+    /**
+     * 文件是否可执行
+     *
+     * @param file 文件
+     * @return 可执行true
+     */
+    public static boolean isExecutable(Path file) {
+        return Files.isExecutable(file);
+    }
+
+    /**
+     * 设置文件是否可执行
+     *
+     * @param file 文件
+     * @param exec 设置文件是否可执行
+     * @return 是否执行成功
+     */
+    public static boolean setExecutable(String file, boolean exec) {
+        return new File(file).setExecutable(exec);
+    }
+
+    /**
+     * 设置文件是否可执行
+     *
+     * @param file 文件
+     * @param exec 设置文件是否可执行
+     * @return 是否执行成功
+     */
+    public static boolean setExecutable(File file, boolean exec) {
+        return file.setExecutable(exec);
+    }
+
+    /**
+     * 设置文件是否可执行
+     *
+     * @param file 文件
+     * @param exec 设置文件是否可执行
+     * @return 是否执行成功
+     */
+    public static boolean setExecutable(Path file, boolean exec) {
+        return file.toFile().setExecutable(exec);
+    }
+
+    /**
+     * 文件是否可读
+     *
+     * @param file 文件
+     * @return 读true
+     */
+    public static boolean isReadable(String file) {
+        return new File(file).canRead();
+    }
+
+    /**
+     * 文件是否可读
+     *
+     * @param file 文件
+     * @return 可读true
+     */
+    public static boolean isReadable(File file) {
+        return file.canRead();
+    }
+
+    /**
+     * 文件是否可读
+     *
+     * @param file 文件
+     * @return 可读true
+     */
+    public static boolean isReadable(Path file) {
+        return Files.isReadable(file);
+    }
+
+    /**
+     * 设置文件是否可读
+     *
+     * @param file 文件
+     * @param exec 设置文件是否可读
+     * @return 是否执行成功
+     */
+    public static boolean setReadable(String file, boolean readable) {
+        return new File(file).setReadable(readable);
+    }
+
+    /**
+     * 设置文件是否可读
+     *
+     * @param file 文件
+     * @param exec 设置文件是否可读
+     * @return 是否执行成功
+     */
+    public static boolean setReadable(File file, boolean readable) {
+        return file.setReadable(readable);
+    }
+
+    /**
+     * 设置文件是否可读
+     *
+     * @param file 文件
+     * @param exec 设置文件是否可读
+     * @return 是否执行成功
+     */
+    public static boolean setReadable(Path file, boolean readable) {
+        return file.toFile().setReadable(readable);
+    }
+
+    /**
+     * 文件是否可写
+     *
+     * @param file 文件
+     * @return 可写true
+     */
+    public static boolean isWritable(String file) {
+        return new File(file).canWrite();
+    }
+
+    /**
+     * 文件是否可写
+     *
+     * @param file 文件
+     * @return 可写true
+     */
+    public static boolean isWritable(File file) {
+        return file.canWrite();
+    }
+
+    /**
+     * 文件是否可写
+     *
+     * @param file 文件
+     * @return 可写true
+     */
+    public static boolean isWritable(Path file) {
+        return Files.isWritable(file);
+    }
+
+    /**
+     * 设置文件是否可写
+     *
+     * @param file 文件
+     * @param exec 设置文件是否可写
+     * @return 是否执行成功
+     */
+    public static boolean setWritable(String file, boolean writable) {
+        return new File(file).setWritable(writable);
+    }
+
+    /**
+     * 设置文件是否可写
+     *
+     * @param file 文件
+     * @param exec 设置文件是否可写
+     * @return 是否执行成功
+     */
+    public static boolean setWritable(File file, boolean writable) {
+        return file.setWritable(writable);
+    }
+
+    /**
+     * 设置文件是否可写
+     *
+     * @param file 文件
+     * @param exec 设置文件是否可写
+     * @return 是否执行成功
+     */
+    public static boolean setWritable(Path file, boolean writable) {
+        return file.toFile().setWritable(writable);
+    }
+
+    /**
+     * 文件是否隐藏
+     *
+     * @param file 文件
+     * @return 隐藏true
+     */
+    public static boolean isHidden(String file) {
+        return new File(file).isHidden();
+    }
+
+    /**
+     * 文件是否隐藏
+     *
+     * @param file 文件
+     * @return 隐藏true
+     */
+    public static boolean isHidden(File file) {
+        return file.isHidden();
+    }
+
+    /**
+     * 文件是否隐藏
+     *
+     * @param file 文件
+     * @return 隐藏true
+     */
+    public static boolean isHidden(Path file) {
+        try {
+            return Files.isHidden(file);
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
+        }
+    }
+
+    /**
+     * 是否为普通文件
+     *
+     * @param file 文件
+     * @return 普通文件true
+     */
+    public static boolean isRegularFile(String file) {
+        return new File(file).isFile();
+    }
+
+    /**
+     * 是否为普通文件
+     *
+     * @param file 文件
+     * @return 普通文件true
+     */
+    public static boolean isRegularFile(File file) {
+        return file.isFile();
+    }
+
+    /**
+     * 是否为普通文件
+     *
+     * @param file 文件
+     * @return 普通文件true
+     */
+    public static boolean isRegularFile(Path file) {
+        return Files.isRegularFile(file);
+    }
+
+    /**
+     * 是否为文件夹
+     *
+     * @param file 文件
+     * @return 文件夹true
+     */
+    public static boolean isDirectory(String file) {
+        return new File(file).isDirectory();
+    }
+
+    /**
+     * 是否为文件夹
+     *
+     * @param file 文件
+     * @return 文件夹true
+     */
+    public static boolean isDirectory(File file) {
+        return file.isDirectory();
+    }
+
+    /**
+     * 是否为文件夹
+     *
+     * @param file 文件
+     * @return 文件夹true
+     */
+    public static boolean isDirectory(Path file) {
+        return Files.isDirectory(file);
+    }
+
+    /**
+     * 是否为连接文件
+     *
+     * @param file 文件
+     * @return 连接文件true
+     */
+    public static boolean isSymbolicLink(String file) {
+        return Files.isSymbolicLink(Paths.get(file));
+    }
+
+    /**
+     * 是否为连接文件
+     *
+     * @param file 文件
+     * @return 连接文件true
+     */
+    public static boolean isSymbolicLink(File file) {
+        return Files.isSymbolicLink(Paths.get(file.getAbsolutePath()));
+    }
+
+    /**
+     * 是否为连接文件
+     *
+     * @param file 文件
+     * @return 连接文件true
+     */
+    public static boolean isSymbolicLink(Path file) {
+        return Files.isSymbolicLink(file);
+    }
+
+    /**
+     * 获取连接源文件
+     *
+     * @param file 连接文件
+     * @return 源文件
+     */
+    public static Path getSymbolicLink(String file) {
+        try {
+            return Files.readSymbolicLink(Paths.get(file));
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    /**
+     * 获取连接源文件
+     *
+     * @param file 连接文件
+     * @return 源文件
+     */
+    public static File getSymbolicLink(File file) {
+        try {
+            return Files.readSymbolicLink(Paths.get(file.getAbsolutePath())).toFile();
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    /**
+     * 获取连接源文件
+     *
+     * @param file 连接文件
+     * @return 源文件
+     */
+    public static Path getSymbolicLink(Path file) {
+        try {
+            return Files.readSymbolicLink(file);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    /**
+     * 创建连接文件
+     *
+     * @param source 源文件
+     * @param link   连接文件
+     * @return 是否成功
+     */
+    public static boolean createLink(String source, String link) {
+        return createLink(Paths.get(source), Paths.get(link));
+    }
+
+    /**
+     * 创建连接文件
+     *
+     * @param source 源文件
+     * @param link   连接文件
+     * @return 是否成功
+     */
+    public static boolean createLink(File source, File link) {
+        return createLink(Paths.get(source.getAbsolutePath()), Paths.get(link.getAbsolutePath()));
+    }
+
+    /**
+     * 创建连接文件
+     *
+     * @param source 源文件
+     * @param link   连接文件
+     * @return 是否成功
+     */
+    public static boolean createLink(Path source, Path link) {
+        try {
+            Files.createDirectories(link.getParent());
+            Files.createLink(link, source);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    /**
+     * 创建连接符号文件
+     *
+     * @param source 源文件
+     * @param link   连接文件
+     * @return 是否成功
+     */
+    public static boolean createSymbolLink(String source, String link) {
+        return createSymbolLink(Paths.get(source), Paths.get(link));
+    }
+
+    /**
+     * 创建连接符号文件
+     *
+     * @param source 源文件
+     * @param link   连接文件
+     * @return 是否成功
+     */
+    public static boolean createSymbolLink(File source, File link) {
+        return createSymbolLink(Paths.get(source.getAbsolutePath()), Paths.get(link.getAbsolutePath()));
+    }
+
+    /**
+     * 创建连接符号文件
+     *
+     * @param source 源文件
+     * @param link   连接文件
+     * @return 是否成功
+     */
+    public static boolean createSymbolLink(Path source, Path link) {
+        try {
+            Files.createDirectories(link.getParent());
+            Files.createSymbolicLink(link, source);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    /**
+     * 获取文件所有人
+     *
+     * @param file 文件
+     * @return 文件所有人
+     */
+    public static String getOwner(String file) {
+        return getOwner(Paths.get(file));
+    }
+
+    /**
+     * 获取文件所有人
+     *
+     * @param file 文件
+     * @return 文件所有人
+     */
+    public static String getOwner(File file) {
+        return getOwner(Paths.get(file.getAbsolutePath()));
+    }
+
+    /**
+     * 获取文件所有人
+     *
+     * @param file 文件
+     * @return 文件所有人
+     */
+    public static String getOwner(Path file) {
+        try {
+            return Files.getOwner(file).getName();
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
+        }
+    }
+
 
     // -------------------- file --------------------
 
@@ -426,18 +896,30 @@ public class Files1 {
      * 创建文件
      *
      * @param file 文件
+     * @return 是否处理成功
      */
-    public static void touch(String file) {
-        touch(new File(file), null, false);
+    public static boolean touch(String file) {
+        return touch(new File(file), null, false);
     }
 
     /**
      * 创建文件
      *
      * @param file 文件
+     * @return 是否处理成功
      */
-    public static void touch(File file) {
-        touch(file, null, false);
+    public static boolean touch(File file) {
+        return touch(file, null, false);
+    }
+
+    /**
+     * 创建文件
+     *
+     * @param file 文件
+     * @return 是否处理成功
+     */
+    public static boolean touch(Path file) {
+        return touch(file, null, false);
     }
 
     /**
@@ -445,9 +927,10 @@ public class Files1 {
      *
      * @param file    文件
      * @param charset 编码格式
+     * @return 是否处理成功
      */
-    public static void touch(String file, String charset) {
-        touch(new File(file), charset, false);
+    public static boolean touch(String file, String charset) {
+        return touch(new File(file), charset, false);
     }
 
     /**
@@ -455,9 +938,21 @@ public class Files1 {
      *
      * @param file    文件
      * @param charset 编码格式
+     * @return 是否处理成功
      */
-    public static void touch(File file, String charset) {
-        touch(file, charset, false);
+    public static boolean touch(File file, String charset) {
+        return touch(file, charset, false);
+    }
+
+    /**
+     * 创建文件
+     *
+     * @param file    文件
+     * @param charset 编码格式
+     * @return 是否处理成功
+     */
+    public static boolean touch(Path file, String charset) {
+        return touch(file, charset, false);
     }
 
     /**
@@ -465,9 +960,10 @@ public class Files1 {
      *
      * @param file  文件
      * @param clean 如果文件存在是否清除文件内容
+     * @return 是否处理成功
      */
-    public static void touch(String file, boolean clean) {
-        touch(new File(file), null, clean);
+    public static boolean touch(String file, boolean clean) {
+        return touch(new File(file), null, clean);
     }
 
     /**
@@ -475,9 +971,21 @@ public class Files1 {
      *
      * @param file  文件
      * @param clean 如果文件存在是否清除文件内容
+     * @return 是否处理成功
      */
-    public static void touch(File file, boolean clean) {
-        touch(file, null, clean);
+    public static boolean touch(File file, boolean clean) {
+        return touch(file, null, clean);
+    }
+
+    /**
+     * 创建文件
+     *
+     * @param file  文件
+     * @param clean 如果文件存在是否清除文件内容
+     * @return 是否处理成功
+     */
+    public static boolean touch(Path file, boolean clean) {
+        return touch(file, null, clean);
     }
 
     /**
@@ -486,9 +994,10 @@ public class Files1 {
      * @param file    文件
      * @param charset 编码格式
      * @param clean   如果文件存在是否清除文件内容
+     * @return 是否处理成功
      */
-    public static void touch(String file, String charset, boolean clean) {
-        touch(new File(file), charset, clean);
+    public static boolean touch(String file, String charset, boolean clean) {
+        return touch(new File(file), charset, clean);
     }
 
     /**
@@ -497,12 +1006,15 @@ public class Files1 {
      * @param file    文件
      * @param charset 编码格式
      * @param clean   如果文件存在是否清除文件内容
+     * @return 是否处理成功
      */
-    public static void touch(File file, String charset, boolean clean) {
+    public static boolean touch(File file, String charset, boolean clean) {
         File dir = file.getParentFile();
         boolean create = false;
         if (!dir.exists()) {
-            dir.mkdirs();
+            if (!dir.mkdirs()) {
+                return false;
+            }
             create = true;
         } else {
             if (!file.exists() || !file.isFile()) {
@@ -511,25 +1023,66 @@ public class Files1 {
         }
         if (create) {
             try {
-                file.createNewFile();
                 if (charset != null) {
-                    OutputStreamWriter osw = null;
-                    try {
-                        file.createNewFile();
-                        osw = new OutputStreamWriter(openOutputStream(file), charset);
-                        osw.write("");
+                    try (OutputStreamWriter w = new OutputStreamWriter(openOutputStream(file), charset)) {
+                        w.write("");
                     } catch (IOException e) {
-                        throw Exceptions.ioRuntime(e);
-                    } finally {
-                        Streams.close(osw);
+                        return false;
                     }
+                } else {
+                    return file.createNewFile();
                 }
             } catch (IOException e) {
-                throw Exceptions.ioRuntime(e);
+                return false;
             }
         } else if (clean) {
-            cleanFile(file);
+            return cleanFile(file);
         }
+        return true;
+    }
+
+    /**
+     * 创建文件
+     *
+     * @param file    文件
+     * @param charset 编码格式
+     * @param clean   如果文件存在是否清除文件内容
+     * @return 是否处理成功
+     */
+    public static boolean touch(Path file, String charset, boolean clean) {
+        Path dir = file.getParent();
+        boolean create = false;
+        if (!Files.exists(dir)) {
+            try {
+                Files.createDirectories(dir);
+                create = true;
+            } catch (IOException e) {
+                return false;
+            }
+        } else {
+            if (!Files.isRegularFile(file)) {
+                create = true;
+            }
+        }
+        if (create) {
+            try {
+                if (charset != null) {
+                    try (OutputStreamWriter w = new OutputStreamWriter(openOutputStreamFast(file), charset)) {
+                        w.write("");
+                    } catch (IOException e) {
+                        return false;
+                    }
+                } else {
+                    Files.createFile(file);
+                    return true;
+                }
+            } catch (IOException e) {
+                return false;
+            }
+        } else if (clean) {
+            return cleanFile(file);
+        }
+        return true;
     }
 
     /**
@@ -569,13 +1122,41 @@ public class Files1 {
     }
 
     /**
-     * 文件剪切
+     * 文件移动
+     *
+     * @param file   文件
+     * @param target 目标位置
+     * @return 是否处理成功
+     */
+    public static boolean mv(String file, File target) {
+        return new File(file).renameTo(target);
+    }
+
+    /**
+     * 文件移动
      *
      * @param file   文件
      * @param targer 目标位置
+     * @return 是否处理成功
      */
-    public static void mv(File file, File targer) {
-        file.renameTo(targer);
+    public static boolean mv(File file, File targer) {
+        return file.renameTo(targer);
+    }
+
+    /**
+     * 文件移动
+     *
+     * @param file   文件
+     * @param targer 目标位置
+     * @return 是否处理成功
+     */
+    public static boolean mv(Path file, Path targer) {
+        try {
+            Files.move(file, targer);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     /**
@@ -583,19 +1164,10 @@ public class Files1 {
      *
      * @param file 文件
      * @param name 名称
+     * @return 是否处理成功
      */
-    public static void mv(File file, String name) {
-        file.renameTo(new File(file.getParentFile() + "/" + name));
-    }
-
-    /**
-     * 文件剪切
-     *
-     * @param file   文件
-     * @param targer 目标位置
-     */
-    public static void mv(String file, File targer) {
-        new File(file).renameTo(targer);
+    public static boolean mv(File file, String name) {
+        return file.renameTo(new File(file.getParentFile() + "/" + name));
     }
 
     /**
@@ -603,46 +1175,120 @@ public class Files1 {
      *
      * @param file 文件
      * @param name 名称
+     * @return 是否处理成功
      */
-    public static void mv(String file, String name) {
+    public static boolean mv(String file, String name) {
         File f = new File(file);
-        f.renameTo(new File(f.getParentFile() + "/" + name));
+        return f.renameTo(new File(f.getParentFile() + "/" + name));
+    }
+
+    /**
+     * 文件重命名
+     *
+     * @param file 文件
+     * @param name 名称
+     * @return 是否处理成功
+     */
+    public static boolean mv(Path file, String name) {
+        try {
+            Files.move(file, file.getParent().resolve(name));
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     /**
      * 创建文件夹
      *
-     * @param file 文件夹
+     * @param path 文件夹
+     * @return 是否处理成功
      */
-    public static void mkdirs(String file) {
-        new File(file).mkdirs();
+    public static boolean mkdirs(String path) {
+        return new File(path).mkdirs();
     }
 
     /**
      * 创建文件夹
      *
-     * @param file 文件夹
+     * @param path 文件夹
+     * @return 是否处理成功
      */
-    public static void mkdirs(File file) {
-        file.mkdirs();
+    public static boolean mkdirs(File path) {
+        return path.mkdirs();
+    }
+
+    /**
+     * 创建文件夹
+     *
+     * @param path 文件夹
+     * @return 是否处理成功
+     */
+    public static boolean mkdirs(Path path) {
+        try {
+            Files.createDirectories(path);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    /**
+     * 删除文件或文件夹
+     *
+     * @param file 文件
+     * @return 是否处理成功
+     */
+    public static boolean delete(String file) {
+        return delete(new File(file));
+    }
+
+    /**
+     * 删除文件或文件夹
+     *
+     * @param file 文件
+     * @return 是否处理成功
+     */
+    public static boolean delete(File file) {
+        if (file.isFile()) {
+            return deleteFile(file);
+        } else {
+            return deleteDir(file);
+        }
+    }
+
+    /**
+     * 删除文件或文件夹
+     *
+     * @param file 文件
+     * @return 是否处理成功
+     */
+    public static boolean delete(Path file) {
+        if (Files.isDirectory(file)) {
+            return deleteDir(file);
+        } else {
+            return deleteFile(file);
+        }
     }
 
     /**
      * 删除一个文件夹
      *
-     * @param file 文件夹
+     * @param path 文件夹
+     * @return 是否处理成功
      */
-    public static void deleteDir(String file) {
-        deleteDir(new File(file));
+    public static boolean deleteDir(String path) {
+        return deleteDir(new File(path));
     }
 
     /**
      * 删除一个文件夹
      *
-     * @param file 文件夹
+     * @param path 文件夹
+     * @return 是否处理成功
      */
-    public static void deleteDir(File file) {
-        List<File> files = listFiles(file, true, true);
+    public static boolean deleteDir(File path) {
+        List<File> files = listFiles(path, true, true);
         for (File f : files) {
             if (f.isDirectory()) {
                 deleteDir(f);
@@ -650,29 +1296,74 @@ public class Files1 {
                 deleteFile(f);
             }
         }
-        file.delete();
+        return path.delete();
+    }
+
+    /**
+     * 删除一个文件夹
+     *
+     * @param path 文件夹
+     * @return 是否处理成功
+     */
+    public static boolean deleteDir(Path path) {
+        try {
+            Files.list(path).forEach(f -> {
+                if (Files.isDirectory(f)) {
+                    deleteDir(f);
+                } else {
+                    try {
+                        Files.delete(f);
+                    } catch (IOException e) {
+                        // ignore
+                    }
+                }
+            });
+            Files.delete(path);
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
     }
 
     /**
      * 删除文件
      *
      * @param file 文件
+     * @return 是否处理成功
      */
-    public static void deleteFile(String file) {
+    public static boolean deleteFile(String file) {
         File f = new File(file);
         if (f.isFile()) {
-            f.delete();
+            return f.delete();
         }
+        return false;
     }
 
     /**
      * 删除文件
      *
      * @param file 文件
+     * @return 是否处理成功
      */
-    public static void deleteFile(File file) {
+    public static boolean deleteFile(File file) {
         if (file.isFile()) {
-            file.delete();
+            return file.delete();
+        }
+        return false;
+    }
+
+    /**
+     * 删除文件
+     *
+     * @param file 文件
+     * @return 是否处理成功
+     */
+    public static boolean deleteFile(Path file) {
+        try {
+            Files.delete(file);
+            return true;
+        } catch (IOException e) {
+            return false;
         }
     }
 
@@ -680,44 +1371,67 @@ public class Files1 {
      * 删除大文件
      *
      * @param file 文件
+     * @return 是否处理成功
      */
-    public static void deleteBigFile(String file) {
-        deleteBigFile(new File(file));
+    public static boolean deleteBigFile(String file) {
+        return deleteBigFile(new File(file));
     }
 
     /**
      * 删除大文件
      *
      * @param file 文件
+     * @return 是否处理成功
      */
-    public static void deleteBigFile(File file) {
+    public static boolean deleteBigFile(File file) {
         cleanFile(file);
-        file.delete();
+        return file.delete();
     }
 
     /**
      * 清空文件
      *
      * @param file 文件
+     * @return 是否处理成功
      */
-    public static void cleanFile(String file) {
-        cleanFile(new File(file));
+    public static boolean cleanFile(String file) {
+        return cleanFile(new File(file));
     }
 
     /**
      * 清空文件
      *
      * @param file 文件
+     * @return 是否处理成功
      */
-    public static void cleanFile(File file) {
+    public static boolean cleanFile(File file) {
         if (!file.exists()) {
-            return;
+            return true;
         }
         try (FileWriter fw = new FileWriter(file)) {
             fw.write("");
         } catch (IOException e) {
-            throw Exceptions.ioRuntime(e);
+            return false;
         }
+        return true;
+    }
+
+    /**
+     * 清空文件
+     *
+     * @param file 文件
+     * @return 是否处理成功
+     */
+    public static boolean cleanFile(Path file) {
+        if (!Files.exists(file)) {
+            return true;
+        }
+        try {
+            Files.write(file, new byte[0]);
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -904,20 +1618,40 @@ public class Files1 {
      * @return 文件行数
      */
     public static int countLines(File file) {
-        LineNumberReader rf = null;
-        try {
-            rf = new LineNumberReader(new InputStreamReader(openInputStream(file)));
+        try (LineNumberReader rf = new LineNumberReader(new InputStreamReader(openInputStream(file)))) {
             rf.skip(file.length());
             return rf.getLineNumber();
         } catch (IOException e) {
             // ignore
-        } finally {
-            Streams.close(rf);
         }
         return 0;
     }
 
     // -------------------- stream --------------------
+
+    /**
+     * 打开文件输入流
+     *
+     * @param file 文件
+     * @return 输入流
+     */
+    public static FileInputStream openInputStreamSafe(String file) {
+        return openInputStreamSafe(new File(file));
+    }
+
+    /**
+     * 打开文件输入流
+     *
+     * @param file 文件
+     * @return 输入流
+     */
+    public static FileInputStream openInputStreamSafe(File file) {
+        try {
+            return openInputStream(file);
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
+        }
+    }
 
     /**
      * 打开文件输入流
@@ -952,24 +1686,46 @@ public class Files1 {
     }
 
     /**
-     * 打开文件输入流
+     * 打开文件输出流
      *
      * @param file 文件
-     * @return 输入流
+     * @return 输出流
      */
-    public static FileInputStream openInputStreamSafe(String file) {
-        return openInputStreamSafe(new File(file));
+    public static FileOutputStream openOutputStreamSafe(String file) {
+        return openOutputStreamSafe(new File(file), false);
     }
 
     /**
-     * 打开文件输入流
+     * 打开文件输出流
      *
      * @param file 文件
-     * @return 输入流
+     * @return 输出流
      */
-    public static FileInputStream openInputStreamSafe(File file) {
+    public static FileOutputStream openOutputStreamSafe(File file) {
+        return openOutputStreamSafe(file, false);
+    }
+
+    /**
+     * 打开文件输出流
+     *
+     * @param file   文件
+     * @param append 是否拼接
+     * @return 输出流
+     */
+    public static FileOutputStream openOutputStreamSafe(String file, boolean append) {
+        return openOutputStreamSafe(new File(file), append);
+    }
+
+    /**
+     * 打开文件输出流
+     *
+     * @param file   文件
+     * @param append append
+     * @return 输出流
+     */
+    public static FileOutputStream openOutputStreamSafe(File file, boolean append) {
         try {
-            return openInputStream(file);
+            return openOutputStream(file, append);
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         }
@@ -989,6 +1745,17 @@ public class Files1 {
     /**
      * 打开文件输出流
      *
+     * @param file 文件
+     * @return 输出流
+     * @throws IOException IO
+     */
+    public static FileOutputStream openOutputStream(File file) throws IOException {
+        return openOutputStream(file, false);
+    }
+
+    /**
+     * 打开文件输出流
+     *
      * @param file   文件
      * @param append 是否拼接
      * @return 输出流
@@ -1001,18 +1768,8 @@ public class Files1 {
     /**
      * 打开文件输出流
      *
-     * @param file 文件
-     * @return 输出流
-     * @throws IOException IO
-     */
-    public static FileOutputStream openOutputStream(File file) throws IOException {
-        return openOutputStream(file, false);
-    }
-
-    /**
-     * 打开文件输出流
-     *
-     * @param file 文件
+     * @param file   文件
+     * @param append append
      * @return 输出流
      * @throws IOException IO
      */
@@ -1040,45 +1797,26 @@ public class Files1 {
     }
 
     /**
-     * 打开文件输出流
+     * 打开文件随机读取
      *
-     * @param file 文件
-     * @return 输出流
+     * @param file file
+     * @param mode r rw rws rwd
+     * @return RandomAccessFile
      */
-    public static FileOutputStream openOutputStreamSafe(String file) {
-        return openOutputStreamSafe(new File(file), false);
+    public static RandomAccessFile openRandomAccessSafe(String file, String mode) {
+        return openRandomAccessSafe(new File(file), mode);
     }
 
     /**
-     * 打开文件输出流
+     * 打开文件随机读取
      *
-     * @param file   文件
-     * @param append 是否拼接
-     * @return 输出流
+     * @param file file
+     * @param mode r rw rws rwd
+     * @return RandomAccessFile
      */
-    public static FileOutputStream openOutputStreamSafe(String file, boolean append) {
-        return openOutputStreamSafe(new File(file), append);
-    }
-
-    /**
-     * 打开文件输出流
-     *
-     * @param file 文件
-     * @return 输出流
-     */
-    public static FileOutputStream openOutputStreamSafe(File file) {
-        return openOutputStreamSafe(file, false);
-    }
-
-    /**
-     * 打开文件输出流
-     *
-     * @param file 文件
-     * @return 输出流
-     */
-    public static FileOutputStream openOutputStreamSafe(File file, boolean append) {
+    public static RandomAccessFile openRandomAccessSafe(File file, String mode) {
         try {
-            return openOutputStream(file, append);
+            return openRandomAccess(file, mode);
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         }
@@ -1123,32 +1861,265 @@ public class Files1 {
         return new RandomAccessFile(file, mode);
     }
 
-    /**
-     * 打开文件随机读取
-     *
-     * @param file file
-     * @param mode r rw rws rwd
-     * @return RandomAccessFile
-     */
-    public static RandomAccessFile openRandomAccessSafe(String file, String mode) {
-        return openRandomAccessSafe(new File(file), mode);
-    }
+    // -------------------- path fast --------------------
 
     /**
-     * 打开文件随机读取
+     * 打开文件输入流
      *
-     * @param file file
-     * @param mode r rw rws rwd
-     * @return RandomAccessFile
+     * @param file 文件
+     * @return 输入流
      */
-    public static RandomAccessFile openRandomAccessSafe(File file, String mode) {
+    public static InputStream openInputStreamSafeFast(String file) {
         try {
-            return openRandomAccess(file, mode);
-        } catch (IOException e) {
+            return openInputStreamFast(Paths.get(file));
+        } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         }
     }
 
+    /**
+     * 打开文件输入流
+     *
+     * @param file 文件
+     * @return 输入流
+     */
+    public static InputStream openInputStreamSafeFast(File file) {
+        try {
+            return openInputStreamFast(Paths.get(file.getAbsolutePath()));
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime(e);
+        }
+    }
+
+    /**
+     * 打开文件输入流
+     *
+     * @param file 文件
+     * @return 输入流
+     */
+    public static InputStream openInputStreamSafeFast(Path file) {
+        try {
+            return openInputStreamFast(file);
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime(e);
+        }
+    }
+
+    /**
+     * 打开文件输入流
+     *
+     * @param file 文件
+     * @return 输入流
+     * @throws IOException IO
+     */
+    public static InputStream openInputStreamFast(String file) throws IOException {
+        return openInputStreamFast(Paths.get(file));
+    }
+
+    /**
+     * 打开文件输入流
+     *
+     * @param file 文件
+     * @return 输入流
+     * @throws IOException IO
+     */
+    public static InputStream openInputStreamFast(File file) throws IOException {
+        return openInputStreamFast(Paths.get(file.getAbsolutePath()));
+    }
+
+    /**
+     * 打开文件输入流
+     *
+     * @param file 文件
+     * @return 输入流
+     * @throws IOException IO
+     */
+    public static InputStream openInputStreamFast(Path file) throws IOException {
+        if (Files.exists(file)) {
+            if (Files.isDirectory(file)) {
+                throw new IOException("File '" + file + "' exists but is a directory");
+            }
+            if (!Files.isReadable(file)) {
+                throw new IOException("File '" + file + "' cannot be read");
+            }
+        } else {
+            throw new FileNotFoundException("File '" + file + "' does not exist");
+        }
+        return Files.newInputStream(file);
+    }
+
+    /**
+     * 打开文件输出流
+     *
+     * @param file 文件
+     * @return 输出流
+     */
+    public static OutputStream openOutputStreamFastSafe(String file) {
+        try {
+            return openOutputStreamFast(Paths.get(file), false);
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime();
+        }
+    }
+
+    /**
+     * 打开文件输出流
+     *
+     * @param file 文件
+     * @return 输出流
+     */
+    public static OutputStream openOutputStreamFastSafe(File file) {
+        try {
+            return openOutputStreamFast(Paths.get(file.getAbsolutePath()), false);
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime();
+        }
+    }
+
+    /**
+     * 打开文件输出流
+     *
+     * @param file 文件
+     * @return 输出流
+     */
+    public static OutputStream openOutputStreamFastSafe(Path file) {
+        try {
+            return openOutputStreamFast(file, false);
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime();
+        }
+    }
+
+    /**
+     * 打开文件输出流
+     *
+     * @param file   文件
+     * @param append append
+     * @return 输出流
+     */
+    public static OutputStream openOutputStreamFastSafe(String file, boolean append) {
+        try {
+            return openOutputStreamFast(Paths.get(file), append);
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime();
+        }
+    }
+
+    /**
+     * 打开文件输出流
+     *
+     * @param file   文件
+     * @param append append
+     * @return 输出流
+     */
+    public static OutputStream openOutputStreamFastSafe(File file, boolean append) {
+        try {
+            return openOutputStreamFast(Paths.get(file.getAbsolutePath()), append);
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime();
+        }
+    }
+
+    /**
+     * 打开文件输出流
+     *
+     * @param file   文件
+     * @param append append
+     * @return 输出流
+     */
+    public static OutputStream openOutputStreamFastSafe(Path file, boolean append) {
+        try {
+            return openOutputStreamFast(file, append);
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime();
+        }
+    }
+
+    /**
+     * 打开文件输出流
+     *
+     * @param file 文件
+     * @return 输出流
+     * @throws IOException IO
+     */
+    public static OutputStream openOutputStreamFast(String file) throws IOException {
+        return openOutputStreamFast(Paths.get(file), false);
+    }
+
+    /**
+     * 打开文件输出流
+     *
+     * @param file 文件
+     * @return 输出流
+     * @throws IOException IO
+     */
+    public static OutputStream openOutputStreamFast(File file) throws IOException {
+        return openOutputStreamFast(Paths.get(file.getAbsolutePath()), false);
+    }
+
+    /**
+     * 打开文件输出流
+     *
+     * @param file 文件
+     * @return 输出流
+     * @throws IOException IO
+     */
+    public static OutputStream openOutputStreamFast(Path file) throws IOException {
+        return openOutputStreamFast(file, false);
+    }
+
+    /**
+     * 打开文件输出流
+     *
+     * @param file   文件
+     * @param append append
+     * @return 输出流
+     * @throws IOException IO
+     */
+    public static OutputStream openOutputStreamFast(String file, boolean append) throws IOException {
+        return openOutputStreamFast(Paths.get(file), append);
+    }
+
+    /**
+     * 打开文件输出流
+     *
+     * @param file   文件
+     * @param append append
+     * @return 输出流
+     * @throws IOException IO
+     */
+    public static OutputStream openOutputStreamFast(File file, boolean append) throws IOException {
+        return openOutputStreamFast(Paths.get(file.getAbsolutePath()), append);
+    }
+
+    /**
+     * 打开文件输出流
+     *
+     * @param file   文件
+     * @param append append
+     * @return 输出流
+     * @throws IOException IO
+     */
+    public static OutputStream openOutputStreamFast(Path file, boolean append) throws IOException {
+        if (Files.exists(file)) {
+            if (Files.isDirectory(file)) {
+                throw new IOException("File '" + file + "' exists but is a directory");
+            }
+            if (!Files.isWritable(file)) {
+                throw new IOException("File '" + file + "' cannot be written to");
+            }
+        } else {
+            Path parent = file.getParent();
+            if (parent != null && !Files.exists(parent)) {
+                Files.createDirectories(parent);
+            }
+        }
+        if (append) {
+            return Files.newOutputStream(file, StandardOpenOption.APPEND);
+        } else {
+            return Files.newOutputStream(file);
+        }
+    }
 
     // -------------------- path --------------------
 

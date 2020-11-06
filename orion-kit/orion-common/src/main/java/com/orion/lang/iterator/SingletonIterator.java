@@ -12,7 +12,7 @@ import java.util.function.Consumer;
  * @version 1.0.0
  * @since 2020/10/22 14:17
  */
-public class SingletonIterator<E> implements Iterator<E> {
+public class SingletonIterator<E> implements Iterator<E>, Iterable<E> {
 
     private final E element;
 
@@ -48,6 +48,11 @@ public class SingletonIterator<E> implements Iterator<E> {
             action.accept(element);
             hasNext = false;
         }
+    }
+
+    @Override
+    public Iterator<E> iterator() {
+        return this;
     }
 
 }

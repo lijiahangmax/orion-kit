@@ -1477,7 +1477,10 @@ public class Strings {
      * @return byte[]
      */
     public static byte[] bytes(String s, Charset charset) {
-        return s.getBytes(charset);
+        if (charset != null) {
+            return s.getBytes(charset);
+        }
+        return s.getBytes();
     }
 
     /**
@@ -1489,7 +1492,11 @@ public class Strings {
      */
     public static byte[] bytes(String s, String charset) {
         try {
-            return s.getBytes(charset);
+            if (charset != null) {
+                return s.getBytes(charset);
+            } else {
+                return s.getBytes();
+            }
         } catch (UnsupportedEncodingException e) {
             throw Exceptions.unCoding(e);
         }

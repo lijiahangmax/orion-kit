@@ -1,11 +1,13 @@
 package com.orion.lang.iterator;
 
+import com.orion.able.SafeCloseable;
 import com.orion.utils.Exceptions;
 import com.orion.utils.io.Streams;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -16,10 +18,14 @@ import java.util.NoSuchElementException;
  * @version 1.0.0
  * @since 2020/10/27 16:28
  */
-public class LineIterator implements Iterator<String> {
+public class LineIterator implements Iterator<String>, Iterable<String>, SafeCloseable, Serializable {
+
+    private static final long serialVersionUID = 129389409684095L;
 
     private final BufferedReader bufferedReader;
+
     private String line;
+
     private boolean finished = false;
 
     public LineIterator(Reader reader) {
@@ -70,10 +76,16 @@ public class LineIterator implements Iterator<String> {
         throw new UnsupportedOperationException("Remove unsupported on LineIterator");
     }
 
+    @Override
     public void close() {
         finished = true;
         Streams.close(bufferedReader);
         line = null;
+    }
+
+    @Override
+    public Iterator<String> iterator() {
+        return this;
     }
 
 }

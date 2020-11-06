@@ -61,7 +61,7 @@ public class SftpUpload implements Runnable, SafeCloseable {
     /**
      * 文件锁
      */
-    private FileLocks.SuffixFileLock lock;
+    private FileLocks.NamedFileLock lock;
 
     /**
      * 实例

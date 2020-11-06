@@ -6,6 +6,9 @@ import com.orion.utils.Strings;
 import com.orion.utils.collect.Lists;
 
 import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -202,7 +205,7 @@ public class FileWriters {
     }
 
     /**
-     * 拼接一行 可能在开头拼接 \n
+     * 拼接一行 可能在开头拼接\n 尾行拼接\n
      *
      * @param file 文件
      * @param line string
@@ -212,7 +215,7 @@ public class FileWriters {
     }
 
     /**
-     * 拼接一行 可能在开头拼接 \n
+     * 拼接一行 可能在开头拼接\n 尾行拼接\n
      *
      * @param file 文件
      * @param line string
@@ -222,7 +225,7 @@ public class FileWriters {
     }
 
     /**
-     * 拼接一行 可能在开头拼接 \n
+     * 拼接一行 可能在开头拼接\n 尾行拼接\n
      *
      * @param file    文件
      * @param line    string
@@ -233,7 +236,7 @@ public class FileWriters {
     }
 
     /**
-     * 拼接一行 可能在开头拼接 \n
+     * 拼接一行 可能在开头拼接\n 尾行拼接\n
      *
      * @param file    文件
      * @param line    string
@@ -244,7 +247,7 @@ public class FileWriters {
     }
 
     /**
-     * 拼接多行 可能在首行开头拼接 \n
+     * 拼接多行 可能在开头拼接\n 尾行拼接\n
      *
      * @param file 文件
      * @param list strings
@@ -254,7 +257,7 @@ public class FileWriters {
     }
 
     /**
-     * 拼接多行 可能在首行开头拼接 \n
+     * 拼接多行 可能在开头拼接\n 尾行拼接\n
      *
      * @param file 文件
      * @param list strings
@@ -264,7 +267,7 @@ public class FileWriters {
     }
 
     /**
-     * 拼接多行 可能在首行开头拼接 \n
+     * 拼接多行 可能在开头拼接\n 尾行拼接\n
      *
      * @param file    文件
      * @param list    strings
@@ -275,7 +278,7 @@ public class FileWriters {
     }
 
     /**
-     * 拼接多行 可能在首行开头拼接 \n
+     * 拼接多行 可能在开头拼接\n 尾行拼接\n
      *
      * @param file    文件
      * @param list    strings
@@ -286,7 +289,7 @@ public class FileWriters {
     }
 
     /**
-     * 拼接行到偏移处 首尾不拼接 \n
+     * 拼接行到偏移处 不会在首行开头拼接\n 尾行拼接\n
      *
      * @param file   文件
      * @param offset 拼接偏移量
@@ -297,7 +300,7 @@ public class FileWriters {
     }
 
     /**
-     * 拼接行到偏移处 首尾不拼接 \n
+     * 拼接行到偏移处 不会在首行开头拼接\n 尾行拼接\n
      *
      * @param file   文件
      * @param offset 拼接偏移量
@@ -308,7 +311,7 @@ public class FileWriters {
     }
 
     /**
-     * 拼接行到偏移处 首尾不拼接 \n
+     * 拼接行到偏移处 不会在首行开头拼接\n 尾行拼接\n
      *
      * @param file    文件
      * @param offset  拼接偏移量
@@ -320,7 +323,7 @@ public class FileWriters {
     }
 
     /**
-     * 拼接行到偏移处 首尾不拼接 \n
+     * 拼接行到偏移处 不会在首行开头拼接\n 尾行拼接\n
      *
      * @param file    文件
      * @param offset  拼接偏移量
@@ -332,7 +335,7 @@ public class FileWriters {
     }
 
     /**
-     * 拼接行到偏移处 首尾不拼接 \n
+     * 拼接行到偏移处 不会在首行开头拼接\n 尾行拼接\n
      *
      * @param file   文件
      * @param offset 拼接偏移量
@@ -343,7 +346,7 @@ public class FileWriters {
     }
 
     /**
-     * 拼接行到偏移处 首尾不拼接 \n
+     * 拼接行到偏移处 不会在首行开头拼接\n 尾行拼接\n
      *
      * @param file   文件
      * @param offset 拼接偏移量
@@ -354,7 +357,7 @@ public class FileWriters {
     }
 
     /**
-     * 拼接行到偏移处 首尾不拼接 \n
+     * 拼接行到偏移处 不会在首行开头拼接\n 尾行拼接\n
      *
      * @param file    文件
      * @param offset  拼接偏移量
@@ -366,7 +369,7 @@ public class FileWriters {
     }
 
     /**
-     * 拼接行到偏移处 首尾不拼接 \n
+     * 拼接行到偏移处 不会在首行开头拼接\n 尾行拼接\n
      *
      * @param file    文件
      * @param offset  拼接偏移量
@@ -400,16 +403,13 @@ public class FileWriters {
                     useBuffer = false;
                 }
             }
-            for (int i = 0, size = lines.size(); i < size; i++) {
-                String line = lines.get(i);
+            for (String line : lines) {
                 if (charset == null) {
                     r.write(Strings.bytes(line));
                 } else {
                     r.write(Strings.bytes(line, charset));
                 }
-                if (i != size - 1) {
-                    r.write('\n');
-                }
+                r.write('\n');
             }
             if (!append) {
                 if (useBuffer) {
@@ -521,6 +521,73 @@ public class FileWriters {
     }
 
     /**
+     * 写入到文件
+     *
+     * @param file      文件
+     * @param skipBytes 跳过前几位
+     * @param bs        写入数组
+     */
+    public static void write(String file, int skipBytes, byte[] bs) {
+        write(new File(file), skipBytes, bs, 0, bs.length);
+    }
+
+    /**
+     * 写入到文件
+     *
+     * @param file      文件
+     * @param skipBytes 跳过前几位
+     * @param bs        写入数组
+     */
+    public static void write(File file, int skipBytes, byte[] bs) {
+        write(file, skipBytes, bs, 0, bs.length);
+    }
+
+    /**
+     * 写入到文件
+     *
+     * @param file      文件
+     * @param skipBytes 跳过前几位
+     * @param bs        写入数组
+     * @param off       偏移量
+     * @param len       写入长度
+     */
+    public static void write(String file, int skipBytes, byte[] bs, int off, int len) {
+        write(new File(file), skipBytes, bs, off, len);
+    }
+
+    /**
+     * 写入到文件
+     *
+     * @param file      文件
+     * @param skipBytes 跳过前几位
+     * @param bs        写入数组
+     * @param off       偏移量
+     * @param len       写入长度
+     */
+    public static void write(File file, int skipBytes, byte[] bs, int off, int len) {
+        if (skipBytes > 0) {
+            try (FileInputStream in = openInputStream(file)) {
+                byte[] skips = new byte[skipBytes];
+                int read = in.read(skips);
+                try (FileOutputStream out = openOutputStream(file)) {
+                    out.write(skips, 0, read);
+                    out.write(bs, off, len);
+                } catch (IOException e) {
+                    throw Exceptions.ioRuntime(e);
+                }
+            } catch (Exception e) {
+                throw Exceptions.ioRuntime(e);
+            }
+        } else {
+            try (FileOutputStream out = openOutputStream(file)) {
+                out.write(bs, off, len);
+            } catch (IOException e) {
+                throw Exceptions.ioRuntime(e);
+            }
+        }
+    }
+
+    /**
      * 写入一行 尾行拼接\n
      *
      * @param file 文件
@@ -622,88 +689,27 @@ public class FileWriters {
                 beforeAppend = true;
             }
         }
-        try (OutputStream out = openOutputStream(file, append)) {
-            if (beforeAppend) {
-                out.write(Strings.bytes(lineSeparator));
-            }
+        BufferedWriter writer = null;
+        try {
             if (charset == null) {
-                for (String str : list) {
-                    str += lineSeparator;
-                    out.write(Strings.bytes(str));
-                }
+                writer = new BufferedWriter(new OutputStreamWriter(openOutputStream(file, append)), BUFFER_SIZE);
             } else {
-                for (String str : list) {
-                    str += lineSeparator;
-                    out.write(Strings.bytes(str, charset));
-                }
+                writer = new BufferedWriter(new OutputStreamWriter(openOutputStream(file, append), charset), BUFFER_SIZE);
+            }
+            if (beforeAppend) {
+                writer.write(lineSeparator);
+            }
+            for (String str : list) {
+                writer.write(str + lineSeparator);
             }
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
+        } finally {
+            close(writer);
         }
     }
 
-    /**
-     * 写入到文件
-     *
-     * @param file      文件
-     * @param skipBytes 跳过前几位
-     * @param bs        写入数组
-     */
-    public static void write(String file, int skipBytes, byte[] bs) {
-        write(new File(file), skipBytes, bs, 0, bs.length);
-    }
-
-    /**
-     * 写入到文件
-     *
-     * @param file      文件
-     * @param skipBytes 跳过前几位
-     * @param bs        写入数组
-     */
-    public static void write(File file, int skipBytes, byte[] bs) {
-        write(file, skipBytes, bs, 0, bs.length);
-    }
-
-    /**
-     * 写入到文件
-     *
-     * @param file      文件
-     * @param skipBytes 跳过前几位
-     * @param bs        写入数组
-     * @param off       偏移量
-     * @param len       写入长度
-     */
-    public static void write(String file, int skipBytes, byte[] bs, int off, int len) {
-        write(new File(file), skipBytes, bs, off, len);
-    }
-
-    /**
-     * 写入到文件
-     *
-     * @param file      文件
-     * @param skipBytes 跳过前几位
-     * @param bs        写入数组
-     * @param off       偏移量
-     * @param len       写入长度
-     */
-    public static void write(File file, int skipBytes, byte[] bs, int off, int len) {
-        if (skipBytes > 0) {
-            try (FileInputStream in = openInputStream(file)) {
-                byte[] skips = new byte[skipBytes];
-                int read = in.read(skips);
-                try (FileOutputStream out = openOutputStream(file)) {
-                    out.write(skips, 0, read);
-                    out.write(bs, off, len);
-                } catch (IOException e) {
-                    throw Exceptions.ioRuntime(e);
-                }
-            } catch (Exception e) {
-                throw Exceptions.ioRuntime(e);
-            }
-        } else {
-            write(file, bs, off, len);
-        }
-    }
+    // -------------------- replace --------------------
 
     /**
      * 写入到文件
@@ -876,6 +882,7 @@ public class FileWriters {
     public static void writeToFile(File file, long off, int len, File targetFile) {
         FileInputStream in = null;
         FileOutputStream out = null;
+        BufferedWriter b;
         try {
             if (off <= 0 && len >= file.length()) {
                 copy(file, targetFile);
@@ -897,6 +904,437 @@ public class FileWriters {
         } finally {
             Streams.close(in);
             Streams.close(out);
+        }
+    }
+
+    // -------------------- fast --------------------
+
+    /**
+     * 写入
+     *
+     * @param file file
+     * @param bs   bs
+     */
+    public static void writeFast(String file, byte[] bs) {
+        writeFast(Paths.get(file), bs, 0, bs.length, false);
+    }
+
+    /**
+     * 写入
+     *
+     * @param file file
+     * @param bs   bs
+     */
+    public static void writeFast(File file, byte[] bs) {
+        writeFast(Paths.get(file.getAbsolutePath()), bs, 0, bs.length, false);
+    }
+
+    /**
+     * 写入
+     *
+     * @param file file
+     * @param bs   bs
+     */
+    public static void writeFast(Path file, byte[] bs) {
+        writeFast(file, bs, 0, bs.length, false);
+    }
+
+    /**
+     * 写入
+     *
+     * @param file file
+     * @param off  offset
+     * @param len  len
+     * @param bs   bs
+     */
+    public static void writeFast(String file, byte[] bs, int off, int len) {
+        writeFast(Paths.get(file), bs, off, len, false);
+    }
+
+    /**
+     * 写入
+     *
+     * @param file file
+     * @param off  offset
+     * @param len  len
+     * @param bs   bs
+     */
+    public static void writeFast(File file, byte[] bs, int off, int len) {
+        writeFast(Paths.get(file.getAbsolutePath()), bs, off, len, false);
+    }
+
+    /**
+     * 写入
+     *
+     * @param file file
+     * @param off  offset
+     * @param len  len
+     * @param bs   bs
+     */
+    public static void writeFast(Path file, byte[] bs, int off, int len) {
+        writeFast(file, bs, off, len, false);
+    }
+
+    /**
+     * 拼接
+     *
+     * @param file file
+     * @param bs   bs
+     */
+    public static void appendFast(String file, byte[] bs) {
+        writeFast(Paths.get(file), bs, 0, bs.length, true);
+    }
+
+    /**
+     * 拼接
+     *
+     * @param file file
+     * @param bs   bs
+     */
+    public static void appendFast(File file, byte[] bs) {
+        writeFast(Paths.get(file.getAbsolutePath()), bs, 0, bs.length, true);
+    }
+
+    /**
+     * 拼接
+     *
+     * @param file file
+     * @param bs   bs
+     */
+    public static void appendFast(Path file, byte[] bs) {
+        writeFast(file, bs, 0, bs.length, true);
+    }
+
+    /**
+     * 拼接
+     *
+     * @param file file
+     * @param off  offset
+     * @param len  len
+     * @param bs   bs
+     */
+    public static void appendFast(String file, byte[] bs, int off, int len) {
+        writeFast(Paths.get(file), bs, off, len, true);
+    }
+
+    /**
+     * 拼接
+     *
+     * @param file file
+     * @param off  offset
+     * @param len  len
+     * @param bs   bs
+     */
+    public static void appendFast(File file, byte[] bs, int off, int len) {
+        writeFast(Paths.get(file.getAbsolutePath()), bs, off, len, true);
+    }
+
+    /**
+     * 拼接
+     *
+     * @param file file
+     * @param off  offset
+     * @param len  len
+     * @param bs   bs
+     */
+    public static void appendFast(Path file, byte[] bs, int off, int len) {
+        writeFast(file, bs, off, len, true);
+    }
+
+    /**
+     * 写入/拼接
+     *
+     * @param file   file
+     * @param bs     bs
+     * @param off    offset
+     * @param len    len
+     * @param append append
+     */
+    private static void writeFast(Path file, byte[] bs, int off, int len, boolean append) {
+        try (OutputStream out = openOutputStreamFast(file, append)) {
+            out.write(bs, off, len);
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime(e);
+        }
+    }
+
+    /**
+     * 写入 尾拼接\n
+     *
+     * @param file file
+     * @param line line
+     */
+    public static void writeLineFast(String file, String line) {
+        writeLinesFast(Paths.get(file), Lists.singleton(line), null, false);
+    }
+
+    /**
+     * 写入 尾拼接\n
+     *
+     * @param file file
+     * @param line line
+     */
+    public static void writeLineFast(File file, String line) {
+        writeLinesFast(Paths.get(file.getAbsolutePath()), Lists.singleton(line), null, false);
+    }
+
+    /**
+     * 写入 尾拼接\n
+     *
+     * @param file file
+     * @param line line
+     */
+    public static void writeLineFast(Path file, String line) {
+        writeLinesFast(file, Lists.singleton(line), null, false);
+    }
+
+    /**
+     * 拼接 首不拼接\n 尾拼接\n
+     *
+     * @param file file
+     * @param line line
+     */
+    public static void appendLineFast(String file, String line) {
+        writeLinesFast(Paths.get(file), Lists.singleton(line), null, true);
+    }
+
+    /**
+     * 拼接 首不拼接\n 尾拼接\n
+     *
+     * @param file file
+     * @param line line
+     */
+    public static void appendLineFast(File file, String line) {
+        writeLinesFast(Paths.get(file.getAbsolutePath()), Lists.singleton(line), null, true);
+    }
+
+    /**
+     * 拼接 首不拼接\n 尾拼接\n
+     *
+     * @param file file
+     * @param line line
+     */
+    public static void appendLineFast(Path file, String line) {
+        writeLinesFast(file, Lists.singleton(line), null, true);
+    }
+
+    /**
+     * 写入 尾拼接\n
+     *
+     * @param file    file
+     * @param line    line
+     * @param charset charset
+     */
+    public static void writeLineFast(String file, String line, String charset) {
+        writeLinesFast(Paths.get(file), Lists.singleton(line), Charset.forName(charset), false);
+    }
+
+    /**
+     * 写入 尾拼接\n
+     *
+     * @param file    file
+     * @param line    line
+     * @param charset charset
+     */
+    public static void writeLineFast(File file, String line, String charset) {
+        writeLinesFast(Paths.get(file.getAbsolutePath()), Lists.singleton(line), Charset.forName(charset), false);
+    }
+
+    /**
+     * 写入 尾拼接\n
+     *
+     * @param file    file
+     * @param line    line
+     * @param charset charset
+     */
+    public static void writeLineFast(Path file, String line, Charset charset) {
+        writeLinesFast(file, Lists.singleton(line), charset, false);
+    }
+
+    /**
+     * 拼接 首不拼接\n 尾拼接\n
+     *
+     * @param file    file
+     * @param line    line
+     * @param charset charset
+     */
+    public static void appendLineFast(String file, String line, String charset) {
+        writeLinesFast(Paths.get(file), Lists.singleton(line), Charset.forName(charset), true);
+    }
+
+    /**
+     * 拼接 首不拼接\n 尾拼接\n
+     *
+     * @param file    file
+     * @param line    line
+     * @param charset charset
+     */
+    public static void appendLineFast(File file, String line, String charset) {
+        writeLinesFast(Paths.get(file.getAbsolutePath()), Lists.singleton(line), Charset.forName(charset), true);
+    }
+
+    /**
+     * 拼接 首不拼接\n 尾拼接\n
+     *
+     * @param file    file
+     * @param line    line
+     * @param charset charset
+     */
+    public static void appendLineFast(Path file, String line, Charset charset) {
+        writeLinesFast(file, Lists.singleton(line), charset, true);
+    }
+
+    /**
+     * 写入 尾行拼接\n
+     *
+     * @param file  file
+     * @param lines lines
+     */
+    public static void writeLinesFast(String file, List<String> lines) {
+        writeLinesFast(Paths.get(file), lines, null, false);
+    }
+
+    /**
+     * 写入 尾行拼接\n
+     *
+     * @param file  file
+     * @param lines lines
+     */
+    public static void writeLinesFast(File file, List<String> lines) {
+        writeLinesFast(Paths.get(file.getAbsolutePath()), lines, null, false);
+    }
+
+    /**
+     * 写入 尾行拼接\n
+     *
+     * @param file  file
+     * @param lines lines
+     */
+    public static void writeLinesFast(Path file, List<String> lines) {
+        writeLinesFast(file, lines, null, false);
+    }
+
+    /**
+     * 拼接 首行不拼接\n 尾行拼接\n
+     *
+     * @param file  file
+     * @param lines lines
+     */
+    public static void appendLinesFast(String file, List<String> lines) {
+        writeLinesFast(Paths.get(file), lines, null, true);
+    }
+
+    /**
+     * 拼接 首行不拼接\n 尾行拼接\n
+     *
+     * @param file  file
+     * @param lines lines
+     */
+    public static void appendLinesFast(File file, List<String> lines) {
+        writeLinesFast(Paths.get(file.getAbsolutePath()), lines, null, true);
+    }
+
+    /**
+     * 拼接 首行不拼接\n 尾行拼接\n
+     *
+     * @param file  file
+     * @param lines lines
+     */
+    public static void appendLinesFast(Path file, List<String> lines) {
+        writeLinesFast(file, lines, null, true);
+    }
+
+    /**
+     * 写入 尾行拼接\n
+     *
+     * @param file    file
+     * @param lines   lines
+     * @param charset charset
+     */
+    public static void writeLinesFast(String file, List<String> lines, String charset) {
+        writeLinesFast(Paths.get(file), lines, Charset.forName(charset), false);
+    }
+
+    /**
+     * 写入 尾行拼接\n
+     *
+     * @param file    file
+     * @param lines   lines
+     * @param charset charset
+     */
+    public static void writeLinesFast(File file, List<String> lines, String charset) {
+        writeLinesFast(Paths.get(file.getAbsolutePath()), lines, Charset.forName(charset), false);
+    }
+
+    /**
+     * 写入 尾行拼接\n
+     *
+     * @param file    file
+     * @param lines   lines
+     * @param charset charset
+     */
+    public static void writeLinesFast(Path file, List<String> lines, Charset charset) {
+        writeLinesFast(file, lines, charset, false);
+    }
+
+    /**
+     * 拼接 首行不拼接\n 尾行拼接\n
+     *
+     * @param file    file
+     * @param lines   lines
+     * @param charset charset
+     */
+    public static void appendLinesFast(String file, List<String> lines, String charset) {
+        writeLinesFast(Paths.get(file), lines, Charset.forName(charset), true);
+    }
+
+    /**
+     * 拼接 首行不拼接\n 尾行拼接\n
+     *
+     * @param file    file
+     * @param lines   lines
+     * @param charset charset
+     */
+    public static void appendLinesFast(File file, List<String> lines, String charset) {
+        writeLinesFast(Paths.get(file.getAbsolutePath()), lines, Charset.forName(charset), true);
+    }
+
+    /**
+     * 拼接 首行不拼接\n 尾行拼接\n
+     *
+     * @param file    file
+     * @param lines   lines
+     * @param charset charset
+     */
+    public static void appendLinesFast(Path file, List<String> lines, Charset charset) {
+        writeLinesFast(file, lines, charset, true);
+    }
+
+    /**
+     * 写入/拼接 首行不拼接\n 尾行拼接\n
+     *
+     * @param file    file
+     * @param lines   lines
+     * @param charset charset
+     * @param append  append
+     */
+    private static void writeLinesFast(Path file, List<String> lines, Charset charset, boolean append) {
+        BufferedWriter writer = null;
+        try {
+            if (charset == null) {
+                writer = new BufferedWriter(new OutputStreamWriter(openOutputStreamFast(file, append)));
+            } else {
+                writer = new BufferedWriter(new OutputStreamWriter(openOutputStreamFast(file, append), charset));
+            }
+            for (String line : lines) {
+                writer.write(line);
+                writer.newLine();
+            }
+
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime(e);
+        } finally {
+            close(writer);
         }
     }
 

@@ -159,6 +159,35 @@ public class Keys {
         }
     }
 
+    /**
+     * 加载 KeyStore
+     *
+     * @param file     file
+     * @param password password
+     * @return KeyStore
+     */
+    public static KeyStore getKeyStore(File file, String password) {
+        return getKeyStore(Files1.openInputStreamSafe(file), password);
+    }
+
+    /**
+     * 加载 KeyStore
+     *
+     * @param in       in
+     * @param password password
+     * @return KeyStore
+     */
+    public static KeyStore getKeyStore(InputStream in, String password) {
+        char[] ps = password == null ? null : password.toCharArray();
+        try {
+            KeyStore ks = KeyStore.getInstance("PKCS12");
+            ks.load(in, ps);
+            return ks;
+        } catch (Exception e) {
+            throw Exceptions.runtime("could not be loaded key");
+        }
+    }
+
     // ------------------ KEY ------------------
 
     /**

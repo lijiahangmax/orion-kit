@@ -1,13 +1,17 @@
 package com.orion.utils.io;
 
+import com.orion.lang.iterator.LineIterator;
 import com.orion.utils.Exceptions;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static com.orion.utils.io.Files1.openInputStream;
 import static com.orion.utils.io.Streams.close;
@@ -322,6 +326,359 @@ public class FileReaders {
             throw Exceptions.ioRuntime(e);
         } finally {
             close(reader);
+        }
+    }
+
+    /**
+     * 行消费者
+     *
+     * @param file file
+     * @param c    consumer
+     */
+    public static void lineConsumer(String file, Consumer<String> c) {
+        lineConsumer(new File(file), null, c);
+    }
+
+    /**
+     * 行消费者
+     *
+     * @param file file
+     * @param c    consumer
+     */
+    public static void lineConsumer(File file, Consumer<String> c) {
+        lineConsumer(file, null, c);
+    }
+
+    /**
+     * 行消费者
+     *
+     * @param file    file
+     * @param charset charset
+     * @param c       consumer
+     */
+    public static void lineConsumer(String file, String charset, Consumer<String> c) {
+        lineConsumer(new File(file), charset, c);
+    }
+
+    /**
+     * 行消费者
+     *
+     * @param file    file
+     * @param charset charset
+     * @param c       consumer
+     */
+    public static void lineConsumer(File file, String charset, Consumer<String> c) {
+        try (InputStream in = Files1.openInputStreamSafe(file)) {
+            if (charset == null) {
+                Streams.lineConsumer(in, c);
+            } else {
+                Streams.lineConsumer(in, charset, c);
+            }
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime(e);
+        }
+    }
+
+    /**
+     * 行迭代器
+     *
+     * @param file file
+     * @return LineIterator
+     */
+    public static LineIterator lineIterator(String file) {
+        return lineIterator(new File(file), null);
+    }
+
+    /**
+     * 行迭代器
+     *
+     * @param file file
+     * @return LineIterator
+     */
+    public static LineIterator lineIterator(File file) {
+        return lineIterator(file, null);
+    }
+
+    /**
+     * 行迭代器
+     *
+     * @param file    file
+     * @param charset charset
+     * @return LineIterator
+     */
+    public static LineIterator lineIterator(String file, String charset) {
+        return lineIterator(new File(file), charset);
+    }
+
+    /**
+     * 行迭代器
+     *
+     * @param file    file
+     * @param charset charset
+     * @return LineIterator
+     */
+    public static LineIterator lineIterator(File file, String charset) {
+        try {
+            if (charset == null) {
+                return new LineIterator(new InputStreamReader(Files1.openInputStream(file)));
+            } else {
+                return new LineIterator(new InputStreamReader(Files1.openInputStream(file), charset));
+            }
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime(e);
+        }
+    }
+
+    // -------------------- fast --------------------
+
+    /**
+     * 读取文件所有字节
+     *
+     * @param file file
+     * @return bytes
+     */
+    public static byte[] readFast(String file) {
+        return readFast(Paths.get(file));
+    }
+
+    /**
+     * 读取文件所有字节
+     *
+     * @param file file
+     * @return bytes
+     */
+    public static byte[] readFast(File file) {
+        return readFast(Paths.get(file.getAbsolutePath()));
+    }
+
+    /**
+     * 读取文件所有字节
+     *
+     * @param path path
+     * @return bytes
+     */
+    public static byte[] readFast(Path path) {
+        try {
+            return Files.readAllBytes(path);
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime(e);
+        }
+    }
+
+    /**
+     * 读取文件所有行
+     *
+     * @param file 文件
+     * @return 行
+     */
+    public static List<String> readLinesFast(String file) {
+        return readLinesFast(Paths.get(file), null);
+    }
+
+    /**
+     * 读取文件所有行
+     *
+     * @param file 文件
+     * @return 行
+     */
+    public static List<String> readLinesFast(File file) {
+        return readLinesFast(Paths.get(file.getAbsolutePath()), null);
+    }
+
+    /**
+     * 读取文件所有行
+     *
+     * @param file 文件
+     * @return 行
+     */
+    public static List<String> readLinesFast(Path file) {
+        return readLinesFast(file, null);
+    }
+
+    /**
+     * 读取文件所有行
+     *
+     * @param file    文件
+     * @param charset 编码
+     * @return 行
+     */
+    public static List<String> readLinesFast(String file, String charset) {
+        return readLinesFast(Paths.get(file), Charset.forName(charset));
+    }
+
+    /**
+     * 读取文件所有行
+     *
+     * @param file    文件
+     * @param charset 编码
+     * @return 行
+     */
+    public static List<String> readLinesFast(File file, String charset) {
+        return readLinesFast(Paths.get(file.getAbsolutePath()), Charset.forName(charset));
+    }
+
+    /**
+     * 读取文件所有行
+     *
+     * @param file    文件
+     * @param charset 编码
+     * @return 行
+     */
+    public static List<String> readLinesFast(Path file, Charset charset) {
+        try {
+            if (charset == null) {
+                return Files.readAllLines(file);
+            } else {
+                return Files.readAllLines(file, charset);
+            }
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
+        }
+    }
+
+    /**
+     * 行消费者
+     *
+     * @param file file
+     * @param c    consumer
+     */
+    public static void lineConsumerFast(String file, Consumer<String> c) {
+        lineConsumerFast(Paths.get(file), null, c);
+    }
+
+    /**
+     * 行消费者
+     *
+     * @param file file
+     * @param c    consumer
+     */
+    public static void lineConsumerFast(File file, Consumer<String> c) {
+        lineConsumerFast(Paths.get(file.getAbsolutePath()), null, c);
+    }
+
+    /**
+     * 行消费者
+     *
+     * @param file file
+     * @param c    consumer
+     */
+    public static void lineConsumerFast(Path file, Consumer<String> c) {
+        lineConsumerFast(file, null, c);
+    }
+
+    /**
+     * 行消费者
+     *
+     * @param file    file
+     * @param charset charset
+     * @param c       consumer
+     */
+    public static void lineConsumerFast(String file, String charset, Consumer<String> c) {
+        lineConsumerFast(Paths.get(file), Charset.forName(charset), c);
+    }
+
+    /**
+     * 行消费者
+     *
+     * @param file    file
+     * @param charset charset
+     * @param c       consumer
+     */
+    public static void lineConsumerFast(File file, String charset, Consumer<String> c) {
+        lineConsumerFast(Paths.get(file.getAbsolutePath()), Charset.forName(charset), c);
+    }
+
+    /**
+     * 行消费者
+     *
+     * @param file    file
+     * @param charset charset
+     * @param c       consumer
+     */
+    public static void lineConsumerFast(Path file, Charset charset, Consumer<String> c) {
+        Stream<String> stream = null;
+        try {
+            if (charset == null) {
+                stream = Files.lines(file);
+            } else {
+                stream = Files.lines(file, charset);
+            }
+            stream.forEach(c);
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime(e);
+        } finally {
+            close(stream);
+        }
+    }
+
+    /**
+     * 行迭代器
+     *
+     * @param file file
+     * @return LineIterator
+     */
+    public static LineIterator lineIteratorFast(String file) {
+        return lineIteratorFast(Paths.get(file), null);
+    }
+
+    /**
+     * 行迭代器
+     *
+     * @param file file
+     * @return LineIterator
+     */
+    public static LineIterator lineIteratorFast(File file) {
+        return lineIteratorFast(Paths.get(file.getAbsolutePath()), null);
+    }
+
+    /**
+     * 行迭代器
+     *
+     * @param file file
+     * @return LineIterator
+     */
+    public static LineIterator lineIteratorFast(Path file) {
+        return lineIteratorFast(file, null);
+    }
+
+    /**
+     * 行迭代器
+     *
+     * @param file    file
+     * @param charset charset
+     * @return LineIterator
+     */
+    public static LineIterator lineIteratorFast(String file, String charset) {
+        return lineIteratorFast(Paths.get(file), Charset.forName(charset));
+    }
+
+    /**
+     * 行迭代器
+     *
+     * @param file    file
+     * @param charset charset
+     * @return LineIterator
+     */
+    public static LineIterator lineIteratorFast(File file, String charset) {
+        return lineIteratorFast(Paths.get(file.getAbsolutePath()), Charset.forName(charset));
+    }
+
+    /**
+     * 行迭代器
+     *
+     * @param file    file
+     * @param charset charset
+     * @return LineIterator
+     */
+    public static LineIterator lineIteratorFast(Path file, Charset charset) {
+        try {
+            if (charset == null) {
+                return new LineIterator(Files.newBufferedReader(file));
+            } else {
+                return new LineIterator(Files.newBufferedReader(file, charset));
+            }
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime(e);
         }
     }
 

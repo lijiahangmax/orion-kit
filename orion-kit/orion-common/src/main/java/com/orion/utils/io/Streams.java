@@ -705,8 +705,8 @@ public class Streams {
         return new LineIterator(new InputStreamReader(input));
     }
 
-    public static LineIterator lineIterator(InputStream input, String chaset) throws IOException {
-        return new LineIterator(new InputStreamReader(input, chaset));
+    public static LineIterator lineIterator(InputStream input, String charset) throws IOException {
+        return new LineIterator(new InputStreamReader(input, charset));
     }
 
 }

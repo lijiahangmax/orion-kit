@@ -58,7 +58,7 @@ public class FtpUpload implements Runnable {
     /**
      * 文件锁
      */
-    private FileLocks.SuffixFileLock lock;
+    private FileLocks.NamedFileLock lock;
 
     /**
      * 实例

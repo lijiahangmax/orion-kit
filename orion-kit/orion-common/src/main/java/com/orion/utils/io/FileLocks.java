@@ -44,13 +44,55 @@ public class FileLocks {
     }
 
     /**
-     * 获取文件后缀锁
+     * 获取文件管道锁
      *
      * @param file 文件
-     * @return 后缀锁
+     * @return 管道锁
      */
-    public static SuffixFileLock getSuffixFileLock(String file) {
-        return new SuffixFileLock(file);
+    public static ChannelFileLock getChannelFileLock(Path file) {
+        return new ChannelFileLock(file);
+    }
+
+    /**
+     * 获取文件前缀锁
+     *
+     * @param file 文件
+     * @return 前缀锁
+     */
+    public static NamedFileLock getPrefixFileLock(String file) {
+        return new NamedFileLock(file).suffix("");
+    }
+
+    /**
+     * 获取文件前缀锁
+     *
+     * @param file 文件
+     * @return 前缀锁
+     */
+    public static NamedFileLock getPrefixFileLock(File file) {
+        return new NamedFileLock(file).suffix("");
+    }
+
+    /**
+     * 获取文件前缀锁
+     *
+     * @param lockPrefix 锁前缀
+     * @param file       文件
+     * @return 前缀锁
+     */
+    public static NamedFileLock getPrefixFileLock(String lockPrefix, String file) {
+        return new NamedFileLock(file).prefix(lockPrefix).suffix("");
+    }
+
+    /**
+     * 获取文件前缀锁
+     *
+     * @param lockPrefix 锁前缀
+     * @param file       文件
+     * @return 前缀锁
+     */
+    public static NamedFileLock getPrefixFileLock(String lockPrefix, File file) {
+        return new NamedFileLock(file).prefix(lockPrefix).suffix("");
     }
 
     /**
@@ -59,8 +101,18 @@ public class FileLocks {
      * @param file 文件
      * @return 后缀锁
      */
-    public static SuffixFileLock getSuffixFileLock(File file) {
-        return new SuffixFileLock(file);
+    public static NamedFileLock getSuffixFileLock(String file) {
+        return new NamedFileLock(file).prefix("");
+    }
+
+    /**
+     * 获取文件后缀锁
+     *
+     * @param file 文件
+     * @return 后缀锁
+     */
+    public static NamedFileLock getSuffixFileLock(File file) {
+        return new NamedFileLock(file).prefix("");
     }
 
     /**
@@ -70,8 +122,8 @@ public class FileLocks {
      * @param file       文件
      * @return 后缀锁
      */
-    public static SuffixFileLock getSuffixFileLock(String lockSuffix, String file) {
-        return new SuffixFileLock(lockSuffix, file);
+    public static NamedFileLock getSuffixFileLock(String lockSuffix, String file) {
+        return new NamedFileLock(file).prefix("").suffix(lockSuffix);
     }
 
     /**
@@ -81,8 +133,52 @@ public class FileLocks {
      * @param file       文件
      * @return 后缀锁
      */
-    public static SuffixFileLock getSuffixFileLock(String lockSuffix, File file) {
-        return new SuffixFileLock(lockSuffix, file);
+    public static NamedFileLock getSuffixFileLock(String lockSuffix, File file) {
+        return new NamedFileLock(file).prefix("").suffix(lockSuffix);
+    }
+
+    /**
+     * 获取文件名称锁
+     *
+     * @param file 文件
+     * @return 名称锁
+     */
+    public static NamedFileLock getNamedFileLock(String file) {
+        return new NamedFileLock(file);
+    }
+
+    /**
+     * 获取文件名称锁
+     *
+     * @param file 文件
+     * @return 名称锁
+     */
+    public static NamedFileLock getNamedFileLock(File file) {
+        return new NamedFileLock(file);
+    }
+
+    /**
+     * 获取文件名称锁
+     *
+     * @param lockPrefix 锁前缀
+     * @param lockSuffix 锁后缀
+     * @param file       文件
+     * @return 名称锁
+     */
+    public static NamedFileLock getNamedFileLock(String lockPrefix, String lockSuffix, String file) {
+        return new NamedFileLock(file).prefix(lockPrefix).suffix(lockSuffix);
+    }
+
+    /**
+     * 获取文件名称锁
+     *
+     * @param lockPrefix 锁前缀
+     * @param lockSuffix 锁后缀
+     * @param file       文件
+     * @return 名称锁
+     */
+    public static NamedFileLock getNamedFileLock(String lockPrefix, String lockSuffix, File file) {
+        return new NamedFileLock(file).prefix(lockPrefix).suffix(lockSuffix);
     }
 
     /**
@@ -90,15 +186,19 @@ public class FileLocks {
      */
     public static class ChannelFileLock implements Lockable {
 
-        private File file;
+        private Path file;
         private FileChannel channel;
         private FileLock lock;
 
         private ChannelFileLock(String file) {
-            this.file = new File(file);
+            this.file = Paths.get(file);
         }
 
         private ChannelFileLock(File file) {
+            this.file = Paths.get(file.getAbsolutePath());
+        }
+
+        private ChannelFileLock(Path file) {
             this.file = file;
         }
 
@@ -106,11 +206,10 @@ public class FileLocks {
         public boolean tryLock() {
             boolean success = false;
             try {
-                Path path = Paths.get(file.getPath());
                 if (channel != null && channel.isOpen()) {
                     return false;
                 }
-                channel = FileChannel.open(path, StandardOpenOption.WRITE, StandardOpenOption.READ);
+                channel = FileChannel.open(file, StandardOpenOption.WRITE, StandardOpenOption.READ);
                 lock = channel.tryLock();
                 if (lock != null) {
                     success = true;
@@ -152,9 +251,14 @@ public class FileLocks {
     }
 
     /**
-     * 文件后缀锁
+     * 文件名称锁
      */
-    public static class SuffixFileLock implements Lockable {
+    public static class NamedFileLock implements Lockable {
+
+        /**
+         * 锁前缀
+         */
+        private String prefix;
 
         /**
          * 锁后缀
@@ -171,32 +275,29 @@ public class FileLocks {
          */
         private File lockFile;
 
-        private SuffixFileLock(String file) {
-            this.suffix = ".lock";
-            this.file = new File(file);
-            this.lockFile = new File(this.file.getAbsolutePath() + this.suffix);
+        private NamedFileLock(String file) {
+            this(new File(file));
         }
 
-        private SuffixFileLock(File file) {
+        private NamedFileLock(File file) {
             this.file = file;
+            this.prefix = "~";
             this.suffix = ".lock";
-            this.lockFile = new File(this.file.getAbsolutePath() + this.suffix);
         }
 
-        private SuffixFileLock(String suffix, String file) {
-            this.suffix = "." + suffix;
-            this.file = new File(file);
-            this.lockFile = new File(this.file.getAbsolutePath() + this.suffix);
+        public NamedFileLock prefix(String prefix) {
+            this.prefix = prefix;
+            return this;
         }
 
-        private SuffixFileLock(String suffix, File file) {
+        public NamedFileLock suffix(String suffix) {
             this.suffix = "." + suffix;
-            this.file = file;
-            this.lockFile = new File(this.file.getAbsolutePath() + this.suffix);
+            return this;
         }
 
         @Override
         public boolean tryLock() {
+            init();
             if (!file.exists()) {
                 throw Exceptions.ioRuntime("File Not Found Error: " + file.getAbsolutePath());
             }
@@ -213,6 +314,7 @@ public class FileLocks {
 
         @Override
         public void unLock() {
+            init();
             if (lockFile.exists() && lockFile.isFile()) {
                 Files1.deleteFile(lockFile);
             }
@@ -220,7 +322,14 @@ public class FileLocks {
 
         @Override
         public boolean checkLock() {
+            init();
             return lockFile.exists();
+        }
+
+        private void init() {
+            if (this.lockFile == null) {
+                this.lockFile = new File(this.file.getParent() + "/" + this.prefix + this.file.getName() + this.suffix);
+            }
         }
 
     }

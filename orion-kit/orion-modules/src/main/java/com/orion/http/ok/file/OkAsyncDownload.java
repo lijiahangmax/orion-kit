@@ -89,7 +89,7 @@ public class OkAsyncDownload {
     /**
      * 文件锁
      */
-    private FileLocks.SuffixFileLock lock;
+    private FileLocks.NamedFileLock lock;
 
     /**
      * 跳过的字节数
