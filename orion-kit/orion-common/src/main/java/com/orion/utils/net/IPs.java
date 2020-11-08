@@ -4,11 +4,9 @@ import com.orion.utils.Matches;
 import com.orion.utils.Strings;
 import com.orion.utils.collect.Lists;
 
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * IP 地址工具
@@ -20,7 +18,7 @@ import java.util.*;
 public class IPs {
 
     /**
-     * 本机外网IP  没有则为127.0.0.1
+     * 本机IP  没有则为127.0.0.1
      */
     public static final String IP;
 
@@ -80,7 +78,7 @@ public class IPs {
         if ("127.0.0.1".equals(ip.trim())) {
             return true;
         }
-        for (String s : getAllHost().keySet()) {
+        for (String s : getLocalHosts().keySet()) {
             if (s.equals(ip.trim())) {
                 return true;
             }
@@ -246,14 +244,27 @@ public class IPs {
     }
 
     /**
+     * 通过名称获取主机ip
+     *
+     * @return ip
+     */
+    public static String getHostIp(String host) {
+        try {
+            return InetAddress.getByName(host).getHostAddress();
+        } catch (Exception e) {
+            return "127.0.0.1";
+        }
+    }
+
+    /**
      * 获取默认主机ip
      *
      * @return ip
      */
     public static String getDefaultHostIp() {
         try {
-            return getHostIp(InetAddress.getLocalHost());
-        } catch (UnknownHostException e) {
+            return InetAddress.getLocalHost().getHostAddress();
+        } catch (Exception e) {
             return "127.0.0.1";
         }
     }
@@ -265,44 +276,18 @@ public class IPs {
      */
     public static String getDefaultHostName() {
         try {
-            return getHostName(InetAddress.getLocalHost());
-        } catch (UnknownHostException e) {
-            return "";
+            return InetAddress.getLocalHost().getHostName();
+        } catch (Exception e) {
+            return "unknown";
         }
     }
 
     /**
-     * 获取主机ip
+     * 获取本机所有 主机ip和名称
      *
-     * @param addr 地址
-     * @return ip
+     * @return key:ip value: host
      */
-    public static String getHostIp(InetAddress addr) {
-        if (addr == null) {
-            return null;
-        }
-        return addr.getHostAddress();
-    }
-
-    /**
-     * 获取主机名称
-     *
-     * @param addr 地址
-     * @return 主机名称
-     */
-    public static String getHostName(InetAddress addr) {
-        if (addr == null) {
-            return null;
-        }
-        return addr.getHostName();
-    }
-
-    /**
-     * 获取所有主机ip和名称
-     *
-     * @return key:ip value: name
-     */
-    public static Map<String, String> getAllHost() {
+    public static Map<String, String> getLocalHosts() {
         Map<String, String> result = new HashMap<>(16);
         try {
             InetAddress[] allAddress = InetAddress.getAllByName(getDefaultHostName());
@@ -317,16 +302,136 @@ public class IPs {
     }
 
     /**
-     * 获取所有主机地址
+     * 检测IP是否能ping通
      *
-     * @return key:ip value: name
+     * @param ip IP地址
+     * @return 是否ping通
      */
-    public static List<InetAddress> getAllInetAddress() {
+    public static boolean ping(String ip) {
+        return ping(ip, 500);
+    }
+
+    /**
+     * 检测IP是否能ping通
+     *
+     * @param ip      IP地址
+     * @param timeout 超时时间
+     * @return 是否ping通
+     */
+    public static boolean ping(String ip, int timeout) {
         try {
-            return Lists.of(InetAddress.getAllByName(getDefaultHostName()));
+            return InetAddress.getByName(ip).isReachable(timeout);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * 获取主机默认网卡信息
+     *
+     * @return 网卡信息
+     */
+    public static NetworkInterface getDefaultNetwork() {
+        try {
+            return NetworkInterface.getByInetAddress(InetAddress.getLocalHost());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * 获取网卡
+     *
+     * @param networkName 网卡名称 linux: 默认eth0
+     * @return 网卡
+     */
+    public static NetworkInterface getNetworkByName(String networkName) {
+        try {
+            return NetworkInterface.getByName(networkName);
+        } catch (SocketException e) {
+            return null;
+        }
+    }
+
+    /**
+     * 获取网卡ip地址
+     *
+     * @param networkName 网卡名称 linux: 默认eth0
+     * @return ip地址
+     */
+    public static List<String> getNetworkAddresses(String networkName) {
+        try {
+            NetworkInterface networkInterface = NetworkInterface.getByName(networkName);
+            return networkInterface.getInterfaceAddresses()
+                    .stream()
+                    .map(s -> s.getAddress().getHostAddress())
+                    .map(s -> s.contains("%") ? s.split("%")[0] : s)
+                    .collect(Collectors.toList());
+        } catch (SocketException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * 获取网卡名称
+     *
+     * @return 网卡名称
+     */
+    public static List<String> getNetworkNames() {
+        try {
+            return Lists.as(NetworkInterface.getNetworkInterfaces())
+                    .stream()
+                    .map(NetworkInterface::getName)
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             return new ArrayList<>();
         }
+    }
+
+    /**
+     * 获得地址信息中的MAC地址 (本-机)
+     *
+     * @param address address
+     * @return MAC地址
+     */
+    public static String getMacAddress(InetAddress address) {
+        if (null == address) {
+            return null;
+        }
+        try {
+            byte[] mac = NetworkInterface.getByInetAddress(address).getHardwareAddress();
+            final StringBuilder sb = new StringBuilder();
+            String s;
+            for (int i = 0; i < mac.length; i++) {
+                if (i != 0) {
+                    sb.append(':');
+                }
+                s = Integer.toHexString(mac[i] & 0xFF);
+                sb.append(s.length() == 1 ? 0 + s : s);
+            }
+            return sb.toString();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * 创建 InetSocketAddress
+     *
+     * @param port 0系统分配临时端口
+     */
+    public static InetSocketAddress createAddress(int port) {
+        return new InetSocketAddress(port);
+    }
+
+    /**
+     * 创建 InetSocketAddress
+     *
+     * @param host 域名/IP地址 null任意
+     * @param port 0系统分配临时端口
+     */
+    public static InetSocketAddress createAddress(String host, int port) {
+        return Strings.isBlank(host) ? new InetSocketAddress(port) : new InetSocketAddress(host, port);
     }
 
 }
