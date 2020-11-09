@@ -1,8 +1,8 @@
 package com.orion.utils.time;
 
-import com.orion.utils.Converts;
 import com.orion.utils.Strings;
 import com.orion.utils.Valid;
+import com.orion.utils.convert.Converts;
 import com.orion.utils.time.format.FastDateFormat;
 
 import java.time.*;

@@ -1,6 +1,5 @@
 package com.orion.dom;
 
-import com.orion.utils.Converts;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.collect.Lists;
@@ -79,9 +78,9 @@ class DomBeanWrapper {
             List es = e.elements();
             String eName = e.getName();
             if (Lists.isEmpty(es)) {
-                normMap.merge(eName, 1, (a, b) -> a + b);
+                normMap.merge(eName, 1, Integer::sum);
             } else {
-                childMap.merge(eName, 1, (a, b) -> a + b);
+                childMap.merge(eName, 1, Integer::sum);
             }
         }
         for (Map.Entry<String, Integer> entry : normMap.entrySet()) {
@@ -138,7 +137,7 @@ class DomBeanWrapper {
                     }
                     if (paramValue == null) {
                         try {
-                            paramValue = Converts.convert(element.element(entry.getKey()).getStringValue(), String.class);
+                            paramValue = element.element(entry.getKey()).getStringValue();
                         } catch (Exception e) {
                             Exceptions.printStacks(e);
                         }

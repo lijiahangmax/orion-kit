@@ -1,11 +1,7 @@
-package com.orion.utils;
+package com.orion.utils.convert;
 
 import com.orion.function.Conversion;
-import com.orion.lang.collect.MultiConcurrentHashMap;
-import com.orion.lang.wrapper.Pair;
-import com.orion.utils.math.BigDecimals;
-import com.orion.utils.math.BigIntegers;
-import com.orion.utils.reflect.Classes;
+import com.orion.utils.*;
 import com.orion.utils.time.Dates;
 
 import java.math.BigDecimal;
@@ -13,10 +9,6 @@ import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.function.IntFunction;
 
 /**
  * 转化对象类型
@@ -31,293 +23,23 @@ public class Converts {
     private Converts() {
     }
 
-    private static final MultiConcurrentHashMap<Class<?>, Class<?>, Conversion> CONVERT_MULTI_MAP = new MultiConcurrentHashMap<>();
-
-    private static final ConcurrentHashMap<Pair<Class<?>, Class<?>>, Boolean> IMPL_MAP = new ConcurrentHashMap<>();
-
-    private static boolean loadByte, loadShort, loadInt, loadLong, loadFloat, loadDouble, loadBoolean, loadChar, loadString;
-
-    private static final Conversion TO_BYTE = Converts::toByte, TO_SHORT = Converts::toShort, TO_INT = Converts::toInt, TO_LONG = Converts::toLong,
-            TO_FLOAT = Converts::toFloat, TO_DOUBLE = Converts::toDouble, TO_BOOLEAN = Converts::toBoolean, TO_CHAR = Converts::toChar,
-            TO_BIG_DECIMAL = BigDecimals::toBigDecimal, TO_BIG_INTEGER = BigIntegers::toBigInteger,
-            TO_DATE = Dates::date, TO_LOCAL_DATE_TIME = Dates::localDateTime, TO_LOCAL_DATE = Dates::localDate,
-            TO_STRING = Converts::toString;
-
     // -------------------- convert --------------------
 
+    public static <T, R> R to(T t, Class<R> targetClass) {
+        return TypeStore.STORE.to(t, targetClass);
+    }
+
     /**
-     * 将原对象转为目标对象
-     * 默认只提供基本类型转化
+     * 转化
      *
-     * @param t   原对象
-     * @param rc  目标对象class
+     * @param t   原始值
+     * @param f   函数
      * @param <T> ignore
      * @param <R> ignore
-     * @return R
-     */
-    public static <T, R> R convert(T t, Class<R> rc) {
-        if (t == null || rc == null) {
-            return null;
-        }
-        Class<?> tc = t.getClass();
-        if (rc.equals(Object.class) || rc.equals(tc)) {
-            return (R) t;
-        }
-        boolean check = false;
-        if (Classes.isBaseClass(rc)) {
-            check = true;
-            rc = (Class<R>) Classes.getWrapClass(rc);
-        }
-        if (check && rc.equals(tc)) {
-            return (R) t;
-        }
-        if (checkImpl(rc, tc)) {
-            return (R) t;
-        }
-        Map<Class<?>, Conversion> conversionMap = getConversion(tc);
-        if (conversionMap == null) {
-            throw Exceptions.convert(Strings.format("Unable to convert source [{}] class to target [{}] class", tc, rc));
-        }
-        Conversion conversion = conversionMap.get(rc);
-        if (conversion == null) {
-            throw Exceptions.convert(Strings.format("Unable to convert source [{}] class to target [{}] class", tc, rc));
-        }
-        Object apply = conversion.apply(t);
-        return apply == null ? null : (R) apply;
-    }
-
-    /**
-     * 检查target是否为require的实现类
-     *
-     * @param require ignore
-     * @param target  ignore
-     * @return ignore
-     */
-    private static boolean checkImpl(Class<?> require, Class<?> target) {
-        Pair<Class<?>, Class<?>> e = new Pair<>(require, target);
-        Boolean b = IMPL_MAP.get(e);
-        if (b == null) {
-            boolean i = Classes.isImplClass(require, target);
-            IMPL_MAP.put(e, i);
-            return i;
-        } else {
-            return b;
-        }
-    }
-
-    /**
-     * 转化
-     *
-     * @param i   原始值
-     * @param f   函数
-     * @param <I> ignore
-     * @param <O> ignore
      * @return 新值
      */
-    public static <I, O> O convert(I i, Function<I, O> f) {
-        return f.apply(i);
-    }
-
-    /**
-     * 转化
-     *
-     * @param i   原始值
-     * @param f   函数
-     * @param <I> ignore
-     * @param <O> ignore
-     * @return 新值
-     */
-    public static <I, O> O[] converts(I[] i, Function<I[], O[]> f) {
-        return f.apply(i);
-    }
-
-    /**
-     * 转化
-     *
-     * @param f         函数
-     * @param generator e.g. Integer[]::new
-     * @param is        原始值
-     * @param <I>       ignore
-     * @param <O>       ignore
-     * @return 新值
-     */
-    public static <I, O> O[] converts(Function<I, O> f, IntFunction<O[]> generator, I[] is) {
-        int len = Arrays1.length(is);
-        O[] os = generator.apply(len);
-        for (int i = 0; i < len; i++) {
-            os[i] = f.apply(is[i]);
-        }
-        return os;
-    }
-
-    // -------------------- Conversion lazy load --------------------
-
-    /**
-     * 添加一个类型转换器
-     *
-     * @param tc  原对象 class
-     * @param rc  目标对象 class
-     * @param c   Conversion
-     * @param <T> ignore
-     * @param <R> ignore
-     */
-    private static <T, R> void addConversion(Class<T> tc, Class<R> rc, Conversion<T, R> c) {
-        CONVERT_MULTI_MAP.put(tc, rc, c);
-    }
-
-    private static Map<Class<?>, Conversion> getConversion(Class<?> tc) {
-        if (tc.equals(Byte.class) && !loadByte) {
-            lazyLoadByte();
-        } else if (tc.equals(Short.class) && !loadShort) {
-            lazyLoadShort();
-        } else if (tc.equals(Integer.class) && !loadInt) {
-            lazyLoadInt();
-        } else if (tc.equals(Long.class) && !loadLong) {
-            lazyLoadLong();
-        } else if (tc.equals(Float.class) && !loadFloat) {
-            lazyLoadFloat();
-        } else if (tc.equals(Double.class) && !loadDouble) {
-            lazyLoadDouble();
-        } else if (tc.equals(Boolean.class) && !loadBoolean) {
-            lazyLoadBoolean();
-        } else if (tc.equals(Character.class) && !loadChar) {
-            lazyLoadChar();
-        } else if (tc.equals(String.class) && !loadString) {
-            lazyLoadString();
-        }
-        return CONVERT_MULTI_MAP.get(tc);
-    }
-
-    private static void lazyLoadByte() {
-        loadByte = true;
-        CONVERT_MULTI_MAP.put(Byte.class, Short.class, TO_SHORT);
-        CONVERT_MULTI_MAP.put(Byte.class, Integer.class, TO_INT);
-        CONVERT_MULTI_MAP.put(Byte.class, Long.class, TO_LONG);
-        CONVERT_MULTI_MAP.put(Byte.class, Float.class, TO_FLOAT);
-        CONVERT_MULTI_MAP.put(Byte.class, Double.class, TO_DOUBLE);
-        CONVERT_MULTI_MAP.put(Byte.class, Boolean.class, TO_BOOLEAN);
-        CONVERT_MULTI_MAP.put(Byte.class, Character.class, TO_CHAR);
-        CONVERT_MULTI_MAP.put(Byte.class, BigDecimal.class, TO_BIG_DECIMAL);
-        CONVERT_MULTI_MAP.put(Byte.class, BigInteger.class, TO_BIG_INTEGER);
-        CONVERT_MULTI_MAP.put(Byte.class, String.class, TO_STRING);
-    }
-
-    private static void lazyLoadShort() {
-        loadShort = true;
-        CONVERT_MULTI_MAP.put(Short.class, Byte.class, TO_BYTE);
-        CONVERT_MULTI_MAP.put(Short.class, Integer.class, TO_INT);
-        CONVERT_MULTI_MAP.put(Short.class, Long.class, TO_LONG);
-        CONVERT_MULTI_MAP.put(Short.class, Float.class, TO_FLOAT);
-        CONVERT_MULTI_MAP.put(Short.class, Double.class, TO_DOUBLE);
-        CONVERT_MULTI_MAP.put(Short.class, Boolean.class, TO_BOOLEAN);
-        CONVERT_MULTI_MAP.put(Short.class, Character.class, TO_CHAR);
-        CONVERT_MULTI_MAP.put(Short.class, BigDecimal.class, TO_BIG_DECIMAL);
-        CONVERT_MULTI_MAP.put(Short.class, BigInteger.class, TO_BIG_INTEGER);
-        CONVERT_MULTI_MAP.put(Short.class, String.class, TO_STRING);
-    }
-
-    private static void lazyLoadInt() {
-        loadInt = true;
-        CONVERT_MULTI_MAP.put(Integer.class, Byte.class, TO_BYTE);
-        CONVERT_MULTI_MAP.put(Integer.class, Short.class, TO_SHORT);
-        CONVERT_MULTI_MAP.put(Integer.class, Long.class, TO_LONG);
-        CONVERT_MULTI_MAP.put(Integer.class, Float.class, TO_FLOAT);
-        CONVERT_MULTI_MAP.put(Integer.class, Double.class, TO_DOUBLE);
-        CONVERT_MULTI_MAP.put(Integer.class, Boolean.class, TO_BOOLEAN);
-        CONVERT_MULTI_MAP.put(Integer.class, Character.class, TO_CHAR);
-        CONVERT_MULTI_MAP.put(Integer.class, BigDecimal.class, TO_BIG_DECIMAL);
-        CONVERT_MULTI_MAP.put(Integer.class, BigInteger.class, TO_BIG_INTEGER);
-        CONVERT_MULTI_MAP.put(Integer.class, String.class, TO_STRING);
-    }
-
-    private static void lazyLoadLong() {
-        loadLong = true;
-        CONVERT_MULTI_MAP.put(Long.class, Byte.class, TO_BYTE);
-        CONVERT_MULTI_MAP.put(Long.class, Short.class, TO_SHORT);
-        CONVERT_MULTI_MAP.put(Long.class, Integer.class, TO_INT);
-        CONVERT_MULTI_MAP.put(Long.class, Float.class, TO_FLOAT);
-        CONVERT_MULTI_MAP.put(Long.class, Double.class, TO_DOUBLE);
-        CONVERT_MULTI_MAP.put(Long.class, Boolean.class, TO_BOOLEAN);
-        CONVERT_MULTI_MAP.put(Long.class, Character.class, TO_CHAR);
-        CONVERT_MULTI_MAP.put(Long.class, BigDecimal.class, TO_BIG_DECIMAL);
-        CONVERT_MULTI_MAP.put(Long.class, BigInteger.class, TO_BIG_INTEGER);
-        CONVERT_MULTI_MAP.put(Long.class, String.class, TO_STRING);
-        CONVERT_MULTI_MAP.put(Long.class, Date.class, TO_DATE);
-        CONVERT_MULTI_MAP.put(Long.class, LocalDateTime.class, TO_LOCAL_DATE_TIME);
-        CONVERT_MULTI_MAP.put(Long.class, LocalDate.class, TO_LOCAL_DATE);
-    }
-
-    private static void lazyLoadFloat() {
-        loadFloat = true;
-        CONVERT_MULTI_MAP.put(Float.class, Byte.class, TO_BYTE);
-        CONVERT_MULTI_MAP.put(Float.class, Short.class, TO_SHORT);
-        CONVERT_MULTI_MAP.put(Float.class, Integer.class, TO_INT);
-        CONVERT_MULTI_MAP.put(Float.class, Long.class, TO_LONG);
-        CONVERT_MULTI_MAP.put(Float.class, Double.class, TO_DOUBLE);
-        CONVERT_MULTI_MAP.put(Float.class, Boolean.class, TO_BOOLEAN);
-        CONVERT_MULTI_MAP.put(Float.class, Character.class, TO_CHAR);
-        CONVERT_MULTI_MAP.put(Float.class, BigDecimal.class, TO_BIG_DECIMAL);
-        CONVERT_MULTI_MAP.put(Float.class, BigInteger.class, TO_BIG_INTEGER);
-        CONVERT_MULTI_MAP.put(Float.class, String.class, TO_STRING);
-    }
-
-    private static void lazyLoadDouble() {
-        loadDouble = true;
-        CONVERT_MULTI_MAP.put(Double.class, Byte.class, TO_BYTE);
-        CONVERT_MULTI_MAP.put(Double.class, Short.class, TO_SHORT);
-        CONVERT_MULTI_MAP.put(Double.class, Integer.class, TO_INT);
-        CONVERT_MULTI_MAP.put(Double.class, Long.class, TO_LONG);
-        CONVERT_MULTI_MAP.put(Double.class, Float.class, TO_FLOAT);
-        CONVERT_MULTI_MAP.put(Double.class, Boolean.class, TO_BOOLEAN);
-        CONVERT_MULTI_MAP.put(Double.class, Character.class, TO_CHAR);
-        CONVERT_MULTI_MAP.put(Double.class, BigDecimal.class, TO_BIG_DECIMAL);
-        CONVERT_MULTI_MAP.put(Double.class, BigInteger.class, TO_BIG_INTEGER);
-        CONVERT_MULTI_MAP.put(Double.class, String.class, TO_STRING);
-    }
-
-    private static void lazyLoadBoolean() {
-        loadBoolean = true;
-        CONVERT_MULTI_MAP.put(Boolean.class, Byte.class, TO_BYTE);
-        CONVERT_MULTI_MAP.put(Boolean.class, Short.class, TO_SHORT);
-        CONVERT_MULTI_MAP.put(Boolean.class, Integer.class, TO_INT);
-        CONVERT_MULTI_MAP.put(Boolean.class, Long.class, TO_LONG);
-        CONVERT_MULTI_MAP.put(Boolean.class, Float.class, TO_FLOAT);
-        CONVERT_MULTI_MAP.put(Boolean.class, Double.class, TO_DOUBLE);
-        CONVERT_MULTI_MAP.put(Boolean.class, Character.class, TO_CHAR);
-        CONVERT_MULTI_MAP.put(Boolean.class, BigDecimal.class, TO_BIG_DECIMAL);
-        CONVERT_MULTI_MAP.put(Boolean.class, BigInteger.class, TO_BIG_INTEGER);
-        CONVERT_MULTI_MAP.put(Boolean.class, String.class, TO_STRING);
-    }
-
-    private static void lazyLoadChar() {
-        loadChar = true;
-        CONVERT_MULTI_MAP.put(Character.class, Byte.class, TO_BYTE);
-        CONVERT_MULTI_MAP.put(Character.class, Short.class, TO_SHORT);
-        CONVERT_MULTI_MAP.put(Character.class, Integer.class, TO_INT);
-        CONVERT_MULTI_MAP.put(Character.class, Long.class, TO_LONG);
-        CONVERT_MULTI_MAP.put(Character.class, Float.class, TO_FLOAT);
-        CONVERT_MULTI_MAP.put(Character.class, Double.class, TO_DOUBLE);
-        CONVERT_MULTI_MAP.put(Character.class, Boolean.class, TO_BOOLEAN);
-        CONVERT_MULTI_MAP.put(Character.class, BigDecimal.class, TO_BIG_DECIMAL);
-        CONVERT_MULTI_MAP.put(Character.class, BigInteger.class, TO_BIG_INTEGER);
-        CONVERT_MULTI_MAP.put(Character.class, String.class, TO_STRING);
-    }
-
-    private static void lazyLoadString() {
-        loadString = true;
-        CONVERT_MULTI_MAP.put(String.class, Byte.class, TO_BYTE);
-        CONVERT_MULTI_MAP.put(String.class, Short.class, TO_SHORT);
-        CONVERT_MULTI_MAP.put(String.class, Integer.class, TO_INT);
-        CONVERT_MULTI_MAP.put(String.class, Long.class, TO_LONG);
-        CONVERT_MULTI_MAP.put(String.class, Float.class, TO_FLOAT);
-        CONVERT_MULTI_MAP.put(String.class, Double.class, TO_DOUBLE);
-        CONVERT_MULTI_MAP.put(String.class, Boolean.class, TO_BOOLEAN);
-        CONVERT_MULTI_MAP.put(String.class, Character.class, TO_CHAR);
-        CONVERT_MULTI_MAP.put(String.class, BigDecimal.class, TO_BIG_DECIMAL);
-        CONVERT_MULTI_MAP.put(String.class, BigInteger.class, TO_BIG_INTEGER);
-        CONVERT_MULTI_MAP.put(String.class, Date.class, TO_DATE);
-        CONVERT_MULTI_MAP.put(String.class, LocalDateTime.class, TO_LOCAL_DATE_TIME);
-        CONVERT_MULTI_MAP.put(String.class, LocalDate.class, TO_LOCAL_DATE);
+    public static <T, R> R to(T t, Conversion<T, R> f) {
+        return f.apply(t);
     }
 
     // -------------------- toString --------------------

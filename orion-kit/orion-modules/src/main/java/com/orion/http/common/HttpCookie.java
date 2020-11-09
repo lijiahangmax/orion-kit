@@ -1,8 +1,8 @@
 package com.orion.http.common;
 
 import com.orion.lang.collect.MutableHashMap;
-import com.orion.utils.Converts;
 import com.orion.utils.Valid;
+import com.orion.utils.convert.Converts;
 import com.orion.utils.time.Dates;
 
 import java.io.Serializable;
@@ -76,7 +76,7 @@ public class HttpCookie implements Serializable {
         cookie = cookie.trim();
         int cookieIndex = cookie.toLowerCase().indexOf("cookie:");
         if (cookieIndex != -1) {
-            cookie = cookie.substring(cookieIndex + 7, cookie.length());
+            cookie = cookie.substring(cookieIndex + 7);
         }
         String[] entities = cookie.split(";");
         for (String entity : entities) {

@@ -1,5 +1,7 @@
 package com.orion.function;
 
+import java.util.function.Function;
+
 /**
  * 转化接口
  *
@@ -17,5 +19,17 @@ public interface Conversion<T, R> {
      * @return R
      */
     R apply(T t);
+
+    /**
+     * Function -> Conversion
+     *
+     * @param f   Function
+     * @param <T> T
+     * @param <R> R
+     * @return Conversion
+     */
+    static <T, R> Conversion<T, R> with(Function<T, R> f) {
+        return f::apply;
+    }
 
 }

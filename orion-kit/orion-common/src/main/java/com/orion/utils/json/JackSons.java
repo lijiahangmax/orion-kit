@@ -140,14 +140,14 @@ public class JackSons {
      * json -> object
      *
      * @param json           json
-     * @param ownClass       class
+     * @param rawClass       class
      * @param genericClasses 泛型class
      * @param <T>            T
      * @return T
      */
-    public static <T> T toObject(String json, Class<?> ownClass, Class<?>... genericClasses) {
+    public static <T> T toObject(String json, Class<?> rawClass, Class<?>... genericClasses) {
         try {
-            return MapperInstant.objectMapper.readValue(json, getJavaType(ownClass, genericClasses));
+            return MapperInstant.objectMapper.readValue(json, getJavaType(rawClass, genericClasses));
         } catch (Exception e) {
             return null;
         }
@@ -156,12 +156,12 @@ public class JackSons {
     /**
      * 获取带泛型的类型
      *
-     * @param ownClass       class
+     * @param rawClass       class
      * @param genericClasses 泛型class
      * @return JavaType
      */
-    public static JavaType getJavaType(Class<?> ownClass, Class<?>... genericClasses) {
-        return MapperInstant.objectMapper.getTypeFactory().constructParametricType(ownClass, genericClasses);
+    public static JavaType getJavaType(Class<?> rawClass, Class<?>... genericClasses) {
+        return MapperInstant.objectMapper.getTypeFactory().constructParametricType(rawClass, genericClasses);
     }
 
 }

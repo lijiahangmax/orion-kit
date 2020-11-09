@@ -126,13 +126,13 @@ public class Gsons {
      * json -> object
      *
      * @param json           json
-     * @param ownClass       class
+     * @param rawClass       class
      * @param genericClasses 泛型class
      * @param <T>            T
      * @return T
      */
-    public static <T> T toObject(String json, Class<?> ownClass, Class<?>... genericClasses) {
-        return GsonInstant.gson.fromJson(json, TypeToken.getParameterized(ownClass, genericClasses).getType());
+    public static <T> T toObject(String json, Class<?> rawClass, Class<?>... genericClasses) {
+        return GsonInstant.gson.fromJson(json, TypeToken.getParameterized(rawClass, genericClasses).getType());
     }
 
 }
