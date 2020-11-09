@@ -296,11 +296,11 @@ public class Streams {
         transfer(in, output);
     }
 
-    public static void transfer(InputStream input, Writer output, String chaset) throws IOException {
-        if (chaset == null) {
+    public static void transfer(InputStream input, Writer output, String charset) throws IOException {
+        if (charset == null) {
             transfer(input, output);
         } else {
-            InputStreamReader in = new InputStreamReader(input, chaset);
+            InputStreamReader in = new InputStreamReader(input, charset);
             transfer(in, output);
         }
     }
@@ -330,11 +330,11 @@ public class Streams {
         out.flush();
     }
 
-    public static void transfer(Reader input, OutputStream output, String chaset) throws IOException {
-        if (chaset == null) {
+    public static void transfer(Reader input, OutputStream output, String charset) throws IOException {
+        if (charset == null) {
             transfer(input, output);
         } else {
-            OutputStreamWriter out = new OutputStreamWriter(output, chaset);
+            OutputStreamWriter out = new OutputStreamWriter(output, charset);
             transfer(input, out);
             out.flush();
         }
@@ -346,11 +346,11 @@ public class Streams {
         return readLines(new InputStreamReader(input));
     }
 
-    public static List readLines(InputStream input, String chaset) throws IOException {
-        if (chaset == null) {
+    public static List readLines(InputStream input, String charset) throws IOException {
+        if (charset == null) {
             return readLines(input);
         } else {
-            return readLines(new InputStreamReader(input, chaset));
+            return readLines(new InputStreamReader(input, charset));
         }
     }
 
@@ -379,12 +379,12 @@ public class Streams {
         }
     }
 
-    public static void write(byte[] data, Writer output, String chaset) throws IOException {
+    public static void write(byte[] data, Writer output, String charset) throws IOException {
         if (data != null) {
-            if (chaset == null) {
+            if (charset == null) {
                 output.write(new String(data));
             } else {
-                output.write(new String(data, chaset));
+                output.write(new String(data, charset));
             }
         }
     }
@@ -401,9 +401,9 @@ public class Streams {
         }
     }
 
-    public static void write(char[] data, OutputStream output, String chaset) throws IOException {
+    public static void write(char[] data, OutputStream output, String charset) throws IOException {
         if (data != null) {
-            if (chaset == null) {
+            if (charset == null) {
                 output.write(Strings.bytes(new String(data)));
             } else {
                 output.write(Strings.bytes(new String(data)));
@@ -423,12 +423,12 @@ public class Streams {
         }
     }
 
-    public static void write(String data, OutputStream output, String chaset) throws IOException {
+    public static void write(String data, OutputStream output, String charset) throws IOException {
         if (data != null) {
-            if (chaset == null) {
+            if (charset == null) {
                 output.write(Strings.bytes(data));
             } else {
-                output.write(Strings.bytes(data, chaset));
+                output.write(Strings.bytes(data, charset));
             }
         }
     }
@@ -502,9 +502,9 @@ public class Streams {
         return output.toByteArray();
     }
 
-    public static byte[] toByteArray(Reader input, String chaset) throws IOException {
+    public static byte[] toByteArray(Reader input, String charset) throws IOException {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
-        transfer(input, output, chaset);
+        transfer(input, output, charset);
         return output.toByteArray();
     }
 
@@ -514,9 +514,9 @@ public class Streams {
         return output.toCharArray();
     }
 
-    public static char[] toCharArray(InputStream is, String chaset) throws IOException {
+    public static char[] toCharArray(InputStream is, String charset) throws IOException {
         CharArrayWriter output = new CharArrayWriter();
-        transfer(is, output, chaset);
+        transfer(is, output, charset);
         return output.toCharArray();
     }
 
@@ -532,9 +532,9 @@ public class Streams {
         return sw.toString();
     }
 
-    public static String toString(InputStream input, String chaset) throws IOException {
+    public static String toString(InputStream input, String charset) throws IOException {
         StringWriter sw = new StringWriter();
-        transfer(input, sw, chaset);
+        transfer(input, sw, charset);
         return sw.toString();
     }
 
@@ -548,11 +548,11 @@ public class Streams {
         return new String(input);
     }
 
-    public static String toString(byte[] input, String chaset) throws IOException {
-        if (chaset == null) {
+    public static String toString(byte[] input, String charset) throws IOException {
+        if (charset == null) {
             return new String(input);
         } else {
-            return new String(input, chaset);
+            return new String(input, charset);
         }
     }
 
@@ -570,9 +570,49 @@ public class Streams {
         return new ByteArrayInputStream(Strings.bytes(input));
     }
 
-    public static InputStream toInputStream(String input, String chaset) throws IOException {
-        byte[] bytes = chaset != null ? Strings.bytes(input, chaset) : Strings.bytes(input);
+    public static InputStream toInputStream(String input, String charset) {
+        byte[] bytes = charset != null ? Strings.bytes(input, charset) : Strings.bytes(input);
         return new ByteArrayInputStream(bytes);
+    }
+
+    public static OutputStream toOutputStream(byte[] bs) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            out.write(bs);
+        } catch (Exception e) {
+            // ignore
+        }
+        return out;
+    }
+
+    public static OutputStream toOutputStream(byte[] bs, int off, int len) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            out.write(bs, off, len);
+        } catch (Exception e) {
+            // ignore
+        }
+        return out;
+    }
+
+    public static OutputStream toOutputStream(String input) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            out.write(Strings.bytes(input));
+        } catch (Exception e) {
+            // ignore
+        }
+        return out;
+    }
+
+    public static OutputStream toOutputStream(String input, String charset) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            out.write(charset != null ? Strings.bytes(input, charset) : Strings.bytes(input));
+        } catch (Exception e) {
+            // ignore
+        }
+        return out;
     }
 
     // -------------------------------- 签名 --------------------------------
@@ -669,13 +709,13 @@ public class Streams {
         }
     }
 
-    public static void lineConsumer(InputStream in, String chaset, Consumer<String> c) throws IOException {
-        if (chaset == null) {
+    public static void lineConsumer(InputStream in, String charset, Consumer<String> c) throws IOException {
+        if (charset == null) {
             lineConsumer(in, c);
             return;
         }
         try {
-            lineConsumer(new InputStreamReader(in, chaset), c);
+            lineConsumer(new InputStreamReader(in, charset), c);
         } catch (UnsupportedEncodingException e) {
             throw Exceptions.unCoding();
         }

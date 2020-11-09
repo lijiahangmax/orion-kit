@@ -19,7 +19,6 @@ public class Tests {
     public static void main(String[] args) throws Exception {
         StopWatch w = StopWatch.begin();
 
-
         w.stop();
         System.out.println("\n\n\n\n\n" + w);
     }

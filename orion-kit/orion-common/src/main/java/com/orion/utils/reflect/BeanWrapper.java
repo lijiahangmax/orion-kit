@@ -33,51 +33,29 @@ public class BeanWrapper {
     private BeanWrapper() {
     }
 
-    /**
-     * Bean -> Map
-     *
-     * @param bean bean
-     * @param <T>  bean
-     * @return Map
-     */
-    public static <T> Map<String, Object> toMap(T bean) {
-        return toMap(bean, null, false);
+    public static <T> Map<String, Object> toMap(T bean, String... ignoreFields) {
+        return toMap(bean, null, false, ignoreFields);
+    }
+
+    public static <T> Map<String, Object> toMap(T bean, boolean putNull, String... ignoreFields) {
+        return toMap(bean, null, putNull, ignoreFields);
+    }
+
+    public static <T> Map<String, Object> toMap(T bean, Map<String, String> fieldMapper, String... ignoreFields) {
+        return toMap(bean, fieldMapper, false, ignoreFields);
     }
 
     /**
      * Bean -> Map
      *
-     * @param bean    bean
-     * @param putNull 为空是否添加
-     * @param <T>     bean
+     * @param bean         bean
+     * @param fieldMapper  map key: beanField  value: mapKey
+     * @param putNull      为空是否添加
+     * @param ignoreFields 跳过的字段
+     * @param <T>          bean
      * @return Map
      */
-    public static <T> Map<String, Object> toMap(T bean, boolean putNull) {
-        return toMap(bean, null, putNull);
-    }
-
-    /**
-     * Bean -> Map
-     *
-     * @param bean     bean
-     * @param fieldMap map key: beanField  value: mapKey
-     * @param <T>      bean
-     * @return Map
-     */
-    public static <T> Map<String, Object> toMap(T bean, Map<String, String> fieldMap) {
-        return toMap(bean, fieldMap, false);
-    }
-
-    /**
-     * Bean -> Map
-     *
-     * @param bean     bean
-     * @param fieldMap map key: beanField  value: mapKey
-     * @param putNull  为空是否添加
-     * @param <T>      bean
-     * @return Map
-     */
-    public static <T> Map<String, Object> toMap(T bean, Map<String, String> fieldMap, boolean putNull) {
+    public static <T> Map<String, Object> toMap(T bean, Map<String, String> fieldMapper, boolean putNull, String... ignoreFields) {
         Map<String, Object> map = new HashMap<>();
         if (bean == null) {
             return map;
@@ -85,11 +63,14 @@ public class BeanWrapper {
         List<Method> getterMethods = getAllGetterMethod(bean.getClass());
         for (Method getterMethod : getterMethods) {
             String fieldName = Fields.getFieldNameByMethodName(getterMethod.getName());
-            if (fieldMap != null) {
-                String s = fieldMap.get(fieldName);
+            if (fieldMapper != null) {
+                String s = fieldMapper.get(fieldName);
                 if (s != null) {
                     fieldName = s;
                 }
+            }
+            if (isIgnore(fieldName, ignoreFields)) {
+                continue;
             }
             Object o = Methods.invokeMethod(bean, getterMethod);
             if (o == null) {
@@ -103,31 +84,24 @@ public class BeanWrapper {
         return map;
     }
 
-    /**
-     * [] -> Map
-     *
-     * @param values   数组
-     * @param fieldMap 数组索引对应的字段
-     * @return Map
-     */
-    public static <T> Map<String, T> toMap(T[] values, Map<Integer, String> fieldMap) {
-        return toMap(values, fieldMap, false);
+    public static <T> Map<String, T> toMap(T[] values, Map<Integer, String> indexMapper) {
+        return toMap(values, indexMapper, false);
     }
 
     /**
      * [] -> Map
      *
-     * @param values   数组
-     * @param fieldMap 数组索引对应的字段
-     * @param putNull  为空是否添加
+     * @param values      数组
+     * @param indexMapper 数组索引对应的名称
+     * @param putNull     为空是否添加
      * @return Map
      */
-    public static <T> Map<String, T> toMap(T[] values, Map<Integer, String> fieldMap, boolean putNull) {
+    public static <T> Map<String, T> toMap(T[] values, Map<Integer, String> indexMapper, boolean putNull) {
         Map<String, T> map = new HashMap<>();
         if (values == null) {
             return map;
         }
-        for (Map.Entry<Integer, String> entry : fieldMap.entrySet()) {
+        for (Map.Entry<Integer, String> entry : indexMapper.entrySet()) {
             Integer i = entry.getKey();
             if (i < values.length) {
                 T value = values[i];
@@ -145,14 +119,6 @@ public class BeanWrapper {
         return map;
     }
 
-    /**
-     * Map -> Bean
-     *
-     * @param map   map, key: Field  value: value
-     * @param clazz bean的class
-     * @param <T>   class
-     * @return bean
-     */
     public static <T> T toBean(Map<String, ?> map, Class<T> clazz) {
         return toBean(map, null, clazz);
     }
@@ -160,20 +126,20 @@ public class BeanWrapper {
     /**
      * Map -> Bean
      *
-     * @param map      map, key: Field  value: value
-     * @param fieldMap map, key: map的key value: Field
-     * @param clazz    bean的class
-     * @param <T>      class
+     * @param map         map, key: Field  value: value
+     * @param fieldMapper map, key: map的key value: field value可以多级映射
+     * @param clazz       bean的class
+     * @param <T>         class
      * @return bean
      */
-    public static <T> T toBean(Map<String, ?> map, Map<String, ?> fieldMap, Class<T> clazz) {
+    public static <T> T toBean(Map<String, ?> map, Map<String, ?> fieldMapper, Class<T> clazz) {
         T t = Constructors.newInstance(getConstructor(clazz));
         for (Map.Entry<String, ?> entry : map.entrySet()) {
             List<Method> setterMethods = getAllSetterMethod(clazz);
             String key = entry.getKey();
             Map<String, ?> keyMap = null;
-            if (fieldMap != null) {
-                Object field = fieldMap.get(key);
+            if (fieldMapper != null) {
+                Object field = fieldMapper.get(key);
                 if (field instanceof String) {
                     key = (String) field;
                 } else if (field instanceof Map) {
@@ -216,21 +182,21 @@ public class BeanWrapper {
     /**
      * [] -> Bean
      *
-     * @param values   数组
-     * @param fieldMap 数组索引对应的字段
-     * @param clazz    class
-     * @param <T>      T
+     * @param values      数组
+     * @param indexMapper 数组索引对应的字段
+     * @param clazz       class
+     * @param <T>         T
      * @return bean
      */
-    public static <T> T toBean(Object[] values, Map<Integer, String> fieldMap, Class<T> clazz) {
+    public static <T> T toBean(Object[] values, Map<Integer, String> indexMapper, Class<T> clazz) {
         T t = Constructors.newInstance(getConstructor(clazz));
-        for (Map.Entry<Integer, String> entry : fieldMap.entrySet()) {
+        for (Map.Entry<Integer, String> entry : indexMapper.entrySet()) {
             try {
-                Integer i = entry.getKey();
-                if (i < values.length) {
+                Integer index = entry.getKey();
+                if (index < values.length) {
                     Method setterMethod = getSetterMethod(clazz, entry.getValue());
                     Object[] valueArr = new Object[1];
-                    Object value = values[i];
+                    Object value = values[index];
                     Class<?> paramClass = setterMethod.getParameterTypes()[0];
                     Class<?> valueClass = value.getClass();
                     if (isImplClass(paramClass, valueClass)) {
@@ -261,14 +227,15 @@ public class BeanWrapper {
     /**
      * 复制属性
      *
-     * @param source      源对象
-     * @param targetClass 目标对象class
-     * @param <R>         R
-     * @param <T>         T
+     * @param source       源对象
+     * @param targetClass  目标对象class
+     * @param ignoreFields 忽略的属性
+     * @param <R>          R
+     * @param <T>          T
      * @return T
      */
-    public static <R, T> T copyProperties(R source, Class<T> targetClass) {
-        return copy(source, targetClass, null, null);
+    public static <R, T> T copyProperties(R source, Class<T> targetClass, String... ignoreFields) {
+        return copy(source, targetClass, null, ignoreFields);
     }
 
     /**
@@ -276,54 +243,13 @@ public class BeanWrapper {
      *
      * @param source      源对象
      * @param targetClass 目标对象class
-     * @param ignore      忽略的属性
+     * @param fieldMapper key: 源对象字段 value: 目标对象字段
      * @param <R>         R
      * @param <T>         T
      * @return T
      */
-    public static <R, T> T copyProperties(R source, Class<T> targetClass, String... ignore) {
-        return copy(source, targetClass, null, ignore);
-    }
-
-    /**
-     * 复制属性
-     *
-     * @param source      源对象
-     * @param targetClass 目标对象class
-     * @param fieldMap    key: 源对象字段 value: 目标对象字段
-     * @param <R>         R
-     * @param <T>         T
-     * @return T
-     */
-    public static <R, T> T copyProperties(R source, Class<T> targetClass, Map<String, String> fieldMap) {
-        return copy(source, targetClass, fieldMap, null);
-    }
-
-    /**
-     * 复制属性
-     *
-     * @param source      源对象
-     * @param targetClass 目标对象class
-     * @param fieldMap    key: 源对象字段 value: 目标对象字段
-     * @param <R>         R
-     * @param <T>         T
-     * @return T
-     */
-    public static <R, T> T copyProperties(R source, Class<T> targetClass, Map<String, String> fieldMap, String... ignore) {
-        return copy(source, targetClass, fieldMap, ignore);
-    }
-
-    /**
-     * 复制属性
-     *
-     * @param source 源对象
-     * @param target 目标对象
-     * @param <R>    R
-     * @param <T>    T
-     * @
-     */
-    public static <R, T> void copyProperties(R source, T target) {
-        copy(source, target, null, null);
+    public static <R, T> T copyProperties(R source, Class<T> targetClass, Map<String, String> fieldMapper, String... ignoreFields) {
+        return copy(source, targetClass, fieldMapper, ignoreFields);
     }
 
     /**
@@ -343,51 +269,38 @@ public class BeanWrapper {
     /**
      * 复制属性
      *
-     * @param source   源对象
-     * @param target   目标对象
-     * @param fieldMap key: 源对象字段 value: 目标对象字段
-     * @param <R>      R
-     * @param <T>      T
+     * @param source       源对象
+     * @param target       目标对象
+     * @param fieldMapper  key: 源对象字段 value: 目标对象字段
+     * @param ignoreFields 忽略的字段
+     * @param <R>          R
+     * @param <T>          T
      */
-    public static <R, T> void copyProperties(R source, T target, Map<String, String> fieldMap) {
-        copy(source, target, fieldMap, null);
+    public static <R, T> void copyProperties(R source, T target, Map<String, String> fieldMapper, String... ignoreFields) {
+        copy(source, target, fieldMapper, ignoreFields);
     }
 
-    /**
-     * 复制属性
-     *
-     * @param source   源对象
-     * @param target   目标对象
-     * @param fieldMap key: 源对象字段 value: 目标对象字段
-     * @param ignore   忽略的字段
-     * @param <R>      R
-     * @param <T>      T
-     */
-    public static <R, T> void copyProperties(R source, T target, Map<String, String> fieldMap, String... ignore) {
-        copy(source, target, fieldMap, ignore);
-    }
-
-    private static <R, T> T copy(R source, Class<T> targetClass, Map<String, String> fieldMap, String[] ignores) {
+    private static <R, T> T copy(R source, Class<T> targetClass, Map<String, String> fieldMapper, String[] ignoreFields) {
         Valid.notNull(source, "source object is null");
         Valid.notNull(targetClass, "target class is null");
         Constructor<T> constructor = getConstructor(targetClass);
         T target = Constructors.newInstance(constructor);
-        copy(source, target, fieldMap, ignores);
+        copy(source, target, fieldMapper, ignoreFields);
         return target;
     }
 
-    private static <R, T> void copy(R source, T target, Map<String, String> fieldMap, String[] ignores) {
+    private static <R, T> void copy(R source, T target, Map<String, String> fieldMapper, String[] ignoreFields) {
         Valid.notNull(source, "source object is null");
         Valid.notNull(target, "target object is null");
         List<Method> sourceGetters = getAllGetterMethod(source.getClass());
         List<Method> targetSetters = getAllSetterMethod(target.getClass());
         for (Method targetSetter : targetSetters) {
             String targetSetterName = targetSetter.getName();
-            String targetFieldName = Strings.firstLower(targetSetterName.substring(3, targetSetterName.length()));
-            if (isIgnore(targetFieldName, ignores)) {
+            String targetFieldName = Strings.firstLower(targetSetterName.substring(3));
+            if (isIgnore(targetFieldName, ignoreFields)) {
                 continue;
             }
-            String sourceFieldName = getFieldNameAlias(targetFieldName, fieldMap);
+            String sourceFieldName = getFieldNameAlias(targetFieldName, fieldMapper);
             for (Method sourceGetter : sourceGetters) {
                 if (Objects1.eq(Fields.getFieldNameByMethodName(sourceGetter.getName()), sourceFieldName)) {
                     try {
@@ -404,9 +317,16 @@ public class BeanWrapper {
         }
     }
 
-    private static boolean isIgnore(String name, String[] ignores) {
-        if (ignores != null) {
-            for (String ignore : ignores) {
+    /**
+     * 是否被忽略
+     *
+     * @param name         字段
+     * @param ignoreFields 忽略的字段
+     * @return true 被忽略
+     */
+    private static boolean isIgnore(String name, String[] ignoreFields) {
+        if (ignoreFields != null) {
+            for (String ignore : ignoreFields) {
                 if (ignore.equals(name)) {
                     return true;
                 }
@@ -415,9 +335,16 @@ public class BeanWrapper {
         return false;
     }
 
-    private static String getFieldNameAlias(String name, Map<String, String> fieldMap) {
-        if (fieldMap != null) {
-            for (Map.Entry<String, String> entry : fieldMap.entrySet()) {
+    /**
+     * 获取字段别名
+     *
+     * @param name        字段名
+     * @param fieldMapper 字段映射
+     * @return 别名
+     */
+    private static String getFieldNameAlias(String name, Map<String, String> fieldMapper) {
+        if (fieldMapper != null) {
+            for (Map.Entry<String, String> entry : fieldMapper.entrySet()) {
                 if (entry.getValue().equals(name)) {
                     return entry.getKey();
                 }
@@ -433,7 +360,7 @@ public class BeanWrapper {
      * @param argClass   argClass
      * @return true 是实现类或本类
      */
-    private static boolean isImplClass(Class paramClass, Class argClass) {
+    private static boolean isImplClass(Class<?> paramClass, Class<?> argClass) {
         if (paramClass.equals(argClass) || paramClass.equals(Object.class)) {
             return true;
         }
@@ -455,7 +382,7 @@ public class BeanWrapper {
      * @param clazz class
      * @return method
      */
-    private static List<Method> getAllSetterMethod(Class clazz) {
+    private static List<Method> getAllSetterMethod(Class<?> clazz) {
         List<Method> methodList = ALL_SET_METHOD_CACHE.get(clazz);
         if (methodList == null) {
             methodList = Methods.getAllSetterMethod(clazz);
@@ -470,7 +397,7 @@ public class BeanWrapper {
      * @param clazz class
      * @return method
      */
-    private static List<Method> getAllGetterMethod(Class clazz) {
+    private static List<Method> getAllGetterMethod(Class<?> clazz) {
         List<Method> methodList = ALL_GET_METHOD_CACHE.get(clazz);
         if (methodList == null) {
             methodList = Methods.getAllGetterMethod(clazz);
@@ -486,7 +413,7 @@ public class BeanWrapper {
      * @param fieldName fieldName
      * @return method
      */
-    private static Method getSetterMethod(Class clazz, String fieldName) {
+    private static Method getSetterMethod(Class<?> clazz, String fieldName) {
         String methodName = "set" + Strings.firstUpper(fieldName);
         Method method = METHOD_CACHE.get(clazz, methodName);
         if (method == null) {
@@ -497,7 +424,7 @@ public class BeanWrapper {
     }
 
     /**
-     * 获取无参方法
+     * 获取无参构造方法
      *
      * @param clazz class
      * @return constructor
