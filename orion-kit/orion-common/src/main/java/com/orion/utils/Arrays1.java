@@ -8,7 +8,6 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.IntFunction;
 
 /**
@@ -426,7 +425,7 @@ public class Arrays1 {
     public static <I, O> O[] mapper(Mapper<? super I, ? extends O> mapper, IntFunction<? extends O[]> generator, I... i) {
         int len = length(i);
         if (len == 0) {
-            throw new IllegalArgumentException("i... length is 0");
+            return generator.apply(0);
         }
         O[] oa = generator.apply(len);
         for (int j = 0; j < len; j++) {
@@ -1647,28 +1646,6 @@ public class Arrays1 {
     // ------------------ wrap ------------------
 
     /**
-     * 将一种数组转化为另一种数组
-     *
-     * @param w            数组
-     * @param wrapFunction 适配器
-     * @param generator    e.g. Integer[]::new
-     * @param <T>          ignore
-     * @param <R>          ignore
-     * @return 适配后的数组
-     */
-    public static <T, R> R[] wraps(T[] w, Function<T, R> wrapFunction, IntFunction<R[]> generator) {
-        int length = length(w);
-        if (length == 0) {
-            return generator.apply(0);
-        }
-        R[] n = generator.apply(length);
-        for (int i = 0; i < length; i++) {
-            n[i] = wrapFunction.apply(w[i]);
-        }
-        return n;
-    }
-
-    /**
      * 将数组转化为其包装类
      *
      * @param w 数组
@@ -1746,6 +1723,18 @@ public class Arrays1 {
         return n;
     }
 
+    public static Boolean[] wrap(boolean[] w) {
+        int length = length(w);
+        if (length == 0) {
+            return new Boolean[0];
+        }
+        Boolean[] n = new Boolean[length];
+        for (int i = 0; i < length; i++) {
+            n[i] = w[i];
+        }
+        return n;
+    }
+
     public static Character[] wrap(char[] w) {
         int length = length(w);
         if (length == 0) {
@@ -1758,16 +1747,28 @@ public class Arrays1 {
         return n;
     }
 
-    public static Boolean[] wrap(boolean[] w) {
-        int length = length(w);
-        if (length == 0) {
-            return new Boolean[0];
+    public static Object wrap(Object w) {
+        if (w == null) {
+            return null;
+        } else if (w instanceof byte[]) {
+            return wrap((byte[]) w);
+        } else if (w instanceof short[]) {
+            return wrap((short[]) w);
+        } else if (w instanceof int[]) {
+            return wrap((int[]) w);
+        } else if (w instanceof long[]) {
+            return wrap((long[]) w);
+        } else if (w instanceof float[]) {
+            return wrap((float[]) w);
+        } else if (w instanceof double[]) {
+            return wrap((double[]) w);
+        } else if (w instanceof boolean[]) {
+            return wrap((boolean[]) w);
+        } else if (w instanceof char[]) {
+            return wrap((char[]) w);
+        } else {
+            return w;
         }
-        Boolean[] n = new Boolean[length];
-        for (int i = 0; i < length; i++) {
-            n[i] = w[i];
-        }
-        return n;
     }
 
     // ------------------ drap ------------------
@@ -1850,6 +1851,18 @@ public class Arrays1 {
         return n;
     }
 
+    public static boolean[] drap(Boolean[] w) {
+        int length = length(w);
+        if (length == 0) {
+            return new boolean[0];
+        }
+        boolean[] n = new boolean[length];
+        for (int i = 0; i < length; i++) {
+            n[i] = w[i];
+        }
+        return n;
+    }
+
     public static char[] drap(Character[] w) {
         int length = length(w);
         if (length == 0) {
@@ -1862,16 +1875,28 @@ public class Arrays1 {
         return n;
     }
 
-    public static boolean[] drap(Boolean[] w) {
-        int length = length(w);
-        if (length == 0) {
-            return new boolean[0];
+    public static Object drap(Object w) {
+        if (w == null) {
+            return null;
+        } else if (w instanceof Byte[]) {
+            return drap((Byte[]) w);
+        } else if (w instanceof Short[]) {
+            return drap((Short[]) w);
+        } else if (w instanceof Integer[]) {
+            return drap((Integer[]) w);
+        } else if (w instanceof Long[]) {
+            return drap((Long[]) w);
+        } else if (w instanceof Float[]) {
+            return drap((Float[]) w);
+        } else if (w instanceof Double[]) {
+            return drap((Double[]) w);
+        } else if (w instanceof Boolean[]) {
+            return drap((Boolean[]) w);
+        } else if (w instanceof Character[]) {
+            return drap((Character[]) w);
+        } else {
+            return w;
         }
-        boolean[] n = new boolean[length];
-        for (int i = 0; i < length; i++) {
-            n[i] = w[i];
-        }
-        return n;
     }
 
     // ------------------ merge ------------------

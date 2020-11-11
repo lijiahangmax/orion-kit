@@ -4,8 +4,6 @@ import com.orion.function.Conversion;
 import com.orion.utils.*;
 import com.orion.utils.time.Dates;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -100,14 +98,6 @@ public class Converts {
         return Byte.valueOf(b);
     }
 
-    public static byte toByte(BigDecimal b) {
-        return (byte) b.doubleValue();
-    }
-
-    public static byte toByte(BigInteger b) {
-        return (byte) b.longValue();
-    }
-
     public static byte toByte(Object o) {
         Valid.notNull(o);
         if (o instanceof Byte) {
@@ -128,10 +118,6 @@ public class Converts {
             return (byte) ((char) o);
         } else if (o instanceof String) {
             return Byte.valueOf((String) o);
-        } else if (o instanceof BigDecimal) {
-            return (byte) ((BigDecimal) o).doubleValue();
-        } else if (o instanceof BigInteger) {
-            return (byte) ((BigInteger) o).longValue();
         }
         throw Exceptions.argument();
     }
@@ -189,14 +175,6 @@ public class Converts {
         return Short.valueOf(b);
     }
 
-    public static short toShort(BigDecimal b) {
-        return (short) b.doubleValue();
-    }
-
-    public static short toShort(BigInteger b) {
-        return (short) b.longValue();
-    }
-
     public static short toShort(Object o) {
         Valid.notNull(o);
         if (o instanceof Byte) {
@@ -221,10 +199,6 @@ public class Converts {
             return (short) ((char) o);
         } else if (o instanceof String) {
             return Short.valueOf((String) o);
-        } else if (o instanceof BigDecimal) {
-            return (short) ((BigDecimal) o).doubleValue();
-        } else if (o instanceof BigInteger) {
-            return (short) ((BigInteger) o).longValue();
         }
         return 0;
     }
@@ -282,14 +256,6 @@ public class Converts {
         return Integer.parseInt(b);
     }
 
-    public static int toInt(BigDecimal b) {
-        return (int) b.doubleValue();
-    }
-
-    public static int toInt(BigInteger b) {
-        return (int) b.longValue();
-    }
-
     public static int toInt(Object o) {
         Valid.notNull(o);
         if (o instanceof Byte) {
@@ -314,10 +280,6 @@ public class Converts {
             return (int) ((char) o);
         } else if (o instanceof String) {
             return (Integer.parseInt((String) o));
-        } else if (o instanceof BigDecimal) {
-            return (int) ((BigDecimal) o).doubleValue();
-        } else if (o instanceof BigInteger) {
-            return (int) ((BigInteger) o).longValue();
         }
         throw Exceptions.argument();
     }
@@ -386,14 +348,6 @@ public class Converts {
         return Long.parseLong(b);
     }
 
-    public static long toLong(BigDecimal b) {
-        return b.longValue();
-    }
-
-    public static long toLong(BigInteger b) {
-        return b.longValue();
-    }
-
     public static long toLong(Object o) {
         Valid.notNull(o);
         if (o instanceof Byte) {
@@ -418,10 +372,6 @@ public class Converts {
             return (long) ((char) o);
         } else if (o instanceof String) {
             return Long.parseLong((String) o);
-        } else if (o instanceof BigDecimal) {
-            return ((BigDecimal) o).longValue();
-        } else if (o instanceof BigInteger) {
-            return ((BigInteger) o).longValue();
         }
         throw Exceptions.argument();
     }
@@ -464,14 +414,6 @@ public class Converts {
         return Float.valueOf(b);
     }
 
-    public static float toFloat(BigDecimal b) {
-        return (float) b.doubleValue();
-    }
-
-    public static float toFloat(BigInteger b) {
-        return (float) b.doubleValue();
-    }
-
     public static float toFloat(Object o) {
         Valid.notNull(o);
         if (o instanceof Byte) {
@@ -492,10 +434,6 @@ public class Converts {
             return (float) ((char) o);
         } else if (o instanceof String) {
             return Float.parseFloat((String) o);
-        } else if (o instanceof BigDecimal) {
-            return (float) ((BigDecimal) o).doubleValue();
-        } else if (o instanceof BigInteger) {
-            return (float) ((BigInteger) o).doubleValue();
         }
         throw Exceptions.argument();
     }
@@ -538,14 +476,6 @@ public class Converts {
         return Double.valueOf(b);
     }
 
-    public static double toDouble(BigDecimal b) {
-        return b.doubleValue();
-    }
-
-    public static double toDouble(BigInteger b) {
-        return b.doubleValue();
-    }
-
     public static double toDouble(Object o) {
         Valid.notNull(o);
         if (o instanceof Byte) {
@@ -566,10 +496,6 @@ public class Converts {
             return (double) ((char) o);
         } else if (o instanceof String) {
             return Double.parseDouble((String) o);
-        } else if (o instanceof BigDecimal) {
-            return ((BigDecimal) o).doubleValue();
-        } else if (o instanceof BigInteger) {
-            return ((BigInteger) o).doubleValue();
         }
         throw Exceptions.argument();
     }
@@ -612,14 +538,6 @@ public class Converts {
         return Strings.isNotBlank(b) && "false".equalsIgnoreCase(b.trim());
     }
 
-    public static boolean toBoolean(BigDecimal b) {
-        return b != null && (b.doubleValue() != 0);
-    }
-
-    public static boolean toBoolean(BigInteger b) {
-        return b != null && (b.doubleValue() != 0);
-    }
-
     public static boolean toBoolean(Object o) {
         if (o == null) {
             return false;
@@ -642,10 +560,6 @@ public class Converts {
             return ((char) o != 0);
         } else if (o instanceof String) {
             return toBoolean((String) o);
-        } else if (o instanceof BigDecimal) {
-            return ((BigDecimal) o).doubleValue() != 0;
-        } else if (o instanceof BigInteger) {
-            return ((BigInteger) o).doubleValue() != 0;
         }
         return true;
     }
@@ -688,14 +602,6 @@ public class Converts {
         return b.charAt(0);
     }
 
-    public static char toChar(BigDecimal b) {
-        return (char) b.doubleValue();
-    }
-
-    public static char toChar(BigInteger b) {
-        return (char) b.doubleValue();
-    }
-
     public static char toChar(Object o) {
         Valid.notNull(o);
         if (o instanceof Byte) {
@@ -716,10 +622,6 @@ public class Converts {
             return ((char) o);
         } else if (o instanceof String) {
             return ((String) o).charAt(0);
-        } else if (o instanceof BigDecimal) {
-            return ((char) ((BigDecimal) o).doubleValue());
-        } else if (o instanceof BigInteger) {
-            return ((char) ((BigInteger) o).longValue());
         }
         throw Exceptions.argument();
     }
@@ -895,28 +797,12 @@ public class Converts {
         return nbs;
     }
 
-    public static byte[] toBytes(BigInteger[] bs) {
-        byte[] nbs = new byte[bs.length];
-        for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = toByte(bs[i]);
-        }
-        return nbs;
-    }
-
-    public static byte[] toBytes(BigDecimal[] bs) {
-        byte[] nbs = new byte[bs.length];
-        for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = toByte(bs[i]);
-        }
-        return nbs;
-    }
-
     public static byte[] toBytes(Object o) {
         Valid.notNull(o);
-        if (o instanceof Integer) {
-            return toBytes((int) o);
-        } else if (o instanceof Short) {
+        if (o instanceof Short) {
             return toBytes((short) o);
+        } else if (o instanceof Integer) {
+            return toBytes((int) o);
         } else if (o instanceof Long) {
             return toBytes((long) o);
         } else if (o instanceof String) {
@@ -955,10 +841,6 @@ public class Converts {
             return toBytes((Character[]) o);
         } else if (o instanceof String[]) {
             return toBytes((String[]) o);
-        } else if (o instanceof BigDecimal[]) {
-            return toBytes((BigDecimal[]) o);
-        } else if (o instanceof BigInteger[]) {
-            return toBytes((BigInteger[]) o);
         }
         throw Exceptions.argument();
     }
@@ -1101,22 +983,6 @@ public class Converts {
         return nbs;
     }
 
-    public static short[] toShorts(BigInteger[] bs) {
-        short[] nbs = new short[bs.length];
-        for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = toShort(bs[i]);
-        }
-        return nbs;
-    }
-
-    public static short[] toShorts(BigDecimal[] bs) {
-        short[] nbs = new short[bs.length];
-        for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = toShort(bs[i]);
-        }
-        return nbs;
-    }
-
     public static short[] toShorts(Object o) {
         Valid.notNull(o);
         if (o instanceof byte[]) {
@@ -1153,10 +1019,6 @@ public class Converts {
             return toShorts((Character[]) o);
         } else if (o instanceof String[]) {
             return toShorts((String[]) o);
-        } else if (o instanceof BigDecimal[]) {
-            return toShorts((BigDecimal[]) o);
-        } else if (o instanceof BigInteger[]) {
-            return toShorts((BigInteger[]) o);
         }
         throw Exceptions.argument();
     }
@@ -1299,22 +1161,6 @@ public class Converts {
         return nbs;
     }
 
-    public static int[] toInts(BigInteger[] bs) {
-        int[] nbs = new int[bs.length];
-        for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = toInt(bs[i]);
-        }
-        return nbs;
-    }
-
-    public static int[] toInts(BigDecimal[] bs) {
-        int[] nbs = new int[bs.length];
-        for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = toInt(bs[i]);
-        }
-        return nbs;
-    }
-
     public static int[] toInts(Object o) {
         Valid.notNull(o);
         if (o instanceof byte[]) {
@@ -1351,10 +1197,6 @@ public class Converts {
             return toInts((Character[]) o);
         } else if (o instanceof String[]) {
             return toInts((String[]) o);
-        } else if (o instanceof BigDecimal[]) {
-            return toInts((BigDecimal[]) o);
-        } else if (o instanceof BigInteger[]) {
-            return toInts((BigInteger[]) o);
         }
         throw Exceptions.argument();
     }
@@ -1497,22 +1339,6 @@ public class Converts {
         return nbs;
     }
 
-    public static long[] toLongs(BigInteger[] bs) {
-        long[] nbs = new long[bs.length];
-        for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = toLong(bs[i]);
-        }
-        return nbs;
-    }
-
-    public static long[] toLongs(BigDecimal[] bs) {
-        long[] nbs = new long[bs.length];
-        for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = toLong(bs[i]);
-        }
-        return nbs;
-    }
-
     public static long[] toLongs(Object o) {
         Valid.notNull(o);
         if (o instanceof byte[]) {
@@ -1549,10 +1375,6 @@ public class Converts {
             return toLongs((Character[]) o);
         } else if (o instanceof String[]) {
             return toLongs((String[]) o);
-        } else if (o instanceof BigDecimal[]) {
-            return toLongs((BigDecimal[]) o);
-        } else if (o instanceof BigInteger[]) {
-            return toLongs((BigInteger[]) o);
         }
         throw Exceptions.argument();
     }
@@ -1695,22 +1517,6 @@ public class Converts {
         return nbs;
     }
 
-    public static float[] toFloats(BigInteger[] bs) {
-        float[] nbs = new float[bs.length];
-        for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = toFloat(bs[i]);
-        }
-        return nbs;
-    }
-
-    public static float[] toFloats(BigDecimal[] bs) {
-        float[] nbs = new float[bs.length];
-        for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = toFloat(bs[i]);
-        }
-        return nbs;
-    }
-
     public static float[] toFloats(Object o) {
         Valid.notNull(o);
         if (o instanceof byte[]) {
@@ -1747,10 +1553,6 @@ public class Converts {
             return toFloats((Character[]) o);
         } else if (o instanceof String[]) {
             return toFloats((String[]) o);
-        } else if (o instanceof BigDecimal[]) {
-            return toFloats((BigDecimal[]) o);
-        } else if (o instanceof BigInteger[]) {
-            return toFloats((BigInteger[]) o);
         }
         throw Exceptions.argument();
     }
@@ -1893,22 +1695,6 @@ public class Converts {
         return nbs;
     }
 
-    public static double[] toDoubles(BigInteger[] bs) {
-        double[] nbs = new double[bs.length];
-        for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = toDouble(bs[i]);
-        }
-        return nbs;
-    }
-
-    public static double[] toDoubles(BigDecimal[] bs) {
-        double[] nbs = new double[bs.length];
-        for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = toDouble(bs[i]);
-        }
-        return nbs;
-    }
-
     public static double[] toDoubles(Object o) {
         Valid.notNull(o);
         if (o instanceof byte[]) {
@@ -1945,10 +1731,6 @@ public class Converts {
             return toDoubles((Character[]) o);
         } else if (o instanceof String[]) {
             return toDoubles((String[]) o);
-        } else if (o instanceof BigDecimal[]) {
-            return toDoubles((BigDecimal[]) o);
-        } else if (o instanceof BigInteger[]) {
-            return toDoubles((BigInteger[]) o);
         }
         throw Exceptions.argument();
     }
@@ -2091,22 +1873,6 @@ public class Converts {
         return nbs;
     }
 
-    public static boolean[] toBooleans(BigInteger[] bs) {
-        boolean[] nbs = new boolean[bs.length];
-        for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = toBoolean(bs[i]);
-        }
-        return nbs;
-    }
-
-    public static boolean[] toBooleans(BigDecimal[] bs) {
-        boolean[] nbs = new boolean[bs.length];
-        for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = toBoolean(bs[i]);
-        }
-        return nbs;
-    }
-
     public static boolean[] toBooleans(Object o) {
         if (o == null) {
             return new boolean[]{false};
@@ -2145,10 +1911,6 @@ public class Converts {
             return toBooleans((Character[]) o);
         } else if (o instanceof String[]) {
             return toBooleans((String[]) o);
-        } else if (o instanceof BigDecimal[]) {
-            return toBooleans((BigDecimal[]) o);
-        } else if (o instanceof BigInteger[]) {
-            return toBooleans((BigInteger[]) o);
         }
         throw Exceptions.argument();
     }
@@ -2302,22 +2064,6 @@ public class Converts {
         return chars;
     }
 
-    public static char[] toChars(BigInteger[] bs) {
-        char[] nbs = new char[bs.length];
-        for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = toChar(bs[i]);
-        }
-        return nbs;
-    }
-
-    public static char[] toChars(BigDecimal[] bs) {
-        char[] nbs = new char[bs.length];
-        for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = toChar(bs[i]);
-        }
-        return nbs;
-    }
-
     public static char[] toChars(Object o) {
         Valid.notNull(o);
         if (o instanceof String) {
@@ -2356,10 +2102,6 @@ public class Converts {
             return toChars((Character[]) o);
         } else if (o instanceof String[]) {
             return toChars((String[]) o);
-        } else if (o instanceof BigDecimal[]) {
-            return toChars((BigDecimal[]) o);
-        } else if (o instanceof BigInteger[]) {
-            return toChars((BigInteger[]) o);
         }
         throw Exceptions.argument();
     }
@@ -2494,22 +2236,6 @@ public class Converts {
         return nbs;
     }
 
-    public static String[] toStrings(BigInteger[] bs) {
-        String[] nbs = new String[bs.length];
-        for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = bs[i] == null ? "" : bs[i].toString();
-        }
-        return nbs;
-    }
-
-    public static String[] toStrings(BigDecimal[] bs) {
-        String[] nbs = new String[bs.length];
-        for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = bs[i] == null ? "" : bs[i].toString();
-        }
-        return nbs;
-    }
-
     public static String[] toStrings(Object o) {
         Valid.notNull(o);
         if (o instanceof String) {
@@ -2548,10 +2274,6 @@ public class Converts {
             return toStrings((Character[]) o);
         } else if (o instanceof String[]) {
             return (String[]) o;
-        } else if (o instanceof BigDecimal[]) {
-            return toStrings((BigDecimal[]) o);
-        } else if (o instanceof BigInteger[]) {
-            return toStrings((BigInteger[]) o);
         }
         throw Exceptions.argument();
     }

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 对象类型转换映射 自定义实现
+ * 对象类型转换映射的自定义实现
  *
  * @author ljh15
  * @version 1.0.0
@@ -51,7 +51,7 @@ public abstract class TypeMapper<T> implements Serializable {
      * @param <R>    target
      * @return Conversion
      */
-    protected <R> Conversion<T, R> get(Class<R> target) {
+    public <R> Conversion<T, R> get(Class<R> target) {
         return store.get(sourceType, target);
     }
 

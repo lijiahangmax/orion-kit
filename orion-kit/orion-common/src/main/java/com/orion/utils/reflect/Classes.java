@@ -46,6 +46,16 @@ public class Classes {
      */
     private static final Class<?>[] WRAP_CLASS = new Class<?>[]{Byte.class, Short.class, Integer.class, Long.class, Float.class, Double.class, Boolean.class, Character.class};
 
+    /**
+     * 基本类型数组的class
+     */
+    private static final Class<?>[] BASE_ARRAY_CLASS = new Class<?>[]{byte[].class, short[].class, int[].class, long[].class, float[].class, double[].class, boolean[].class, char[].class};
+
+    /**
+     * 包装类型数组的class
+     */
+    private static final Class<?>[] WRAP_ARRAY_CLASS = new Class<?>[]{Byte[].class, Short[].class, Integer[].class, Long[].class, Float[].class, Double[].class, Boolean[].class, Character[].class};
+
     static {
         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
         if (contextClassLoader != null) {
@@ -302,6 +312,86 @@ public class Classes {
         for (int i = 0; i < BASE_CLASS.length; i++) {
             if (clazz.equals(BASE_CLASS[i])) {
                 return WRAP_CLASS[i];
+            }
+        }
+        return clazz;
+    }
+
+    /**
+     * 返回包装类型的基本类型
+     *
+     * @param clazz class
+     * @return class
+     */
+    public static Class<?> getBaseClass(Class<?> clazz) {
+        Valid.notNull(clazz, "Class is null");
+        for (int i = 0; i < WRAP_CLASS.length; i++) {
+            if (clazz.equals(WRAP_CLASS[i])) {
+                return BASE_CLASS[i];
+            }
+        }
+        return clazz;
+    }
+
+    /**
+     * 判断是否为基本数组类型
+     *
+     * @param clazz class
+     * @return 基本数组类型true
+     */
+    public static boolean isBaseArrayClass(Class<?> clazz) {
+        Valid.notNull(clazz, "Class is null");
+        for (Class<?> baseClass : BASE_ARRAY_CLASS) {
+            if (clazz.equals(baseClass)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 判断是否为包装数组类型
+     *
+     * @param clazz class
+     * @return 包装数组类型true
+     */
+    public static boolean isWrapArrayClass(Class<?> clazz) {
+        Valid.notNull(clazz, "Class is null");
+        for (Class<?> wrapClass : WRAP_ARRAY_CLASS) {
+            if (clazz.equals(wrapClass)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 返回基本数组类型的包装数组类型
+     *
+     * @param clazz class
+     * @return class
+     */
+    public static Class<?> getWrapArrayClass(Class<?> clazz) {
+        Valid.notNull(clazz, "Class is null");
+        for (int i = 0; i < BASE_ARRAY_CLASS.length; i++) {
+            if (clazz.equals(BASE_ARRAY_CLASS[i])) {
+                return WRAP_ARRAY_CLASS[i];
+            }
+        }
+        return clazz;
+    }
+
+    /**
+     * 返回包装数组类型的基本数组类型
+     *
+     * @param clazz class
+     * @return class
+     */
+    public static Class<?> getBaseArrayClass(Class<?> clazz) {
+        Valid.notNull(clazz, "Class is null");
+        for (int i = 0; i < WRAP_ARRAY_CLASS.length; i++) {
+            if (clazz.equals(WRAP_ARRAY_CLASS[i])) {
+                return BASE_ARRAY_CLASS[i];
             }
         }
         return clazz;

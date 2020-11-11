@@ -41,7 +41,7 @@ public abstract class FolderWatcher implements Runnable, Watchable, Stoppable, S
     protected Map<WatchKey, Path> watchKeys = new LinkedHashMap<>();
 
     protected FolderWatcher(WatchHandler handler, WatchEventKind... kinds) {
-        this(handler, null, Arrays1.wraps(kinds, WatchEventKind::getValue, WatchEvent.Kind<?>[]::new));
+        this(handler, null, Arrays1.mapper(WatchEventKind::getValue, WatchEvent.Kind<?>[]::new, kinds));
     }
 
     protected FolderWatcher(WatchHandler handler, WatchEvent.Kind<?>... kinds) {
@@ -49,7 +49,7 @@ public abstract class FolderWatcher implements Runnable, Watchable, Stoppable, S
     }
 
     protected FolderWatcher(WatchHandler handler, WatchEvent.Modifier[] modifiers, WatchEventKind... kinds) {
-        this(handler, modifiers, Arrays1.wraps(kinds, WatchEventKind::getValue, WatchEvent.Kind<?>[]::new));
+        this(handler, modifiers, Arrays1.mapper(WatchEventKind::getValue, WatchEvent.Kind<?>[]::new, kinds));
     }
 
     protected FolderWatcher(WatchHandler handler, WatchEvent.Modifier[] modifiers, WatchEvent.Kind<?>... kinds) {
