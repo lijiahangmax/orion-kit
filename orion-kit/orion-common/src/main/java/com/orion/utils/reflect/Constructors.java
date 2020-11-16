@@ -1,9 +1,13 @@
 package com.orion.utils.reflect;
 
-import com.orion.utils.*;
+import com.orion.utils.Arrays1;
+import com.orion.utils.Exceptions;
+import com.orion.utils.Strings;
+import com.orion.utils.Valid;
+import com.orion.utils.collect.Lists;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -119,6 +123,16 @@ public class Constructors {
     }
 
     /**
+     * 设置构造方法可访问
+     */
+    public static void setAccessible(Constructor constructor) {
+        Valid.notNull(constructor, "Set Accessible Constructor class is null");
+        if ((!Modifier.isPublic(constructor.getModifiers()) || !Modifier.isPublic(constructor.getDeclaringClass().getModifiers())) && !constructor.isAccessible()) {
+            constructor.setAccessible(true);
+        }
+    }
+
+    /**
      * 实例化对象
      *
      * @param constructor constructor
@@ -192,9 +206,22 @@ public class Constructors {
     }
 
     /**
-     * 实例化对象 参数类型推断, 不推荐使用到多个构造方法参数列表长度相同的类
-     * 如果使用到多个重载方法切长度相同的方法上, 对象需要实现序列化或者实现了Cloneable,
-     * 因为推断时会克隆一个新的对象, 防止前面执行失败, 导致对象的值被修改
+     * 实例化对象 参数类型推断
+     *
+     * @param constructor constructor
+     * @param <T>         类实例型
+     * @return 实例
+     */
+    public static <T> T newInstanceInfer(Constructor<T> constructor, Object[] args) {
+        Valid.notNull(constructor, "constructor is null");
+        if (Arrays1.isEmpty(args)) {
+            return newInstance(constructor);
+        }
+        return TypeInfer.newInstanceInfer(Lists.singleton(constructor), args);
+    }
+
+    /**
+     * 实例化对象 参数类型推断
      *
      * @param clazz 需要实例化的对象
      * @param <T>   类实例型
@@ -202,67 +229,11 @@ public class Constructors {
      */
     public static <T> T newInstanceInfer(Class<T> clazz, Object[] args) {
         Valid.notNull(clazz, "Class is null");
-        if (args == null || args.length == 0) {
+        if (Arrays1.isEmpty(args)) {
             return newInstance(clazz);
         }
-        Constructor<?>[] constructors = clazz.getDeclaredConstructors();
-        for (Constructor constructor : constructors) {
-            try {
-                if (constructors.length == 1) {
-                    return (T) newInstanceInfers(constructor, args);
-                } else {
-                    return (T) newInstanceInfers(constructor, Objects1.clone(args));
-                }
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                throw Exceptions.invoke(Strings.format("Cannot initialize class: {}, values: {}", clazz.getName(), Arrays.toString(args)), e);
-            } catch (Exception e) {
-                // ignore
-            }
-        }
-        throw Exceptions.invoke(Strings.format("Cannot initialize class not found constructor: {}, values: {}", clazz.getName(), Arrays.toString(args)));
-    }
-
-    /**
-     * 实例化对象 参数类型推断, 不推荐使用到多个构造方法参数列表长度相同的类
-     * 如果使用到多个重载方法切长度相同的方法上, 对象需要实现序列化或者实现了Cloneable,
-     * 因为推断时会克隆一个新的对象, 防止前面执行失败, 导致对象的值被修改
-     *
-     * @param constructor constructor
-     * @param <T>         类实例型
-     * @return 实例
-     */
-    public static <T> T newInstanceInfer(Constructor<T> constructor, Object[] args) {
-        try {
-            return newInstanceInfers(constructor, args);
-        } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
-            throw Exceptions.invoke(Strings.format("Cannot initialize class values: {}", Arrays.toString(args)));
-        }
-    }
-
-    /**
-     * 实例化对象 参数类型推断, 不推荐使用到多个构造方法参数列表长度相同的类
-     * 如果使用到多个重载方法切长度相同的方法上, 对象需要实现序列化或者实现了Cloneable,
-     * 因为推断时会克隆一个新的对象, 防止前面执行失败, 导致对象的值被修改
-     *
-     * @param constructor constructor
-     * @param <T>         类实例型
-     * @return 实例
-     */
-    private static <T> T newInstanceInfers(Constructor<T> constructor, Object[] args) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        Class<?>[] params = constructor.getParameterTypes();
-        int len = Arrays1.length(args);
-        if (params.length != len) {
-            throw Exceptions.invoke(Strings.format("Constructor parameters len is {}, but args length is {}", params.length, len));
-        }
-        for (int i = 0; i < len; i++) {
-            if (args[i] != null) {
-                if (!params[i].equals(Object.class) && params[i] != args[i].getClass() && !Classes.getInterfaces(args[i].getClass()).contains(params[i])) {
-                    args[i] = TypeInfer.convert(args[i], params[i]);
-                }
-            }
-        }
-        constructor.setAccessible(true);
-        return constructor.newInstance(args);
+        List<Constructor<T>> constructors = getConstructors(clazz, args.length);
+        return TypeInfer.newInstanceInfer(constructors, args);
     }
 
 }

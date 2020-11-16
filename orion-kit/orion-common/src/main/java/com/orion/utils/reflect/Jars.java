@@ -31,7 +31,7 @@ public class Jars {
      *
      * @return targetUrl / thisJar
      */
-    public static URL getTargetURL() {
+    public static URL getTargetUrl() {
         URL resource = Methods.class.getClassLoader().getResource("");
         if (resource == null) {
             resource = Methods.class.getResource("");
@@ -45,10 +45,10 @@ public class Jars {
      * @return 当前 jarFile
      */
     public static JarFile getJarFile() {
-        URL targetURL = getTargetURL();
-        if (targetURL != null && "jar".equals(targetURL.getProtocol())) {
+        URL targetUrl = getTargetUrl();
+        if (targetUrl != null && "jar".equals(targetUrl.getProtocol())) {
             try {
-                return ((JarURLConnection) targetURL.openConnection()).getJarFile();
+                return ((JarURLConnection) targetUrl.openConnection()).getJarFile();
             } catch (Exception e) {
                 Exceptions.printStacks(e);
             }

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * rpc远程调用结果封装
@@ -42,7 +43,7 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
     /**
      * 错误信息
      */
-    private List<String> errorMsg;
+    private List<String> errorMessages;
 
     /**
      * 会话追踪标识
@@ -155,7 +156,7 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
      * 检查是否成功
      */
     public boolean isSuccess() {
-        return RPC_OK_CODE == code && (errorMsg == null || errorMsg.isEmpty());
+        return RPC_OK_CODE == code && (errorMessages == null || errorMessages.isEmpty());
     }
 
     /**
@@ -180,9 +181,15 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
     public void errorThrows(String msg, boolean appendErrMsg) {
         if (!isSuccess()) {
             if (appendErrMsg) {
-                throw new RuntimeException(msg + " " + errorMsg);
+                throw new RuntimeException(msg + " " + errorMessages);
             }
             throw new RuntimeException(msg);
+        }
+    }
+
+    public void errorThrows(Supplier<? extends RuntimeException> e) {
+        if (!isSuccess()) {
+            throw e.get();
         }
     }
 
@@ -233,23 +240,6 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
         return this;
     }
 
-    public RpcWrapper<T> addErrorMsg(String errorMsg) {
-        if (errorMsg == null) {
-            this.errorMsg = new ArrayList<>();
-        }
-        this.errorMsg.add(errorMsg);
-        return this;
-    }
-
-    public List<String> getErrorMsg() {
-        return errorMsg == null ? new ArrayList<>() : errorMsg;
-    }
-
-    public RpcWrapper<T> setErrorMsg(List<String> errorMsg) {
-        this.errorMsg = errorMsg;
-        return this;
-    }
-
     public String getTraceId() {
         return traceId;
     }
@@ -257,6 +247,27 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
     public RpcWrapper<T> setTraceId(String traceId) {
         this.traceId = TRACE_PREFIX + traceId;
         return this;
+    }
+
+    public RpcWrapper<T> addErrorMessage(String errorMsg) {
+        if (errorMsg == null) {
+            this.errorMessages = new ArrayList<>();
+        }
+        this.errorMessages.add(errorMsg);
+        return this;
+    }
+
+    public List<String> getErrorMessages() {
+        return errorMessages == null ? new ArrayList<>() : errorMessages;
+    }
+
+    public RpcWrapper<T> setErrorMessages(List<String> errorMessages) {
+        this.errorMessages = errorMessages;
+        return this;
+    }
+
+    public String getErrorMessageString() {
+        return errorMessages == null ? "" : errorMessages.toString();
     }
 
     private String createTrace() {
@@ -283,7 +294,7 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
                 .append("msg ==> ").append(msg).append("\n\t")
                 .append("data ==> ").append(Jsons.toJsonWriteNull(data));
         if (!ok) {
-            builder.append("errorMsg ==> ").append(errorMsg);
+            builder.append("errorMsg ==> ").append(errorMessages);
         }
         return builder.toString();
     }
@@ -295,7 +306,7 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
         map.put("msg", msg);
         map.put("data", data);
         map.put("traceID", traceId);
-        map.put("errorMsg", errorMsg);
+        map.put("errorMsg", errorMessages);
         return map;
     }
 

@@ -4,6 +4,7 @@ import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.Valid;
 import com.orion.utils.collect.Lists;
+import com.orion.utils.convert.TypeStore;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -169,6 +170,52 @@ public class Fields {
             field.set(obj, value);
         } catch (Exception e) {
             throw Exceptions.invoke(Strings.format("Set Field Value error: {}, field: {}, class: {}", e.getMessage(), field.getName(), obj.getClass().getName(), value), e);
+        }
+    }
+
+    /**
+     * 直接设置对象属性值 类型推断
+     *
+     * @param obj       对象
+     * @param fieldName 字段
+     * @param value     对象值
+     * @param <E>       属性类型
+     */
+    public static <E> void setFieldValueInfer(Object obj, String fieldName, E value) {
+        Valid.notNull(obj, "Invoker object is null");
+        Valid.notNull(fieldName, "Invoke Field is null");
+        Field field = getAccessibleField(obj.getClass(), fieldName);
+        try {
+            if (TypeStore.canConvert(value.getClass(), field.getType())) {
+                field.set(obj, value);
+                return;
+            }
+            throw Exceptions.invoke(Strings.format("could infer set field value, field: {}, class: {}", fieldName, obj.getClass().getName()));
+        } catch (Exception e) {
+            throw Exceptions.invoke(Strings.format("Set Field Value error: {}, field: {}, class: {}", e.getMessage(), fieldName, obj.getClass().getName()), e);
+        }
+    }
+
+    /**
+     * 直接设置对象属性值 类型推断
+     *
+     * @param obj   对象
+     * @param field 字段
+     * @param value 对象值
+     * @param <E>   属性类型
+     */
+    public static <E> void setFieldValueInfer(Object obj, Field field, E value) {
+        Valid.notNull(obj, "Invoker object is null");
+        Valid.notNull(field, "Invoke Field is null");
+        try {
+            setAccessible(field);
+            if (TypeStore.canConvert(value.getClass(), field.getType())) {
+                field.set(obj, value);
+                return;
+            }
+            throw Exceptions.invoke(Strings.format("could infer set field value, field: {}, class: {}", field.getName(), obj.getClass().getName()));
+        } catch (Exception e) {
+            throw Exceptions.invoke(Strings.format("Set Field Value error: {}, field: {}, class: {}", e.getMessage(), field.getName(), obj.getClass().getName()), e);
         }
     }
 

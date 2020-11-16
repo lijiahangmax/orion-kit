@@ -1,10 +1,12 @@
 package com.orion.utils.reflect;
 
-import com.orion.utils.*;
+import com.orion.utils.Arrays1;
+import com.orion.utils.Exceptions;
+import com.orion.utils.Strings;
+import com.orion.utils.Valid;
 import com.orion.utils.collect.Lists;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
@@ -316,25 +318,17 @@ public class Methods {
      * @param argsNum    参数数量
      * @return 方法对象
      */
-    public static Method[] getAccessibleMethods(Class<?> clazz, String methodName, int argsNum) {
+    public static List<Method> getAccessibleMethods(Class<?> clazz, String methodName, int argsNum) {
         Valid.notNull(clazz, "Method class is null");
-        int i = 0;
-        Method[] methods = new Method[0];
+        List<Method> methods = new ArrayList<>();
         for (Class<?> searchType = clazz; searchType != Object.class; searchType = searchType.getSuperclass()) {
             Method[] searchMethods = searchType.getDeclaredMethods();
             for (Method method : searchMethods) {
                 if (method.getName().equals(methodName) && method.getParameterTypes().length == argsNum) {
-                    int len = methods.length;
-                    if (i + 1 >= len) {
-                        methods = Arrays1.resize(methods, len + 2, Method[]::new);
-                    }
                     setAccessible(method);
-                    methods[i++] = method;
+                    methods.add(method);
                 }
             }
-        }
-        if (i != methods.length) {
-            methods = Arrays1.resize(methods, i, Method[]::new);
         }
         return methods;
     }
@@ -346,25 +340,17 @@ public class Methods {
      * @param methodName 方法名称
      * @return 方法对象
      */
-    public static Method[] getAccessibleMethods(Class<?> clazz, String methodName) {
+    public static List<Method> getAccessibleMethods(Class<?> clazz, String methodName) {
         Valid.notNull(clazz, "Method class is null");
-        int i = 0;
-        Method[] methods = new Method[0];
+        List<Method> methods = new ArrayList<>();
         for (Class<?> searchType = clazz; searchType != Object.class; searchType = searchType.getSuperclass()) {
             Method[] searchMethods = searchType.getDeclaredMethods();
             for (Method method : searchMethods) {
                 if (method.getName().equals(methodName)) {
-                    int len = methods.length;
-                    if (i + 1 >= len) {
-                        methods = Arrays1.resize(methods, len + 2, Method[]::new);
-                    }
                     setAccessible(method);
-                    methods[i++] = method;
+                    methods.add(method);
                 }
             }
-        }
-        if (i != methods.length) {
-            methods = Arrays1.resize(methods, i, Method[]::new);
         }
         return methods;
     }
@@ -505,6 +491,18 @@ public class Methods {
     }
 
     /**
+     * 调用setter方法 类型推断调用
+     *
+     * @param obj    对象
+     * @param method method
+     * @param value  ignore
+     * @param <E>    属性类型
+     */
+    public static <E, R> R invokeSetterInfer(Object obj, Method method, E value) {
+        return invokeMethodInfer(obj, method, new Object[]{value});
+    }
+
+    /**
      * 直接调用对象方法
      *
      * @param obj            对象
@@ -596,9 +594,7 @@ public class Methods {
     }
 
     /**
-     * 直接调用对象方法, 会进行参数推断, 不推荐使用到多个重载方法且参数列表长度相同的方法
-     * 如果使用到多个重载方法切长度相同的方法上, 对象需要实现序列化或者实现了Cloneable,
-     * 因为推断时会克隆一个新的对象, 防止前面执行失败, 导致对象的值被修改
+     * 直接调用对象方法, 会进行参数推断
      *
      * @param obj    对象
      * @param method 方法
@@ -609,23 +605,14 @@ public class Methods {
     public static <E> E invokeMethodInfer(Object obj, Method method, Object[] args) {
         Valid.notNull(obj, "Invoker object is null");
         Valid.notNull(method, "Invoke Method is null");
-        if (args == null || args.length == 0) {
+        if (Arrays1.isEmpty(args)) {
             return invokeMethod(obj, method, null);
         }
-        try {
-            return invokeMethodInfers(obj, method, args);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            throw Exceptions.invoke(Strings.format("Invoke Method error: {}, class: {}, args: {}", method.getName(), obj.getClass().getName(), Arrays.toString(args)), e);
-        } catch (Exception e) {
-            // ignore
-        }
-        throw Exceptions.invoke(Strings.format("Invoke Method error: {}, class: {}, args: {}", method.getName(), obj.getClass().getName(), Arrays.toString(args)));
+        return TypeInfer.invokeInfer(obj, Lists.singleton(method), args);
     }
 
     /**
-     * 直接调用对象方法, 会进行参数推断, 不推荐使用到多个重载方法且参数列表长度相同的方法
-     * 如果使用到多个重载方法切长度相同的方法上, 对象需要实现序列化或者实现了Cloneable,
-     * 因为推断时会克隆一个新的对象, 防止前面执行失败, 导致对象的值被修改
+     * 直接调用对象方法, 会进行参数推断
      *
      * @param obj        对象
      * @param methodName 方法名称
@@ -636,53 +623,12 @@ public class Methods {
     public static <E> E invokeMethodInfer(Object obj, String methodName, Object[] args) {
         Valid.notNull(obj, "Invoker object is null");
         Valid.notBlank(methodName, "Invoke Method is null");
-        if (args == null || args.length == 0) {
+        if (Arrays1.isEmpty(args)) {
             return invokeMethod(obj, methodName, null);
         }
         int len = Arrays1.length(args);
-        Method[] methods = Methods.getAccessibleMethods(obj.getClass(), methodName, len);
-        for (Method method : methods) {
-            try {
-                if (methods.length == 1) {
-                    return invokeMethodInfers(obj, method, args);
-                } else {
-                    return invokeMethodInfers(obj, method, Objects1.clone(args));
-                }
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                throw Exceptions.invoke(Strings.format("Invoke Method error: {}, class: {}, args: {}", methodName, obj.getClass().getName(), Arrays.toString(args)), e);
-            } catch (Exception e) {
-                // ignore
-            }
-        }
-        throw Exceptions.invoke(Strings.format("Invoke Method not found : {}, class: {}, args: {}", methodName, obj.getClass().getName(), Arrays.toString(args)));
-    }
-
-    /**
-     * 直接调用对象方法, 会进行参数推断, 不推荐使用到多个重载方法且参数列表长度相同的方法
-     * 如果使用到多个重载方法切长度相同的方法上, 对象需要实现序列化或者实现了Cloneable,
-     * 因为推断时会克隆一个新的对象, 防止前面执行失败, 导致对象的值被修改
-     *
-     * @param obj    对象
-     * @param method 方法名称
-     * @param args   参数列表
-     * @param <E>    返回值类型
-     * @return 对象
-     */
-    private static <E> E invokeMethodInfers(Object obj, Method method, Object[] args) throws InvocationTargetException, IllegalAccessException {
-        Class<?>[] params = method.getParameterTypes();
-        int len = Arrays1.length(args);
-        if (params.length != len) {
-            throw Exceptions.invoke(Strings.format("Method {} parameters len is {}, but args length is {}", method.getName(), params.length, len));
-        }
-        for (int i = 0; i < len; i++) {
-            if (args[i] != null) {
-                if (!params[i].equals(Object.class) && params[i] != args[i].getClass() && !Classes.getInterfaces(args[i].getClass()).contains(params[i])) {
-                    args[i] = TypeInfer.convert(args[i], params[i]);
-                }
-            }
-        }
-        Methods.setAccessible(method);
-        return (E) method.invoke(obj, args);
+        List<Method> methods = Methods.getAccessibleMethods(obj.getClass(), methodName, len);
+        return TypeInfer.invokeInfer(obj, methods, args);
     }
 
 }

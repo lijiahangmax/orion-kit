@@ -1,14 +1,13 @@
 package com.orion.utils.reflect;
 
-import com.orion.utils.convert.Converts;
-import com.orion.utils.math.BigDecimals;
-import com.orion.utils.math.BigIntegers;
+import com.orion.utils.Arrays1;
+import com.orion.utils.Exceptions;
+import com.orion.utils.convert.TypeStore;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 类型推断
@@ -17,65 +16,136 @@ import java.util.Date;
  * @version 1.0.0
  * @since 2020/5/22 10:41
  */
-class TypeInfer {
+public class TypeInfer {
 
     private TypeInfer() {
     }
 
     /**
-     * 根据class转换object
+     * 推断创建对象
      *
-     * @param o     o
-     * @param clazz class
-     * @return o
+     * @param constructors 构造
+     * @param params       参数
+     * @return 对象
      */
-    static Object convert(Object o, Class<?> clazz) {
-        if (clazz.equals(byte.class)) {
-            return Converts.toByte(o);
-        } else if (clazz.equals(Byte.class)) {
-            return Converts.toByte(o);
-        } else if (clazz.equals(short.class)) {
-            return Converts.toShort(o);
-        } else if (clazz.equals(Short.class)) {
-            return Converts.toShort(o);
-        } else if (clazz.equals(int.class)) {
-            return Converts.toInt(o);
-        } else if (clazz.equals(Integer.class)) {
-            return Converts.toInt(o);
-        } else if (clazz.equals(long.class)) {
-            return Converts.toLong(o);
-        } else if (clazz.equals(Long.class)) {
-            return Converts.toLong(o);
-        } else if (clazz.equals(float.class)) {
-            return Converts.toFloat(o);
-        } else if (clazz.equals(Float.class)) {
-            return Converts.toFloat(o);
-        } else if (clazz.equals(double.class)) {
-            return Converts.toDouble(o);
-        } else if (clazz.equals(Double.class)) {
-            return Converts.toDouble(o);
-        } else if (clazz.equals(boolean.class)) {
-            return Converts.toBoolean(o);
-        } else if (clazz.equals(Boolean.class)) {
-            return Converts.toBoolean(o);
-        } else if (clazz.equals(char.class)) {
-            return Converts.toChar(o);
-        } else if (clazz.equals(Character.class)) {
-            return Converts.toChar(o);
-        } else if (clazz.equals(String.class)) {
-            return Converts.toString(o);
-        } else if (clazz.equals(Date.class)) {
-            return Converts.toDate(o);
-        } else if (clazz.equals(LocalDateTime.class)) {
-            return Converts.toLocalDateTime(o);
-        } else if (clazz.equals(LocalDate.class)) {
-            return Converts.toLocalDate(o);
-        } else if (clazz.equals(BigDecimal.class)) {
-            return BigDecimals.toBigDecimal(o);
-        } else if (clazz.equals(BigInteger.class)) {
-            return BigIntegers.toBigInteger(o);
+    public static <T> T newInstanceInfer(List<Constructor<T>> constructors, Object[] params) {
+        int index = -1;
+        Class<?>[] sourceClasses = Arrays1.mapper(params, Class<?>[]::new, Object::getClass);
+        List<Class<?>[]> targetClassesList = constructors.stream()
+                .filter(m -> m.getParameterCount() == params.length)
+                .peek(Constructors::setAccessible)
+                .map(Constructor::getParameterTypes)
+                .collect(Collectors.toList());
+        for (int i = 0; i < 3; i++) {
+            if (index == -1) {
+                index = allTypeMatch(sourceClasses, targetClassesList, i + 1);
+            }
         }
-        return o;
+        if (index == -1) {
+            throw Exceptions.invoke("could infer new instance, not found match constructor");
+        }
+        Class<?>[] targetClass = targetClassesList.get(index);
+        Object[] inferParams = convertType(params, targetClass);
+        return Constructors.newInstance(constructors.get(index), inferParams);
+    }
+
+    /**
+     * 推断调用方法
+     *
+     * @param o       o
+     * @param methods 方法
+     * @param params  参数
+     * @return 返回值
+     */
+    public static <T> T invokeInfer(Object o, List<Method> methods, Object[] params) {
+        int index = -1;
+        Class<?>[] sourceClasses = Arrays1.mapper(params, Class<?>[]::new, Object::getClass);
+        List<Class<?>[]> targetClassesList = methods.stream()
+                .filter(m -> m.getParameterCount() == params.length)
+                .peek(Methods::setAccessible)
+                .map(Method::getParameterTypes)
+                .collect(Collectors.toList());
+        for (int i = 0; i < 3; i++) {
+            if (index == -1) {
+                index = allTypeMatch(sourceClasses, targetClassesList, i + 1);
+            }
+        }
+        if (index == -1) {
+            throw Exceptions.invoke("could infer invoke method, not found match method");
+        }
+        Class<?>[] targetClass = targetClassesList.get(index);
+        Object[] inferParams = convertType(params, targetClass);
+        return Methods.invokeMethod(o, methods.get(index), inferParams);
+    }
+
+    /**
+     * 类型是否全匹配
+     *
+     * @param sourceClasses     源class
+     * @param targetClassesList 所有目标class
+     * @param type              1严格匹配 2可直接转换 3可以转换
+     * @return true 可以转换
+     */
+    public static int allTypeMatch(Class<?>[] sourceClasses, List<Class<?>[]> targetClassesList, int type) {
+        for (int i = 0; i < targetClassesList.size(); i++) {
+            Class<?>[] targetClasses = targetClassesList.get(i);
+            if (targetClasses.length != sourceClasses.length) {
+                continue;
+            }
+            if (allTypeMatch(sourceClasses, targetClasses, type)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * 类型是否全匹配
+     *
+     * @param sourceClasses 源class
+     * @param targetClasses 目标class
+     * @param type          1严格匹配 2可直接转换 3可以转换
+     * @return true 可以转换
+     */
+    private static boolean allTypeMatch(Class<?>[] sourceClasses, Class<?>[] targetClasses, int type) {
+        for (int i = 0; i < sourceClasses.length; i++) {
+            Class<?> sourceClass = sourceClasses[i];
+            Class<?> targetClass = targetClasses[i];
+            if (type == 1) {
+                // 严格
+                if (!sourceClass.equals(targetClass)) {
+                    return false;
+                }
+            } else if (type == 2) {
+                // 直接转换
+                if (!TypeStore.canDirectConvert(sourceClass, targetClass)) {
+                    return false;
+                }
+            } else if (type == 3) {
+                // 类型转换
+                if (!TypeStore.canConvert(sourceClass, targetClass)) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 转换源数组类型
+     *
+     * @param sourceArray   源数组
+     * @param targetClasses 目标类型
+     * @return 目标类型
+     */
+    private static Object[] convertType(Object[] sourceArray, Class<?>[] targetClasses) {
+        Object[] r = new Object[sourceArray.length];
+        for (int i = 0; i < sourceArray.length; i++) {
+            r[i] = TypeStore.STORE.to(sourceArray[i], targetClasses[i]);
+        }
+        return r;
     }
 
 }

@@ -415,14 +415,14 @@ public class Arrays1 {
     /**
      * 映射
      *
-     * @param mapper    映射接口
+     * @param i         需要映射的对象
      * @param generator 数组创建接口 e.g. Integer[]::new
-     * @param i         需要映射的对象 该对象不能为基本类型的数组, 可以为基本类型的变量
+     * @param mapper    映射接口
      * @param <I>       输入类型
      * @param <O>       输出类型
      * @return 映射结果
      */
-    public static <I, O> O[] mapper(Mapper<? super I, ? extends O> mapper, IntFunction<? extends O[]> generator, I... i) {
+    public static <I, O> O[] mapper(I[] i, IntFunction<? extends O[]> generator, Mapper<? super I, ? extends O> mapper) {
         int len = length(i);
         if (len == 0) {
             return generator.apply(0);
@@ -444,10 +444,10 @@ public class Arrays1 {
      * @param <R>    规约类型
      * @return 规约后的数据
      */
-    public static <V, R> R reduce(Reduce<? super V, ? extends R> reduce, V... v) {
+    public static <V, R> R reduce(V[] v, Reduce<? super V, ? extends R> reduce) {
         int len = length(v);
         if (len == 0) {
-            throw new IllegalArgumentException("v... length is 0");
+            throw new IllegalArgumentException("array length is 0");
         }
         return reduce.accept(v);
     }

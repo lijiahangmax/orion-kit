@@ -31,7 +31,7 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
     /**
      * 结果列表
      */
-    private List<T> rows = new ArrayList<>();
+    private List<T> rows;
 
     /**
      * 第几页

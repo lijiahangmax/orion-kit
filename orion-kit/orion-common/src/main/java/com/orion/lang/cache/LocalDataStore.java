@@ -107,13 +107,7 @@ public class LocalDataStore {
     /**
      * 插入元素
      */
-    public void put(Object key, Object value) {
-        if (!(key instanceof Serializable)) {
-            throw new RuntimeException("NotSerializable");
-        }
-        if (!(value instanceof Serializable)) {
-            throw new RuntimeException("NotSerializable");
-        }
+    public void put(Serializable key, Serializable value) {
         localStore.put(key, value);
         write();
     }
@@ -123,7 +117,7 @@ public class LocalDataStore {
      *
      * @param map 集合
      */
-    public void putAll(Map<Object, Object> map) {
+    public void putAll(Map<? extends Serializable, ? extends Serializable> map) {
         localStore.putAll(map);
         write();
     }
