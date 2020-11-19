@@ -20,7 +20,8 @@ public class ObjectIds {
 
     private static final AtomicInteger NEXT_SEQ_INCR = new AtomicInteger(Randoms.randomInt());
 
-    private static final int MACHINE = Systems.getMachineCode() | Systems.getProcessCode();
+    private static final int MACHINE = Systems.getMachineCode();
+    // private static final int MACHINE = Systems.getMachineCode() | Systems.getProcessCode();
 
     /**
      * 判断objectId是否有效
@@ -99,6 +100,15 @@ public class ObjectIds {
 
         }
         return buf.toString();
+    }
+
+    /**
+     * 获取机器唯一信息
+     *
+     * @return 机器码
+     */
+    public static int getMachine() {
+        return MACHINE;
     }
 
 }

@@ -53,10 +53,7 @@ public class BigDecimals {
      * @return BigDecimal
      */
     public static BigDecimal toBigDecimal(Object o, BigDecimal defaultV) {
-        if (o == null) {
-            return defaultV;
-        }
-        return objectToDecimal(o);
+        return Objects1.det(objectToDecimal(o), defaultV);
     }
 
     /**
@@ -66,11 +63,12 @@ public class BigDecimals {
      * @return BigDecimals[]
      */
     public static BigDecimal[] toBigDecimals(Object... o) {
-        if (Arrays1.length(o) == 0) {
-            return new BigDecimal[]{};
+        int length = Arrays1.length(o);
+        if (length == 0) {
+            return new BigDecimal[0];
         }
-        BigDecimal[] r = new BigDecimal[o.length];
-        for (int i = 0, len = o.length; i < len; i++) {
+        BigDecimal[] r = new BigDecimal[length];
+        for (int i = 0; i < length; i++) {
             r[i] = objectToDecimal(o[i]);
         }
         return r;
@@ -165,9 +163,10 @@ public class BigDecimals {
             return defaultV;
         }
         if (mode == null) {
-            mode = RoundingMode.DOWN;
+            return b.setScale(length).toPlainString();
+        } else {
+            return b.setScale(length, mode).toPlainString();
         }
-        return b.setScale(length, mode).toPlainString();
     }
 
     /**
@@ -177,7 +176,7 @@ public class BigDecimals {
      * @return Long
      */
     public static Long toLong(BigDecimal b) {
-        return toLong(b, 0L, false);
+        return toLong(b, 0L);
     }
 
     /**
@@ -188,25 +187,10 @@ public class BigDecimals {
      * @return Long
      */
     public static Long toLong(BigDecimal b, Long defaultV) {
-        return toLong(b, defaultV, false);
-    }
-
-    /**
-     * BigDecimal -> Long
-     *
-     * @param b        BigDecimal
-     * @param defaultV 默认值
-     * @param exact    精确模式
-     * @return Long
-     */
-    public static Long toLong(BigDecimal b, Long defaultV, boolean exact) {
         if (b == null) {
             return defaultV;
         }
-        if (exact) {
-            return b.longValueExact();
-        }
-        return b.longValue();
+        return b.longValueExact();
     }
 
     /**
@@ -216,7 +200,7 @@ public class BigDecimals {
      * @return Integer
      */
     public static Integer toInteger(BigDecimal b) {
-        return toInteger(b, 0, false);
+        return toInteger(b, 0);
     }
 
     /**
@@ -227,25 +211,10 @@ public class BigDecimals {
      * @return Integer
      */
     public static Integer toInteger(BigDecimal b, Integer defaultV) {
-        return toInteger(b, defaultV, false);
-    }
-
-    /**
-     * BigDecimal -> Integer
-     *
-     * @param b        BigDecimal
-     * @param defaultV 默认值
-     * @param exact    精确模式
-     * @return Integer
-     */
-    public static Integer toInteger(BigDecimal b, Integer defaultV, boolean exact) {
         if (b == null) {
             return defaultV;
         }
-        if (exact) {
-            return b.intValueExact();
-        }
-        return b.intValue();
+        return b.intValueExact();
     }
 
     /**
@@ -295,9 +264,10 @@ public class BigDecimals {
             return defaultV;
         }
         if (mode == null) {
-            mode = RoundingMode.DOWN;
+            return b.setScale(length).doubleValue();
+        } else {
+            return b.setScale(length, mode).doubleValue();
         }
-        return b.setScale(length, mode).doubleValue();
     }
 
     /**
@@ -318,7 +288,7 @@ public class BigDecimals {
      * @param b 加数
      * @return 和
      */
-    public static BigDecimal addskipNegative(BigDecimal s, BigDecimal... b) {
+    public static BigDecimal addSkipNegative(BigDecimal s, BigDecimal... b) {
         return add(true, s, b);
     }
 
@@ -369,7 +339,7 @@ public class BigDecimals {
      * @param b 减数
      * @return 差
      */
-    public static BigDecimal subtractskipNegative(BigDecimal s, BigDecimal... b) {
+    public static BigDecimal subtractSkipNegative(BigDecimal s, BigDecimal... b) {
         return subtract(true, s, b);
     }
 
@@ -431,7 +401,7 @@ public class BigDecimals {
      * @param b 乘数
      * @return 积
      */
-    public static BigDecimal multiplyskipNegative(BigDecimal s, BigDecimal... b) {
+    public static BigDecimal multiplySkipNegative(BigDecimal s, BigDecimal... b) {
         return multiply(true, false, s, b);
     }
 
@@ -514,7 +484,7 @@ public class BigDecimals {
      * @param b 除数
      * @return 商
      */
-    public static BigDecimal divideskipNegative(BigDecimal s, BigDecimal... b) {
+    public static BigDecimal divideSkipNegative(BigDecimal s, BigDecimal... b) {
         return divide(true, false, s, b);
     }
 
@@ -575,15 +545,14 @@ public class BigDecimals {
      * @return 最大值
      */
     public static BigDecimal max(BigDecimal... b) {
-        BigDecimal max = null;
         int len = Arrays1.length(b);
         if (len == 0) {
             return null;
         }
-        max = b[0];
+        BigDecimal max = b[0];
         int offset = 1;
         if (max == null) {
-            for (int blen = b.length; offset < blen; offset++) {
+            for (; offset < len; offset++) {
                 BigDecimal bi = b[offset];
                 if (bi != null) {
                     max = bi;
@@ -610,15 +579,14 @@ public class BigDecimals {
      * @return 最大值
      */
     public static BigDecimal min(BigDecimal... b) {
-        BigDecimal min = null;
         int len = Arrays1.length(b);
         if (len == 0) {
             return null;
         }
-        min = b[0];
+        BigDecimal min = b[0];
         int offset = 1;
         if (min == null) {
-            for (int blen = b.length; offset < blen; offset++) {
+            for (; offset < len; offset++) {
                 BigDecimal bi = b[offset];
                 if (bi != null) {
                     min = bi;
@@ -639,6 +607,49 @@ public class BigDecimals {
     }
 
     /**
+     * 总和
+     *
+     * @param b ignore
+     * @return 总和
+     */
+    public static BigDecimal sum(BigDecimal... b) {
+        return sum(false, b);
+    }
+
+    /**
+     * 总和 跳过负数
+     *
+     * @param b ignore
+     * @return 总和
+     */
+    public static BigDecimal sumSkipNegative(BigDecimal... b) {
+        return sum(true, b);
+    }
+
+    /**
+     * 总和
+     *
+     * @param skipNegative 跳过负数
+     * @param b            ignore
+     * @return 总和
+     */
+    private static BigDecimal sum(boolean skipNegative, BigDecimal... b) {
+        BigDecimal sum = BigDecimal.ZERO;
+        int len = Arrays1.length(b);
+        for (int i = 0; i < len; i++) {
+            BigDecimal d = b[i];
+            if (d.compareTo(BigDecimal.ZERO) < 0) {
+                if (!skipNegative) {
+                    sum = sum.add(d);
+                }
+            } else {
+                sum = sum.add(d);
+            }
+        }
+        return sum;
+    }
+
+    /**
      * 平均值
      *
      * @param b ignore
@@ -649,6 +660,36 @@ public class BigDecimals {
     }
 
     /**
+     * 平均值 跳过0
+     *
+     * @param b ignore
+     * @return 平均值
+     */
+    public static BigDecimal avgSkipZero(BigDecimal... b) {
+        return avg(true, false, b);
+    }
+
+    /**
+     * 平均值 跳过负数
+     *
+     * @param b ignore
+     * @return 平均值
+     */
+    public static BigDecimal avgSkipNegative(BigDecimal... b) {
+        return avg(false, true, b);
+    }
+
+    /**
+     * 平均值 跳过0和负数
+     *
+     * @param b ignore
+     * @return 平均值
+     */
+    public static BigDecimal avgSkip(BigDecimal... b) {
+        return avg(true, true, b);
+    }
+
+    /**
      * 平均值
      *
      * @param skipZero     跳过0
@@ -656,8 +697,8 @@ public class BigDecimals {
      * @param b            ignore
      * @return 平均值
      */
-    public static BigDecimal avg(boolean skipZero, boolean skipNegative, BigDecimal... b) {
-        BigDecimal c = null;
+    private static BigDecimal avg(boolean skipZero, boolean skipNegative, BigDecimal... b) {
+        BigDecimal c;
         int len = Arrays1.length(b);
         int skip = 0;
         if (len == 0) {
@@ -775,6 +816,37 @@ public class BigDecimals {
      */
     public static boolean isDecimal(BigDecimal d) {
         return Double.compare(d.doubleValue(), ((double) d.longValueExact())) != 0;
+    }
+
+    /**
+     * 是否为负数
+     *
+     * @param d ignore
+     * @return true负数
+     */
+    public static boolean isNegative(BigDecimal d) {
+        if (d == null) {
+            return false;
+        }
+        return d.compareTo(BigDecimal.ZERO) < 0;
+    }
+
+    /**
+     * 返回绝对值
+     *
+     * @param d ignore
+     * @return 绝对值
+     */
+    public static BigDecimal abs(BigDecimal d) {
+        if (d == null) {
+            return null;
+        }
+        int i = d.compareTo(BigDecimal.ZERO);
+        if (i < 0) {
+            return d.negate();
+        } else {
+            return d;
+        }
     }
 
 }

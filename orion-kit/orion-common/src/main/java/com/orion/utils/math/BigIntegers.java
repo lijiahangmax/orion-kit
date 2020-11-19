@@ -35,10 +35,7 @@ public class BigIntegers {
      * @return BigInteger
      */
     public static BigInteger toBigInteger(Object o, BigInteger defaultV) {
-        if (o == null) {
-            return defaultV;
-        }
-        return objectToBigInteger(o);
+        return Objects1.det(objectToBigInteger(o), defaultV);
     }
 
     /**
@@ -108,7 +105,7 @@ public class BigIntegers {
      *
      * @param b        BigInteger
      * @param defaultV 默认值
-     * @param length   进制
+     * @param radix    进制
      * @return String
      */
     public static String toStr(BigInteger b, String defaultV, int radix) {
@@ -125,7 +122,7 @@ public class BigIntegers {
      * @return Long
      */
     public static Long toLong(BigInteger b) {
-        return toLong(b, 0L, false);
+        return toLong(b, 0L);
     }
 
     /**
@@ -136,25 +133,10 @@ public class BigIntegers {
      * @return Long
      */
     public static Long toLong(BigInteger b, Long defaultV) {
-        return toLong(b, defaultV, false);
-    }
-
-    /**
-     * BigInteger -> Long
-     *
-     * @param b        BigInteger
-     * @param defaultV 默认值
-     * @param exact    精确模式
-     * @return Long
-     */
-    public static Long toLong(BigInteger b, Long defaultV, boolean exact) {
         if (b == null) {
             return defaultV;
         }
-        if (exact) {
-            return b.longValueExact();
-        }
-        return b.longValue();
+        return b.longValueExact();
     }
 
     /**
@@ -164,7 +146,7 @@ public class BigIntegers {
      * @return Integer
      */
     public static Integer toInteger(BigInteger b) {
-        return toInteger(b, 0, false);
+        return toInteger(b, 0);
     }
 
     /**
@@ -175,25 +157,10 @@ public class BigIntegers {
      * @return Integer
      */
     public static Integer toInteger(BigInteger b, Integer defaultV) {
-        return toInteger(b, defaultV, false);
-    }
-
-    /**
-     * BigInteger -> Integer
-     *
-     * @param b        BigInteger
-     * @param defaultV 默认值
-     * @param exact    精确模式
-     * @return Integer
-     */
-    public static Integer toInteger(BigInteger b, Integer defaultV, boolean exact) {
         if (b == null) {
             return defaultV;
         }
-        if (exact) {
-            return b.intValueExact();
-        }
-        return b.intValue();
+        return b.intValueExact();
     }
 
     /**
@@ -238,7 +205,7 @@ public class BigIntegers {
      * @param b 加数
      * @return 和
      */
-    public static BigInteger addSkipMinus(BigInteger s, BigInteger... b) {
+    public static BigInteger addSkipNegative(BigInteger s, BigInteger... b) {
         return add(true, s, b);
     }
 
@@ -289,7 +256,7 @@ public class BigIntegers {
      * @param b 减数
      * @return 差
      */
-    public static BigInteger subtractSkipMinus(BigInteger s, BigInteger... b) {
+    public static BigInteger subtractSkipNegative(BigInteger s, BigInteger... b) {
         return subtract(true, s, b);
     }
 
@@ -351,7 +318,7 @@ public class BigIntegers {
      * @param b 乘数
      * @return 积
      */
-    public static BigInteger multiplySkipMinus(BigInteger s, BigInteger... b) {
+    public static BigInteger multiplySkipNegative(BigInteger s, BigInteger... b) {
         return multiply(true, false, s, b);
     }
 
@@ -434,7 +401,7 @@ public class BigIntegers {
      * @param b 除数
      * @return 商
      */
-    public static BigInteger divideSkipMinus(BigInteger s, BigInteger... b) {
+    public static BigInteger divideSkipNegative(BigInteger s, BigInteger... b) {
         return divide(true, false, s, b);
     }
 
@@ -488,7 +455,6 @@ public class BigIntegers {
         return s;
     }
 
-
     /**
      * 最大值
      *
@@ -496,15 +462,14 @@ public class BigIntegers {
      * @return 最大值
      */
     public static BigInteger max(BigInteger... b) {
-        BigInteger max = null;
         int len = Arrays1.length(b);
         if (len == 0) {
             return null;
         }
-        max = b[0];
+        BigInteger max = b[0];
         int offset = 1;
         if (max == null) {
-            for (int blen = b.length; offset < blen; offset++) {
+            for (; offset < len; offset++) {
                 BigInteger bi = b[offset];
                 if (bi != null) {
                     max = bi;
@@ -531,15 +496,14 @@ public class BigIntegers {
      * @return 最大值
      */
     public static BigInteger min(BigInteger... b) {
-        BigInteger min = null;
         int len = Arrays1.length(b);
         if (len == 0) {
             return null;
         }
-        min = b[0];
+        BigInteger min = b[0];
         int offset = 1;
         if (min == null) {
-            for (int blen = b.length; offset < blen; offset++) {
+            for (; offset < len; offset++) {
                 BigInteger bi = b[offset];
                 if (bi != null) {
                     min = bi;
@@ -560,6 +524,49 @@ public class BigIntegers {
     }
 
     /**
+     * 总和
+     *
+     * @param b ignore
+     * @return 总和
+     */
+    public static BigInteger sum(BigInteger... b) {
+        return sum(false, b);
+    }
+
+    /**
+     * 总和 跳过负数
+     *
+     * @param b ignore
+     * @return 总和
+     */
+    public static BigInteger sumSkipNegative(BigInteger... b) {
+        return sum(true, b);
+    }
+
+    /**
+     * 总和
+     *
+     * @param skipNegative 跳过负数
+     * @param b            ignore
+     * @return 总和
+     */
+    private static BigInteger sum(boolean skipNegative, BigInteger... b) {
+        BigInteger sum = BigInteger.ZERO;
+        int len = Arrays1.length(b);
+        for (int i = 0; i < len; i++) {
+            BigInteger d = b[i];
+            if (d.compareTo(BigInteger.ZERO) < 0) {
+                if (!skipNegative) {
+                    sum = sum.add(d);
+                }
+            } else {
+                sum = sum.add(d);
+            }
+        }
+        return sum;
+    }
+
+    /**
      * 平均值
      *
      * @param b ignore
@@ -570,6 +577,36 @@ public class BigIntegers {
     }
 
     /**
+     * 平均值 跳过0
+     *
+     * @param b ignore
+     * @return 平均值
+     */
+    public static BigInteger avgSkipZero(BigInteger... b) {
+        return avg(true, false, b);
+    }
+
+    /**
+     * 平均值 跳过负数
+     *
+     * @param b ignore
+     * @return 平均值
+     */
+    public static BigInteger avgSkipNegative(BigInteger... b) {
+        return avg(false, true, b);
+    }
+
+    /**
+     * 平均值 跳过0和负数
+     *
+     * @param b ignore
+     * @return 平均值
+     */
+    public static BigInteger avgSkip(BigInteger... b) {
+        return avg(true, true, b);
+    }
+
+    /**
      * 平均值
      *
      * @param skipZero     跳过0
@@ -577,8 +614,8 @@ public class BigIntegers {
      * @param b            ignore
      * @return 平均值
      */
-    public static BigInteger avg(boolean skipZero, boolean skipNegative, BigInteger... b) {
-        BigInteger c = null;
+    private static BigInteger avg(boolean skipZero, boolean skipNegative, BigInteger... b) {
+        BigInteger c;
         int len = Arrays1.length(b);
         int skip = 0;
         if (len == 0) {
@@ -609,7 +646,7 @@ public class BigIntegers {
         } else {
             c = add(false, null, b);
         }
-        return c.divide(new BigInteger(len - skip + ""));
+        return c.divide(BigInteger.valueOf(len - skip));
     }
 
     /**
@@ -683,6 +720,38 @@ public class BigIntegers {
      */
     public static boolean eq(BigInteger d1, BigInteger d2) {
         return Objects1.eq(d1, d2);
+    }
+
+
+    /**
+     * 是否为负数
+     *
+     * @param d ignore
+     * @return true负数
+     */
+    public static boolean isNegative(BigInteger d) {
+        if (d == null) {
+            return false;
+        }
+        return d.compareTo(BigInteger.ZERO) < 0;
+    }
+
+    /**
+     * 返回绝对值
+     *
+     * @param d ignore
+     * @return 绝对值
+     */
+    public static BigInteger abs(BigInteger d) {
+        if (d == null) {
+            return null;
+        }
+        int i = d.compareTo(BigInteger.ZERO);
+        if (i < 0) {
+            return d.negate();
+        } else {
+            return d;
+        }
     }
 
 }

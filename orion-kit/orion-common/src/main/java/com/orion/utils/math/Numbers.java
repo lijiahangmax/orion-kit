@@ -1,4 +1,8 @@
-package com.orion.utils;
+package com.orion.utils.math;
+
+import com.orion.utils.Arrays1;
+import com.orion.utils.Strings;
+import com.orion.utils.Valid;
 
 import java.text.DecimalFormat;
 import java.util.Map;
@@ -811,7 +815,131 @@ public class Numbers {
         return max;
     }
 
+    // -------------------- sum --------------------
+
+    public static long sum(byte... array) {
+        long max = 0;
+        for (int j = 0; j < array.length; j++) {
+            max += array[j];
+        }
+        return max;
+    }
+
+    public static long sum(short... array) {
+        long max = 0;
+        for (int j = 0; j < array.length; j++) {
+            max += array[j];
+        }
+        return max;
+    }
+
+    public static long sum(int... array) {
+        long max = 0;
+        for (int j = 0; j < array.length; j++) {
+            max += array[j];
+        }
+        return max;
+    }
+
+    public static long sum(long... array) {
+        long max = 0;
+        for (int j = 0; j < array.length; j++) {
+            max += array[j];
+        }
+        return max;
+    }
+
+    public static double sum(float... array) {
+        double max = 0;
+        for (int j = 0; j < array.length; j++) {
+            if (!Float.isNaN(array[j])) {
+                max += array[j];
+            }
+        }
+        return max;
+    }
+
+    public static double sum(double... array) {
+        double max = 0;
+        for (int j = 0; j < array.length; j++) {
+            if (!Double.isNaN(array[j])) {
+                max += array[j];
+            }
+        }
+        return max;
+    }
+
+    // -------------------- avg --------------------
+
+    public static byte avg(byte... array) {
+        int len = Arrays1.length(array);
+        if (len == 0) {
+            return 0;
+        }
+        return (byte) (sum(array) / len);
+    }
+
+    public static short avg(short... array) {
+        int len = Arrays1.length(array);
+        if (len == 0) {
+            return 0;
+        }
+        return (short) (sum(array) / len);
+    }
+
+    public static int avg(int... array) {
+        int len = Arrays1.length(array);
+        if (len == 0) {
+            return 0;
+        }
+        return (int) (sum(array) / len);
+    }
+
+    public static long avg(long... array) {
+        int len = Arrays1.length(array);
+        if (len == 0) {
+            return 0;
+        }
+        return sum(array) / len;
+    }
+
+    public static float avg(float... array) {
+        int len = Arrays1.length(array);
+        if (len == 0) {
+            return 0;
+        }
+        return (float) (sum(array) / len);
+    }
+
+    public static double avg(double... array) {
+        int len = Arrays1.length(array);
+        if (len == 0) {
+            return 0;
+        }
+        return sum(array) / len;
+    }
+
     // -------------------- scale --------------------
+
+    /**
+     * 清空小数
+     *
+     * @param f float
+     * @return int
+     */
+    public static int cleanDecimal(float f) {
+        return Integer.parseInt(NO_DECIMAL.format(f));
+    }
+
+    /**
+     * 清空小数
+     *
+     * @param d double
+     * @return string
+     */
+    public static long cleanDecimal(double d) {
+        return Long.parseLong(NO_DECIMAL.format(d));
+    }
 
     /**
      * 清空小数
@@ -819,7 +947,7 @@ public class Numbers {
      * @param f float
      * @return string
      */
-    public static String cleanDecimal(float f) {
+    public static String cleanFloatDecimal(float f) {
         return NO_DECIMAL.format(f);
     }
 
@@ -829,7 +957,7 @@ public class Numbers {
      * @param d double
      * @return string
      */
-    public static String cleanDecimal(double d) {
+    public static String cleanDoubleDecimal(double d) {
         return NO_DECIMAL.format(d);
     }
 
