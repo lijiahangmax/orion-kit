@@ -58,7 +58,7 @@ public class BeanMap extends MutableLinkedHashMap<String, Object> {
      * @return BeanMap
      */
     public static BeanMap create(Object o, String... ignoreFields) {
-        return new BeanMap(o, ignoreFields);
+        return new BeanMap(o, true, ignoreFields);
     }
 
     /**

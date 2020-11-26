@@ -13,9 +13,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.orion.utils.reflect.Classes.isImplClass;
+
 /**
  * Bean 工具类
- * 根据getter方法获取值 和 setter方法设置值
+ * 根据getter方法获取值和setter方法设置值
  *
  * @author ljh15
  * @version 1.0.0
@@ -27,7 +29,6 @@ public class BeanWrapper {
     private static final Map<Class<?>, Constructor<?>> CONSTRUCTOR_CACHE = new ConcurrentHashMap<>(16);
     private static final Map<Class<?>, List<Method>> ALL_SET_METHOD_CACHE = new ConcurrentHashMap<>(16);
     private static final Map<Class<?>, List<Method>> ALL_GET_METHOD_CACHE = new ConcurrentHashMap<>(16);
-    private static final Map<Class<?>, List<Class<?>>> ALL_INTERFACE_CACHE = new ConcurrentHashMap<>(16);
     private static final MultiConcurrentHashMap<Class<?>, String, Method> METHOD_CACHE = new MultiConcurrentHashMap<>();
 
     private BeanWrapper() {
@@ -119,7 +120,7 @@ public class BeanWrapper {
         return map;
     }
 
-    public static <T> T toBean(Map<String, ?> map, Class<T> clazz) {
+    public static <T> T toBean(Map<?, ?> map, Class<T> clazz) {
         return toBean(map, null, clazz);
     }
 
@@ -132,11 +133,11 @@ public class BeanWrapper {
      * @param <T>         class
      * @return bean
      */
-    public static <T> T toBean(Map<String, ?> map, Map<String, ?> fieldMapper, Class<T> clazz) {
+    public static <T> T toBean(Map<?, ?> map, Map<String, ?> fieldMapper, Class<T> clazz) {
         T t = Constructors.newInstance(getConstructor(clazz));
-        for (Map.Entry<String, ?> entry : map.entrySet()) {
+        for (Map.Entry<?, ?> entry : map.entrySet()) {
             List<Method> setterMethods = getAllSetterMethod(clazz);
-            String key = entry.getKey();
+            String key = Objects1.toString(entry.getKey());
             Map<String, ?> keyMap = null;
             if (fieldMapper != null) {
                 Object field = fieldMapper.get(key);
@@ -158,16 +159,16 @@ public class BeanWrapper {
                     try {
                         if (isImplClass(paramClass, valueClass)) {
                             // 赋值
-                            Methods.invokeMethod(t, setterMethod, new Object[]{value});
+                            Methods.invokeMethod(t, setterMethod, value);
                         } else if (isImplClass(Map.class, valueClass) && !isImplClass(Map.class, paramClass)) {
                             // 值为map 属性为 bean
-                            Methods.invokeMethod(t, setterMethod, new Object[]{toBean((Map<String, ?>) value, keyMap, paramClass)});
+                            Methods.invokeMethod(t, setterMethod, toBean((Map<?, ?>) value, keyMap, paramClass));
                         } else if (isImplClass(Map.class, paramClass) && !isImplClass(Map.class, valueClass)) {
                             // 值为bean 属性为 map
-                            Methods.invokeMethod(t, setterMethod, new Object[]{toMap(value, (Map<String, String>) keyMap)});
+                            Methods.invokeMethod(t, setterMethod, toMap(value, (Map<String, String>) keyMap));
                         } else {
                             // 推断
-                            Methods.invokeMethodInfer(t, setterMethod, new Object[]{value});
+                            Methods.invokeMethodInfer(t, setterMethod, value);
                         }
                     } catch (Exception e) {
                         Exceptions.printStacks(e);
@@ -306,7 +307,7 @@ public class BeanWrapper {
                     try {
                         Object sourceValue = Methods.invokeMethod(source, sourceGetter);
                         if (sourceValue != null) {
-                            Methods.invokeMethodInfer(target, targetSetter, new Object[]{sourceValue});
+                            Methods.invokeMethodInfer(target, targetSetter, sourceValue);
                         }
                         break;
                     } catch (Exception e) {
@@ -351,29 +352,6 @@ public class BeanWrapper {
             }
         }
         return name;
-    }
-
-    /**
-     * 判断argClass是否为paramClass的实现类
-     *
-     * @param paramClass paramClass
-     * @param argClass   argClass
-     * @return true 是实现类或本类
-     */
-    private static boolean isImplClass(Class<?> paramClass, Class<?> argClass) {
-        if (paramClass.equals(argClass) || paramClass.equals(Object.class)) {
-            return true;
-        }
-        List<Class<?>> list = ALL_INTERFACE_CACHE.get(argClass);
-        if (list == null) {
-            list = Classes.getInterfaces(argClass);
-            list.addAll(Classes.getSuperClasses(argClass));
-            ALL_INTERFACE_CACHE.put(argClass, list);
-        }
-        if (list.isEmpty()) {
-            return false;
-        }
-        return list.contains(paramClass);
     }
 
     /**

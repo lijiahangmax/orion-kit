@@ -5,8 +5,8 @@ import com.orion.lang.collect.MutableArrayList;
 import com.orion.lang.collect.SingletonList;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Objects1;
-import com.orion.utils.Randoms;
 import com.orion.utils.Valid;
+import com.orion.utils.random.Randoms;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;

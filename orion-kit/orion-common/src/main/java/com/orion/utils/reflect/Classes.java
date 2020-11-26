@@ -156,7 +156,7 @@ public class Classes {
      * @param o ignore
      * @return true 是
      */
-    public static boolean isJDKProxy(Object o) {
+    public static boolean isJdkProxy(Object o) {
         return Proxy.isProxyClass(o.getClass());
     }
 
@@ -251,11 +251,12 @@ public class Classes {
         if (requireClass.equals(argClass) || requireClass.equals(Object.class)) {
             return true;
         }
-        List<Class<?>> list = getInterfaces(argClass);
-        if (list.isEmpty() || !list.contains(requireClass)) {
-            list = getSuperClasses(argClass);
-        }
-        return list.contains(requireClass);
+        // List<Class<?>> list = getInterfaces(argClass);
+        // if (list.isEmpty() || !list.contains(requireClass)) {
+        //     list = getSuperClasses(argClass);
+        // }
+        // return list.contains(requireClass);
+        return requireClass.isAssignableFrom(argClass);
     }
 
     /**

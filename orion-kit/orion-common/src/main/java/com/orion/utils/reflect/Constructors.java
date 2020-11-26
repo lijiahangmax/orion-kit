@@ -38,7 +38,6 @@ public class Constructors {
             constructor.setAccessible(true);
             return constructor;
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -51,7 +50,7 @@ public class Constructors {
      * @param <T>            ignore
      * @return 构造方法
      */
-    public static <T> Constructor<T> getConstructor(Class<T> clazz, Class[] parameterTypes) {
+    public static <T> Constructor<T> getConstructor(Class<T> clazz, Class<?>... parameterTypes) {
         Valid.notNull(clazz, "Class is null");
         if (Arrays1.length(parameterTypes) == 0) {
             return getDefaultConstructor(clazz);
@@ -61,7 +60,6 @@ public class Constructors {
             constructor.setAccessible(true);
             return constructor;
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -123,9 +121,31 @@ public class Constructors {
     }
 
     /**
+     * 获取构造方法
+     *
+     * @param clazz class
+     * @param <T>   ignore
+     * @return 构造方法
+     */
+    public static <T> List<Constructor<T>> getConstructors(Class<T> clazz) {
+        Valid.notNull(clazz, "Class is null");
+        List<Constructor<T>> list = new ArrayList<>();
+        try {
+            Constructor<?>[] constructors = clazz.getConstructors();
+            for (Constructor<?> constructor : constructors) {
+                constructor.setAccessible(true);
+                list.add((Constructor<T>) constructor);
+            }
+        } catch (Exception e) {
+            // ignore
+        }
+        return list;
+    }
+
+    /**
      * 设置构造方法可访问
      */
-    public static void setAccessible(Constructor constructor) {
+    public static void setAccessible(Constructor<?> constructor) {
         Valid.notNull(constructor, "Set Accessible Constructor class is null");
         if ((!Modifier.isPublic(constructor.getModifiers()) || !Modifier.isPublic(constructor.getDeclaringClass().getModifiers())) && !constructor.isAccessible()) {
             constructor.setAccessible(true);
@@ -157,7 +177,7 @@ public class Constructors {
      * @param <T>         类实例型
      * @return 实例
      */
-    public static <T> T newInstance(Constructor<T> constructor, Object[] values) {
+    public static <T> T newInstance(Constructor<T> constructor, Object... values) {
         Valid.notNull(constructor, "Constructor is null");
         try {
             constructor.setAccessible(true);
@@ -194,7 +214,7 @@ public class Constructors {
      * @param <T>            类实例型
      * @return 实例
      */
-    public static <T> T newInstance(Class<T> clazz, Class[] parameterTypes, Object[] values) {
+    public static <T> T newInstance(Class<T> clazz, Class<?>[] parameterTypes, Object... values) {
         Valid.notNull(clazz, "Class is null");
         try {
             Constructor<T> constructor = clazz.getDeclaredConstructor(parameterTypes);
@@ -212,7 +232,7 @@ public class Constructors {
      * @param <T>         类实例型
      * @return 实例
      */
-    public static <T> T newInstanceInfer(Constructor<T> constructor, Object[] args) {
+    public static <T> T newInstanceInfer(Constructor<T> constructor, Object... args) {
         Valid.notNull(constructor, "constructor is null");
         if (Arrays1.isEmpty(args)) {
             return newInstance(constructor);
@@ -227,7 +247,7 @@ public class Constructors {
      * @param <T>   类实例型
      * @return 实例
      */
-    public static <T> T newInstanceInfer(Class<T> clazz, Object[] args) {
+    public static <T> T newInstanceInfer(Class<T> clazz, Object... args) {
         Valid.notNull(clazz, "Class is null");
         if (Arrays1.isEmpty(args)) {
             return newInstance(clazz);

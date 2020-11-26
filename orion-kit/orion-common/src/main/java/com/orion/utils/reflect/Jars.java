@@ -124,7 +124,7 @@ public class Jars {
         while (entries.hasMoreElements()) {
             String className = entries.nextElement().getName();
             if (className.endsWith(".class")) {
-                classes.add(className.replace("/", ".").substring(0, className.lastIndexOf(".")));
+                classes.add(className.replaceAll("/", ".").substring(0, className.lastIndexOf(".")));
             }
         }
         return classes;

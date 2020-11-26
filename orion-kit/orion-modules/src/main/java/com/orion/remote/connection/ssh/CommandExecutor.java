@@ -369,4 +369,9 @@ public class CommandExecutor implements Executable, SafeCloseable {
         return runState == 2 || runState == 3;
     }
 
+    @Override
+    public String toString() {
+        return "[" + command + "]";
+    }
+
 }

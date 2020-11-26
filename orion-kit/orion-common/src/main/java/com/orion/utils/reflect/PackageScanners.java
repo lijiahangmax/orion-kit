@@ -35,7 +35,7 @@ public class PackageScanners {
     /**
      * 是否扫描子包
      */
-    private boolean scanChildPackage = false;
+    private boolean scanChildPackage;
 
     /**
      * 扫描的包
@@ -104,7 +104,7 @@ public class PackageScanners {
             return new HashSet<>();
         }
         Set<Class<?>> impl = new HashSet<>();
-        for (Class c : classes) {
+        for (Class<?> c : classes) {
             if (!c.equals(superClass) && Classes.isImplClass(superClass, c)) {
                 impl.add(c);
             }
@@ -118,11 +118,12 @@ public class PackageScanners {
      * @param annotateClasses 注解class
      * @return AnnotatedClasses
      */
-    public Set<Class<?>> getAnnotatedClass(Class<? extends Annotation>... annotateClasses) {
+    @SafeVarargs
+    public final Set<Class<?>> getAnnotatedClass(Class<? extends Annotation>... annotateClasses) {
         Valid.notEmpty(annotateClasses, "AnnotateClasses length is 0");
         Set<Class<?>> annotatedClass = new HashSet<>();
-        for (Class c : classes) {
-            if (Annotations.classHasAnnotated(c, annotateClasses)) {
+        for (Class<?> c : classes) {
+            if (Annotations.present(c, annotateClasses)) {
                 annotatedClass.add(c);
             }
         }
@@ -135,13 +136,14 @@ public class PackageScanners {
      * @param annotateClasses 注解class
      * @return AnnotatedConstructor
      */
-    public Map<Class<?>, Set<Constructor>> getAnnotatedConstructor(Class<? extends Annotation>... annotateClasses) {
+    @SafeVarargs
+    public final Map<Class<?>, Set<Constructor<?>>> getAnnotatedConstructor(Class<? extends Annotation>... annotateClasses) {
         Valid.notEmpty(annotateClasses, "AnnotateClasses length is 0");
-        Map<Class<?>, Set<Constructor>> annotatedClass = new HashMap<>(16);
-        for (Class c : classes) {
-            Set<Constructor> constructors = null;
-            for (Constructor constructor : c.getConstructors()) {
-                if (Annotations.constructorHasAnnotated(constructor, annotateClasses)) {
+        Map<Class<?>, Set<Constructor<?>>> annotatedClass = new HashMap<>(16);
+        for (Class<?> c : classes) {
+            Set<Constructor<?>> constructors = null;
+            for (Constructor<?> constructor : c.getConstructors()) {
+                if (Annotations.present(constructor, annotateClasses)) {
                     if (constructors == null) {
                         constructors = new HashSet<>();
                     }
@@ -162,18 +164,19 @@ public class PackageScanners {
      * @param constructorAnnotateClasses 构造方法注解class
      * @return AnnotatedConstructor
      */
-    public Map<Class<?>, Set<Constructor>> getAnnotatedConstructorByAnnotatedClass(Class<? extends Annotation> classAnnotatedClass, Class<? extends Annotation>... constructorAnnotateClasses) {
+    @SafeVarargs
+    public final Map<Class<?>, Set<Constructor<?>>> getAnnotatedConstructorByAnnotatedClass(Class<? extends Annotation> classAnnotatedClass, Class<? extends Annotation>... constructorAnnotateClasses) {
         Valid.notNull(classAnnotatedClass, "ClassAnnotatedClass is null");
         Valid.notEmpty(constructorAnnotateClasses, "ConstructorAnnotateClasses length is 0");
-        Map<Class<?>, Set<Constructor>> annotatedClass = new HashMap<>(16);
-        for (Class c : classes) {
-            boolean hasAnnotated = Annotations.classHasAnnotated(c, classAnnotatedClass);
+        Map<Class<?>, Set<Constructor<?>>> annotatedClass = new HashMap<>(16);
+        for (Class<?> c : classes) {
+            boolean hasAnnotated = Annotations.present(c, classAnnotatedClass);
             if (!hasAnnotated) {
                 continue;
             }
-            Set<Constructor> constructors = null;
-            for (Constructor constructor : c.getConstructors()) {
-                if (Annotations.constructorHasAnnotated(constructor, constructorAnnotateClasses)) {
+            Set<Constructor<?>> constructors = null;
+            for (Constructor<?> constructor : c.getConstructors()) {
+                if (Annotations.present(constructor, constructorAnnotateClasses)) {
                     if (constructors == null) {
                         constructors = new HashSet<>();
                     }
@@ -193,13 +196,14 @@ public class PackageScanners {
      * @param annotateClasses 注解class
      * @return AnnotatedClasses
      */
-    public Map<Class<?>, Set<Method>> getAnnotatedMethod(Class<? extends Annotation>... annotateClasses) {
+    @SafeVarargs
+    public final Map<Class<?>, Set<Method>> getAnnotatedMethod(Class<? extends Annotation>... annotateClasses) {
         Valid.notEmpty(annotateClasses, "AnnotateClasses length is 0");
         Map<Class<?>, Set<Method>> annotatedClass = new HashMap<>(16);
-        for (Class c : classes) {
+        for (Class<?> c : classes) {
             Set<Method> methods = null;
             for (Method method : c.getDeclaredMethods()) {
-                if (Annotations.methodHasAnnotated(method, annotateClasses)) {
+                if (Annotations.present(method, annotateClasses)) {
                     if (methods == null) {
                         methods = new HashSet<>();
                     }
@@ -220,18 +224,19 @@ public class PackageScanners {
      * @param methodAnnotateClasses 方法注解class
      * @return AnnotatedClasses
      */
-    public Map<Class<?>, Set<Method>> getAnnotatedMethodByAnnotatedClass(Class<? extends Annotation> classAnnotatedClass, Class<? extends Annotation>... methodAnnotateClasses) {
+    @SafeVarargs
+    public final Map<Class<?>, Set<Method>> getAnnotatedMethodByAnnotatedClass(Class<? extends Annotation> classAnnotatedClass, Class<? extends Annotation>... methodAnnotateClasses) {
         Valid.notNull(classAnnotatedClass, "ClassAnnotatedClass is null");
         Valid.notEmpty(methodAnnotateClasses, "MethodAnnotateClasses length is 0");
         Map<Class<?>, Set<Method>> annotatedClass = new HashMap<>(16);
-        for (Class c : classes) {
-            boolean hasAnnotated = Annotations.classHasAnnotated(c, classAnnotatedClass);
+        for (Class<?> c : classes) {
+            boolean hasAnnotated = Annotations.present(c, classAnnotatedClass);
             if (!hasAnnotated) {
                 continue;
             }
             Set<Method> methods = null;
             for (Method method : c.getDeclaredMethods()) {
-                if (Annotations.methodHasAnnotated(method, methodAnnotateClasses)) {
+                if (Annotations.present(method, methodAnnotateClasses)) {
                     if (methods == null) {
                         methods = new HashSet<>();
                     }
@@ -251,13 +256,14 @@ public class PackageScanners {
      * @param annotateClasses 注解class
      * @return AnnotatedClasses
      */
-    public Map<Class<?>, Set<Field>> getAnnotatedField(Class<? extends Annotation>... annotateClasses) {
+    @SafeVarargs
+    public final Map<Class<?>, Set<Field>> getAnnotatedField(Class<? extends Annotation>... annotateClasses) {
         Valid.notEmpty(annotateClasses, "AnnotateClasses length is 0");
         Map<Class<?>, Set<Field>> annotatedClass = new HashMap<>(16);
-        for (Class c : classes) {
+        for (Class<?> c : classes) {
             Set<Field> fields = null;
             for (Field field : c.getDeclaredFields()) {
-                if (Annotations.fieldHasAnnotated(field, annotateClasses)) {
+                if (Annotations.present(field, annotateClasses)) {
                     if (fields == null) {
                         fields = new HashSet<>();
                     }
@@ -278,18 +284,19 @@ public class PackageScanners {
      * @param fieldAnnotateClasses 字段注解class
      * @return AnnotatedClasses
      */
-    public Map<Class<?>, Set<Field>> getAnnotatedField(Class<? extends Annotation> classAnnotatedClass, Class<? extends Annotation>... fieldAnnotateClasses) {
+    @SafeVarargs
+    public final Map<Class<?>, Set<Field>> getAnnotatedField(Class<? extends Annotation> classAnnotatedClass, Class<? extends Annotation>... fieldAnnotateClasses) {
         Valid.notNull(classAnnotatedClass, "ClassAnnotatedClass is null");
         Valid.notEmpty(fieldAnnotateClasses, "FieldAnnotateClasses length is 0");
         Map<Class<?>, Set<Field>> annotatedClass = new HashMap<>(16);
-        for (Class c : classes) {
-            boolean hasAnnotated = Annotations.classHasAnnotated(c, classAnnotatedClass);
+        for (Class<?> c : classes) {
+            boolean hasAnnotated = Annotations.present(c, classAnnotatedClass);
             if (!hasAnnotated) {
                 continue;
             }
             Set<Field> fields = null;
             for (Field field : c.getDeclaredFields()) {
-                if (Annotations.fieldHasAnnotated(field, fieldAnnotateClasses)) {
+                if (Annotations.present(field, fieldAnnotateClasses)) {
                     if (fields == null) {
                         fields = new HashSet<>();
                     }
@@ -315,9 +322,9 @@ public class PackageScanners {
             if ("file".equals(protocol)) {
                 addFileClass(Files1.getPath(Urls.decode(resource.getPath() + "/" + packageName.replaceAll("\\.", "/"))), packageName, classNameSet);
             } else if ("jar".equals(protocol)) {
-                JarURLConnection jarURLConnection = (JarURLConnection) resource.openConnection();
-                if (jarURLConnection != null) {
-                    JarFile jarFile = jarURLConnection.getJarFile();
+                JarURLConnection connection = (JarURLConnection) resource.openConnection();
+                if (connection != null) {
+                    JarFile jarFile = connection.getJarFile();
                     if (jarFile != null) {
                         Enumeration<JarEntry> jarEntries = jarFile.entries();
                         while (jarEntries.hasMoreElements()) {

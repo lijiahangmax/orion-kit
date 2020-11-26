@@ -1,4 +1,6 @@
-package com.orion.utils;
+package com.orion.utils.random;
+
+import com.orion.utils.Strings;
 
 import java.util.List;
 import java.util.Random;

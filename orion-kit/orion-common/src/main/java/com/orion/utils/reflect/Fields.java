@@ -187,7 +187,7 @@ public class Fields {
         Field field = getAccessibleField(obj.getClass(), fieldName);
         try {
             if (TypeStore.canConvert(value.getClass(), field.getType())) {
-                field.set(obj, value);
+                field.set(obj, TypeStore.STORE.to(value, field.getType()));
                 return;
             }
             throw Exceptions.invoke(Strings.format("could infer set field value, field: {}, class: {}", fieldName, obj.getClass().getName()));
@@ -210,7 +210,7 @@ public class Fields {
         try {
             setAccessible(field);
             if (TypeStore.canConvert(value.getClass(), field.getType())) {
-                field.set(obj, value);
+                field.set(obj, TypeStore.STORE.to(value, field.getType()));
                 return;
             }
             throw Exceptions.invoke(Strings.format("could infer set field value, field: {}, class: {}", field.getName(), obj.getClass().getName()));
@@ -230,7 +230,7 @@ public class Fields {
     }
 
     /**
-     * 获取该类的所有属性列表
+     * 获取该类的所有属性列表 包括父类 不包括 static transient
      *
      * @param clazz 反射类
      * @return 属性
@@ -241,7 +241,7 @@ public class Fields {
             List<Field> fieldList = Stream.of(clazz.getDeclaredFields())
                     .filter(field -> !Modifier.isStatic(field.getModifiers()))
                     .filter(field -> !Modifier.isTransient(field.getModifiers()))
-                    .collect(toCollection(ArrayList::new));
+                    .collect(Collectors.toList());
             Class<?> superClass = clazz.getSuperclass();
             // 当前类属性
             Map<String, Field> fieldMap = fieldList.stream().collect(toMap(Field::getName, identity()));
@@ -251,6 +251,20 @@ public class Fields {
         } else {
             return new ArrayList<>();
         }
+    }
+
+    /**
+     * 获取所有static的属性
+     *
+     * @param clazz 类
+     * @return static属性
+     */
+    public static List<Field> getStaticFields(Class<?> clazz) {
+        Field[] fields = clazz.getDeclaredFields();
+        return Arrays.stream(fields)
+                .filter(f -> Modifier.isStatic(f.getModifiers()))
+                .filter(f -> !Modifier.isTransient(f.getModifiers()))
+                .collect(toCollection(ArrayList::new));
     }
 
     /**
@@ -268,7 +282,7 @@ public class Fields {
                 setAccessible(field);
                 return field;
             } catch (NoSuchFieldException e) {
-                Exceptions.printStacks(e);
+                // ignore
             }
         }
         return null;
@@ -284,20 +298,6 @@ public class Fields {
         if ((!Modifier.isPublic(field.getModifiers()) || !Modifier.isPublic(field.getDeclaringClass().getModifiers()) || Modifier.isFinal(field.getModifiers())) && !field.isAccessible()) {
             field.setAccessible(true);
         }
-    }
-
-    /**
-     * 获取所有static的属性
-     *
-     * @param clazz 类
-     * @return static属性
-     */
-    public static List<Field> getStaticFields(Class<?> clazz) {
-        Field[] fields = clazz.getDeclaredFields();
-        return Arrays.stream(fields)
-                .filter(f -> Modifier.isStatic(f.getModifiers()))
-                .filter(f -> !Modifier.isTransient(f.getModifiers()))
-                .collect(toCollection(ArrayList::new));
     }
 
 }

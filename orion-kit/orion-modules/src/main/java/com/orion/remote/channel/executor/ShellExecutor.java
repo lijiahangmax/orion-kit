@@ -58,7 +58,7 @@ public class ShellExecutor extends BaseExecutor {
     /**
      * 是否关闭
      */
-    private boolean close;
+    private volatile boolean close;
 
     /**
      * 是否执行完毕

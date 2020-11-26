@@ -1,8 +1,8 @@
 package com.orion.id;
 
-import com.orion.utils.Randoms;
 import com.orion.utils.Strings;
 import com.orion.utils.Systems;
+import com.orion.utils.random.Randoms;
 
 import java.net.Inet4Address;
 import java.net.UnknownHostException;

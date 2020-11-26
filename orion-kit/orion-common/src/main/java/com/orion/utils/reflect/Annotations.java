@@ -1,5 +1,6 @@
 package com.orion.utils.reflect;
 
+import com.orion.lang.collect.MutableHashMap;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
 
@@ -7,8 +8,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
 
 /**
  * 反射 注解工具类
@@ -17,22 +17,10 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2020/5/15 13:18
  */
+@SuppressWarnings("ALL")
 public class Annotations {
 
     private Annotations() {
-    }
-
-    /**
-     * 判断类是否有指定注解
-     *
-     * @param clazz          class
-     * @param annotatedClass 注解类
-     * @return ignore
-     */
-    public static boolean classHasAnnotated(Class<?> clazz, Class<? extends Annotation> annotatedClass) {
-        Valid.notNull(clazz, "Class is null");
-        Valid.notNull(annotatedClass, "AnnotatedClass is null");
-        return clazz.getDeclaredAnnotation(annotatedClass) != null;
     }
 
     /**
@@ -43,27 +31,14 @@ public class Annotations {
      * @return ignore
      */
     @SafeVarargs
-    public static boolean classHasAnnotated(Class<?> clazz, Class<? extends Annotation>... annotatedClasses) {
+    public static boolean present(Class<?> clazz, Class<? extends Annotation>... annotatedClasses) {
         Valid.notNull(clazz, "Class is null");
         Valid.notEmpty(annotatedClasses, "AnnotatedClasses length is 0");
         if (annotatedClasses.length == 1) {
-            return clazz.getDeclaredAnnotation(annotatedClasses[0]) != null;
+            return clazz.isAnnotationPresent(annotatedClasses[0]);
         } else {
-            return checkHasAnnotated(clazz.getDeclaredAnnotations(), annotatedClasses);
+            return Arrays.stream(annotatedClasses).allMatch(clazz::isAnnotationPresent);
         }
-    }
-
-    /**
-     * 判断构造方法是否有指定注解
-     *
-     * @param constructor    构造方法
-     * @param annotatedClass 注解类
-     * @return ignore
-     */
-    public static boolean constructorHasAnnotated(Constructor<?> constructor, Class<? extends Annotation> annotatedClass) {
-        Valid.notNull(constructor, "Constructor is null");
-        Valid.notNull(annotatedClass, "AnnotatedClass is null");
-        return constructor.getDeclaredAnnotation(annotatedClass) != null;
     }
 
     /**
@@ -74,27 +49,14 @@ public class Annotations {
      * @return ignore
      */
     @SafeVarargs
-    public static boolean constructorHasAnnotated(Constructor<?> constructor, Class<? extends Annotation>... annotatedClasses) {
+    public static boolean present(Constructor<?> constructor, Class<? extends Annotation>... annotatedClasses) {
         Valid.notNull(constructor, "Constructor is null");
         Valid.notEmpty(annotatedClasses, "AnnotatedClasses length is 0");
         if (annotatedClasses.length == 1) {
-            return constructor.getDeclaredAnnotation(annotatedClasses[0]) != null;
+            return constructor.isAnnotationPresent(annotatedClasses[0]);
         } else {
-            return checkHasAnnotated(constructor.getDeclaredAnnotations(), annotatedClasses);
+            return Arrays.stream(annotatedClasses).allMatch(constructor::isAnnotationPresent);
         }
-    }
-
-    /**
-     * 判断方法是否有指定注解
-     *
-     * @param method         方法
-     * @param annotatedClass 注解类
-     * @return ignore
-     */
-    public static boolean methodHasAnnotated(Method method, Class<? extends Annotation> annotatedClass) {
-        Valid.notNull(method, "Method is null");
-        Valid.notNull(annotatedClass, "AnnotatedClass is null");
-        return method.getDeclaredAnnotation(annotatedClass) != null;
     }
 
     /**
@@ -105,27 +67,14 @@ public class Annotations {
      * @return ignore
      */
     @SafeVarargs
-    public static boolean methodHasAnnotated(Method method, Class<? extends Annotation>... annotatedClasses) {
+    public static boolean present(Method method, Class<? extends Annotation>... annotatedClasses) {
         Valid.notNull(method, "Method is null");
         Valid.notEmpty(annotatedClasses, "AnnotatedClasses length is 0");
         if (annotatedClasses.length == 1) {
-            return method.getDeclaredAnnotation(annotatedClasses[0]) != null;
+            return method.isAnnotationPresent(annotatedClasses[0]);
         } else {
-            return checkHasAnnotated(method.getDeclaredAnnotations(), annotatedClasses);
+            return Arrays.stream(annotatedClasses).allMatch(method::isAnnotationPresent);
         }
-    }
-
-    /**
-     * 判断字段是否有指定注解
-     *
-     * @param field          字段
-     * @param annotatedClass 注解类
-     * @return ignore
-     */
-    public static boolean fieldHasAnnotated(Field field, Class<? extends Annotation> annotatedClass) {
-        Valid.notNull(field, "Field is null");
-        Valid.notNull(annotatedClass, "AnnotatedClass is null");
-        return field.getDeclaredAnnotation(annotatedClass) != null;
     }
 
     /**
@@ -136,47 +85,67 @@ public class Annotations {
      * @return ignore
      */
     @SafeVarargs
-    public static boolean fieldHasAnnotated(Field field, Class<? extends Annotation>... annotatedClasses) {
+    public static boolean present(Field field, Class<? extends Annotation>... annotatedClasses) {
         Valid.notNull(field, "Field is null");
         Valid.notEmpty(annotatedClasses, "AnnotatedClasses length is 0");
         if (annotatedClasses.length == 1) {
-            return field.getDeclaredAnnotation(annotatedClasses[0]) != null;
+            return field.isAnnotationPresent(annotatedClasses[0]);
         } else {
-            return checkHasAnnotated(field.getDeclaredAnnotations(), annotatedClasses);
+            return Arrays.stream(annotatedClasses).allMatch(field::isAnnotationPresent);
         }
     }
 
     /**
-     * 判断注解集是否包含指定注解集
+     * Annotation -> @
      *
-     * @param annotations      注解集
-     * @param annotatedClasses 指定注解集
-     * @return true包含
+     * @param a   Annotation
+     * @param <A> A
+     * @return @
      */
-    private static boolean checkHasAnnotated(Annotation[] annotations, Class<? extends Annotation>[] annotatedClasses) {
-        for (Class<? extends Annotation> annotatedClass : annotatedClasses) {
-            boolean has = false;
-            for (Annotation annotation : annotations) {
-                if (annotation.annotationType().equals(annotatedClass)) {
-                    has = true;
-                    break;
-                }
-            }
-            if (!has) {
-                return false;
-            }
+    public static <A extends Annotation> A cast(Annotation a) {
+        return ((A) a);
+    }
+
+    /**
+     * 获取注解对应的value
+     *
+     * @param annotated 注解
+     * @param <A>       A
+     * @param <E>       E
+     * @return 属性值
+     */
+    public static <A extends Annotation, E> E getValue(A annotated) {
+        return getAttribute(annotated, "value");
+    }
+
+    /**
+     * 获取注解对应的属性值
+     *
+     * @param annotated     注解
+     * @param attributeName 属性名
+     * @param <A>           A
+     * @param <E>           E
+     * @return 属性值
+     */
+    public static <A extends Annotation, E> E getAttribute(A annotated, String attributeName) {
+        try {
+            Method method = annotated.annotationType().getDeclaredMethod(attributeName);
+            method.setAccessible(true);
+            return (E) method.invoke(annotated);
+        } catch (Exception e) {
+            return null;
         }
-        return true;
     }
 
     /**
      * 获取注解所有的属性
      *
      * @param annotated 注解
+     * @param <A>       A
      * @return ignore
      */
-    public static Map<String, Object> getAttributes(Annotation annotated) {
-        Map<String, Object> attrs = new HashMap<>();
+    public static <A extends Annotation> MutableHashMap<String, Object> getAttributes(A annotated) {
+        MutableHashMap<String, Object> attrs = new MutableHashMap<>();
         Method[] methods = annotated.annotationType().getDeclaredMethods();
         for (Method method : methods) {
             method.setAccessible(true);
@@ -193,41 +162,15 @@ public class Annotations {
     }
 
     /**
-     * 获取注解对应的value
-     *
-     * @param annotated 注解
-     * @return 属性值
-     */
-    public static Object getValue(Annotation annotated) {
-        return getAttribute(annotated, "value");
-    }
-
-    /**
-     * 获取注解对应的属性值
-     *
-     * @param annotated     注解
-     * @param attributeName 属性名
-     * @return 属性值
-     */
-    public static Object getAttribute(Annotation annotated, String attributeName) {
-        try {
-            Method method = annotated.annotationType().getDeclaredMethod(attributeName);
-            method.setAccessible(true);
-            return method.invoke(annotated);
-        } catch (Exception e) {
-            Exceptions.printStacks(e);
-            return null;
-        }
-    }
-
-    /**
      * 获取注解value的默认值
      *
-     * @param annotated 注解
+     * @param annotated 注解\
+     * @param <A>       A
+     * @param <E>       E
      * @return 属性默认值
      */
-    public static Object getDefaultValue(Annotation annotated) {
-        return getAttributeDefaultValue(annotated.annotationType(), "value");
+    public static <A extends Annotation, E> E getDefaultValue(A annotated) {
+        return getDefaultValue(annotated.annotationType(), "value");
     }
 
     /**
@@ -235,20 +178,23 @@ public class Annotations {
      *
      * @param annotated     注解
      * @param attributeName 属性名
+     * @param <A>           A
+     * @param <E>           E
      * @return 属性默认值
      */
-    public static Object getDefaultValue(Annotation annotated, String attributeName) {
-        return getAttributeDefaultValue(annotated.annotationType(), attributeName);
+    public static <A extends Annotation, E> E getDefaultValue(A annotated, String attributeName) {
+        return getDefaultValue(annotated.annotationType(), attributeName);
     }
 
     /**
      * 获取注解value的默认值
      *
      * @param annotatedClass 注解类
+     * @param <E>            E
      * @return 属性默认值
      */
-    public static Object getAttributeDefaultValue(Class<? extends Annotation> annotatedClass) {
-        return getAttributeDefaultValue(annotatedClass, "value");
+    public static <E> E getDefaultValue(Class<? extends Annotation> annotatedClass) {
+        return getDefaultValue(annotatedClass, "value");
     }
 
     /**
@@ -256,15 +202,15 @@ public class Annotations {
      *
      * @param annotatedClass 注解类
      * @param attributeName  属性名
+     * @param <E>            E
      * @return 属性默认值
      */
-    public static Object getAttributeDefaultValue(Class<? extends Annotation> annotatedClass, String attributeName) {
+    public static <E> E getDefaultValue(Class<? extends Annotation> annotatedClass, String attributeName) {
         try {
             Method method = annotatedClass.getDeclaredMethod(attributeName);
             method.setAccessible(true);
-            return method.getDefaultValue();
+            return (E) method.getDefaultValue();
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }

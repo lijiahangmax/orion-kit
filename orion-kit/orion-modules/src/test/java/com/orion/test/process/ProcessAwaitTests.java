@@ -1,6 +1,8 @@
 package com.orion.test.process;
 
+import com.orion.lang.Console;
 import com.orion.process.ProcessAwaitExecutor;
+import com.orion.utils.Threads;
 
 /**
  * @author ljh15
@@ -10,7 +12,7 @@ import com.orion.process.ProcessAwaitExecutor;
 public class ProcessAwaitTests {
 
     public static void main(String[] args) {
-        echo();
+        ping();
     }
 
     public static void echo() {
@@ -42,6 +44,15 @@ public class ProcessAwaitTests {
                     System.out.println(l);
                 })
                 .exec();
+    }
+
+    public static void ping() {
+        ProcessAwaitExecutor e = new ProcessAwaitExecutor("ping www.baidu.com -n 100")
+                .lineHandler(Console::trace, "GBK");
+        e.terminal();
+        e.exec();
+        Threads.sleep(2000);
+        e.close();
     }
 
 }

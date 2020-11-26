@@ -1,7 +1,7 @@
 package com.orion.id;
 
-import com.orion.utils.Randoms;
 import com.orion.utils.Systems;
+import com.orion.utils.random.Randoms;
 
 import java.nio.ByteBuffer;
 import java.util.concurrent.atomic.AtomicInteger;

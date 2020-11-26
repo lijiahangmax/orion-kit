@@ -5,8 +5,8 @@ import com.orion.lang.collect.EmptySet;
 import com.orion.lang.collect.MutableHashSet;
 import com.orion.lang.collect.SingletonSet;
 import com.orion.utils.Arrays1;
-import com.orion.utils.Randoms;
 import com.orion.utils.Valid;
+import com.orion.utils.random.Randoms;
 
 import java.util.*;
 import java.util.function.Function;

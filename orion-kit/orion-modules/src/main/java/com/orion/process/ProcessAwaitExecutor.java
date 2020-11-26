@@ -77,7 +77,7 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
     /**
      * 是否已关闭
      */
-    private boolean close;
+    private volatile boolean close;
 
     public ProcessAwaitExecutor(String command) {
         this(new String[]{command}, null);
@@ -247,7 +247,7 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
                             bufferedReader = new BufferedReader(new InputStreamReader(inputStream, lineCharset));
                         }
                         String line;
-                        while ((line = bufferedReader.readLine()) != null && !close) {
+                        while (!close && (line = bufferedReader.readLine()) != null) {
                             lineHandler.accept(this, line);
                         }
                     } catch (Exception e) {

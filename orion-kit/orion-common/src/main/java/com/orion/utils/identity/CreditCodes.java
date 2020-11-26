@@ -1,7 +1,7 @@
 package com.orion.utils.identity;
 
 import com.orion.utils.Matches;
-import com.orion.utils.Randoms;
+import com.orion.utils.random.Randoms;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

@@ -22,6 +22,11 @@ import java.util.function.BiConsumer;
 public class CommandExecutor extends BaseExecutor {
 
     /**
+     * command
+     */
+    private byte[] command;
+
+    /**
      * channel
      */
     private ChannelExec channel;
@@ -69,7 +74,7 @@ public class CommandExecutor extends BaseExecutor {
     /**
      * 是否关闭
      */
-    private boolean close;
+    private volatile boolean close;
 
     /**
      * 是否执行完毕
@@ -83,6 +88,7 @@ public class CommandExecutor extends BaseExecutor {
     public CommandExecutor(ChannelExec channel, byte[] command) {
         super(channel);
         this.channel = channel;
+        this.command = command;
         this.channel.setCommand(command);
         try {
             inputStream = this.channel.getInputStream();
@@ -273,6 +279,15 @@ public class CommandExecutor extends BaseExecutor {
 
     public boolean isDone() {
         return done;
+    }
+
+    public byte[] getCommand() {
+        return command;
+    }
+
+    @Override
+    public String toString() {
+        return command == null ? "[]" : "[" + new String(command, StandardCharsets.UTF_8) + "]";
     }
 
 }

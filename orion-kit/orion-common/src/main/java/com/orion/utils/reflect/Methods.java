@@ -19,6 +19,8 @@ import static java.util.stream.Collectors.toMap;
 
 /**
  * 反射 方法工具类
+ * <p>
+ * 如果需要调用基本类型入参的方法 可以先获取Method
  *
  * @author ljh15
  * @version 1.0.0
@@ -93,6 +95,7 @@ public class Methods {
      */
     public static List<Method> getAllGetterMethod(Class<?> clazz) {
         List<Method> list = new ArrayList<>();
+        // get super class methods
         for (Method method : clazz.getMethods()) {
             if (!"getClass".equals(method.getName()) && !Modifier.isStatic(method.getModifiers()) && method.getParameters().length == 0) {
                 String name = method.getName();
@@ -116,6 +119,7 @@ public class Methods {
      */
     public static List<Method> getAllSetterMethod(Class<?> clazz) {
         List<Method> list = new ArrayList<>();
+        // get super class methods
         for (Method method : clazz.getMethods()) {
             String name = method.getName();
             if (name.startsWith(SETTER_PREFIX) && name.length() != 3 && !Modifier.isStatic(method.getModifiers()) && method.getParameters().length == 1) {
@@ -201,8 +205,8 @@ public class Methods {
     /**
      * 通过字段名称获取getter方法
      *
-     * @param clazz class
-     * @param field fieldName
+     * @param clazz     class
+     * @param fieldName fieldName
      * @return getter方法
      */
     public static Method getGetterMethodByFieldName(Class<?> clazz, String fieldName) {
@@ -232,8 +236,8 @@ public class Methods {
     /**
      * 通过字段获取setter方法
      *
-     * @param clazz class
-     * @param field field
+     * @param clazz     class
+     * @param fieldName field
      * @return setter方法
      */
     public static Method getSetterMethodByFieldName(Class<?> clazz, String fieldName) {
@@ -246,7 +250,7 @@ public class Methods {
     }
 
     /**
-     * 获取对象匹配方法名和参数类型的DeclaredMethod, 并强制设置为可访问
+     * 获取对象匹配方法名和参数类型的DeclaredMethod, 并强制设置为可访问, 可以获取基本类型的方法
      *
      * @param clazz          class
      * @param methodName     方法名
@@ -261,14 +265,14 @@ public class Methods {
                 setAccessible(method);
                 return method;
             } catch (Exception e) {
-                Exceptions.printStacks(e);
+                // ignore
             }
         }
         return null;
     }
 
     /**
-     * 获取对象匹配方法名和参数长度的第一个DeclaredMethod, 并强制设置为可访问
+     * 获取对象匹配方法名和参数长度的第一个DeclaredMethod, 并强制设置为可访问, 可以获取基本类型的方法
      *
      * @param clazz      class
      * @param methodName 方法名称
@@ -290,14 +294,13 @@ public class Methods {
     }
 
     /**
-     * 获取对象匹配方法名的第一个DeclaredMethod, 并强制设置为可访问
+     * 获取对象匹配方法名的第一个DeclaredMethod, 并强制设置为可访问, 可以获取基本类型的方法
      *
      * @param clazz      class
      * @param methodName 方法名称
      * @return 方法对象
      */
     public static Method getAccessibleMethod(Class<?> clazz, String methodName) {
-        Valid.notNull(clazz, "Method class is null");
         for (Class<?> searchType = clazz; searchType != Object.class; searchType = searchType.getSuperclass()) {
             Method[] methods = searchType.getDeclaredMethods();
             for (Method method : methods) {
@@ -311,7 +314,7 @@ public class Methods {
     }
 
     /**
-     * 获取对象匹配方法名和参数长度的DeclaredMethod, 并强制设置为可访问
+     * 获取对象匹配方法名和参数长度的DeclaredMethod, 并强制设置为可访问, 可以获取基本类型的方法
      *
      * @param clazz      class
      * @param methodName 方法名称
@@ -414,7 +417,7 @@ public class Methods {
     }
 
     /**
-     * 调用getter方法
+     * 调用field的getter方法
      *
      * @param obj       对象
      * @param fieldName 字段名称
@@ -426,13 +429,10 @@ public class Methods {
         Valid.notBlank(fieldName, "Invoke Getter Field is null");
         try {
             Field field = Fields.getAccessibleField(obj.getClass(), fieldName);
-            if (field == null) {
-                throw Exceptions.notFound(Strings.format("Field: {} not found", fieldName));
-            }
-            if (field.getType().equals(boolean.class)) {
-                return invokeMethod(obj, BOOLEAN_GETTER_PREFIX + Strings.firstUpper(fieldName), null, null);
+            if (field == null || !field.getType().equals(boolean.class)) {
+                return invokeMethod(obj, GETTER_PREFIX + Strings.firstUpper(fieldName), null, (Object[]) null);
             } else {
-                return invokeMethod(obj, GETTER_PREFIX + Strings.firstUpper(fieldName), null, null);
+                return invokeMethod(obj, BOOLEAN_GETTER_PREFIX + Strings.firstUpper(fieldName), null, (Object[]) null);
             }
         } catch (Exception e) {
             throw Exceptions.invoke(Strings.format("Invoke Field: {} Setter Method error {}", fieldName, e.getMessage()), e);
@@ -440,7 +440,7 @@ public class Methods {
     }
 
     /**
-     * 调用setter方法
+     * 调用setter方法 不支持基本类型
      *
      * @param obj       对象
      * @param fieldName 字段名称
@@ -452,14 +452,15 @@ public class Methods {
     }
 
     /**
-     * 调用setter方法, 多级调用需要手动拼接set
+     * 调用setter方法, 多级调用需要手动拼接set 不支持基本类型
      *
      * @param obj                   对象
      * @param fieldSetterMethodName 字段名称
      * @param values                ignore
      * @param <E>                   属性类型
      */
-    public static <E, R> R invokeSetter(Object obj, String fieldSetterMethodName, E[] values) {
+    @SafeVarargs
+    public static <E, R> R invokeSetter(Object obj, String fieldSetterMethodName, E... values) {
         Valid.notNull(obj, "Invoke object is null");
         Valid.notBlank(fieldSetterMethodName, "Invoke Setter Method is null");
         String[] names = fieldSetterMethodName.split("\\.");
@@ -479,7 +480,7 @@ public class Methods {
     }
 
     /**
-     * 调用setter方法 类型推断调用
+     * 调用setter方法 类型推断调用 支持基本数据类型
      *
      * @param obj       对象
      * @param fieldName 字段名称
@@ -491,7 +492,7 @@ public class Methods {
     }
 
     /**
-     * 调用setter方法 类型推断调用
+     * 调用setter方法 类型推断调用 支持基本数据类型
      *
      * @param obj    对象
      * @param method method
@@ -503,7 +504,7 @@ public class Methods {
     }
 
     /**
-     * 直接调用对象方法
+     * 直接调用对象方法 不支持基本类型
      *
      * @param obj            对象
      * @param methodName     方法名称
@@ -512,7 +513,7 @@ public class Methods {
      * @param <E>            返回值类型
      * @return ignore
      */
-    public static <E> E invokeMethod(Object obj, String methodName, Class<?>[] parameterTypes, Object[] args) {
+    public static <E> E invokeMethod(Object obj, String methodName, Class<?>[] parameterTypes, Object... args) {
         Valid.notNull(obj, "Invoker object is null");
         Valid.notBlank(methodName, "Invoke Method is null");
         Method method = Methods.getAccessibleMethod(obj.getClass(), methodName, parameterTypes);
@@ -535,7 +536,7 @@ public class Methods {
      * @return 对象
      */
     public static <E> E invokeMethod(Object obj, String methodName) {
-        return invokeMethod(obj, methodName, null);
+        return invokeMethod(obj, methodName, (Object[]) null);
     }
 
     /**
@@ -547,11 +548,11 @@ public class Methods {
      * @return 对象
      */
     public static <E> E invokeMethod(Object obj, Method method) {
-        return invokeMethod(obj, method, null);
+        return invokeMethod(obj, method, (Object[]) null);
     }
 
     /**
-     * 直接调用对象方法
+     * 直接调用对象方法 不支持基本数据类型
      *
      * @param obj        对象
      * @param methodName 方法名称
@@ -559,7 +560,7 @@ public class Methods {
      * @param <E>        返回值类型
      * @return 对象
      */
-    public static <E> E invokeMethod(Object obj, String methodName, Object[] args) {
+    public static <E> E invokeMethod(Object obj, String methodName, Object... args) {
         Valid.notNull(obj, "Invoker object is null");
         Valid.notBlank(methodName, "Invoke Method is null");
         Method method = Methods.getAccessibleMethod(obj.getClass(), methodName, Arrays1.length(args));
@@ -574,7 +575,7 @@ public class Methods {
     }
 
     /**
-     * 直接调用对象方法
+     * 直接调用对象方法 不支持基本数据类型
      *
      * @param obj    对象
      * @param method 方法
@@ -582,7 +583,7 @@ public class Methods {
      * @param <E>    返回值类型
      * @return 对象
      */
-    public static <E> E invokeMethod(Object obj, Method method, Object[] args) {
+    public static <E> E invokeMethod(Object obj, Method method, Object... args) {
         Valid.notNull(obj, "Invoker object is null");
         Valid.notNull(method, "Invoke Method is null");
         try {
@@ -594,7 +595,7 @@ public class Methods {
     }
 
     /**
-     * 直接调用对象方法, 会进行参数推断
+     * 直接调用对象方法, 会进行参数推断, 支持基本数据类型
      *
      * @param obj    对象
      * @param method 方法
@@ -602,17 +603,17 @@ public class Methods {
      * @param <E>    返回值类型
      * @return 对象
      */
-    public static <E> E invokeMethodInfer(Object obj, Method method, Object[] args) {
+    public static <E> E invokeMethodInfer(Object obj, Method method, Object... args) {
         Valid.notNull(obj, "Invoker object is null");
         Valid.notNull(method, "Invoke Method is null");
         if (Arrays1.isEmpty(args)) {
-            return invokeMethod(obj, method, null);
+            return invokeMethod(obj, method, (Object[]) null);
         }
         return TypeInfer.invokeInfer(obj, Lists.singleton(method), args);
     }
 
     /**
-     * 直接调用对象方法, 会进行参数推断
+     * 直接调用对象方法, 会进行参数推断, 支持基本数据类型
      *
      * @param obj        对象
      * @param methodName 方法名称
@@ -620,11 +621,11 @@ public class Methods {
      * @param <E>        返回值类型
      * @return 对象
      */
-    public static <E> E invokeMethodInfer(Object obj, String methodName, Object[] args) {
+    public static <E> E invokeMethodInfer(Object obj, String methodName, Object... args) {
         Valid.notNull(obj, "Invoker object is null");
         Valid.notBlank(methodName, "Invoke Method is null");
         if (Arrays1.isEmpty(args)) {
-            return invokeMethod(obj, methodName, null);
+            return invokeMethod(obj, methodName, (Object[]) null);
         }
         int len = Arrays1.length(args);
         List<Method> methods = Methods.getAccessibleMethods(obj.getClass(), methodName, len);
