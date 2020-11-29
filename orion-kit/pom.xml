@@ -5,25 +5,23 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.orion.kit</groupId>
-    <artifactId>orion-kit</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <modules>
-        <module>orion-common</module>
-        <module>orion-modules</module>
-        <module>orion-spring</module>
-    </modules>
-
     <packaging>pom</packaging>
-    <name>orion-kit</name>
+    <artifactId>orion-kit</artifactId>
+    <name>${project.artifactId}</name>
     <description>Orion Dev Kit</description>
+
+    <modules>
+        <module>orion-lang</module>
+        <module>orion-core</module>
+        <module>orion-spring</module>
+        <module>orion-all</module>
+    </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <orion.common.version>1.0.0-SNAPSHOT</orion.common.version>
-        <orion.modules.version>1.0.0-SNAPSHOT</orion.modules.version>
-        <orion.spring.version>1.0.0-SNAPSHOT</orion.spring.version>
         <junit.version>4.12</junit.version>
         <spring.version>4.3.10.RELEASE</spring.version>
         <spring.mvc.version>4.3.10.RELEASE</spring.mvc.version>
