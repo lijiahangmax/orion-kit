@@ -871,16 +871,10 @@ public class Arrays1 {
      * 消费对象
      *
      * @param consumer 消费函数
-     * @param e        元素, 不可以是基本类型的数组
+     * @param e        元素
      * @param <T>      对象类型
      */
-    public static <T> void forEachs(Consumer<? super T> consumer, T... e) {
-        for (int i = 0, len = length(e); i < len; i++) {
-            consumer.accept(e[i]);
-        }
-    }
-
-    public static void forEach(Consumer<Object> consumer, Object[] arr) {
+    public static <T> void forEach(Consumer<T> consumer, T[] arr) {
         for (int i = 0, len = length(arr); i < len; i++) {
             consumer.accept(arr[i]);
         }
@@ -1217,7 +1211,6 @@ public class Arrays1 {
      * <p>
      * 在默认情况下, 如果可变参数o, 传参是基本类型的数组, 使用length属性判断, o.length = 1
      */
-    @SuppressWarnings("ALL")
     public static int lengths(Object... arr) {
         if (arr == null) {
             return 0;
@@ -2162,7 +2155,7 @@ public class Arrays1 {
         return indexOfs(a, s, start);
     }
 
-    public static int indexOf(Object[] a, Object s, int start) {
+    public static <T> int indexOf(T[] a, T s, int start) {
         return indexOfs(a, s, start);
     }
 
@@ -2198,11 +2191,11 @@ public class Arrays1 {
         return indexOfs(a, s, 0);
     }
 
-    public static int indexOf(Object[] a, Object s) {
+    public static <T> int indexOf(T[] a, T s) {
         return indexOfs(a, s, 0);
     }
 
-    private static int indexOfs(Object a, Object s, int start) {
+    private static <T> int indexOfs(T a, T s, int start) {
         Object[] arr = ofs(a);
         int length = arr.length;
         if (start < 0) {
@@ -2260,7 +2253,7 @@ public class Arrays1 {
         return lastIndexOfs(a, s, start);
     }
 
-    public static int lastIndexOf(Object[] a, Object s, int start) {
+    public static <T> int lastIndexOf(T[] a, T s, int start) {
         return lastIndexOfs(a, s, start);
     }
 
@@ -2296,11 +2289,11 @@ public class Arrays1 {
         return lastIndexOfs(a, s, a.length - 1);
     }
 
-    public static int lastIndexOf(Object[] a, Object s) {
+    public static <T> int lastIndexOf(T[] a, T s) {
         return lastIndexOfs(a, s, a.length - 1);
     }
 
-    private static int lastIndexOfs(Object a, Object s, int start) {
+    private static <T> int lastIndexOfs(T a, T s, int start) {
         Object[] arr = ofs(a);
         int length = arr.length;
         if (start <= 0) {
@@ -2357,7 +2350,7 @@ public class Arrays1 {
         return indexOf(a, s) != -1;
     }
 
-    public static boolean contains(Object[] a, Object s) {
+    public static <T> boolean contains(T[] a, T s) {
         return indexOf(a, s) != -1;
     }
 
@@ -2953,8 +2946,8 @@ public class Arrays1 {
         a[j] = temp;
     }
 
-    public static void swap(Object[] a, int i, int j) {
-        Object temp = a[i];
+    public static <T> void swap(T[] a, int i, int j) {
+        T temp = a[i];
         a[i] = a[j];
         a[j] = temp;
     }

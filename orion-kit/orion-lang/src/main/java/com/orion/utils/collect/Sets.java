@@ -173,7 +173,7 @@ public class Sets extends Collections {
     }
 
     public static <E> Set<E> as(Iterator<E> iter) {
-        Set<E> list = new HashSet<>();
+        Set<E> list = new LinkedHashSet<>();
         if (null != iter) {
             while (iter.hasNext()) {
                 list.add(iter.next());
@@ -183,7 +183,7 @@ public class Sets extends Collections {
     }
 
     public static <E> Set<E> as(Enumeration<E> iter) {
-        Set<E> list = new HashSet<>();
+        Set<E> list = new LinkedHashSet<>();
         if (null != iter) {
             while (iter.hasMoreElements()) {
                 list.add(iter.nextElement());

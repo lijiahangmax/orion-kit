@@ -8,7 +8,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>orion-spring</artifactId>
-    <name>orion-spring</name>
+    <name>${project.artifactId}</name>
     <description>Orion Integrated Spring</description>
 </project>
 

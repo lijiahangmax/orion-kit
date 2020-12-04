@@ -1,11 +1,6 @@
 package com.orion.utils.reflect;
 
-import com.orion.lang.Console;
-import com.orion.utils.Exceptions;
-import com.orion.utils.Strings;
-import com.orion.utils.Urls;
-import com.orion.utils.Valid;
-import com.orion.utils.collect.Lists;
+import com.orion.utils.*;
 import com.orion.utils.io.Files1;
 
 import java.io.File;
@@ -28,22 +23,22 @@ import java.util.jar.JarFile;
  * @since 2020/4/23 17:38
  */
 @SuppressWarnings("ALL")
-public class PackageScanners {
+public class PackageScanner {
 
     /**
      * 扫描到的类
      */
-    private Set<Class<?>> classes = new HashSet<>();
-
-    /**
-     * 是否扫描子包
-     */
-    private boolean scanChildPackage;
+    private Set<Class<?>> classes = new LinkedHashSet<>();
 
     /**
      * 扫描的包
      */
-    private Set<String> packages = new HashSet<>();
+    private Set<String> packages = new LinkedHashSet<>();
+
+    /**
+     * 是否扫描所有包
+     */
+    private boolean scanAll;
 
     /**
      * target resource url
@@ -53,55 +48,213 @@ public class PackageScanners {
     /**
      * 扫描指定包 如果不填扫描当前项目所有的包
      *
-     * @param packageNames 包
+     * @param packages 包名 可以用.*结尾 扫描子包
      */
-    public PackageScanners(String... packageNames) {
-        this(false, packageNames);
-    }
-
-    /**
-     * 扫描指定包 如果不填扫描当前项目所有的包
-     *
-     * @param scanChildPackage 是否扫描子包
-     * @param packageNames     包
-     */
-    public PackageScanners(boolean scanChildPackage, String... packageNames) {
-        URL resource = PackageScanners.class.getClassLoader().getResource("");
-        try {
-            Lists.as(PackageScanners.class.getClassLoader().getResources("")).forEach(Console::trace);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (resource == null) {
-            resource = PackageScanners.class.getResource("");
-        }
-        this.resource = resource;
-        if (packageNames == null || packageNames.length == 0) {
-            this.scanChildPackage = true;
-            if (resource != null) {
-                packages.add("");
-            }
+    public PackageScanner(String... packages) {
+        if (Arrays1.isEmpty(packages)) {
+            this.scanAll = true;
         } else {
-            this.scanChildPackage = scanChildPackage;
-            for (String packageName : packageNames) {
+            for (String packageName : packages) {
                 if (!Strings.isBlank(packageName)) {
-                    if (resource != null) {
-                        packages.add(packageName);
-                    }
+                    this.packages.add(packageName);
                 }
             }
         }
+    }
+
+    /**
+     * 添加扫描的包
+     *
+     * @param packageName 包名 可以用.*结尾 扫描子包
+     * @return this
+     */
+    public PackageScanner addPackage(String... packageName) {
+        if (!Arrays1.isEmpty(packageName)) {
+            for (String p : packageName) {
+                if (!Strings.isBlank(p)) {
+                    this.packages.add(p);
+                }
+            }
+        }
+        return this;
+    }
+
+    /**
+     * 扫描所有包
+     *
+     * @return this
+     */
+    public PackageScanner all() {
+        this.scanAll = true;
+        return this;
+    }
+
+    /**
+     * 开始扫描
+     *
+     * @return this
+     */
+    public PackageScanner scan() {
+        if (this.resource != null) {
+            return this;
+        }
+        URL r = PackageScanner.class.getClassLoader().getResource("");
+        if (r == null) {
+            r = PackageScanner.class.getResource("");
+        }
+        if (r != null) {
+            this.resource = r;
+        } else {
+            throw Exceptions.init("cannot find the resource");
+        }
+        String protocol = resource.getProtocol();
+        Set<String> classNameSet = new LinkedHashSet<>();
+        if (scanAll) {
+            if ("file".equals(protocol)) {
+                this.scanFile("", classNameSet);
+            } else if ("jar".equals(protocol)) {
+                this.scanJar("", classNameSet);
+            }
+        } else {
+            for (String p : packages) {
+                if ("file".equals(protocol)) {
+                    this.scanFile(p, classNameSet);
+                } else if ("jar".equals(protocol)) {
+                    this.scanJar(p, classNameSet);
+                }
+            }
+        }
+        this.loadClasses(classNameSet);
+        return this;
+    }
+
+    // --------------- SCAN ---------------
+
+    /**
+     * 扫描 file://*
+     *
+     * @param packageName  包名
+     * @param classNameSet 包名容器
+     */
+    private void scanFile(String packageName, Set<String> classNameSet) {
+        boolean all = packageName.endsWith(".*");
+        if (all) {
+            packageName = packageName.substring(0, packageName.length() - 2);
+        }
+        String packagePath = resource.getPath() + "/" + packageName.replaceAll("\\.", "/");
+        addFileClass(Files1.getPath(Urls.decode(packagePath)), packageName, all || scanAll, classNameSet);
+    }
+
+    /**
+     * 扫描 jar://*
+     *
+     * @param packageName  包名
+     * @param classNameSet 包名容器
+     */
+    private void scanJar(String packageName, Set<String> classNameSet) {
+        boolean all = packageName.endsWith(".*");
+        if (all) {
+            packageName = packageName.substring(0, packageName.length() - 2);
+        }
         try {
-            scanClasses();
-        } catch (Exception e) {
-            throw Exceptions.parse("Scan Package error: " + Arrays.toString(packageNames), e);
+            JarURLConnection connection = (JarURLConnection) resource.openConnection();
+            if (connection == null) {
+                return;
+            }
+            JarFile jarFile = connection.getJarFile();
+            if (jarFile != null) {
+                Enumeration<JarEntry> jarEntries = jarFile.entries();
+                while (jarEntries.hasMoreElements()) {
+                    JarEntry jarEntry = jarEntries.nextElement();
+                    String jarEntryName = jarEntry.getName();
+                    if (jarEntryName.endsWith(".class") && (scanAll || this.checkJarEntry(packageName, jarEntryName, all))) {
+                        classNameSet.add(jarEntryName.substring(0, jarEntryName.lastIndexOf(".")).replaceAll("/", "."));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime("scan jar file error", e);
+        }
+    }
+
+    /**
+     * file://* 添加class
+     *
+     * @param packagePath 包路径
+     * @param basePackage 包名
+     * @param all         是否通配本包
+     * @param set         classNameSet
+     */
+    private void addFileClass(String packagePath, String basePackage, boolean all, Set<String> set) {
+        File[] files = new File(packagePath).listFiles(file -> (file.isFile() && file.getName().endsWith(".class")) || (all && file.isDirectory()));
+        if (Arrays1.isEmpty(files)) {
+            return;
+        }
+        for (File file : files) {
+            String fileName = file.getName();
+            if (file.isFile()) {
+                String className = fileName.substring(0, fileName.lastIndexOf("."));
+                if (Strings.isNotEmpty(basePackage)) {
+                    className = basePackage + "." + className;
+                }
+                set.add(className);
+            } else {
+                String subPackagePath = fileName;
+                if (Strings.isNotEmpty(packagePath)) {
+                    subPackagePath = packagePath + "/" + subPackagePath;
+                }
+                String subPackageName = fileName;
+                if (Strings.isNotEmpty(basePackage)) {
+                    subPackageName = basePackage + "." + subPackageName;
+                }
+                addFileClass(subPackagePath, subPackageName, all, set);
+            }
+        }
+    }
+
+    /**
+     * 检查jar内元素是否添加
+     *
+     * @param packageName 包名
+     * @param entryName   类名
+     * @param all         是否通配本包
+     * @return true添加
+     */
+    private boolean checkJarEntry(String packageName, String entryName, boolean all) {
+        if (Strings.isBlank(packageName)) {
+            return true;
+        }
+
+        packageName = packageName.replaceAll("\\.", "/");
+        if (entryName.startsWith(packageName + "/") && all) {
+            return true;
+        }
+        return entryName.substring(0, entryName.lastIndexOf("/")).equals(packageName);
+    }
+
+    /**
+     * 加载类 不初始化
+     *
+     * @param classNames 类名
+     */
+    private void loadClasses(Set<String> classNames) {
+        for (String className : classNames) {
+            Class<?> c = null;
+            try {
+                c = Class.forName(className, false, Classes.getCurrentClassLoader());
+            } catch (ClassNotFoundException e) {
+                // ignore
+            }
+            if (c != null) {
+                classes.add(c);
+            }
         }
     }
 
     // --------------- GET ---------------
 
     /**
-     * 从扫描到的类中获取给定类的所有实现类 Object.class 返回空
+     * 从扫描到的类中获取给定类的所有实现类
      *
      * @param superClass class
      * @return ImplClasses
@@ -109,9 +262,9 @@ public class PackageScanners {
     public Set<Class<?>> getImplClass(Class<?> superClass) {
         Valid.notNull(superClass, "SuperClass is null");
         if (superClass.equals(Object.class)) {
-            return new HashSet<>();
+            return classes;
         }
-        Set<Class<?>> impl = new HashSet<>();
+        Set<Class<?>> impl = new LinkedHashSet<>();
         for (Class<?> c : classes) {
             if (!c.equals(superClass) && Classes.isImplClass(superClass, c)) {
                 impl.add(c);
@@ -129,7 +282,7 @@ public class PackageScanners {
     @SafeVarargs
     public final Set<Class<?>> getAnnotatedClass(Class<? extends Annotation>... annotateClasses) {
         Valid.notEmpty(annotateClasses, "AnnotateClasses length is 0");
-        Set<Class<?>> annotatedClass = new HashSet<>();
+        Set<Class<?>> annotatedClass = new LinkedHashSet<>();
         for (Class<?> c : classes) {
             if (Annotations.present(c, annotateClasses)) {
                 annotatedClass.add(c);
@@ -153,7 +306,7 @@ public class PackageScanners {
             for (Constructor<?> constructor : c.getDeclaredConstructors()) {
                 if (Annotations.present(constructor, annotateClasses)) {
                     if (constructors == null) {
-                        constructors = new HashSet<>();
+                        constructors = new LinkedHashSet<>();
                     }
                     constructors.add(constructor);
                 }
@@ -186,7 +339,7 @@ public class PackageScanners {
             for (Constructor<?> constructor : c.getDeclaredConstructors()) {
                 if (Annotations.present(constructor, constructorAnnotateClasses)) {
                     if (constructors == null) {
-                        constructors = new HashSet<>();
+                        constructors = new LinkedHashSet<>();
                     }
                     constructors.add(constructor);
                 }
@@ -213,7 +366,7 @@ public class PackageScanners {
             for (Method method : c.getDeclaredMethods()) {
                 if (Annotations.present(method, annotateClasses)) {
                     if (methods == null) {
-                        methods = new HashSet<>();
+                        methods = new LinkedHashSet<>();
                     }
                     methods.add(method);
                 }
@@ -246,7 +399,7 @@ public class PackageScanners {
             for (Method method : c.getDeclaredMethods()) {
                 if (Annotations.present(method, methodAnnotateClasses)) {
                     if (methods == null) {
-                        methods = new HashSet<>();
+                        methods = new LinkedHashSet<>();
                     }
                     methods.add(method);
                 }
@@ -273,7 +426,7 @@ public class PackageScanners {
             for (Field field : c.getDeclaredFields()) {
                 if (Annotations.present(field, annotateClasses)) {
                     if (fields == null) {
-                        fields = new HashSet<>();
+                        fields = new LinkedHashSet<>();
                     }
                     fields.add(field);
                 }
@@ -306,7 +459,7 @@ public class PackageScanners {
             for (Field field : c.getDeclaredFields()) {
                 if (Annotations.present(field, fieldAnnotateClasses)) {
                     if (fields == null) {
-                        fields = new HashSet<>();
+                        fields = new LinkedHashSet<>();
                     }
                     fields.add(field);
                 }
@@ -318,127 +471,21 @@ public class PackageScanners {
         return annotatedClass;
     }
 
-    // --------------- SCAN ---------------
-
-    /**
-     * 获取某个包下的所有类
-     */
-    private void scanClasses() throws Exception {
-        Set<String> classNameSet = new HashSet<>();
-        for (String packageName : packages) {
-            String protocol = resource.getProtocol();
-            if ("file".equals(protocol)) {
-                addFileClass(Files1.getPath(Urls.decode(resource.getPath() + "/" + packageName.replaceAll("\\.", "/"))), packageName, classNameSet);
-            } else if ("jar".equals(protocol)) {
-                JarURLConnection connection = (JarURLConnection) resource.openConnection();
-                if (connection != null) {
-                    JarFile jarFile = connection.getJarFile();
-                    if (jarFile != null) {
-                        Enumeration<JarEntry> jarEntries = jarFile.entries();
-                        while (jarEntries.hasMoreElements()) {
-                            JarEntry jarEntry = jarEntries.nextElement();
-                            String jarEntryName = jarEntry.getName();
-                            if (jarEntryName.endsWith(".class") && checkJarEntry(packageName, jarEntryName)) {
-                                classNameSet.add(jarEntryName.substring(0, jarEntryName.lastIndexOf(".")).replaceAll("/", "."));
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        loadClasses(classNameSet);
-    }
-
-    /**
-     * 检查jar内元素是否添加
-     *
-     * @param packageName 包名
-     * @param entryName   类名
-     * @return true添加
-     */
-    private boolean checkJarEntry(String packageName, String entryName) {
-        if (Strings.isBlank(packageName)) {
-            return true;
-        }
-        String[] packageNameAnalysis = packageName.split("\\.");
-        String[] entryAnalysis = entryName.split("/");
-        if (entryAnalysis.length <= packageNameAnalysis.length) {
-            return false;
-        }
-        for (int i = 0; i < packageNameAnalysis.length; i++) {
-            if (!entryAnalysis[i].equals(packageNameAnalysis[i])) {
-                return false;
-            }
-        }
-        if (packageNameAnalysis.length + 1 == entryAnalysis.length) {
-            return true;
-        }
-        return scanChildPackage;
-    }
-
-    /**
-     * file 添加class
-     *
-     * @param packagePath 包路径
-     * @param packageName 包名
-     */
-    private void addFileClass(String packagePath, String packageName, Set<String> set) {
-        File[] files = new File(packagePath).listFiles(file -> (file.isFile() && file.getName().endsWith(".class")) || (scanChildPackage && file.isDirectory()));
-        if (files == null) {
-            return;
-        }
-        for (File file : files) {
-            String fileName = file.getName();
-            if (file.isFile()) {
-                String className = fileName.substring(0, fileName.lastIndexOf("."));
-                if (Strings.isNotEmpty(packageName)) {
-                    className = packageName + "." + className;
-                }
-                set.add(className);
-            } else if (scanChildPackage) {
-                String subPackagePath = fileName;
-                if (Strings.isNotEmpty(packagePath)) {
-                    subPackagePath = packagePath + "/" + subPackagePath;
-                }
-                String subPackageName = fileName;
-                if (Strings.isNotEmpty(packageName)) {
-                    subPackageName = packageName + "." + subPackageName;
-                }
-                addFileClass(subPackagePath, subPackageName, set);
-            }
-        }
-    }
-
-    /**
-     * 加载类 不初始化
-     *
-     * @param classNames 类名
-     */
-    private void loadClasses(Set<String> classNames) {
-        for (String className : classNames) {
-            Class<?> c = null;
-            try {
-                c = Class.forName(className, false, Classes.getCurrentClassLoader());
-            } catch (ClassNotFoundException e) {
-                // ignore
-            }
-            if (c != null) {
-                classes.add(c);
-            }
-        }
-    }
-
     /**
      * 获取扫描到的所有类
      *
      * @return class
      */
-    public Set<Class<?>> getScanClasses() {
+    public Set<Class<?>> getClasses() {
         return classes;
     }
 
     public URL getResource() {
         return resource;
+    }
+
+    public Set<String> getPackages() {
+        return packages;
     }
 
 }

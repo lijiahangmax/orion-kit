@@ -7,7 +7,7 @@ package com.orion.exception;
  * @version 1.0.0
  * @since 2020/3/3 2:05
  */
-public class InitializeException extends Exception {
+public class InitializeException extends RuntimeException {
 
     public InitializeException() {
     }
