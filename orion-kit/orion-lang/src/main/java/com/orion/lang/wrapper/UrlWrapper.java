@@ -4,6 +4,7 @@ import com.orion.able.JsonAble;
 import com.orion.able.Logable;
 import com.orion.able.Mapable;
 import com.orion.lang.support.CloneSupport;
+import com.orion.utils.Strings;
 import com.orion.utils.json.Jsons;
 
 import java.util.HashMap;
@@ -29,7 +30,7 @@ public class UrlWrapper<T> extends CloneSupport<UrlWrapper<T>> implements Wrappe
     /**
      * 操作 1: 无操作  2: 刷新  3: 重定向到url
      */
-    private Integer type;
+    private int type;
 
     /**
      * 携带的数据
@@ -39,7 +40,21 @@ public class UrlWrapper<T> extends CloneSupport<UrlWrapper<T>> implements Wrappe
     private UrlWrapper() {
     }
 
-    private UrlWrapper(String url, Integer type, T data) {
+    private UrlWrapper(String url) {
+        this.url = url;
+    }
+
+    private UrlWrapper(String url, int type) {
+        this.url = url;
+        this.type = type;
+    }
+
+    private UrlWrapper(String url, T data) {
+        this.url = url;
+        this.data = data;
+    }
+
+    private UrlWrapper(String url, int type, T data) {
         this.url = url;
         this.type = type;
         this.data = data;
@@ -49,37 +64,37 @@ public class UrlWrapper<T> extends CloneSupport<UrlWrapper<T>> implements Wrappe
      * 初始化
      */
     public static <T> UrlWrapper<T> get() {
-        return new UrlWrapper<>();
+        return new UrlWrapper<>(Strings.EMPTY, URL_NO_OPERATION, null);
     }
 
     public static <T> UrlWrapper<T> get(T data) {
-        return new UrlWrapper<>("", 1, data);
+        return new UrlWrapper<>(Strings.EMPTY, URL_NO_OPERATION, data);
     }
 
     /**
      * 刷新页面
      */
     public static <T> UrlWrapper<T> refresh() {
-        return new UrlWrapper<>("", 2, null);
+        return new UrlWrapper<>(Strings.EMPTY, URL_REFRESH, null);
     }
 
     public static <T> UrlWrapper<T> refresh(T data) {
-        return new UrlWrapper<>("", 2, data);
+        return new UrlWrapper<>(Strings.EMPTY, URL_REFRESH, data);
     }
 
     /**
      * 重定向页面
      */
     public static <T> UrlWrapper<T> redirect() {
-        return new UrlWrapper<>("", 3, null);
+        return new UrlWrapper<>(Strings.EMPTY, URL_REDIRECT, null);
     }
 
     public static <T> UrlWrapper<T> redirect(String url) {
-        return new UrlWrapper<>(url, 3, null);
+        return new UrlWrapper<>(url, URL_REDIRECT, null);
     }
 
     public static <T> UrlWrapper<T> redirect(String url, T data) {
-        return new UrlWrapper<>(url, 3, data);
+        return new UrlWrapper<>(url, URL_REDIRECT, data);
     }
 
     public UrlWrapper<T> url(String url) {
@@ -87,7 +102,7 @@ public class UrlWrapper<T> extends CloneSupport<UrlWrapper<T>> implements Wrappe
         return this;
     }
 
-    public UrlWrapper<T> type(Integer type) {
+    public UrlWrapper<T> type(int type) {
         this.type = type;
         return this;
     }
@@ -106,11 +121,11 @@ public class UrlWrapper<T> extends CloneSupport<UrlWrapper<T>> implements Wrappe
         return this;
     }
 
-    public Integer getType() {
+    public int getType() {
         return type;
     }
 
-    public UrlWrapper<T> setType(Integer type) {
+    public UrlWrapper<T> setType(int type) {
         this.type = type;
         return this;
     }

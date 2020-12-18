@@ -5,7 +5,9 @@ import com.orion.able.Logable;
 import com.orion.able.Mapable;
 import com.orion.id.UUIds;
 import com.orion.lang.support.CloneSupport;
+import com.orion.utils.Objects1;
 import com.orion.utils.Strings;
+import com.orion.utils.collect.Lists;
 import com.orion.utils.json.Jsons;
 
 import java.util.ArrayList;
@@ -50,19 +52,23 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
      */
     private String traceId = this.createTrace();
 
-    private RpcWrapper() {
+    public RpcWrapper() {
+        this(RPC_SUCCESS_CODE, RPC_SUCCESS_MESSAGE, null);
     }
 
-    private RpcWrapper(int code) {
-        this.code = code;
+    public RpcWrapper(int code) {
+        this(code, RPC_SUCCESS_MESSAGE, null);
     }
 
-    private RpcWrapper(int code, String msg) {
-        this.code = code;
-        this.msg = msg;
+    public RpcWrapper(int code, String msg) {
+        this(code, msg, null);
     }
 
-    private RpcWrapper(int code, String msg, T data) {
+    public RpcWrapper(int code, T data) {
+        this(code, RPC_SUCCESS_MESSAGE, data);
+    }
+
+    public RpcWrapper(int code, String msg, T data) {
         this.code = code;
         this.msg = msg;
         this.data = data;
@@ -94,6 +100,10 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
         return new RpcWrapper<>(code, msg, data);
     }
 
+    public static <T> RpcWrapper<T> wrap(int code, T data) {
+        return new RpcWrapper<>(code, data);
+    }
+
     public static <T> RpcWrapper<T> wrap(T data, int code, String msg, Object... args) {
         return new RpcWrapper<>(code, Strings.format(msg, args), data);
     }
@@ -101,28 +111,28 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
     /**
      * 成功
      */
-    public static <T> RpcWrapper<T> ok() {
-        return new RpcWrapper<>(RPC_OK_CODE, RPC_OK_MESSAGE);
+    public static <T> RpcWrapper<T> success() {
+        return new RpcWrapper<>(RPC_SUCCESS_CODE, RPC_SUCCESS_MESSAGE);
     }
 
-    public static <T> RpcWrapper<T> ok(String msg) {
-        return new RpcWrapper<>(RPC_OK_CODE, msg);
+    public static <T> RpcWrapper<T> success(String msg) {
+        return new RpcWrapper<>(RPC_SUCCESS_CODE, msg);
     }
 
-    public static <T> RpcWrapper<T> ok(String msg, Object... args) {
-        return new RpcWrapper<>(RPC_OK_CODE, Strings.format(msg, args));
+    public static <T> RpcWrapper<T> success(String msg, Object... args) {
+        return new RpcWrapper<>(RPC_SUCCESS_CODE, Strings.format(msg, args));
     }
 
-    public static <T> RpcWrapper<T> ok(T data) {
-        return new RpcWrapper<>(RPC_OK_CODE, RPC_OK_MESSAGE, data);
+    public static <T> RpcWrapper<T> success(T data) {
+        return new RpcWrapper<>(RPC_SUCCESS_CODE, RPC_SUCCESS_MESSAGE, data);
     }
 
-    public static <T> RpcWrapper<T> ok(String msg, T data) {
-        return new RpcWrapper<>(RPC_OK_CODE, msg, data);
+    public static <T> RpcWrapper<T> success(String msg, T data) {
+        return new RpcWrapper<>(RPC_SUCCESS_CODE, msg, data);
     }
 
-    public static <T> RpcWrapper<T> ok(T data, String msg, Object... args) {
-        return new RpcWrapper<>(RPC_OK_CODE, Strings.format(msg, args), data);
+    public static <T> RpcWrapper<T> success(T data, String msg, Object... args) {
+        return new RpcWrapper<>(RPC_SUCCESS_CODE, Strings.format(msg, args), data);
     }
 
     /**
@@ -152,38 +162,54 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
         return new RpcWrapper<>(RPC_ERROR_CODE, Strings.format(msg, args), data);
     }
 
+    public static <T> RpcWrapper<T> error(Throwable t) {
+        return new RpcWrapper<>(RPC_ERROR_CODE, t.getMessage());
+    }
+
+    public static <T> RpcWrapper<T> error(Throwable t, T data) {
+        return new RpcWrapper<>(RPC_ERROR_CODE, t.getMessage(), data);
+    }
+
     /**
      * 检查是否成功
      */
     public boolean isSuccess() {
-        return RPC_OK_CODE == code && (errorMessages == null || errorMessages.isEmpty());
+        return RPC_ERROR_CODE != code && Lists.isEmpty(errorMessages);
     }
 
     /**
      * 失败抛出异常
      */
     public void errorThrows() {
-        errorThrows("", true);
+        errorThrows(null, true);
     }
 
     public void errorThrows(String msg) {
-        errorThrows(msg, true);
+        errorThrows(msg, false);
     }
 
     public void errorThrows(String msg, Object... args) {
-        errorThrows(Strings.format(msg, args), true);
+        errorThrows(Strings.format(msg, args), false);
     }
 
-    public void errorThrows(boolean appendErrMsg, String msg, Object... args) {
-        errorThrows(Strings.format(msg, args), appendErrMsg);
+    public void errorThrowsAppend(String msg, Object... args) {
+        errorThrows(Strings.format(msg, args), true);
     }
 
     public void errorThrows(String msg, boolean appendErrMsg) {
         if (!isSuccess()) {
             if (appendErrMsg) {
-                throw new RuntimeException(msg + " " + errorMessages);
+                if (msg == null) {
+                    throw new RuntimeException(Objects1.toString(errorMessages));
+                } else {
+                    throw new RuntimeException(msg + Strings.SPACE + Objects1.toString(errorMessages));
+                }
             }
-            throw new RuntimeException(msg);
+            if (msg == null) {
+                throw new RuntimeException();
+            } else {
+                throw new RuntimeException(msg);
+            }
         }
     }
 
@@ -209,7 +235,7 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
     }
 
     public RpcWrapper<T> trace(Object object) {
-        traceId = TRACE_PREFIX + object;
+        traceId = PRC_TRACE_PREFIX + object;
         return this;
     }
 
@@ -245,7 +271,7 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
     }
 
     public RpcWrapper<T> setTraceId(String traceId) {
-        this.traceId = TRACE_PREFIX + traceId;
+        this.traceId = PRC_TRACE_PREFIX + traceId;
         return this;
     }
 
@@ -258,7 +284,7 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
     }
 
     public List<String> getErrorMessages() {
-        return errorMessages == null ? new ArrayList<>() : errorMessages;
+        return errorMessages == null ? errorMessages = new ArrayList<>() : errorMessages;
     }
 
     public RpcWrapper<T> setErrorMessages(List<String> errorMessages) {
@@ -267,11 +293,11 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
     }
 
     public String getErrorMessageString() {
-        return errorMessages == null ? "" : errorMessages.toString();
+        return errorMessages == null ? Strings.EMPTY : errorMessages.toString();
     }
 
     private String createTrace() {
-        return traceId = TRACE_PREFIX + UUIds.random32();
+        return traceId = PRC_TRACE_PREFIX + UUIds.random32();
     }
 
     @Override
@@ -287,13 +313,13 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
     @Override
     public String toLogString() {
         StringBuilder builder = new StringBuilder();
-        boolean ok = isSuccess();
-        builder.append("RpcWrapper:\n\tisSuccess ==> ").append(ok).append("\n\t")
-                .append("traceID ==> ").append(traceId).append("\n\t")
+        boolean success = isSuccess();
+        builder.append("RpcWrapper:\n\tisSuccess ==> ").append(success).append("\n\t")
+                .append("traceId ==> ").append(traceId).append("\n\t")
                 .append("code ==> ").append(code).append("\n\t")
                 .append("msg ==> ").append(msg).append("\n\t")
                 .append("data ==> ").append(Jsons.toJsonWriteNull(data));
-        if (!ok) {
+        if (!success) {
             builder.append("errorMsg ==> ").append(errorMessages);
         }
         return builder.toString();
@@ -305,7 +331,7 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
         map.put("code", code);
         map.put("msg", msg);
         map.put("data", data);
-        map.put("traceID", traceId);
+        map.put("traceId", traceId);
         map.put("errorMsg", errorMessages);
         return map;
     }

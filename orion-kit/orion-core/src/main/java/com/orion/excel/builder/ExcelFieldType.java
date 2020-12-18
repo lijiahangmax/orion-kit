@@ -12,22 +12,26 @@ public enum ExcelFieldType {
     /**
      * 文本
      */
-    TEXT(1),
+    TEXT,
 
     /**
      * 数字
      */
-    NUMBER(2),
+    NUMBER,
+
+    /**
+     * 公式
+     */
+    FORMULA,
 
     /**
      * 时间
      */
-    DATE(3);
+    DATE,
 
-    int code;
-
-    ExcelFieldType(int code) {
-        this.code = code;
-    }
+    /**
+     * 布尔值
+     */
+    BOOLEAN,
 
 }

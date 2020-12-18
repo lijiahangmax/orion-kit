@@ -19,6 +19,10 @@ import java.util.function.Consumer;
 @SuppressWarnings("ALL")
 public class Strings {
 
+    public static final String EMPTY = "";
+
+    public static final String SPACE = " ";
+
     private static final String UTF8 = "UTF-8";
 
     private Strings() {
@@ -123,7 +127,7 @@ public class Strings {
      * @return 空 true
      */
     public static boolean isBlank(String str) {
-        return str == null || "".equals(str) || "".equals(str.trim()) || 0 == str.replaceAll("\\s", "").length();
+        return str == null || Strings.EMPTY.equals(str) || Strings.EMPTY.equals(str.trim()) || 0 == str.replaceAll("\\s", Strings.EMPTY).length();
     }
 
     /**
@@ -577,7 +581,7 @@ public class Strings {
      */
     public static String join(String... strs) {
         if (Arrays1.length(strs) == 0) {
-            return "";
+            return Strings.EMPTY;
         }
         StringBuilder sb = newBuilder();
         for (String str : strs) {
@@ -595,10 +599,10 @@ public class Strings {
      */
     public static String joinSymbol(String symbol, String... strs) {
         if (Arrays1.length(strs) == 0) {
-            return "";
+            return Strings.EMPTY;
         }
         if (isBlank(symbol)) {
-            symbol = "";
+            symbol = Strings.EMPTY;
         }
         StringBuilder sb = newBuilder();
         for (String str : strs) {
@@ -616,7 +620,7 @@ public class Strings {
      * @return 连接后的字符串
      */
     public static String join(List<String> list, String symbol) {
-        return join(list, symbol, "", "");
+        return join(list, symbol, Strings.EMPTY, Strings.EMPTY);
     }
 
     /**
@@ -629,8 +633,8 @@ public class Strings {
      * @return 连接后的字符串
      */
     public static String join(List<String> list, String symbol, String prefix, String suffix) {
-        prefix = isBlank(prefix) ? "" : prefix;
-        suffix = isBlank(suffix) ? "" : suffix;
+        prefix = isBlank(prefix) ? Strings.EMPTY : prefix;
+        suffix = isBlank(suffix) ? Strings.EMPTY : suffix;
         StringJoiner sj = new StringJoiner(symbol, prefix, suffix);
         list.forEach(sj::add);
         return sj.toString();
@@ -645,8 +649,8 @@ public class Strings {
      * @return prefix + s + suffix
      */
     public static String appendAround(String s, String prefix, String suffix) {
-        prefix = isBlank(prefix) ? "" : prefix;
-        suffix = isBlank(suffix) ? "" : suffix;
+        prefix = isBlank(prefix) ? Strings.EMPTY : prefix;
+        suffix = isBlank(suffix) ? Strings.EMPTY : suffix;
         if (isBlank(s)) {
             return prefix + suffix;
         }
@@ -812,7 +816,7 @@ public class Strings {
      */
     public static String build(Appendable build, Object... obj) {
         if (obj == null || obj.length == 0) {
-            return "";
+            return Strings.EMPTY;
         }
         if (build == null) {
             build = new StringBuilder();
@@ -822,7 +826,7 @@ public class Strings {
                 build.append(str(o));
             }
         } catch (Exception e) {
-            return "";
+            return Strings.EMPTY;
         }
         return build.toString();
     }
@@ -1052,7 +1056,7 @@ public class Strings {
             return str;
         }
         if (num <= 0) {
-            return "";
+            return Strings.EMPTY;
         }
         StringBuilder s = new StringBuilder();
         for (int i = 0; i < num; i++) {
@@ -1070,7 +1074,7 @@ public class Strings {
      */
     public static String repeat(char c, int num) {
         if (num <= 0) {
-            return "";
+            return Strings.EMPTY;
         }
         StringBuilder s = new StringBuilder();
         for (int i = 0; i < num; i++) {
@@ -1108,7 +1112,7 @@ public class Strings {
         if (isBlank(s)) {
             return s;
         }
-        return s.replaceAll("[\\pP\\p{Punct}]", "").replaceAll("￥", "");
+        return s.replaceAll("[\\pP\\p{Punct}]", Strings.EMPTY).replaceAll("￥", Strings.EMPTY);
     }
 
     /**
@@ -1130,7 +1134,7 @@ public class Strings {
      */
     public static String def(String str) {
         if (str == null) {
-            return "";
+            return Strings.EMPTY;
         }
         return str;
     }
@@ -1171,7 +1175,7 @@ public class Strings {
         }
         int length = length(str);
         if (skip >= length) {
-            return "";
+            return Strings.EMPTY;
         }
         char[] cs = new char[length - skip];
         System.arraycopy(str.toCharArray(), skip, cs, 0, length - skip);
@@ -1191,7 +1195,7 @@ public class Strings {
         }
         int length = length(str);
         if (omit >= length) {
-            return "";
+            return Strings.EMPTY;
         }
         char[] cs = new char[length - omit];
         System.arraycopy(str.toCharArray(), 0, cs, 0, length - omit);
@@ -1269,7 +1273,7 @@ public class Strings {
     /**
      * 右侧用空格补齐到规定长度
      * rightPad(null, *)   = null
-     * rightPad("", 3)     = "   "
+     * rightPad(Strings.EMPTY, 3)     = "   "
      * rightPad("abc", 3)  = "abc"
      * rightPad("abc", 5)  = "abc  "
      * rightPad("abc", 1)  = "abc"
@@ -1302,7 +1306,7 @@ public class Strings {
             return null;
         }
         if (isEmpty(padStr)) {
-            padStr = " ";
+            padStr = Strings.SPACE;
         }
         int padLen = padStr.length();
         int strLen = str.length();
@@ -1330,7 +1334,7 @@ public class Strings {
     /**
      * 左侧用空格补齐到规定长度
      * leftPad(null, *)   = null
-     * leftPad("", 3)     = "   "
+     * leftPad(Strings.EMPTY, 3)     = "   "
      * leftPad("abc", 3)  = "abc"
      * leftPad("abc", 5)  = "  abc"
      * leftPad("abc", 1)  = "abc"
@@ -1363,7 +1367,7 @@ public class Strings {
             return null;
         }
         if (isEmpty(padStr)) {
-            padStr = " ";
+            padStr = Strings.SPACE;
         }
         int padLen = padStr.length();
         int strLen = str.length();
@@ -1391,7 +1395,7 @@ public class Strings {
     /**
      * 中间用空格补齐到规定长度
      * .center(null, *)   = null
-     * .center("", 4)     = "    "
+     * .center(Strings.EMPTY, 4)     = "    "
      * .center("ab", -1)  = "ab"
      * .center("ab", 4)   = " ab "
      * .center("abc", 2) = "abc"
@@ -1424,7 +1428,7 @@ public class Strings {
             return str;
         }
         if (isEmpty(padStr)) {
-            padStr = " ";
+            padStr = Strings.SPACE;
         }
         int strLen = str.length();
         int pads = size - strLen;

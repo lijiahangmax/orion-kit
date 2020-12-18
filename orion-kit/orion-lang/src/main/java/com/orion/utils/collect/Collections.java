@@ -21,6 +21,10 @@ class Collections {
         return java.util.Collections.synchronizedCollection(c);
     }
 
+    public static <E> Collection<E> unmodified(Collection<E> c) {
+        return java.util.Collections.unmodifiableCollection(c);
+    }
+
     /**
      * 将集合连接成字符串
      *
@@ -50,7 +54,7 @@ class Collections {
         while (iterator.hasNext()) {
             sb.append(iterator.next());
             if (++i != size) {
-                sb.append(split).append(" ");
+                sb.append(split).append(Strings.SPACE);
             }
         }
         return sb.append(end).toString();
@@ -361,7 +365,7 @@ class Collections {
      * @param <E> ignore
      * @return 第一个元素
      */
-    public static <E> E getFirst(Collection<E> c) {
+    public static <E> E first(Collection<E> c) {
         if (size(c) == 0) {
             return null;
         }
@@ -375,7 +379,7 @@ class Collections {
      * @param <E> ignore
      * @return 最后一个元素
      */
-    public static <E> E getLast(Collection<E> c) {
+    public static <E> E last(Collection<E> c) {
         if (size(c) == 0) {
             return null;
         }

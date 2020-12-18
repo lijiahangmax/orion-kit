@@ -1,6 +1,5 @@
 package com.orion.utils;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -11,6 +10,13 @@ import java.util.regex.Pattern;
  * @since 2019/9/20 17:07
  */
 public class Xsses {
+
+    private static final Pattern SCRIPT_PATTERN = Pattern.compile("<[\\s]*?script[^>]*?>[\\s\\S]*?<[\\s]*?\\/[\\s]*?script[\\s]*?>", Pattern.CASE_INSENSITIVE);
+
+    private static final Pattern STYLE_PATTERN = Pattern.compile("<[\\s]*?style[^>]*?>[\\s\\S]*?<[\\s]*?\\/[\\s]*?style[\\s]*?>", Pattern.CASE_INSENSITIVE);
+
+    private static final Pattern HTML_TAG_PATTERN = Pattern.compile("<[^>]+>", Pattern.CASE_INSENSITIVE);
+
 
     private Xsses() {
     }
@@ -25,21 +31,12 @@ public class Xsses {
         if (Strings.isBlank(s)) {
             return s;
         }
-        String script = "<[\\s]*?script[^>]*?>[\\s\\S]*?<[\\s]*?\\/[\\s]*?script[\\s]*?>";
-        String style = "<[\\s]*?style[^>]*?>[\\s\\S]*?<[\\s]*?\\/[\\s]*?style[\\s]*?>";
-        // String empty = "\\s+";
-        // eval()
-        // javascript:
-
         // 过滤script标签
-        Pattern pScript = Pattern.compile(script, Pattern.CASE_INSENSITIVE);
-        Matcher mScript = pScript.matcher(s);
-        s = mScript.replaceAll("");
-
+        s = SCRIPT_PATTERN.matcher(s).replaceAll("");
         // 过滤style标签
-        Pattern pStyle = Pattern.compile(style, Pattern.CASE_INSENSITIVE);
-        Matcher mStyle = pStyle.matcher(s);
-        s = mStyle.replaceAll("");
+        s = STYLE_PATTERN.matcher(s).replaceAll("");
+        // 过滤html标签
+        // s = HTML_TAG_PATTERN.matcher(s).replaceAll("");
 
         // 过滤特殊字符
         s = s.replaceAll("&", "&amp;");

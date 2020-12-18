@@ -1,6 +1,5 @@
 package com.orion.utils.reflect;
 
-import com.orion.lang.collect.MultiConcurrentHashMap;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Objects1;
 import com.orion.utils.Strings;
@@ -11,7 +10,6 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static com.orion.utils.reflect.Classes.isImplClass;
 
@@ -25,11 +23,6 @@ import static com.orion.utils.reflect.Classes.isImplClass;
  */
 @SuppressWarnings("unchecked")
 public class BeanWrapper {
-
-    private static final Map<Class<?>, Constructor<?>> CONSTRUCTOR_CACHE = new ConcurrentHashMap<>(16);
-    private static final Map<Class<?>, List<Method>> ALL_SET_METHOD_CACHE = new ConcurrentHashMap<>(16);
-    private static final Map<Class<?>, List<Method>> ALL_GET_METHOD_CACHE = new ConcurrentHashMap<>(16);
-    private static final MultiConcurrentHashMap<Class<?>, String, Method> METHOD_CACHE = new MultiConcurrentHashMap<>();
 
     private BeanWrapper() {
     }
@@ -61,7 +54,7 @@ public class BeanWrapper {
         if (bean == null) {
             return map;
         }
-        List<Method> getterMethods = getAllGetterMethod(bean.getClass());
+        List<Method> getterMethods = Methods.getAllGetterMethodByCache(bean.getClass());
         for (Method getterMethod : getterMethods) {
             String fieldName = Fields.getFieldNameByMethodName(getterMethod.getName());
             if (fieldMapper != null) {
@@ -134,9 +127,9 @@ public class BeanWrapper {
      * @return bean
      */
     public static <T> T toBean(Map<?, ?> map, Map<String, ?> fieldMapper, Class<T> clazz) {
-        T t = Constructors.newInstance(getConstructor(clazz));
+        T t = Constructors.newInstance(Constructors.getDefaultConstructorByCache(clazz));
         for (Map.Entry<?, ?> entry : map.entrySet()) {
-            List<Method> setterMethods = getAllSetterMethod(clazz);
+            List<Method> setterMethods = Methods.getAllSetterMethodByCache(clazz);
             String key = Objects1.toString(entry.getKey());
             Map<String, ?> keyMap = null;
             if (fieldMapper != null) {
@@ -190,12 +183,15 @@ public class BeanWrapper {
      * @return bean
      */
     public static <T> T toBean(Object[] values, Map<Integer, String> indexMapper, Class<T> clazz) {
-        T t = Constructors.newInstance(getConstructor(clazz));
+        T t = Constructors.newInstance(Constructors.getDefaultConstructorByCache(clazz));
         for (Map.Entry<Integer, String> entry : indexMapper.entrySet()) {
             try {
                 Integer index = entry.getKey();
                 if (index < values.length) {
-                    Method setterMethod = getSetterMethod(clazz, entry.getValue());
+                    Method setterMethod = Methods.getSetterMethodByCache(clazz, entry.getValue());
+                    if (setterMethod == null) {
+                        continue;
+                    }
                     Object[] valueArr = new Object[1];
                     Object value = values[index];
                     Class<?> paramClass = setterMethod.getParameterTypes()[0];
@@ -284,7 +280,7 @@ public class BeanWrapper {
     private static <R, T> T copy(R source, Class<T> targetClass, Map<String, String> fieldMapper, String[] ignoreFields) {
         Valid.notNull(source, "source object is null");
         Valid.notNull(targetClass, "target class is null");
-        Constructor<T> constructor = getConstructor(targetClass);
+        Constructor<T> constructor = Constructors.getDefaultConstructorByCache(targetClass);
         T target = Constructors.newInstance(constructor);
         copy(source, target, fieldMapper, ignoreFields);
         return target;
@@ -293,8 +289,8 @@ public class BeanWrapper {
     private static <R, T> void copy(R source, T target, Map<String, String> fieldMapper, String[] ignoreFields) {
         Valid.notNull(source, "source object is null");
         Valid.notNull(target, "target object is null");
-        List<Method> sourceGetters = getAllGetterMethod(source.getClass());
-        List<Method> targetSetters = getAllSetterMethod(target.getClass());
+        List<Method> sourceGetters = Methods.getAllGetterMethodByCache(source.getClass());
+        List<Method> targetSetters = Methods.getAllSetterMethodByCache(target.getClass());
         for (Method targetSetter : targetSetters) {
             String targetSetterName = targetSetter.getName();
             String targetFieldName = Strings.firstLower(targetSetterName.substring(3));
@@ -352,68 +348,6 @@ public class BeanWrapper {
             }
         }
         return name;
-    }
-
-    /**
-     * 获取所有setter方法
-     *
-     * @param clazz class
-     * @return method
-     */
-    private static List<Method> getAllSetterMethod(Class<?> clazz) {
-        List<Method> methodList = ALL_SET_METHOD_CACHE.get(clazz);
-        if (methodList == null) {
-            methodList = Methods.getAllSetterMethod(clazz);
-            ALL_SET_METHOD_CACHE.put(clazz, methodList);
-        }
-        return methodList;
-    }
-
-    /**
-     * 获取所有getter方法
-     *
-     * @param clazz class
-     * @return method
-     */
-    private static List<Method> getAllGetterMethod(Class<?> clazz) {
-        List<Method> methodList = ALL_GET_METHOD_CACHE.get(clazz);
-        if (methodList == null) {
-            methodList = Methods.getAllGetterMethod(clazz);
-            ALL_GET_METHOD_CACHE.put(clazz, methodList);
-        }
-        return methodList;
-    }
-
-    /**
-     * 获取setter方法
-     *
-     * @param clazz     class
-     * @param fieldName fieldName
-     * @return method
-     */
-    private static Method getSetterMethod(Class<?> clazz, String fieldName) {
-        String methodName = "set" + Strings.firstUpper(fieldName);
-        Method method = METHOD_CACHE.get(clazz, methodName);
-        if (method == null) {
-            method = Methods.getAccessibleMethod(clazz, methodName, 1);
-            METHOD_CACHE.put(clazz, methodName, method);
-        }
-        return method;
-    }
-
-    /**
-     * 获取无参构造方法
-     *
-     * @param clazz class
-     * @return constructor
-     */
-    private static <T> Constructor<T> getConstructor(Class<T> clazz) {
-        Constructor<?> constructor = CONSTRUCTOR_CACHE.get(clazz);
-        if (constructor == null) {
-            constructor = Constructors.getDefaultConstructor(clazz);
-            CONSTRUCTOR_CACHE.put(clazz, constructor);
-        }
-        return (Constructor<T>) constructor;
     }
 
 }

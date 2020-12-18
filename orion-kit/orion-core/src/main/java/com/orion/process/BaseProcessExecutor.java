@@ -2,6 +2,7 @@ package com.orion.process;
 
 import com.orion.able.Executable;
 import com.orion.able.SafeCloseable;
+import com.orion.utils.Strings;
 import com.orion.utils.Systems;
 import com.orion.utils.collect.Lists;
 
@@ -18,11 +19,6 @@ public abstract class BaseProcessExecutor implements Executable, SafeCloseable {
      * 系统命令
      */
     private static final ArrayList<String> COMMAND = new ArrayList<>();
-
-    /**
-     * 空格
-     */
-    protected static final String SPACE = " ";
 
     static {
         if (Systems.OS_NAME.toLowerCase().contains("windows")) {
@@ -124,7 +120,7 @@ public abstract class BaseProcessExecutor implements Executable, SafeCloseable {
     public BaseProcessExecutor terminal() {
         List<String> c = getTerminalCommand();
         for (String s : this.command) {
-            c.add(s.replaceAll("\n", SPACE).replaceAll("\r", SPACE));
+            c.add(s.replaceAll("\n", Strings.SPACE).replaceAll("\r", Strings.SPACE));
         }
         this.command = c.toArray(new String[0]);
         return this;
@@ -240,7 +236,7 @@ public abstract class BaseProcessExecutor implements Executable, SafeCloseable {
 
     @Override
     public String toString() {
-        return Lists.join(Lists.of(this.command), SPACE);
+        return Lists.join(Lists.of(this.command), Strings.SPACE);
     }
 
 }

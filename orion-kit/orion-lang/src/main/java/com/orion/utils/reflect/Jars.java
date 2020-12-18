@@ -1,6 +1,7 @@
 package com.orion.utils.reflect;
 
 import com.orion.utils.Exceptions;
+import com.orion.utils.Strings;
 import com.orion.utils.Valid;
 import com.orion.utils.io.Files1;
 
@@ -32,9 +33,9 @@ public class Jars {
      * @return targetUrl / thisJar
      */
     public static URL getTargetUrl() {
-        URL resource = Methods.class.getClassLoader().getResource("");
+        URL resource = Methods.class.getClassLoader().getResource(Strings.EMPTY);
         if (resource == null) {
-            resource = Methods.class.getResource("");
+            resource = Methods.class.getResource(Strings.EMPTY);
         }
         return resource;
     }

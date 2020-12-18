@@ -95,7 +95,7 @@ public class Spells {
                 sb.append(anArr);
             }
         }
-        return sb.toString().replaceAll("\\W", "").trim();
+        return sb.toString().replaceAll("\\W", Strings.EMPTY).trim();
     }
 
     /**
@@ -224,8 +224,8 @@ public class Spells {
      */
     public static boolean isMessyCode(String s) {
         Matcher m = MESSY_CODE.matcher(s);
-        String after = m.replaceAll("");
-        String temp = after.replaceAll("\\p{P}", "");
+        String after = m.replaceAll(Strings.EMPTY);
+        String temp = after.replaceAll("\\p{P}", Strings.EMPTY);
         char[] ch = temp.trim().toCharArray();
         float chLength = 0;
         float count = 0;

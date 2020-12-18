@@ -3,6 +3,7 @@ package com.orion.excel.split;
 import com.orion.excel.Excels;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
+import com.orion.utils.Strings;
 import com.orion.utils.Valid;
 import com.orion.utils.collect.Lists;
 import com.orion.utils.io.Files1;
@@ -167,7 +168,7 @@ public class ExcelColumnBatchSplit {
                     if (rowData.size() > fileColumn && fileColumn >= 0) {
                         cell.setCellValue(rowData.get(fileColumn));
                     } else {
-                        cell.setCellValue("");
+                        cell.setCellValue(Strings.EMPTY);
                     }
                 }
                 rowCellIndex = 0;

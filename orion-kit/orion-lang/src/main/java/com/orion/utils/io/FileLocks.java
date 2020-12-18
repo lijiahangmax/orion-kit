@@ -2,6 +2,7 @@ package com.orion.utils.io;
 
 import com.orion.able.Lockable;
 import com.orion.utils.Exceptions;
+import com.orion.utils.Strings;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,7 +61,7 @@ public class FileLocks {
      * @return 前缀锁
      */
     public static NamedFileLock getPrefixFileLock(String file) {
-        return new NamedFileLock(file).suffix("");
+        return new NamedFileLock(file).suffix(Strings.EMPTY);
     }
 
     /**
@@ -70,7 +71,7 @@ public class FileLocks {
      * @return 前缀锁
      */
     public static NamedFileLock getPrefixFileLock(File file) {
-        return new NamedFileLock(file).suffix("");
+        return new NamedFileLock(file).suffix(Strings.EMPTY);
     }
 
     /**
@@ -81,7 +82,7 @@ public class FileLocks {
      * @return 前缀锁
      */
     public static NamedFileLock getPrefixFileLock(String lockPrefix, String file) {
-        return new NamedFileLock(file).prefix(lockPrefix).suffix("");
+        return new NamedFileLock(file).prefix(lockPrefix).suffix(Strings.EMPTY);
     }
 
     /**
@@ -92,7 +93,7 @@ public class FileLocks {
      * @return 前缀锁
      */
     public static NamedFileLock getPrefixFileLock(String lockPrefix, File file) {
-        return new NamedFileLock(file).prefix(lockPrefix).suffix("");
+        return new NamedFileLock(file).prefix(lockPrefix).suffix(Strings.EMPTY);
     }
 
     /**
@@ -102,7 +103,7 @@ public class FileLocks {
      * @return 后缀锁
      */
     public static NamedFileLock getSuffixFileLock(String file) {
-        return new NamedFileLock(file).prefix("");
+        return new NamedFileLock(file).prefix(Strings.EMPTY);
     }
 
     /**
@@ -112,7 +113,7 @@ public class FileLocks {
      * @return 后缀锁
      */
     public static NamedFileLock getSuffixFileLock(File file) {
-        return new NamedFileLock(file).prefix("");
+        return new NamedFileLock(file).prefix(Strings.EMPTY);
     }
 
     /**
@@ -123,7 +124,7 @@ public class FileLocks {
      * @return 后缀锁
      */
     public static NamedFileLock getSuffixFileLock(String lockSuffix, String file) {
-        return new NamedFileLock(file).prefix("").suffix(lockSuffix);
+        return new NamedFileLock(file).prefix(Strings.EMPTY).suffix(lockSuffix);
     }
 
     /**
@@ -134,7 +135,7 @@ public class FileLocks {
      * @return 后缀锁
      */
     public static NamedFileLock getSuffixFileLock(String lockSuffix, File file) {
-        return new NamedFileLock(file).prefix("").suffix(lockSuffix);
+        return new NamedFileLock(file).prefix(Strings.EMPTY).suffix(lockSuffix);
     }
 
     /**

@@ -73,7 +73,7 @@ public class FileCompress {
             } else {
                 zos = new ZipOutputStream(new BufferedOutputStream(Files1.openOutputStreamFast(dest)));
             }
-            generateFile(zos, file, "");
+            generateFile(zos, file, Strings.EMPTY);
             return dest;
         } catch (Exception e) {
             Exceptions.printStacks(e);
@@ -94,7 +94,7 @@ public class FileCompress {
         if (file.isDirectory()) {
             File[] files = file.listFiles();
             out.putNextEntry(new ZipEntry(dir + "/"));
-            dir = dir.length() == 0 ? "" : dir + "/";
+            dir = dir.length() == 0 ? Strings.EMPTY : dir + "/";
             if (files != null && files.length != 0) {
                 for (File file1 : files) {
                     generateFile(out, file1, dir + file1.getName());

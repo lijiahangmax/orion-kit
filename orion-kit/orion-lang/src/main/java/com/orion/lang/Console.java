@@ -118,7 +118,7 @@ public class Console {
         StringBuilder sb = new StringBuilder();
         if (os != null) {
             for (Object o : os) {
-                sb.append(Objects1.toString(o)).append(" ");
+                sb.append(Objects1.toString(o)).append(Strings.SPACE);
             }
         }
         out.println(sb);

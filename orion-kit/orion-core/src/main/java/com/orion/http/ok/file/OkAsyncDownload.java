@@ -645,7 +645,7 @@ public class OkAsyncDownload {
             lock = FileLocks.getSuffixFileLock("httpdownload", file);
             if (lock.checkLock()) {
                 long size = Files1.getSize(file);
-                this.request = this.buildHandler(new Request.Builder()).addHeader(skipSizeHeader, size + "").build();
+                this.request = this.buildHandler(new Request.Builder()).addHeader(skipSizeHeader, size + Strings.EMPTY).build();
                 this.skipBytes = size;
                 return this.download(Files1.openOutputStream(file, true), true);
             } else {
@@ -680,7 +680,7 @@ public class OkAsyncDownload {
             this.request = this.buildHandler(new Request.Builder()).build();
         } else {
             this.skipBytes = skipBytes;
-            this.request = this.buildHandler(new Request.Builder()).addHeader(this.skipSizeHeader, this.skipSizeHeader + "").build();
+            this.request = this.buildHandler(new Request.Builder()).addHeader(this.skipSizeHeader, this.skipSizeHeader + Strings.EMPTY).build();
         }
         return this.download(out, false);
     }
@@ -808,7 +808,7 @@ public class OkAsyncDownload {
                     this.formParts.forEach(formBuilder::add);
                     builder.method(this.method, formBuilder.build());
                 } else {
-                    builder.method(this.method, RequestBody.create(MediaType.parse(this.contentType), ""));
+                    builder.method(this.method, RequestBody.create(MediaType.parse(this.contentType), Strings.EMPTY));
                 }
             } else {
                 if (this.body != null) {
@@ -818,7 +818,7 @@ public class OkAsyncDownload {
                     this.formParts.forEach(formBuilder::addEncoded);
                     builder.method(this.method, formBuilder.build());
                 } else {
-                    builder.method(this.method, RequestBody.create(MediaType.parse(this.contentType + "; charset=" + this.charset), ""));
+                    builder.method(this.method, RequestBody.create(MediaType.parse(this.contentType + "; charset=" + this.charset), Strings.EMPTY));
                 }
             }
         }

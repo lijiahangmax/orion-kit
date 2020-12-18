@@ -1,5 +1,8 @@
 package com.orion.excel.annotation;
 
+import com.orion.excel.builder.ExcelFieldType;
+import com.orion.utils.Strings;
+
 import java.lang.annotation.*;
 
 /**
@@ -30,7 +33,7 @@ public @interface ExportField {
      *
      * @return 表头
      */
-    String header() default "";
+    String header() default Strings.EMPTY;
 
     /**
      * 自动换行
@@ -52,7 +55,7 @@ public @interface ExportField {
     /**
      * 背景颜色
      */
-    String backgroundColor() default "";
+    String backgroundColor() default Strings.EMPTY;
 
     /**
      * 边框
@@ -61,13 +64,18 @@ public @interface ExportField {
     int border() default -1;
 
     /**
-     * 边框颜色
+     * 边框颜色 RGB
      */
-    String borderColor() default "";
+    String borderColor() default Strings.EMPTY;
 
     /**
      * 时间格式化
      */
-    String datePattern() default "";
+    String datePattern() default Strings.EMPTY;
+
+    /**
+     * 类型
+     */
+    ExcelFieldType type() default ExcelFieldType.TEXT;
 
 }

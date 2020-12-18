@@ -1,5 +1,6 @@
 package com.orion.utils.random;
 
+import com.orion.utils.Strings;
 import com.orion.utils.Systems;
 import com.orion.utils.Valid;
 
@@ -47,7 +48,7 @@ public class RndGenerator {
     }
 
     public RndGenerator(long seed, int bit) {
-        Valid.gte((seed + "").length(), bit, "bit len must less than or equal seed len");
+        Valid.gte((seed + Strings.EMPTY).length(), bit, "bit len must less than or equal seed len");
         this.seed = seed;
         this.originSeed = seed;
         this.bit = bit;
@@ -55,9 +56,9 @@ public class RndGenerator {
     }
 
     public long next() {
-        String bs = seed + "";
+        String bs = seed + Strings.EMPTY;
         seed *= seed;
-        String as = seed + "";
+        String as = seed + Strings.EMPTY;
         int el = (as.length() - bs.length()) >> 1;
         char c = as.charAt(el);
         String ns;
@@ -68,7 +69,7 @@ public class RndGenerator {
         }
         seed = Long.parseLong(ns);
         if (rep.matcher(ns).matches()) {
-            ns = originSeed + "";
+            ns = originSeed + Strings.EMPTY;
             seed = originSeed;
         }
         int i = (bs.length() - bit) >> 1;

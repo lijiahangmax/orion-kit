@@ -27,7 +27,7 @@ public class Safes {
     public static String mix(String s, int start, int end, String safe, int repeat) {
         int length = Strings.length(s);
         if (length == 0) {
-            return "";
+            return Strings.EMPTY;
         }
         if (Strings.isBlank(safe)) {
             safe = SAFE_CHAR;

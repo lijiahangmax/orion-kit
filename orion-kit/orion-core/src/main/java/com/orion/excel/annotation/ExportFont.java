@@ -1,5 +1,7 @@
 package com.orion.excel.annotation;
 
+import com.orion.utils.Strings;
+
 import java.lang.annotation.*;
 
 /**
@@ -18,7 +20,7 @@ public @interface ExportFont {
     /**
      * 字体名称
      */
-    String fontName() default "";
+    String fontName() default Strings.EMPTY;
 
     /**
      * 字体大小
@@ -28,7 +30,7 @@ public @interface ExportFont {
     /**
      * 字体颜色
      */
-    String fontColor() default "";
+    String fontColor() default Strings.EMPTY;
 
     /**
      * 是否加粗

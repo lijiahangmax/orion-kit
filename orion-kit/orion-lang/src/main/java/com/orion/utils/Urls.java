@@ -90,13 +90,13 @@ public class Urls {
      */
     public static String buildQueryString(Map<String, ?> request, List<String> skipFields, boolean encode, String encodeCharset) {
         if (request == null || request.isEmpty()) {
-            return "";
+            return Strings.EMPTY;
         }
         List<String> fieldNames = new ArrayList<>(request.keySet());
         Collections.sort(fieldNames);
         StringBuilder sb = Strings.newBuilder();
         for (String fieldName : fieldNames) {
-            String fieldValue = "";
+            String fieldValue = Strings.EMPTY;
             Object o = request.get(fieldName);
             if (o != null) {
                 fieldValue = o.toString();
@@ -337,7 +337,7 @@ public class Urls {
         /**
          * 主机
          */
-        private String host = "";
+        private String host = Strings.EMPTY;
 
         /**
          * 端口

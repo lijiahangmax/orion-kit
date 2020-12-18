@@ -1,5 +1,6 @@
 package com.orion.id;
 
+import com.orion.utils.Strings;
 import com.orion.utils.Systems;
 import com.orion.utils.random.Randoms;
 
@@ -33,7 +34,7 @@ public class ObjectIds {
         if (s == null) {
             return false;
         }
-        s = s.replaceAll("-", "");
+        s = s.replaceAll("-", Strings.EMPTY);
         int len = s.length();
         if (len != 24) {
             return false;

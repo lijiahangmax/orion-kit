@@ -283,7 +283,7 @@ public class Keys {
                 }
                 s = r.readLine();
             }
-            return key.toString().replaceAll("\n", "").replaceAll("\r", "");
+            return key.toString().replaceAll("\n", Strings.EMPTY).replaceAll("\r", Strings.EMPTY);
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         } finally {

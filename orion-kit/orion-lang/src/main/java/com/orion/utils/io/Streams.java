@@ -141,7 +141,7 @@ public class Streams {
             return null;
         }
         if (linePos == 0) {
-            return "";
+            return Strings.EMPTY;
         }
         return new String(line, 0, linePos, charset);
     }

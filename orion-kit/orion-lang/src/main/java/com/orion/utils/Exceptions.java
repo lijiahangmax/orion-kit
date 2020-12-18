@@ -28,6 +28,20 @@ public class Exceptions {
     }
 
     /**
+     * Throwable ->  RuntimeException
+     *
+     * @param e Throwable
+     * @return RuntimeException
+     */
+    public static RuntimeException unchecked(Throwable e) {
+        if (e instanceof RuntimeException) {
+            return (RuntimeException) e;
+        } else {
+            return new RuntimeException(e);
+        }
+    }
+
+    /**
      * 打印异常
      *
      * @param t Throwable

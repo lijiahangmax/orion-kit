@@ -153,7 +153,9 @@ public class Dates {
      * @return ignore
      */
     public static boolean isDateClass(Class<?> c) {
-        return c == long.class || c == Long.class || c == Date.class || c == Calendar.class ||
+        return c == Long.TYPE || c == Long.class ||
+                c == Integer.TYPE || c == Integer.class ||
+                c == Date.class || c == Calendar.class ||
                 c == LocalDate.class || c == LocalDateTime.class || c == Instant.class;
     }
 
@@ -621,7 +623,7 @@ public class Dates {
             if (pattern != null) {
                 return parse(d, pattern);
             }
-        } else if (d.split(" ").length == 6) {
+        } else if (d.split(Strings.SPACE).length == 6) {
             return parse(d, WORLD, Locale.US);
         }
         return null;
@@ -1204,7 +1206,7 @@ public class Dates {
     public static String convert(String d, String n) {
         Date parse = parse(d);
         if (parse == null) {
-            return "";
+            return Strings.EMPTY;
         }
         return format(parse, n);
     }

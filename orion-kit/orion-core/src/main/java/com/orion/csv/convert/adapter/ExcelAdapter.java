@@ -1,6 +1,7 @@
 package com.orion.csv.convert.adapter;
 
 import com.orion.able.Adaptable;
+import com.orion.able.SafeCloseable;
 import com.orion.csv.CsvExt;
 import com.orion.csv.importing.CsvStream;
 import com.orion.excel.Excels;
@@ -22,7 +23,7 @@ import java.util.List;
  * @version 1.0.0
  * @since 2020/9/18 2:36
  */
-public class ExcelAdapter implements Adaptable<ExcelAdapter> {
+public class ExcelAdapter implements Adaptable<ExcelAdapter>, SafeCloseable {
 
     /**
      * workbook
@@ -173,6 +174,7 @@ public class ExcelAdapter implements Adaptable<ExcelAdapter> {
     /**
      * 关闭workbook
      */
+    @Override
     public void close() {
         Streams.close(sheet.getWorkbook());
     }

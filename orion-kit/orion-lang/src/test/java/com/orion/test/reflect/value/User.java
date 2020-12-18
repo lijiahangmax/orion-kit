@@ -34,10 +34,13 @@ public class User extends BaseUser {
         this.id = id;
     }
 
-
     @UserAnno1
     @UserAnno2
     public User(int a, int a1) {
+    }
+
+    public void say(@UserAnno1 String name, @UserAnno2 int age) {
+        System.out.println("say" + name + age);
     }
 
     @UserAnno1

@@ -1,11 +1,8 @@
 package com.orion.lang.wrapper;
 
-import com.orion.lang.collect.MultiConcurrentHashMap;
 import com.orion.utils.Objects1;
-import com.orion.utils.Strings;
 import com.orion.utils.reflect.Methods;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -21,8 +18,6 @@ import java.util.function.Predicate;
  * @since 2020/1/3 15:59
  */
 public class GroupList<V> {
-
-    private static final MultiConcurrentHashMap<Class<?>, String, Method> METHOD_CACHE = new MultiConcurrentHashMap<>();
 
     private List<V> list;
 
@@ -43,7 +38,7 @@ public class GroupList<V> {
             if (v == null) {
                 continue;
             }
-            Object val = Methods.invokeMethod(v, getGetterMethod(v.getClass(), field));
+            Object val = Methods.invokeMethod(v, Methods.getGetterMethodByCache(v.getClass(), field));
             if (Objects1.eq(value, val)) {
                 groupList.add(v);
             }
@@ -64,7 +59,7 @@ public class GroupList<V> {
             if (v == null) {
                 continue;
             }
-            V val = Methods.invokeMethod(v, getGetterMethod(v.getClass(), field));
+            V val = Methods.invokeMethod(v, Methods.getGetterMethodByCache(v.getClass(), field));
             if (f.test(val)) {
                 groupList.add(v);
             }
@@ -85,32 +80,11 @@ public class GroupList<V> {
             if (v == null) {
                 continue;
             }
-            E val = Methods.invokeMethod(v, getGetterMethod(v.getClass(), field));
+            E val = Methods.invokeMethod(v, Methods.getGetterMethodByCache(v.getClass(), field));
             List<V> vs = map.computeIfAbsent(val, k -> new ArrayList<>());
             vs.add(v);
         }
         return map;
-    }
-
-    /**
-     * 获取getter方法
-     *
-     * @param clazz class
-     * @param field field
-     * @return getter
-     */
-    private static Method getGetterMethod(Class<?> clazz, String field) {
-        Method method = METHOD_CACHE.get(clazz, field);
-        if (method == null) {
-            method = Methods.getAccessibleMethod(clazz, "get" + Strings.firstUpper(field), 0);
-            if (method == null) {
-                method = Methods.getAccessibleMethod(clazz, "is" + Strings.firstUpper(field), 0);
-            }
-            if (method != null) {
-                METHOD_CACHE.put(clazz, field, method);
-            }
-        }
-        return method;
     }
 
 }

@@ -11,6 +11,8 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 反射 构造方法工具类
@@ -22,8 +24,28 @@ import java.util.List;
 @SuppressWarnings("ALL")
 public class Constructors {
 
+    private static final Map<Class<?>, Constructor<?>> CLASS_DEFAULT_CONSTRUCTOR_CACHE = new ConcurrentHashMap<>(16);
+
     private Constructors() {
     }
+
+    // -------------------- cache start --------------------
+
+    /**
+     * 获取无参构造方法
+     *
+     * @param clazz class
+     * @return constructor
+     */
+    public static <T> Constructor<T> getDefaultConstructorByCache(Class<T> clazz) {
+        Constructor<?> constructor = CLASS_DEFAULT_CONSTRUCTOR_CACHE.get(clazz);
+        if (constructor == null) {
+            CLASS_DEFAULT_CONSTRUCTOR_CACHE.put(clazz, constructor = getDefaultConstructor(clazz));
+        }
+        return (Constructor<T>) constructor;
+    }
+
+    // -------------------- cache end --------------------
 
     /**
      * 获取默认构造方法

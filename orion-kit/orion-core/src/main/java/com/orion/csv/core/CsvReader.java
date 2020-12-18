@@ -1,5 +1,7 @@
 package com.orion.csv.core;
 
+import com.orion.utils.Strings;
+
 import java.io.*;
 import java.nio.charset.Charset;
 import java.text.NumberFormat;
@@ -47,7 +49,7 @@ public class CsvReader {
         this.columnBuffer = new CsvReader.ColumnBuffer();
         this.rawBuffer = new CsvReader.RawRecordBuffer();
         this.isQualified = null;
-        this.rawRecord = "";
+        this.rawRecord = Strings.EMPTY;
         this.headersHolder = new CsvReader.HeadersHolder();
         this.startedColumn = false;
         this.startedWithQualifier = false;
@@ -91,7 +93,7 @@ public class CsvReader {
         this.columnBuffer = new CsvReader.ColumnBuffer();
         this.rawBuffer = new CsvReader.RawRecordBuffer();
         this.isQualified = null;
-        this.rawRecord = "";
+        this.rawRecord = Strings.EMPTY;
         this.headersHolder = new CsvReader.HeadersHolder();
         this.startedColumn = false;
         this.startedWithQualifier = false;
@@ -267,7 +269,7 @@ public class CsvReader {
 
     public String get(int i) throws IOException {
         this.checkClosed();
-        return i > -1 && i < this.columnsCount ? this.values[i] : "";
+        return i > -1 && i < this.columnsCount ? this.values[i] : Strings.EMPTY;
     }
 
     public String get(String s) throws IOException {
@@ -773,7 +775,7 @@ public class CsvReader {
                 this.rawRecord = new String(this.rawBuffer.buffer, 0, this.rawBuffer.position);
             }
         } else {
-            this.rawRecord = "";
+            this.rawRecord = Strings.EMPTY;
         }
         return this.hasReadNextLine;
     }
@@ -829,7 +831,7 @@ public class CsvReader {
 
     public String getHeader(int var1) throws IOException {
         this.checkClosed();
-        return var1 > -1 && var1 < this.headersHolder.length ? this.headersHolder.headers[var1] : "";
+        return var1 > -1 && var1 < this.headersHolder.length ? this.headersHolder.headers[var1] : Strings.EMPTY;
     }
 
     public boolean isQualified(int var1) throws IOException {
@@ -838,7 +840,7 @@ public class CsvReader {
     }
 
     private void endColumn() throws IOException {
-        String var1 = "";
+        String var1 = Strings.EMPTY;
         int var2;
         if (this.startedColumn) {
             if (this.columnBuffer.position == 0) {
@@ -883,7 +885,7 @@ public class CsvReader {
 
             this.values[this.columnsCount] = var1;
             this.isQualified[this.columnsCount] = this.startedWithQualifier;
-            var1 = "";
+            var1 = Strings.EMPTY;
             ++this.columnsCount;
         }
     }
@@ -968,7 +970,7 @@ public class CsvReader {
         }
 
         this.rawBuffer.position = 0;
-        this.rawRecord = "";
+        this.rawRecord = Strings.EMPTY;
         return var1;
     }
 

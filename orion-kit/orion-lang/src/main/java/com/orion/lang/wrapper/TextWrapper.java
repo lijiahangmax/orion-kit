@@ -1,7 +1,9 @@
 package com.orion.lang.wrapper;
 
 import com.orion.lang.support.CloneSupport;
+import com.orion.utils.Urls;
 import com.orion.utils.Xsses;
+import com.orion.utils.codec.Base64s;
 
 /**
  * restful 文本包装
@@ -16,15 +18,15 @@ public class TextWrapper extends CloneSupport<TextWrapper> implements Wrapper<St
 
     private StringBuilder sb;
 
-    private TextWrapper() {
-        this.sb = new StringBuilder();
+    public TextWrapper() {
+        this(new StringBuilder());
     }
 
-    private TextWrapper(String s) {
-        this.sb = new StringBuilder(s);
+    public TextWrapper(String s) {
+        this(new StringBuilder(s));
     }
 
-    private TextWrapper(StringBuilder sb) {
+    public TextWrapper(StringBuilder sb) {
         if (sb == null) {
             this.sb = new StringBuilder();
         } else {
@@ -64,12 +66,28 @@ public class TextWrapper extends CloneSupport<TextWrapper> implements Wrapper<St
         return this;
     }
 
-    public String encodeText() {
+    public String encodeXss() {
         return Xsses.clean(sb.toString());
     }
 
-    public String decodeText() {
+    public String decodeXss() {
         return Xsses.recode(sb.toString());
+    }
+
+    public String encodeUrl() {
+        return Urls.encode(sb.toString());
+    }
+
+    public String decodeUrl() {
+        return Urls.decode(sb.toString());
+    }
+
+    public String encodeBase64() {
+        return Base64s.encode(sb.toString());
+    }
+
+    public String decodeBase64() {
+        return Base64s.decode(sb.toString());
     }
 
     public String text() {

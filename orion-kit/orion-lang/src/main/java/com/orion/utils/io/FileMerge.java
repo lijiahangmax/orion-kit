@@ -97,7 +97,7 @@ public class FileMerge implements Callable<String> {
             }
         }
         int last = 0, i = 0;
-        String filePath = "";
+        String filePath = Strings.EMPTY;
         List<String> fileList = new ArrayList<>();
         for (Map.Entry<Integer, String> is : fm.entrySet()) {
             if (i++ == 0) {

@@ -94,6 +94,10 @@ public class Lists extends Collections {
         return java.util.Collections.synchronizedList(c);
     }
 
+    public static <E> List<E> unmodified(List<E> c) {
+        return java.util.Collections.unmodifiableList(c);
+    }
+
     public static <E> List<E> singleton(E e) {
         return new SingletonList<>(e);
     }

@@ -1025,7 +1025,7 @@ public class Files1 {
             try {
                 if (charset != null) {
                     try (OutputStreamWriter w = new OutputStreamWriter(openOutputStream(file), charset)) {
-                        w.write("");
+                        w.write(Strings.EMPTY);
                     } catch (IOException e) {
                         return false;
                     }
@@ -1068,7 +1068,7 @@ public class Files1 {
             try {
                 if (charset != null) {
                     try (OutputStreamWriter w = new OutputStreamWriter(openOutputStreamFast(file), charset)) {
-                        w.write("");
+                        w.write(Strings.EMPTY);
                     } catch (IOException e) {
                         return false;
                     }
@@ -1409,7 +1409,7 @@ public class Files1 {
             return true;
         }
         try (FileWriter fw = new FileWriter(file)) {
-            fw.write("");
+            fw.write(Strings.EMPTY);
         } catch (IOException e) {
             return false;
         }

@@ -37,19 +37,23 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
      */
     private T data;
 
-    private HttpWrapper() {
+    public HttpWrapper() {
+        this(HTTP_OK_CODE, HTTP_OK_MESSAGE, null);
     }
 
-    private HttpWrapper(int code) {
-        this.code = code;
+    public HttpWrapper(int code) {
+        this(code, HTTP_OK_MESSAGE, null);
     }
 
-    private HttpWrapper(int code, String msg) {
-        this.code = code;
-        this.msg = msg;
+    public HttpWrapper(int code, String msg) {
+        this(code, msg, null);
     }
 
-    private HttpWrapper(int code, String msg, T data) {
+    public HttpWrapper(int code, T data) {
+        this(code, HTTP_OK_MESSAGE, data);
+    }
+
+    public HttpWrapper(int code, String msg, T data) {
         this.code = code;
         this.msg = msg;
         this.data = data;
@@ -79,6 +83,10 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
 
     public static <T> HttpWrapper<T> wrap(int code, String msg, T data) {
         return new HttpWrapper<>(code, msg, data);
+    }
+
+    public static <T> HttpWrapper<T> wrap(int code, T data) {
+        return new HttpWrapper<>(code, data);
     }
 
     public static <T> HttpWrapper<T> wrap(T data, int code, String msg, Object... args) {
@@ -139,6 +147,14 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
         return new HttpWrapper<>(HTTP_ERROR_CODE, Strings.format(msg, args), data);
     }
 
+    public static <T> HttpWrapper<T> error(Throwable t) {
+        return new HttpWrapper<>(HTTP_ERROR_CODE, t.getMessage());
+    }
+
+    public static <T> HttpWrapper<T> error(Throwable t, T data) {
+        return new HttpWrapper<>(HTTP_ERROR_CODE, t.getMessage(), data);
+    }
+
     public HttpWrapper<T> code(int code) {
         this.code = code;
         return this;
@@ -180,6 +196,15 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
     public HttpWrapper<T> setData(T data) {
         this.data = data;
         return this;
+    }
+
+    /**
+     * 是否为成功状态码
+     *
+     * @return 是否成功
+     */
+    public boolean isOk() {
+        return this.code == HTTP_OK_CODE;
     }
 
     @Override

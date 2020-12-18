@@ -3,12 +3,15 @@ package com.orion.utils.reflect;
 import com.orion.lang.collect.MutableHashMap;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
+import com.orion.utils.collect.Lists;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * 反射 注解工具类
@@ -23,9 +26,346 @@ public class Annotations {
     private Annotations() {
     }
 
-    // getAnnotation(int i)
-    // getAnnotation(Class i)
-    // getAnnotations
+    // ------------------ class ------------------
+
+    /**
+     * 通过类型 获取class上的注解
+     *
+     * @param clazz      class
+     * @param annotation 注解class
+     * @param <A>        A
+     * @return 注解
+     */
+    public static <A extends Annotation> A getAnnotation(Class<?> clazz, Class<A> annotation) {
+        return clazz.getDeclaredAnnotation(annotation);
+    }
+
+    /**
+     * 通过类型 获取class上的所有注解
+     *
+     * @param clazz      class
+     * @param annotation 注解class
+     * @param <A>        A
+     * @return 注解list
+     * @see java.lang.annotation.Repeatable
+     */
+    public static <A extends Annotation> List<A> getAnnotations(Class<?> clazz, Class<A> annotation) {
+        return Lists.of(clazz.getDeclaredAnnotationsByType(annotation));
+    }
+
+    /**
+     * 通过类型 获取class上的注解
+     *
+     * @param clazz      class
+     * @param annotation 注解class
+     * @param index      注解索引
+     * @param <A>        A
+     * @return 注解
+     * @see java.lang.annotation.Repeatable
+     */
+    public static <A extends Annotation> A getAnnotations(Class<?> clazz, Class<A> annotation, int index) {
+        List<A> list = Lists.of(clazz.getDeclaredAnnotationsByType(annotation));
+        if (list.size() <= index) {
+            return null;
+        }
+        return list.get(index);
+    }
+
+    /**
+     * 获取class上的注解
+     *
+     * @param clazz class
+     * @return 注解list
+     */
+    public static List<Annotation> getAnnotations(Class<?> clazz) {
+        return Lists.of(clazz.getDeclaredAnnotations());
+    }
+
+    /**
+     * 获取class上的注解
+     *
+     * @param clazz class
+     * @param index 注解索引
+     * @param <A>   A
+     * @return 注解
+     */
+    public static <A extends Annotation> A getAnnotations(Class<?> clazz, int index) {
+        List<Annotation> list = Lists.of(clazz.getDeclaredAnnotations());
+        if (list.size() <= index) {
+            return null;
+        }
+        return ((A) list.get(index));
+    }
+
+    // ------------------ constructor ------------------
+
+    /**
+     * 通过类型 获取constructor上的注解
+     *
+     * @param constructor constructor
+     * @param annotation  注解class
+     * @param <A>         A
+     * @return 注解
+     */
+    public static <A extends Annotation> A getAnnotation(Constructor<?> constructor, Class<A> annotation) {
+        return constructor.getDeclaredAnnotation(annotation);
+    }
+
+    /**
+     * 获取constructor上的注解
+     *
+     * @param constructor constructor
+     * @return 注解list
+     */
+    public static List<Annotation> getAnnotations(Constructor<?> constructor) {
+        return Lists.of(constructor.getDeclaredAnnotations());
+    }
+
+    /**
+     * 获取constructor上的注解
+     *
+     * @param constructor constructor
+     * @param index       注解索引
+     * @param <A>         A
+     * @return 注解
+     */
+    public static <A extends Annotation> A getAnnotations(Constructor<?> constructor, int index) {
+        List<Annotation> list = Lists.of(constructor.getDeclaredAnnotations());
+        if (list.size() <= index) {
+            return null;
+        }
+        return ((A) list.get(index));
+    }
+
+    // ------------------ field ------------------
+
+    /**
+     * 通过类型 获取field上的注解
+     *
+     * @param field      field
+     * @param annotation 注解class
+     * @param <A>        A
+     * @return 注解
+     */
+    public static <A extends Annotation> A getAnnotation(Field field, Class<A> annotation) {
+        return field.getDeclaredAnnotation(annotation);
+    }
+
+    /**
+     * 获取field上的注解
+     *
+     * @param field field
+     * @return 注解list
+     */
+    public static List<Annotation> getAnnotations(Field field) {
+        return Lists.of(field.getDeclaredAnnotations());
+    }
+
+    /**
+     * 获取field上的注解
+     *
+     * @param field field
+     * @param index 注解索引
+     * @param <A>   A
+     * @return 注解
+     */
+    public static <A extends Annotation> A getAnnotations(Field field, int index) {
+        List<Annotation> list = Lists.of(field.getDeclaredAnnotations());
+        if (list.size() <= index) {
+            return null;
+        }
+        return ((A) list.get(index));
+    }
+
+    // ------------------ method ------------------
+
+    /**
+     * 通过类型 获取method上的注解
+     *
+     * @param method     method
+     * @param annotation 注解class
+     * @param <A>        A
+     * @return 注解
+     */
+    public static <A extends Annotation> A getAnnotation(Method method, Class<A> annotation) {
+        return method.getDeclaredAnnotation(annotation);
+    }
+
+    /**
+     * 获取method上的注解
+     *
+     * @param method method
+     * @return 注解list
+     */
+    public static List<Annotation> getAnnotations(Method method) {
+        return Lists.of(method.getDeclaredAnnotations());
+    }
+
+    /**
+     * 获取method上的注解
+     *
+     * @param method method
+     * @param index  注解索引
+     * @param <A>    A
+     * @return 注解
+     */
+    public static <A extends Annotation> A getAnnotations(Method method, int index) {
+        List<Annotation> list = Lists.of(method.getDeclaredAnnotations());
+        if (list.size() <= index) {
+            return null;
+        }
+        return ((A) list.get(index));
+    }
+
+    // ------------------ constructor parameter ------------------
+
+    /**
+     * 获取 constructor 参数上的注解
+     *
+     * @param constructor constructor
+     * @param paramIndex  参数索引
+     * @param annotation  注解class
+     * @param <A>         A
+     * @return 注解
+     */
+    public static <A extends Annotation> A getParameterAnnotation(Constructor<?> constructor, int paramIndex, Class<A> annotation) {
+        Annotation[][] annotations = constructor.getParameterAnnotations();
+        if (annotations.length <= paramIndex) {
+            return null;
+        }
+        for (Annotation a : annotations[paramIndex]) {
+            if (a.annotationType().equals(annotation)) {
+                return (A) a;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取 constructor 参数上的注解
+     *
+     * @param constructor constructor
+     * @param paramIndex  参数索引
+     * @param index       注解索引
+     * @param <A>         A
+     * @return 注解
+     */
+    public static <A extends Annotation> A getParameterAnnotation(Constructor<?> constructor, int paramIndex, int index) {
+        Annotation[][] annotations = constructor.getParameterAnnotations();
+        if (annotations.length <= paramIndex) {
+            return null;
+        }
+        Annotation[] a = annotations[paramIndex];
+        if (a.length <= index) {
+            return null;
+        }
+        return (A) a[index];
+    }
+
+    /**
+     * 获取 constructor 参数上的注解
+     *
+     * @param constructor constructor
+     * @param paramIndex  参数索引
+     * @return 注解list
+     */
+    public static List<Annotation> getParameterAnnotation(Constructor<?> constructor, int paramIndex) {
+        Annotation[][] annotations = constructor.getParameterAnnotations();
+        if (annotations.length <= paramIndex) {
+            return new ArrayList<>();
+        }
+        return Lists.of(annotations[paramIndex]);
+    }
+
+    /**
+     * 获取 constructor 参数上的注解
+     *
+     * @param constructor constructor
+     * @return 注解list
+     */
+    public static List<List<Annotation>> getParameterAnnotation(Constructor<?> constructor) {
+        Annotation[][] annotations = constructor.getParameterAnnotations();
+        List<List<Annotation>> list = new ArrayList<>();
+        for (Annotation[] annotation : annotations) {
+            list.add(Lists.of(annotation));
+        }
+        return list;
+    }
+
+    // ------------------ method parameter ------------------
+
+    /**
+     * 获取 method 参数上的注解
+     *
+     * @param method     method
+     * @param paramIndex 参数索引
+     * @param annotation 注解class
+     * @param <A>        A
+     * @return 注解
+     */
+    public static <A extends Annotation> A getParameterAnnotation(Method method, int paramIndex, Class<A> annotation) {
+        Annotation[][] annotations = method.getParameterAnnotations();
+        if (annotations.length <= paramIndex) {
+            return null;
+        }
+        for (Annotation a : annotations[paramIndex]) {
+            if (a.annotationType().equals(annotation)) {
+                return (A) a;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取 method 参数上的注解
+     *
+     * @param method     method
+     * @param paramIndex 参数索引
+     * @param index      注解索引
+     * @param <A>        A
+     * @return 注解
+     */
+    public static <A extends Annotation> A getParameterAnnotation(Method method, int paramIndex, int index) {
+        Annotation[][] annotations = method.getParameterAnnotations();
+        if (annotations.length <= paramIndex) {
+            return null;
+        }
+        Annotation[] a = annotations[paramIndex];
+        if (a.length <= index) {
+            return null;
+        }
+        return (A) a[index];
+    }
+
+    /**
+     * 获取 method 参数上的注解
+     *
+     * @param method     method
+     * @param paramIndex 参数索引
+     * @return 注解list
+     */
+    public static List<Annotation> getParameterAnnotation(Method method, int paramIndex) {
+        Annotation[][] annotations = method.getParameterAnnotations();
+        if (annotations.length <= paramIndex) {
+            return new ArrayList<>();
+        }
+        return Lists.of(annotations[paramIndex]);
+    }
+
+    /**
+     * 获取 method 参数上的注解
+     *
+     * @param method method
+     * @return 注解list
+     */
+    public static List<List<Annotation>> getParameterAnnotation(Method method) {
+        Annotation[][] annotations = method.getParameterAnnotations();
+        List<List<Annotation>> list = new ArrayList<>();
+        for (Annotation[] annotation : annotations) {
+            list.add(Lists.of(annotation));
+        }
+        return list;
+    }
 
     /**
      * 判断类是否有所有指定注解

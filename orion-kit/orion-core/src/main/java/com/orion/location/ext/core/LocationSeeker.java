@@ -2,6 +2,7 @@ package com.orion.location.ext.core;
 
 import com.orion.location.region.core.Region;
 import com.orion.utils.Exceptions;
+import com.orion.utils.Strings;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -226,9 +227,9 @@ public class LocationSeeker {
      * @return 国家 地区
      */
     public String getAddress(String ip) {
-        String country = " CZ88.NET".equals(getCountry(ip)) ? "" : getCountry(ip);
-        String area = " CZ88.NET".equals(getArea(ip)) ? "" : getArea(ip);
-        String address = country + " " + area;
+        String country = " CZ88.NET".equals(getCountry(ip)) ? Strings.EMPTY : getCountry(ip);
+        String area = " CZ88.NET".equals(getArea(ip)) ? Strings.EMPTY : getArea(ip);
+        String address = country + Strings.SPACE + area;
         return address.trim();
     }
 
@@ -711,7 +712,7 @@ public class LocationSeeker {
         } catch (IOException e) {
             Exceptions.printStacks(e);
         }
-        return "";
+        return Strings.EMPTY;
     }
 
     /**
@@ -729,7 +730,7 @@ public class LocationSeeker {
         } catch (IllegalArgumentException e) {
             Exceptions.printStacks(e);
         }
-        return "";
+        return Strings.EMPTY;
     }
 
     /**
@@ -740,7 +741,7 @@ public class LocationSeeker {
         private String area;
 
         private IpLocation() {
-            country = area = "";
+            country = area = Strings.EMPTY;
         }
 
         private IpLocation copy() {
@@ -752,7 +753,7 @@ public class LocationSeeker {
 
         @Override
         public String toString() {
-            return country + " " + area;
+            return country + Strings.SPACE + area;
         }
     }
 
@@ -782,12 +783,12 @@ public class LocationSeeker {
         private String area;
 
         private IpEntry() {
-            beginIp = endIp = country = area = "";
+            beginIp = endIp = country = area = Strings.EMPTY;
         }
 
         @Override
         public String toString() {
-            return this.area + " " + this.country + "IP  Χ:" + this.beginIp + "-" + this.endIp;
+            return this.area + Strings.SPACE + this.country + "IP  Χ:" + this.beginIp + "-" + this.endIp;
         }
     }
 

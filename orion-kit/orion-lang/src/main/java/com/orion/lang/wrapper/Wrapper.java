@@ -11,7 +11,7 @@ import java.io.Serializable;
  */
 public interface Wrapper<T> extends Serializable {
 
-    // --------------- Restful ---------------
+    // --------------- HTTP ---------------
 
     int HTTP_OK_CODE = 200;
 
@@ -23,14 +23,22 @@ public interface Wrapper<T> extends Serializable {
 
     // --------------- RPC ---------------
 
-    int RPC_OK_CODE = 2000;
+    int RPC_SUCCESS_CODE = 2000;
 
-    String RPC_OK_MESSAGE = "success";
+    String RPC_SUCCESS_MESSAGE = "success";
 
     int RPC_ERROR_CODE = 5000;
 
     String RPC_ERROR_MESSAGE = "error";
 
-    String TRACE_PREFIX = "SESSION-TRACE-";
+    String PRC_TRACE_PREFIX = "PRC-TRACE-ID-";
+
+    // --------------- URL ---------------
+
+    int URL_NO_OPERATION = 1;
+
+    int URL_REFRESH = 2;
+
+    int URL_REDIRECT = 3;
 
 }

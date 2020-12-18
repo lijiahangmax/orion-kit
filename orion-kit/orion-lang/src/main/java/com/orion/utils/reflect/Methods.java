@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -44,8 +45,92 @@ public class Methods {
      */
     protected static final String BOOLEAN_GETTER_PREFIX = "is";
 
+    private static final Map<Class<?>, List<Method>> CLASS_SET_METHOD_CACHE = new ConcurrentHashMap<>(16);
+
+    private static final Map<Class<?>, List<Method>> CLASS_GET_METHOD_CACHE = new ConcurrentHashMap<>(16);
+
     private Methods() {
     }
+
+    // -------------------- cache start --------------------
+
+    /**
+     * 获取getter方法
+     *
+     * @param clazz class
+     * @param field field
+     * @return getter
+     */
+    public static Method getGetterMethodByCache(Class<?> clazz, String field) {
+        List<Method> methods = getAllGetterMethodByCache(clazz);
+        if (methods == null) {
+            return null;
+        }
+        String methodName1 = GETTER_PREFIX + Strings.firstUpper(field);
+        for (Method method : methods) {
+            if (method.getParameterCount() == 0 && method.getName().equals(methodName1)) {
+                return method;
+            }
+        }
+        String methodName2 = BOOLEAN_GETTER_PREFIX + Strings.firstUpper(field);
+        for (Method method : methods) {
+            if (method.getParameterCount() == 0 && method.getName().equals(methodName2)) {
+                return method;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取setter方法
+     *
+     * @param clazz class
+     * @param field field
+     * @return method
+     */
+    public static Method getSetterMethodByCache(Class<?> clazz, String field) {
+        List<Method> methods = getAllSetterMethodByCache(clazz);
+        if (methods == null) {
+            return null;
+        }
+        String methodName = SETTER_PREFIX + Strings.firstUpper(field);
+        for (Method method : methods) {
+            if (method.getParameterCount() == 1 && method.getName().equals(methodName)) {
+                return method;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取所有getter方法
+     *
+     * @param clazz class
+     * @return method
+     */
+    public static List<Method> getAllGetterMethodByCache(Class<?> clazz) {
+        List<Method> methodList = CLASS_GET_METHOD_CACHE.get(clazz);
+        if (methodList == null) {
+            CLASS_GET_METHOD_CACHE.put(clazz, methodList = getAllGetterMethod(clazz));
+        }
+        return methodList;
+    }
+
+    /**
+     * 获取所有setter方法
+     *
+     * @param clazz class
+     * @return method
+     */
+    public static List<Method> getAllSetterMethodByCache(Class<?> clazz) {
+        List<Method> methodList = CLASS_SET_METHOD_CACHE.get(clazz);
+        if (methodList == null) {
+            CLASS_SET_METHOD_CACHE.put(clazz, methodList = getAllSetterMethod(clazz));
+        }
+        return methodList;
+    }
+
+    // -------------------- cache end --------------------
 
     /**
      * 通过字段名称获取getter方法
@@ -64,7 +149,7 @@ public class Methods {
      * 通过字段名称获取getter方法
      *
      * @param fieldName      fieldName
-     * @param isBooleanClass 是否为boolean.class
+     * @param isBooleanClass 是否为 Boolean.TYPE
      * @return getter方法
      */
     public static String getGetterMethodNameByFieldName(String fieldName, boolean isBooleanClass) {
@@ -99,10 +184,10 @@ public class Methods {
         for (Method method : clazz.getMethods()) {
             if (!"getClass".equals(method.getName()) && !Modifier.isStatic(method.getModifiers()) && method.getParameters().length == 0) {
                 String name = method.getName();
-                if (name.startsWith(GETTER_PREFIX) && name.length() != 3 && !"void".equals(method.getReturnType().getName())) {
+                if (name.startsWith(GETTER_PREFIX) && name.length() != 3 && !method.getReturnType().equals(Void.TYPE)) {
                     setAccessible(method);
                     list.add(method);
-                } else if (method.getName().startsWith(BOOLEAN_GETTER_PREFIX) && method.getReturnType().equals(boolean.class)) {
+                } else if (method.getName().startsWith(BOOLEAN_GETTER_PREFIX) && name.length() != 2 && method.getReturnType().equals(Boolean.TYPE)) {
                     setAccessible(method);
                     list.add(method);
                 }
@@ -142,7 +227,7 @@ public class Methods {
         for (Field field : fields) {
             if (!Modifier.isStatic(field.getModifiers())) {
                 Method method;
-                if (field.getType().equals(boolean.class)) {
+                if (field.getType().equals(Boolean.TYPE)) {
                     String fieldName = Strings.firstUpper(field.getName());
                     method = getAccessibleMethod(clazz, BOOLEAN_GETTER_PREFIX + fieldName, 0);
                     if (method == null) {
@@ -189,7 +274,7 @@ public class Methods {
      */
     public static Method getGetterMethodByField(Class<?> clazz, Field field) {
         Method method;
-        if (field.getType().equals(boolean.class)) {
+        if (field.getType().equals(Boolean.TYPE)) {
             String fieldName = Strings.firstUpper(field.getName());
             method = getAccessibleMethod(clazz, BOOLEAN_GETTER_PREFIX + fieldName, 0);
             if (method == null) {
@@ -413,7 +498,7 @@ public class Methods {
         Method[] methods = clazz.getDeclaredMethods();
         return Arrays.stream(methods)
                 .filter(m -> Modifier.isStatic(m.getModifiers()))
-                .collect(toCollection(ArrayList::new));
+                .collect(Collectors.toList());
     }
 
     /**
@@ -429,7 +514,7 @@ public class Methods {
         Valid.notBlank(fieldName, "Invoke Getter Field is null");
         try {
             Field field = Fields.getAccessibleField(obj.getClass(), fieldName);
-            if (field == null || !field.getType().equals(boolean.class)) {
+            if (field == null || !field.getType().equals(Boolean.TYPE)) {
                 return invokeMethod(obj, GETTER_PREFIX + Strings.firstUpper(fieldName), null, (Object[]) null);
             } else {
                 return invokeMethod(obj, BOOLEAN_GETTER_PREFIX + Strings.firstUpper(fieldName), null, (Object[]) null);

@@ -55,7 +55,7 @@ public class Gsons {
      */
     public static String toJson(Object o) {
         if (o == null) {
-            return "";
+            return Strings.EMPTY;
         }
         return GsonInstant.gson.toJson(o);
     }

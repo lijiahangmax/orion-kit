@@ -30,7 +30,7 @@ public class Jsons {
      */
     public static String toJson(Object bean) {
         if (bean == null) {
-            return "";
+            return Strings.EMPTY;
         }
         return JSON.toJSONString(bean);
     }
@@ -43,7 +43,7 @@ public class Jsons {
      */
     public static String toJsonLog(Object bean) {
         if (bean == null) {
-            return "";
+            return Strings.EMPTY;
         }
         return JSON.toJSONString(bean, WriteMapNullValue, PrettyFormat);
     }
@@ -56,7 +56,7 @@ public class Jsons {
      */
     public static String toJsonWriteNull(Object bean) {
         if (bean == null) {
-            return "";
+            return Strings.EMPTY;
         }
         return JSON.toJSONString(bean, WriteMapNullValue);
     }
@@ -70,7 +70,7 @@ public class Jsons {
      */
     public static String toJson(Object bean, SerializerFeature... features) {
         if (null == bean) {
-            return "";
+            return Strings.EMPTY;
         } else {
             if (null == features) {
                 return JSON.toJSONString(bean);
@@ -221,11 +221,11 @@ public class Jsons {
      */
     public static String encode(String json) {
         if (Strings.isBlank(json)) {
-            return "";
+            return Strings.EMPTY;
         }
         json = JSON.toJSONString(json);
         if (Strings.isBlank(json)) {
-            return "";
+            return Strings.EMPTY;
         }
         return json.substring(1, json.length() - 1);
     }
@@ -238,9 +238,9 @@ public class Jsons {
      */
     public static String decode(String json) {
         if (Strings.isBlank(json)) {
-            return "";
+            return Strings.EMPTY;
         }
-        return json.replaceAll("\\\\", "");
+        return json.replaceAll("\\\\", Strings.EMPTY);
     }
 
     /**
@@ -251,10 +251,10 @@ public class Jsons {
      */
     public static String compress(String json) {
         if (Strings.isBlank(json)) {
-            return "";
+            return Strings.EMPTY;
         }
-        return json.replaceAll("\n", "")
-                .replaceAll("\r", "");
+        return json.replaceAll("\n", Strings.EMPTY)
+                .replaceAll("\r", Strings.EMPTY);
     }
 
 }

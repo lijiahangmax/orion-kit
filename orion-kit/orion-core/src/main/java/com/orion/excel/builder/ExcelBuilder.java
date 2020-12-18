@@ -1,10 +1,10 @@
 package com.orion.excel.builder;
 
+import com.orion.able.SafeCloseable;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
-import com.orion.utils.reflect.Methods;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
@@ -12,10 +12,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Excel 构建器 不支持注解
@@ -24,12 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version 1.0.0
  * @since 2020/4/6 21:59
  */
-public class ExcelBuilder {
-
-    /**
-     * getter方法实例
-     */
-    private static final Map<Class<?>, List<Method>> ALL_GET_METHOD_CACHE = new ConcurrentHashMap<>(16);
+public class ExcelBuilder implements SafeCloseable {
 
     /**
      * workbook
@@ -121,19 +112,9 @@ public class ExcelBuilder {
         }
     }
 
-    /**
-     * 获取所有getter方法
-     *
-     * @param clazz class
-     * @return method
-     */
-    static List<Method> getAllGetterMethod(Class clazz) {
-        List<Method> methodList = ALL_GET_METHOD_CACHE.get(clazz);
-        if (methodList == null) {
-            methodList = Methods.getAllGetterMethod(clazz);
-            ALL_GET_METHOD_CACHE.put(clazz, methodList);
-        }
-        return methodList;
+    @Override
+    public void close() {
+        Streams.close(workbook);
     }
 
 }

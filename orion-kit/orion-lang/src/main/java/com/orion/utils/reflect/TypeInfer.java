@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 类型推断
+ * 反射 类型推断
  *
  * @author ljh15
  * @version 1.0.0

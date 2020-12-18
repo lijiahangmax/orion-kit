@@ -14,10 +14,10 @@ public enum RpcWrapMapper implements Supplier<RpcWrapper<Object>> {
     /**
      * 成功
      */
-    OK {
+    SUCCESS {
         @Override
         public RpcWrapper<Object> get() {
-            return RpcWrapper.ok();
+            return RpcWrapper.success();
         }
     },
 

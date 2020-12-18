@@ -140,7 +140,7 @@ public class WrapperAdapter {
                 return msg;
             }
         }
-        return "";
+        return Strings.EMPTY;
     }
 
     @SuppressWarnings("unchecked")

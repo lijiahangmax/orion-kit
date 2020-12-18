@@ -1,5 +1,7 @@
 package com.orion.utils.reflect;
 
+import com.orion.utils.Strings;
+
 /**
  * 反射 包工具类
  *
@@ -19,7 +21,7 @@ public class Packages {
      * @return ignore
      */
     public static String getPackageName(Object o) {
-        return o == null ? "" : getPackageName(o.getClass().getName());
+        return o == null ? Strings.EMPTY : getPackageName(o.getClass().getName());
     }
 
     /**
@@ -40,7 +42,7 @@ public class Packages {
      */
     public static String getPackageName(String className) {
         int lastIndex = className.lastIndexOf(".");
-        return (lastIndex != -1 ? className.substring(0, lastIndex) : "");
+        return (lastIndex != -1 ? className.substring(0, lastIndex) : Strings.EMPTY);
     }
 
     /**

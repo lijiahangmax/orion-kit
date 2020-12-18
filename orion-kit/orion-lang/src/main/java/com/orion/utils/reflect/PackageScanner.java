@@ -98,9 +98,9 @@ public class PackageScanner {
         if (this.resource != null) {
             return this;
         }
-        URL r = PackageScanner.class.getClassLoader().getResource("");
+        URL r = PackageScanner.class.getClassLoader().getResource(Strings.EMPTY);
         if (r == null) {
-            r = PackageScanner.class.getResource("");
+            r = PackageScanner.class.getResource(Strings.EMPTY);
         }
         if (r != null) {
             this.resource = r;
@@ -111,9 +111,9 @@ public class PackageScanner {
         Set<String> classNameSet = new LinkedHashSet<>();
         if (scanAll) {
             if ("file".equals(protocol)) {
-                this.scanFile("", classNameSet);
+                this.scanFile(Strings.EMPTY, classNameSet);
             } else if ("jar".equals(protocol)) {
-                this.scanJar("", classNameSet);
+                this.scanJar(Strings.EMPTY, classNameSet);
             }
         } else {
             for (String p : packages) {

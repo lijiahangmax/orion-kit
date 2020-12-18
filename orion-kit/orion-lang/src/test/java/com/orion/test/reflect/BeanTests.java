@@ -3,6 +3,7 @@ package com.orion.test.reflect;
 import com.orion.lang.Console;
 import com.orion.test.reflect.value.Shop;
 import com.orion.test.reflect.value.User;
+import com.orion.utils.VariableStyles;
 import com.orion.utils.reflect.BeanMap;
 import com.orion.utils.reflect.BeanWrapper;
 import org.junit.Test;
@@ -26,7 +27,7 @@ public class BeanTests {
         user.setType(1);
         user.setVipType(2);
         user.setBalance(BigDecimal.ONE);
-        BeanMap.create(user).forEach(Console::trace);
+        BeanMap.create(user, VariableStyles.BIG_HUMP).forEach(Console::trace);
     }
 
     @Test

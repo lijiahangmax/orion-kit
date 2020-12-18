@@ -7,6 +7,7 @@ import com.orion.lang.collect.SingletonMap;
 import com.orion.lang.wrapper.Args;
 import com.orion.lang.wrapper.Pair;
 import com.orion.utils.Arrays1;
+import com.orion.utils.Strings;
 import com.orion.utils.Valid;
 import com.orion.utils.random.Randoms;
 
@@ -162,6 +163,14 @@ public class Maps {
         return Collections.synchronizedMap(m);
     }
 
+    public static <K, V> Map<K, V> unmodified(Map<? extends K, ? extends V> c) {
+        return java.util.Collections.unmodifiableMap(c);
+    }
+
+    public static <K, V> SortedMap<K, V> unmodified(SortedMap<K, ? extends V> c) {
+        return java.util.Collections.unmodifiableSortedMap(c);
+    }
+
     public static <K, V> Map<K, V> singleton(K k, V v) {
         return new SingletonMap<>(k, v);
     }
@@ -180,7 +189,8 @@ public class Maps {
         return isEmpty(map) ? def : map;
     }
 
-    public static <K, V> Map<K, V> of(Pair<K, V>... entries) {
+    @SafeVarargs
+    public static <E extends Map.Entry<K, V>, K, V> Map<K, V> of(E... entries) {
         int len = Arrays1.length(entries);
         if (len == 0) {
             return new HashMap<>(16);
@@ -192,6 +202,24 @@ public class Maps {
         return map;
     }
 
+    public static <K, V> Map<K, V> of(K[] keys, V[] values) {
+        int klen = Arrays1.length(keys);
+        int vlen = Arrays1.length(values);
+        if (klen == 0) {
+            return new HashMap<>(16);
+        }
+        Map<K, V> map = new HashMap<>(klen * 4 / 3);
+        for (int i = 0; i < klen; i++) {
+            if (vlen > i) {
+                map.put(keys[i], values[i]);
+            } else {
+                map.put(keys[i], null);
+            }
+        }
+        return map;
+    }
+
+    @SafeVarargs
     public static <K, V> Map<K, V> of(Args.Entry<K, V>... entries) {
         int len = Arrays1.length(entries);
         if (len == 0) {
@@ -243,6 +271,7 @@ public class Maps {
      * @param <V> ignore
      * @return 合并后的map
      */
+    @SafeVarargs
     public static <K, V> Map<K, V> merge(Map<K, V> map, Map<K, V>... ms) {
         if (map == null) {
             map = new HashMap<>(16);
@@ -262,7 +291,7 @@ public class Maps {
      * @param m map
      * @return 长度
      */
-    public static int size(Map m) {
+    public static int size(Map<?, ?> m) {
         return m == null ? 0 : m.size();
     }
 
@@ -272,7 +301,7 @@ public class Maps {
      * @param m map
      * @return true为空
      */
-    public static boolean isEmpty(Map m) {
+    public static boolean isEmpty(Map<?, ?> m) {
         return size(m) == 0;
     }
 
@@ -282,7 +311,7 @@ public class Maps {
      * @param m map
      * @return true不为空
      */
-    public static boolean isNotEmpty(Map m) {
+    public static boolean isNotEmpty(Map<?, ?> m) {
         return !isEmpty(m);
     }
 
@@ -292,11 +321,11 @@ public class Maps {
      * @param ms map
      * @return true全为空
      */
-    public static boolean isAllEmpty(Map... ms) {
+    public static boolean isAllEmpty(Map<?, ?>... ms) {
         if (ms == null) {
             return true;
         }
-        for (Map m : ms) {
+        for (Map<?, ?> m : ms) {
             if (!isEmpty(m)) {
                 return false;
             }
@@ -310,11 +339,11 @@ public class Maps {
      * @param ms map
      * @return true全不为空, 参数为空false
      */
-    public static boolean isNoneEmpty(Map... ms) {
+    public static boolean isNoneEmpty(Map<?, ?>... ms) {
         if (ms == null) {
             return false;
         }
-        for (Map m : ms) {
+        for (Map<?, ?> m : ms) {
             if (isEmpty(m)) {
                 return false;
             }
@@ -330,7 +359,7 @@ public class Maps {
      */
     public static Map<String, Object> multiToSingleMap(Map<String, ?> map) {
         Map<String, Object> result = new LinkedHashMap<>();
-        multiToSingleMap(map, "", result);
+        multiToSingleMap(map, Strings.EMPTY, result);
         return result;
     }
 
@@ -361,8 +390,8 @@ public class Maps {
         } else if (size == 1) {
             return Pair.toMapEntry(map.entrySet().iterator().next());
         } else {
-            Object randomKey = map.keySet().toArray()[Randoms.RANDOM.nextInt(size)];
-            return new Pair(randomKey, map.get(randomKey));
+            K randomKey = ((K) map.keySet().toArray()[Randoms.RANDOM.nextInt(size)]);
+            return new Pair<K, V>(randomKey, map.get(randomKey));
         }
     }
 
@@ -435,7 +464,7 @@ public class Maps {
         if (size(m) == 0) {
             return null;
         }
-        return Lists.getFirst(m.entrySet());
+        return Lists.first(m.entrySet());
     }
 
     /**
@@ -450,7 +479,7 @@ public class Maps {
         if (size(m) == 0) {
             return null;
         }
-        return Lists.getLast(m.entrySet());
+        return Lists.last(m.entrySet());
     }
 
 }

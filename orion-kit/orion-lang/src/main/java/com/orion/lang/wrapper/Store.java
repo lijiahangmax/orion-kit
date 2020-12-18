@@ -1,6 +1,7 @@
 package com.orion.lang.wrapper;
 
 import com.orion.lang.support.CloneSupport;
+import com.orion.utils.Strings;
 
 import java.io.Serializable;
 
@@ -35,7 +36,7 @@ public class Store<T> extends CloneSupport<Store<T>> implements Serializable {
 
     @Override
     public String toString() {
-        return t == null ? "" : t.toString();
+        return t == null ? Strings.EMPTY : t.toString();
     }
 
 }

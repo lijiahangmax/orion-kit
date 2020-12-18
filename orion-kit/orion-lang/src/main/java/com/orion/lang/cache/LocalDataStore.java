@@ -1,6 +1,7 @@
 package com.orion.lang.cache;
 
 import com.orion.utils.Exceptions;
+import com.orion.utils.Strings;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
 
@@ -88,7 +89,7 @@ public class LocalDataStore {
         BufferedWriter clean = null;
         try {
             clean = new BufferedWriter(new FileWriter(localDataStoreFile));
-            clean.write("");
+            clean.write(Strings.EMPTY);
             clean.flush();
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);

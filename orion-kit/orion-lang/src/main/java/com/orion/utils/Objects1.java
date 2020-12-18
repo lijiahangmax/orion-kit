@@ -343,7 +343,7 @@ public class Objects1 {
      */
     public static String toString(Object o) {
         if (o == null) {
-            return "";
+            return Strings.EMPTY;
         } else if (o instanceof byte[]) {
             return Arrays.toString((byte[]) o);
         } else if (o instanceof short[]) {
@@ -375,7 +375,7 @@ public class Objects1 {
      */
     public static String getObjectIdentity(Object obj) {
         if (obj == null) {
-            return "";
+            return Strings.EMPTY;
         }
         return obj.getClass().getName() + "@" + getIdentity(obj);
     }

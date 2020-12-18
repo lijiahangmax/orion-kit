@@ -2,6 +2,7 @@ package com.orion.utils.reflect;
 
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
+import com.orion.utils.Strings;
 import com.orion.utils.Urls;
 import com.orion.utils.collect.Sets;
 import com.orion.utils.io.Files1;
@@ -124,14 +125,14 @@ public class ResourceScanner {
         resourcesUrl.clear();
         if (all) {
             try {
-                resourcesUrl.addAll(Sets.as(ResourceScanner.class.getClassLoader().getResources("")));
+                resourcesUrl.addAll(Sets.as(ResourceScanner.class.getClassLoader().getResources(Strings.EMPTY)));
             } catch (Exception e) {
                 throw Exceptions.ioRuntime(e);
             }
         } else {
-            URL r = ResourceScanner.class.getClassLoader().getResource("");
+            URL r = ResourceScanner.class.getClassLoader().getResource(Strings.EMPTY);
             if (r == null) {
-                r = ResourceScanner.class.getResource("");
+                r = ResourceScanner.class.getResource(Strings.EMPTY);
             }
             if (r != null) {
                 resourcesUrl.add(r);

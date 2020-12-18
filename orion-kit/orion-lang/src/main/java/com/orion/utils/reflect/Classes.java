@@ -39,7 +39,7 @@ public class Classes {
     /**
      * 基本类型的class
      */
-    private static final Class<?>[] BASE_CLASS = new Class<?>[]{byte.class, short.class, int.class, long.class, float.class, double.class, boolean.class, char.class};
+    private static final Class<?>[] BASE_CLASS = new Class<?>[]{Byte.TYPE, Short.TYPE, Integer.TYPE, Long.TYPE, Float.TYPE, Double.TYPE, Boolean.TYPE, Character.TYPE};
 
     /**
      * 包装类型的class
@@ -406,9 +406,9 @@ public class Classes {
      */
     public static boolean isNumberClass(Class<?> clazz) {
         Valid.notNull(clazz, "Class is null");
-        boolean n = clazz == byte.class || clazz == short.class ||
-                clazz == int.class || clazz == long.class ||
-                clazz == float.class || clazz == double.class ||
+        boolean n = clazz == Byte.TYPE || clazz == Short.TYPE ||
+                clazz == Integer.TYPE || clazz == Long.TYPE ||
+                clazz == Float.TYPE || clazz == Double.TYPE ||
                 clazz == Number.class;
         if (n) {
             return n;

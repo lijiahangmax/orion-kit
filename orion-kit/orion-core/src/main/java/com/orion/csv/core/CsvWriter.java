@@ -1,6 +1,7 @@
 package com.orion.csv.core;
 
 import com.orion.able.SafeCloseable;
+import com.orion.utils.Strings;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -131,7 +132,7 @@ public class CsvWriter implements SafeCloseable {
         this.checkClosed();
         this.checkInit();
         if (s == null) {
-            s = "";
+            s = Strings.EMPTY;
         }
         if (!this.firstColumn) {
             this.outputStream.write(this.userSettings.delimiter);
@@ -162,15 +163,15 @@ public class CsvWriter implements SafeCloseable {
             this.outputStream.write(this.userSettings.textQualifier);
             if (this.userSettings.escapeMode == 2) {
                 s = replace(s, "\\", "\\\\");
-                s = replace(s, "" + this.userSettings.textQualifier, "\\" + this.userSettings.textQualifier);
+                s = replace(s, Strings.EMPTY + this.userSettings.textQualifier, "\\" + this.userSettings.textQualifier);
             } else {
-                s = replace(s, "" + this.userSettings.textQualifier, "" + this.userSettings.textQualifier + this.userSettings.textQualifier);
+                s = replace(s, Strings.EMPTY + this.userSettings.textQualifier, Strings.EMPTY + this.userSettings.textQualifier + this.userSettings.textQualifier);
             }
         } else if (this.userSettings.escapeMode == 2) {
             s = replace(s, "\\", "\\\\");
-            s = replace(s, "" + this.userSettings.delimiter, "\\" + this.userSettings.delimiter);
+            s = replace(s, Strings.EMPTY + this.userSettings.delimiter, "\\" + this.userSettings.delimiter);
             if (this.useCustomRecordDelimiter) {
-                s = replace(s, "" + this.userSettings.recordDelimiter, "\\" + this.userSettings.recordDelimiter);
+                s = replace(s, Strings.EMPTY + this.userSettings.recordDelimiter, "\\" + this.userSettings.recordDelimiter);
             } else {
                 s = replace(s, "\r", "\\\r");
                 s = replace(s, "\n", "\\\n");

@@ -1,13 +1,15 @@
 package com.orion.servlet.filter;
 
+import com.orion.lang.Null;
+import com.orion.utils.Strings;
+import com.orion.utils.Xsses;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Xss过滤器
@@ -21,7 +23,7 @@ public class XssFilter implements Filter {
     /**
      * 应用名称
      */
-    private static final String APPLICATION_CONTEXT = "/web";
+    private static String applicationContext = "/web";
 
     /**
      * key: 不需要过滤的Url
@@ -46,7 +48,7 @@ public class XssFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         String url = ((HttpServletRequest) request).getRequestURI();
-        url = url.replace(APPLICATION_CONTEXT, "");
+        url = url.replace(applicationContext, Strings.EMPTY);
         // 需要配置不需要拦截的url
         if (xssSkipUrlMap.get(url) != null) {
             chain.doFilter(new XssHttpServletRequestWrapper((HttpServletRequest) request, xssSkipUrlMap.get(url)), response);
@@ -60,8 +62,8 @@ public class XssFilter implements Filter {
         this.filterConfig = null;
     }
 
-    public FilterConfig getFilterConfig() {
-        return filterConfig;
+    public static void setApplicationContext(String applicationContext) {
+        XssFilter.applicationContext = applicationContext;
     }
 
     /**
@@ -72,17 +74,17 @@ public class XssFilter implements Filter {
         /**
          * 存放url中不需要过滤的字段名
          */
-        private Map<String, String> filedMap = new HashMap<>();
+        private Map<String, Null> fieldMap = new HashMap<>();
 
         XssHttpServletRequestWrapper(HttpServletRequest servletRequest) {
             super(servletRequest);
         }
 
-        XssHttpServletRequestWrapper(HttpServletRequest servletRequest, String filed) {
+        XssHttpServletRequestWrapper(HttpServletRequest servletRequest, String field) {
             super(servletRequest);
-            String[] filedArr = filed.split(",");
-            for (String aFiledArr : filedArr) {
-                filedMap.put(aFiledArr.trim(), "true");
+            String[] fieldArr = field.split(",");
+            for (String f : fieldArr) {
+                fieldMap.put(f.trim(), Null.VALUE);
             }
         }
 
@@ -95,9 +97,9 @@ public class XssFilter implements Filter {
             int count = values.length;
             String[] encodedValues = new String[count];
             for (int i = 0; i < count; i++) {
-                // 如果filedMap中不存在某个字段, 则过滤这个字段
-                if (filedMap.get(parameter) == null) {
-                    encodedValues[i] = cleanXSS(values[i]);
+                // 如果fieldMap中不存在某个字段, 则过滤这个字段
+                if (fieldMap.get(parameter) == null) {
+                    encodedValues[i] = Xsses.clean(values[i]);
                 } else {
                     encodedValues[i] = values[i];
                 }
@@ -111,10 +113,9 @@ public class XssFilter implements Filter {
             if (value == null) {
                 return null;
             }
-            // 如果filedMap中不存在某个字段, 则过滤这个字段
-            // 如果存在, 则不过滤这个字段
-            if (filedMap.get(parameter) == null) {
-                return cleanXSS(value);
+            // 如果fieldMap中不存在, 则过滤
+            if (fieldMap.get(parameter) == null) {
+                return Xsses.clean(value);
             }
             return value;
         }
@@ -125,47 +126,7 @@ public class XssFilter implements Filter {
             if (value == null) {
                 return null;
             }
-            return cleanXSS(value);
-        }
-
-        /**
-         * 去除html代码
-         *
-         * @param htmlStr ignore
-         * @return ignore
-         */
-        private String cleanXSS(String htmlStr) {
-            String textStr = "";
-            try {
-                String regScript = "<[\\s]*?script[^>]*?>[\\s\\S]*?<[\\s]*?\\/[\\s]*?script[\\s]*?>";
-                // 定义script的正则表达式{或<script[^>]*?>[\\s\\S]*?<\\/script>
-                String regStyle = "<[\\s]*?style[^>]*?>[\\s\\S]*?<[\\s]*?\\/[\\s]*?style[\\s]*?>";
-                // 定义style的正则表达式{或<style[^>]*?>[\\s\\S]*?<\\/style>
-                String regHtml = "<[^>]+>";
-                // 定义HTML标签的正则表达式
-                String patternStr = "\\s+";
-
-                Pattern pScript = Pattern.compile(regScript, Pattern.CASE_INSENSITIVE);
-                Matcher mScript = pScript.matcher(htmlStr);
-                // 过滤script标签
-                htmlStr = mScript.replaceAll("");
-                Pattern pStyle = Pattern.compile(regStyle, Pattern.CASE_INSENSITIVE);
-                Matcher mStyle = pStyle.matcher(htmlStr);
-                // 过滤style标签
-                htmlStr = mStyle.replaceAll("");
-                Pattern pHtml = Pattern.compile(regHtml, Pattern.CASE_INSENSITIVE);
-                Matcher mHtml = pHtml.matcher(htmlStr);
-                // 过滤html标签
-                htmlStr = mHtml.replaceAll("");
-                // Pattern pBa = Pattern.compile(patternStr, Pattern.CASE_INSENSITIVE);
-                // Matcher mBa = pBa.matcher(htmlStr);
-                // 过滤空格
-                // htmlStr = mBa.replaceAll("");
-                textStr = htmlStr;
-            } catch (Exception e) {
-                // ignore
-            }
-            return textStr;
+            return Xsses.clean(value);
         }
     }
 

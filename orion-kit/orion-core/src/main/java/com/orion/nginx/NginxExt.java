@@ -2,6 +2,7 @@ package com.orion.nginx;
 
 import com.github.odiszapc.nginxparser.*;
 import com.orion.utils.Exceptions;
+import com.orion.utils.Strings;
 import com.orion.utils.collect.Lists;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
@@ -164,14 +165,14 @@ public class NginxExt {
      * @return 解析后的值
      */
     private String parseLabelValue(String value) {
-        String[] ss = value.split(" ");
+        String[] ss = value.split(Strings.SPACE);
         if (ss.length == 0 || ss.length == 1) {
             return null;
         }
         StringBuilder sb = new StringBuilder();
         for (int i = 1; i < ss.length; i++) {
             if (ss.length - i > 2) {
-                sb.append(ss[i]).append(" ");
+                sb.append(ss[i]).append(Strings.SPACE);
             } else if (ss.length - i == 2) {
                 sb.append(ss[i]);
             }

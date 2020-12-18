@@ -1,5 +1,7 @@
 package com.orion.excel.annotation;
 
+import com.orion.utils.Strings;
+
 import java.lang.annotation.*;
 
 /**
@@ -17,7 +19,7 @@ public @interface ExportSheet {
     /**
      * sheet 名称
      */
-    String value() default "";
+    String value() default Strings.EMPTY;
 
     /**
      * 默认行宽

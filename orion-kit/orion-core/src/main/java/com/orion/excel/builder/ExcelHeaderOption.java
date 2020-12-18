@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @version 1.0.0
  * @since 2020/6/1 17:06
  */
-public class ExcelHeaderMap implements Serializable {
+public class ExcelHeaderOption implements Serializable {
 
     /**
      * 名称
@@ -33,7 +33,7 @@ public class ExcelHeaderMap implements Serializable {
         return name;
     }
 
-    public ExcelHeaderMap setName(String name) {
+    public ExcelHeaderOption setName(String name) {
         this.name = name;
         return this;
     }
@@ -42,7 +42,7 @@ public class ExcelHeaderMap implements Serializable {
         return cellStyle;
     }
 
-    public ExcelHeaderMap setCellStyle(CellStyle cellStyle) {
+    public ExcelHeaderOption setCellStyle(CellStyle cellStyle) {
         this.cellStyle = cellStyle;
         return this;
     }
@@ -51,18 +51,9 @@ public class ExcelHeaderMap implements Serializable {
         return font;
     }
 
-    public ExcelHeaderMap setFont(Font font) {
+    public ExcelHeaderOption setFont(Font font) {
         this.font = font;
         return this;
-    }
-
-    @Override
-    public String toString() {
-        return "ExcelHeaderMap{" +
-                "name='" + name + '\'' +
-                ", cellStyle=" + cellStyle +
-                ", font=" + font +
-                '}';
     }
 
 }

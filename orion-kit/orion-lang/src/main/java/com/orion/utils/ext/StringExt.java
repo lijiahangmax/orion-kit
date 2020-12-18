@@ -27,7 +27,7 @@ public class StringExt implements CharSequence, Serializable {
     private String s;
 
     public StringExt() {
-        s = "";
+        s = Strings.EMPTY;
     }
 
     public StringExt(Object o) {

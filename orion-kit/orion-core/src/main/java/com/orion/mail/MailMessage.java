@@ -1,6 +1,7 @@
 package com.orion.mail;
 
 import com.orion.able.JsonAble;
+import com.orion.utils.Strings;
 
 import java.io.File;
 import java.io.Serializable;
@@ -182,7 +183,7 @@ public class MailMessage implements Serializable, JsonAble {
      * 追加内容
      */
     public MailMessage addLines(List<String> lines) {
-        StringBuilder sb = new StringBuilder(content == null ? "" : content);
+        StringBuilder sb = new StringBuilder(content == null ? Strings.EMPTY : content);
         for (String line : lines) {
             sb.append(line).append("\n");
         }

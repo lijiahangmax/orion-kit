@@ -630,7 +630,7 @@ public class OkRequest implements Awaitable<OkResponse>, Asyncable<Consumer<OkRe
                     this.formParts.forEach(formBuilder::add);
                     requestBuilder.method(this.method, formBuilder.build());
                 } else {
-                    requestBuilder.method(this.method, RequestBody.create(MediaType.parse(this.contentType), ""));
+                    requestBuilder.method(this.method, RequestBody.create(MediaType.parse(this.contentType), Strings.EMPTY));
                 }
             } else {
                 if (this.body != null) {
@@ -640,7 +640,7 @@ public class OkRequest implements Awaitable<OkResponse>, Asyncable<Consumer<OkRe
                     this.formParts.forEach(formBuilder::addEncoded);
                     requestBuilder.method(this.method, formBuilder.build());
                 } else {
-                    requestBuilder.method(this.method, RequestBody.create(MediaType.parse(this.contentType + "; charset=" + this.charset), ""));
+                    requestBuilder.method(this.method, RequestBody.create(MediaType.parse(this.contentType + "; charset=" + this.charset), Strings.EMPTY));
                 }
             }
         }

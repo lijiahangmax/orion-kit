@@ -1,7 +1,6 @@
 package com.orion.dom;
 
 import com.orion.utils.Exceptions;
-import com.orion.utils.Strings;
 import com.orion.utils.collect.Lists;
 import com.orion.utils.reflect.Classes;
 import com.orion.utils.reflect.Constructors;
@@ -75,7 +74,7 @@ class DomBeanWrapper {
         Map<String, Integer> normMap = new LinkedHashMap<>();
         Map<String, Integer> childMap = new LinkedHashMap<>();
         for (Element e : elements) {
-            List es = e.elements();
+            List<?> es = e.elements();
             String eName = e.getName();
             if (Lists.isEmpty(es)) {
                 normMap.merge(eName, 1, Integer::sum);
@@ -85,12 +84,11 @@ class DomBeanWrapper {
         }
         for (Map.Entry<String, Integer> entry : normMap.entrySet()) {
             for (Method method : setterMethod) {
-                String elementSet = "set" + Strings.firstUpper(entry.getKey());
+                String elementSet = Methods.getSetterMethodNameByFieldName(entry.getKey());
                 if (convertMap != null) {
                     Object getSetter = convertMap.get(entry.getKey());
                     if (getSetter instanceof String) {
-                        String setter = getSetter.toString();
-                        elementSet = "set" + Strings.firstUpper(setter);
+                        elementSet = Methods.getSetterMethodNameByFieldName(getSetter.toString());
                     }
                 }
                 if (method.getName().equals(elementSet)) {
@@ -126,7 +124,7 @@ class DomBeanWrapper {
                                 paramType = Set.class;
                             }
                         }
-                        Collection c = ((Collection) Constructors.newInstance(paramType));
+                        Collection<Object> c = ((Collection<Object>) Constructors.newInstance(paramType));
                         Collection<Element> list = element.elements(entry.getKey());
                         for (Element e : list) {
                             c.add(e.getStringValue());
@@ -150,12 +148,11 @@ class DomBeanWrapper {
         }
         for (Map.Entry<String, Integer> entry : childMap.entrySet()) {
             for (Method method : setterMethod) {
-                String elementSet = "set" + Strings.firstUpper(entry.getKey());
+                String elementSet = Methods.getSetterMethodNameByFieldName(entry.getKey());
                 if (convertMap != null) {
                     Object getSetter = convertMap.get(entry.getKey());
                     if (getSetter instanceof String) {
-                        String setter = getSetter.toString();
-                        elementSet = "set" + Strings.firstUpper(setter);
+                        elementSet = Methods.getSetterMethodNameByFieldName(getSetter.toString());
                     }
                 }
                 if (method.getName().equals(elementSet)) {
@@ -182,7 +179,7 @@ class DomBeanWrapper {
                         if (convertMap != null) {
                             Object childConvertMap = convertMap.get(entry.getKey());
                             if (childConvertMap instanceof Map) {
-                                paramValue = toBean(element.element(entry.getKey()), ((Map) childConvertMap), paramType);
+                                paramValue = toBean(element.element(entry.getKey()), ((Map<String, Object>) childConvertMap), paramType);
                             } else {
                                 paramValue = toBean(element.element(entry.getKey()), null, paramType);
                             }
@@ -190,9 +187,7 @@ class DomBeanWrapper {
                             paramValue = toBean(element.element(entry.getKey()), null, paramType);
                         }
                     }
-                    if (paramValue != null) {
-                        Methods.invokeMethodInfer(t, method.getName(), paramValue);
-                    }
+                    Methods.invokeMethodInfer(t, method.getName(), paramValue);
                 }
             }
         }
@@ -235,7 +230,7 @@ class DomBeanWrapper {
         Map<String, Integer> countMap = new LinkedHashMap<>();
         List<Element> elements = element.elements();
         for (Element e : elements) {
-            countMap.merge(e.getName(), 1, (a, b) -> a + b);
+            countMap.merge(e.getName(), 1, Integer::sum);
         }
         for (Map.Entry<String, Integer> entry : countMap.entrySet()) {
             if (entry.getValue() == 1) {
@@ -282,7 +277,7 @@ class DomBeanWrapper {
         Map<String, Integer> countMap = new LinkedHashMap<>();
         List<Element> elements = element.elements();
         for (Element e : elements) {
-            countMap.merge(e.getName(), 1, (a, b) -> a + b);
+            countMap.merge(e.getName(), 1, Integer::sum);
         }
         for (Map.Entry<String, Integer> entry : countMap.entrySet()) {
             if (entry.getValue() == 1) {

@@ -49,7 +49,7 @@ public class JackSons {
      */
     public static String toJson(Object bean) {
         if (bean == null) {
-            return "";
+            return Strings.EMPTY;
         }
         try {
             return MapperInstant.objectMapper.writeValueAsString(bean);

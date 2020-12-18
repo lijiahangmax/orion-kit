@@ -214,7 +214,7 @@ public enum VariableStyles implements ConvertToSmallHump, ConvertToBigHump, Conv
         Matcher matcher = BIG_HUMP_PATTERN.matcher(variable);
         while (matcher.find()) {
             sb.append(matcher.group().toLowerCase())
-                    .append(matcher.end() == variable.length() ? "" : tokenizer);
+                    .append(matcher.end() == variable.length() ? Strings.EMPTY : tokenizer);
         }
         return sb.toString();
     }

@@ -2,6 +2,7 @@ package com.orion.excel.split;
 
 import com.orion.excel.Excels;
 import com.orion.utils.Arrays1;
+import com.orion.utils.Strings;
 import com.orion.utils.Valid;
 import com.orion.utils.io.Streams;
 import org.apache.poi.ss.usermodel.Cell;
@@ -144,7 +145,7 @@ public class ExcelColumnSplit {
                 if (rowList.size() > column && column >= 0) {
                     rowCell.setCellValue(rowList.get(column));
                 } else {
-                    rowCell.setCellValue("");
+                    rowCell.setCellValue(Strings.EMPTY);
                 }
             }
             cellIndex = 0;

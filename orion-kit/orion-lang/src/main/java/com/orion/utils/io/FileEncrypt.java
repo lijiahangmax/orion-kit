@@ -29,7 +29,7 @@ public class FileEncrypt implements Callable<Boolean> {
 
     private String password;
 
-    private int bufferSize = DEFAULT_BUFFER_SIZE;
+    private int bufferSize;
 
     private boolean autoClose = true;
 

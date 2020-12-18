@@ -1,5 +1,6 @@
 package com.orion.excel.copy;
 
+import com.orion.utils.Strings;
 import com.orion.utils.Valid;
 import org.apache.poi.hssf.usermodel.HSSFPalette;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -186,7 +187,7 @@ public class CopySheet {
                 target.setCellValue(resource.getBooleanCellValue());
                 break;
             default:
-                target.setCellValue("");
+                target.setCellValue(Strings.EMPTY);
         }
     }
 

@@ -1,5 +1,7 @@
 package com.orion.id;
 
+import com.orion.utils.Strings;
+
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,7 +50,7 @@ public class UUIds {
      * 获取32位UUID
      */
     public static String random32() {
-        return UUID.randomUUID().toString().replace("-", "");
+        return UUID.randomUUID().toString().replace("-", Strings.EMPTY);
     }
 
     /**

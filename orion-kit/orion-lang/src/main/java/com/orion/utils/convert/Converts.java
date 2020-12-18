@@ -2111,7 +2111,7 @@ public class Converts {
     public static String[] toStrings(Byte[] bs) {
         String[] nbs = new String[bs.length];
         for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = bs[i] == null ? "" : bs[i].toString();
+            nbs[i] = bs[i] == null ? Strings.EMPTY : bs[i].toString();
         }
         return nbs;
     }
@@ -2119,7 +2119,7 @@ public class Converts {
     public static String[] toStrings(byte[] bs) {
         String[] nbs = new String[bs.length];
         for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = bs[i] + "";
+            nbs[i] = bs[i] + Strings.EMPTY;
         }
         return nbs;
     }
@@ -2127,7 +2127,7 @@ public class Converts {
     public static String[] toStrings(Short[] bs) {
         String[] nbs = new String[bs.length];
         for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = bs[i] == null ? "" : bs[i].toString();
+            nbs[i] = bs[i] == null ? Strings.EMPTY : bs[i].toString();
         }
         return nbs;
     }
@@ -2135,7 +2135,7 @@ public class Converts {
     public static String[] toStrings(short[] bs) {
         String[] nbs = new String[bs.length];
         for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = bs[i] + "";
+            nbs[i] = bs[i] + Strings.EMPTY;
         }
         return nbs;
     }
@@ -2143,7 +2143,7 @@ public class Converts {
     public static String[] toStrings(Integer[] bs) {
         String[] nbs = new String[bs.length];
         for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = bs[i] == null ? "" : bs[i].toString();
+            nbs[i] = bs[i] == null ? Strings.EMPTY : bs[i].toString();
         }
         return nbs;
     }
@@ -2151,7 +2151,7 @@ public class Converts {
     public static String[] toStrings(int[] bs) {
         String[] nbs = new String[bs.length];
         for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = bs[i] + "";
+            nbs[i] = bs[i] + Strings.EMPTY;
         }
         return nbs;
     }
@@ -2159,7 +2159,7 @@ public class Converts {
     public static String[] toStrings(Long[] bs) {
         String[] nbs = new String[bs.length];
         for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = bs[i] == null ? "" : bs[i].toString();
+            nbs[i] = bs[i] == null ? Strings.EMPTY : bs[i].toString();
         }
         return nbs;
     }
@@ -2167,7 +2167,7 @@ public class Converts {
     public static String[] toStrings(long[] bs) {
         String[] nbs = new String[bs.length];
         for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = bs[i] + "";
+            nbs[i] = bs[i] + Strings.EMPTY;
         }
         return nbs;
     }
@@ -2175,7 +2175,7 @@ public class Converts {
     public static String[] toStrings(Float[] bs) {
         String[] nbs = new String[bs.length];
         for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = bs[i] == null ? "" : bs[i].toString();
+            nbs[i] = bs[i] == null ? Strings.EMPTY : bs[i].toString();
         }
         return nbs;
     }
@@ -2183,7 +2183,7 @@ public class Converts {
     public static String[] toStrings(float[] bs) {
         String[] nbs = new String[bs.length];
         for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = bs[i] + "";
+            nbs[i] = bs[i] + Strings.EMPTY;
         }
         return nbs;
     }
@@ -2191,7 +2191,7 @@ public class Converts {
     public static String[] toStrings(Double[] bs) {
         String[] nbs = new String[bs.length];
         for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = bs[i] == null ? "" : bs[i].toString();
+            nbs[i] = bs[i] == null ? Strings.EMPTY : bs[i].toString();
         }
         return nbs;
     }
@@ -2199,7 +2199,7 @@ public class Converts {
     public static String[] toStrings(double[] bs) {
         String[] nbs = new String[bs.length];
         for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = bs[i] + "";
+            nbs[i] = bs[i] + Strings.EMPTY;
         }
         return nbs;
     }
@@ -2207,7 +2207,7 @@ public class Converts {
     public static String[] toStrings(Boolean[] bs) {
         String[] nbs = new String[bs.length];
         for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = bs[i] == null ? "" : bs[i].toString();
+            nbs[i] = bs[i] == null ? Strings.EMPTY : bs[i].toString();
         }
         return nbs;
     }
@@ -2215,7 +2215,7 @@ public class Converts {
     public static String[] toStrings(boolean[] bs) {
         String[] nbs = new String[bs.length];
         for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = bs[i] + "";
+            nbs[i] = bs[i] + Strings.EMPTY;
         }
         return nbs;
     }
@@ -2223,7 +2223,7 @@ public class Converts {
     public static String[] toStrings(Character[] bs) {
         String[] nbs = new String[bs.length];
         for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = bs[i] == null ? "" : bs[i].toString();
+            nbs[i] = bs[i] == null ? Strings.EMPTY : bs[i].toString();
         }
         return nbs;
     }
@@ -2231,7 +2231,7 @@ public class Converts {
     public static String[] toStrings(char[] bs) {
         String[] nbs = new String[bs.length];
         for (int i = 0, bsLen = bs.length; i < bsLen; i++) {
-            nbs[i] = bs[i] + "";
+            nbs[i] = bs[i] + Strings.EMPTY;
         }
         return nbs;
     }

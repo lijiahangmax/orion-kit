@@ -121,6 +121,15 @@ public class Sets extends Collections {
         return new ConcurrentHashSet<>(m);
     }
 
+    public static <E> Set<E> unmodified(Set<? extends E> c) {
+        return java.util.Collections.unmodifiableSet(c);
+    }
+
+    public static <E> Set<E> unmodified(SortedSet<E> c) {
+        return java.util.Collections.unmodifiableSortedSet(c);
+    }
+
+
     public static <E> Set<E> singleton(E e) {
         return new SingletonSet<>(e);
     }

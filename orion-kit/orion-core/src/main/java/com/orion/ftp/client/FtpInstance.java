@@ -130,7 +130,7 @@ public class FtpInstance {
      * @return 文件列表
      */
     public List<FtpFile> listFiles() {
-        return listFiles("", false, false);
+        return listFiles(Strings.EMPTY, false, false);
     }
 
     /**
@@ -140,7 +140,7 @@ public class FtpInstance {
      * @return 文件列表
      */
     public List<FtpFile> listFiles(boolean child) {
-        return listFiles("", child, false);
+        return listFiles(Strings.EMPTY, child, false);
     }
 
     /**
@@ -151,7 +151,7 @@ public class FtpInstance {
      * @return 文件列表
      */
     public List<FtpFile> listFiles(boolean child, boolean dir) {
-        return listFiles("", child, dir);
+        return listFiles(Strings.EMPTY, child, dir);
     }
 
     /**
@@ -213,7 +213,7 @@ public class FtpInstance {
      * @return 文件夹
      */
     public List<FtpFile> listDirs() {
-        return listDirs("", true);
+        return listDirs(Strings.EMPTY, true);
     }
 
     /**
@@ -223,7 +223,7 @@ public class FtpInstance {
      * @return 文件夹
      */
     public List<FtpFile> listDirs(boolean child) {
-        return listDirs("", child);
+        return listDirs(Strings.EMPTY, child);
     }
 
     /**
@@ -270,7 +270,7 @@ public class FtpInstance {
      * @return 文件
      */
     public List<FtpFile> listFilesSuffix(String suffix) {
-        return this.listFilesSearch("", suffix, null, null, 1, false, false);
+        return this.listFilesSearch(Strings.EMPTY, suffix, null, null, 1, false, false);
     }
 
     /**
@@ -281,7 +281,7 @@ public class FtpInstance {
      * @return 文件
      */
     public List<FtpFile> listFilesSuffix(String suffix, boolean child) {
-        return this.listFilesSearch("", suffix, null, null, 1, child, false);
+        return this.listFilesSearch(Strings.EMPTY, suffix, null, null, 1, child, false);
     }
 
     /**
@@ -293,7 +293,7 @@ public class FtpInstance {
      * @return 文件
      */
     public List<FtpFile> listFilesSuffix(String suffix, boolean child, boolean dir) {
-        return this.listFilesSearch("", suffix, null, null, 1, child, dir);
+        return this.listFilesSearch(Strings.EMPTY, suffix, null, null, 1, child, dir);
     }
 
     /**
@@ -339,7 +339,7 @@ public class FtpInstance {
      * @return 文件
      */
     public List<FtpFile> listFilesMatch(String match) {
-        return this.listFilesSearch("", match, null, null, 2, false, false);
+        return this.listFilesSearch(Strings.EMPTY, match, null, null, 2, false, false);
     }
 
     /**
@@ -350,7 +350,7 @@ public class FtpInstance {
      * @return 文件
      */
     public List<FtpFile> listFilesMatch(String match, boolean child) {
-        return this.listFilesSearch("", match, null, null, 2, child, false);
+        return this.listFilesSearch(Strings.EMPTY, match, null, null, 2, child, false);
     }
 
     /**
@@ -362,7 +362,7 @@ public class FtpInstance {
      * @return 文件
      */
     public List<FtpFile> listFilesMatch(String match, boolean child, boolean dir) {
-        return this.listFilesSearch("", match, null, null, 2, child, dir);
+        return this.listFilesSearch(Strings.EMPTY, match, null, null, 2, child, dir);
     }
 
     /**
@@ -408,7 +408,7 @@ public class FtpInstance {
      * @return 文件
      */
     public List<FtpFile> listFilesPattern(Pattern pattern) {
-        return this.listFilesSearch("", null, pattern, null, 3, false, false);
+        return this.listFilesSearch(Strings.EMPTY, null, pattern, null, 3, false, false);
     }
 
     /**
@@ -419,7 +419,7 @@ public class FtpInstance {
      * @return 文件
      */
     public List<FtpFile> listFilesPattern(Pattern pattern, boolean child) {
-        return this.listFilesSearch("", null, pattern, null, 3, child, false);
+        return this.listFilesSearch(Strings.EMPTY, null, pattern, null, 3, child, false);
     }
 
     /**
@@ -431,7 +431,7 @@ public class FtpInstance {
      * @return 文件
      */
     public List<FtpFile> listFilesPattern(Pattern pattern, boolean child, boolean dir) {
-        return this.listFilesSearch("", null, pattern, null, 3, child, dir);
+        return this.listFilesSearch(Strings.EMPTY, null, pattern, null, 3, child, dir);
     }
 
     /**
@@ -477,7 +477,7 @@ public class FtpInstance {
      * @return 文件
      */
     public List<FtpFile> listFilesFilter(FTPFileFilter filter) {
-        return this.listFilesSearch("", null, null, filter, 4, false, false);
+        return this.listFilesSearch(Strings.EMPTY, null, null, filter, 4, false, false);
     }
 
     /**
@@ -488,7 +488,7 @@ public class FtpInstance {
      * @return 文件
      */
     public List<FtpFile> listFilesFilter(FTPFileFilter filter, boolean child) {
-        return this.listFilesSearch("", null, null, filter, 4, child, false);
+        return this.listFilesSearch(Strings.EMPTY, null, null, filter, 4, child, false);
     }
 
     /**
@@ -500,7 +500,7 @@ public class FtpInstance {
      * @return 文件
      */
     public List<FtpFile> listFilesFilter(FTPFileFilter filter, boolean child, boolean dir) {
-        return this.listFilesSearch("", null, null, filter, 4, child, dir);
+        return this.listFilesSearch(Strings.EMPTY, null, null, filter, 4, child, dir);
     }
 
     /**
@@ -609,7 +609,7 @@ public class FtpInstance {
      * @return 属性列表
      */
     public Map<String, FtpFileAttr> listFilesAttr() {
-        return listFilesAttr("", false);
+        return listFilesAttr(Strings.EMPTY, false);
     }
 
     /**
@@ -641,7 +641,7 @@ public class FtpInstance {
                     attr.setPath(fileName);
                     attr.setModifyTime(file.getTimestamp().getTime());
                     attr.setSize(file.getSize());
-                    attr.setPermission(file.getRawListing().split(" ")[0]);
+                    attr.setPermission(file.getRawListing().split(Strings.SPACE)[0]);
                     map.put(fileName, attr);
                 } else if (file.isDirectory() && child) {
                     map.putAll(listFilesAttr(path + SYMBOL + file.getName(), true));
@@ -1285,7 +1285,7 @@ public class FtpInstance {
             String[] dirs = Files1.getPath(dir).split(SYMBOL);
             String base = config.getRemoteBaseDir();
             for (String d : dirs) {
-                if (null == d || "".equals(d)) {
+                if (null == d || Strings.EMPTY.equals(d)) {
                     continue;
                 }
                 base = serverCharset(base + SYMBOL + d);

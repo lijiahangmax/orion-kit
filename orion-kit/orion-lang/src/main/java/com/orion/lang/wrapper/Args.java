@@ -2,6 +2,7 @@ package com.orion.lang.wrapper;
 
 import com.orion.lang.iterator.ArrayIterator;
 import com.orion.lang.support.CloneSupport;
+import com.orion.utils.Strings;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -225,7 +226,7 @@ public class Args implements Serializable {
 
         @Override
         public String toString() {
-            return "";
+            return Strings.EMPTY;
         }
 
     }

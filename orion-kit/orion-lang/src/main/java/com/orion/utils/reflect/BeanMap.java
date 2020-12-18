@@ -3,11 +3,10 @@ package com.orion.utils.reflect;
 import com.orion.lang.collect.MutableLinkedHashMap;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Valid;
+import com.orion.utils.VariableStyles;
 
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * bean map 根据getter方法获取
@@ -17,11 +16,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 2020/9/9 1:57
  */
 public class BeanMap extends MutableLinkedHashMap<String, Object> {
-
-    /**
-     * getter方法缓存
-     */
-    private static final Map<Class<?>, List<Method>> GETTER_METHOD_CACHE = new ConcurrentHashMap<>();
 
     /**
      * 对象
@@ -38,52 +32,55 @@ public class BeanMap extends MutableLinkedHashMap<String, Object> {
      */
     private boolean addNull;
 
+    /**
+     * keyStyle
+     */
+    private VariableStyles variableStyle;
+
     public BeanMap(Object o, String... ignoreFields) {
-        this(o, false, ignoreFields);
+        this(o, null, false, ignoreFields);
+    }
+
+    public BeanMap(Object o, VariableStyles variableStyle, String... ignoreFields) {
+        this(o, variableStyle, false, ignoreFields);
     }
 
     public BeanMap(Object o, boolean addNull, String... ignoreFields) {
+        this(o, null, addNull, ignoreFields);
+    }
+
+    public BeanMap(Object o, VariableStyles variableStyle, boolean addNull, String... ignoreFields) {
         Valid.notNull(o, "object is null");
         this.o = o;
+        this.variableStyle = variableStyle;
         this.addNull = addNull;
         this.ignoreFields = ignoreFields;
-        this.parseClass();
+        this.invokeGetter(Methods.getAllGetterMethodByCache(o.getClass()));
     }
 
-    /**
-     * 创建  BeanMap
-     *
-     * @param o            object
-     * @param ignoreFields 跳过的属性名称
-     * @return BeanMap
-     */
     public static BeanMap create(Object o, String... ignoreFields) {
-        return new BeanMap(o, true, ignoreFields);
+        return new BeanMap(o, null, true, ignoreFields);
+    }
+
+    public static BeanMap create(Object o, boolean addNull, String... ignoreFields) {
+        return new BeanMap(o, null, addNull, ignoreFields);
+    }
+
+    public static BeanMap create(Object o, VariableStyles variableStyle, String... ignoreFields) {
+        return new BeanMap(o, variableStyle, true, ignoreFields);
     }
 
     /**
      * 创建  BeanMap
      *
-     * @param o            object
-     * @param addNull      是否添加为null的属性
-     * @param ignoreFields 跳过的属性名称
+     * @param o             object
+     * @param variableStyle key 类型
+     * @param addNull       是否添加为null的属性
+     * @param ignoreFields  跳过的属性名称
      * @return BeanMap
      */
-    public static BeanMap create(Object o, boolean addNull, String... ignoreFields) {
-        return new BeanMap(o, addNull, ignoreFields);
-    }
-
-    /**
-     * 解析getterMethod
-     */
-    private void parseClass() {
-        Class<?> clazz = o.getClass();
-        List<Method> methods = GETTER_METHOD_CACHE.get(clazz);
-        if (methods == null) {
-            methods = Methods.getAllGetterMethod(clazz);
-            GETTER_METHOD_CACHE.put(clazz, methods);
-        }
-        this.invokeGetter(methods);
+    public static BeanMap create(Object o, VariableStyles variableStyle, boolean addNull, String... ignoreFields) {
+        return new BeanMap(o, variableStyle, addNull, ignoreFields);
     }
 
     /**
@@ -96,6 +93,9 @@ public class BeanMap extends MutableLinkedHashMap<String, Object> {
             String fieldName = Fields.getFieldNameByMethodName(method.getName());
             if (this.isIgnoreField(fieldName)) {
                 continue;
+            }
+            if (variableStyle != null) {
+                fieldName = VariableStyles.convert(fieldName, variableStyle);
             }
             Object value = Methods.invokeMethod(this.o, method);
             if (value == null) {
