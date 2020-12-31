@@ -44,9 +44,22 @@ public class ExcelSheet<T> {
      */
     private List<ExcelFieldOption> options;
 
+    /**
+     * 列class
+     *
+     * @see #addRow
+     * @see #addRows
+     */
+    private Class<? extends T> elementClass;
+
     public ExcelSheet(Workbook workbook, Sheet sheet) {
+        this(workbook, sheet, null);
+    }
+
+    public ExcelSheet(Workbook workbook, Sheet sheet, Class<? extends T> elementClass) {
         this.workbook = workbook;
         this.sheet = sheet;
+        this.elementClass = elementClass;
     }
 
     /**
@@ -99,7 +112,7 @@ public class ExcelSheet<T> {
         for (int i = 0; i < headerMap.size(); i++) {
             ExcelHeaderOption map = headerMap.get(i);
             Cell cell = row.createCell(i);
-            cell.setCellValue(map.getName());
+            cell.setCellValue(map.getValue());
             CellStyle cellStyle = map.getCellStyle();
             if (cellStyle != null) {
                 cell.setCellStyle(cellStyle);
@@ -230,7 +243,7 @@ public class ExcelSheet<T> {
     }
 
     /**
-     * 添加列 根据bean的getter方法
+     * 添加列 根据bean的getter方法 空行有样式
      *
      * @param row 列
      * @return this
@@ -240,7 +253,7 @@ public class ExcelSheet<T> {
     }
 
     /**
-     * 添加列 根据bean的getter方法
+     * 添加列 根据bean的getter方法 空行有样式
      *
      * @param list 列
      * @return this
@@ -252,29 +265,17 @@ public class ExcelSheet<T> {
         if (Lists.isEmpty(options)) {
             return this;
         }
-        T first = null;
-        for (T t : list) {
-            if (t != null) {
-                first = t;
-            }
-        }
-        if (first == null) {
-            return this;
-        }
 
         for (ExcelFieldOption option : options) {
             String fieldName = option.getFieldName();
             if (option.getIndex() == null || fieldName == null) {
                 continue;
             }
-            option.setGetterMethod(Methods.getGetterMethodByCache(first.getClass(), fieldName));
+            option.setGetterMethod(Methods.getGetterMethodByCache(elementClass.getClass(), fieldName));
         }
 
         for (T t : list) {
-            if (t == null) {
-                if (!skipNullRow) {
-                    index++;
-                }
+            if (t == null && skipNullRow) {
                 continue;
             }
             Row row = sheet.createRow(index++);
@@ -285,7 +286,7 @@ public class ExcelSheet<T> {
                     continue;
                 }
                 Cell cell = row.createCell(index);
-                CellStyle style = option.getCellStyle();
+                CellStyle style = option.getStyle();
                 if (style != null) {
                     cell.setCellStyle(style);
                 }
@@ -297,25 +298,26 @@ public class ExcelSheet<T> {
                     style.setFont(font);
                     cell.setCellStyle(style);
                 }
+                if (t == null) {
+                    // !skipNullRow 为null的row会有样式
+                    continue;
+                }
                 Object v = Methods.invokeMethod(t, method);
-                Excels.setCellValue(cell, v, option.getFieldType(), option.getDatePattern());
+                Excels.setCellValue(cell, v, option.getType());
             }
         }
         return this;
     }
 
     /**
-     * 添加列
+     * 添加列 空行无样式
      *
      * @param r 列
      * @return this
      */
     public ExcelSheet<T> addMap(Map<Integer, ?> r) {
         if (r == null) {
-            if (skipNullRow) {
-                index++;
-            }
-            return this;
+            return this.addArray(null);
         }
         int max = 0;
         for (Map.Entry<Integer, ?> e : r.entrySet()) {
@@ -330,11 +332,11 @@ public class ExcelSheet<T> {
         for (int i = 0; i < max; i++) {
             arr[i] = r.get(i);
         }
-        return addArray(arr);
+        return this.addArray(arr);
     }
 
     /**
-     * 添加列 根据bean的getter方法
+     * 添加列 空行无样式
      *
      * @param list 列
      * @return this
@@ -347,14 +349,14 @@ public class ExcelSheet<T> {
     }
 
     /**
-     * 添加列
+     * 添加列 空行无样式
      *
      * @param r r
      * @return this
      */
     public ExcelSheet<T> addArray(Object[] r) {
         if (r == null) {
-            if (skipNullRow) {
+            if (!skipNullRow) {
                 index++;
             }
             return this;
@@ -371,7 +373,7 @@ public class ExcelSheet<T> {
                 if (!option.getIndex().equals(i)) {
                     continue;
                 }
-                CellStyle style = option.getCellStyle();
+                CellStyle style = option.getStyle();
                 if (style != null) {
                     cell.setCellStyle(style);
                 }
@@ -383,7 +385,7 @@ public class ExcelSheet<T> {
                     style.setFont(font);
                     cell.setCellStyle(style);
                 }
-                Excels.setCellValue(cell, value, option.getFieldType(), option.getDatePattern());
+                Excels.setCellValue(cell, value, option.getType());
                 set = true;
                 break;
             }
@@ -396,7 +398,7 @@ public class ExcelSheet<T> {
     }
 
     /**
-     * 添加列
+     * 添加列 空行无样式
      *
      * @param list 列
      * @return this
@@ -408,12 +410,12 @@ public class ExcelSheet<T> {
         return this;
     }
 
-    public Sheet getSheet() {
-        return sheet;
-    }
-
     public Workbook getWorkbook() {
         return workbook;
+    }
+
+    public Sheet getSheet() {
+        return sheet;
     }
 
     public int getIndex() {

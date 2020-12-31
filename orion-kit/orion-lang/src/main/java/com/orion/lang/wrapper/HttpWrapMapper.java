@@ -9,46 +9,42 @@ import java.util.function.Supplier;
  * @version 1.0.0
  * @since 2019/8/8 17:25
  */
-public enum HttpWrapMapper implements Supplier<HttpWrapper<Object>> {
+public enum HttpWrapMapper implements Supplier<HttpWrapper<?>> {
 
     /**
      * 成功
      */
-    OK {
-        @Override
-        public HttpWrapper<Object> get() {
-            return HttpWrapper.ok();
-        }
-    },
+    OK(Wrapper.HTTP_OK_CODE, Wrapper.HTTP_OK_MESSAGE),
 
     /**
      * 失败
      */
-    ERROR {
-        @Override
-        public HttpWrapper<Object> get() {
-            return HttpWrapper.error();
-        }
-    },
+    ERROR(Wrapper.HTTP_ERROR_CODE, Wrapper.HTTP_ERROR_MESSAGE),
 
     /**
      * 未登录
      */
-    NO_LOGIN {
-        @Override
-        public HttpWrapper<Object> get() {
-            return HttpWrapper.wrap(700, "Not signed in");
-        }
-    },
+    NO_LOGIN(700, "Not signed in"),
 
     /**
      * 无权限
      */
-    No_PERMISSION {
-        @Override
-        public HttpWrapper<Object> get() {
-            return HttpWrapper.wrap(701, "No permission");
-        }
+    No_PERMISSION(701, "No permission"),
+
+    ;
+
+    private int code;
+
+    private String msg;
+
+    HttpWrapMapper(int code, String msg) {
+        this.code = code;
+        this.msg = msg;
+    }
+
+    @Override
+    public HttpWrapper<?> get() {
+        return new HttpWrapper<>(code, msg);
     }
 
 }

@@ -28,7 +28,6 @@ public class TailTests {
         new Thread(d).start();
     }
 
-
     @Test
     public void testAdd() throws IOException {
         FileOutputStream outputStream = Files1.openOutputStream(new File("C:\\Users\\ljh15\\Desktop\\tail.txt"), true);

@@ -64,7 +64,7 @@ public class SoftCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializable 
     }
 
     public V get(K key, V def) {
-        return Objects1.det(this.get(key), def);
+        return Objects1.def(this.get(key), def);
     }
 
     public V put(K key, V value) {

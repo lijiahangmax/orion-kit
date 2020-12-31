@@ -1,15 +1,18 @@
 package com.orion.excel.style;
 
+import com.orion.excel.Excels;
+import com.orion.excel.option.FontOption;
 import com.orion.utils.Colors;
-import org.apache.poi.hssf.usermodel.HSSFPalette;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.FontScheme;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.model.ThemesTable;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  * Excel 字体样式流
@@ -27,10 +30,6 @@ public class FontStream {
     public FontStream(Workbook workbook) {
         this.workbook = workbook;
         this.font = workbook.createFont();
-    }
-
-    public FontStream(Font font) {
-        this.font = font;
     }
 
     public FontStream(Workbook workbook, Font font) {
@@ -51,22 +50,52 @@ public class FontStream {
     /**
      * 获取 FontStream
      *
-     * @param font Font
-     * @return FontStream
-     */
-    public static FontStream fontStream(Font font) {
-        return new FontStream(font);
-    }
-
-    /**
-     * 获取 FontStream
-     *
      * @param workbook Workbook
      * @param font     Font
      * @return FontStream
      */
     public static FontStream fontStream(Workbook workbook, Font font) {
         return new FontStream(workbook, font);
+    }
+
+    /**
+     * 解析 font
+     *
+     * @param workbook workbook
+     * @param option   option
+     * @return font
+     */
+    public static Font parseFont(Workbook workbook, FontOption option) {
+        if (option == null) {
+            return null;
+        }
+        FontStream stream = new FontStream(workbook);
+        String fontName = option.getFontName();
+        if (fontName != null) {
+            stream.name(fontName);
+        }
+        Integer fontSize = option.getFontSize();
+        if (fontSize != null) {
+            stream.size(fontSize.shortValue());
+        }
+        String fontColor = option.getColor();
+        if (fontColor != null) {
+            if (workbook instanceof XSSFWorkbook || workbook instanceof SXSSFWorkbook) {
+                stream.color(fontColor);
+            } else if (workbook instanceof HSSFWorkbook) {
+                short paletteColorIndex = option.getPaletteColorIndex();
+                short usePaletteColorIndex = Excels.paletteColor(workbook, paletteColorIndex, Colors.toRgb(fontColor));
+                stream.color(usePaletteColorIndex);
+                if (paletteColorIndex == usePaletteColorIndex) {
+                    option.setPaletteColorIndex(++paletteColorIndex);
+                }
+            }
+        }
+        return stream.bold(option.isBold())
+                .italic(option.isItalic())
+                .deleteLine(option.isDelete())
+                .underLine(option.getUnder().getCode())
+                .getFont();
     }
 
     /**
@@ -92,6 +121,16 @@ public class FontStream {
     }
 
     /**
+     * 设置删除线
+     *
+     * @return this
+     */
+    public FontStream deleteLine() {
+        font.setStrikeout(true);
+        return this;
+    }
+
+    /**
      * 不设置删除线
      *
      * @return this
@@ -104,10 +143,21 @@ public class FontStream {
     /**
      * 设置删除线
      *
+     * @param set 是否设置
      * @return this
      */
-    public FontStream deleteLine() {
-        font.setStrikeout(true);
+    public FontStream deleteLine(boolean set) {
+        font.setStrikeout(set);
+        return this;
+    }
+
+    /**
+     * 设置下滑线
+     *
+     * @return this
+     */
+    public FontStream underLine() {
+        font.setUnderline((byte) 1);
         return this;
     }
 
@@ -124,10 +174,11 @@ public class FontStream {
     /**
      * 设置下滑线
      *
+     * @param line 下滑线类型
      * @return this
      */
-    public FontStream underLine() {
-        font.setUnderline((byte) 1);
+    public FontStream underLine(int line) {
+        font.setUnderline((byte) line);
         return this;
     }
 
@@ -138,6 +189,16 @@ public class FontStream {
      */
     public FontStream underDoubleLine() {
         font.setUnderline((byte) 2);
+        return this;
+    }
+
+    /**
+     * 设置斜体
+     *
+     * @return this
+     */
+    public FontStream italic() {
+        font.setItalic(true);
         return this;
     }
 
@@ -154,10 +215,21 @@ public class FontStream {
     /**
      * 设置斜体
      *
+     * @param set 是否设置
      * @return this
      */
-    public FontStream italic() {
-        font.setItalic(true);
+    public FontStream italic(boolean set) {
+        font.setItalic(set);
+        return this;
+    }
+
+    /**
+     * 设置加粗
+     *
+     * @return this
+     */
+    public FontStream bold() {
+        font.setBold(true);
         return this;
     }
 
@@ -174,10 +246,22 @@ public class FontStream {
     /**
      * 设置加粗
      *
+     * @param set 是否设置
      * @return this
      */
-    public FontStream bold() {
-        font.setBold(true);
+    public FontStream bold(boolean set) {
+        font.setBold(set);
+        return this;
+    }
+
+    /**
+     * 设置偏移
+     *
+     * @param offset 0不偏移 1顶部偏移 2底部偏移
+     * @return this
+     */
+    public FontStream typeOffset(int offset) {
+        font.setTypeOffset((short) offset);
         return this;
     }
 
@@ -208,6 +292,17 @@ public class FontStream {
      */
     public FontStream bottomOffset() {
         font.setTypeOffset((short) 2);
+        return this;
+    }
+
+    /**
+     * 设置编码
+     *
+     * @param charset 0系统 1默认 2符号
+     * @return this
+     */
+    public FontStream charset(int charset) {
+        font.setCharSet(charset);
         return this;
     }
 
@@ -273,14 +368,7 @@ public class FontStream {
      */
     public FontStream color(short index, byte[] c) {
         if (workbook instanceof HSSFWorkbook) {
-            HSSFPalette palette = ((HSSFWorkbook) workbook).getCustomPalette();
-            HSSFColor color = palette.findColor(c[0], c[1], c[2]);
-            if (color == null) {
-                palette.setColorAtIndex(index, c[0], c[1], c[2]);
-                font.setColor(index);
-            } else {
-                font.setColor(color.getIndex());
-            }
+            font.setColor(Excels.paletteColor(workbook, index, c));
         }
         return this;
     }
@@ -473,7 +561,7 @@ public class FontStream {
      *
      * @return true加粗
      */
-    public boolean getBold() {
+    public boolean isBold() {
         return font.getBold();
     }
 
@@ -482,8 +570,17 @@ public class FontStream {
      *
      * @return true斜体
      */
-    public boolean getItalic() {
+    public boolean isItalic() {
         return font.getItalic();
+    }
+
+    /**
+     * 是否为删除线
+     *
+     * @return true删除线
+     */
+    public boolean isDelete() {
+        return font.getStrikeout();
     }
 
     /**

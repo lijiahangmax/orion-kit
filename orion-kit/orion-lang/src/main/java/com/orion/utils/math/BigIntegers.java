@@ -35,7 +35,7 @@ public class BigIntegers {
      * @return BigInteger
      */
     public static BigInteger toBigInteger(Object o, BigInteger defaultV) {
-        return Objects1.det(objectToBigInteger(o), defaultV);
+        return Objects1.def(objectToBigInteger(o), defaultV);
     }
 
     /**
@@ -721,7 +721,6 @@ public class BigIntegers {
     public static boolean eq(BigInteger d1, BigInteger d2) {
         return Objects1.eq(d1, d2);
     }
-
 
     /**
      * 是否为负数

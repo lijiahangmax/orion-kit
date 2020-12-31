@@ -241,8 +241,8 @@ public class Classes {
     /**
      * 判断argClass是否为requireClass的实现类
      *
-     * @param requireClass paramClass
-     * @param argClass     argClass
+     * @param requireClass paramClass 父
+     * @param argClass     argClass 子
      * @return true 是实现类或本类
      */
     public static boolean isImplClass(Class<?> requireClass, Class<?> argClass) {

@@ -1,5 +1,6 @@
 package com.orion.excel.builder;
 
+import com.orion.excel.type.ExcelFieldType;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 
@@ -30,7 +31,7 @@ public class ExcelFieldOption implements Serializable {
     /**
      * 单元格样式
      */
-    private CellStyle cellStyle;
+    private CellStyle style;
 
     /**
      * 字体样式
@@ -40,7 +41,7 @@ public class ExcelFieldOption implements Serializable {
     /**
      * 字段类型
      */
-    private ExcelFieldType fieldType;
+    private ExcelFieldType type;
 
     /**
      * 日期格式化
@@ -84,13 +85,12 @@ public class ExcelFieldOption implements Serializable {
         return this;
     }
 
-
-    public CellStyle getCellStyle() {
-        return cellStyle;
+    public CellStyle getStyle() {
+        return style;
     }
 
-    public ExcelFieldOption setCellStyle(CellStyle cellStyle) {
-        this.cellStyle = cellStyle;
+    public ExcelFieldOption setStyle(CellStyle style) {
+        this.style = style;
         return this;
     }
 
@@ -103,12 +103,12 @@ public class ExcelFieldOption implements Serializable {
         return this;
     }
 
-    public ExcelFieldType getFieldType() {
-        return fieldType;
+    public ExcelFieldType getType() {
+        return type;
     }
 
-    public ExcelFieldOption setFieldType(ExcelFieldType fieldType) {
-        this.fieldType = fieldType;
+    public ExcelFieldOption setType(ExcelFieldType type) {
+        this.type = type;
         return this;
     }
 

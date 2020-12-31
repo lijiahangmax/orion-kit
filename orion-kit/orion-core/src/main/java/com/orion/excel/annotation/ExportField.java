@@ -1,6 +1,9 @@
 package com.orion.excel.annotation;
 
-import com.orion.excel.builder.ExcelFieldType;
+import com.orion.excel.type.ExcelAlignType;
+import com.orion.excel.type.ExcelBorderType;
+import com.orion.excel.type.ExcelFieldType;
+import com.orion.excel.type.ExcelVerticalAlignType;
 import com.orion.utils.Strings;
 
 import java.lang.annotation.*;
@@ -21,7 +24,7 @@ public @interface ExportField {
     /**
      * 表格列索引 从0开始
      */
-    int value();
+    int index();
 
     /**
      * 单元格宽
@@ -30,8 +33,6 @@ public @interface ExportField {
 
     /**
      * 表头
-     *
-     * @return 表头
      */
     String header() default Strings.EMPTY;
 
@@ -42,26 +43,23 @@ public @interface ExportField {
 
     /**
      * 垂直对齐方式
-     * 0上对齐 1居中对齐 2下对齐
      */
-    int verticalAlign() default -1;
+    ExcelVerticalAlignType verticalAlign() default ExcelVerticalAlignType.CENTER;
 
     /**
      * 水平对齐方式
-     * 0默认 1左对齐 2居中 3右对齐 5两端对齐
      */
-    int align() default -1;
+    ExcelAlignType align() default ExcelAlignType.DEFAULT;
 
     /**
-     * 背景颜色
+     * 背景颜色 RGB
      */
     String backgroundColor() default Strings.EMPTY;
 
     /**
      * 边框
-     * 0默认(不设置) 1细边框 2中边框 3粗边框
      */
-    int border() default -1;
+    ExcelBorderType border() default ExcelBorderType.DEFAULT;
 
     /**
      * 边框颜色 RGB
@@ -69,13 +67,48 @@ public @interface ExportField {
     String borderColor() default Strings.EMPTY;
 
     /**
-     * 时间格式化
+     * 缩进
      */
-    String datePattern() default Strings.EMPTY;
+    int indent() default -1;
+
+    /**
+     * 格式化
+     */
+    String format() default Strings.EMPTY;
 
     /**
      * 类型
      */
-    ExcelFieldType type() default ExcelFieldType.TEXT;
+    ExcelFieldType type() default ExcelFieldType.AUTO;
+
+    /**
+     * 表头跳过样式
+     */
+    boolean skipHeaderStyle() default false;
+
+    /**
+     * 隐藏列
+     */
+    boolean hidden() default false;
+
+    /**
+     * 是否锁定
+     */
+    boolean lock() default false;
+
+    /**
+     * 自动调节大小
+     */
+    boolean autoResize() default false;
+
+    /**
+     * 公式前缀
+     */
+    boolean quotePrefixed() default false;
+
+    /**
+     * 选择框
+     */
+    String[] selectOptions() default {};
 
 }

@@ -129,7 +129,6 @@ public class Sets extends Collections {
         return java.util.Collections.unmodifiableSortedSet(c);
     }
 
-
     public static <E> Set<E> singleton(E e) {
         return new SingletonSet<>(e);
     }

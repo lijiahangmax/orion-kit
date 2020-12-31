@@ -1,12 +1,19 @@
 package com.orion.excel.style;
 
+import com.orion.excel.Excels;
+import com.orion.excel.option.FieldOption;
+import com.orion.excel.option.TitleOption;
+import com.orion.excel.type.ExcelAlignType;
+import com.orion.excel.type.ExcelVerticalAlignType;
 import com.orion.utils.Colors;
-import org.apache.poi.hssf.usermodel.HSSFPalette;
+import com.orion.utils.Strings;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  * Excel 单元格样式流
@@ -24,10 +31,6 @@ public class StyleStream {
     public StyleStream(Workbook workbook) {
         this.workbook = workbook;
         this.style = workbook.createCellStyle();
-    }
-
-    public StyleStream(CellStyle style) {
-        this.style = style;
     }
 
     public StyleStream(Workbook workbook, CellStyle style) {
@@ -48,22 +51,114 @@ public class StyleStream {
     /**
      * 获取 StyleStream
      *
-     * @param style CellStyle
-     * @return StyleStream
-     */
-    public static StyleStream styleStream(CellStyle style) {
-        return new StyleStream(style);
-    }
-
-    /**
-     * 获取 StyleStream
-     *
      * @param workbook Workbook
      * @param style    CellStyle
      * @return StyleStream
      */
     public static StyleStream styleStream(Workbook workbook, CellStyle style) {
         return new StyleStream(workbook, style);
+    }
+
+    /**
+     * 解析样式
+     *
+     * @param workbook workbook
+     * @param option   option
+     */
+    public static CellStyle parseStyle(Workbook workbook, FieldOption option) {
+        if (option == null) {
+            return null;
+        }
+        StyleStream stream = new StyleStream(workbook);
+        // 对齐
+        if (option.getAlign() != null && !option.getAlign().equals(ExcelAlignType.DEFAULT)) {
+            stream.alignment(option.getAlign().getCode());
+        }
+        if (option.getVerticalAlign() != null && !option.getVerticalAlign().equals(ExcelVerticalAlignType.DEFAULT)) {
+            stream.verticalAlignment(option.getVerticalAlign().getCode());
+        }
+        stream.wrapText(option.isWrapText());
+        stream.lock(option.isLock());
+        stream.autoResize(option.isAutoResize());
+        // 背景色
+        String backgroundColor = option.getBackgroundColor();
+        if (!Strings.isEmpty(backgroundColor)) {
+            stream.texture(FillPatternType.SOLID_FOREGROUND.getCode());
+            if (workbook instanceof XSSFWorkbook || workbook instanceof SXSSFWorkbook) {
+                stream.textureColor(backgroundColor);
+            } else if (workbook instanceof HSSFWorkbook) {
+                short paletteColorIndex = option.getPaletteColorIndex();
+                short usePaletteColorIndex = Excels.paletteColor(workbook, paletteColorIndex, Colors.toRgb(backgroundColor));
+                stream.textureColor(usePaletteColorIndex);
+                if (paletteColorIndex == usePaletteColorIndex) {
+                    option.setPaletteColorIndex(++paletteColorIndex);
+                }
+            }
+        }
+        // 边框
+        if (option.getBorder() != null) {
+            stream.border(option.getBorder().getCode());
+            String borderColor = option.getBorderColor();
+            if (!Strings.isEmpty(borderColor)) {
+                if (workbook instanceof XSSFWorkbook || workbook instanceof SXSSFWorkbook) {
+                    stream.borderColor(borderColor);
+                } else if (workbook instanceof HSSFWorkbook) {
+                    short paletteColorIndex = option.getPaletteColorIndex();
+                    short usePaletteColorIndex = Excels.paletteColor(workbook, paletteColorIndex, Colors.toRgb(borderColor));
+                    stream.borderColor(usePaletteColorIndex);
+                    if (paletteColorIndex == usePaletteColorIndex) {
+                        option.setPaletteColorIndex(++paletteColorIndex);
+                    }
+                }
+            }
+        }
+        return stream.getStyle();
+    }
+
+    /**
+     * 解析列样式
+     *
+     * @param workbook workbook
+     * @param option   option
+     */
+    public static CellStyle parseColumnStyle(Workbook workbook, FieldOption option) {
+        CellStyle style = parseStyle(workbook, option);
+        if (style == null) {
+            return null;
+        }
+        if (!Strings.isEmpty(option.getFormat())) {
+            style.setDataFormat(workbook.createDataFormat().getFormat(option.getFormat()));
+        }
+        if (option.getIndent() != null) {
+            style.setIndention(option.getIndent());
+        }
+        if (option.isQuotePrefixed()) {
+            style.setQuotePrefixed(true);
+        }
+        return style;
+    }
+
+    /**
+     * 解析标题样式
+     *
+     * @param workbook workbook
+     * @param option   option
+     */
+    public static CellStyle parseTitleStyle(Workbook workbook, TitleOption option) {
+        if (option == null) {
+            return null;
+        }
+        // convert
+        FieldOption fieldOption = new FieldOption();
+        fieldOption.setAlign(option.getAlign());
+        fieldOption.setVerticalAlign(option.getVerticalAlign());
+        fieldOption.setBackgroundColor(option.getBackgroundColor());
+        fieldOption.setBorder(option.getBorder());
+        fieldOption.setBorderColor(option.getBorderColor());
+        fieldOption.setPaletteColorIndex(option.getPaletteColorIndex());
+        CellStyle cellStyle = parseStyle(workbook, fieldOption);
+        option.setPaletteColorIndex(fieldOption.getPaletteColorIndex());
+        return cellStyle;
     }
 
     /**
@@ -87,6 +182,16 @@ public class StyleStream {
     }
 
     /**
+     * 设置自动换行
+     *
+     * @return this
+     */
+    public StyleStream wrapText() {
+        style.setWrapText(true);
+        return this;
+    }
+
+    /**
      * 不设置自动换行
      *
      * @return this
@@ -99,10 +204,11 @@ public class StyleStream {
     /**
      * 设置自动换行
      *
+     * @param wrap 是否自动换行
      * @return this
      */
-    public StyleStream wrapText() {
-        style.setWrapText(true);
+    public StyleStream wrapText(boolean wrap) {
+        style.setWrapText(wrap);
         return this;
     }
 
@@ -111,7 +217,17 @@ public class StyleStream {
      *
      * @return this
      */
-    public StyleStream defalutAlignment() {
+    public StyleStream alignment(int code) {
+        style.setAlignment(HorizontalAlignment.forInt(code));
+        return this;
+    }
+
+    /**
+     * 设置水平默认对齐
+     *
+     * @return this
+     */
+    public StyleStream defaultAlignment() {
         style.setAlignment(HorizontalAlignment.forInt(0));
         return this;
     }
@@ -153,6 +269,17 @@ public class StyleStream {
      */
     public StyleStream fillAlignment() {
         style.setAlignment(HorizontalAlignment.forInt(5));
+        return this;
+    }
+
+    /**
+     * 设置垂直对齐
+     *
+     * @param code code
+     * @return this
+     */
+    public StyleStream verticalAlignment(int code) {
+        style.setVerticalAlignment(VerticalAlignment.forInt(code));
         return this;
     }
 
@@ -207,6 +334,17 @@ public class StyleStream {
     }
 
     /**
+     * 设置锁定
+     *
+     * @param lock 是否锁定
+     * @return this
+     */
+    public StyleStream lock(boolean lock) {
+        style.setLocked(lock);
+        return this;
+    }
+
+    /**
      * 设置隐藏
      *
      * @return this
@@ -217,12 +355,34 @@ public class StyleStream {
     }
 
     /**
+     * 设置隐藏
+     *
+     * @param hidden 是否隐藏
+     * @return this
+     */
+    public StyleStream hidden(boolean hidden) {
+        style.setHidden(hidden);
+        return this;
+    }
+
+    /**
      * 设置显示
      *
      * @return this
      */
     public StyleStream show() {
         style.setHidden(false);
+        return this;
+    }
+
+    /**
+     * 设置显示
+     *
+     * @param show 是否显示
+     * @return this
+     */
+    public StyleStream show(boolean show) {
+        style.setHidden(show);
         return this;
     }
 
@@ -249,6 +409,16 @@ public class StyleStream {
     }
 
     /**
+     * 设置公式前缀
+     *
+     * @return this
+     */
+    public StyleStream quotePrefixed() {
+        style.setQuotePrefixed(true);
+        return this;
+    }
+
+    /**
      * 不设置公式前缀
      *
      * @return this
@@ -261,10 +431,21 @@ public class StyleStream {
     /**
      * 设置公式前缀
      *
+     * @param set 是否设置
      * @return this
      */
-    public StyleStream quotePrefixed() {
-        style.setQuotePrefixed(true);
+    public StyleStream quotePrefixed(boolean set) {
+        style.setQuotePrefixed(set);
+        return this;
+    }
+
+    /**
+     * 设置自动调整大小
+     *
+     * @return this
+     */
+    public StyleStream autoResize() {
+        style.setShrinkToFit(true);
         return this;
     }
 
@@ -283,8 +464,8 @@ public class StyleStream {
      *
      * @return this
      */
-    public StyleStream autoResize() {
-        style.setShrinkToFit(true);
+    public StyleStream autoResize(boolean set) {
+        style.setShrinkToFit(set);
         return this;
     }
 
@@ -296,6 +477,17 @@ public class StyleStream {
      */
     public StyleStream dataFormat(int index) {
         style.setDataFormat((short) index);
+        return this;
+    }
+
+    /**
+     * 设置数据格式化
+     *
+     * @param format format
+     * @return this
+     */
+    public StyleStream dataFormat(String format) {
+        style.setDataFormat(workbook.createDataFormat().getFormat(format));
         return this;
     }
 
@@ -360,7 +552,7 @@ public class StyleStream {
     }
 
     /**
-     * 设置纹理前景颜
+     * 设置纹理前景色
      *
      * @return this
      */
@@ -370,7 +562,7 @@ public class StyleStream {
     }
 
     /**
-     * 设置纹理前景颜
+     * 设置纹理前景色
      *
      * @param rgb 颜色
      * @return this
@@ -383,7 +575,7 @@ public class StyleStream {
     }
 
     /**
-     * 设置纹理前景颜
+     * 设置纹理前景色
      *
      * @param c 颜色
      * @return this
@@ -396,7 +588,7 @@ public class StyleStream {
     }
 
     /**
-     * 设置纹理前景颜
+     * 设置纹理前景色
      *
      * @param index 覆盖索引
      * @param rgb   颜色
@@ -404,13 +596,13 @@ public class StyleStream {
      */
     public StyleStream textureColor(short index, byte[] rgb) {
         if (workbook instanceof HSSFWorkbook) {
-            style.setFillForegroundColor(getPaletteColorIndex(index, rgb));
+            style.setFillForegroundColor(Excels.paletteColor(workbook, index, rgb));
         }
         return this;
     }
 
     /**
-     * 设置纹理前景颜
+     * 设置纹理前景色
      *
      * @param index 覆盖索引
      * @param c     颜色
@@ -418,13 +610,13 @@ public class StyleStream {
      */
     public StyleStream textureColor(short index, String c) {
         if (workbook instanceof HSSFWorkbook) {
-            style.setFillForegroundColor(getPaletteColorIndex(index, c));
+            style.setFillForegroundColor(Excels.paletteColor(workbook, index, c));
         }
         return this;
     }
 
     /**
-     * 设置纹理前景颜为蓝色
+     * 设置纹理前景色为蓝色
      *
      * @return this
      */
@@ -434,7 +626,7 @@ public class StyleStream {
     }
 
     /**
-     * 设置纹理前景颜为黑色
+     * 设置纹理前景色为黑色
      *
      * @return this
      */
@@ -444,7 +636,7 @@ public class StyleStream {
     }
 
     /**
-     * 设置纹理前景颜为红色
+     * 设置纹理前景色为红色
      *
      * @return this
      */
@@ -454,7 +646,7 @@ public class StyleStream {
     }
 
     /**
-     * 设置纹理前景颜为粉色
+     * 设置纹理前景色为粉色
      *
      * @return this
      */
@@ -464,7 +656,7 @@ public class StyleStream {
     }
 
     /**
-     * 设置纹理前景颜为靛青色
+     * 设置纹理前景色为靛青色
      *
      * @return this
      */
@@ -519,7 +711,7 @@ public class StyleStream {
      */
     public StyleStream textureBackgroundColor(short index, byte[] rgb) {
         if (workbook instanceof HSSFWorkbook) {
-            style.setFillBackgroundColor(getPaletteColorIndex(index, rgb));
+            style.setFillBackgroundColor(Excels.paletteColor(workbook, index, rgb));
         }
         return this;
     }
@@ -533,7 +725,7 @@ public class StyleStream {
      */
     public StyleStream textureBackgroundColor(short index, String c) {
         if (workbook instanceof HSSFWorkbook) {
-            style.setFillBackgroundColor(getPaletteColorIndex(index, c));
+            style.setFillBackgroundColor(Excels.paletteColor(workbook, index, c));
         }
         return this;
     }
@@ -686,7 +878,7 @@ public class StyleStream {
      */
     public StyleStream borderColor(short index, byte[] rgb) {
         if (workbook instanceof HSSFWorkbook) {
-            short ci = getPaletteColorIndex(index, rgb);
+            short ci = Excels.paletteColor(workbook, index, rgb);
             style.setTopBorderColor(ci);
             style.setLeftBorderColor(ci);
             style.setBottomBorderColor(ci);
@@ -704,7 +896,7 @@ public class StyleStream {
      */
     public StyleStream borderColor(short index, String c) {
         if (workbook instanceof HSSFWorkbook) {
-            short ci = getPaletteColorIndex(index, c);
+            short ci = Excels.paletteColor(workbook, index, c);
             style.setTopBorderColor(ci);
             style.setLeftBorderColor(ci);
             style.setBottomBorderColor(ci);
@@ -842,7 +1034,7 @@ public class StyleStream {
      */
     public StyleStream topBorderColor(short index, byte[] rgb) {
         if (workbook instanceof HSSFWorkbook) {
-            style.setTopBorderColor(getPaletteColorIndex(index, rgb));
+            style.setTopBorderColor(Excels.paletteColor(workbook, index, rgb));
         }
         return this;
     }
@@ -856,7 +1048,7 @@ public class StyleStream {
      */
     public StyleStream topBorderColor(short index, String c) {
         if (workbook instanceof HSSFWorkbook) {
-            style.setTopBorderColor(getPaletteColorIndex(index, c));
+            style.setTopBorderColor(Excels.paletteColor(workbook, index, c));
         }
         return this;
     }
@@ -990,7 +1182,7 @@ public class StyleStream {
      */
     public StyleStream bottomBorderColor(short index, byte[] rgb) {
         if (workbook instanceof HSSFWorkbook) {
-            style.setBottomBorderColor(getPaletteColorIndex(index, rgb));
+            style.setBottomBorderColor(Excels.paletteColor(workbook, index, rgb));
         }
         return this;
     }
@@ -1004,7 +1196,7 @@ public class StyleStream {
      */
     public StyleStream bottomBorderColor(short index, String c) {
         if (workbook instanceof HSSFWorkbook) {
-            style.setBottomBorderColor(getPaletteColorIndex(index, c));
+            style.setBottomBorderColor(Excels.paletteColor(workbook, index, c));
         }
         return this;
     }
@@ -1138,7 +1330,7 @@ public class StyleStream {
      */
     public StyleStream leftBorderColor(short index, byte[] rgb) {
         if (workbook instanceof HSSFWorkbook) {
-            style.setLeftBorderColor(getPaletteColorIndex(index, rgb));
+            style.setLeftBorderColor(Excels.paletteColor(workbook, index, rgb));
         }
         return this;
     }
@@ -1152,7 +1344,7 @@ public class StyleStream {
      */
     public StyleStream leftBorderColor(short index, String c) {
         if (workbook instanceof HSSFWorkbook) {
-            style.setLeftBorderColor(getPaletteColorIndex(index, c));
+            style.setLeftBorderColor(Excels.paletteColor(workbook, index, c));
         }
         return this;
     }
@@ -1286,7 +1478,7 @@ public class StyleStream {
      */
     public StyleStream rightBorderColor(short index, byte[] rgb) {
         if (workbook instanceof HSSFWorkbook) {
-            style.setRightBorderColor(getPaletteColorIndex(index, rgb));
+            style.setRightBorderColor(Excels.paletteColor(workbook, index, rgb));
         }
         return this;
     }
@@ -1300,7 +1492,7 @@ public class StyleStream {
      */
     public StyleStream rightBorderColor(short index, String c) {
         if (workbook instanceof HSSFWorkbook) {
-            style.setRightBorderColor(getPaletteColorIndex(index, c));
+            style.setRightBorderColor(Excels.paletteColor(workbook, index, c));
         }
         return this;
     }
@@ -1350,38 +1542,6 @@ public class StyleStream {
         return this.rightBorderColor(HSSFColor.HSSFColorPredefined.INDIGO.getIndex());
     }
 
-    /**
-     * 通过调色板获取颜色
-     *
-     * @param index 调色板颜色覆盖索引
-     * @param c     color
-     * @return index
-     */
-    private short getPaletteColorIndex(short index, String c) {
-        return getPaletteColorIndex(index, Colors.toRgb(c));
-    }
-
-    /**
-     * 通过调色板获取颜色
-     *
-     * @param index 调色板颜色覆盖索引
-     * @param c     color
-     * @return index
-     */
-    private short getPaletteColorIndex(short index, byte[] rgb) {
-        if (workbook instanceof HSSFWorkbook) {
-            HSSFPalette palette = ((HSSFWorkbook) workbook).getCustomPalette();
-            HSSFColor color = palette.findColor(rgb[0], rgb[1], rgb[2]);
-            if (color == null) {
-                palette.setColorAtIndex(index, rgb[0], rgb[1], rgb[2]);
-                return index;
-            } else {
-                return color.getIndex();
-            }
-        }
-        return 0;
-    }
-
     public Workbook getWorkbook() {
         return workbook;
     }
@@ -1395,7 +1555,7 @@ public class StyleStream {
      *
      * @return true自动换行
      */
-    public boolean getWrapText() {
+    public boolean isWrapText() {
         return style.getWrapText();
     }
 
@@ -1458,7 +1618,7 @@ public class StyleStream {
      *
      * @return true锁定样式
      */
-    public boolean getLocked() {
+    public boolean isLocked() {
         return style.getLocked();
     }
 
@@ -1566,7 +1726,7 @@ public class StyleStream {
      *
      * @return ignore
      */
-    public boolean getQuotePrefixed() {
+    public boolean isQuotePrefixed() {
         return style.getQuotePrefixed();
     }
 
@@ -1575,7 +1735,7 @@ public class StyleStream {
      *
      * @return ignore
      */
-    public boolean getAutoResize() {
+    public boolean isAutoResize() {
         return style.getShrinkToFit();
     }
 

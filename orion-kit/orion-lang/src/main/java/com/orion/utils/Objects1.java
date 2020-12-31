@@ -32,21 +32,7 @@ public class Objects1 {
      * @param def 默认值
      * @return 如果对象为空返回默认值
      */
-    public static Object def(Object o, Object def) {
-        if (isNull(o)) {
-            return def;
-        }
-        return o;
-    }
-
-    /**
-     * 默认值
-     *
-     * @param o   对象
-     * @param def 默认值
-     * @return 如果对象为空返回默认值
-     */
-    public static <T> T det(T o, T def) {
+    public static <T> T def(T o, T def) {
         if (isNull(o)) {
             return def;
         }

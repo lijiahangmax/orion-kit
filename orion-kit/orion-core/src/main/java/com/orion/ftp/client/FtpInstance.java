@@ -123,7 +123,6 @@ public class FtpInstance {
         return false;
     }
 
-
     /**
      * 文件列表 遍历
      *

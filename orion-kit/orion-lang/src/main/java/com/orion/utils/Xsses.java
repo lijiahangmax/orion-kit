@@ -17,7 +17,6 @@ public class Xsses {
 
     private static final Pattern HTML_TAG_PATTERN = Pattern.compile("<[^>]+>", Pattern.CASE_INSENSITIVE);
 
-
     private Xsses() {
     }
 

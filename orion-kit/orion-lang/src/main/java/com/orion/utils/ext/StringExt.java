@@ -47,7 +47,7 @@ public class StringExt implements CharSequence, Serializable {
     }
 
     public StringExt(String s, String def) {
-        this.s = Objects1.det(s, def);
+        this.s = Objects1.def(s, def);
     }
 
     public StringExt of(String s) {
@@ -74,7 +74,7 @@ public class StringExt implements CharSequence, Serializable {
      * @return 值
      */
     public String get(String def) {
-        return Objects1.det(s, def);
+        return Objects1.def(s, def);
     }
 
     /**
@@ -96,7 +96,7 @@ public class StringExt implements CharSequence, Serializable {
      * @return this
      */
     public StringExt set(String s, String def) {
-        this.s = Objects1.det(s, def);
+        this.s = Objects1.def(s, def);
         return this;
     }
 

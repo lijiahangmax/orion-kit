@@ -36,7 +36,6 @@ public class Numbers {
         DECIMAL_FORMAT_MAP.put(2, new DecimalFormat("#.##"));
     }
 
-
     /**
      * 将给定的数除余为指定区间中的数
      *

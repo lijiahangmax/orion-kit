@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -27,8 +28,38 @@ import static java.util.stream.Collectors.toMap;
 @SuppressWarnings("ALL")
 public class Fields {
 
+    private static final Map<Class<?>, List<Field>> FIELD_CACHE = new ConcurrentHashMap<>(16);
+
     private Fields() {
     }
+
+    // -------------------- cache start --------------------
+
+    public static List<Field> getFieldByCache(Class<?> clazz) {
+        List<Field> fields = FIELD_CACHE.get(clazz);
+        if (fields == null) {
+            FIELD_CACHE.put(clazz, fields = getFieldList(clazz));
+        }
+        return fields;
+    }
+
+    public static Field getFieldByCache(Class<?> clazz, String fieldName) {
+        List<Field> fields = FIELD_CACHE.get(clazz);
+        if (fields == null) {
+            FIELD_CACHE.put(clazz, fields = getFieldList(clazz));
+        }
+        if (fields == null) {
+            return null;
+        }
+        for (Field field : fields) {
+            if (field.getName().equals(fieldName)) {
+                return field;
+            }
+        }
+        return null;
+    }
+
+    // -------------------- cache end --------------------
 
     /**
      * 通过方法名获取字段名 仅限于 getter setter

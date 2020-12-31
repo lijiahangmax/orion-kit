@@ -45,18 +45,18 @@ public class CsvSymbol implements Serializable {
 
     public CsvSymbol(char symbol, String suffix) {
         this.symbol = symbol;
-        this.suffix = Objects1.det(suffix, DEFAULT_SUFFIX);
+        this.suffix = Objects1.def(suffix, DEFAULT_SUFFIX);
     }
 
     public CsvSymbol(char symbol, Charset charset) {
         this.symbol = symbol;
-        this.charset = Objects1.det(charset, DEFAULT_CHARSET);
+        this.charset = Objects1.def(charset, DEFAULT_CHARSET);
     }
 
     public CsvSymbol(char symbol, Charset charset, String suffix) {
         this.symbol = symbol;
-        this.charset = Objects1.det(charset, DEFAULT_CHARSET);
-        this.suffix = Objects1.det(suffix, DEFAULT_SUFFIX);
+        this.charset = Objects1.def(charset, DEFAULT_CHARSET);
+        this.suffix = Objects1.def(suffix, DEFAULT_SUFFIX);
     }
 
     private static CsvSymbol of(char symbol) {
@@ -68,11 +68,11 @@ public class CsvSymbol implements Serializable {
     }
 
     private static CsvSymbol of(char symbol, Charset charset) {
-        return new CsvSymbol(symbol, Objects1.det(charset, DEFAULT_CHARSET));
+        return new CsvSymbol(symbol, Objects1.def(charset, DEFAULT_CHARSET));
     }
 
     private static CsvSymbol of(char symbol, Charset charset, String suffix) {
-        return new CsvSymbol(symbol, Objects1.det(charset, DEFAULT_CHARSET), Objects1.det(suffix, DEFAULT_SUFFIX));
+        return new CsvSymbol(symbol, Objects1.def(charset, DEFAULT_CHARSET), Objects1.def(suffix, DEFAULT_SUFFIX));
     }
 
     public char getSymbol() {

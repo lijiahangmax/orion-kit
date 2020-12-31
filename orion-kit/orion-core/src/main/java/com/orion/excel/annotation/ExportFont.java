@@ -1,12 +1,12 @@
 package com.orion.excel.annotation;
 
+import com.orion.excel.type.ExcelUnderType;
 import com.orion.utils.Strings;
 
 import java.lang.annotation.*;
 
 /**
  * Excel 导出字体注解
- * 可以加到 get方法 或者 字段上, 但是必须有get方法
  *
  * @author ljh15
  * @version 1.0.0
@@ -28,9 +28,9 @@ public @interface ExportFont {
     int fontSize() default -1;
 
     /**
-     * 字体颜色
+     * 字体颜色 RGB
      */
-    String fontColor() default Strings.EMPTY;
+    String color() default Strings.EMPTY;
 
     /**
      * 是否加粗
@@ -43,8 +43,13 @@ public @interface ExportFont {
     boolean italic() default false;
 
     /**
+     * 是否使用删除线
+     */
+    boolean delete() default false;
+
+    /**
      * 是否使用下滑线
      */
-    boolean under() default false;
+    ExcelUnderType under() default ExcelUnderType.NONE;
 
 }

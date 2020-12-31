@@ -33,66 +33,59 @@ public class ExcelExt implements SafeCloseable {
     private boolean streaming;
 
     public ExcelExt(File file) {
-        this(Files1.openInputStreamSafe(file), file.getName(), null, false, true);
+        this(Files1.openInputStreamSafe(file), null, false, true);
     }
 
     public ExcelExt(File file, boolean streaming) {
-        this(Files1.openInputStreamSafe(file), file.getName(), null, streaming, true);
+        this(Files1.openInputStreamSafe(file), null, streaming, true);
     }
 
     public ExcelExt(File file, String password) {
-        this(Files1.openInputStreamSafe(file), file.getName(), password, false, true);
+        this(Files1.openInputStreamSafe(file), password, false, true);
     }
 
     public ExcelExt(File file, String password, boolean streaming) {
-        this(Files1.openInputStreamSafe(file), file.getName(), password, streaming, true);
+        this(Files1.openInputStreamSafe(file), password, streaming, true);
     }
 
     public ExcelExt(String file) {
-        this(Files1.openInputStreamSafe(file), null, null, false, true);
+        this(Files1.openInputStreamSafe(file), null, false, true);
     }
 
     public ExcelExt(String file, boolean streaming) {
-        this(Files1.openInputStreamSafe(file), Files1.getFileName(file), null, streaming, true);
+        this(Files1.openInputStreamSafe(file), null, streaming, true);
     }
 
     public ExcelExt(String file, String password) {
-        this(Files1.openInputStreamSafe(file), null, password, false, true);
+        this(Files1.openInputStreamSafe(file), password, false, true);
     }
 
     public ExcelExt(String file, String password, boolean streaming) {
-        this(Files1.openInputStreamSafe(file), Files1.getFileName(file), password, streaming, true);
+        this(Files1.openInputStreamSafe(file), password, streaming, true);
     }
 
     public ExcelExt(InputStream in) {
-        this(in, null, null, false, false);
+        this(in, null, false, false);
     }
 
     public ExcelExt(InputStream in, boolean streaming) {
-        this(in, null, null, streaming, false);
+        this(in, null, streaming, false);
     }
 
     public ExcelExt(InputStream in, String password) {
-        this(in, null, password, false, false);
+        this(in, password, false, false);
     }
 
     public ExcelExt(InputStream in, String password, boolean streaming) {
-        this(in, null, password, streaming, false);
+        this(in, password, streaming, false);
     }
 
-    public ExcelExt(InputStream in, String fileName, String password, boolean streaming) {
-        this(in, fileName, password, streaming, false);
-    }
-
-    private ExcelExt(InputStream in, String fileName, String password, boolean streaming, boolean close) {
+    private ExcelExt(InputStream in, String password, boolean streaming, boolean close) {
         if (streaming) {
             // 使用流式读取文件必须是 xlsx 文件
-            if (fileName != null && fileName.toLowerCase().endsWith("xls")) {
-                throw Exceptions.parse("Cannot using streaming open 2003 workbook");
-            }
             this.workbook = Excels.openStreamingWorkbook(in, password);
         } else {
-            this.workbook = Excels.openWorkbook(in, fileName, password);
+            this.workbook = Excels.openWorkbook(in, password);
         }
         Valid.notNull(workbook, "workbook is null");
         this.streaming = streaming;

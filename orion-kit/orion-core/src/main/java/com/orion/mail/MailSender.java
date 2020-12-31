@@ -107,7 +107,6 @@ public class MailSender implements Sendable<MailMessage> {
         }
     }
 
-
     /**
      * 单例
      */

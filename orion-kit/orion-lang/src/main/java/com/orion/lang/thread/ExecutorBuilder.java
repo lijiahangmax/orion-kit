@@ -244,7 +244,7 @@ public class ExecutorBuilder implements Buildable<ThreadPoolExecutor> {
             workQueue = (corePoolSize <= 0) ? new SynchronousQueue<>() : new LinkedBlockingQueue<>(DEFAULT_QUEUE_CAPACITY);
         }
         ThreadFactory threadFactory = (null != builder.threadFactory) ? builder.threadFactory : Executors.defaultThreadFactory();
-        RejectedExecutionHandler handler = Objects1.det(builder.handler, new ThreadPoolExecutor.AbortPolicy());
+        RejectedExecutionHandler handler = Objects1.def(builder.handler, new ThreadPoolExecutor.AbortPolicy());
 
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(corePoolSize, maxPoolSize,
                 keepAliveTime, TimeUnit.MILLISECONDS,

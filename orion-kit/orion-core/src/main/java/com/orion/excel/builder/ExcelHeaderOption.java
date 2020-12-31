@@ -6,7 +6,7 @@ import org.apache.poi.ss.usermodel.Font;
 import java.io.Serializable;
 
 /**
- * Excel 表头映射
+ * Excel 表头
  *
  * @author ljh15
  * @version 1.0.0
@@ -15,9 +15,9 @@ import java.io.Serializable;
 public class ExcelHeaderOption implements Serializable {
 
     /**
-     * 名称
+     * 表头值
      */
-    private String name;
+    private String value;
 
     /**
      * 单元格样式
@@ -29,12 +29,12 @@ public class ExcelHeaderOption implements Serializable {
      */
     private Font font;
 
-    public String getName() {
-        return name;
+    public String getValue() {
+        return value;
     }
 
-    public ExcelHeaderOption setName(String name) {
-        this.name = name;
+    public ExcelHeaderOption setValue(String value) {
+        this.value = value;
         return this;
     }
 

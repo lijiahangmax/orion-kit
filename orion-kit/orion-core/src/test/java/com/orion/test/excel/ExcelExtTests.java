@@ -2,6 +2,7 @@ package com.orion.test.excel;
 
 import com.orion.excel.ExcelExt;
 import com.orion.excel.Excels;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Test;
 
 /**
@@ -33,9 +34,22 @@ public class ExcelExtTests {
     }
 
     @Test
-    public void open2() {
+    public void open() {
+        System.out.println(Excels.openWorkbook("C:\\Users\\ljh15\\Desktop\\1.xlsx", null).getClass());
+        System.out.println(Excels.openWorkbook("C:\\Users\\ljh15\\Desktop\\1.xls", null).getClass());
+    }
+
+    @Test
+    public void openExt() {
         System.out.println(new ExcelExt("C:\\Users\\ljh15\\Desktop\\data\\user.xlsx"));
         System.out.println(new ExcelExt("C:\\Users\\ljh15\\Desktop\\data\\user_password.xlsx"));
+    }
+
+    @Test
+    public void writePassword() {
+        String s = "C:\\Users\\ljh15\\Desktop\\data\\1.xlsx";
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        Excels.write(workbook, s, "123");
     }
 
 }

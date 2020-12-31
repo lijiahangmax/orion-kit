@@ -21,7 +21,7 @@ public class BigDecimals {
     }
 
     /**
-     * 格式化double
+     * 格式化
      *
      * @param format 要格式化成的格式 #.00, #.#
      * @return 格式化的字符串
@@ -29,7 +29,7 @@ public class BigDecimals {
     public static String format(Object o, String format) {
         try {
             DecimalFormat df = new DecimalFormat(format);
-            return df.format(o);
+            return df.format(objectToDecimal(o));
         } catch (Exception e) {
             return String.valueOf(o);
         }
@@ -53,7 +53,7 @@ public class BigDecimals {
      * @return BigDecimal
      */
     public static BigDecimal toBigDecimal(Object o, BigDecimal defaultV) {
-        return Objects1.det(objectToDecimal(o), defaultV);
+        return Objects1.def(objectToDecimal(o), defaultV);
     }
 
     /**

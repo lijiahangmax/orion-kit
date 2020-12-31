@@ -38,7 +38,6 @@ public class ConstructorTests {
         System.out.println(Constructors.getConstructor(Shop.class, String.class, Long.class));
     }
 
-
     @Test
     public void newInstanceTest() {
         System.out.println(Constructors.newInstance(Shop.class));

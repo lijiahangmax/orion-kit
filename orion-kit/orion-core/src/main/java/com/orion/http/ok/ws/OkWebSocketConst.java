@@ -33,5 +33,4 @@ public class OkWebSocketConst {
 
     public static final String CLIENT_CLOSE_REASON = "Client 关闭连接";
 
-
 }

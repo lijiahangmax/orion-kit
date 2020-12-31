@@ -1,5 +1,6 @@
 package com.orion.excel.style;
 
+import com.orion.excel.option.PrintOption;
 import org.apache.poi.ss.usermodel.PaperSize;
 import org.apache.poi.ss.usermodel.PrintSetup;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -28,31 +29,153 @@ public class PrintStream {
         this.printSetup = sheet.getPrintSetup();
     }
 
-    public PrintStream(PrintSetup printSetup) {
-        this.printSetup = printSetup;
-    }
-
-    public PrintStream(Sheet sheet, PrintSetup printSetup) {
-        this.sheet = sheet;
-        this.printSetup = printSetup;
-    }
-
-    public static PrintStream printStream(Sheet sheet) {
+    public static PrintStream stream(Sheet sheet) {
         return new PrintStream(sheet);
     }
 
-    public static PrintStream printStream(PrintSetup printSetup) {
-        return new PrintStream(printSetup);
-    }
-
-    public static PrintStream printStream(Sheet sheet, PrintSetup printSetup) {
-        return new PrintStream(sheet, printSetup);
+    /**
+     * 解析 print
+     *
+     * @param sheet  sheet
+     * @param option option
+     * @return PrintSetup
+     */
+    public static PrintSetup parsePrint(Sheet sheet, PrintOption option) {
+        PrintStream stream = new PrintStream(sheet)
+                .printGridLines(option.isPrintGridLines())
+                .printHeading(option.isPrintHeading())
+                .autoBreak(option.isAutoBreak())
+                .paper(option.getPaper().getCode())
+                .color(option.isColor())
+                .landScapePrint(option.isLandScapePrint())
+                .printOrientation(option.isSetPrintOrientation())
+                .scale(option.getScale())
+                .notes(option.isNotes())
+                .usePage(option.isUsePage())
+                .draft(option.isDraft())
+                .topToBottomOrder(option.isTopToBottom());
+        Integer horizontalResolution = option.getHorizontalResolution();
+        if (horizontalResolution != null) {
+            stream.horizontalResolution(horizontalResolution);
+        }
+        Integer verticalResolution = option.getVerticalResolution();
+        if (verticalResolution != null) {
+            stream.verticalResolution(verticalResolution);
+        }
+        Integer width = option.getWidth();
+        if (width != null) {
+            stream.width(width);
+        }
+        Integer height = option.getHeight();
+        if (height != null) {
+            stream.height(height);
+        }
+        Integer headerMargin = option.getHeaderMargin();
+        if (headerMargin != null) {
+            stream.headerMargin(headerMargin);
+        }
+        Integer footerMargin = option.getFooterMargin();
+        if (footerMargin != null) {
+            stream.footerMargin(footerMargin);
+        }
+        Integer pageStart = option.getPageStart();
+        if (pageStart != null) {
+            stream.pageStart(pageStart);
+        }
+        Integer copies = option.getCopies();
+        if (copies != null) {
+            stream.copies(copies);
+        }
+        return stream.getPrintSetup();
     }
 
     /**
-     * 设置纸张
+     * 打印网格线
      *
-     * @param i 纸张
+     * @return this
+     */
+    public PrintStream printGridLines() {
+        sheet.setPrintGridlines(true);
+        return this;
+    }
+
+    /**
+     * 打印网格线
+     *
+     * @param print 是否打印
+     * @return this
+     */
+    public PrintStream printGridLines(boolean print) {
+        sheet.setPrintGridlines(print);
+        return this;
+    }
+
+    /**
+     * 不打印网格线
+     *
+     * @return this
+     */
+    public PrintStream unPrintGridLines() {
+        sheet.setPrintGridlines(true);
+        return this;
+    }
+
+    /**
+     * 打印行和列的标题
+     *
+     * @return this
+     */
+    public PrintStream printHeading() {
+        sheet.setPrintRowAndColumnHeadings(true);
+        return this;
+    }
+
+    /**
+     * 打印行和列的标题
+     *
+     * @param print 是否打印
+     * @return this
+     */
+    public PrintStream printHeading(boolean print) {
+        sheet.setPrintRowAndColumnHeadings(print);
+        return this;
+    }
+
+    /**
+     * 打印行和列的标题
+     *
+     * @return this
+     */
+    public PrintStream unPrintHeading() {
+        sheet.setPrintRowAndColumnHeadings(false);
+        return this;
+    }
+
+    /**
+     * sheet页自适应页面大小
+     *
+     * @return this
+     */
+    public PrintStream autoBreak() {
+        sheet.setAutobreaks(false);
+        return this;
+    }
+
+    /**
+     * sheet页自适应页面大小
+     *
+     * @param auto 是否自适应
+     * @return this
+     */
+    public PrintStream autoBreak(boolean auto) {
+        sheet.setAutobreaks(auto);
+        return this;
+    }
+
+    /**
+     * 设置纸张大小
+     *
+     * @param i 纸张大小
      * @return this
      */
     public PrintStream paper(int i) {
@@ -61,9 +184,9 @@ public class PrintStream {
     }
 
     /**
-     * 设置纸张
+     * 设置纸张大小
      *
-     * @param s 纸张
+     * @param s 纸张大小
      * @return this
      */
     public PrintStream paper(PaperSize s) {
@@ -86,8 +209,19 @@ public class PrintStream {
      *
      * @return this
      */
-    public PrintStream colour() {
+    public PrintStream color() {
         printSetup.setNoColor(false);
+        return this;
+    }
+
+    /**
+     * 打印彩色纸张
+     *
+     * @param color 是否为彩色
+     * @return this
+     */
+    public PrintStream color(boolean color) {
+        printSetup.setNoColor(!color);
         return this;
     }
 
@@ -112,12 +246,55 @@ public class PrintStream {
     }
 
     /**
+     * 横向打印
+     *
+     * @param landScape 是否横向打印
+     * @return this
+     */
+    public PrintStream landScapePrint(boolean landScape) {
+        printSetup.setLandscape(landScape);
+        return this;
+    }
+
+    /**
      * 纵向打印
      *
      * @return this
      */
     public PrintStream portraitPrint() {
         printSetup.setLandscape(false);
+        return this;
+    }
+
+    /**
+     * 纵向打印
+     *
+     * @param portrait 是否纵向打印
+     * @return this
+     */
+    public PrintStream portraitPrint(boolean portrait) {
+        printSetup.setLandscape(portrait);
+        return this;
+    }
+
+    /**
+     * 设置打印方向
+     *
+     * @param set 是否设置打印方向
+     * @return this
+     */
+    public PrintStream printOrientation(boolean set) {
+        printSetup.setNoOrientation(!set);
+        return this;
+    }
+
+    /**
+     * 设置打印方向
+     *
+     * @return this
+     */
+    public PrintStream setPrintOrientation() {
+        printSetup.setNoOrientation(false);
         return this;
     }
 
@@ -157,8 +334,19 @@ public class PrintStream {
      *
      * @return this
      */
-    public PrintStream unsetNotes() {
+    public PrintStream unNotes() {
         printSetup.setNotes(false);
+        return this;
+    }
+
+    /**
+     * 打印批注
+     *
+     * @param print 是否打印批注
+     * @return this
+     */
+    public PrintStream notes(boolean print) {
+        printSetup.setNotes(print);
         return this;
     }
 
@@ -239,11 +427,22 @@ public class PrintStream {
     }
 
     /**
+     * 使用起始页
+     *
+     * @param use 是否使用
+     * @return this
+     */
+    public PrintStream usePage(boolean use) {
+        printSetup.setUsePage(use);
+        return this;
+    }
+
+    /**
      * 不使用起始页
      *
      * @return this
      */
-    public PrintStream unUsedPage() {
+    public PrintStream unUsePage() {
         printSetup.setUsePage(false);
         return this;
     }
@@ -282,6 +481,17 @@ public class PrintStream {
     }
 
     /**
+     * 使用草稿模式
+     *
+     * @param use 是否使用
+     * @return this
+     */
+    public PrintStream draft(boolean use) {
+        printSetup.setDraft(use);
+        return this;
+    }
+
+    /**
      * 不使用草稿模式
      *
      * @return this
@@ -302,12 +512,34 @@ public class PrintStream {
     }
 
     /**
+     * 设置顺序为从左往右
+     *
+     * @param left 是否从左到右
+     * @return this
+     */
+    public PrintStream leftToRightOrder(boolean left) {
+        printSetup.setLeftToRight(left);
+        return this;
+    }
+
+    /**
      * 设置顺序为自上而下
      *
      * @return this
      */
     public PrintStream topToBottomOrder() {
         printSetup.setLeftToRight(false);
+        return this;
+    }
+
+    /**
+     * 设置顺序为自上而下
+     *
+     * @param top 是否自上而下
+     * @return this
+     */
+    public PrintStream topToBottomOrder(boolean top) {
+        printSetup.setLeftToRight(top);
         return this;
     }
 
@@ -325,7 +557,7 @@ public class PrintStream {
      *
      * @return 黑白true
      */
-    public boolean getNoColor() {
+    public boolean isNoColor() {
         return printSetup.getNoColor();
     }
 
@@ -352,7 +584,7 @@ public class PrintStream {
      *
      * @return true打印
      */
-    public boolean getNotes() {
+    public boolean isPrintNotes() {
         return printSetup.getNotes();
     }
 
@@ -433,7 +665,7 @@ public class PrintStream {
      *
      * @return 打印份数
      */
-    public int getcopies() {
+    public int getCopies() {
         return printSetup.getCopies();
     }
 
@@ -442,7 +674,7 @@ public class PrintStream {
      *
      * @return true草稿模式
      */
-    public boolean getDraft() {
+    public boolean isDraft() {
         return printSetup.getDraft();
     }
 
@@ -460,8 +692,35 @@ public class PrintStream {
      *
      * @return true合法
      */
-    public boolean getValid() {
+    public boolean isValid() {
         return printSetup.getValidSettings();
+    }
+
+    /**
+     * sheet页是否自适应页面大小
+     *
+     * @return true自适应
+     */
+    public boolean isAutoBreak() {
+        return sheet.getAutobreaks();
+    }
+
+    /**
+     * 是否打印网格线
+     *
+     * @return true打印
+     */
+    public boolean isPrintGridLines() {
+        return sheet.isPrintGridlines();
+    }
+
+    /**
+     * 是否打印行和列的标题
+     *
+     * @return true打印
+     */
+    public boolean isPrintHeadings() {
+        return sheet.isPrintRowAndColumnHeadings();
     }
 
     public Sheet getSheet() {

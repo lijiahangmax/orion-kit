@@ -27,7 +27,6 @@ public class AesTests {
         System.out.println("e1 = " + e1);
         System.out.println("e2 = " + e2);
 
-
         String d1 = AES.decrypt(e1, k1);
         String d2 = AES.decrypt(e1, k2);
         String d3 = AES.decrypt(e2, k1);
@@ -59,7 +58,6 @@ public class AesTests {
         System.out.println();
         System.out.println("g1 = " + g1);
         System.out.println("g2 = " + g2);
-
 
     }
 

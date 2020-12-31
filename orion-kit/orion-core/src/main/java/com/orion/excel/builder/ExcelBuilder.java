@@ -49,6 +49,19 @@ public class ExcelBuilder implements SafeCloseable {
     /**
      * 获取sheet
      *
+     * @param <T>          T
+     * @param index        index
+     * @param elementClass class
+     * @return ExcelSheet
+     * @see ExcelSheet#addRows
+     */
+    public <T> ExcelSheet<T> getSheet(int index, Class<? extends T> elementClass) {
+        return new ExcelSheet<>(workbook, workbook.getSheetAt(index), elementClass);
+    }
+
+    /**
+     * 获取sheet
+     *
      * @param <T> T
      * @return ExcelSheet
      */
@@ -65,6 +78,29 @@ public class ExcelBuilder implements SafeCloseable {
      */
     public <T> ExcelSheet<T> newSheet(String name) {
         return new ExcelSheet<>(workbook, workbook.createSheet(name));
+    }
+
+    /**
+     * 获取sheet
+     *
+     * @param <T> T
+     * @return ExcelSheet
+     * @see ExcelSheet#addRows
+     */
+    public <T> ExcelSheet<T> newSheet(Class<? extends T> elementClass) {
+        return new ExcelSheet<>(workbook, workbook.createSheet(), elementClass);
+    }
+
+    /**
+     * 获取sheet
+     *
+     * @param name sheet name
+     * @param <T>  T
+     * @return ExcelSheet
+     * @see ExcelSheet#addRows
+     */
+    public <T> ExcelSheet<T> newSheet(String name, Class<? extends T> elementClass) {
+        return new ExcelSheet<>(workbook, workbook.createSheet(name), elementClass);
     }
 
     public Workbook getWorkbook() {

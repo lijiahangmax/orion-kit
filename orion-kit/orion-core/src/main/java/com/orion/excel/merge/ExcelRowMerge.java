@@ -1,5 +1,6 @@
 package com.orion.excel.merge;
 
+import com.orion.able.SafeCloseable;
 import com.orion.excel.Excels;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Valid;
@@ -22,17 +23,17 @@ import java.util.List;
  * @version 1.0.0
  * @since 2020/9/9 1:07
  */
-public class ExcelRowMerge {
+public class ExcelRowMerge implements SafeCloseable {
 
     /**
      * workbook
      */
-    private Workbook workbook = new XSSFWorkbook();
+    private Workbook workbook;
 
     /**
      * sheet
      */
-    private Sheet sheet = workbook.createSheet();
+    private Sheet sheet;
 
     /**
      * 需要合并的sheet
@@ -56,6 +57,8 @@ public class ExcelRowMerge {
 
     public ExcelRowMerge(List<Sheet> mergeSheets) {
         Valid.notEmpty(mergeSheets, "merge sheets is empty");
+        this.workbook = new XSSFWorkbook();
+        this.sheet = workbook.createSheet();
         this.mergeSheets = mergeSheets;
     }
 
@@ -191,9 +194,7 @@ public class ExcelRowMerge {
         return this;
     }
 
-    /**
-     * 关闭workbook
-     */
+    @Override
     public void close() {
         Streams.close(workbook);
     }

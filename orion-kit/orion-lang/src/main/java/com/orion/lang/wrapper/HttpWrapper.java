@@ -170,7 +170,6 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
         return this;
     }
 
-
     public int getCode() {
         return code;
     }

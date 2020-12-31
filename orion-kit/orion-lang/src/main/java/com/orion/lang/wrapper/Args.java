@@ -314,7 +314,6 @@ public class Args implements Serializable {
             return this;
         }
 
-
         @Override
         public String toString() {
             return "arg1=" + arg1 + "\n" +
@@ -379,7 +378,6 @@ public class Args implements Serializable {
             this.arg5 = arg5;
             return this;
         }
-
 
         @Override
         public String toString() {

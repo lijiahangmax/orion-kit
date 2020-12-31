@@ -30,7 +30,7 @@ public class Base64s {
      * 图片base64编码
      *
      * @param bs   bs
-     * @param type jpg, jepg, png
+     * @param type jpg, jpeg, png
      * @return base64
      */
     public static String img64Encode(byte[] bs, String type) {
@@ -48,6 +48,25 @@ public class Base64s {
         // return decode(Strings.bytes(s.substring(i + 7)));
         String[] b = s.split(",");
         return decode(Strings.bytes(b[b.length - 1]));
+    }
+
+    /**
+     * 获取base64图片类型
+     *
+     * @param s base64
+     * @return 图片类型
+     */
+    public static String image64Type(String s) {
+        String[] b = s.split(",");
+        if (b.length == 0) {
+            return Strings.EMPTY;
+        }
+        String dataImage = b[0].split(";")[0];
+        String[] dataType = dataImage.split("/");
+        if (dataType.length == 0) {
+            return Strings.EMPTY;
+        }
+        return dataType[1];
     }
 
     /**
