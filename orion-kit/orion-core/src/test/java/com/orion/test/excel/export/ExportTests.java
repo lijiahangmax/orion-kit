@@ -42,6 +42,8 @@ public class ExportTests {
         list.add(null);
 
         new ExcelExport<>(UserExport.class)
+                .cleanHeaderStyle(2)
+                .cleanColumnStyle(4)
                 .init()
                 .headers("二级标题", "", "day", "", "用户信息", "", "", "")
                 .skip(1)

@@ -152,6 +152,7 @@ public class ExcelExport<T> implements SafeCloseable {
     public ExcelExport<T> sheet(String sheetName) {
         if (sheetName != null) {
             sheetOption.setName(sheetName);
+            sheetOption.setNameReset(true);
         }
         return this;
     }
@@ -166,6 +167,173 @@ public class ExcelExport<T> implements SafeCloseable {
         if (title != null) {
             sheetOption.setTitle(title);
         }
+        return this;
+    }
+
+    /**
+     * 清空列样式 不包括已设置过的
+     *
+     * @param column 列
+     * @return this
+     */
+    public ExcelExport<T> cleanStyle(int column) {
+        processor.columnStyles.remove(column);
+        processor.headerStyles.remove(column);
+        Integer rowWidth = sheetOption.getColumnWidth();
+        if (rowWidth != null) {
+            sheet.setColumnWidth(column, (int) ((rowWidth + 0.72) * 256));
+        }
+        return this;
+    }
+
+    /**
+     * 清空表头列样式 不包括已设置过的
+     *
+     * @param column 列
+     * @return this
+     */
+    public ExcelExport<T> cleanHeaderStyle(int column) {
+        processor.headerStyles.remove(column);
+        return this;
+    }
+
+    /**
+     * 清空数据列样式 不包括已设置过的
+     *
+     * @param column 列
+     * @return this
+     */
+    public ExcelExport<T> cleanColumnStyle(int column) {
+        processor.columnStyles.remove(column);
+        return this;
+    }
+
+    /**
+     * 表头使用数据列样式 不包括已设置过的
+     *
+     * @return this
+     */
+    public ExcelExport<T> headUseColumnStyle() {
+        fieldOptions.forEach((k, v) -> {
+            processor.headerStyles.put(k, processor.parseStyle(k, false, v));
+        });
+        return this;
+    }
+
+    /**
+     * 表头使用数据列样式 不包括已设置过的
+     *
+     * @param column column
+     * @return this
+     */
+    public ExcelExport<T> headUseColumnStyle(int column) {
+        processor.headerStyles.put(column, processor.parseStyle(column, false, fieldOptions.get(column)));
+        return this;
+    }
+
+    /**
+     * 数据使用表头列样式 不包括已设置过的
+     *
+     * @return this
+     */
+    public ExcelExport<T> columnUseHeadStyle() {
+        fieldOptions.forEach((k, v) -> {
+            processor.columnStyles.put(k, processor.parseStyle(k, true, v));
+        });
+        return this;
+    }
+
+    /**
+     * 数据使用表头列样式 不包括已设置过的
+     *
+     * @param column column
+     * @return this
+     */
+    public ExcelExport<T> columnUseHeadStyle(int column) {
+        processor.columnStyles.put(column, processor.parseStyle(column, true, fieldOptions.get(column)));
+        return this;
+    }
+
+    /**
+     * 设置列样式 不包括已设置过的
+     *
+     * @param column 列
+     * @param style  样式
+     * @return this
+     */
+    public ExcelExport<T> setStyle(int column, CellStyle style) {
+        processor.headerStyles.put(column, style);
+        processor.columnStyles.put(column, style);
+        return this;
+    }
+
+    /**
+     * 设置表头样式 不包括已设置过的
+     *
+     * @param column 列
+     * @param style  样式
+     * @return this
+     */
+    public ExcelExport<T> setHeaderStyle(int column, CellStyle style) {
+        processor.headerStyles.put(column, style);
+        return this;
+    }
+
+    /**
+     * 设置数据样式 不包括已设置过的
+     *
+     * @param column 列
+     * @param style  样式
+     * @return this
+     */
+    public ExcelExport<T> setColumnStyle(int column, CellStyle style) {
+        processor.columnStyles.put(column, style);
+        return this;
+    }
+
+    /**
+     * 设置列样式 不包括已设置过的
+     *
+     * @param column 列
+     * @param option 样式
+     * @return this
+     */
+    public ExcelExport<T> setStyle(int column, FieldOption option) {
+        if (option == null) {
+            return this;
+        }
+        processor.headerStyles.put(column, processor.parseStyle(column, false, option));
+        processor.columnStyles.put(column, processor.parseStyle(column, true, option));
+        return this;
+    }
+
+    /**
+     * 设置表头样式 不包括已设置过的
+     *
+     * @param column 列
+     * @param option 样式
+     * @return this
+     */
+    public ExcelExport<T> setHeaderStyle(int column, FieldOption option) {
+        if (option == null) {
+            return this;
+        }
+        processor.headerStyles.put(column, processor.parseStyle(column, false, option));
+        return this;
+    }
+
+    /**
+     * 设置数据样式 不包括已设置过的
+     *
+     * @param column 列
+     * @param option 样式
+     * @return this
+     */
+    public ExcelExport<T> setColumnStyle(int column, FieldOption option) {
+        if (option == null) {
+            return this;
+        }
+        processor.columnStyles.put(column, processor.parseStyle(column, true, option));
         return this;
     }
 

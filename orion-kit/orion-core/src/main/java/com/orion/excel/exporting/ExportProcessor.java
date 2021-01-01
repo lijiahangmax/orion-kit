@@ -39,12 +39,12 @@ public class ExportProcessor<T> {
     /**
      * 列样式
      */
-    private Map<Integer, CellStyle> columnStyles = new TreeMap<>();
+    protected Map<Integer, CellStyle> columnStyles = new TreeMap<>();
 
     /**
      * 表头样式
      */
-    private Map<Integer, CellStyle> headerStyles = new TreeMap<>();
+    protected Map<Integer, CellStyle> headerStyles = new TreeMap<>();
 
     /**
      * 当前位置
@@ -56,25 +56,24 @@ public class ExportProcessor<T> {
      */
     private short colorIndex = 32;
 
-    public ExportProcessor(Workbook workbook, Sheet sheet, SheetOption sheetOption, Map<Integer, FieldOption> fieldOptions) {
+    protected ExportProcessor(Workbook workbook, Sheet sheet, SheetOption sheetOption, Map<Integer, FieldOption> fieldOptions) {
         this.workbook = workbook;
         this.sheet = sheet;
         this.sheetOption = sheetOption;
         this.fieldOptions = fieldOptions;
+        this.setup();
     }
 
     /**
      * 初始化
      */
-    public void init() {
+    protected void init() {
         // 表格
         this.setSheetOption();
         // 页眉
         this.setPageHeader();
         // 页脚
         this.setPageFooter();
-        // 样式
-        this.addColumnStyle();
         // 注解标题
         this.addTitle();
         // 注解表头
@@ -86,9 +85,10 @@ public class ExportProcessor<T> {
     }
 
     /**
-     * 设置sheet
+     * 预初始化
      */
-    private void setSheetOption() {
+    private void setup() {
+        // sheet
         if (sheetOption.getName() != null) {
             if (this.sheet == null) {
                 this.sheet = workbook.createSheet(sheetOption.getName());
@@ -97,6 +97,18 @@ public class ExportProcessor<T> {
             }
         } else if (this.sheet == null) {
             this.sheet = workbook.createSheet();
+        }
+        // 样式
+        this.addColumnStyle();
+    }
+
+    /**
+     * 设置sheet
+     */
+    private void setSheetOption() {
+        if (sheetOption.isNameReset()) {
+            // 如果修改了sheet名称需要
+            workbook.setSheetName(workbook.getSheetIndex(this.sheet), sheetOption.getName());
         }
         // 默认行高
         Integer defaultRowHeight = sheetOption.getRowHeight();
@@ -459,7 +471,7 @@ public class ExportProcessor<T> {
         return style;
     }
 
-    public Sheet getSheet() {
+    protected Sheet getSheet() {
         return sheet;
     }
 

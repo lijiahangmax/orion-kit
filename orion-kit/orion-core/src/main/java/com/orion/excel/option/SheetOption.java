@@ -151,6 +151,11 @@ public class SheetOption implements Serializable {
      */
     private String title;
 
+    /**
+     * 名字是否重新设置
+     */
+    private boolean nameReset;
+
     public String getName() {
         return name;
     }
@@ -373,6 +378,14 @@ public class SheetOption implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public boolean isNameReset() {
+        return nameReset;
+    }
+
+    public void setNameReset(boolean nameReset) {
+        this.nameReset = nameReset;
     }
 
 }
