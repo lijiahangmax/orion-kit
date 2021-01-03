@@ -210,7 +210,7 @@ public class ExcelRowSplitStreaming {
             }
             List<String> rowList = new ArrayList<>();
             for (Cell cell : row) {
-                rowList.add(Excels.getValue(cell));
+                rowList.add(Excels.getCellValue(cell));
             }
             if (rowIndex++ >= rowSize) {
                 rowIndex = 1;

@@ -12,6 +12,7 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 /**
  * 拷贝Sheet, 拷贝的列宽有些许差异
  * Streaming不适用
+ * 只能拷贝基本元素
  *
  * @author ljh15
  * @version 1.0.0

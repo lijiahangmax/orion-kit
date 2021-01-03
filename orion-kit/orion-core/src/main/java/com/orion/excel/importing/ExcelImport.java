@@ -1,23 +1,23 @@
 package com.orion.excel.importing;
 
 import com.monitorjbl.xlsx.impl.StreamingSheet;
-import com.orion.excel.Excels;
-import com.orion.excel.annotation.ImportField;
+import com.orion.able.SafeCloseable;
+import com.orion.excel.option.ImportFieldOption;
+import com.orion.excel.option.ImportSheetOption;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
+import com.orion.utils.io.Streams;
 import com.orion.utils.reflect.Constructors;
-import com.orion.utils.reflect.Fields;
-import com.orion.utils.reflect.Methods;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * Excel 读取器 不支持随机读写 仅支持注解
@@ -26,100 +26,86 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2020/5/27 13:52
  */
-public class ExcelImport<T> {
+public class ExcelImport<T> implements SafeCloseable {
 
-    /**
-     * 表
-     */
+    private Workbook workbook;
+
     private Sheet sheet;
 
     /**
-     * bean class
+     * sheet option
      */
-    private Class<T> targetClass;
+    private ImportSheetOption<T> sheetOption = new ImportSheetOption<>();
 
     /**
-     * bean constructor
+     * field option
      */
-    private Constructor<T> constructor;
+    private Map<Method, ImportFieldOption> fieldOptions = new HashMap<>();
 
     /**
-     * bean setter methods
+     * 处理器
      */
-    private Map<Integer, Method> setMethods = new HashMap<>();
-
-    /**
-     * 行数
-     */
-    private int rowNum;
-
-    /**
-     * 读取行数
-     */
-    private int readRowNum;
-
-    /**
-     * 行索引
-     */
-    private int rowIndex;
-
-    /**
-     * 是否跳过空行
-     */
-    private boolean skipNullRows = true;
-
-    /**
-     * 是否为流式读取
-     */
-    private boolean streaming;
+    private ImportProcessor<T> processor;
 
     /**
      * 读取的记录
      */
-    private List<T> rows = new ArrayList<>();
+    private List<T> rows;
 
-    public ExcelImport(Sheet sheet, Class<T> targetClass) {
+    /**
+     * 读取的消费器
+     */
+    private Consumer<T> consumer;
+
+    /**
+     * 是否存储数据
+     */
+    private boolean store;
+
+    public ExcelImport(Workbook workbook, Sheet sheet, Class<T> targetClass) {
+        this(workbook, sheet, targetClass, new ArrayList<>(), null);
+    }
+
+    public ExcelImport(Workbook workbook, Sheet sheet, Class<T> targetClass, List<T> store) {
+        this(workbook, sheet, targetClass, store, null);
+    }
+
+    public ExcelImport(Workbook workbook, Sheet sheet, Class<T> targetClass, Consumer<T> consumer) {
+        this(workbook, sheet, targetClass, null, consumer);
+    }
+
+    private ExcelImport(Workbook workbook, Sheet sheet, Class<T> targetClass, List<T> rows, Consumer<T> consumer) {
         Valid.notNull(sheet, "Sheet is null");
         Valid.notNull(targetClass, "TargetClass is null");
+        if (rows == null && consumer == null) {
+            throw Exceptions.argument("rows container or row consumer one of them must not be empty");
+        }
+        this.rows = rows;
+        this.consumer = consumer;
+        this.store = rows != null;
+        this.workbook = workbook;
         this.sheet = sheet;
-        this.streaming = sheet instanceof StreamingSheet;
-        this.rowNum = sheet.getLastRowNum() + 1;
-        this.targetClass = targetClass;
-        this.constructor = Constructors.getDefaultConstructor(targetClass);
+        Constructor<T> constructor = Constructors.getDefaultConstructor(targetClass);
         if (constructor == null) {
             throw Exceptions.argument("targetClass not found default constructor");
         }
-        this.analysisClass();
+        sheetOption.setConstructor(constructor);
+        sheetOption.setStreaming(sheet instanceof StreamingSheet);
+        sheetOption.setRowNum(sheet.getLastRowNum() + 1);
+        // 解析器
+        ImportColumnAnalysis columnAnalysis = new ImportColumnAnalysis(targetClass, sheetOption, fieldOptions);
+        columnAnalysis.analysis();
+        // 处理器
+        this.processor = new ImportProcessor<>(this.workbook, this.sheet, sheetOption, fieldOptions);
     }
 
     /**
-     * 读取一行
+     * 初始化
      *
      * @return this
      */
-    public ExcelImport<T> readRow() {
-        readRowNum += 1;
-        return this;
-    }
-
-    /**
-     * 读取多行
-     *
-     * @param i 读取行数
-     * @return this
-     */
-    public ExcelImport<T> readRows(int i) {
-        readRowNum += i;
-        return this;
-    }
-
-    /**
-     * 读取多行
-     *
-     * @return this
-     */
-    public ExcelImport<T> readRows() {
-        readRowNum = 0;
+    public ExcelImport<T> init() {
+        this.processor.init();
         return this;
     }
 
@@ -128,8 +114,8 @@ public class ExcelImport<T> {
      *
      * @return this
      */
-    public ExcelImport<T> skipRow() {
-        rowIndex++;
+    public ExcelImport<T> skip() {
+        processor.readRow++;
         return this;
     }
 
@@ -139,138 +125,102 @@ public class ExcelImport<T> {
      * @param i 跳过的行数
      * @return this
      */
-    public ExcelImport<T> skipRows(int i) {
-        rowIndex += i;
+    public ExcelImport<T> skip(int i) {
+        processor.readRow += i;
         return this;
     }
 
     /**
      * 是否跳过空行
      *
-     * @param skip 如果row为null true: continue false: rows.add(null), row = null
+     * @param skip 如果row为null true: continue false: rows.add(null)
      * @return this
      */
     public ExcelImport<T> skipNullRows(boolean skip) {
-        this.skipNullRows = skip;
+        sheetOption.setSkipNullRows(skip);
         return this;
     }
 
     /**
-     * 解析 setter method
-     */
-    private void analysisClass() {
-        // 扫描setter
-        List<Method> setterMethodList = Methods.getAllSetterMethod(this.targetClass);
-        // 扫描field
-        List<Field> fieldList = Fields.getFieldList(this.targetClass);
-        for (Field field : fieldList) {
-            ImportField importField = field.getAnnotation(ImportField.class);
-            if (importField != null) {
-                int columnIndex = importField.value();
-                if (columnIndex != -1) {
-                    Method method = Methods.getSetterMethodByField(this.targetClass, field);
-                    if (method != null) {
-                        setMethods.put(columnIndex, method);
-                    }
-                }
-            }
-        }
-        for (Method method : setterMethodList) {
-            ImportField importField = method.getAnnotation(ImportField.class);
-            if (importField != null) {
-                int columnIndex = importField.value();
-                if (columnIndex != -1) {
-                    setMethods.put(columnIndex, method);
-                }
-            }
-        }
-    }
-
-    /**
-     * row -> bean
-     *
-     * @param row row
-     */
-    private void addBean(Row row) {
-        if (row == null) {
-            if (!skipNullRows) {
-                rows.add(Constructors.newInstance(constructor));
-            }
-            return;
-        }
-
-        T t = Constructors.newInstance(constructor);
-        for (Map.Entry<Integer, Method> entry : setMethods.entrySet()) {
-            Method setMethod = entry.getValue();
-            if (setMethod == null) {
-                continue;
-            }
-            String value = Excels.getValue(row.getCell(entry.getKey()));
-            try {
-                Methods.invokeMethodInfer(t, setMethod, value);
-            } catch (Exception e) {
-                Exceptions.printStacks(e);
-            }
-        }
-        rows.add(t);
-    }
-
-    /**
-     * 执行导入
+     * 读取所有行
      *
      * @return this
      */
-    public ExcelImport<T> execute() {
-        if (readRowNum == 0 || readRowNum > rowNum) {
-            readRowNum = rowNum;
-        }
-        if (rowIndex != 0 && rowNum != readRowNum) {
-            readRowNum += rowIndex;
-            if (readRowNum > rowNum) {
-                readRowNum = rowNum;
-            }
-        }
-        if (streaming) {
-            // 流式读取
-            int i = 0;
-            for (Row row : sheet) {
-                if (i++ < rowIndex) {
-                    continue;
-                }
-                if (rowIndex++ < readRowNum) {
-                    this.addBean(row);
-                }
-            }
-        } else {
-            for (; rowIndex < readRowNum; ) {
-                this.addBean(sheet.getRow(rowIndex++));
-            }
+    public ExcelImport<T> read() {
+        while (!processor.end) {
+            this.readRow();
         }
         return this;
+    }
+
+    /**
+     * 读取多行
+     *
+     * @param i 行数
+     * @return this
+     */
+    public ExcelImport<T> read(int i) {
+        for (int j = 0; j < i; j++) {
+            this.readRow();
+        }
+        return this;
+    }
+
+    /**
+     * 读取一行
+     */
+    private void readRow() {
+        T row = processor.read();
+        if (row == null && sheetOption.isSkipNullRows()) {
+            return;
+        }
+        if (store) {
+            rows.add(row);
+        } else {
+            consumer.accept(row);
+        }
+    }
+
+    @Override
+    public void close() {
+        Streams.close(workbook);
+    }
+
+    public Workbook getWorkbook() {
+        return workbook;
     }
 
     public Sheet getSheet() {
         return sheet;
     }
 
-    public Class<T> getTargetClass() {
-        return targetClass;
+    public ImportSheetOption<T> getSheetOption() {
+        return sheetOption;
     }
 
-    public List<T> rows() {
+    public Map<Method, ImportFieldOption> getFieldOptions() {
+        return fieldOptions;
+    }
+
+    /**
+     * @return 读取的行
+     */
+    public List<T> getRows() {
         return rows;
     }
 
+    /**
+     * @return 读取的行数
+     */
     public int getRowNum() {
-        return rowNum;
+        return processor.readRow;
     }
 
-    public int getRowIndex() {
-        return rowIndex;
-    }
-
-    public boolean isSkipNullRows() {
-        return skipNullRows;
+    /**
+     * @return sheet行数
+     */
+    public int getLines() {
+        return sheetOption.getRowNum();
     }
 
 }

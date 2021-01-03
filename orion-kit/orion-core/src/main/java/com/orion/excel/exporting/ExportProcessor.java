@@ -20,7 +20,7 @@ import java.util.Optional;
 import java.util.TreeMap;
 
 /**
- * 导出处理器
+ * Export 处理器
  *
  * @author ljh15
  * @version 1.0.0
@@ -32,9 +32,9 @@ public class ExportProcessor<T> {
 
     private Sheet sheet;
 
-    private SheetOption sheetOption;
+    private ExportSheetOption exportSheetOption;
 
-    private Map<Integer, FieldOption> fieldOptions;
+    private Map<Integer, ExportFieldOption> fieldOptions;
 
     /**
      * 列样式
@@ -56,10 +56,10 @@ public class ExportProcessor<T> {
      */
     private short colorIndex = 32;
 
-    protected ExportProcessor(Workbook workbook, Sheet sheet, SheetOption sheetOption, Map<Integer, FieldOption> fieldOptions) {
+    protected ExportProcessor(Workbook workbook, Sheet sheet, ExportSheetOption exportSheetOption, Map<Integer, ExportFieldOption> fieldOptions) {
         this.workbook = workbook;
         this.sheet = sheet;
-        this.sheetOption = sheetOption;
+        this.exportSheetOption = exportSheetOption;
         this.fieldOptions = fieldOptions;
         this.setup();
     }
@@ -89,11 +89,11 @@ public class ExportProcessor<T> {
      */
     private void setup() {
         // sheet
-        if (sheetOption.getName() != null) {
+        if (exportSheetOption.getName() != null) {
             if (this.sheet == null) {
-                this.sheet = workbook.createSheet(sheetOption.getName());
+                this.sheet = workbook.createSheet(exportSheetOption.getName());
             } else {
-                workbook.setSheetName(workbook.getSheetIndex(this.sheet), sheetOption.getName());
+                workbook.setSheetName(workbook.getSheetIndex(this.sheet), exportSheetOption.getName());
             }
         } else if (this.sheet == null) {
             this.sheet = workbook.createSheet();
@@ -106,31 +106,31 @@ public class ExportProcessor<T> {
      * 设置sheet
      */
     private void setSheetOption() {
-        if (sheetOption.isNameReset()) {
+        if (exportSheetOption.isNameReset()) {
             // 如果修改了sheet名称需要
-            workbook.setSheetName(workbook.getSheetIndex(this.sheet), sheetOption.getName());
+            workbook.setSheetName(workbook.getSheetIndex(this.sheet), exportSheetOption.getName());
         }
         // 默认行高
-        Integer defaultRowHeight = sheetOption.getRowHeight();
+        Integer defaultRowHeight = exportSheetOption.getRowHeight();
         if (defaultRowHeight != null) {
             this.sheet.setDefaultRowHeightInPoints(defaultRowHeight);
         }
         // 默认行宽
-        Integer defaultRowWidth = sheetOption.getColumnWidth();
+        Integer defaultRowWidth = exportSheetOption.getColumnWidth();
         if (defaultRowWidth != null) {
             // 默认无需用 (x + 0.72) * 256 接近但不准确
             this.sheet.setDefaultColumnWidth(defaultRowWidth);
         }
         // 缩放
-        if (sheetOption.getZoom() != null) {
-            this.sheet.setZoom(sheetOption.getZoom());
+        if (exportSheetOption.getZoom() != null) {
+            this.sheet.setZoom(exportSheetOption.getZoom());
         }
         // 选中
-        if (sheetOption.isSelected()) {
+        if (exportSheetOption.isSelected()) {
             this.sheet.setSelected(true);
         }
         // 隐藏
-        if (sheetOption.isHidden()) {
+        if (exportSheetOption.isHidden()) {
             this.workbook.setSheetHidden(workbook.getSheetIndex(this.sheet), true);
         }
     }
@@ -139,7 +139,7 @@ public class ExportProcessor<T> {
      * 设置页眉
      */
     private void setPageHeader() {
-        HeaderOption headerOption = sheetOption.getHeaderOption();
+        HeaderOption headerOption = exportSheetOption.getHeaderOption();
         if (headerOption != null) {
             Excels.setHeader(sheet, headerOption);
         }
@@ -149,7 +149,7 @@ public class ExportProcessor<T> {
      * 设置页脚
      */
     private void setPageFooter() {
-        FooterOption footerOption = sheetOption.getFooterOption();
+        FooterOption footerOption = exportSheetOption.getFooterOption();
         if (footerOption != null) {
             Excels.setFooter(sheet, footerOption);
         }
@@ -162,7 +162,7 @@ public class ExportProcessor<T> {
         fieldOptions.forEach((k, v) -> {
             CellStyle columnStyle = this.parseStyle(k, true, v);
             columnStyles.put(k, columnStyle);
-            if (sheetOption.isHeaderUseColumnStyle()) {
+            if (exportSheetOption.isHeaderUseColumnStyle()) {
                 CellStyle headerStyle = this.parseStyle(k, false, v);
                 headerStyles.put(k, headerStyle);
             }
@@ -176,12 +176,12 @@ public class ExportProcessor<T> {
      * 添加标题
      */
     private void addTitle() {
-        TitleOption titleOption = sheetOption.getTitleOption();
-        if (sheetOption.isSkipTitle() || titleOption == null) {
+        TitleOption titleOption = exportSheetOption.getTitleOption();
+        if (exportSheetOption.isSkipTitle() || titleOption == null) {
             return;
         }
-        if (sheetOption.getTitle() != null) {
-            titleOption.setTitle(sheetOption.getTitle());
+        if (exportSheetOption.getTitle() != null) {
+            titleOption.setTitle(exportSheetOption.getTitle());
         }
         titleOption.setPaletteColorIndex(this.colorIndex);
         CellStyle titleStyle = Objects1.def(Excels.parseTitleStyle(workbook, titleOption), workbook.createCellStyle());
@@ -195,15 +195,15 @@ public class ExportProcessor<T> {
         // 防止多个row高度不一致
         for (int i = 1; i < titleOption.getUseRow(); i++) {
             Row temp = sheet.createRow(rowIndex + i);
-            if (sheetOption.getTitleHeight() != null) {
-                temp.setHeightInPoints(sheetOption.getTitleHeight());
+            if (exportSheetOption.getTitleHeight() != null) {
+                temp.setHeightInPoints(exportSheetOption.getTitleHeight());
             }
         }
-        if (sheetOption.getTitleHeight() != null) {
-            titleRow.setHeightInPoints(sheetOption.getTitleHeight());
+        if (exportSheetOption.getTitleHeight() != null) {
+            titleRow.setHeightInPoints(exportSheetOption.getTitleHeight());
         }
         if (titleOption.getUseColumn() == -1) {
-            titleOption.setUseColumn(sheetOption.getColumnSize());
+            titleOption.setUseColumn(exportSheetOption.getColumnSize());
         }
         Cell titleCell = titleRow.createCell(0);
         titleCell.setCellStyle(titleStyle);
@@ -212,7 +212,7 @@ public class ExportProcessor<T> {
         Excels.mergeCell(sheet, region);
         Excels.mergeCellBorder(sheet, titleStyle.getBorderTop().getCode(), titleStyle.getTopBorderColor(), region);
         rowIndex += titleOption.getUseRow();
-        sheetOption.setAddTitle(true);
+        exportSheetOption.setAddTitle(true);
     }
 
     /**
@@ -224,7 +224,7 @@ public class ExportProcessor<T> {
                 headerStyles.remove(k);
             }
         });
-        if (sheetOption.isSkipFieldHeader()) {
+        if (exportSheetOption.isSkipFieldHeader()) {
             return;
         }
         Integer size = Sets.max(fieldOptions.keySet());
@@ -235,15 +235,15 @@ public class ExportProcessor<T> {
         if (Strings.isAllEmpty(h)) {
             return;
         }
-        this.sheetOption.setAddDefaultHeader(true);
+        this.exportSheetOption.setAddDefaultHeader(true);
         this.headers(true, h);
         // 冻结首行
-        if (sheetOption.isFreezeHeader()) {
+        if (exportSheetOption.isFreezeHeader()) {
             Excels.freezeRow(sheet, rowIndex);
         }
         // 筛选首行
-        if (sheetOption.isFilterHeader()) {
-            Excels.filterRow(sheet, rowIndex - 1, 0, sheetOption.getColumnSize());
+        if (exportSheetOption.isFilterHeader()) {
+            Excels.filterRow(sheet, rowIndex - 1, 0, exportSheetOption.getColumnSize());
         }
     }
 
@@ -251,7 +251,7 @@ public class ExportProcessor<T> {
      * 添加列下拉框
      */
     private void addRowSelectOptions() {
-        if (this.sheetOption.isSkipSelectOption()) {
+        if (this.exportSheetOption.isSkipSelectOption()) {
             return;
         }
         fieldOptions.forEach((k, v) -> {
@@ -259,7 +259,7 @@ public class ExportProcessor<T> {
             if (Arrays1.isEmpty(options)) {
                 return;
             }
-            Excels.addSelectOptions(sheet, this.sheetOption.isAddDefaultHeader() ? 1 : 0, k, options);
+            Excels.addSelectOptions(sheet, this.exportSheetOption.isAddDefaultHeader() ? 1 : 0, k, options);
         });
     }
 
@@ -267,7 +267,7 @@ public class ExportProcessor<T> {
      * 添加打印参数
      */
     private void addPrintSetup() {
-        PrintOption printOption = sheetOption.getPrintOption();
+        PrintOption printOption = exportSheetOption.getPrintOption();
         if (printOption == null) {
             return;
         }
@@ -287,7 +287,7 @@ public class ExportProcessor<T> {
             return;
         }
         Row headerRow = sheet.createRow(rowIndex);
-        Integer headerHeight = sheetOption.getHeaderHeight();
+        Integer headerHeight = exportSheetOption.getHeaderHeight();
         if (headerHeight != null) {
             headerRow.setHeightInPoints(headerHeight.floatValue());
         }
@@ -300,7 +300,7 @@ public class ExportProcessor<T> {
             // 批注
             if (isDefault) {
                 CommentOption commentOption = Optional.ofNullable(fieldOptions.get(i))
-                        .map(FieldOption::getCommentOption).orElse(null);
+                        .map(ExportFieldOption::getCommentOption).orElse(null);
                 Comment comment = Excels.createComment(sheet, i, rowIndex, commentOption);
                 if (comment != null) {
                     headerCell.setCellComment(comment);
@@ -319,7 +319,7 @@ public class ExportProcessor<T> {
      * @param columnIndex columnIndex
      * @param row         row
      */
-    protected void setCellValue(Cell cell, int rowIndex, int columnIndex, T row, FieldOption option) {
+    protected void setCellValue(Cell cell, int rowIndex, int columnIndex, T row, ExportFieldOption option) {
         CellStyle style = columnStyles.get(columnIndex);
         if (style != null) {
             cell.setCellStyle(style);
@@ -352,7 +352,7 @@ public class ExportProcessor<T> {
      * @param row    row
      * @param option option
      */
-    private void setPicture(Cell cell, T row, int rowIndex, int columnIndex, FieldOption option) {
+    private void setPicture(Cell cell, T row, int rowIndex, int columnIndex, ExportFieldOption option) {
         Method getterMethod = option.getGetterMethod();
         PictureOption pictureOption = option.getPictureOption();
         // 图片
@@ -374,7 +374,7 @@ public class ExportProcessor<T> {
                     picture.resize(pictureOption.getScaleX(), pictureOption.getScaleY());
                 }
             } catch (Exception e) {
-                if (!sheetOption.isSkipPictureException()) {
+                if (!exportSheetOption.isSkipPictureException()) {
                     throw Exceptions.unchecked(e);
                 }
             } finally {
@@ -404,7 +404,7 @@ public class ExportProcessor<T> {
      * @param row    row
      * @param option option
      */
-    private void setLink(Cell cell, T row, FieldOption option) {
+    private void setLink(Cell cell, T row, ExportFieldOption option) {
         Method getterMethod = option.getGetterMethod();
         LinkOption linkOption = option.getLinkOption();
         String address = null;
@@ -442,7 +442,7 @@ public class ExportProcessor<T> {
      * @param option      option
      * @return CellStyle
      */
-    protected CellStyle parseStyle(int columnIndex, boolean isColumn, FieldOption option) {
+    protected CellStyle parseStyle(int columnIndex, boolean isColumn, ExportFieldOption option) {
         // 样式
         option.setPaletteColorIndex(this.colorIndex);
         CellStyle style;

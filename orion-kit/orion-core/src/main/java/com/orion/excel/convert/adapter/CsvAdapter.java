@@ -94,7 +94,7 @@ public class CsvAdapter implements Adaptable<CsvAdapter>, SafeCloseable {
             }
             List<String> row = new ArrayList<>();
             for (Cell cell : cells) {
-                String value = Excels.getValue(cell);
+                String value = Excels.getCellValue(cell);
                 row.add(value);
             }
             export.addRecord(row.toArray(new String[0]));

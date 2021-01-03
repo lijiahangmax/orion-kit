@@ -3,13 +3,13 @@ package com.orion.excel.option;
 import java.io.Serializable;
 
 /**
- * Excel 表格参数
+ * Export 表格参数
  *
  * @author ljh15
  * @version 1.0.0
  * @since 2020/5/28 11:20
  */
-public class SheetOption implements Serializable {
+public class ExportSheetOption implements Serializable {
 
     /**
      * sheet 名称

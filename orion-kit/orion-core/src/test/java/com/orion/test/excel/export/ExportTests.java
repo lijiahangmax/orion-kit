@@ -34,7 +34,7 @@ public class ExportTests {
             String spell = Spells.getSpell(realName);
             e.setBlogUrl("http://" + spell + ".com");
             e.setEmailUrl(spell + "@orion.com");
-            e.setFile("file:///C:/Users/ljh15/Desktop/list.html");
+            e.setFile("C:/Users/ljh15/Desktop/list.html");
             e.setRealName(realName);
             return e;
         }).collect(Collectors.toList());

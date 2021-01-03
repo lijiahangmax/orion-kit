@@ -1,5 +1,6 @@
 package com.orion.excel.exporting;
 
+import com.orion.able.Analysable;
 import com.orion.excel.annotation.*;
 import com.orion.excel.option.*;
 import com.orion.excel.type.ExcelFieldType;
@@ -18,23 +19,23 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 列 解析器
+ * Export 列 解析器
  *
  * @author ljh15
  * @version 1.0.0
  * @since 2020/12/29 18:05
  */
-public class ColumnAnalysis implements Analysable {
+public class ExportColumnAnalysis implements Analysable {
 
     private Class<?> targetClass;
 
     private int columnSize;
 
-    private SheetOption sheetOption;
+    private ExportSheetOption sheetOption;
 
-    private Map<Integer, FieldOption> fieldOptions;
+    private Map<Integer, ExportFieldOption> fieldOptions;
 
-    public ColumnAnalysis(Class<?> targetClass, SheetOption sheetOption, Map<Integer, FieldOption> fieldOptions) {
+    protected ExportColumnAnalysis(Class<?> targetClass, ExportSheetOption sheetOption, Map<Integer, ExportFieldOption> fieldOptions) {
         this.targetClass = targetClass;
         this.sheetOption = sheetOption;
         this.fieldOptions = fieldOptions;
@@ -53,7 +54,7 @@ public class ColumnAnalysis implements Analysable {
                     Annotations.getAnnotation(field, ExportLink.class),
                     Annotations.getAnnotation(field, ExportPicture.class),
                     Annotations.getAnnotation(field, ExportIgnore.class),
-                    Methods.getGetterMethodByField(targetClass, field));
+                    Methods.getGetterMethodByField(targetClass, field), field.getName());
         }
         for (Method method : methodList) {
             this.analysisColumn(Annotations.getAnnotation(method, ExportField.class),
@@ -62,48 +63,52 @@ public class ColumnAnalysis implements Analysable {
                     Annotations.getAnnotation(method, ExportLink.class),
                     Annotations.getAnnotation(method, ExportPicture.class),
                     Annotations.getAnnotation(method, ExportIgnore.class),
-                    method);
+                    method, null);
         }
     }
 
     /**
      * 解析 field font comment link picture
      *
-     * @param field   field
-     * @param font    font
-     * @param comment comment
-     * @param link    link
-     * @param picture picture
-     * @param ignore  ignore
-     * @param method  getter
+     * @param field     field
+     * @param font      font
+     * @param comment   comment
+     * @param link      link
+     * @param picture   picture
+     * @param ignore    ignore
+     * @param method    getter
+     * @param fieldName fieldName
      */
     private void analysisColumn(ExportField field, ExportFont font,
                                 ExportComment comment, ExportLink link,
                                 ExportPicture picture, ExportIgnore ignore,
-                                Method method) {
+                                Method method, String fieldName) {
         if (field == null || ignore != null) {
             return;
+        }
+        if (method == null) {
+            throw Exceptions.parse("not found " + fieldName + "getter method");
         }
         int index = field.index();
         sheetOption.setColumnSize(columnSize = Math.max(columnSize, index));
         // 解析 field
-        FieldOption fieldOption = this.analysisField(field, method);
+        ExportFieldOption exportFieldOption = this.analysisField(field, method);
         if (font != null) {
             // 解析 font
             FontOption fontOption = this.analysisFont(font);
-            fieldOption.setFontOption(fontOption);
+            exportFieldOption.setFontOption(fontOption);
         }
         // 解析 comment
         if (comment != null && !sheetOption.isSkipComment()) {
-            fieldOption.setCommentOption(this.analysisComment(comment));
+            exportFieldOption.setCommentOption(this.analysisComment(comment));
         }
         // 解析 link
         if (link != null && !sheetOption.isSkipLink()) {
-            fieldOption.setLinkOption(this.analysisLink(link, fieldOption));
+            exportFieldOption.setLinkOption(this.analysisLink(link, exportFieldOption));
         }
         // 解析 picture
         if (picture != null && !sheetOption.isSkipPicture()) {
-            fieldOption.setPictureOption(this.analysisPicture(picture, fieldOption, method));
+            exportFieldOption.setPictureOption(this.analysisPicture(picture, exportFieldOption, method));
         }
     }
 
@@ -113,57 +118,57 @@ public class ColumnAnalysis implements Analysable {
      * @param field annotation
      * @return FieldOption
      */
-    private FieldOption analysisField(ExportField field, Method method) {
-        FieldOption fieldOption = new FieldOption();
-        fieldOption.setGetterMethod(method);
+    private ExportFieldOption analysisField(ExportField field, Method method) {
+        ExportFieldOption exportFieldOption = new ExportFieldOption();
+        exportFieldOption.setGetterMethod(method);
         // 对齐
-        fieldOption.setAlign(field.align());
-        fieldOption.setVerticalAlign(field.verticalAlign());
+        exportFieldOption.setAlign(field.align());
+        exportFieldOption.setVerticalAlign(field.verticalAlign());
         // 宽
         int width = field.width();
         if (width != -1) {
-            fieldOption.setWidth(width);
+            exportFieldOption.setWidth(width);
         }
         // 背景色
         String backgroundColor = field.backgroundColor();
         if (!Strings.isEmpty(backgroundColor)) {
-            fieldOption.setBackgroundColor(backgroundColor);
+            exportFieldOption.setBackgroundColor(backgroundColor);
         }
         if (field.wrapText()) {
-            fieldOption.setWrapText(true);
+            exportFieldOption.setWrapText(true);
         }
         // 边框
-        fieldOption.setBorder(field.border());
+        exportFieldOption.setBorder(field.border());
         String borderColor = field.borderColor();
         if (!Strings.isEmpty(borderColor)) {
-            fieldOption.setBorderColor(borderColor);
+            exportFieldOption.setBorderColor(borderColor);
         }
         // 缩进
         if (field.indent() != -1) {
-            fieldOption.setIndent((short) field.indent());
+            exportFieldOption.setIndent((short) field.indent());
         }
         // 类型
         ExcelFieldType type = field.type();
         if (type.equals(ExcelFieldType.AUTO)) {
-            fieldOption.setType(ExcelFieldType.of(method.getReturnType()));
+            exportFieldOption.setType(ExcelFieldType.of(method.getReturnType()));
         } else {
-            fieldOption.setType(type);
+            exportFieldOption.setType(type);
         }
-        fieldOption.setFormat(field.format());
-        fieldOption.setHeader(field.header());
-        fieldOption.setSkipHeaderStyle(field.skipHeaderStyle());
-        fieldOption.setSelectOptions(field.selectOptions());
+        exportFieldOption.setFormat(field.format());
+        exportFieldOption.setHeader(field.header());
+        exportFieldOption.setSkipHeaderStyle(field.skipHeaderStyle());
+        exportFieldOption.setSelectOptions(field.selectOptions());
         // 隐藏
-        fieldOption.setHidden(field.hidden());
-        fieldOption.setLock(field.lock());
-        fieldOption.setAutoResize(field.autoResize());
-        fieldOption.setQuotePrefixed(field.quotePrefixed());
+        exportFieldOption.setHidden(field.hidden());
+        exportFieldOption.setLock(field.lock());
+        exportFieldOption.setAutoResize(field.autoResize());
+        exportFieldOption.setQuotePrefixed(field.quotePrefixed());
         // cell
         CellOption cellOption = new CellOption();
         cellOption.setFormat(field.format());
-        fieldOption.setCellOption(cellOption);
-        fieldOptions.put(field.index(), fieldOption);
-        return fieldOption;
+        exportFieldOption.setCellOption(cellOption);
+        fieldOptions.put(field.index(), exportFieldOption);
+        return exportFieldOption;
     }
 
     /**
@@ -193,11 +198,11 @@ public class ColumnAnalysis implements Analysable {
     /**
      * 解析超链接
      *
-     * @param link        link
-     * @param fieldOption fieldOption
+     * @param link              link
+     * @param exportFieldOption fieldOption
      * @return LinkOption
      */
-    private LinkOption analysisLink(ExportLink link, FieldOption fieldOption) {
+    private LinkOption analysisLink(ExportLink link, ExportFieldOption exportFieldOption) {
         LinkOption linkOption = new LinkOption();
         linkOption.setType(link.type());
         linkOption.setAddress(link.address());
@@ -220,8 +225,8 @@ public class ColumnAnalysis implements Analysable {
         if (LinkOption.ORIGIN.equals(linkOption.getText())) {
             // 原数据
             linkOption.setOriginText(true);
-            linkOption.setTextType(fieldOption.getType());
-            linkOption.setCellOption(fieldOption.getCellOption());
+            linkOption.setTextType(exportFieldOption.getType());
+            linkOption.setCellOption(exportFieldOption.getCellOption());
         } else if (linkOption.getText().startsWith(LinkOption.NORMAL_PREFIX)) {
             // 普通文本
             linkOption.setTextType(ExcelFieldType.TEXT);
@@ -239,12 +244,12 @@ public class ColumnAnalysis implements Analysable {
     /**
      * 解析图片
      *
-     * @param picture     图片
-     * @param fieldOption fieldOption
-     * @param method      getter
+     * @param picture           图片
+     * @param exportFieldOption fieldOption
+     * @param method            getter
      * @return PictureOption
      */
-    private PictureOption analysisPicture(ExportPicture picture, FieldOption fieldOption, Method method) {
+    private PictureOption analysisPicture(ExportPicture picture, ExportFieldOption exportFieldOption, Method method) {
         PictureOption option = new PictureOption();
         option.setScaleX(picture.scaleX());
         option.setScaleY(picture.scaleY());
@@ -281,8 +286,8 @@ public class ColumnAnalysis implements Analysable {
         } else if (PictureOption.ORIGIN.equals(option.getText())) {
             // 原数据
             option.setOriginText(true);
-            option.setTextType(fieldOption.getType());
-            option.setCellOption(fieldOption.getCellOption());
+            option.setTextType(exportFieldOption.getType());
+            option.setCellOption(exportFieldOption.getCellOption());
         } else if (option.getText().startsWith(PictureOption.NORMAL_PREFIX)) {
             // 普通文本
             option.setTextType(ExcelFieldType.TEXT);

@@ -89,17 +89,17 @@ public class BigDecimals {
         } else if (o instanceof String) {
             return new BigDecimal((String) o);
         } else if (o instanceof Byte) {
-            return new BigDecimal(o.toString());
+            return new BigDecimal((Byte) o);
         } else if (o instanceof Short) {
-            return new BigDecimal(o.toString());
+            return new BigDecimal((Short) o);
         } else if (o instanceof Integer) {
-            return new BigDecimal(o.toString());
+            return new BigDecimal((Integer) o);
         } else if (o instanceof Long) {
-            return new BigDecimal(o.toString());
+            return BigDecimal.valueOf((Long) o);
         } else if (o instanceof Float) {
-            return new BigDecimal(o.toString());
+            return BigDecimal.valueOf((Float) o);
         } else if (o instanceof Double) {
-            return new BigDecimal(o.toString());
+            return BigDecimal.valueOf((Double) o);
         } else if (o instanceof Boolean) {
             if ((Boolean) o) {
                 return BigDecimal.ONE;
@@ -846,6 +846,36 @@ public class BigDecimals {
             return d.negate();
         } else {
             return d;
+        }
+    }
+
+    /**
+     * 格式化解析
+     *
+     * @param value  value
+     * @param format 格式
+     * @return value
+     */
+    public static BigDecimal parse(String value, String format) {
+        return parse(value, format, null);
+    }
+
+    /**
+     * 格式化解析
+     *
+     * @param value    value
+     * @param format   格式
+     * @param defaultV 默认值
+     * @return value
+     */
+    public static BigDecimal parse(String value, String format, BigDecimal defaultV) {
+        if (value == null) {
+            return defaultV;
+        }
+        try {
+            return objectToDecimal(new DecimalFormat(format).parse(value));
+        } catch (Exception e) {
+            return defaultV;
         }
     }
 

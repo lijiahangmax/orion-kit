@@ -5,12 +5,14 @@ import com.monitorjbl.xlsx.impl.StreamingSheet;
 import com.monitorjbl.xlsx.impl.StreamingWorkbook;
 import com.orion.excel.copy.CopySheet;
 import com.orion.excel.option.*;
+import com.orion.excel.picture.PictureParser;
 import com.orion.excel.style.FontStream;
 import com.orion.excel.style.PrintStream;
 import com.orion.excel.style.StyleStream;
 import com.orion.excel.type.ExcelFieldType;
 import com.orion.excel.type.ExcelLinkType;
 import com.orion.excel.type.ExcelPictureType;
+import com.orion.excel.type.ExcelReadType;
 import com.orion.utils.*;
 import com.orion.utils.convert.Converts;
 import com.orion.utils.io.FileReaders;
@@ -71,13 +73,64 @@ public class Excels {
     }
 
     /**
+     * 通过类型获取值
+     *
+     * @param cell cell
+     * @param type type 不包含picture
+     * @param <T>  T
+     * @return value
+     */
+    public static <T> T getCellValue(Cell cell, ExcelReadType type) {
+        return getCellValue(cell, type, null);
+    }
+
+    /**
+     * 通过类型获取值
+     *
+     * @param cell   cell
+     * @param type   type 不包含picture
+     * @param option option
+     * @param <T>    T
+     * @return value
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T getCellValue(Cell cell, ExcelReadType type, CellOption option) {
+        Object value;
+        switch (type) {
+            case DECIMAL:
+                value = Excels.getCellDecimal(cell, null, option);
+                break;
+            case DATE:
+                value = Excels.getCellDate(cell, null, option);
+                break;
+            case PHONE:
+                value = Excels.getCellPhone(cell);
+                break;
+            case LINK_ADDRESS:
+                value = Excels.getCellHyperUrl(cell);
+                break;
+            case COMMENT:
+                value = Excels.getCellComment(cell);
+                break;
+            case PICTURE:
+                value = null;
+                break;
+            case TEXT:
+            default:
+                value = Excels.getCellValue(cell);
+                break;
+        }
+        return (T) value;
+    }
+
+    /**
      * 获取String的值
      *
      * @param cell cell
      * @return value
      */
-    public static String getValue(Cell cell) {
-        return getValue(cell, cell.getCellType());
+    public static String getCellValue(Cell cell) {
+        return getCellValue(cell, (CellType) null);
     }
 
     /**
@@ -87,29 +140,31 @@ public class Excels {
      * @param type type
      * @return value
      */
-    private static String getValue(Cell cell, CellType type) {
+    private static String getCellValue(Cell cell, CellType type) {
         String value = Strings.EMPTY;
-        if (null == cell) {
+        if (cell == null) {
             return value;
+        }
+        if (type == null) {
+            type = cell.getCellType();
         }
         switch (type) {
             case NUMERIC:
                 if (DateUtil.isCellDateFormatted(cell)) {
+                    // 日期
                     value = Dates.format(DateUtil.getJavaDate(cell.getNumericCellValue()));
                 } else {
                     // 纯数字
-                    BigDecimal big = BigDecimal.valueOf(cell.getNumericCellValue());
-                    value = big.toString();
-                    if (!Strings.isBlank(value)) {
-                        String[] item = value.split("[.]");
-                        if (1 < item.length && Integer.parseInt(item[1]) == 0) {
-                            value = item[0];
-                        }
+                    value = BigDecimal.valueOf(cell.getNumericCellValue()).toString();
+                    String[] item = value.split("\\.");
+                    if (item.length > 1 && Integer.parseInt(item[1]) == 0) {
+                        // 整数
+                        value = item[0];
                     }
                 }
                 break;
             case FORMULA:
-                value = getValue(cell, cell.getCachedFormulaResultType());
+                value = getCellValue(cell, cell.getCachedFormulaResultType());
                 if ("NaN".equals(value)) {
                     value = cell.getStringCellValue();
                 }
@@ -127,7 +182,59 @@ public class Excels {
             default:
                 value = cell.getStringCellValue();
         }
-        return value;
+        return Objects1.def(value, Strings.EMPTY);
+    }
+
+    /**
+     * 获取数字
+     *
+     * @param cell cell
+     * @return 数字
+     */
+    public static BigDecimal getCellDecimal(Cell cell) {
+        return getCellDecimal(cell, null, null);
+    }
+
+    /**
+     * 获取数字
+     *
+     * @param cell   cell
+     * @param option option
+     * @return BigDecimal
+     */
+    public static BigDecimal getCellDecimal(Cell cell, CellOption option) {
+        return getCellDecimal(cell, null, option);
+    }
+
+    /**
+     * 获取数字
+     *
+     * @param cell   cell
+     * @param type   type
+     * @param option option
+     * @return BigDecimal
+     */
+    private static BigDecimal getCellDecimal(Cell cell, CellType type, CellOption option) {
+        if (cell == null) {
+            return null;
+        }
+        if (type == null) {
+            type = cell.getCellType();
+        }
+        switch (type) {
+            case FORMULA:
+                return getCellDecimal(cell, cell.getCachedFormulaResultType(), option);
+            case NUMERIC:
+                return BigDecimal.valueOf(cell.getNumericCellValue());
+            case STRING:
+                if (option != null && !Strings.isEmpty(option.getFormat())) {
+                    return BigDecimals.parse(cell.getStringCellValue(), option.getFormat());
+                } else {
+                    return BigDecimals.toBigDecimal(cell.getStringCellValue());
+                }
+            default:
+                return null;
+        }
     }
 
     /**
@@ -137,19 +244,57 @@ public class Excels {
      * @return 时间
      */
     public static Date getCellDate(Cell cell) {
-        if (cell != null) {
-            CellType cellType = cell.getCellType();
-            switch (cellType) {
-                case NUMERIC:
-                case FORMULA:
-                    if (DateUtil.isCellDateFormatted(cell)) {
-                        return cell.getDateCellValue();
-                    }
-                default:
-                    return Dates.date(cell.toString());
-            }
-        } else {
+        return getCellDate(cell, null, null);
+    }
+
+    /**
+     * 获取时间
+     *
+     * @param cell   cell
+     * @param option option
+     * @return 时间
+     */
+    public static Date getCellDate(Cell cell, CellOption option) {
+        return getCellDate(cell, null, option);
+    }
+
+    /**
+     * 获取时间
+     *
+     * @param cell   cell
+     * @param type   type
+     * @param option option
+     * @return 时间
+     */
+    private static Date getCellDate(Cell cell, CellType type, CellOption option) {
+        if (cell == null) {
             return null;
+        }
+        if (type == null) {
+            type = cell.getCellType();
+        }
+        switch (type) {
+            case FORMULA:
+                if (!DateUtil.isCellDateFormatted(cell)) {
+                    // 非日期公式
+                    return getCellDate(cell, cell.getCachedFormulaResultType(), option);
+                }
+            case NUMERIC:
+                if (DateUtil.isCellDateFormatted(cell)) {
+                    return cell.getDateCellValue();
+                }
+                double value = cell.getNumericCellValue();
+                if (DateUtil.isValidExcelDate(value)) {
+                    // 非日期公式
+                    return DateUtil.getJavaDate(cell.getNumericCellValue());
+                }
+            default:
+                String o = cell.getStringCellValue();
+                if (option != null && !Strings.isEmpty(option.getFormat())) {
+                    return Dates.parse(o, option.getFormat());
+                } else {
+                    return Dates.date(o);
+                }
         }
     }
 
@@ -160,7 +305,25 @@ public class Excels {
      * @return 手机号
      */
     public static String getCellPhone(Cell cell) {
-        switch (cell.getCellType()) {
+        return getCellPhone(cell, null);
+    }
+
+    /**
+     * 获取手机号
+     *
+     * @param cell cell
+     * @return 手机号
+     */
+    private static String getCellPhone(Cell cell, CellType type) {
+        if (cell == null) {
+            return Strings.EMPTY;
+        }
+        if (type == null) {
+            type = cell.getCellType();
+        }
+        switch (type) {
+            case FORMULA:
+                return getCellPhone(cell, cell.getCachedFormulaResultType());
             case NUMERIC:
                 return DF.format(cell.getNumericCellValue());
             case STRING:
@@ -168,6 +331,37 @@ public class Excels {
             default:
                 return cell.toString();
         }
+    }
+
+    /**
+     * 获取批注
+     *
+     * @param cell cell
+     * @return 批注
+     */
+    public static String getCellComment(Cell cell) {
+        if (cell == null) {
+            return Strings.EMPTY;
+        }
+        return Optional.ofNullable(cell.getCellComment())
+                .map(Comment::getString)
+                .map(RichTextString::getString)
+                .orElse(Strings.EMPTY);
+    }
+
+    /**
+     * 获取超链接
+     *
+     * @param cell cell
+     * @return 超链接url
+     */
+    public static String getCellHyperUrl(Cell cell) {
+        if (cell == null) {
+            return Strings.EMPTY;
+        }
+        return Optional.ofNullable(cell.getHyperlink())
+                .map(Hyperlink::getAddress)
+                .orElse(Strings.EMPTY);
     }
 
     /**
@@ -406,6 +600,38 @@ public class Excels {
     }
 
     // --------------- option ---------------
+
+    /**
+     * 创建图片解析器
+     *
+     * @param sheet sheet
+     * @return PictureParser
+     */
+    public static PictureParser createPictureParser(Sheet sheet) {
+        return new PictureParser(sheet.getWorkbook(), sheet);
+    }
+
+    /**
+     * 创建图片解析器
+     *
+     * @param workbook workbook
+     * @param index    sheetIndex
+     * @return PictureParser
+     */
+    public static PictureParser createPictureParser(Workbook workbook, int index) {
+        return new PictureParser(workbook, workbook.getSheetAt(index));
+    }
+
+    /**
+     * 创建图片解析器
+     *
+     * @param workbook workbook
+     * @param sheet    sheet
+     * @return PictureParser
+     */
+    public static PictureParser createPictureParser(Workbook workbook, Sheet sheet) {
+        return new PictureParser(workbook, sheet);
+    }
 
     /**
      * 获取缩略图
@@ -753,7 +979,7 @@ public class Excels {
      * @param workbook workbook
      * @param option   option
      */
-    public static CellStyle parseStyle(Workbook workbook, FieldOption option) {
+    public static CellStyle parseStyle(Workbook workbook, ExportFieldOption option) {
         return StyleStream.parseStyle(workbook, option);
     }
 
@@ -763,7 +989,7 @@ public class Excels {
      * @param workbook workbook
      * @param option   option
      */
-    public static CellStyle parseColumnStyle(Workbook workbook, FieldOption option) {
+    public static CellStyle parseColumnStyle(Workbook workbook, ExportFieldOption option) {
         return StyleStream.parseColumnStyle(workbook, option);
     }
 
@@ -848,11 +1074,12 @@ public class Excels {
         if (link == null) {
             return;
         }
-        if (linkType.equals(ExcelLinkType.LINK_FILE)) {
+        if (linkType.equals(ExcelLinkType.LINK_FILE) && !address.startsWith("file:///")) {
             // 文件
-            if (!address.startsWith("file:///")) {
-                address = "file:///" + Files1.getPath(address);
-            }
+            address = "file:///" + Files1.getPath(address);
+        } else if (linkType.equals(ExcelLinkType.LINK_EMAIL) && !address.startsWith("mailto:")) {
+            // 邮件
+            address = "mailto:" + address;
         }
         link.setAddress(Strings.def(address));
         cell.setHyperlink(link);

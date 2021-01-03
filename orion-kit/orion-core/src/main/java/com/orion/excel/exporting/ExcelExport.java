@@ -2,8 +2,8 @@ package com.orion.excel.exporting;
 
 import com.orion.able.SafeCloseable;
 import com.orion.excel.Excels;
-import com.orion.excel.option.FieldOption;
-import com.orion.excel.option.SheetOption;
+import com.orion.excel.option.ExportFieldOption;
+import com.orion.excel.option.ExportSheetOption;
 import com.orion.utils.Valid;
 import com.orion.utils.collect.Lists;
 import com.orion.utils.io.Streams;
@@ -39,12 +39,12 @@ public class ExcelExport<T> implements SafeCloseable {
     /**
      * sheet配置
      */
-    private SheetOption sheetOption = new SheetOption();
+    private ExportSheetOption sheetOption = new ExportSheetOption();
 
     /**
      * 列配置
      */
-    private Map<Integer, FieldOption> fieldOptions = new TreeMap<>();
+    private Map<Integer, ExportFieldOption> fieldOptions = new TreeMap<>();
 
     /**
      * 初始化器
@@ -83,10 +83,10 @@ public class ExcelExport<T> implements SafeCloseable {
      */
     private void analysisClass() {
         // 解析sheet
-        SheetAnalysis sheetAnalysis = new SheetAnalysis(targetClass, sheetOption);
-        sheetAnalysis.analysis();
+        ExportSheetAnalysis exportSheetAnalysis = new ExportSheetAnalysis(targetClass, sheetOption);
+        exportSheetAnalysis.analysis();
         // 解析列
-        ColumnAnalysis columnAnalysis = new ColumnAnalysis(targetClass, sheetOption, fieldOptions);
+        ExportColumnAnalysis columnAnalysis = new ExportColumnAnalysis(targetClass, sheetOption, fieldOptions);
         columnAnalysis.analysis();
     }
 
@@ -298,7 +298,7 @@ public class ExcelExport<T> implements SafeCloseable {
      * @param option 样式
      * @return this
      */
-    public ExcelExport<T> setStyle(int column, FieldOption option) {
+    public ExcelExport<T> setStyle(int column, ExportFieldOption option) {
         if (option == null) {
             return this;
         }
@@ -314,7 +314,7 @@ public class ExcelExport<T> implements SafeCloseable {
      * @param option 样式
      * @return this
      */
-    public ExcelExport<T> setHeaderStyle(int column, FieldOption option) {
+    public ExcelExport<T> setHeaderStyle(int column, ExportFieldOption option) {
         if (option == null) {
             return this;
         }
@@ -329,7 +329,7 @@ public class ExcelExport<T> implements SafeCloseable {
      * @param option 样式
      * @return this
      */
-    public ExcelExport<T> setColumnStyle(int column, FieldOption option) {
+    public ExcelExport<T> setColumnStyle(int column, ExportFieldOption option) {
         if (option == null) {
             return this;
         }
@@ -556,10 +556,6 @@ public class ExcelExport<T> implements SafeCloseable {
         return sheet;
     }
 
-    public Class<T> getTargetClass() {
-        return targetClass;
-    }
-
     public int getColumnSize() {
         return sheetOption.getColumnSize();
     }
@@ -582,18 +578,24 @@ public class ExcelExport<T> implements SafeCloseable {
         return workbook.createFont();
     }
 
-    public Map<Integer, FieldOption> getFieldOptions() {
+    public Map<Integer, ExportFieldOption> getFieldOptions() {
         return fieldOptions;
     }
 
-    public SheetOption getSheetOption() {
+    public ExportSheetOption getSheetOption() {
         return sheetOption;
     }
 
+    /**
+     * @return 当前行数
+     */
     public int getRowIndex() {
         return processor.rowIndex;
     }
 
+    /**
+     * @return 写入的数据行数
+     */
     public int getRows() {
         return rows;
     }

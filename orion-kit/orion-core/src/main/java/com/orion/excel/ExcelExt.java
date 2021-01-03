@@ -1,10 +1,10 @@
 package com.orion.excel;
 
 import com.monitorjbl.xlsx.impl.StreamingWorkbook;
+import com.orion.ExcelReader;
+import com.orion.ExcelStream;
 import com.orion.able.SafeCloseable;
 import com.orion.excel.importing.ExcelImport;
-import com.orion.excel.importing.ExcelReader;
-import com.orion.excel.importing.ExcelStream;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
 import com.orion.utils.io.Files1;
@@ -200,7 +200,7 @@ public class ExcelExt implements SafeCloseable {
      * @return ExcelImport
      */
     public <T> ExcelImport<T> sheetImport(Class<T> targetClass) {
-        return new ExcelImport<>(workbook.getSheetAt(0), targetClass);
+        return new ExcelImport<>(workbook, workbook.getSheetAt(0), targetClass);
     }
 
     /**
@@ -212,7 +212,7 @@ public class ExcelExt implements SafeCloseable {
      * @return ExcelImport
      */
     public <T> ExcelImport<T> sheetImport(int sheetIndex, Class<T> targetClass) {
-        return new ExcelImport<>(workbook.getSheetAt(sheetIndex), targetClass);
+        return new ExcelImport<>(workbook, workbook.getSheetAt(sheetIndex), targetClass);
     }
 
     public Workbook getWorkbook() {

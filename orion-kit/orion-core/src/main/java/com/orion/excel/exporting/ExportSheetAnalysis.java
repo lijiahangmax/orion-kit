@@ -1,5 +1,6 @@
 package com.orion.excel.exporting;
 
+import com.orion.able.Analysable;
 import com.orion.excel.annotation.*;
 import com.orion.excel.option.*;
 import com.orion.utils.Exceptions;
@@ -7,19 +8,19 @@ import com.orion.utils.Strings;
 import com.orion.utils.reflect.Annotations;
 
 /**
- * sheet 解析器
+ * Export sheet 解析器
  *
  * @author ljh15
  * @version 1.0.0
  * @since 2020/12/29 17:49
  */
-public class SheetAnalysis implements Analysable {
+public class ExportSheetAnalysis implements Analysable {
 
     private Class<?> targetClass;
 
-    private SheetOption sheetOption;
+    private ExportSheetOption sheetOption;
 
-    public SheetAnalysis(Class<?> targetClass, SheetOption sheetOption) {
+    public ExportSheetAnalysis(Class<?> targetClass, ExportSheetOption sheetOption) {
         this.targetClass = targetClass;
         this.sheetOption = sheetOption;
     }
@@ -120,7 +121,7 @@ public class SheetAnalysis implements Analysable {
         if (!Strings.isEmpty(borderColor)) {
             titleOption.setBorderColor(borderColor);
         }
-        FontOption fontOption = ColumnAnalysis.parseFont(title.font());
+        FontOption fontOption = ExportColumnAnalysis.parseFont(title.font());
         titleOption.setFont(fontOption);
         sheetOption.setTitleOption(titleOption);
     }

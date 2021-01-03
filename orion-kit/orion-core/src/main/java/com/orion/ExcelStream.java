@@ -1,4 +1,4 @@
-package com.orion.excel.importing;
+package com.orion;
 
 import com.monitorjbl.xlsx.impl.StreamingSheet;
 import com.orion.excel.Excels;
@@ -182,13 +182,13 @@ public class ExcelStream {
         if (columns != null) {
             rowString = new String[columns.length];
             for (int i = 0; i < columns.length; i++) {
-                rowString[i] = Excels.getValue(row.getCell(columns[i]));
+                rowString[i] = Excels.getCellValue(row.getCell(columns[i]));
             }
         } else {
             int rowCellNum = row.getLastCellNum();
             rowString = new String[rowCellNum];
             for (int i = 0; i < rowCellNum; i++) {
-                rowString[i] = Excels.getValue(row.getCell(i));
+                rowString[i] = Excels.getCellValue(row.getCell(i));
             }
         }
         return rowString;

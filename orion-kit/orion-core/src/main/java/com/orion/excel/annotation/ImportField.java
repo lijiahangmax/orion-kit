@@ -1,5 +1,8 @@
 package com.orion.excel.annotation;
 
+import com.orion.excel.type.ExcelReadType;
+import com.orion.utils.Strings;
+
 import java.lang.annotation.*;
 
 /**
@@ -18,6 +21,16 @@ public @interface ImportField {
     /**
      * 导出表格列索引 从0开始
      */
-    int value();
+    int index();
+
+    /**
+     * 读取类型
+     */
+    ExcelReadType type() default ExcelReadType.TEXT;
+
+    /**
+     * 解析格式
+     */
+    String parseFormat() default Strings.EMPTY;
 
 }

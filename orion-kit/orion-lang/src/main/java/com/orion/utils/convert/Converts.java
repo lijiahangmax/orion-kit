@@ -100,18 +100,8 @@ public class Converts {
 
     public static byte toByte(Object o) {
         Valid.notNull(o);
-        if (o instanceof Byte) {
-            return (byte) o;
-        } else if (o instanceof Short) {
-            return (byte) ((short) o);
-        } else if (o instanceof Integer) {
-            return (byte) ((int) o);
-        } else if (o instanceof Long) {
-            return (byte) ((long) o);
-        } else if (o instanceof Float) {
-            return (byte) ((float) o);
-        } else if (o instanceof Double) {
-            return (byte) ((double) o);
+        if (o instanceof Number) {
+            return ((Number) o).byteValue();
         } else if (o instanceof Boolean) {
             return (byte) ((boolean) o ? 1 : 0);
         } else if (o instanceof Character) {
@@ -177,28 +167,20 @@ public class Converts {
 
     public static short toShort(Object o) {
         Valid.notNull(o);
-        if (o instanceof Byte) {
-            return (short) ((byte) o);
-        } else if (o instanceof byte[]) {
+        if (o instanceof byte[]) {
             return toShort((byte[]) o);
         } else if (o instanceof Byte[]) {
             return toShort(Arrays1.drap((Byte[]) o));
-        } else if (o instanceof Short) {
-            return (short) o;
-        } else if (o instanceof Integer) {
-            return (short) ((int) o);
-        } else if (o instanceof Long) {
-            return (short) ((long) o);
-        } else if (o instanceof Float) {
-            return (short) ((float) o);
-        } else if (o instanceof Double) {
-            return (short) ((double) o);
+        } else if (o instanceof Number) {
+            return ((Number) o).shortValue();
         } else if (o instanceof Boolean) {
             return (short) ((boolean) o ? 1 : 0);
         } else if (o instanceof Character) {
             return (short) ((char) o);
         } else if (o instanceof String) {
             return Short.valueOf((String) o);
+        } else if (o instanceof Number) {
+            return ((Number) o).shortValue();
         }
         return 0;
     }
@@ -258,22 +240,12 @@ public class Converts {
 
     public static int toInt(Object o) {
         Valid.notNull(o);
-        if (o instanceof Byte) {
-            return (int) ((byte) o);
-        } else if (o instanceof byte[]) {
+        if (o instanceof byte[]) {
             return toInt((byte[]) o);
         } else if (o instanceof Byte[]) {
             return toInt(Arrays1.drap((Byte[]) o));
-        } else if (o instanceof Short) {
-            return (int) ((short) o);
-        } else if (o instanceof Integer) {
-            return ((int) o);
-        } else if (o instanceof Long) {
-            return (int) ((long) o);
-        } else if (o instanceof Float) {
-            return (int) ((float) o);
-        } else if (o instanceof Double) {
-            return (int) ((double) o);
+        } else if (o instanceof Number) {
+            return ((Number) o).intValue();
         } else if (o instanceof Boolean) {
             return ((boolean) o ? 1 : 0);
         } else if (o instanceof Character) {
@@ -350,22 +322,12 @@ public class Converts {
 
     public static long toLong(Object o) {
         Valid.notNull(o);
-        if (o instanceof Byte) {
-            return (long) ((Byte) o);
-        } else if (o instanceof byte[]) {
+        if (o instanceof byte[]) {
             return toLong((byte[]) o);
         } else if (o instanceof Byte[]) {
             return toLong(Arrays1.drap((Byte[]) o));
-        } else if (o instanceof Short) {
-            return (long) ((short) o);
-        } else if (o instanceof Integer) {
-            return (long) ((int) o);
-        } else if (o instanceof Long) {
-            return (long) o;
-        } else if (o instanceof Float) {
-            return (long) ((float) o);
-        } else if (o instanceof Double) {
-            return (long) ((double) o);
+        } else if (o instanceof Number) {
+            return ((Number) o).longValue();
         } else if (o instanceof Boolean) {
             return ((boolean) o) ? 1L : 0L;
         } else if (o instanceof Character) {
@@ -416,18 +378,8 @@ public class Converts {
 
     public static float toFloat(Object o) {
         Valid.notNull(o);
-        if (o instanceof Byte) {
-            return (float) ((byte) o);
-        } else if (o instanceof Short) {
-            return (float) ((short) o);
-        } else if (o instanceof Integer) {
-            return (float) ((int) o);
-        } else if (o instanceof Long) {
-            return (float) ((long) o);
-        } else if (o instanceof Float) {
-            return (float) o;
-        } else if (o instanceof Double) {
-            return (float) ((double) o);
+        if (o instanceof Number) {
+            return ((Number) o).floatValue();
         } else if (o instanceof Boolean) {
             return (float) (((boolean) o) ? 1 : 0);
         } else if (o instanceof Character) {
@@ -478,18 +430,8 @@ public class Converts {
 
     public static double toDouble(Object o) {
         Valid.notNull(o);
-        if (o instanceof Byte) {
-            return (double) ((byte) o);
-        } else if (o instanceof Short) {
-            return (double) ((short) o);
-        } else if (o instanceof Integer) {
-            return (double) ((int) o);
-        } else if (o instanceof Long) {
-            return (double) ((long) o);
-        } else if (o instanceof Float) {
-            return (double) ((float) o);
-        } else if (o instanceof Double) {
-            return (double) o;
+        if (o instanceof Number) {
+            return ((Number) o).doubleValue();
         } else if (o instanceof Boolean) {
             return ((boolean) o) ? 1.00 : 0.00;
         } else if (o instanceof Character) {

@@ -3,6 +3,7 @@ package com.orion.utils.math;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Objects1;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
@@ -65,7 +66,11 @@ public class BigIntegers {
         if (o == null) {
             return null;
         }
-        if (o instanceof String) {
+        if (o instanceof BigInteger) {
+            return (BigInteger) o;
+        } else if (o instanceof BigDecimal) {
+            return BigInteger.valueOf(((BigDecimal) o).longValueExact());
+        } else if (o instanceof String) {
             return new BigInteger((String) o);
         } else if (o instanceof Boolean) {
             if ((Boolean) o) {
@@ -73,8 +78,8 @@ public class BigIntegers {
             } else {
                 return BigInteger.ZERO;
             }
-        } else if (o instanceof BigInteger) {
-            return (BigInteger) o;
+        } else if (o instanceof Long) {
+            return BigInteger.valueOf((Long) o);
         }
         return new BigInteger(o.toString());
     }

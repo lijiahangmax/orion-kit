@@ -1,7 +1,7 @@
 package com.orion.excel.style;
 
 import com.orion.excel.Excels;
-import com.orion.excel.option.FieldOption;
+import com.orion.excel.option.ExportFieldOption;
 import com.orion.excel.option.TitleOption;
 import com.orion.excel.type.ExcelAlignType;
 import com.orion.excel.type.ExcelVerticalAlignType;
@@ -65,7 +65,7 @@ public class StyleStream {
      * @param workbook workbook
      * @param option   option
      */
-    public static CellStyle parseStyle(Workbook workbook, FieldOption option) {
+    public static CellStyle parseStyle(Workbook workbook, ExportFieldOption option) {
         if (option == null) {
             return null;
         }
@@ -121,7 +121,7 @@ public class StyleStream {
      * @param workbook workbook
      * @param option   option
      */
-    public static CellStyle parseColumnStyle(Workbook workbook, FieldOption option) {
+    public static CellStyle parseColumnStyle(Workbook workbook, ExportFieldOption option) {
         CellStyle style = parseStyle(workbook, option);
         if (style == null) {
             return null;
@@ -149,15 +149,15 @@ public class StyleStream {
             return null;
         }
         // convert
-        FieldOption fieldOption = new FieldOption();
-        fieldOption.setAlign(option.getAlign());
-        fieldOption.setVerticalAlign(option.getVerticalAlign());
-        fieldOption.setBackgroundColor(option.getBackgroundColor());
-        fieldOption.setBorder(option.getBorder());
-        fieldOption.setBorderColor(option.getBorderColor());
-        fieldOption.setPaletteColorIndex(option.getPaletteColorIndex());
-        CellStyle cellStyle = parseStyle(workbook, fieldOption);
-        option.setPaletteColorIndex(fieldOption.getPaletteColorIndex());
+        ExportFieldOption exportFieldOption = new ExportFieldOption();
+        exportFieldOption.setAlign(option.getAlign());
+        exportFieldOption.setVerticalAlign(option.getVerticalAlign());
+        exportFieldOption.setBackgroundColor(option.getBackgroundColor());
+        exportFieldOption.setBorder(option.getBorder());
+        exportFieldOption.setBorderColor(option.getBorderColor());
+        exportFieldOption.setPaletteColorIndex(option.getPaletteColorIndex());
+        CellStyle cellStyle = parseStyle(workbook, exportFieldOption);
+        option.setPaletteColorIndex(exportFieldOption.getPaletteColorIndex());
         return cellStyle;
     }
 

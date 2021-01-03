@@ -133,7 +133,7 @@ public class ExcelColumnBatchSplit {
             }
             List<String> rowList = new ArrayList<>();
             for (Cell cell : row) {
-                rowList.add(Excels.getValue(cell));
+                rowList.add(Excels.getCellValue(cell));
             }
             rows.add(rowList);
         }

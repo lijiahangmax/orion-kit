@@ -41,6 +41,8 @@ public class BasicTypeMapper implements Serializable {
         this.loadBoolean();
         this.loadChar();
         this.loadString();
+        this.loadBigDecimal();
+        this.loadBigInteger();
         this.loadByteArray();
         this.loadShortArray();
         this.loadIntArray();
@@ -203,6 +205,28 @@ public class BasicTypeMapper implements Serializable {
         store.register(String.class, Date.class, TO_DATE);
         store.register(String.class, LocalDateTime.class, TO_LOCAL_DATE_TIME);
         store.register(String.class, LocalDate.class, TO_LOCAL_DATE);
+    }
+
+    private void loadBigDecimal() {
+        store.register(BigDecimal.class, Byte.class, TO_BYTE);
+        store.register(BigDecimal.class, Short.class, TO_SHORT);
+        store.register(BigDecimal.class, Integer.class, TO_INT);
+        store.register(BigDecimal.class, Long.class, TO_LONG);
+        store.register(BigDecimal.class, Float.class, TO_FLOAT);
+        store.register(BigDecimal.class, Double.class, TO_DOUBLE);
+        store.register(BigDecimal.class, BigInteger.class, TO_BIG_INTEGER);
+        store.register(BigDecimal.class, String.class, TO_STRING);
+    }
+
+    private void loadBigInteger() {
+        store.register(BigInteger.class, Byte.class, TO_BYTE);
+        store.register(BigInteger.class, Short.class, TO_SHORT);
+        store.register(BigInteger.class, Integer.class, TO_INT);
+        store.register(BigInteger.class, Long.class, TO_LONG);
+        store.register(BigInteger.class, Float.class, TO_FLOAT);
+        store.register(BigInteger.class, Double.class, TO_DOUBLE);
+        store.register(BigInteger.class, BigDecimal.class, TO_BIG_DECIMAL);
+        store.register(BigInteger.class, String.class, TO_STRING);
     }
 
     private void loadByteArray() {

@@ -9,13 +9,13 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 
 /**
- * Excel 字段参数
+ * Export 字段写入参数
  *
  * @author ljh15
  * @version 1.0.0
  * @since 2020/5/28 11:20
  */
-public class FieldOption implements Serializable {
+public class ExportFieldOption implements Serializable {
 
     /**
      * 单元格宽

@@ -120,7 +120,7 @@ public class ExcelRowMerge implements SafeCloseable {
                 }
                 List<String> rowList = new ArrayList<>();
                 for (Cell cell : sheetRow) {
-                    rowList.add(Excels.getValue(cell));
+                    rowList.add(Excels.getCellValue(cell));
                 }
                 Row row = sheet.createRow(i++);
                 for (int sheetCellIndex = 0; sheetCellIndex < rowList.size(); sheetCellIndex++) {

@@ -134,7 +134,7 @@ public class ExcelColumnSplit {
             }
             List<String> rowList = new ArrayList<>();
             for (Cell cell : row) {
-                rowList.add(Excels.getValue(cell));
+                rowList.add(Excels.getCellValue(cell));
             }
             if (saveData) {
                 rows.add(rowList);
