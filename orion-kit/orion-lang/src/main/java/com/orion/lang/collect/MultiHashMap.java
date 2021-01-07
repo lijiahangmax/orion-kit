@@ -1,5 +1,6 @@
 package com.orion.lang.collect;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.function.BiConsumer;
 
@@ -10,7 +11,7 @@ import java.util.function.BiConsumer;
  * @version 1.0.0
  * @since 2020/10/19 16:56
  */
-public class MultiHashMap<E, K, V> extends HashMap<E, HashMap<K, V>> {
+public class MultiHashMap<E, K, V> extends HashMap<E, HashMap<K, V>> implements Serializable {
 
     private static final long serialVersionUID = 4834450551128977L;
 

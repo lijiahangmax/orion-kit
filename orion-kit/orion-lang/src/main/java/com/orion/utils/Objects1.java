@@ -330,6 +330,10 @@ public class Objects1 {
     public static String toString(Object o) {
         if (o == null) {
             return Strings.EMPTY;
+        } else if (o instanceof String) {
+            return (String) o;
+        } else if (o instanceof Object[]) {
+            return Arrays.toString((Object[]) o);
         } else if (o instanceof byte[]) {
             return Arrays.toString((byte[]) o);
         } else if (o instanceof short[]) {
@@ -346,10 +350,8 @@ public class Objects1 {
             return Arrays.toString((char[]) o);
         } else if (o instanceof boolean[]) {
             return Arrays.toString((boolean[]) o);
-        } else if (o instanceof Object[]) {
-            return Arrays.toString((Object[]) o);
         } else {
-            return o.toString();
+            return def(o.toString(), Strings.EMPTY);
         }
     }
 

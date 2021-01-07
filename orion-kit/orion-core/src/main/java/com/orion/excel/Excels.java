@@ -88,10 +88,17 @@ public class Excels {
      * 通过类型获取值
      *
      * @param cell   cell
-     * @param type   type 不包含picture
+     * @param type   type
      * @param option option
      * @param <T>    T
      * @return value
+     * @see ExcelReadType#DECIMAL       可能为null
+     * @see ExcelReadType#DATE          可能为null
+     * @see ExcelReadType#LINK_ADDRESS  可能为null
+     * @see ExcelReadType#COMMENT       可能为null
+     * @see ExcelReadType#PICTURE       为null
+     * @see ExcelReadType#PHONE         不为null
+     * @see ExcelReadType#TEXT          不为null
      */
     @SuppressWarnings("unchecked")
     public static <T> T getCellValue(Cell cell, ExcelReadType type, CellOption option) {
@@ -341,12 +348,12 @@ public class Excels {
      */
     public static String getCellComment(Cell cell) {
         if (cell == null) {
-            return Strings.EMPTY;
+            return null;
         }
         return Optional.ofNullable(cell.getCellComment())
                 .map(Comment::getString)
                 .map(RichTextString::getString)
-                .orElse(Strings.EMPTY);
+                .orElse(null);
     }
 
     /**
@@ -357,11 +364,11 @@ public class Excels {
      */
     public static String getCellHyperUrl(Cell cell) {
         if (cell == null) {
-            return Strings.EMPTY;
+            return null;
         }
         return Optional.ofNullable(cell.getHyperlink())
                 .map(Hyperlink::getAddress)
-                .orElse(Strings.EMPTY);
+                .orElse(null);
     }
 
     /**

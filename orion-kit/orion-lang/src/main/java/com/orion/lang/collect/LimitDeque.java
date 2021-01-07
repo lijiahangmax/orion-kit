@@ -1,5 +1,6 @@
 package com.orion.lang.collect;
 
+import java.io.Serializable;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 /**
@@ -9,7 +10,9 @@ import java.util.concurrent.ConcurrentLinkedDeque;
  * @version 1.0.0
  * @since 2020/11/6 11:30
  */
-public class LimitDeque<E> extends ConcurrentLinkedDeque<E> {
+public class LimitDeque<E> extends ConcurrentLinkedDeque<E> implements Serializable {
+
+    private static final long serialVersionUID = 923412312354068942L;
 
     private int limit;
 

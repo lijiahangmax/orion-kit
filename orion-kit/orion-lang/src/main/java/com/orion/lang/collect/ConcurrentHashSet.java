@@ -1,5 +1,7 @@
 package com.orion.lang.collect;
 
+import com.orion.lang.Null;
+
 import java.io.Serializable;
 import java.util.AbstractSet;
 import java.util.Collection;
@@ -20,9 +22,9 @@ public class ConcurrentHashSet<E> extends AbstractSet<E> implements Serializable
 
     private static final long serialVersionUID = -6809192700238394L;
 
-    private Object o = new Object();
+    private static final Null VALUE = Null.VALUE;
 
-    private final ConcurrentMap<E, Object> map;
+    private final ConcurrentMap<E, Null> map;
 
     public ConcurrentHashSet() {
         map = new ConcurrentHashMap<>();
@@ -33,13 +35,16 @@ public class ConcurrentHashSet<E> extends AbstractSet<E> implements Serializable
     }
 
     public ConcurrentHashSet(Map<? extends E, ?> m) {
-        map = new ConcurrentHashMap<>(m);
+        map = new ConcurrentHashMap<>(m.size());
+        for (E e : m.keySet()) {
+            map.put(e, VALUE);
+        }
     }
 
     public ConcurrentHashSet(Collection<? extends E> s) {
         map = new ConcurrentHashMap<>(s.size());
         for (E e : s) {
-            map.put(e, o);
+            map.put(e, VALUE);
         }
     }
 
@@ -65,7 +70,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E> implements Serializable
 
     @Override
     public boolean add(E e) {
-        return map.put(e, o) == null;
+        return map.put(e, VALUE) == null;
     }
 
     @Override
@@ -80,7 +85,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E> implements Serializable
 
     @Override
     public void forEach(Consumer<? super E> action) {
-        for (Map.Entry<E, Object> e : map.entrySet()) {
+        for (Map.Entry<E, Null> e : map.entrySet()) {
             action.accept(e.getKey());
         }
     }

@@ -1,6 +1,7 @@
 package com.orion.excel.option;
 
 import com.orion.excel.type.ExcelReadType;
+import com.orion.utils.Strings;
 
 import java.io.Serializable;
 
@@ -14,7 +15,7 @@ import java.io.Serializable;
 public class ImportFieldOption implements Serializable {
 
     /**
-     * index
+     * row index
      */
     private int index;
 
@@ -32,6 +33,23 @@ public class ImportFieldOption implements Serializable {
      * 单元格配置
      */
     private CellOption cellOption;
+
+    public ImportFieldOption() {
+    }
+
+    public ImportFieldOption(int index, ExcelReadType type) {
+        this.index = index;
+        this.type = type;
+    }
+
+    public ImportFieldOption(int index, ExcelReadType type, String parseFormat) {
+        this.index = index;
+        this.type = type;
+        this.parseFormat = parseFormat;
+        if (!Strings.isEmpty(parseFormat)) {
+            this.cellOption = new CellOption(parseFormat);
+        }
+    }
 
     public int getIndex() {
         return index;

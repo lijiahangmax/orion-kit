@@ -1,4 +1,4 @@
-package com.orion.excel.builder;
+package com.orion.excel.writer;
 
 import com.orion.excel.type.ExcelFieldType;
 import org.apache.poi.ss.usermodel.CellStyle;

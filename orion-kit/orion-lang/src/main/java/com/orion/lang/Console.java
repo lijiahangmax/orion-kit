@@ -4,6 +4,8 @@ import com.orion.utils.Objects1;
 import com.orion.utils.Stacks;
 import com.orion.utils.Strings;
 
+import java.util.StringJoiner;
+
 import static java.lang.System.err;
 import static java.lang.System.out;
 
@@ -115,13 +117,13 @@ public class Console {
      * 输出 trace
      */
     public static void trace(Object... os) {
-        StringBuilder sb = new StringBuilder();
+        StringJoiner joiner = new StringJoiner(Strings.SPACE);
         if (os != null) {
             for (Object o : os) {
-                sb.append(Objects1.toString(o)).append(Strings.SPACE);
+                joiner.add(Objects1.toString(o));
             }
         }
-        out.println(sb);
+        out.println(joiner);
     }
 
     /**

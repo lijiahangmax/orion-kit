@@ -1,5 +1,6 @@
 package com.orion.lang.collect;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -11,7 +12,9 @@ import java.util.List;
  * @version 1.0.0
  * @since 2019/11/18 14:48
  */
-public class LimitList<E> extends ArrayList<E> {
+public class LimitList<E> extends ArrayList<E> implements Serializable {
+
+    private static final long serialVersionUID = 829347812390094123L;
 
     /**
      * 条数

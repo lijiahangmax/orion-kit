@@ -1,4 +1,4 @@
-package com.orion.excel.exporting;
+package com.orion.excel.writer.exporting;
 
 import com.orion.able.SafeCloseable;
 import com.orion.excel.Excels;
@@ -69,8 +69,8 @@ public class ExcelExport<T> implements SafeCloseable {
     }
 
     public ExcelExport(Class<T> targetClass, Workbook workbook, Sheet sheet) {
-        Valid.notNull(targetClass, "TargetClass is null");
-        Valid.notNull(workbook, "Workbook is null");
+        Valid.notNull(targetClass, "target class is null");
+        Valid.notNull(workbook, "workbook is null");
         this.targetClass = targetClass;
         this.workbook = workbook;
         this.sheet = sheet;
@@ -125,11 +125,11 @@ public class ExcelExport<T> implements SafeCloseable {
     /**
      * 跳过空行
      *
-     * @param skipNullRow true跳过
+     * @param skipNullRows true跳过
      * @return this
      */
-    public ExcelExport<T> skipNullRow(boolean skipNullRow) {
-        sheetOption.setSkipNullRow(skipNullRow);
+    public ExcelExport<T> skipNullRows(boolean skipNullRows) {
+        sheetOption.setSkipNullRows(skipNullRows);
         return this;
     }
 
@@ -439,10 +439,10 @@ public class ExcelExport<T> implements SafeCloseable {
         Integer rowHeight = sheetOption.getRowHeight();
         for (T data : rows) {
             this.rows++;
-            if (data == null && sheetOption.isSkipNullRow()) {
+            if (data == null && sheetOption.isSkipNullRows()) {
                 continue;
             }
-            // !skipNullRow 为null的row会有样式
+            // !skipNullRows 为null的row会有样式
             Row dataRow = sheet.createRow(processor.rowIndex);
             // 行高
             if (rowHeight != null) {

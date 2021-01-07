@@ -8,7 +8,6 @@ import org.apache.poi.ooxml.POIXMLDocumentPart;
 import org.apache.poi.ss.usermodel.PictureData;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.*;
 import org.openxmlformats.schemas.drawingml.x2006.spreadsheetDrawing.CTMarker;
 
@@ -33,11 +32,6 @@ public class PictureParser implements Analysable {
     private Sheet sheet;
 
     public PictureParser(Workbook workbook, Sheet sheet) {
-        if (workbook instanceof SXSSFWorkbook) {
-            int index = workbook.getSheetIndex(sheet);
-            workbook = ((SXSSFWorkbook) workbook).getXSSFWorkbook();
-            sheet = workbook.getSheetAt(index);
-        }
         this.workbook = workbook;
         this.sheet = sheet;
     }

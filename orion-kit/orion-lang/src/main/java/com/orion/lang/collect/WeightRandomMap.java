@@ -3,6 +3,7 @@ package com.orion.lang.collect;
 import com.orion.utils.collect.Lists;
 import com.orion.utils.collect.Maps;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -13,7 +14,9 @@ import java.util.concurrent.ThreadLocalRandom;
  * @version 1.0.0
  * @since 2020/10/15 10:52
  */
-public class WeightRandomMap<T> extends TreeMap<Double, T> {
+public class WeightRandomMap<T> extends TreeMap<Double, T> implements Serializable {
+
+    private static final long serialVersionUID = -978238901200283479L;
 
     private final Random RANDOM = ThreadLocalRandom.current();
 

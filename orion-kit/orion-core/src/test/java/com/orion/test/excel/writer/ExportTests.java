@@ -1,6 +1,6 @@
-package com.orion.test.excel.export;
+package com.orion.test.excel.writer;
 
-import com.orion.excel.exporting.ExcelExport;
+import com.orion.excel.writer.exporting.ExcelExport;
 import com.orion.utils.Spells;
 import com.orion.utils.Strings;
 import com.orion.utils.random.Randoms;
@@ -47,7 +47,7 @@ public class ExportTests {
                 .init()
                 .headers("二级标题", "", "day", "", "用户信息", "", "", "")
                 .skip(1)
-                .skipNullRow(false)
+                .skipNullRows(false)
                 .addRows(list)
                 .merge(1, 0, 1)
                 .merge(1, 4, 7)

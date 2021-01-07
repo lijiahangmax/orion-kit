@@ -3,6 +3,7 @@ package com.orion.lang.collect;
 import com.orion.utils.Objects1;
 import com.orion.utils.Valid;
 
+import java.io.Serializable;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
@@ -17,7 +18,9 @@ import java.util.concurrent.locks.ReentrantLock;
  * copy with spring
  * key value 可以为null
  */
-public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> {
+public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>, Serializable {
+
+    private static final long serialVersionUID = -128497912390452323L;
 
     private static final int DEFAULT_INITIAL_CAPACITY = 16;
 

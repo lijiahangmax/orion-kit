@@ -1,14 +1,14 @@
-package com.orion.excel.importing;
+package com.orion.excel.reader;
 
 import com.orion.able.Analysable;
 import com.orion.excel.annotation.ImportField;
 import com.orion.excel.annotation.ImportIgnore;
 import com.orion.excel.option.CellOption;
 import com.orion.excel.option.ImportFieldOption;
-import com.orion.excel.option.ImportSheetOption;
 import com.orion.excel.type.ExcelReadType;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
+import com.orion.utils.Valid;
 import com.orion.utils.reflect.Annotations;
 import com.orion.utils.reflect.Fields;
 import com.orion.utils.reflect.Methods;
@@ -27,18 +27,18 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2021/1/2 0:35
  */
-public class ImportColumnAnalysis implements Analysable {
+public class ReaderColumnAnalysis implements Analysable {
 
     private Class<?> targetClass;
 
-    private ImportSheetOption<?> sheetOption;
+    private boolean streaming;
 
-    private Map<Method, ImportFieldOption> fieldOptions;
+    private Map<Method, ImportFieldOption> options;
 
-    public ImportColumnAnalysis(Class<?> targetClass, ImportSheetOption<?> sheetOption, Map<Method, ImportFieldOption> fieldOptions) {
+    public ReaderColumnAnalysis(Class<?> targetClass, boolean streaming, Map<Method, ImportFieldOption> options) {
         this.targetClass = targetClass;
-        this.sheetOption = sheetOption;
-        this.fieldOptions = fieldOptions;
+        this.streaming = streaming;
+        this.options = options;
     }
 
     @Override
@@ -72,18 +72,40 @@ public class ImportColumnAnalysis implements Analysable {
         if (field == null || ignore != null) {
             return;
         }
-        if (method == null) {
-            throw Exceptions.parse("not found " + fieldName + "setter method");
+        ImportFieldOption option = new ImportFieldOption();
+        option.setIndex(field.index());
+        option.setType(field.type());
+        String parseFormat = field.parseFormat();
+        option.setParseFormat(parseFormat);
+        if (!Strings.isEmpty(parseFormat)) {
+            option.setCellOption(new CellOption(parseFormat));
         }
-        ImportFieldOption fieldOption = new ImportFieldOption();
+        this.analysisColumn(option, fieldName, method);
+    }
+
+    /**
+     * 解析option
+     *
+     * @param option    option
+     * @param fieldName fieldName
+     * @param method    method
+     */
+    public void analysisColumn(ImportFieldOption option, String fieldName, Method method) {
+        Valid.notNull(option, "option is null");
+        Valid.notNull(method, fieldName + " setter method not found from " + targetClass);
+        Valid.gte(option.getIndex(), 0, "index must >= 0");
         // check
-        if (sheetOption.isStreaming() && (field.type().equals(ExcelReadType.LINK_ADDRESS) ||
-                field.type().equals(ExcelReadType.COMMENT) ||
-                field.type().equals(ExcelReadType.PICTURE))) {
+        ExcelReadType type = option.getType();
+        if (type == null) {
+            option.setType(type = ExcelReadType.TEXT);
+        }
+        if (streaming && (type.equals(ExcelReadType.LINK_ADDRESS) ||
+                type.equals(ExcelReadType.COMMENT) ||
+                type.equals(ExcelReadType.PICTURE))) {
             throw Exceptions.parse("streaming just support read value");
         }
         Class<?> parameterType = method.getParameterTypes()[0];
-        switch (field.type()) {
+        switch (type) {
             case LINK_ADDRESS:
                 if (!parameterType.equals(String.class)) {
                     throw Exceptions.parse("read hyperlink address parameter type must be String");
@@ -96,20 +118,12 @@ public class ImportColumnAnalysis implements Analysable {
                         !parameterType.equals(ByteArrayOutputStream.class)) {
                     throw Exceptions.parse("read picture parameter type must be byte[], String, OutputStream or ByteArrayOutputStream");
                 }
-                sheetOption.setHavePicture(true);
                 break;
             case TEXT:
             default:
                 break;
         }
-        fieldOption.setIndex(field.index());
-        fieldOption.setType(field.type());
-        String parseFormat = field.parseFormat();
-        fieldOption.setParseFormat(parseFormat);
-        if (!Strings.isEmpty(parseFormat)) {
-            fieldOption.setCellOption(new CellOption(parseFormat));
-        }
-        fieldOptions.put(method, fieldOption);
+        options.put(method, option);
     }
 
 }

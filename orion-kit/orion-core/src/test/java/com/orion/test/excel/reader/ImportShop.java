@@ -1,4 +1,4 @@
-package com.orion.test.excel.importing;
+package com.orion.test.excel.reader;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
@@ -91,6 +91,9 @@ public class ImportShop {
     }
 
     public void setMargin(Double margin) {
+        if (margin == null) {
+            margin = 0.0;
+        }
         this.margin = margin;
     }
 

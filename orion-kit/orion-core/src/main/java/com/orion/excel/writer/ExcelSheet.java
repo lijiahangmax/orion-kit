@@ -1,4 +1,4 @@
-package com.orion.excel.builder;
+package com.orion.excel.writer;
 
 import com.orion.excel.Excels;
 import com.orion.utils.collect.Lists;
@@ -37,7 +37,7 @@ public class ExcelSheet<T> {
     /**
      * 是否跳过null
      */
-    private boolean skipNullRow = true;
+    private boolean skipNullRows = true;
 
     /**
      * 选项
@@ -167,8 +167,8 @@ public class ExcelSheet<T> {
      * @param skip 跳过空行
      * @return this
      */
-    public ExcelSheet<T> skipNullRow(boolean skip) {
-        this.skipNullRow = skip;
+    public ExcelSheet<T> skipNullRows(boolean skip) {
+        this.skipNullRows = skip;
         return this;
     }
 
@@ -275,7 +275,7 @@ public class ExcelSheet<T> {
         }
 
         for (T t : list) {
-            if (t == null && skipNullRow) {
+            if (t == null && skipNullRows) {
                 continue;
             }
             Row row = sheet.createRow(index++);
@@ -299,7 +299,7 @@ public class ExcelSheet<T> {
                     cell.setCellStyle(style);
                 }
                 if (t == null) {
-                    // !skipNullRow 为null的row会有样式
+                    // !skipNullRows 为null的row会有样式
                     continue;
                 }
                 Object v = Methods.invokeMethod(t, method);
@@ -356,7 +356,7 @@ public class ExcelSheet<T> {
      */
     public ExcelSheet<T> addArray(Object[] r) {
         if (r == null) {
-            if (!skipNullRow) {
+            if (!skipNullRows) {
                 index++;
             }
             return this;

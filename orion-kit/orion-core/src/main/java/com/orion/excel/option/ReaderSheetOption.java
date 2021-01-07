@@ -3,21 +3,20 @@ package com.orion.excel.option;
 import com.orion.excel.picture.PictureParser;
 
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
 
 /**
- * Import 表格参数
+ * Reader sheet配置
  *
  * @author ljh15
  * @version 1.0.0
- * @since 2021/1/2 1:06
+ * @since 2021/1/4 17:33
  */
-public class ImportSheetOption<T> implements Serializable {
+public class ReaderSheetOption implements Serializable {
 
     /**
-     * bean constructor
+     * 读取的列
      */
-    private Constructor<T> constructor;
+    private int[] columns;
 
     /**
      * 是否跳过空行
@@ -30,11 +29,6 @@ public class ImportSheetOption<T> implements Serializable {
     private boolean streaming;
 
     /**
-     * 行数
-     */
-    private int rowNum;
-
-    /**
      * 是否包含图片
      */
     private boolean havePicture;
@@ -44,12 +38,12 @@ public class ImportSheetOption<T> implements Serializable {
      */
     private PictureParser pictureParser;
 
-    public Constructor<T> getConstructor() {
-        return constructor;
+    public int[] getColumns() {
+        return columns;
     }
 
-    public void setConstructor(Constructor<T> constructor) {
-        this.constructor = constructor;
+    public void setColumns(int[] columns) {
+        this.columns = columns;
     }
 
     public boolean isSkipNullRows() {
@@ -66,14 +60,6 @@ public class ImportSheetOption<T> implements Serializable {
 
     public void setStreaming(boolean streaming) {
         this.streaming = streaming;
-    }
-
-    public int getRowNum() {
-        return rowNum;
-    }
-
-    public void setRowNum(int rowNum) {
-        this.rowNum = rowNum;
     }
 
     public boolean isHavePicture() {

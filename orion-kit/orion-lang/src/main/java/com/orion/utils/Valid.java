@@ -276,11 +276,11 @@ public abstract class Valid {
         noNullElements(array, "The validated array contains null element at index: {}");
     }
 
-    public static <T> void noNullElements(T[] array, String message) {
+    public static <T> void noNullElements(T[] array, String message, Object... values) {
         notNull(array);
         for (int i = 0; i < array.length; i++) {
             if (array[i] == null) {
-                throw Exceptions.invalidArgument(Strings.format(message, i));
+                throw Exceptions.invalidArgument(Strings.format(message, values));
             }
         }
     }
@@ -289,12 +289,12 @@ public abstract class Valid {
         noNullElements(iterable, "The validated collection contains null element at index: {}");
     }
 
-    public static <T extends Iterable<?>> void noNullElements(T iterable, String message) {
+    public static <T extends Iterable<?>> void noNullElements(T iterable, String message, Object... values) {
         notNull(iterable);
         int i = 0;
         for (Iterator<?> it = iterable.iterator(); it.hasNext(); i++) {
             if (it.next() == null) {
-                throw Exceptions.invalidArgument(Strings.format(message, i));
+                throw Exceptions.invalidArgument(Strings.format(message, values));
             }
         }
     }

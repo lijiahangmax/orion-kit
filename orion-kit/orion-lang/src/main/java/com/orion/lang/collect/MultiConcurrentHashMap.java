@@ -1,5 +1,6 @@
 package com.orion.lang.collect;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
@@ -11,7 +12,7 @@ import java.util.function.BiConsumer;
  * @version 1.0.0
  * @since 2020/10/19 16:39
  */
-public class MultiConcurrentHashMap<E, K, V> extends ConcurrentHashMap<E, ConcurrentHashMap<K, V>> {
+public class MultiConcurrentHashMap<E, K, V> extends ConcurrentHashMap<E, ConcurrentHashMap<K, V>> implements Serializable {
 
     private static final long serialVersionUID = 4834450551128977L;
 

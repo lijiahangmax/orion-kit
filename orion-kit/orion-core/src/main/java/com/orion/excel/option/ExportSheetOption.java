@@ -84,7 +84,7 @@ public class ExportSheetOption implements Serializable {
     /**
      * 是否跳过空行
      */
-    private boolean skipNullRow = true;
+    private boolean skipNullRows = true;
 
     /**
      * 是否固定表头
@@ -356,12 +356,12 @@ public class ExportSheetOption implements Serializable {
         this.skipTitle = skipTitle;
     }
 
-    public boolean isSkipNullRow() {
-        return skipNullRow;
+    public boolean isSkipNullRows() {
+        return skipNullRows;
     }
 
-    public void setSkipNullRow(boolean skipNullRow) {
-        this.skipNullRow = skipNullRow;
+    public void setSkipNullRows(boolean skipNullRows) {
+        this.skipNullRows = skipNullRows;
     }
 
     public boolean isAddTitle() {
