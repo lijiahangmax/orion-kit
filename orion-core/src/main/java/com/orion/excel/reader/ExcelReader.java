@@ -21,7 +21,7 @@ import java.util.function.Consumer;
  * @version 1.0.0
  * @since 2021/1/4 17:09
  */
-public abstract class ExcelReader<T> implements SafeCloseable {
+public abstract class ExcelReader<T> implements SafeCloseable, Iterator<T>, Iterable<T> {
 
     protected Workbook workbook;
 
@@ -91,6 +91,11 @@ public abstract class ExcelReader<T> implements SafeCloseable {
      * 是否存储数据
      */
     protected boolean store;
+
+    /**
+     * 下一个元素
+     */
+    protected T next;
 
     protected ExcelReader(Workbook workbook, Sheet sheet, List<T> rows, Consumer<T> consumer) {
         Valid.notNull(workbook, "workbook is null");
@@ -203,8 +208,8 @@ public abstract class ExcelReader<T> implements SafeCloseable {
     /**
      * 读取一行
      */
-    private void readRow() {
-        T row = next();
+    protected void readRow() {
+        T row = nextRow();
         if (row == null && skipNullRows) {
             return;
         }
@@ -221,7 +226,7 @@ public abstract class ExcelReader<T> implements SafeCloseable {
      *
      * @return row
      */
-    private T next() {
+    protected T nextRow() {
         if (!iterator.hasNext()) {
             end = true;
             return null;
@@ -231,7 +236,7 @@ public abstract class ExcelReader<T> implements SafeCloseable {
             rowIndex++;
             return parserRow(row);
         }
-        return next();
+        return nextRow();
     }
 
     /**
@@ -241,6 +246,29 @@ public abstract class ExcelReader<T> implements SafeCloseable {
      * @return row
      */
     protected abstract T parserRow(Row row);
+
+    @Override
+    public Iterator<T> iterator() {
+        return this;
+    }
+
+    @Override
+    public boolean hasNext() {
+        if (end) {
+            return false;
+        }
+        next = nextRow();
+        if (next == null && skipNullRows) {
+            return hasNext();
+        }
+        return true;
+    }
+
+    @Override
+    public T next() {
+        rowNum++;
+        return next;
+    }
 
     @Override
     public void close() {
