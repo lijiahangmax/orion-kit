@@ -2,18 +2,19 @@ package com.orion.utils.convert;
 
 import com.orion.function.Conversion;
 import com.orion.lang.collect.MultiConcurrentHashMap;
+import com.orion.lang.iterator.ClassIterator;
 import com.orion.lang.support.CloneSupport;
 import com.orion.lang.wrapper.Pair;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.Valid;
-import com.orion.utils.collect.Lists;
+import com.orion.utils.collect.Sets;
 import com.orion.utils.reflect.Classes;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -38,7 +39,7 @@ public class TypeStore extends CloneSupport<TypeStore> implements Serializable {
 
     static {
         // 装载基础Mapper
-        new BasicTypeMapper();
+        new BasicTypeStoreProvider(STORE);
     }
 
     private final MultiConcurrentHashMap<Class<?>, Class<?>, Conversion<?, ?>> conversionMapping = new MultiConcurrentHashMap<>();
@@ -97,6 +98,13 @@ public class TypeStore extends CloneSupport<TypeStore> implements Serializable {
         if (conversion != null) {
             return conversion.apply(t);
         }
+        // sourceParentClass
+        for (Class<?> sourceParentClass : new ClassIterator<>(sourceClass)) {
+            conversion = (Conversion<T, R>) this.get(sourceParentClass, targetClass);
+            if (conversion != null) {
+                return conversion.apply(t);
+            }
+        }
         // check base array
         if (!Classes.isArray(targetClass)) {
             throw Exceptions.convert(Strings.format("Unable to convert source [{}] class to target [{}] class", sourceClass, targetClass));
@@ -124,19 +132,67 @@ public class TypeStore extends CloneSupport<TypeStore> implements Serializable {
      * 获取适配的 class
      *
      * @param sourceType 原始类型
-     * @return List
+     * @return set
      */
-    public List<Class<?>> getSuitableClasses(Class<?> sourceType) {
-        return Lists.as(conversionMapping.computeIfAbsent(sourceType, c -> new ConcurrentHashMap<>()).keys());
+    public Set<Class<?>> getSuitableClasses(Class<?> sourceType) {
+        return this.getSuitableClasses(sourceType, false);
+    }
+
+    /**
+     * 获取所有适配的 class
+     *
+     * @param sourceType 原始类型
+     * @return set
+     */
+    public Set<Class<?>> getAllSuitableClasses(Class<?> sourceType) {
+        return this.getSuitableClasses(sourceType, true);
+    }
+
+    protected Set<Class<?>> getSuitableClasses(Class<?> sourceType, boolean all) {
+        Set<Class<?>> classes = Sets.as(conversionMapping.computeIfAbsent(sourceType, c -> new ConcurrentHashMap<>(8)).keys());
+        if (all) {
+            for (Class<?> parentType : new ClassIterator<>(sourceType)) {
+                Map<Class<?>, Conversion<?, ?>> map = conversionMapping.get(parentType);
+                if (map != null) {
+                    classes.addAll(map.keySet());
+                }
+            }
+        }
+        return classes;
     }
 
     /**
      * 获取适配的 Conversion
      *
-     * @return Map
+     * @param sourceType 原始类型
+     * @return map
      */
     public Map<Class<?>, Conversion<?, ?>> getSuitableConversion(Class<?> sourceType) {
-        return conversionMapping.computeIfAbsent(sourceType, c -> new ConcurrentHashMap<>());
+        return this.getSuitableConversion(sourceType, false);
+    }
+
+    /**
+     * 获取所有适配的 Conversion
+     *
+     * @param sourceType 原始类型
+     * @return map
+     */
+    public Map<Class<?>, Conversion<?, ?>> getAllSuitableConversion(Class<?> sourceType) {
+        return this.getSuitableConversion(sourceType, true);
+    }
+
+    protected Map<Class<?>, Conversion<?, ?>> getSuitableConversion(Class<?> sourceType, boolean all) {
+        Map<Class<?>, Conversion<?, ?>> mapping = conversionMapping.computeIfAbsent(sourceType, c -> new ConcurrentHashMap<>(8));
+        if (all) {
+            for (Class<?> parentType : new ClassIterator<>(sourceType)) {
+                Map<Class<?>, Conversion<?, ?>> parentMapping = conversionMapping.get(parentType);
+                if (parentMapping == null) {
+                    continue;
+                }
+                parentMapping.forEach(mapping::putIfAbsent);
+            }
+        }
+        return mapping;
     }
 
     /**
@@ -177,6 +233,11 @@ public class TypeStore extends CloneSupport<TypeStore> implements Serializable {
         }
         if (store.get(sourceClass, targetClass) != null) {
             return true;
+        }
+        for (Class<?> sourceParentClass : new ClassIterator<>(sourceClass)) {
+            if (store.get(sourceParentClass, targetClass) != null) {
+                return true;
+            }
         }
         if (!Classes.isArray(targetClass)) {
             return false;

@@ -5,8 +5,6 @@ import com.orion.utils.Strings;
 import com.orion.utils.Valid;
 
 import java.text.DecimalFormat;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 数字工具类
@@ -17,23 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Numbers {
 
-    /**
-     * 无小数点
-     */
-    private static final DecimalFormat NO_DECIMAL = new DecimalFormat("#");
-
-    /**
-     * 格式化
-     */
-    private static final Map<Integer, DecimalFormat> DECIMAL_FORMAT_MAP = new ConcurrentHashMap<>();
-
     private Numbers() {
-    }
-
-    static {
-        DECIMAL_FORMAT_MAP.put(0, NO_DECIMAL);
-        DECIMAL_FORMAT_MAP.put(1, new DecimalFormat("#.#"));
-        DECIMAL_FORMAT_MAP.put(2, new DecimalFormat("#.##"));
     }
 
     /**
@@ -927,7 +909,7 @@ public class Numbers {
      * @return int
      */
     public static int cleanDecimal(float f) {
-        return Integer.parseInt(NO_DECIMAL.format(f));
+        return Integer.parseInt(new DecimalFormat("#").format(f));
     }
 
     /**
@@ -937,7 +919,7 @@ public class Numbers {
      * @return string
      */
     public static long cleanDecimal(double d) {
-        return Long.parseLong(NO_DECIMAL.format(d));
+        return Long.parseLong(new DecimalFormat("#").format(d));
     }
 
     /**
@@ -947,7 +929,7 @@ public class Numbers {
      * @return string
      */
     public static String cleanFloatDecimal(float f) {
-        return NO_DECIMAL.format(f);
+        return new DecimalFormat("#").format(f);
     }
 
     /**
@@ -957,7 +939,7 @@ public class Numbers {
      * @return string
      */
     public static String cleanDoubleDecimal(double d) {
-        return NO_DECIMAL.format(d);
+        return new DecimalFormat("#").format(d);
     }
 
     /**
@@ -968,11 +950,7 @@ public class Numbers {
      * @return string
      */
     public static String setScale(double d, int decimalLen) {
-        DecimalFormat format = DECIMAL_FORMAT_MAP.get(decimalLen);
-        if (format == null) {
-            format = new DecimalFormat("#." + Strings.repeat('#', decimalLen));
-            DECIMAL_FORMAT_MAP.put(decimalLen, format);
-        }
+        DecimalFormat format = new DecimalFormat("#." + Strings.repeat('#', decimalLen));
         return format.format(d);
     }
 
@@ -984,11 +962,7 @@ public class Numbers {
      * @return string
      */
     public static String setScale(float f, int decimalLen) {
-        DecimalFormat format = DECIMAL_FORMAT_MAP.get(decimalLen);
-        if (format == null) {
-            format = new DecimalFormat("#." + Strings.repeat('#', decimalLen));
-            DECIMAL_FORMAT_MAP.put(decimalLen, format);
-        }
+        DecimalFormat format = new DecimalFormat("#." + Strings.repeat('#', decimalLen));
         return format.format(f);
     }
 

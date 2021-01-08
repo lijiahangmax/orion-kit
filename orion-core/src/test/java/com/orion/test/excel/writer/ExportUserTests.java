@@ -14,17 +14,17 @@ import java.util.stream.IntStream;
 /**
  * @author ljh15
  * @version 1.0.0
- * @since 2020/12/21 17:50
+ * @since 2020/12/30 9:40
  */
-public class ExportTests {
+public class ExportUserTests {
 
     @Test
     public void export() {
-        List<UserExport> list = IntStream.rangeClosed(1, 200).mapToObj((i) -> {
+        List<ExportUser> list = IntStream.rangeClosed(1, 200).mapToObj((i) -> {
             if (i == 2) {
                 return null;
             }
-            UserExport e = new UserExport();
+            ExportUser e = new ExportUser();
             e.setId((long) (10000 + i));
             e.setName(Strings.randomChars(40));
             e.setDate(Dates.date(System.currentTimeMillis() + (i * 10000)));
@@ -41,7 +41,7 @@ public class ExportTests {
         list.add(null);
         list.add(null);
 
-        new ExcelExport<>(UserExport.class)
+        new ExcelExport<>(ExportUser.class)
                 .cleanHeaderStyle(2)
                 .cleanColumnStyle(4)
                 .init()

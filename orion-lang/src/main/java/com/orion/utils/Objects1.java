@@ -240,18 +240,25 @@ public class Objects1 {
         return !isVoids(c);
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * 如果实现了cloneable 会调用clone方法
+     * 如果没实现cloneable 则会深拷贝对象 对象必须实现序列化接口
+     *
+     * @param o   对象
+     * @param <T> T
+     * @return clone T
+     */
     public static <T> T clone(T o) {
         if (o == null) {
             return null;
         }
         if (Arrays1.isArray(o)) {
-            return (T) deserialize(serialize(((Serializable) o)));
+            return deserialize(serialize(((Serializable) o)));
         }
         if (o.getClass() != Object.class && o instanceof Cloneable) {
             return Methods.invokeMethod(o, "clone");
         } else if (o instanceof Serializable) {
-            return (T) deserialize(serialize(((Serializable) o)));
+            return deserialize(serialize(((Serializable) o)));
         } else {
             throw Exceptions.argument("Failed to serialize object, not implements Cloneable and not implements Serializable");
         }
@@ -267,15 +274,14 @@ public class Objects1 {
         if (o == null) {
             return null;
         }
-        ByteArrayOutputStream bs = new ByteArrayOutputStream(1024);
-        try {
-            ObjectOutputStream oos = new ObjectOutputStream(bs);
+        try (ByteArrayOutputStream bs = new ByteArrayOutputStream(1024);
+             ObjectOutputStream oos = new ObjectOutputStream(bs)) {
             oos.writeObject(o);
             oos.flush();
+            return bs.toByteArray();
         } catch (IOException e) {
-            throw Exceptions.argument("Failed to serialize object of type: " + o.getClass(), e);
+            throw Exceptions.argument("failed to serialize object of type: " + o.getClass(), e);
         }
-        return bs.toByteArray();
     }
 
     /**
@@ -284,15 +290,15 @@ public class Objects1 {
      * @param bytes ignore
      * @return ignore
      */
-    public static Object deserialize(byte[] bytes) {
+    @SuppressWarnings("unchecked")
+    public static <T> T deserialize(byte[] bytes) {
         if (bytes == null) {
             return null;
         }
-        try {
-            ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
-            return ois.readObject();
+        try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes))) {
+            return (T) ois.readObject();
         } catch (Exception e) {
-            throw new IllegalArgumentException("Failed to deserialize object", e);
+            throw new IllegalArgumentException("failed to deserialize object", e);
         }
     }
 

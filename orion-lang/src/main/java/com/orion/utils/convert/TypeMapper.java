@@ -4,8 +4,8 @@ import com.orion.function.Conversion;
 import com.orion.utils.Valid;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 对象类型转换映射的自定义实现
@@ -70,19 +70,37 @@ public abstract class TypeMapper<T> implements Serializable {
     /**
      * 获取适配的 class
      *
-     * @return List
+     * @return set
      */
-    public List<Class<?>> getSuitableClasses() {
+    public Set<Class<?>> getSuitableClasses() {
         return store.getSuitableClasses(sourceType);
+    }
+
+    /**
+     * 获取所有适配的 class
+     *
+     * @return set
+     */
+    public Set<Class<?>> getAllSuitableClasses() {
+        return store.getSuitableClasses(sourceType, true);
     }
 
     /**
      * 获取适配的 Conversion
      *
-     * @return Map
+     * @return map
      */
     public Map<Class<?>, Conversion<?, ?>> getSuitableConversion() {
         return store.getSuitableConversion(sourceType);
+    }
+
+    /**
+     * 获取所有适配的 Conversion
+     *
+     * @return map
+     */
+    public Map<Class<?>, Conversion<?, ?>> getAllSuitableConversion() {
+        return store.getSuitableConversion(sourceType, true);
     }
 
 }

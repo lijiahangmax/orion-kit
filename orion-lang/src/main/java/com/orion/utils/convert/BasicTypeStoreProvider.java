@@ -13,36 +13,30 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
- * 基本类型转换映射
+ * 基本类型转换映射 提供者
  *
  * @author ljh15
  * @version 1.0.0
  * @since 2020/11/9 15:49
  */
 @SuppressWarnings("ALL")
-public class BasicTypeMapper implements Serializable {
+public class BasicTypeStoreProvider implements Serializable {
 
     private static final long serialVersionUID = -938129593771195L;
 
     private final TypeStore store;
 
-    public BasicTypeMapper() {
+    public BasicTypeStoreProvider() {
         this(TypeStore.STORE);
     }
 
-    public BasicTypeMapper(TypeStore store) {
+    public BasicTypeStoreProvider(TypeStore store) {
         this.store = store;
-        this.loadByte();
-        this.loadShort();
-        this.loadInt();
-        this.loadLong();
-        this.loadFloat();
-        this.loadDouble();
+        this.loadNumber();
+        this.loadNumberExt();
         this.loadBoolean();
         this.loadChar();
         this.loadString();
-        this.loadBigDecimal();
-        this.loadBigInteger();
         this.loadByteArray();
         this.loadShortArray();
         this.loadIntArray();
@@ -81,88 +75,29 @@ public class BasicTypeMapper implements Serializable {
     private final static Conversion TO_LOCAL_DATE_TIME = Dates::localDateTime;
     private final static Conversion TO_LOCAL_DATE = Dates::localDate;
 
-    private void loadByte() {
-        store.register(Byte.class, Short.class, TO_SHORT);
-        store.register(Byte.class, Integer.class, TO_INT);
-        store.register(Byte.class, Long.class, TO_LONG);
-        store.register(Byte.class, Float.class, TO_FLOAT);
-        store.register(Byte.class, Double.class, TO_DOUBLE);
-        store.register(Byte.class, Boolean.class, TO_BOOLEAN);
-        store.register(Byte.class, Character.class, TO_CHAR);
-        store.register(Byte.class, BigDecimal.class, TO_BIG_DECIMAL);
-        store.register(Byte.class, BigInteger.class, TO_BIG_INTEGER);
-        store.register(Byte.class, String.class, TO_STRING);
+
+    private void loadNumber() {
+        store.register(Number.class, Byte.class, TO_BYTE);
+        store.register(Number.class, Short.class, TO_SHORT);
+        store.register(Number.class, Integer.class, TO_INT);
+        store.register(Number.class, Long.class, TO_LONG);
+        System.out.println(TO_LONG);
+        store.register(Number.class, Float.class, TO_FLOAT);
+        store.register(Number.class, Double.class, TO_DOUBLE);
+        store.register(Number.class, Boolean.class, TO_BOOLEAN);
+        store.register(Number.class, Character.class, TO_CHAR);
+        store.register(Number.class, BigDecimal.class, TO_BIG_DECIMAL);
+        store.register(Number.class, BigInteger.class, TO_BIG_INTEGER);
+        store.register(Number.class, String.class, TO_STRING);
     }
 
-    private void loadShort() {
-        store.register(Short.class, Byte.class, TO_BYTE);
-        store.register(Short.class, Integer.class, TO_INT);
-        store.register(Short.class, Long.class, TO_LONG);
-        store.register(Short.class, Float.class, TO_FLOAT);
-        store.register(Short.class, Double.class, TO_DOUBLE);
-        store.register(Short.class, Boolean.class, TO_BOOLEAN);
-        store.register(Short.class, Character.class, TO_CHAR);
-        store.register(Short.class, BigDecimal.class, TO_BIG_DECIMAL);
-        store.register(Short.class, BigInteger.class, TO_BIG_INTEGER);
-        store.register(Short.class, String.class, TO_STRING);
+    private void loadNumberExt() {
         store.register(Short.class, byte[].class, TO_BYTE_ARRAY);
-    }
-
-    private void loadInt() {
-        store.register(Integer.class, Byte.class, TO_BYTE);
-        store.register(Integer.class, Short.class, TO_SHORT);
-        store.register(Integer.class, Long.class, TO_LONG);
-        store.register(Integer.class, Float.class, TO_FLOAT);
-        store.register(Integer.class, Double.class, TO_DOUBLE);
-        store.register(Integer.class, Boolean.class, TO_BOOLEAN);
-        store.register(Integer.class, Character.class, TO_CHAR);
-        store.register(Integer.class, BigDecimal.class, TO_BIG_DECIMAL);
-        store.register(Integer.class, BigInteger.class, TO_BIG_INTEGER);
-        store.register(Integer.class, String.class, TO_STRING);
         store.register(Integer.class, byte[].class, TO_BYTE_ARRAY);
-    }
-
-    private void loadLong() {
-        store.register(Long.class, Byte.class, TO_BYTE);
-        store.register(Long.class, Short.class, TO_SHORT);
-        store.register(Long.class, Integer.class, TO_INT);
-        store.register(Long.class, Float.class, TO_FLOAT);
-        store.register(Long.class, Double.class, TO_DOUBLE);
-        store.register(Long.class, Boolean.class, TO_BOOLEAN);
-        store.register(Long.class, Character.class, TO_CHAR);
-        store.register(Long.class, BigDecimal.class, TO_BIG_DECIMAL);
-        store.register(Long.class, BigInteger.class, TO_BIG_INTEGER);
-        store.register(Long.class, String.class, TO_STRING);
         store.register(Long.class, Date.class, TO_DATE);
         store.register(Long.class, LocalDateTime.class, TO_LOCAL_DATE_TIME);
         store.register(Long.class, LocalDate.class, TO_LOCAL_DATE);
         store.register(Long.class, byte[].class, TO_BYTE_ARRAY);
-    }
-
-    private void loadFloat() {
-        store.register(Float.class, Byte.class, TO_BYTE);
-        store.register(Float.class, Short.class, TO_SHORT);
-        store.register(Float.class, Integer.class, TO_INT);
-        store.register(Float.class, Long.class, TO_LONG);
-        store.register(Float.class, Double.class, TO_DOUBLE);
-        store.register(Float.class, Boolean.class, TO_BOOLEAN);
-        store.register(Float.class, Character.class, TO_CHAR);
-        store.register(Float.class, BigDecimal.class, TO_BIG_DECIMAL);
-        store.register(Float.class, BigInteger.class, TO_BIG_INTEGER);
-        store.register(Float.class, String.class, TO_STRING);
-    }
-
-    private void loadDouble() {
-        store.register(Double.class, Byte.class, TO_BYTE);
-        store.register(Double.class, Short.class, TO_SHORT);
-        store.register(Double.class, Integer.class, TO_INT);
-        store.register(Double.class, Long.class, TO_LONG);
-        store.register(Double.class, Float.class, TO_FLOAT);
-        store.register(Double.class, Boolean.class, TO_BOOLEAN);
-        store.register(Double.class, Character.class, TO_CHAR);
-        store.register(Double.class, BigDecimal.class, TO_BIG_DECIMAL);
-        store.register(Double.class, BigInteger.class, TO_BIG_INTEGER);
-        store.register(Double.class, String.class, TO_STRING);
     }
 
     private void loadBoolean() {
@@ -205,28 +140,6 @@ public class BasicTypeMapper implements Serializable {
         store.register(String.class, Date.class, TO_DATE);
         store.register(String.class, LocalDateTime.class, TO_LOCAL_DATE_TIME);
         store.register(String.class, LocalDate.class, TO_LOCAL_DATE);
-    }
-
-    private void loadBigDecimal() {
-        store.register(BigDecimal.class, Byte.class, TO_BYTE);
-        store.register(BigDecimal.class, Short.class, TO_SHORT);
-        store.register(BigDecimal.class, Integer.class, TO_INT);
-        store.register(BigDecimal.class, Long.class, TO_LONG);
-        store.register(BigDecimal.class, Float.class, TO_FLOAT);
-        store.register(BigDecimal.class, Double.class, TO_DOUBLE);
-        store.register(BigDecimal.class, BigInteger.class, TO_BIG_INTEGER);
-        store.register(BigDecimal.class, String.class, TO_STRING);
-    }
-
-    private void loadBigInteger() {
-        store.register(BigInteger.class, Byte.class, TO_BYTE);
-        store.register(BigInteger.class, Short.class, TO_SHORT);
-        store.register(BigInteger.class, Integer.class, TO_INT);
-        store.register(BigInteger.class, Long.class, TO_LONG);
-        store.register(BigInteger.class, Float.class, TO_FLOAT);
-        store.register(BigInteger.class, Double.class, TO_DOUBLE);
-        store.register(BigInteger.class, BigDecimal.class, TO_BIG_DECIMAL);
-        store.register(BigInteger.class, String.class, TO_STRING);
     }
 
     private void loadByteArray() {

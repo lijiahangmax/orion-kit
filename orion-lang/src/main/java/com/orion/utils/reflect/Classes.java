@@ -34,7 +34,7 @@ public class Classes {
     /**
      * cglib动态代理类
      */
-    private static final String CGLIB_CLASS_SEPARATOR = "$$";
+    public static final String CGLIB_CLASS_SEPARATOR = "$$";
 
     /**
      * 基本类型的class

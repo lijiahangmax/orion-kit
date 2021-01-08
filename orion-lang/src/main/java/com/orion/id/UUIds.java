@@ -117,7 +117,8 @@ public class UUIds {
             throw new NumberFormatException("radix " + radix + " greater than Numbers.MAX_RADIX");
         }
         boolean negative = false;
-        Integer digit, i = 0, len = s.length();
+        Integer digit;
+        int i = 0, len = s.length();
         long result = 0, limit = -Long.MAX_VALUE, multmin;
         if (len <= 0) {
             throw swap(s);
