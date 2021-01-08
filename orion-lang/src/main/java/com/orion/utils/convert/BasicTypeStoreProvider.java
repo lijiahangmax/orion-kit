@@ -81,7 +81,6 @@ public class BasicTypeStoreProvider implements Serializable {
         store.register(Number.class, Short.class, TO_SHORT);
         store.register(Number.class, Integer.class, TO_INT);
         store.register(Number.class, Long.class, TO_LONG);
-        System.out.println(TO_LONG);
         store.register(Number.class, Float.class, TO_FLOAT);
         store.register(Number.class, Double.class, TO_DOUBLE);
         store.register(Number.class, Boolean.class, TO_BOOLEAN);
