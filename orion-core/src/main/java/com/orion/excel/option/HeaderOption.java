@@ -26,28 +26,40 @@ public class HeaderOption implements Serializable {
      */
     private String right;
 
+    public HeaderOption() {
+    }
+
+    public HeaderOption(String left, String center, String right) {
+        this.left = left;
+        this.center = center;
+        this.right = right;
+    }
+
     public String getLeft() {
         return left;
     }
 
-    public void setLeft(String left) {
+    public HeaderOption setLeft(String left) {
         this.left = left;
+        return this;
     }
 
     public String getCenter() {
         return center;
     }
 
-    public void setCenter(String center) {
+    public HeaderOption setCenter(String center) {
         this.center = center;
+        return this;
     }
 
     public String getRight() {
         return right;
     }
 
-    public void setRight(String right) {
+    public HeaderOption setRight(String right) {
         this.right = right;
+        return this;
     }
 
 }

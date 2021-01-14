@@ -511,7 +511,7 @@ public class Exceptions {
         return new Error(s, t);
     }
 
-    // ------------------------ ValidException ------------------------
+    // ------------------------ invalidException ------------------------
 
     public static InvalidArgumentException invalidArgument() {
         return new InvalidArgumentException();

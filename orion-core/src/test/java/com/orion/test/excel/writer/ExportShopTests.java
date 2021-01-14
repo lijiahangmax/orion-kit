@@ -25,7 +25,7 @@ public class ExportShopTests {
         List<ExportShop> shopList = IntStream.rangeClosed(1, 15).mapToObj(i -> {
             ExportShop shop = new ExportShop();
             shop.setShopId(10000L + i);
-            shop.setShopName(Strings.randomChars(5) + "的店铺");
+            shop.setShopName("          " + Strings.randomChars(5) + "的店铺        ");
             shop.setCreateDate(Dates.date(System.currentTimeMillis() + Randoms.randomLong(10000000)));
             shop.setBusinessCode(CreditCodes.random());
             File picFile = new File("C:\\Users\\ljh15\\Desktop\\export\\pic\\" + i + ".jpg");

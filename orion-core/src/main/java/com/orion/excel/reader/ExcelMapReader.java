@@ -194,6 +194,9 @@ public class ExcelMapReader<K> extends ExcelReader<MutableMap<K, Object>> {
                     map.put(key, defaultValue);
                 }
             } else {
+                if (trim && value instanceof String) {
+                    value = ((String) value).trim();
+                }
                 map.put(key, value);
             }
         });

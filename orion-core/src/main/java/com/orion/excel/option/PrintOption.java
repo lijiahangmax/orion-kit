@@ -19,19 +19,49 @@ public class PrintOption implements Serializable {
     private boolean printGridLines;
 
     /**
-     * 是否打印列和标题
+     * 打印行标题和列标题
      */
-    private boolean printHeading;
+    private boolean printRowHeading;
 
     /**
-     * sheet是否自适应
+     * sheet页行数自适应
      */
-    private boolean autoBreak;
+    private boolean autoLimit;
+
+    /**
+     * sheet每页行数
+     */
+    private Integer limit;
+
+    /**
+     * 打印自适应
+     */
+    private boolean fit;
+
+    /**
+     * 页面水平居中
+     */
+    private boolean horizontallyCenter;
+
+    /**
+     * 页面垂直居中
+     */
+    private boolean verticallyCenter;
+
+    /**
+     * 重复打印的行和列
+     * 0 rowStartIndex
+     * 1 rowEndIndex
+     * 2 columnStartIndex
+     * 3 columnEndIndex
+     * [1, 3] = [0, 1, 0, 3]
+     */
+    private int[] repeat;
 
     /**
      * 纸张大小
      */
-    private ExcelPaperType paper;
+    private ExcelPaperType paper = ExcelPaperType.DEFAULT;
 
     /**
      * 是否是彩色
@@ -117,160 +147,235 @@ public class PrintOption implements Serializable {
         return printGridLines;
     }
 
-    public void setPrintGridLines(boolean printGridLines) {
+    public PrintOption setPrintGridLines(boolean printGridLines) {
         this.printGridLines = printGridLines;
+        return this;
     }
 
-    public boolean isPrintHeading() {
-        return printHeading;
+    public boolean isPrintRowHeading() {
+        return printRowHeading;
     }
 
-    public void setPrintHeading(boolean printHeading) {
-        this.printHeading = printHeading;
+    public PrintOption setPrintRowHeading(boolean printRowHeading) {
+        this.printRowHeading = printRowHeading;
+        return this;
     }
 
-    public boolean isAutoBreak() {
-        return autoBreak;
+    public boolean isAutoLimit() {
+        return autoLimit;
     }
 
-    public void setAutoBreak(boolean autoBreak) {
-        this.autoBreak = autoBreak;
+    public PrintOption setAutoLimit(boolean autoLimit) {
+        this.autoLimit = autoLimit;
+        return this;
     }
 
     public ExcelPaperType getPaper() {
         return paper;
     }
 
-    public void setPaper(ExcelPaperType paper) {
+    public PrintOption setPaper(ExcelPaperType paper) {
         this.paper = paper;
+        return this;
     }
 
     public boolean isColor() {
         return color;
     }
 
-    public void setColor(boolean color) {
+    public PrintOption setColor(boolean color) {
         this.color = color;
+        return this;
     }
 
     public boolean isLandScapePrint() {
         return landScapePrint;
     }
 
-    public void setLandScapePrint(boolean landScapePrint) {
+    public PrintOption setLandScapePrint(boolean landScapePrint) {
         this.landScapePrint = landScapePrint;
+        return this;
     }
 
     public boolean isSetPrintOrientation() {
         return setPrintOrientation;
     }
 
-    public void setSetPrintOrientation(boolean setPrintOrientation) {
+    public PrintOption setSetPrintOrientation(boolean setPrintOrientation) {
         this.setPrintOrientation = setPrintOrientation;
+        return this;
     }
 
     public Integer getScale() {
         return scale;
     }
 
-    public void setScale(Integer scale) {
+    public PrintOption setScale(Integer scale) {
         this.scale = scale;
+        return this;
     }
 
     public boolean isNotes() {
         return notes;
     }
 
-    public void setNotes(boolean notes) {
+    public PrintOption setNotes(boolean notes) {
         this.notes = notes;
+        return this;
     }
 
     public Integer getHorizontalResolution() {
         return horizontalResolution;
     }
 
-    public void setHorizontalResolution(Integer horizontalResolution) {
+    public PrintOption setHorizontalResolution(Integer horizontalResolution) {
         this.horizontalResolution = horizontalResolution;
+        return this;
     }
 
     public Integer getVerticalResolution() {
         return verticalResolution;
     }
 
-    public void setVerticalResolution(Integer verticalResolution) {
+    public PrintOption setVerticalResolution(Integer verticalResolution) {
         this.verticalResolution = verticalResolution;
+        return this;
     }
 
     public Integer getWidth() {
         return width;
     }
 
-    public void setWidth(Integer width) {
+    public PrintOption setWidth(Integer width) {
         this.width = width;
+        return this;
     }
 
     public Integer getHeight() {
         return height;
     }
 
-    public void setHeight(Integer height) {
+    public PrintOption setHeight(Integer height) {
         this.height = height;
+        return this;
     }
 
     public Integer getHeaderMargin() {
         return headerMargin;
     }
 
-    public void setHeaderMargin(Integer headerMargin) {
+    public PrintOption setHeaderMargin(Integer headerMargin) {
         this.headerMargin = headerMargin;
+        return this;
     }
 
     public Integer getFooterMargin() {
         return footerMargin;
     }
 
-    public void setFooterMargin(Integer footerMargin) {
+    public PrintOption setFooterMargin(Integer footerMargin) {
         this.footerMargin = footerMargin;
+        return this;
     }
 
     public boolean isUsePage() {
         return usePage;
     }
 
-    public void setUsePage(boolean usePage) {
+    public PrintOption setUsePage(boolean usePage) {
         this.usePage = usePage;
+        return this;
     }
 
     public Integer getPageStart() {
         return pageStart;
     }
 
-    public void setPageStart(Integer pageStart) {
+    public PrintOption setPageStart(Integer pageStart) {
         this.pageStart = pageStart;
+        return this;
     }
 
     public Integer getCopies() {
         return copies;
     }
 
-    public void setCopies(Integer copies) {
+    public PrintOption setCopies(Integer copies) {
         this.copies = copies;
+        return this;
     }
 
     public boolean isDraft() {
         return draft;
     }
 
-    public void setDraft(boolean draft) {
+    public PrintOption setDraft(boolean draft) {
         this.draft = draft;
+        return this;
     }
 
     public boolean isTopToBottom() {
         return topToBottom;
     }
 
-    public void setTopToBottom(boolean topToBottom) {
+    public PrintOption setTopToBottom(boolean topToBottom) {
         this.topToBottom = topToBottom;
+        return this;
+    }
+
+    public boolean isFit() {
+        return fit;
+    }
+
+    public PrintOption setFit(boolean fit) {
+        this.fit = fit;
+        return this;
+    }
+
+    public boolean isHorizontallyCenter() {
+        return horizontallyCenter;
+    }
+
+    public PrintOption setHorizontallyCenter(boolean horizontallyCenter) {
+        this.horizontallyCenter = horizontallyCenter;
+        return this;
+    }
+
+    public boolean isVerticallyCenter() {
+        return verticallyCenter;
+    }
+
+    public PrintOption setVerticallyCenter(boolean verticallyCenter) {
+        this.verticallyCenter = verticallyCenter;
+        return this;
+    }
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public PrintOption setLimit(Integer limit) {
+        this.limit = limit;
+        return this;
+    }
+
+    public int[] getRepeat() {
+        return repeat;
+    }
+
+    public PrintOption setRepeat(int[] repeat) {
+        this.repeat = repeat;
+        return this;
+    }
+
+    public PrintOption setRepeat(int rowEndIndex, int columnEndIndex) {
+        this.repeat = new int[]{0, rowEndIndex, 0, columnEndIndex};
+        return this;
+    }
+
+    public PrintOption setRepeat(int rowStartIndex, int rowEndIndex, int columnStartIndex, int columnEndIndex) {
+        this.repeat = new int[]{rowStartIndex, rowEndIndex, columnStartIndex, columnEndIndex};
+        return this;
     }
 
 }

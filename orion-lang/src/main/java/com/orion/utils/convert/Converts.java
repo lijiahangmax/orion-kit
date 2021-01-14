@@ -49,15 +49,36 @@ public class Converts {
     // -------------------- toDate --------------------
 
     public static Date toDate(Object o) {
-        return Dates.date(o);
+        if (o == null) {
+            return null;
+        }
+        Date date = Dates.date(o);
+        if (date == null) {
+            throw Exceptions.convert(Strings.format("unable to convert [{}: {}] to [Date]", o.getClass().getName(), o.toString()));
+        }
+        return date;
     }
 
     public static LocalDate toLocalDate(Object o) {
-        return Dates.localDate(o);
+        if (o == null) {
+            return null;
+        }
+        LocalDate date = Dates.localDate(o);
+        if (date == null) {
+            throw Exceptions.convert(Strings.format("unable to convert [{}: {}] to [LocalDate]", o.getClass().getName(), o.toString()));
+        }
+        return date;
     }
 
     public static LocalDateTime toLocalDateTime(Object o) {
-        return Dates.localDateTime(o);
+        if (o == null) {
+            return null;
+        }
+        LocalDateTime date = Dates.localDateTime(o);
+        if (date == null) {
+            throw Exceptions.convert(Strings.format("unable to convert [{}: {}] to [LocalDateTime]", o.getClass().getName(), o.toString()));
+        }
+        return date;
     }
 
     // -------------------- toByte --------------------
@@ -109,7 +130,7 @@ public class Converts {
         } else if (o instanceof String) {
             return Byte.valueOf((String) o);
         }
-        throw Exceptions.argument();
+        throw Exceptions.convert(Strings.format("unable to convert [{}] to [byte]", o.getClass().getName()));
     }
 
     // -------------------- toShort --------------------
@@ -125,8 +146,7 @@ public class Converts {
         } else if (b.length == 8) {
             return (short) toLong(b);
         }
-        throw Exceptions.argument("array length must 2 or 4 or 8");
-
+        throw Exceptions.convert("array length must 2 or 4 or 8");
     }
 
     public static short toShort(byte b) {
@@ -182,7 +202,7 @@ public class Converts {
         } else if (o instanceof Number) {
             return ((Number) o).shortValue();
         }
-        return 0;
+        throw Exceptions.convert(Strings.format("unable to convert [{}] to [short]", o.getClass().getName()));
     }
 
     // -------------------- toInt --------------------
@@ -199,7 +219,7 @@ public class Converts {
         } else if (bs.length == 8) {
             return (int) toLong(bs);
         }
-        throw Exceptions.argument("array length must 2 or 4 or 8");
+        throw Exceptions.convert("array length must 2 or 4 or 8");
     }
 
     public static int toInt(byte b) {
@@ -253,7 +273,7 @@ public class Converts {
         } else if (o instanceof String) {
             return (Integer.parseInt((String) o));
         }
-        throw Exceptions.argument();
+        throw Exceptions.convert(Strings.format("unable to convert [{}] to [int]", o.getClass().getName()));
     }
 
     // -------------------- toLong --------------------
@@ -281,7 +301,7 @@ public class Converts {
             s7 <<= 8 * 7;
             return s0 | s1 | s2 | s3 | s4 | s5 | s6 | s7;
         }
-        throw Exceptions.argument("array length must 4 or 8");
+        throw Exceptions.convert("array length must 4 or 8");
     }
 
     public static long toLong(byte b) {
@@ -335,7 +355,7 @@ public class Converts {
         } else if (o instanceof String) {
             return Long.parseLong((String) o);
         }
-        throw Exceptions.argument();
+        throw Exceptions.convert(Strings.format("unable to convert [{}] to [long]", o.getClass().getName()));
     }
 
     // -------------------- toFloat --------------------
@@ -387,7 +407,7 @@ public class Converts {
         } else if (o instanceof String) {
             return Float.parseFloat((String) o);
         }
-        throw Exceptions.argument();
+        throw Exceptions.convert(Strings.format("unable to convert [{}] to [float]", o.getClass().getName()));
     }
 
     // -------------------- toDouble --------------------
@@ -439,7 +459,7 @@ public class Converts {
         } else if (o instanceof String) {
             return Double.parseDouble((String) o);
         }
-        throw Exceptions.argument();
+        throw Exceptions.convert(Strings.format("unable to convert [{}] to [double]", o.getClass().getName()));
     }
 
     // -------------------- toBoolean --------------------
@@ -503,7 +523,7 @@ public class Converts {
         } else if (o instanceof String) {
             return toBoolean((String) o);
         }
-        return true;
+        throw Exceptions.convert(Strings.format("unable to convert [{}] to [boolean]", o.getClass().getName()));
     }
 
     // -------------------- toChar --------------------
@@ -565,7 +585,7 @@ public class Converts {
         } else if (o instanceof String) {
             return ((String) o).charAt(0);
         }
-        throw Exceptions.argument();
+        throw Exceptions.convert(Strings.format("unable to convert [{}] to [char]", o.getClass().getName()));
     }
 
     // -------------------- toBytes --------------------
@@ -784,7 +804,7 @@ public class Converts {
         } else if (o instanceof String[]) {
             return toBytes((String[]) o);
         }
-        throw Exceptions.argument();
+        throw Exceptions.convert(Strings.format("unable to convert [{}] to [byte[]]", o.getClass().getName()));
     }
 
     // -------------------- toShorts --------------------
@@ -962,7 +982,7 @@ public class Converts {
         } else if (o instanceof String[]) {
             return toShorts((String[]) o);
         }
-        throw Exceptions.argument();
+        throw Exceptions.convert(Strings.format("unable to convert [{}] to [short[]]", o.getClass().getName()));
     }
 
     // -------------------- toInts --------------------
@@ -1140,7 +1160,7 @@ public class Converts {
         } else if (o instanceof String[]) {
             return toInts((String[]) o);
         }
-        throw Exceptions.argument();
+        throw Exceptions.convert(Strings.format("unable to convert [{}] to [int[]]", o.getClass().getName()));
     }
 
     // -------------------- toLongs --------------------
@@ -1318,7 +1338,7 @@ public class Converts {
         } else if (o instanceof String[]) {
             return toLongs((String[]) o);
         }
-        throw Exceptions.argument();
+        throw Exceptions.convert(Strings.format("unable to convert [{}] to [long[]]", o.getClass().getName()));
     }
 
     // -------------------- toFloats --------------------
@@ -1496,7 +1516,7 @@ public class Converts {
         } else if (o instanceof String[]) {
             return toFloats((String[]) o);
         }
-        throw Exceptions.argument();
+        throw Exceptions.convert(Strings.format("unable to convert [{}] to [float[]]", o.getClass().getName()));
     }
 
     // -------------------- toDoubles --------------------
@@ -1674,7 +1694,7 @@ public class Converts {
         } else if (o instanceof String[]) {
             return toDoubles((String[]) o);
         }
-        throw Exceptions.argument();
+        throw Exceptions.convert(Strings.format("unable to convert [{}] to [double[]]", o.getClass().getName()));
     }
 
     // -------------------- toBooleans --------------------
@@ -1854,7 +1874,7 @@ public class Converts {
         } else if (o instanceof String[]) {
             return toBooleans((String[]) o);
         }
-        throw Exceptions.argument();
+        throw Exceptions.convert(Strings.format("unable to convert [{}] to [boolean[]]", o.getClass().getName()));
     }
 
     // -------------------- toChars --------------------
@@ -2045,7 +2065,7 @@ public class Converts {
         } else if (o instanceof String[]) {
             return toChars((String[]) o);
         }
-        throw Exceptions.argument();
+        throw Exceptions.convert(Strings.format("unable to convert [{}] to [char[]]", o.getClass().getName()));
     }
 
     // -------------------- toStrings --------------------
@@ -2217,7 +2237,7 @@ public class Converts {
         } else if (o instanceof String[]) {
             return (String[]) o;
         }
-        throw Exceptions.argument();
+        throw Exceptions.convert(Strings.format("unable to convert [{}] to [String[]]", o.getClass().getName()));
     }
 
 }

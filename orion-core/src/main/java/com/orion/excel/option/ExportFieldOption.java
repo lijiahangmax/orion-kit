@@ -93,6 +93,14 @@ public class ExportFieldOption implements Serializable {
     private ExcelFieldType type;
 
     /**
+     * 是否清除空格
+     *
+     * @see ExcelFieldType#TEXT
+     * @see String
+     */
+    private boolean trim;
+
+    /**
      * 表头
      */
     private String header;
@@ -327,6 +335,14 @@ public class ExportFieldOption implements Serializable {
 
     public void setGetterMethod(Method getterMethod) {
         this.getterMethod = getterMethod;
+    }
+
+    public boolean isTrim() {
+        return trim;
+    }
+
+    public void setTrim(boolean trim) {
+        this.trim = trim;
     }
 
 }

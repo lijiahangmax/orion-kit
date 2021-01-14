@@ -20,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 类型转换容器
  * 自动转换基本类型为包装类型
+ * 支持子父类转换 但是不支持接口转换
  *
  * @author ljh15
  * @version 1.0.0
@@ -107,11 +108,11 @@ public class TypeStore extends CloneSupport<TypeStore> implements Serializable {
         }
         // check base array
         if (!Classes.isArray(targetClass)) {
-            throw Exceptions.convert(Strings.format("Unable to convert source [{}] class to target [{}] class", sourceClass, targetClass));
+            throw Exceptions.convert(Strings.format("unable to convert source [{}] class to target [{}] class", sourceClass, targetClass));
         }
         Class<?> baseArrayClass = Classes.getBaseArrayClass(targetClass);
         if (baseArrayClass.equals(targetClass)) {
-            throw Exceptions.convert(Strings.format("Unable to convert source [{}] class to target [{}] class", sourceClass, targetClass));
+            throw Exceptions.convert(Strings.format("unable to convert source [{}] class to target [{}] class", sourceClass, targetClass));
         }
         if (sourceClass.equals(baseArrayClass)) {
             return (R) Arrays1.wrap(t);
@@ -119,7 +120,7 @@ public class TypeStore extends CloneSupport<TypeStore> implements Serializable {
         // get base array
         Conversion baseConvert = this.get(sourceClass, baseArrayClass);
         if (baseConvert == null) {
-            throw Exceptions.convert(Strings.format("Unable to convert source [{}] class to target [{}] class", sourceClass, targetClass));
+            throw Exceptions.convert(Strings.format("unable to convert source [{}] class to target [{}] class", sourceClass, targetClass));
         }
         Object apply = baseConvert.apply(t);
         if (apply != null) {

@@ -38,7 +38,6 @@ public class ExportSheetAnalysis implements Analysable {
         }
         // 复用style
         if (sheet.headerUseColumnStyle()) {
-            sheetOption.setHeadUseColumnStyle(true);
             sheetOption.setHeaderUseColumnStyle(true);
         }
         // 默认行宽
@@ -172,8 +171,10 @@ public class ExportSheetAnalysis implements Analysable {
         }
         PrintOption printOption = new PrintOption();
         printOption.setPrintGridLines(print.printGridLines());
-        printOption.setPrintHeading(print.printHeading());
-        printOption.setAutoBreak(print.autoBreak());
+        printOption.setPrintRowHeading(print.printHeading());
+        printOption.setFit(print.fit());
+        printOption.setHorizontallyCenter(print.horizontallyCenter());
+        printOption.setVerticallyCenter(print.verticallyCenter());
         printOption.setPaper(print.paper());
         printOption.setColor(print.color());
         printOption.setLandScapePrint(print.landScapePrint());
@@ -209,6 +210,15 @@ public class ExportSheetAnalysis implements Analysable {
         int footerMargin = print.footerMargin();
         if (footerMargin != -1) {
             printOption.setFooterMargin(footerMargin);
+        }
+        int limit = print.limit();
+        if (limit != -1) {
+            printOption.setAutoLimit(true);
+            printOption.setLimit(limit);
+        }
+        int[] repeat = print.repeat();
+        if (repeat.length != 0) {
+            printOption.setRepeat(repeat);
         }
         sheetOption.setPrintOption(printOption);
     }

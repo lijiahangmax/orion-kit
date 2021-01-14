@@ -116,7 +116,12 @@ public class ExcelArrayReader extends ExcelReader<String[]> {
             if (cell == null) {
                 array[i] = cellEmpty;
             } else {
-                array[i] = Excels.getCellValue(cell);
+                String value = Excels.getCellValue(cell);
+                if (trim) {
+                    array[i] = value.trim();
+                } else {
+                    array[i] = value;
+                }
             }
         }
         return array;

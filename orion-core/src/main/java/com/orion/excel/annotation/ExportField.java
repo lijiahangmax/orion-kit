@@ -82,6 +82,14 @@ public @interface ExportField {
     ExcelFieldType type() default ExcelFieldType.AUTO;
 
     /**
+     * 是否清除空格
+     *
+     * @see ExcelFieldType#TEXT
+     * @see String
+     */
+    boolean trim() default false;
+
+    /**
      * 表头跳过样式
      */
     boolean skipHeaderStyle() default false;

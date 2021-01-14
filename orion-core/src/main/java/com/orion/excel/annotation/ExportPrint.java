@@ -22,14 +22,29 @@ public @interface ExportPrint {
     boolean printGridLines() default true;
 
     /**
-     * 是否打印列和标题
+     * 是否打印行标题和列标题
      */
     boolean printHeading() default false;
 
     /**
-     * sheet是否自适应
+     * 打印自适应
      */
-    boolean autoBreak() default true;
+    boolean fit() default true;
+
+    /**
+     * 每页行数
+     */
+    int limit() default -1;
+
+    /**
+     * 重复打印的行和列
+     * 0 rowStartIndex
+     * 1 rowEndIndex
+     * 2 columnStartIndex
+     * 3 columnEndIndex
+     * [1, 3] = [0, 1, 0, 3]
+     */
+    int[] repeat() default {};
 
     /**
      * 纸张大小
@@ -115,5 +130,15 @@ public @interface ExportPrint {
      * 是否自上而下
      */
     boolean topToBottom() default true;
+
+    /**
+     * 页面是否水平居中
+     */
+    boolean horizontallyCenter() default false;
+
+    /**
+     * 页面是否垂直居中
+     */
+    boolean verticallyCenter() default false;
 
 }

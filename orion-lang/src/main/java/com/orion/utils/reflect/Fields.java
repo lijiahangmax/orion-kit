@@ -62,6 +62,19 @@ public class Fields {
     // -------------------- cache end --------------------
 
     /**
+     * 通过方法获取字段名 仅限于 getter setter
+     *
+     * @param method 方法
+     * @return 字段名称
+     */
+    public static String getFieldNameByMethod(Method method) {
+        if (method == null) {
+            return null;
+        }
+        return getFieldNameByMethodName(method.getName());
+    }
+
+    /**
      * 通过方法名获取字段名 仅限于 getter setter
      *
      * @param methodName 方法名称

@@ -127,7 +127,7 @@ public class ExportProcessor<T> {
         }
         // 选中
         if (exportSheetOption.isSelected()) {
-            this.sheet.setSelected(true);
+            this.workbook.setActiveSheet(this.workbook.getSheetIndex(this.sheet));
         }
         // 隐藏
         if (exportSheetOption.isHidden()) {
@@ -272,9 +272,6 @@ public class ExportProcessor<T> {
             return;
         }
         Excels.parsePrint(sheet, printOption);
-        if (!sheet.getPrintSetup().getValidSettings()) {
-            throw Exceptions.parse("Invalid print setting");
-        }
     }
 
     /**
@@ -341,6 +338,9 @@ public class ExportProcessor<T> {
         if (setValue) {
             // 普通
             Object o = Methods.invokeMethod(row, option.getGetterMethod());
+            if (o instanceof String && option.isTrim()) {
+                o = ((String) o).trim();
+            }
             Excels.setCellValue(cell, o, option.getType(), option.getCellOption());
         }
     }

@@ -175,6 +175,9 @@ public class ExcelImport<T> extends ExcelReader<T> {
                 value = Excels.getCellValue(cell, v.getType(), v.getCellOption());
             }
             if (value != null) {
+                if (trim && value instanceof String) {
+                    value = ((String) value).trim();
+                }
                 try {
                     Methods.invokeSetterInfer(t, k, value);
                 } catch (Exception e) {

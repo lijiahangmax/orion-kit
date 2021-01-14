@@ -63,6 +63,13 @@ public abstract class ExcelReader<T> implements SafeCloseable, Iterator<T>, Iter
     protected boolean skipNullRows = true;
 
     /**
+     * 是否清除空格
+     *
+     * @see String
+     */
+    protected boolean trim;
+
+    /**
      * 是否为流式读取
      */
     protected boolean streaming;
@@ -150,7 +157,17 @@ public abstract class ExcelReader<T> implements SafeCloseable, Iterator<T>, Iter
      * @return this
      */
     public ExcelReader<T> skipNullRows(boolean skip) {
-        skipNullRows = skip;
+        this.skipNullRows = skip;
+        return this;
+    }
+
+    /**
+     * 是否清除空格
+     *
+     * @return this
+     */
+    public ExcelReader<T> trim() {
+        this.trim = true;
         return this;
     }
 
@@ -176,7 +193,7 @@ public abstract class ExcelReader<T> implements SafeCloseable, Iterator<T>, Iter
         if (!Arrays1.isEmpty(columns)) {
             throw Exceptions.unSupport("if the column is set, the capacity is not supported");
         }
-        columnSize = capacity;
+        this.columnSize = capacity;
         return this;
     }
 

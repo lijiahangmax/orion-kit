@@ -1,9 +1,11 @@
 package com.orion.excel.style;
 
 import com.orion.excel.option.PrintOption;
+import com.orion.excel.type.ExcelPaperType;
 import org.apache.poi.ss.usermodel.PaperSize;
 import org.apache.poi.ss.usermodel.PrintSetup;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 /**
  * Excel 打印设置
@@ -43,9 +45,9 @@ public class PrintStream {
     public static PrintSetup parsePrint(Sheet sheet, PrintOption option) {
         PrintStream stream = new PrintStream(sheet)
                 .printGridLines(option.isPrintGridLines())
-                .printHeading(option.isPrintHeading())
-                .autoBreak(option.isAutoBreak())
-                .paper(option.getPaper().getCode())
+                .printRowHeading(option.isPrintRowHeading())
+                .autoLimit(option.isAutoLimit())
+                .fit(option.isFit())
                 .color(option.isColor())
                 .landScapePrint(option.isLandScapePrint())
                 .printOrientation(option.isSetPrintOrientation())
@@ -53,7 +55,13 @@ public class PrintStream {
                 .notes(option.isNotes())
                 .usePage(option.isUsePage())
                 .draft(option.isDraft())
-                .topToBottomOrder(option.isTopToBottom());
+                .topToBottomOrder(option.isTopToBottom())
+                .horizontallyCenter(option.isHorizontallyCenter())
+                .verticallyCenter(option.isVerticallyCenter());
+        ExcelPaperType paper = option.getPaper();
+        if (paper != null) {
+            stream.paper(paper.getCode());
+        }
         Integer horizontalResolution = option.getHorizontalResolution();
         if (horizontalResolution != null) {
             stream.horizontalResolution(horizontalResolution);
@@ -86,6 +94,15 @@ public class PrintStream {
         if (copies != null) {
             stream.copies(copies);
         }
+        Integer limit = option.getLimit();
+        if (limit != null) {
+            stream.autoLimit(true);
+            stream.limit(limit);
+        }
+        int[] repeat = option.getRepeat();
+        if (repeat != null) {
+            stream.repeat(repeat);
+        }
         return stream.getPrintSetup();
     }
 
@@ -116,33 +133,33 @@ public class PrintStream {
      * @return this
      */
     public PrintStream unPrintGridLines() {
-        sheet.setPrintGridlines(true);
+        sheet.setPrintGridlines(false);
         return this;
     }
 
     /**
-     * 打印行和列的标题
+     * 打印行标题和列标题
      *
      * @return this
      */
-    public PrintStream printHeading() {
+    public PrintStream printRowHeading() {
         sheet.setPrintRowAndColumnHeadings(true);
         return this;
     }
 
     /**
-     * 打印行和列的标题
+     * 打印行标题和列标题
      *
      * @param print 是否打印
      * @return this
      */
-    public PrintStream printHeading(boolean print) {
+    public PrintStream printRowHeading(boolean print) {
         sheet.setPrintRowAndColumnHeadings(print);
         return this;
     }
 
     /**
-     * 打印行和列的标题
+     * 打印行标题和列标题
      *
      * @return this
      */
@@ -152,23 +169,188 @@ public class PrintStream {
     }
 
     /**
-     * sheet页自适应页面大小
+     * sheet页自适应
      *
      * @return this
      */
-    public PrintStream autoBreak() {
+    public PrintStream fit() {
+        sheet.setFitToPage(true);
+        return this;
+    }
+
+    /**
+     * 打印自适应
+     *
+     * @param auto 是否自适应
+     * @return this
+     */
+    public PrintStream fit(boolean fit) {
+        sheet.setFitToPage(fit);
+        return this;
+    }
+
+    /**
+     * 打印自适应
+     *
+     * @return this
+     */
+    public PrintStream unFit() {
+        sheet.setFitToPage(false);
+        return this;
+    }
+
+    /**
+     * sheet页行数自适应
+     *
+     * @return this
+     */
+    public PrintStream autoLimit() {
+        sheet.setAutobreaks(true);
+        return this;
+    }
+
+    /**
+     * sheet页行数自适应
+     *
+     * @param auto 是否自适应
+     * @return this
+     */
+    public PrintStream autoLimit(boolean auto) {
+        sheet.setAutobreaks(auto);
+        return this;
+    }
+
+    /**
+     * sheet页行数不自适应
+     *
+     * @return this
+     */
+    public PrintStream unAutoLimit() {
         sheet.setAutobreaks(false);
         return this;
     }
 
     /**
-     * sheet页自适应页面大小
+     * 每页行数
      *
-     * @param auto 是否自适应
+     * @param limit 行数
      * @return this
      */
-    public PrintStream autoBreak(boolean auto) {
-        sheet.setAutobreaks(auto);
+    public PrintStream limit(int limit) {
+        sheet.setRowBreak(limit);
+        return this;
+    }
+
+    /**
+     * 设置页面水平居中
+     *
+     * @return this
+     */
+    public PrintStream horizontallyCenter() {
+        sheet.setHorizontallyCenter(true);
+        return this;
+    }
+
+    /**
+     * 设置页面水平居中
+     *
+     * @param center 是否水平居中
+     * @return this
+     */
+    public PrintStream horizontallyCenter(boolean center) {
+        sheet.setHorizontallyCenter(center);
+        return this;
+    }
+
+    /**
+     * 不设置页面水平居中
+     *
+     * @return this
+     */
+    public PrintStream unHorizontallyCenter() {
+        sheet.setHorizontallyCenter(false);
+        return this;
+    }
+
+    /**
+     * 设置页面垂直居中
+     *
+     * @return this
+     */
+    public PrintStream verticallyCenter() {
+        sheet.setVerticallyCenter(true);
+        return this;
+    }
+
+    /**
+     * 设置页面垂直居中
+     *
+     * @param center 是否垂直居中
+     * @return this
+     */
+    public PrintStream verticallyCenter(boolean center) {
+        sheet.setVerticallyCenter(center);
+        return this;
+    }
+
+    /**
+     * 不设置页面垂直居中
+     *
+     * @return this
+     */
+    public PrintStream unVerticallyCenter() {
+        sheet.setVerticallyCenter(false);
+        return this;
+    }
+
+    /**
+     * 重复打印行和列
+     * 0 rowStartIndex
+     * 1 rowEndIndex
+     * 2 columnStartIndex
+     * 3 columnEndIndex
+     * [1, 3] = [0, 1, 0, 3]
+     *
+     * @param repeat repeat
+     * @return this
+     */
+    public PrintStream repeat(int[] repeat) {
+        if (repeat == null) {
+            return this;
+        }
+        if (repeat.length == 2) {
+            return repeat(repeat[0], repeat[1]);
+        } else if (repeat.length == 4) {
+            return repeat(repeat[0], repeat[1], repeat[2], repeat[3]);
+        }
+        return this;
+    }
+
+    /**
+     * 重复打印行和列
+     *
+     * @param rowEndIndex    结束行索引
+     * @param columnEndIndex 结束列索引
+     * @return this
+     */
+    public PrintStream repeat(int rowEndIndex, int columnEndIndex) {
+        sheet.setRepeatingRows(new CellRangeAddress(0, rowEndIndex, 0, 0));
+        sheet.setRepeatingColumns(new CellRangeAddress(0, 0, 0, columnEndIndex));
+        return this;
+    }
+
+    /**
+     * 重复打印行和列
+     *
+     * @param rowStartIndex    开始行索引
+     * @param rowEndIndex      结束行索引
+     * @param columnStartIndex 开始列索引
+     * @param columnEndIndex   结束列索引
+     * @return this
+     */
+    public PrintStream repeat(int rowStartIndex, int rowEndIndex, int columnStartIndex, int columnEndIndex) {
+        sheet.setRepeatingRows(new CellRangeAddress(rowStartIndex, rowEndIndex, 0, 0));
+        sheet.setRepeatingColumns(new CellRangeAddress(0, 0, columnStartIndex, columnEndIndex));
         return this;
     }
 
@@ -195,12 +377,13 @@ public class PrintStream {
     }
 
     /**
-     * 设置纸张A4
+     * 设置纸张大小
      *
+     * @param type 纸张
      * @return this
      */
-    public PrintStream paperA4() {
-        printSetup.setPaperSize((short) (PaperSize.A4_PAPER.ordinal() + 1));
+    public PrintStream paper(ExcelPaperType type) {
+        printSetup.setPaperSize((short) type.getCode());
         return this;
     }
 
@@ -697,12 +880,64 @@ public class PrintStream {
     }
 
     /**
-     * sheet页是否自适应页面大小
+     * sheet页行数是否自适应
      *
      * @return true自适应
      */
-    public boolean isAutoBreak() {
+    public boolean isAutoLimit() {
         return sheet.getAutobreaks();
+    }
+
+    /**
+     * 打印
+     *
+     * @return true自适应
+     */
+    public boolean isFit() {
+        return sheet.getFitToPage();
+    }
+
+    /**
+     * sheet页是否水平居中
+     *
+     * @return true水平居中
+     */
+    public boolean isHorizontallyCenter() {
+        return sheet.getHorizontallyCenter();
+    }
+
+    /**
+     * sheet页是否垂直居中
+     *
+     * @return true垂直居中
+     */
+    public boolean isVerticallyCenter() {
+        return sheet.getVerticallyCenter();
+    }
+
+    /**
+     * 重复打印的行和列
+     * <p>
+     * 0 rowStartIndex
+     * * 1 rowEndIndex
+     * * 2 columnStartIndex
+     * * 3 columnEndIndex
+     *
+     * @return array
+     */
+    public int[] getRepeat() {
+        int[] r = new int[4];
+        CellRangeAddress rows = sheet.getRepeatingRows();
+        if (rows != null) {
+            r[0] = rows.getFirstRow();
+            r[1] = rows.getLastRow();
+        }
+        CellRangeAddress columns = sheet.getRepeatingColumns();
+        if (columns != null) {
+            r[2] = columns.getFirstColumn();
+            r[3] = columns.getLastColumn();
+        }
+        return r;
     }
 
     /**

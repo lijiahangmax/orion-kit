@@ -19,7 +19,7 @@ import java.util.Optional;
 import java.util.TreeMap;
 
 /**
- * Excel 导出器 仅支持注解 支持样式
+ * Excel 导出器
  *
  * @author ljh15
  * @version 1.0.0
@@ -576,6 +576,15 @@ public class ExcelExport<T> implements SafeCloseable {
      */
     public Font getFont() {
         return workbook.createFont();
+    }
+
+    /**
+     * 获取一个格式 用于样式修改
+     *
+     * @return 格式
+     */
+    public DataFormat getFormat() {
+        return workbook.createDataFormat();
     }
 
     public Map<Integer, ExportFieldOption> getFieldOptions() {

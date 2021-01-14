@@ -28,6 +28,7 @@ public class ImportShopTest {
     @Test
     public void testImport1() {
         new ExcelImport<>(workbook, sheet, ImportShop.class, Console::trace)
+                .trim()
                 .init()
                 .skip(2)
                 .read(2)

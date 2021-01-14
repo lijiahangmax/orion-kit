@@ -154,6 +154,7 @@ public class ExportColumnAnalysis implements Analysable {
         } else {
             exportFieldOption.setType(type);
         }
+        exportFieldOption.setTrim(field.trim());
         exportFieldOption.setFormat(field.format());
         exportFieldOption.setHeader(field.header());
         exportFieldOption.setSkipHeaderStyle(field.skipHeaderStyle());
@@ -351,7 +352,7 @@ public class ExportColumnAnalysis implements Analysable {
             getterMethod = Methods.getGetterMethodByField(targetClass, field);
         }
         if (getterMethod == null) {
-            throw Exceptions.parse("Did not find " + fieldName + " getter method at " + targetClass);
+            throw Exceptions.parse("did not find " + fieldName + " getter method at " + targetClass);
         }
         ExportField exportField = null;
         if (field != null) {

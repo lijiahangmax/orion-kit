@@ -127,11 +127,6 @@ public class ExportSheetOption implements Serializable {
     private PrintOption printOption;
 
     /**
-     * 头使用行的样式
-     */
-    private boolean headUseColumnStyle;
-
-    /**
      * 是否添加了默认表头
      */
     private boolean addDefaultHeader;
@@ -322,14 +317,6 @@ public class ExportSheetOption implements Serializable {
 
     public void setPrintOption(PrintOption printOption) {
         this.printOption = printOption;
-    }
-
-    public boolean isHeadUseColumnStyle() {
-        return headUseColumnStyle;
-    }
-
-    public void setHeadUseColumnStyle(boolean headUseColumnStyle) {
-        this.headUseColumnStyle = headUseColumnStyle;
     }
 
     public boolean isAddDefaultHeader() {
