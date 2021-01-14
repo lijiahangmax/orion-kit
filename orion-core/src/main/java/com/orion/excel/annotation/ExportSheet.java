@@ -111,13 +111,28 @@ public @interface ExportSheet {
     boolean filterHeader() default false;
 
     /**
-     * 选中
+     * 是否选中
      */
     boolean selected() default false;
 
     /**
-     * 隐藏
+     * 是否隐藏
      */
     boolean hidden() default false;
+
+    /**
+     * 是否隐藏网格线
+     */
+    boolean displayGridLines() default false;
+
+    /**
+     * 是否隐藏列数和行数
+     */
+    boolean displayRowColHeadings() default false;
+
+    /**
+     * 是否不执行公式 会修改列宽单位
+     */
+    boolean displayFormulas() default false;
 
 }

@@ -119,6 +119,7 @@ public class ImportShopTest {
                 .skip(2)
                 .read(2)
                 .skip(1)
+                .trim()
                 .read()
                 .close();
     }

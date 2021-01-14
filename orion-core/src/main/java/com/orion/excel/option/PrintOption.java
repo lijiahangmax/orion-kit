@@ -109,16 +109,6 @@ public class PrintOption implements Serializable {
     private Integer height;
 
     /**
-     * 页眉边距
-     */
-    private Integer headerMargin;
-
-    /**
-     * 页脚边距
-     */
-    private Integer footerMargin;
-
-    /**
      * 是否使用起始页
      */
     private boolean usePage;
@@ -142,6 +132,36 @@ public class PrintOption implements Serializable {
      * 是否自上而下
      */
     private boolean topToBottom;
+
+    /**
+     * 左边距 英寸
+     */
+    private Double leftMargin;
+
+    /**
+     * 右边距 英寸
+     */
+    private Double rightMargin;
+
+    /**
+     * 上边距 英寸
+     */
+    private Double topMargin;
+
+    /**
+     * 下边距 英寸
+     */
+    private Double bottomMargin;
+
+    /**
+     * 页眉边距 英寸
+     */
+    private Double headerMargin;
+
+    /**
+     * 页脚边距 英寸
+     */
+    private Double footerMargin;
 
     public boolean isPrintGridLines() {
         return printGridLines;
@@ -260,24 +280,6 @@ public class PrintOption implements Serializable {
         return this;
     }
 
-    public Integer getHeaderMargin() {
-        return headerMargin;
-    }
-
-    public PrintOption setHeaderMargin(Integer headerMargin) {
-        this.headerMargin = headerMargin;
-        return this;
-    }
-
-    public Integer getFooterMargin() {
-        return footerMargin;
-    }
-
-    public PrintOption setFooterMargin(Integer footerMargin) {
-        this.footerMargin = footerMargin;
-        return this;
-    }
-
     public boolean isUsePage() {
         return usePage;
     }
@@ -375,6 +377,60 @@ public class PrintOption implements Serializable {
 
     public PrintOption setRepeat(int rowStartIndex, int rowEndIndex, int columnStartIndex, int columnEndIndex) {
         this.repeat = new int[]{rowStartIndex, rowEndIndex, columnStartIndex, columnEndIndex};
+        return this;
+    }
+
+    public Double getLeftMargin() {
+        return leftMargin;
+    }
+
+    public PrintOption setLeftMargin(Double leftMargin) {
+        this.leftMargin = leftMargin;
+        return this;
+    }
+
+    public Double getRightMargin() {
+        return rightMargin;
+    }
+
+    public PrintOption setRightMargin(Double rightMargin) {
+        this.rightMargin = rightMargin;
+        return this;
+    }
+
+    public Double getTopMargin() {
+        return topMargin;
+    }
+
+    public PrintOption setTopMargin(Double topMargin) {
+        this.topMargin = topMargin;
+        return this;
+    }
+
+    public Double getBottomMargin() {
+        return bottomMargin;
+    }
+
+    public PrintOption setBottomMargin(Double bottomMargin) {
+        this.bottomMargin = bottomMargin;
+        return this;
+    }
+
+    public Double getHeaderMargin() {
+        return headerMargin;
+    }
+
+    public PrintOption setHeaderMargin(Double headerMargin) {
+        this.headerMargin = headerMargin;
+        return this;
+    }
+
+    public Double getFooterMargin() {
+        return footerMargin;
+    }
+
+    public PrintOption setFooterMargin(Double footerMargin) {
+        this.footerMargin = footerMargin;
         return this;
     }
 

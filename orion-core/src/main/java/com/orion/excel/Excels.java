@@ -1409,9 +1409,9 @@ public class Excels {
     /**
      * 合并单元格
      *
-     * @param row         合并行
-     * @param firstColumn 合并开始单元格
-     * @param lastColumn  合并结束单元格
+     * @param row         合并行索引
+     * @param firstColumn 合并开始列索引
+     * @param lastColumn  合并结束列索引
      * @return merge
      */
     public static CellRangeAddress mergeCellRange(int row, int firstColumn, int lastColumn) {
@@ -1421,10 +1421,10 @@ public class Excels {
     /**
      * 合并单元格
      *
-     * @param firstRow    合并开始行
-     * @param lastRow     合并结束行
-     * @param firstColumn 合并开始单元格
-     * @param lastColumn  合并结束单元格
+     * @param firstRow    合并开始行索引
+     * @param lastRow     合并结束行索引
+     * @param firstColumn 合并开始列索引
+     * @param lastColumn  合并结束列索引
      * @return merge
      */
     public static CellRangeAddress mergeCellRange(int firstRow, int lastRow, int firstColumn, int lastColumn) {
@@ -1435,9 +1435,9 @@ public class Excels {
      * 合并单元格
      *
      * @param sheet       sheet
-     * @param row         合并行
-     * @param firstColumn 合并开始单元格
-     * @param lastColumn  合并结束单元格
+     * @param row         合并行索引
+     * @param firstColumn 合并开始列索引
+     * @param lastColumn  合并结束列索引
      */
     public static void mergeCell(Sheet sheet, int row, int firstColumn, int lastColumn) {
         mergeCell(sheet, new CellRangeAddress(row, row, firstColumn, lastColumn));
@@ -1447,10 +1447,10 @@ public class Excels {
      * 合并单元格
      *
      * @param sheet       sheet
-     * @param firstRow    合并开始行
-     * @param lastRow     合并结束行
-     * @param firstColumn 合并开始单元格
-     * @param lastColumn  合并结束单元格
+     * @param firstRow    合并开始行索引
+     * @param lastRow     合并结束行索引
+     * @param firstColumn 合并开始列索引
+     * @param lastColumn  合并结束列索引
      */
     public static void mergeCell(Sheet sheet, int firstRow, int lastRow, int firstColumn, int lastColumn) {
         mergeCell(sheet, new CellRangeAddress(firstRow, lastRow, firstColumn, lastColumn));
@@ -1472,9 +1472,9 @@ public class Excels {
      * @param sheet       sheet
      * @param borderCode  边框
      * @param colorIndex  颜色
-     * @param row         合并行
-     * @param firstColumn 合并开始单元格
-     * @param lastColumn  合并结束单元格
+     * @param row         合并行索引
+     * @param firstColumn 合并开始列索引
+     * @param lastColumn  合并结束列索引
      */
     public static void mergeCellBorder(Sheet sheet, int borderCode, int colorIndex, int row, int firstColumn, int lastColumn) {
         mergeCellBorder(sheet, borderCode, colorIndex, new CellRangeAddress(row, row, firstColumn, lastColumn));
@@ -1485,10 +1485,10 @@ public class Excels {
      *
      * @param sheet       sheet
      * @param borderCode  边框
-     * @param firstRow    合并开始行
-     * @param lastRow     合并结束行
-     * @param firstColumn 合并开始单元格
-     * @param lastColumn  合并结束单元格
+     * @param firstRow    合并开始行索引
+     * @param lastRow     合并结束行索引
+     * @param firstColumn 合并开始列索引
+     * @param lastColumn  合并结束列索引
      */
     public static void mergeCellBorder(Sheet sheet, int borderCode, int colorIndex, int firstRow, int lastRow, int firstColumn, int lastColumn) {
         mergeCellBorder(sheet, borderCode, colorIndex, new CellRangeAddress(firstRow, lastRow, firstColumn, lastColumn));
@@ -1516,7 +1516,7 @@ public class Excels {
      * 添加下拉框
      *
      * @param sheet   sheet
-     * @param column  开始列
+     * @param column  开始列索引
      * @param options 选项
      */
     public static void addSelectOptions(Sheet sheet, int column, String[] options) {
@@ -1527,8 +1527,8 @@ public class Excels {
      * 添加下拉框
      *
      * @param sheet    sheet
-     * @param startRow 开始行
-     * @param column   开始列
+     * @param startRow 开始行索引
+     * @param column   开始列索引
      * @param options  选项
      */
     public static void addSelectOptions(Sheet sheet, int startRow, int column, String[] options) {
@@ -1539,9 +1539,9 @@ public class Excels {
      * 添加下拉框
      *
      * @param sheet    sheet
-     * @param startRow 开始行
-     * @param endRow   结束行
-     * @param column   结束列
+     * @param startRow 开始行索引
+     * @param endRow   结束行索引
+     * @param column   结束列索引
      * @param options  选项
      */
     public static void addSelectOptions(Sheet sheet, int startRow, int endRow, int column, String[] options) {
@@ -1552,10 +1552,10 @@ public class Excels {
      * 添加下拉框
      *
      * @param sheet       sheet
-     * @param startRow    开始行
-     * @param endRow      结束行
-     * @param startColumn 开始列
-     * @param endColumn   结束列
+     * @param startRow    开始行索引
+     * @param endRow      结束行索引
+     * @param startColumn 开始列索引
+     * @param endColumn   结束列索引
      * @param options     选项
      */
     public static void addSelectOptions(Sheet sheet, int startRow, int endRow, int startColumn, int endColumn, String[] options) {

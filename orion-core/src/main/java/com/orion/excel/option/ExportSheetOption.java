@@ -137,9 +137,9 @@ public class ExportSheetOption implements Serializable {
     private boolean addTitle;
 
     /**
-     * 列数
+     * 最大列索引
      */
-    private int columnSize;
+    private int columnMaxIndex;
 
     /**
      * 标题
@@ -150,6 +150,21 @@ public class ExportSheetOption implements Serializable {
      * 名字是否重新设置
      */
     private boolean nameReset;
+
+    /**
+     * 是否隐藏网格线
+     */
+    private boolean displayGridLines;
+
+    /**
+     * 是否隐藏列数和行数
+     */
+    private boolean displayRowColHeadings;
+
+    /**
+     * 是否不执行公式 会修改列宽单位
+     */
+    private boolean displayFormulas;
 
     public String getName() {
         return name;
@@ -327,12 +342,16 @@ public class ExportSheetOption implements Serializable {
         this.addDefaultHeader = addDefaultHeader;
     }
 
-    public int getColumnSize() {
-        return columnSize;
+    public int getColumnMaxIndex() {
+        return columnMaxIndex;
     }
 
-    public void setColumnSize(int columnSize) {
-        this.columnSize = columnSize;
+    public int getColumnSize() {
+        return columnMaxIndex + 1;
+    }
+
+    public void setColumnMaxIndex(int columnMaxIndex) {
+        this.columnMaxIndex = columnMaxIndex;
     }
 
     public boolean isSkipTitle() {
@@ -373,6 +392,30 @@ public class ExportSheetOption implements Serializable {
 
     public void setNameReset(boolean nameReset) {
         this.nameReset = nameReset;
+    }
+
+    public boolean isDisplayGridLines() {
+        return displayGridLines;
+    }
+
+    public void setDisplayGridLines(boolean displayGridLines) {
+        this.displayGridLines = displayGridLines;
+    }
+
+    public boolean isDisplayRowColHeadings() {
+        return displayRowColHeadings;
+    }
+
+    public void setDisplayRowColHeadings(boolean displayRowColHeadings) {
+        this.displayRowColHeadings = displayRowColHeadings;
+    }
+
+    public boolean isDisplayFormulas() {
+        return displayFormulas;
+    }
+
+    public void setDisplayFormulas(boolean displayFormulas) {
+        this.displayFormulas = displayFormulas;
     }
 
 }

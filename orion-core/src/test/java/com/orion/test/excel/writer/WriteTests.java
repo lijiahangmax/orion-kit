@@ -110,7 +110,8 @@ public class WriteTests {
                 .setLimit(10)
                 .setRepeat(2, 5)
                 .setPaper(ExcelPaperType.A5);
-        writer.print(option);
+        writer.print(option)
+                .displayFormulas();
     }
 
     @Test
@@ -146,7 +147,9 @@ public class WriteTests {
                 .setLeft("left")
                 .setCenter("中心")
                 .setRight("right");
-        writer.header(option);
+        writer.header(option)
+                .displayRowColHeadings()
+                .protect("123");
     }
 
     @Test
@@ -183,7 +186,8 @@ public class WriteTests {
                 .setLeft("left")
                 .setCenter("中心")
                 .setRight("right");
-        writer.footer(option);
+        writer.footer(option)
+                .displayGridLines();
     }
 
     @Test

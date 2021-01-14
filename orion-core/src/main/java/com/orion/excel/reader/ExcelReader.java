@@ -16,6 +16,8 @@ import java.util.function.Consumer;
 
 /**
  * Excel 读取器 基类
+ * <p>
+ * 使用迭代器不会存储也不会消费
  *
  * @author ljh15
  * @version 1.0.0
@@ -80,7 +82,7 @@ public abstract class ExcelReader<T> implements SafeCloseable, Iterator<T>, Iter
     protected int[] columns;
 
     /**
-     * 列长
+     * 列数
      */
     protected int columnSize;
 
@@ -168,6 +170,16 @@ public abstract class ExcelReader<T> implements SafeCloseable, Iterator<T>, Iter
      */
     public ExcelReader<T> trim() {
         this.trim = true;
+        return this;
+    }
+
+    /**
+     * 重新计算所有公式
+     *
+     * @return this
+     */
+    public ExcelReader<T> recalculationFormula() {
+        sheet.setForceFormulaRecalculation(true);
         return this;
     }
 
@@ -264,6 +276,11 @@ public abstract class ExcelReader<T> implements SafeCloseable, Iterator<T>, Iter
      */
     protected abstract T parserRow(Row row);
 
+    /**
+     * 迭代器 不会存储也不会消费
+     *
+     * @return 迭代器
+     */
     @Override
     public Iterator<T> iterator() {
         return this;

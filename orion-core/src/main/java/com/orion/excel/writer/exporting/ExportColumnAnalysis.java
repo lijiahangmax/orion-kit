@@ -29,7 +29,7 @@ public class ExportColumnAnalysis implements Analysable {
 
     private Class<?> targetClass;
 
-    private int columnSize;
+    private int columnMaxIndex;
 
     private ExportSheetOption sheetOption;
 
@@ -90,7 +90,7 @@ public class ExportColumnAnalysis implements Analysable {
             throw Exceptions.parse("not found " + fieldName + "getter method");
         }
         int index = field.index();
-        sheetOption.setColumnSize(columnSize = Math.max(columnSize, index));
+        sheetOption.setColumnMaxIndex(columnMaxIndex = Math.max(columnMaxIndex, index));
         // 解析 field
         ExportFieldOption exportFieldOption = this.analysisField(field, method);
         if (font != null) {

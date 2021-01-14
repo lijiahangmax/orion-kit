@@ -32,9 +32,9 @@ public abstract class ExcelSheetWriter<T, K> {
     protected int cellIndex;
 
     /**
-     * 列数
+     * 最大列索引
      */
-    protected int columnSize;
+    protected int columnMaxIndex;
 
     /**
      * 是否跳过null
@@ -100,7 +100,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @return this
      */
     public ExcelSheetWriter<T, K> title(String title) {
-        return title(title, 1, columnSize);
+        return title(title, 1, columnMaxIndex);
     }
 
     /**
@@ -111,20 +111,20 @@ public abstract class ExcelSheetWriter<T, K> {
      * @return this
      */
     public ExcelSheetWriter<T, K> title(String title, int row) {
-        return title(title, row, columnSize);
+        return title(title, row, columnMaxIndex);
     }
 
     /**
      * 添加标题
      *
-     * @param title  title
-     * @param row    使用行数
-     * @param column 使用列数
+     * @param title           title
+     * @param row             使用行数
+     * @param lastColumnIndex 列数索引
      * @return this
      */
-    public ExcelSheetWriter<T, K> title(String title, int row, int column) {
+    public ExcelSheetWriter<T, K> title(String title, int row, int lastColumnIndex) {
         Valid.gt(row, 0, "title use row must > 0");
-        Valid.gte(column, 0, "title column row must >= 0");
+        Valid.gte(lastColumnIndex, 0, "title last column index row must >= 0");
         Row titleRow = sheet.createRow(cellIndex++);
         if (titleHeight != 0) {
             titleRow.setHeightInPoints(titleHeight);
@@ -146,7 +146,7 @@ public abstract class ExcelSheetWriter<T, K> {
             title = title.trim();
         }
         cell.setCellValue(title);
-        this.merge(cellIndex - row, cellIndex - 1, 0, column, true);
+        this.merge(cellIndex - row, cellIndex - 1, 0, lastColumnIndex, true);
         return this;
     }
 
@@ -348,7 +348,17 @@ public abstract class ExcelSheetWriter<T, K> {
     }
 
     /**
-     * 设置隐藏
+     * 设置隐藏表格
+     *
+     * @return this
+     */
+    public ExcelSheetWriter<T, K> hidden() {
+        workbook.setSheetHidden(workbook.getSheetIndex(sheet), true);
+        return this;
+    }
+
+    /**
+     * 设置隐藏列
      *
      * @param column 列
      * @return this
@@ -364,7 +374,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @return this
      */
     public ExcelSheetWriter<T, K> filter() {
-        return filter(0, columnSize);
+        return filter(0, columnMaxIndex);
     }
 
     /**
@@ -374,7 +384,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @return this
      */
     public ExcelSheetWriter<T, K> filter(int rowIndex) {
-        return filter(rowIndex, columnSize);
+        return filter(rowIndex, columnMaxIndex);
     }
 
     /**
@@ -469,59 +479,59 @@ public abstract class ExcelSheetWriter<T, K> {
     protected void addOption(K k, WriteFieldOption option) {
         Valid.gte(option.getIndex(), 0, "title use row must >= 0");
         this.options.put(k, option);
-        this.columnSize = Math.max(columnSize, option.getIndex());
+        this.columnMaxIndex = Math.max(columnMaxIndex, option.getIndex());
     }
 
     /**
      * 合并单元格
      *
-     * @param row       合并行
-     * @param firstCell 合并开始单元格
-     * @param lastCell  合并结束单元格
+     * @param row      合并行索引
+     * @param firstCol 合并开始列索引
+     * @param lastCol  合并结束列索引
      * @return this
      */
-    public ExcelSheetWriter<T, K> merge(int row, int firstCell, int lastCell) {
-        return merge(new CellRangeAddress(row, row, firstCell, lastCell), true);
+    public ExcelSheetWriter<T, K> merge(int row, int firstCol, int lastCol) {
+        return merge(new CellRangeAddress(row, row, firstCol, lastCol), true);
     }
 
     /**
      * 合并单元格
      *
-     * @param row         合并行
-     * @param firstCell   合并开始单元格
-     * @param lastCell    合并结束单元格
+     * @param row         合并行索引
+     * @param firstCol    合并开始列索引
+     * @param lastCol     合并结束列索引
      * @param mergeBorder 是否合并边框
      * @return this
      */
-    public ExcelSheetWriter<T, K> merge(int row, int firstCell, int lastCell, boolean mergeBorder) {
-        return merge(new CellRangeAddress(row, row, firstCell, lastCell), mergeBorder);
+    public ExcelSheetWriter<T, K> merge(int row, int firstCol, int lastCol, boolean mergeBorder) {
+        return merge(new CellRangeAddress(row, row, firstCol, lastCol), mergeBorder);
     }
 
     /**
      * 合并单元格
      *
-     * @param firstRow  合并开始行
-     * @param lastRow   合并结束行
-     * @param firstCell 合并开始单元格
-     * @param lastCell  合并结束单元格
+     * @param firstRow 合并开始行索引
+     * @param lastRow  合并结束行索引
+     * @param firstCol 合并开始列索引
+     * @param lastCol  合并结束列索引
      * @return this
      */
-    public ExcelSheetWriter<T, K> merge(int firstRow, int lastRow, int firstCell, int lastCell) {
-        return merge(new CellRangeAddress(firstRow, lastRow, firstCell, lastCell), true);
+    public ExcelSheetWriter<T, K> merge(int firstRow, int lastRow, int firstCol, int lastCol) {
+        return merge(new CellRangeAddress(firstRow, lastRow, firstCol, lastCol), true);
     }
 
     /**
      * 合并单元格
      *
-     * @param firstRow    合并开始行
-     * @param lastRow     合并结束行
-     * @param firstCell   合并开始单元格
-     * @param lastCell    合并结束单元格
+     * @param firstRow    合并开始行索引
+     * @param lastRow     合并结束行索引
+     * @param firstCol    合并开始列索引
+     * @param lastCol     合并结束列索引
      * @param mergeBorder 是否合并边框
      * @return this
      */
-    public ExcelSheetWriter<T, K> merge(int firstRow, int lastRow, int firstCell, int lastCell, boolean mergeBorder) {
-        return merge(new CellRangeAddress(firstRow, lastRow, firstCell, lastCell), mergeBorder);
+    public ExcelSheetWriter<T, K> merge(int firstRow, int lastRow, int firstCol, int lastCol, boolean mergeBorder) {
+        return merge(new CellRangeAddress(firstRow, lastRow, firstCol, lastCol), mergeBorder);
     }
 
     /**
@@ -624,6 +634,47 @@ public abstract class ExcelSheetWriter<T, K> {
     }
 
     /**
+     * 保护表格
+     *
+     * @param password password
+     * @return this
+     */
+    public ExcelSheetWriter<T, K> protect(String password) {
+        sheet.protectSheet(password);
+        return this;
+    }
+
+    /**
+     * 不显示网格线
+     *
+     * @return this
+     */
+    public ExcelSheetWriter<T, K> displayGridLines() {
+        sheet.setDisplayGridlines(false);
+        return this;
+    }
+
+    /**
+     * 不显示行数和列数
+     *
+     * @return this
+     */
+    public ExcelSheetWriter<T, K> displayRowColHeadings() {
+        sheet.setDisplayRowColHeadings(false);
+        return this;
+    }
+
+    /**
+     * 不执行公式 会修改列宽单位
+     *
+     * @return this
+     */
+    public ExcelSheetWriter<T, K> displayFormulas() {
+        sheet.setDisplayFormulas(true);
+        return this;
+    }
+
+    /**
      * 获取值
      *
      * @param row row
@@ -642,6 +693,14 @@ public abstract class ExcelSheetWriter<T, K> {
 
     public int getCellIndex() {
         return cellIndex;
+    }
+
+    public int getColumnMaxIndex() {
+        return columnMaxIndex;
+    }
+
+    public int getColumnSize() {
+        return columnMaxIndex + 1;
     }
 
     public CellStyle createStyle() {

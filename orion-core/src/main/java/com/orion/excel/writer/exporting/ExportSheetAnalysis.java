@@ -81,6 +81,9 @@ public class ExportSheetAnalysis implements Analysable {
         sheetOption.setFilterHeader(sheet.filterHeader());
         sheetOption.setSelected(sheet.selected());
         sheetOption.setHidden(sheet.hidden());
+        sheetOption.setDisplayGridLines(sheet.displayGridLines());
+        sheetOption.setDisplayRowColHeadings(sheet.displayRowColHeadings());
+        sheetOption.setDisplayFormulas(sheet.displayFormulas());
         // 标题
         this.analysisTitle();
         // 页眉
@@ -203,11 +206,27 @@ public class ExportSheetAnalysis implements Analysable {
         if (height != -1) {
             printOption.setHeight(height);
         }
-        int headerMargin = print.headerMargin();
+        double leftMargin = print.leftMargin();
+        if (leftMargin != -1) {
+            printOption.setLeftMargin(leftMargin);
+        }
+        double rightMargin = print.rightMargin();
+        if (rightMargin != -1) {
+            printOption.setRightMargin(rightMargin);
+        }
+        double topMargin = print.topMargin();
+        if (topMargin != -1) {
+            printOption.setTopMargin(topMargin);
+        }
+        double bottomMargin = print.bottomMargin();
+        if (bottomMargin != -1) {
+            printOption.setBottomMargin(bottomMargin);
+        }
+        double headerMargin = print.headerMargin();
         if (headerMargin != -1) {
             printOption.setHeaderMargin(headerMargin);
         }
-        int footerMargin = print.footerMargin();
+        double footerMargin = print.footerMargin();
         if (footerMargin != -1) {
             printOption.setFooterMargin(footerMargin);
         }

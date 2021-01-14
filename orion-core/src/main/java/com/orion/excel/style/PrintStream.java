@@ -1,6 +1,7 @@
 package com.orion.excel.style;
 
 import com.orion.excel.option.PrintOption;
+import com.orion.excel.type.ExcelMarginType;
 import com.orion.excel.type.ExcelPaperType;
 import org.apache.poi.ss.usermodel.PaperSize;
 import org.apache.poi.ss.usermodel.PrintSetup;
@@ -78,13 +79,29 @@ public class PrintStream {
         if (height != null) {
             stream.height(height);
         }
-        Integer headerMargin = option.getHeaderMargin();
-        if (headerMargin != null) {
-            stream.headerMargin(headerMargin);
+        Double leftMargin = option.getLeftMargin();
+        if (leftMargin != null) {
+            stream.margin(ExcelMarginType.LEFT, leftMargin);
         }
-        Integer footerMargin = option.getFooterMargin();
+        Double rightMargin = option.getRightMargin();
+        if (rightMargin != null) {
+            stream.margin(ExcelMarginType.RIGHT, rightMargin);
+        }
+        Double topMargin = option.getTopMargin();
+        if (topMargin != null) {
+            stream.margin(ExcelMarginType.TOP, topMargin);
+        }
+        Double bottomMargin = option.getBottomMargin();
+        if (bottomMargin != null) {
+            stream.margin(ExcelMarginType.BOTTOM, bottomMargin);
+        }
+        Double headerMargin = option.getHeaderMargin();
+        if (headerMargin != null) {
+            stream.margin(ExcelMarginType.HEADER, headerMargin);
+        }
+        Double footerMargin = option.getFooterMargin();
         if (footerMargin != null) {
-            stream.footerMargin(footerMargin);
+            stream.margin(ExcelMarginType.FOOTER, footerMargin);
         }
         Integer pageStart = option.getPageStart();
         if (pageStart != null) {
@@ -578,24 +595,86 @@ public class PrintStream {
     }
 
     /**
-     * 页脚边距
+     * 设置左边距 英寸
      *
      * @param margin 边距
      * @return this
      */
-    public PrintStream footerMargin(double margin) {
-        printSetup.setFooterMargin(margin);
-        return this;
+    public PrintStream leftMargin(double margin) {
+        return margin(ExcelMarginType.LEFT, margin);
     }
 
     /**
-     * 头部边距
+     * 设置右边距 英寸
+     *
+     * @param margin 边距
+     * @return this
+     */
+    public PrintStream rightMargin(double margin) {
+        return margin(ExcelMarginType.RIGHT, margin);
+    }
+
+    /**
+     * 设置上边距 英寸
+     *
+     * @param margin 边距
+     * @return this
+     */
+    public PrintStream topMargin(double margin) {
+        return margin(ExcelMarginType.TOP, margin);
+    }
+
+    /**
+     * 设置下边距 英寸
+     *
+     * @param margin 边距
+     * @return this
+     */
+    public PrintStream bottomMargin(double margin) {
+        return margin(ExcelMarginType.BOTTOM, margin);
+    }
+
+    /**
+     * 设置页眉边距 英寸
      *
      * @param margin 边距
      * @return this
      */
     public PrintStream headerMargin(double margin) {
-        printSetup.setHeaderMargin(margin);
+        return margin(ExcelMarginType.HEADER, margin);
+    }
+
+    /**
+     * 设置页脚边距 英寸
+     *
+     * @param margin 边距
+     * @return this
+     */
+    public PrintStream footerMargin(double margin) {
+        return margin(ExcelMarginType.FOOTER, margin);
+    }
+
+    /**
+     * 设置边距 英寸
+     *
+     * @param type   类型
+     * @param margin 边距
+     * @return this
+     */
+    public PrintStream margin(ExcelMarginType type, double margin) {
+        sheet.setMargin(type.getCode(), margin);
+        return this;
+    }
+
+    /**
+     * 设置边距 英寸
+     *
+     * @param type   类型 {@link ExcelMarginType}
+     * @param margin 边距
+     * @return this
+     */
+    public PrintStream margin(short type, double margin) {
+        sheet.setMargin(type, margin);
         return this;
     }
 
@@ -736,6 +815,15 @@ public class PrintStream {
     }
 
     /**
+     * 获取打印颜色是否为彩色
+     *
+     * @return 彩色true
+     */
+    public boolean isColor() {
+        return !printSetup.getNoColor();
+    }
+
+    /**
      * 获取打印颜色是否为黑白
      *
      * @return 黑白true
@@ -808,21 +896,59 @@ public class PrintStream {
     }
 
     /**
-     * 获取页脚边距
+     * 获取左边距 英寸
      *
-     * @return 页脚边距
+     * @return 边距
      */
-    public double getFooterMargin() {
-        return printSetup.getFooterMargin();
+    public double getLeftMargin() {
+        return getMargin(ExcelMarginType.LEFT);
     }
 
     /**
-     * 获取头部边距
+     * 获取右边距 英寸
      *
-     * @return 头部边距
+     * @return 边距
      */
-    public double getHeaderMargin() {
-        return printSetup.getHeaderMargin();
+    public double getRightMargin() {
+        return getMargin(ExcelMarginType.RIGHT);
+    }
+
+    /**
+     * 获取上边距 英寸
+     *
+     * @return 边距
+     */
+    public double getTopMargin() {
+        return getMargin(ExcelMarginType.TOP);
+    }
+
+    /**
+     * 获取下边距 英寸
+     *
+     * @return 边距
+     */
+    public double getBottomMargin() {
+        return getMargin(ExcelMarginType.BOTTOM);
+    }
+
+    /**
+     * 获取边距 英寸
+     *
+     * @param type type
+     * @return 边距
+     */
+    public double getMargin(ExcelMarginType type) {
+        return sheet.getMargin(type.getCode());
+    }
+
+    /**
+     * 获取边距 英寸
+     *
+     * @param type 类型 {@link ExcelMarginType}
+     * @return 边距
+     */
+    public double getMargin(int type) {
+        return sheet.getMargin((short) type);
     }
 
     /**

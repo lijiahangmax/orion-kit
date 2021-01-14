@@ -97,14 +97,34 @@ public @interface ExportPrint {
     int height() default -1;
 
     /**
-     * 页眉边距
+     * 左边距 英寸
      */
-    int headerMargin() default -1;
+    double leftMargin() default -1;
 
     /**
-     * 页脚边距
+     * 右边距 英寸
      */
-    int footerMargin() default -1;
+    double rightMargin() default -1;
+
+    /**
+     * 上边距 英寸
+     */
+    double topMargin() default -1;
+
+    /**
+     * 下边距 英寸
+     */
+    double bottomMargin() default -1;
+
+    /**
+     * 页眉边距 英寸
+     */
+    double headerMargin() default -1;
+
+    /**
+     * 页脚边距 英寸
+     */
+    double footerMargin() default -1;
 
     /**
      * 是否使用起始页

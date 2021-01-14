@@ -171,6 +171,17 @@ public class ExcelExport<T> implements SafeCloseable {
     }
 
     /**
+     * 保护表格
+     *
+     * @param password password
+     * @return this
+     */
+    public ExcelExport<T> protect(String password) {
+        sheet.protectSheet(password);
+        return this;
+    }
+
+    /**
      * 清空列样式 不包括已设置过的
      *
      * @param column 列
@@ -340,53 +351,53 @@ public class ExcelExport<T> implements SafeCloseable {
     /**
      * 合并单元格
      *
-     * @param row       合并行
-     * @param firstCell 合并开始单元格
-     * @param lastCell  合并结束单元格
+     * @param row      合并行索引
+     * @param firstCol 合并开始列索引
+     * @param lastCol  合并结束列索引
      * @return this
      */
-    public ExcelExport<T> merge(int row, int firstCell, int lastCell) {
-        return merge(new CellRangeAddress(row, row, firstCell, lastCell), true);
+    public ExcelExport<T> merge(int row, int firstCol, int lastCol) {
+        return merge(new CellRangeAddress(row, row, firstCol, lastCol), true);
     }
 
     /**
      * 合并单元格
      *
-     * @param row         合并行
-     * @param firstCell   合并开始单元格
-     * @param lastCell    合并结束单元格
+     * @param row         合并行索引
+     * @param firstCol    合并开始列索引
+     * @param lastCol     合并结束列索引
      * @param mergeBorder 是否合并边框
      * @return this
      */
-    public ExcelExport<T> merge(int row, int firstCell, int lastCell, boolean mergeBorder) {
-        return merge(new CellRangeAddress(row, row, firstCell, lastCell), mergeBorder);
+    public ExcelExport<T> merge(int row, int firstCol, int lastCol, boolean mergeBorder) {
+        return merge(new CellRangeAddress(row, row, firstCol, lastCol), mergeBorder);
     }
 
     /**
      * 合并单元格
      *
-     * @param firstRow  合并开始行
-     * @param lastRow   合并结束行
-     * @param firstCell 合并开始单元格
-     * @param lastCell  合并结束单元格
+     * @param firstRow 合并开始行索引
+     * @param lastRow  合并结束行索引
+     * @param firstCol 合并开始列索引
+     * @param lastCol  合并结束列索引
      * @return this
      */
-    public ExcelExport<T> merge(int firstRow, int lastRow, int firstCell, int lastCell) {
-        return merge(new CellRangeAddress(firstRow, lastRow, firstCell, lastCell), true);
+    public ExcelExport<T> merge(int firstRow, int lastRow, int firstCol, int lastCol) {
+        return merge(new CellRangeAddress(firstRow, lastRow, firstCol, lastCol), true);
     }
 
     /**
      * 合并单元格
      *
-     * @param firstRow    合并开始行
-     * @param lastRow     合并结束行
-     * @param firstCell   合并开始单元格
-     * @param lastCell    合并结束单元格
+     * @param firstRow    合并开始行索引
+     * @param lastRow     合并结束行索引
+     * @param firstCol    合并开始列索引
+     * @param lastCol     合并结束列索引
      * @param mergeBorder 是否合并边框
      * @return this
      */
-    public ExcelExport<T> merge(int firstRow, int lastRow, int firstCell, int lastCell, boolean mergeBorder) {
-        return merge(new CellRangeAddress(firstRow, lastRow, firstCell, lastCell), mergeBorder);
+    public ExcelExport<T> merge(int firstRow, int lastRow, int firstCol, int lastCol, boolean mergeBorder) {
+        return merge(new CellRangeAddress(firstRow, lastRow, firstCol, lastCol), mergeBorder);
     }
 
     /**
@@ -556,6 +567,20 @@ public class ExcelExport<T> implements SafeCloseable {
         return sheet;
     }
 
+    /**
+     * 获取最大列索引
+     *
+     * @return 最大列索引
+     */
+    public int getColumnMaxIndex() {
+        return sheetOption.getColumnMaxIndex();
+    }
+
+    /**
+     * 获取列数
+     *
+     * @return 列数
+     */
     public int getColumnSize() {
         return sheetOption.getColumnSize();
     }
