@@ -1,18 +1,15 @@
 package com.orion.excel.writer.exporting;
 
-import com.orion.able.SafeCloseable;
 import com.orion.excel.Excels;
 import com.orion.excel.option.ExportFieldOption;
 import com.orion.excel.option.ExportSheetOption;
+import com.orion.excel.writer.BaseExcelWriteable;
 import com.orion.utils.Valid;
 import com.orion.utils.collect.Lists;
-import com.orion.utils.io.Streams;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
-import java.io.File;
-import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -25,7 +22,7 @@ import java.util.TreeMap;
  * @version 1.0.0
  * @since 2020/5/28 11:15
  */
-public class ExcelExport<T> implements SafeCloseable {
+public class ExcelExport<T> extends BaseExcelWriteable {
 
     private Workbook workbook;
 
@@ -69,8 +66,8 @@ public class ExcelExport<T> implements SafeCloseable {
     }
 
     public ExcelExport(Class<T> targetClass, Workbook workbook, Sheet sheet) {
+        super(workbook);
         Valid.notNull(targetClass, "target class is null");
-        Valid.notNull(workbook, "workbook is null");
         this.targetClass = targetClass;
         this.workbook = workbook;
         this.sheet = sheet;
@@ -465,89 +462,6 @@ public class ExcelExport<T> implements SafeCloseable {
             processor.rowIndex++;
         }
         return this;
-    }
-
-    /**
-     * 写出到文件
-     *
-     * @param file 文件
-     * @return this
-     */
-    public ExcelExport<T> write(String file) {
-        Valid.notNull(file, "file is null");
-        Excels.write(workbook, file);
-        return this;
-    }
-
-    /**
-     * 写出到文件
-     *
-     * @param file 文件
-     * @return this
-     */
-    public ExcelExport<T> write(File file) {
-        Valid.notNull(file, "file is null");
-        Excels.write(workbook, file);
-        return this;
-    }
-
-    /**
-     * 写出到流
-     *
-     * @param out 流
-     * @return this
-     */
-    public ExcelExport<T> write(OutputStream out) {
-        Valid.notNull(out, "file is null");
-        Excels.write(workbook, out);
-        return this;
-    }
-
-    /**
-     * 写出到文件
-     *
-     * @param file     文件
-     * @param password 密码
-     * @return this
-     */
-    public ExcelExport<T> write(String file, String password) {
-        Valid.notNull(file, "file is null");
-        Excels.write(workbook, file, password);
-        return this;
-    }
-
-    /**
-     * 写出到文件
-     *
-     * @param file     文件
-     * @param password 密码
-     * @return this
-     */
-    public ExcelExport<T> write(File file, String password) {
-        Valid.notNull(file, "file is null");
-        Excels.write(workbook, file, password);
-        return this;
-    }
-
-    /**
-     * 写出到流
-     *
-     * @param out      流
-     * @param password 密码
-     * @return this
-     */
-    public ExcelExport<T> write(OutputStream out, String password) {
-        Valid.notNull(out, "file is null");
-        Excels.write(workbook, out, password);
-        return this;
-    }
-
-    /**
-     * 关闭
-     */
-    @Override
-    public void close() {
-        Streams.close(workbook);
     }
 
     /**

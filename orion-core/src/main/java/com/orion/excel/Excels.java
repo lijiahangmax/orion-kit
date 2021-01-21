@@ -147,7 +147,7 @@ public class Excels {
      * @param type type
      * @return value
      */
-    private static String getCellValue(Cell cell, CellType type) {
+    public static String getCellValue(Cell cell, CellType type) {
         String value = Strings.EMPTY;
         if (cell == null) {
             return value;
@@ -221,7 +221,7 @@ public class Excels {
      * @param option option
      * @return BigDecimal
      */
-    private static BigDecimal getCellDecimal(Cell cell, CellType type, CellOption option) {
+    public static BigDecimal getCellDecimal(Cell cell, CellType type, CellOption option) {
         if (cell == null) {
             return null;
         }
@@ -273,7 +273,7 @@ public class Excels {
      * @param option option
      * @return 时间
      */
-    private static Date getCellDate(Cell cell, CellType type, CellOption option) {
+    public static Date getCellDate(Cell cell, CellType type, CellOption option) {
         if (cell == null) {
             return null;
         }
@@ -321,7 +321,7 @@ public class Excels {
      * @param cell cell
      * @return 手机号
      */
-    private static String getCellPhone(Cell cell, CellType type) {
+    public static String getCellPhone(Cell cell, CellType type) {
         if (cell == null) {
             return Strings.EMPTY;
         }
@@ -522,6 +522,44 @@ public class Excels {
                     cell.setCellValue(Objects1.toString(value));
                     break;
             }
+        }
+    }
+
+    /**
+     * 复制cell的值
+     *
+     * @param source 原始
+     * @param target 目标
+     */
+    public static void copyCellValue(Cell source, Cell target) {
+        if (source == null) {
+            target.setCellType(CellType.BLANK);
+            return;
+        }
+        CellType type = source.getCellType();
+        target.setCellType(type);
+        switch (type) {
+            case NUMERIC:
+                if (DateUtil.isCellDateFormatted(source)) {
+                    target.setCellValue(source.getDateCellValue());
+                } else {
+                    target.setCellValue(source.getNumericCellValue());
+                }
+                break;
+            case STRING:
+                target.setCellValue(source.getRichStringCellValue());
+                break;
+            case FORMULA:
+                target.setCellFormula(source.getCellFormula());
+                break;
+            case ERROR:
+                target.setCellErrorValue(source.getErrorCellValue());
+                break;
+            case BOOLEAN:
+                target.setCellValue(source.getBooleanCellValue());
+                break;
+            default:
+                target.setCellType(CellType.BLANK);
         }
     }
 

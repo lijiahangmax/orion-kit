@@ -1,15 +1,9 @@
 package com.orion.excel.writer;
 
-import com.orion.able.SafeCloseable;
 import com.orion.excel.Excels;
 import com.orion.excel.option.PropertiesOption;
-import com.orion.utils.Valid;
-import com.orion.utils.io.Streams;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-
-import java.io.File;
-import java.io.OutputStream;
 
 /**
  * Excel 构建器
@@ -18,7 +12,7 @@ import java.io.OutputStream;
  * @version 1.0.0
  * @since 2020/4/6 21:59
  */
-public class ExcelWriterBuilder implements SafeCloseable {
+public class ExcelWriterBuilder extends BaseExcelWriteable {
 
     /**
      * workbook
@@ -26,10 +20,11 @@ public class ExcelWriterBuilder implements SafeCloseable {
     private Workbook workbook;
 
     public ExcelWriterBuilder() {
-        this.workbook = new SXSSFWorkbook();
+        this(new SXSSFWorkbook());
     }
 
     public ExcelWriterBuilder(Workbook workbook) {
+        super(workbook);
         this.workbook = workbook;
     }
 
@@ -179,84 +174,6 @@ public class ExcelWriterBuilder implements SafeCloseable {
     public ExcelWriterBuilder properties(PropertiesOption option) {
         Excels.setProperties(workbook, option);
         return this;
-    }
-
-    /**
-     * 写入到流
-     *
-     * @param out out
-     * @return this
-     */
-    public ExcelWriterBuilder write(OutputStream out) {
-        Excels.write(workbook, out);
-        return this;
-    }
-
-    /**
-     * 写入到文件
-     *
-     * @param file file
-     * @return this
-     */
-    public ExcelWriterBuilder write(String file) {
-        Valid.notNull(file, "file is null");
-        Excels.write(workbook, file);
-        return this;
-    }
-
-    /**
-     * 写入到文件
-     *
-     * @param file file
-     * @return this
-     */
-    public ExcelWriterBuilder write(File file) {
-        Valid.notNull(file, "file is null");
-        Excels.write(workbook, file);
-        return this;
-    }
-
-    /**
-     * 写入到流
-     *
-     * @param password password
-     * @param out      out
-     * @return this
-     */
-    public ExcelWriterBuilder write(OutputStream out, String password) {
-        Excels.write(workbook, out, password);
-        return this;
-    }
-
-    /**
-     * 写入到文件
-     *
-     * @param password password
-     * @param file     file
-     * @return this
-     */
-    public ExcelWriterBuilder write(String file, String password) {
-        Valid.notNull(file, "file is null");
-        Excels.write(workbook, file, password);
-        return this;
-    }
-
-    /**
-     * 写入到文件
-     *
-     * @param password password
-     * @param file     file
-     * @return this
-     */
-    public ExcelWriterBuilder write(File file, String password) {
-        Valid.notNull(file, "file is null");
-        Excels.write(workbook, file, password);
-        return this;
-    }
-
-    @Override
-    public void close() {
-        Streams.close(workbook);
     }
 
     public Workbook getWorkbook() {

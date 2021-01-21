@@ -37,7 +37,7 @@ public class WriteTests {
         Object[] array = new Object[6];
         array[0] = 1000 + i;
         array[1] = "   " + Strings.randomChars(3) + "  ";
-        array[2] = Strings.format("=ABS({})", i);
+        array[2] = Strings.format("ABS({})", i);
         array[3] = Dates.date(System.currentTimeMillis() + i * 100000);
         array[4] = Randoms.randomDouble(1000000, 9000000);
         array[5] = "disable";
@@ -48,7 +48,7 @@ public class WriteTests {
         Map<String, Object> m = new HashMap<>();
         m.put("id", 1000 + i);
         m.put("name", "   " + Strings.randomChars(3) + "  ");
-        m.put("formula", Strings.format("=ABS({})", i));
+        m.put("formula", Strings.format("ABS({})", i));
         m.put("date", Dates.date(System.currentTimeMillis() + i * 100000));
         m.put("balance", Randoms.randomDouble(1000000, 9000000));
         m.put("hidden", "disable");
@@ -59,7 +59,7 @@ public class WriteTests {
         WriteUser user = new WriteUser();
         user.setId(1000L + i);
         user.setName("   " + Strings.randomChars(3) + "  ");
-        user.setFormula(Strings.format("=ABS({})", i));
+        user.setFormula(Strings.format("ABS({})", i));
         user.setDate(Dates.date(System.currentTimeMillis() + i * 100000));
         user.setBalance(BigDecimal.valueOf(Randoms.randomDouble(1000000, 9000000)));
         user.setDisable("disable");
@@ -160,7 +160,7 @@ public class WriteTests {
                 .option("name", 2)
                 .option("date", 3, ExcelFieldType.DATE_FORMAT, "yyyy-MM-dd HH:mm:ss")
                 .option("balance", 4, ExcelFieldType.DECIMAL_FORMAT, "#,###$")
-                .option("hidden", 5)
+                .option("disable", 5)
                 .hidden(5)
                 .width(12)
                 .width(3, 20)

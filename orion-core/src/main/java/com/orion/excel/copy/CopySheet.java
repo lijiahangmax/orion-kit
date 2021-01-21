@@ -1,6 +1,6 @@
 package com.orion.excel.copy;
 
-import com.orion.utils.Strings;
+import com.orion.excel.Excels;
 import com.orion.utils.Valid;
 import org.apache.poi.hssf.usermodel.HSSFPalette;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -23,7 +23,7 @@ public class CopySheet {
     /**
      * 源workbook
      */
-    private Workbook resourceWorkbook;
+    private Workbook sourceWorkbook;
 
     /**
      * 目标workbook
@@ -33,7 +33,7 @@ public class CopySheet {
     /**
      * 源sheet
      */
-    private Sheet resourceSheet;
+    private Sheet sourceSheet;
 
     /**
      * 目标sheet
@@ -43,17 +43,17 @@ public class CopySheet {
     /**
      * 列数
      */
-    private int column = 128;
+    private int column = 32;
 
-    public CopySheet(Workbook resourceWorkbook, Workbook targetWorkbook, Sheet resourceSheet, Sheet targetSheet) {
-        Valid.notNull(resourceWorkbook, "ResourceWorkbook is null");
-        Valid.notNull(targetWorkbook, "TargetWorkbook is null");
-        Valid.notNull(resourceSheet, "ResourceSheet is null");
-        Valid.notNull(targetSheet, "TargetSheet is null");
-        Valid.isTrue((resourceSheet.getClass() == targetSheet.getClass()), "ResourceSheet class not equal targetSheet class");
-        this.resourceWorkbook = resourceWorkbook;
+    public CopySheet(Workbook sourceWorkbook, Workbook targetWorkbook, Sheet sourceSheet, Sheet targetSheet) {
+        Valid.notNull(sourceWorkbook, "sourceWorkbook is null");
+        Valid.notNull(targetWorkbook, "targetWorkbook is null");
+        Valid.notNull(sourceSheet, "sourceSheet is null");
+        Valid.notNull(targetSheet, "targetSheet is null");
+        Valid.isTrue((sourceSheet.getClass() == targetSheet.getClass()), "sourceSheet class not equal targetSheet class");
+        this.sourceWorkbook = sourceWorkbook;
         this.targetWorkbook = targetWorkbook;
-        this.resourceSheet = resourceSheet;
+        this.sourceSheet = sourceSheet;
         this.targetSheet = targetSheet;
     }
 
@@ -65,11 +65,11 @@ public class CopySheet {
         this.copySheet();
         this.copyMargin();
         this.copyPrint();
-        for (Row resource : resourceSheet) {
-            Row target = targetSheet.createRow(resource.getRowNum());
-            copyRow(resource, target);
+        for (Row source : sourceSheet) {
+            Row target = targetSheet.createRow(source.getRowNum());
+            this.copyRow(source, target);
         }
-        this.copyRegion(resourceSheet, targetSheet);
+        this.copyRegion(sourceSheet, targetSheet);
     }
 
     /**
@@ -87,12 +87,12 @@ public class CopySheet {
      * 复制sheet属性
      */
     private void copySheet() {
-        targetSheet.setDefaultColumnWidth(resourceSheet.getDefaultColumnWidth());
-        targetSheet.setDefaultRowHeight(resourceSheet.getDefaultRowHeight());
-        targetSheet.setFitToPage(resourceSheet.getFitToPage());
-        targetSheet.setAutobreaks(resourceSheet.getAutobreaks());
+        targetSheet.setDefaultColumnWidth(sourceSheet.getDefaultColumnWidth());
+        targetSheet.setDefaultRowHeight(sourceSheet.getDefaultRowHeight());
+        targetSheet.setFitToPage(sourceSheet.getFitToPage());
+        targetSheet.setAutobreaks(sourceSheet.getAutobreaks());
         for (int i = 0; i < column; i++) {
-            targetSheet.setColumnWidth(i, resourceSheet.getColumnWidth(i));
+            targetSheet.setColumnWidth(i, sourceSheet.getColumnWidth(i));
         }
     }
 
@@ -100,11 +100,11 @@ public class CopySheet {
      * copy color
      */
     private void copyWorkbookColor() {
-        if (resourceWorkbook instanceof HSSFWorkbook && targetWorkbook instanceof HSSFWorkbook) {
-            HSSFPalette resourcePalette = ((HSSFWorkbook) resourceWorkbook).getCustomPalette();
+        if (sourceWorkbook instanceof HSSFWorkbook && targetWorkbook instanceof HSSFWorkbook) {
+            HSSFPalette sourcePalette = ((HSSFWorkbook) sourceWorkbook).getCustomPalette();
             HSSFPalette targetPalette = ((HSSFWorkbook) targetWorkbook).getCustomPalette();
             for (int i = 8; i < 64; i++) {
-                short[] cs = resourcePalette.getColor(i).getTriplet();
+                short[] cs = sourcePalette.getColor(i).getTriplet();
                 targetPalette.setColorAtIndex((short) i, (byte) cs[0], (byte) cs[1], (byte) cs[2]);
             }
         }
@@ -113,20 +113,20 @@ public class CopySheet {
     /**
      * copy row
      *
-     * @param resource resource row
-     * @param target   target row
+     * @param source source row
+     * @param target target row
      */
-    private void copyRow(Row resource, Row target) {
-        target.setHeight(resource.getHeight());
-        CellStyle resourceStyle = resource.getRowStyle();
-        if (resourceStyle != null) {
+    private void copyRow(Row source, Row target) {
+        target.setHeight(source.getHeight());
+        CellStyle sourceStyle = source.getRowStyle();
+        if (sourceStyle != null) {
             CellStyle targetStyle = targetWorkbook.createCellStyle();
-            targetStyle.cloneStyleFrom(resourceStyle);
-            // this.copyCellStyle(resourceStyle, targetStyle);
+            targetStyle.cloneStyleFrom(sourceStyle);
+            // this.copyCellStyle(sourceStyle, targetStyle);
             target.setRowStyle(targetStyle);
         }
-        target.setZeroHeight(resource.getZeroHeight());
-        for (Cell cell : resource) {
+        target.setZeroHeight(source.getZeroHeight());
+        for (Cell cell : source) {
             this.copyCell(cell, target.createCell(cell.getColumnIndex()));
         }
     }
@@ -134,13 +134,13 @@ public class CopySheet {
     /**
      * copy region
      *
-     * @param resource resource region
-     * @param target   target region
+     * @param source source region
+     * @param target target region
      */
-    private void copyRegion(Sheet resource, Sheet target) {
-        int sheetMergerCount = resource.getNumMergedRegions();
+    private void copyRegion(Sheet source, Sheet target) {
+        int sheetMergerCount = source.getNumMergedRegions();
         for (int i = 0; i < sheetMergerCount; i++) {
-            CellRangeAddress address = resource.getMergedRegion(i);
+            CellRangeAddress address = source.getMergedRegion(i);
             if (address != null) {
                 target.addMergedRegion(address);
             }
@@ -150,87 +150,63 @@ public class CopySheet {
     /**
      * copy cell
      *
-     * @param resource resource cell
-     * @param target   target cell
+     * @param source source cell
+     * @param target target cell
      */
-    private void copyCell(Cell resource, Cell target) {
-        CellStyle resStyle = resource.getCellStyle();
+    private void copyCell(Cell source, Cell target) {
+        CellStyle resStyle = source.getCellStyle();
         if (resStyle != null) {
             CellStyle style = targetWorkbook.createCellStyle();
             style.cloneStyleFrom(resStyle);
             // this.copyCellStyle(resStyle, style);
             target.setCellStyle(style);
         }
-        Comment comment = resource.getCellComment();
+        Comment comment = source.getCellComment();
         if (comment != null) {
             target.setCellComment(comment);
         }
-        CellType type = resource.getCellType();
-        target.setCellType(type);
-        switch (type) {
-            case NUMERIC:
-                if (DateUtil.isCellDateFormatted(resource)) {
-                    target.setCellValue(resource.getDateCellValue());
-                } else {
-                    target.setCellValue(resource.getNumericCellValue());
-                }
-                break;
-            case STRING:
-                target.setCellValue(resource.getRichStringCellValue());
-                break;
-            case FORMULA:
-                target.setCellFormula(resource.getCellFormula());
-                break;
-            case ERROR:
-                target.setCellErrorValue(resource.getErrorCellValue());
-                break;
-            case BOOLEAN:
-                target.setCellValue(resource.getBooleanCellValue());
-                break;
-            default:
-                target.setCellValue(Strings.EMPTY);
-        }
+        Excels.copyCellValue(source, target);
     }
 
     /**
      * copy style
      *
-     * @param resource resource style
-     * @param target   target style
+     * @param source source style
+     * @param target target style
      */
-    private void copyCellStyle(CellStyle resource, CellStyle target) {
-        target.setBorderBottom(resource.getBorderBottom());
-        target.setBorderLeft(resource.getBorderLeft());
-        target.setBorderRight(resource.getBorderRight());
-        target.setBorderTop(resource.getBorderTop());
-        target.setTopBorderColor(resource.getTopBorderColor());
-        target.setBottomBorderColor(resource.getBottomBorderColor());
-        target.setRightBorderColor(resource.getRightBorderColor());
-        target.setLeftBorderColor(resource.getLeftBorderColor());
-        target.setFillPattern(resource.getFillPattern());
-        if (resource instanceof XSSFCellStyle && target instanceof XSSFCellStyle) {
-            ((XSSFCellStyle) target).setFillBackgroundColor(((XSSFCellStyle) resource).getFillBackgroundColorColor());
-            ((XSSFCellStyle) target).setFillForegroundColor(((XSSFCellStyle) resource).getFillForegroundColorColor());
+    private void copyCellStyle(CellStyle source, CellStyle target) {
+        target.setBorderBottom(source.getBorderBottom());
+        target.setBorderLeft(source.getBorderLeft());
+        target.setBorderRight(source.getBorderRight());
+        target.setBorderTop(source.getBorderTop());
+        target.setTopBorderColor(source.getTopBorderColor());
+        target.setBottomBorderColor(source.getBottomBorderColor());
+        target.setRightBorderColor(source.getRightBorderColor());
+        target.setLeftBorderColor(source.getLeftBorderColor());
+        target.setFillPattern(source.getFillPattern());
+        if (source instanceof XSSFCellStyle && target instanceof XSSFCellStyle) {
+            ((XSSFCellStyle) target).setFillBackgroundColor(((XSSFCellStyle) source).getFillBackgroundColorColor());
+            ((XSSFCellStyle) target).setFillForegroundColor(((XSSFCellStyle) source).getFillForegroundColorColor());
         } else {
-            target.setFillBackgroundColor(resource.getFillBackgroundColor());
-            target.setFillForegroundColor(resource.getFillForegroundColor());
+            target.setFillBackgroundColor(source.getFillBackgroundColor());
+            target.setFillForegroundColor(source.getFillForegroundColor());
         }
-        target.setDataFormat(resource.getDataFormat());
-        target.setFillPattern(resource.getFillPattern());
-        target.setHidden(resource.getHidden());
-        target.setIndention(resource.getIndention());
-        target.setLocked(resource.getLocked());
-        target.setRotation(resource.getRotation());
-        target.setVerticalAlignment(resource.getVerticalAlignment());
-        target.setWrapText(resource.getWrapText());
-        target.setAlignment(resource.getAlignment());
-        target.setShrinkToFit(resource.getShrinkToFit());
-        target.setQuotePrefixed(resource.getQuotePrefixed());
+        target.setDataFormat(source.getDataFormat());
+        target.setFillPattern(source.getFillPattern());
+        target.setHidden(source.getHidden());
+        target.setIndention(source.getIndention());
+        target.setLocked(source.getLocked());
+        target.setRotation(source.getRotation());
+        target.setVerticalAlignment(source.getVerticalAlignment());
+        target.setWrapText(source.getWrapText());
+        target.setAlignment(source.getAlignment());
+        target.setShrinkToFit(source.getShrinkToFit());
+        target.setQuotePrefixed(source.getQuotePrefixed());
 
-        Font resourceFont = resourceWorkbook.getFontAt(resource.getFontIndexAsInt());
-        if (resourceFont != null) {
+        Font sourceFont = sourceWorkbook.getFontAt(source.getFontIndexAsInt());
+        if (sourceFont != null) {
             Font targetFont = targetWorkbook.createFont();
-            this.copyFont(resourceFont, targetFont);
+            this.copyFont(sourceFont, targetFont);
             target.setFont(targetFont);
         }
     }
@@ -238,55 +214,55 @@ public class CopySheet {
     /**
      * copy cont
      *
-     * @param resource resource cont
-     * @param target   target cont
+     * @param source source cont
+     * @param target target cont
      */
-    private void copyFont(Font resource, Font target) {
-        if (resource instanceof XSSFFont && target instanceof XSSFFont) {
-            ((XSSFFont) target).setColor(((XSSFFont) resource).getXSSFColor());
-            ((XSSFFont) target).setFamily(((XSSFFont) resource).getFamily());
-            ((XSSFFont) target).setScheme(((XSSFFont) resource).getScheme());
+    private void copyFont(Font source, Font target) {
+        if (source instanceof XSSFFont && target instanceof XSSFFont) {
+            ((XSSFFont) target).setColor(((XSSFFont) source).getXSSFColor());
+            ((XSSFFont) target).setFamily(((XSSFFont) source).getFamily());
+            ((XSSFFont) target).setScheme(((XSSFFont) source).getScheme());
         } else {
-            target.setColor(resource.getColor());
+            target.setColor(source.getColor());
         }
-        target.setUnderline(resource.getUnderline());
-        target.setItalic(resource.getItalic());
-        target.setBold(resource.getBold());
-        target.setFontName(resource.getFontName());
-        target.setFontHeight(resource.getFontHeight());
-        target.setCharSet(resource.getCharSet());
-        target.setTypeOffset(resource.getTypeOffset());
-        target.setStrikeout(resource.getStrikeout());
+        target.setUnderline(source.getUnderline());
+        target.setItalic(source.getItalic());
+        target.setBold(source.getBold());
+        target.setFontName(source.getFontName());
+        target.setFontHeight(source.getFontHeight());
+        target.setCharSet(source.getCharSet());
+        target.setTypeOffset(source.getTypeOffset());
+        target.setStrikeout(source.getStrikeout());
     }
 
     /**
      * copy sheet print setting
      */
     private void copyPrint() {
-        PrintSetup resource = resourceSheet.getPrintSetup();
+        PrintSetup source = sourceSheet.getPrintSetup();
         PrintSetup target = targetSheet.getPrintSetup();
-        target.setUsePage(resource.getUsePage());
-        target.setScale(resource.getScale());
-        target.setPaperSize(resource.getPaperSize());
-        target.setPageStart(resource.getPageStart());
-        target.setNotes(resource.getNotes());
-        if (resource.getNoOrientation()) {
+        target.setUsePage(source.getUsePage());
+        target.setScale(source.getScale());
+        target.setPaperSize(source.getPaperSize());
+        target.setPageStart(source.getPageStart());
+        target.setNotes(source.getNotes());
+        if (source.getNoOrientation()) {
             target.setNoOrientation(true);
         } else {
             target.setNoOrientation(false);
-            target.setLandscape(resource.getLandscape());
+            target.setLandscape(source.getLandscape());
         }
-        target.setNoColor(resource.getNoColor());
-        target.setLeftToRight(resource.getLeftToRight());
-        target.setHResolution(resource.getHResolution());
-        target.setVResolution(resource.getVResolution());
-        target.setHeaderMargin(resource.getHeaderMargin());
-        target.setFooterMargin(resource.getFooterMargin());
-        target.setCopies(resource.getCopies());
-        target.setDraft(resource.getDraft());
-        target.setFitWidth(resource.getFitWidth());
-        target.setFitHeight(resource.getFitHeight());
-        target.setValidSettings(resource.getValidSettings());
+        target.setNoColor(source.getNoColor());
+        target.setLeftToRight(source.getLeftToRight());
+        target.setHResolution(source.getHResolution());
+        target.setVResolution(source.getVResolution());
+        target.setHeaderMargin(source.getHeaderMargin());
+        target.setFooterMargin(source.getFooterMargin());
+        target.setCopies(source.getCopies());
+        target.setDraft(source.getDraft());
+        target.setFitWidth(source.getFitWidth());
+        target.setFitHeight(source.getFitHeight());
+        target.setValidSettings(source.getValidSettings());
     }
 
     /**
@@ -294,20 +270,20 @@ public class CopySheet {
      */
     private void copyMargin() {
         for (short i = 0; i < 5; i++) {
-            targetSheet.setMargin(i, resourceSheet.getMargin(i));
+            targetSheet.setMargin(i, sourceSheet.getMargin(i));
         }
     }
 
-    public Workbook getResourceWorkbook() {
-        return resourceWorkbook;
+    public Workbook getSourceWorkbook() {
+        return sourceWorkbook;
     }
 
     public Workbook getTargetWorkbook() {
         return targetWorkbook;
     }
 
-    public Sheet getResourceSheet() {
-        return resourceSheet;
+    public Sheet getSourceSheet() {
+        return sourceSheet;
     }
 
     public Sheet getTargetSheet() {
