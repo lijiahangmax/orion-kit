@@ -1,0 +1,45 @@
+package com.orion.mail;
+
+/**
+ * SMTP 邮件服务器类型
+ *
+ * @author ljh15
+ * @version 1.0.0
+ * @since 2020/3/16 16:06
+ */
+public enum MailServerType {
+
+    /**
+     * 网易
+     */
+    WY163("smtp.163.com", 465),
+
+    /**
+     * QQ
+     */
+    QQ("smtp.qq.com", 465),
+
+    /**
+     * 移动
+     */
+    YD139("smtp.139.com", 465);
+
+    private String host;
+
+    private int port;
+
+    MailServerType(String host, int port) {
+        this.host = host;
+        this.port = port;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+}
+

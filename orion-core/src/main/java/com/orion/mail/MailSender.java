@@ -2,12 +2,14 @@ package com.orion.mail;
 
 import com.orion.able.Sendable;
 import com.orion.utils.Exceptions;
+import com.orion.utils.Strings;
+import com.orion.utils.Valid;
 
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
 import javax.mail.*;
-import javax.mail.internet.*;
-import java.io.File;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -21,8 +23,71 @@ import java.util.Properties;
  */
 public class MailSender implements Sendable<MailMessage> {
 
-    public static MailSender getInstance() {
-        return SenderInstance.MAIL_SENDER;
+    private Properties props;
+
+    private boolean debug;
+
+    private PasswordAuthentication authentication;
+
+    public MailSender(MailServerType type) {
+        this(type.getHost(), type.getPort());
+    }
+
+    public MailSender(String serverHost, int serverPort) {
+        props = new Properties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.host", serverHost);
+        props.put("mail.smtp.port", serverPort + Strings.EMPTY);
+        props.put("mail.smtp.socketFactory.port", serverPort + Strings.EMPTY);
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.socketFactory.fallback", "false");
+        props.put("mail.smtp.ssl.enable", false);
+    }
+
+    /**
+     * ssl发送
+     *
+     * @return this
+     */
+    public MailSender ssl() {
+        props.put("mail.smtp.ssl.enable", true);
+        return this;
+    }
+
+    /**
+     * ssl发送
+     *
+     * @param sslPort ssl端口
+     * @return this
+     */
+    public MailSender ssl(int sslPort) {
+        props.put("mail.smtp.ssl.enable", true);
+        props.put("mail.smtp.port", sslPort + Strings.EMPTY);
+        props.put("mail.smtp.socketFactory.port", sslPort + Strings.EMPTY);
+        return this;
+    }
+
+    /**
+     * 开启debug
+     *
+     * @return this
+     */
+    public MailSender debug() {
+        debug = true;
+        return this;
+    }
+
+    /**
+     * 服务器认证
+     *
+     * @param serverUsername 服务器用户名
+     * @param serverPassword 服务器密码
+     * @return this
+     */
+    public MailSender auth(String serverUsername, String serverPassword) {
+        authentication = new PasswordAuthentication(serverUsername, serverPassword);
+        return this;
     }
 
     /**
@@ -30,25 +95,15 @@ public class MailSender implements Sendable<MailMessage> {
      */
     @Override
     public boolean send(MailMessage msg) {
-        MailServer mailServer = msg.getMailServer();
-        Properties props = new Properties();
-        props.put("mail.transport.protocol", "smtp");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.host", mailServer.getSmtpHost());
-        props.put("mail.smtp.port", mailServer.getSmtpPort().toString());
-        props.put("mail.smtp.socketFactory.port", mailServer.getSmtpPort().toString());
-        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-        props.put("mail.smtp.socketFactory.fallback", "false");
-        props.put("mail.smtp.ssl.enable", msg.getSsl());
-
+        Valid.notNull(authentication, "unauthorized");
         // 会话
         Session session = Session.getDefaultInstance(props, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(msg.getUsername(), msg.getPassword());
+                return authentication;
             }
         });
-        session.setDebug(msg.getDebug());
+        session.setDebug(debug);
         try {
             MimeMessage mimeMessage = new MimeMessage(session);
             // 发件人
@@ -89,11 +144,8 @@ public class MailSender implements Sendable<MailMessage> {
             multipart.addBodyPart(body);
             // 附件
             if (msg.getAttachments() != null && !msg.getAttachments().isEmpty()) {
-                for (File file : msg.getAttachments()) {
-                    MimeBodyPart attache = new MimeBodyPart();
-                    attache.setDataHandler(new DataHandler(new FileDataSource(file)));
-                    attache.setFileName(MimeUtility.encodeText(file.getName(), msg.getAttachmentsCharset(), null));
-                    multipart.addBodyPart(attache);
+                for (MailAttachment attachment : msg.getAttachments()) {
+                    multipart.addBodyPart(attachment.getMimeBodyPart());
                 }
             }
             mimeMessage.setContent(multipart);
@@ -103,17 +155,7 @@ public class MailSender implements Sendable<MailMessage> {
             return true;
         } catch (Exception e) {
             Exceptions.printStacks(e);
-            return true;
-        }
-    }
-
-    /**
-     * 单例
-     */
-    private static class SenderInstance {
-        private static final MailSender MAIL_SENDER = new MailSender();
-
-        private SenderInstance() {
+            return false;
         }
     }
 

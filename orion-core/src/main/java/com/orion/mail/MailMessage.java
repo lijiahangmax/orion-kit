@@ -1,11 +1,10 @@
 package com.orion.mail;
 
-import com.orion.able.JsonAble;
 import com.orion.utils.Strings;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -15,36 +14,18 @@ import java.util.List;
  * @version 1.0.0
  * @since 2020/3/15 18:27
  */
-public class MailMessage implements Serializable, JsonAble {
+public class MailMessage implements Serializable {
 
     private static final String CHARSET = "UTF-8";
+
     private static final String HTML = "text/html";
+
     private static final String TEXT = "text/plain";
 
     /**
      * 发件人账号
      */
     private String from;
-
-    /**
-     * 发件服务器用户名
-     */
-    private String username;
-
-    /**
-     * 发件服务器密码
-     */
-    private String password;
-
-    /**
-     * 是否启用ssl
-     */
-    private Boolean ssl = false;
-
-    /**
-     * 使用使用debug模式
-     */
-    private Boolean debug = false;
 
     /**
      * 收件人邮箱
@@ -82,26 +63,9 @@ public class MailMessage implements Serializable, JsonAble {
     private String contentCharset = CHARSET;
 
     /**
-     * 邮件协议配置
-     */
-    private MailServer mailServer;
-
-    /**
      * 附件
      */
-    private List<File> attachments;
-
-    /**
-     * 附件编码格式
-     */
-    private String attachmentsCharset = CHARSET;
-
-    /**
-     * 初始化
-     */
-    public MailMessage(MailServer mailServer) {
-        this.mailServer = mailServer;
-    }
+    private List<MailAttachment> attachments;
 
     /**
      * 消息
@@ -120,7 +84,7 @@ public class MailMessage implements Serializable, JsonAble {
         this.from = from;
         this.title = title;
         this.content = content;
-        return addTo(to);
+        return to(to);
     }
 
     /**
@@ -131,22 +95,179 @@ public class MailMessage implements Serializable, JsonAble {
         this.title = title;
         this.content = content;
         this.mimeType = mimeType;
-        return addTo(to);
+        return to(to);
     }
 
     /**
-     * ssl发件
+     * 发件人
+     *
+     * @param from 发件人
+     * @return this
      */
-    public MailMessage ssl() {
-        this.ssl = true;
+    public MailMessage from(String from) {
+        this.from = from;
         return this;
     }
 
     /**
-     * debug
+     * 收件人
+     *
+     * @param to 收件人
+     * @return this
      */
-    public MailMessage debug() {
-        this.debug = true;
+    public MailMessage to(String... to) {
+        if (this.to == null) {
+            this.to = new ArrayList<>();
+        }
+        this.to.addAll(Arrays.asList(to));
+        return this;
+    }
+
+    /**
+     * 收件人
+     *
+     * @param to 收件人
+     * @return this
+     */
+    public MailMessage to(List<String> to) {
+        if (this.to == null) {
+            this.to = new ArrayList<>();
+        }
+        this.to.addAll(to);
+        return this;
+    }
+
+    /**
+     * 抄送人
+     *
+     * @param cc 抄送人
+     * @return this
+     */
+    public MailMessage cc(String... cc) {
+        if (this.cc == null) {
+            this.cc = new ArrayList<>();
+        }
+        this.cc.addAll(Arrays.asList(cc));
+        return this;
+    }
+
+    /**
+     * 抄送人
+     *
+     * @param cc 抄送人
+     * @return this
+     */
+    public MailMessage cc(List<String> cc) {
+        if (this.cc == null) {
+            this.cc = new ArrayList<>();
+        }
+        this.cc.addAll(cc);
+        return this;
+    }
+
+    /**
+     * 密抄人
+     *
+     * @param bcc 密抄人
+     * @return this
+     */
+    public MailMessage bcc(String... bcc) {
+        if (this.bcc == null) {
+            this.bcc = new ArrayList<>();
+        }
+        this.bcc.addAll(Arrays.asList(bcc));
+        return this;
+    }
+
+    /**
+     * 密抄人
+     *
+     * @param bcc 密抄人
+     * @return this
+     */
+    public MailMessage bcc(List<String> bcc) {
+        if (this.bcc == null) {
+            this.bcc = new ArrayList<>();
+        }
+        this.bcc.addAll(bcc);
+        return this;
+    }
+
+    /**
+     * 标题
+     *
+     * @param title 标题
+     * @return this
+     */
+    public MailMessage title(String title) {
+        this.title = title;
+        return this;
+    }
+
+    /**
+     * 内容
+     *
+     * @param content 内容
+     * @return this
+     */
+    public MailMessage content(String content) {
+        this.content = content;
+        return this;
+    }
+
+    /**
+     * 追加内容
+     *
+     * @param line 行
+     * @return this
+     */
+    public MailMessage addLine(String line) {
+        if (content == null) {
+            content = line;
+        } else {
+            content += (line + eof());
+        }
+        return this;
+    }
+
+    /**
+     * 追加内容
+     *
+     * @param lines 行
+     * @return this
+     */
+    public MailMessage addLines(String... lines) {
+        StringBuilder sb = new StringBuilder(content == null ? Strings.EMPTY : content);
+        for (String line : lines) {
+            sb.append(line).append(eof());
+        }
+        content = sb.toString();
+        return this;
+    }
+
+    /**
+     * 追加内容
+     *
+     * @param lines 行
+     * @return this
+     */
+    public MailMessage addLines(List<String> lines) {
+        StringBuilder sb = new StringBuilder(content == null ? Strings.EMPTY : content);
+        for (String line : lines) {
+            sb.append(line).append(eof());
+        }
+        content = sb.toString();
+        return this;
+    }
+
+    /**
+     * 邮件类型
+     *
+     * @param mimeType {@link #TEXT} {@link #HTML}
+     * @return this
+     */
+    public MailMessage mimeType(String mimeType) {
+        this.mimeType = mimeType;
         return this;
     }
 
@@ -159,175 +280,31 @@ public class MailMessage implements Serializable, JsonAble {
     }
 
     /**
-     * 认证
+     * 内容为文本
      */
-    public MailMessage auth(String username, String password) {
-        this.username = username;
-        this.password = password;
+    public MailMessage text() {
+        this.mimeType = TEXT;
         return this;
     }
 
     /**
-     * 追加内容
+     * 内容编码
+     *
+     * @param contentCharset charset
+     * @return this
      */
-    public MailMessage addLine(String line) {
-        if (content == null) {
-            content = line;
-        } else {
-            content += (line + "\n");
-        }
+    public MailMessage contentCharset(String contentCharset) {
+        this.contentCharset = contentCharset;
         return this;
     }
 
     /**
-     * 追加内容
+     * 附件
+     *
+     * @param attachment 附件
+     * @return this
      */
-    public MailMessage addLines(List<String> lines) {
-        StringBuilder sb = new StringBuilder(content == null ? Strings.EMPTY : content);
-        for (String line : lines) {
-            sb.append(line).append("\n");
-        }
-        content = sb.toString();
-        return this;
-    }
-
-    public String getFrom() {
-        return from;
-    }
-
-    public MailMessage setFrom(String from) {
-        this.from = from;
-        return this;
-    }
-
-    public Boolean getSsl() {
-        return ssl;
-    }
-
-    public MailMessage setSsl(Boolean ssl) {
-        this.ssl = ssl;
-        return this;
-    }
-
-    public Boolean getDebug() {
-        return debug;
-    }
-
-    public MailMessage setDebug(Boolean debug) {
-        this.debug = debug;
-        return this;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public MailMessage setUsername(String username) {
-        this.username = username;
-        return this;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public MailMessage setPassword(String password) {
-        this.password = password;
-        return this;
-    }
-
-    public List<String> getTo() {
-        return to;
-    }
-
-    public MailMessage addTo(String to) {
-        if (this.to == null) {
-            this.to = new ArrayList<>();
-        }
-        this.to.add(to);
-        return this;
-    }
-
-    public MailMessage setTo(List<String> to) {
-        this.to = to;
-        return this;
-    }
-
-    public List<String> getCc() {
-        return cc;
-    }
-
-    public MailMessage addCc(String cc) {
-        if (this.cc == null) {
-            this.cc = new ArrayList<>();
-        }
-        this.cc.add(cc);
-        return this;
-    }
-
-    public MailMessage setCc(List<String> cc) {
-        this.cc = cc;
-        return this;
-    }
-
-    public List<String> getBcc() {
-        return bcc;
-    }
-
-    public MailMessage addBcc(String bcc) {
-        if (this.bcc == null) {
-            this.bcc = new ArrayList<>();
-        }
-        this.bcc.add(bcc);
-        return this;
-    }
-
-    public MailMessage setBcc(List<String> bcc) {
-        this.bcc = bcc;
-        return this;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public MailMessage setTitle(String title) {
-        this.title = title;
-        return this;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public MailMessage setContent(String content) {
-        this.content = content;
-        return this;
-    }
-
-    public String getMimeType() {
-        return mimeType;
-    }
-
-    public MailMessage setMimeType(String mimeType) {
-        this.mimeType = mimeType;
-        return this;
-    }
-
-    public MailServer getMailServer() {
-        return mailServer;
-    }
-
-    public MailMessage setMailServer(MailServer mailServer) {
-        this.mailServer = mailServer;
-        return this;
-    }
-
-    public List<File> getAttachments() {
-        return attachments;
-    }
-
-    public MailMessage addAttachments(File attachment) {
+    public MailMessage attachment(MailAttachment attachment) {
         if (this.attachments == null) {
             this.attachments = new ArrayList<>();
         }
@@ -335,37 +312,75 @@ public class MailMessage implements Serializable, JsonAble {
         return this;
     }
 
-    public MailMessage setAttachments(List<File> attachments) {
-        this.attachments = attachments;
+    /**
+     * 附件
+     *
+     * @param attachments 附件
+     * @return this
+     */
+    public MailMessage attachments(List<MailAttachment> attachments) {
+        if (this.attachments == null) {
+            this.attachments = new ArrayList<>();
+        }
+        this.attachments.addAll(attachments);
         return this;
+    }
+
+    private String eof() {
+        return HTML.equals(mimeType) ? "<br/>" : "\n";
+    }
+
+    // -------------------- getter --------------------
+
+    public String getFrom() {
+        return from;
+    }
+
+    public List<String> getTo() {
+        return to;
+    }
+
+    public List<String> getCc() {
+        return cc;
+    }
+
+    public List<String> getBcc() {
+        return bcc;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public String getMimeType() {
+        return mimeType;
     }
 
     public String getContentCharset() {
         return contentCharset;
     }
 
-    public MailMessage setContentCharset(String contentCharset) {
-        this.contentCharset = contentCharset;
-        return this;
-    }
-
-    public String getAttachmentsCharset() {
-        return attachmentsCharset;
-    }
-
-    public MailMessage setAttachmentsCharset(String attachmentsCharset) {
-        this.attachmentsCharset = attachmentsCharset;
-        return this;
-    }
-
-    @Override
-    public String toJsonString() {
-        return toJson();
+    public List<MailAttachment> getAttachments() {
+        return attachments;
     }
 
     @Override
     public String toString() {
-        return toJson();
+        StringBuilder sb = new StringBuilder("EML-form: [");
+        sb.append(from).append("]\n");
+        sb.append("  ==> to: ").append(to == null ? "[]" : to.toString()).append(" \n");
+        if (cc != null) {
+            sb.append("  ==> cc: ").append(cc.toString()).append(" \n");
+        }
+        if (bcc != null) {
+            sb.append("  ==> bcc: ").append(bcc.toString()).append(" \n");
+        }
+        sb.append("  ==> title: [").append(title).append("] \n");
+        return sb.toString();
     }
 
 }
