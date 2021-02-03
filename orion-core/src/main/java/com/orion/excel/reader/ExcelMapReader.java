@@ -23,7 +23,7 @@ import java.util.function.Consumer;
  * @version 1.0.0
  * @since 2021/1/5 11:52
  */
-public class ExcelMapReader<K> extends ExcelReader<MutableMap<K, Object>> {
+public class ExcelMapReader<K> extends BaseExcelReader<MutableMap<K, Object>> {
 
     /**
      * 配置信息

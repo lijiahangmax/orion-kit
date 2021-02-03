@@ -2,6 +2,7 @@ package com.orion.excel.reader;
 
 import com.orion.excel.Excels;
 import com.orion.utils.Arrays1;
+import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -19,7 +20,17 @@ import java.util.function.Consumer;
  * @version 1.0.0
  * @since 2021/1/5 10:04
  */
-public class ExcelArrayReader extends ExcelReader<String[]> {
+public class ExcelArrayReader extends BaseExcelReader<String[]> {
+
+    /**
+     * 读取的列
+     */
+    protected int[] columns;
+
+    /**
+     * 列数
+     */
+    protected int columnSize;
 
     /**
      * 空列
@@ -97,6 +108,33 @@ public class ExcelArrayReader extends ExcelReader<String[]> {
         return this;
     }
 
+    /**
+     * 设置读取的列
+     *
+     * @param columns 列
+     * @return this
+     */
+    public ExcelArrayReader columns(int... columns) {
+        this.columns = columns;
+        this.columnSize = Arrays1.length(columns);
+        return this;
+    }
+
+    /**
+     * 设置列容量
+     *
+     * @param capacity capacity
+     * @return this
+     */
+    public ExcelArrayReader capacity(int capacity) {
+        if (!Arrays1.isEmpty(columns)) {
+            throw Exceptions.unSupport("if the column is set, the capacity is not supported");
+        }
+        this.columnSize = capacity;
+        return this;
+    }
+
+
     @Override
     protected String[] parserRow(Row row) {
         if (row == null) {
@@ -125,6 +163,10 @@ public class ExcelArrayReader extends ExcelReader<String[]> {
             }
         }
         return array;
+    }
+
+    public int getColumnSize() {
+        return columnSize;
     }
 
 }

@@ -2,7 +2,7 @@ package com.orion.excel.convert.adapter;
 
 import com.orion.able.Adaptable;
 import com.orion.able.SafeCloseable;
-import com.orion.csv.exporting.CsvExport;
+import com.orion.csv.writer.CsvExport;
 import com.orion.excel.Excels;
 import com.orion.utils.io.Streams;
 import org.apache.poi.ss.usermodel.Cell;
@@ -85,7 +85,7 @@ public class CsvAdapter implements Adaptable<CsvAdapter>, SafeCloseable {
     @Override
     public CsvAdapter forNew() {
         if (header != null) {
-            export.addRecord(header);
+            export.headers(header);
         }
         int i = 0;
         for (Row cells : sheet) {
@@ -97,7 +97,7 @@ public class CsvAdapter implements Adaptable<CsvAdapter>, SafeCloseable {
                 String value = Excels.getCellValue(cell);
                 row.add(value);
             }
-            export.addRecord(row.toArray(new String[0]));
+            // export.addRecord(row.toArray(new String[0]));
         }
         export.flush().close();
         return this;

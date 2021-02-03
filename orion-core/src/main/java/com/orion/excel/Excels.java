@@ -57,8 +57,6 @@ import java.util.Optional;
  */
 public class Excels {
 
-    private static final DecimalFormat DF = new DecimalFormat("#");
-
     /**
      * 流式读取缓存行数
      */
@@ -332,9 +330,9 @@ public class Excels {
             case FORMULA:
                 return getCellPhone(cell, cell.getCachedFormulaResultType());
             case NUMERIC:
-                return DF.format(cell.getNumericCellValue());
+                return new DecimalFormat("#").format(cell.getNumericCellValue());
             case STRING:
-                return DF.format(Double.parseDouble(cell.toString()));
+                return new DecimalFormat("#").format(Double.parseDouble(cell.toString()));
             default:
                 return cell.toString();
         }

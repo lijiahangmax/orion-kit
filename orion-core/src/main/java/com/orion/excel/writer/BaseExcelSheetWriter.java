@@ -7,6 +7,7 @@ import com.orion.excel.option.PrintOption;
 import com.orion.excel.option.WriteFieldOption;
 import com.orion.excel.type.ExcelFieldType;
 import com.orion.utils.Arrays1;
+import com.orion.utils.Objects1;
 import com.orion.utils.Valid;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -20,7 +21,7 @@ import java.util.*;
  * @version 1.0.0
  * @since 2020/4/6 23:33
  */
-public abstract class ExcelSheetWriter<T, K> {
+public abstract class BaseExcelSheetWriter<K, V> {
 
     protected Workbook workbook;
 
@@ -88,7 +89,12 @@ public abstract class ExcelSheetWriter<T, K> {
      */
     protected Map<Integer, CellStyle> columnStyles = new TreeMap<>();
 
-    public ExcelSheetWriter(Workbook workbook, Sheet sheet) {
+    /**
+     * 默认值
+     */
+    private Map<K, Object> defaultValue = new HashMap<>();
+
+    public BaseExcelSheetWriter(Workbook workbook, Sheet sheet) {
         this.workbook = workbook;
         this.sheet = sheet;
     }
@@ -99,7 +105,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param title title
      * @return this
      */
-    public ExcelSheetWriter<T, K> title(String title) {
+    public BaseExcelSheetWriter<K, V> title(String title) {
         return title(title, 1, columnMaxIndex);
     }
 
@@ -110,7 +116,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param row   使用行数
      * @return this
      */
-    public ExcelSheetWriter<T, K> title(String title, int row) {
+    public BaseExcelSheetWriter<K, V> title(String title, int row) {
         return title(title, row, columnMaxIndex);
     }
 
@@ -122,7 +128,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param lastColumnIndex 列数索引
      * @return this
      */
-    public ExcelSheetWriter<T, K> title(String title, int row, int lastColumnIndex) {
+    public BaseExcelSheetWriter<K, V> title(String title, int row, int lastColumnIndex) {
         Valid.gt(row, 0, "title use row must > 0");
         Valid.gte(lastColumnIndex, 0, "title last column index row must >= 0");
         Row titleRow = sheet.createRow(cellIndex++);
@@ -156,7 +162,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param headers 表头
      * @return this
      */
-    public ExcelSheetWriter<T, K> headers(String... headers) {
+    public BaseExcelSheetWriter<K, V> headers(String... headers) {
         if (Arrays1.isEmpty(headers)) {
             return this;
         }
@@ -183,7 +189,7 @@ public abstract class ExcelSheetWriter<T, K> {
      *
      * @return this
      */
-    public ExcelSheetWriter<T, K> skip() {
+    public BaseExcelSheetWriter<K, V> skip() {
         cellIndex++;
         return this;
     }
@@ -194,7 +200,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param i 行
      * @return this
      */
-    public ExcelSheetWriter<T, K> skip(int i) {
+    public BaseExcelSheetWriter<K, V> skip(int i) {
         cellIndex += i;
         return this;
     }
@@ -205,7 +211,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param skip 跳过空行
      * @return this
      */
-    public ExcelSheetWriter<T, K> skipNullRows(boolean skip) {
+    public BaseExcelSheetWriter<K, V> skipNullRows(boolean skip) {
         this.skipNullRows = skip;
         return this;
     }
@@ -215,7 +221,7 @@ public abstract class ExcelSheetWriter<T, K> {
      *
      * @return this
      */
-    public ExcelSheetWriter<T, K> trim() {
+    public BaseExcelSheetWriter<K, V> trim() {
         this.trim = true;
         return this;
     }
@@ -227,7 +233,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param width  行宽
      * @return this
      */
-    public ExcelSheetWriter<T, K> width(int column, int width) {
+    public BaseExcelSheetWriter<K, V> width(int column, int width) {
         sheet.setColumnWidth(column, (int) ((width + 0.72) * 256));
         return this;
     }
@@ -238,7 +244,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param width 行宽
      * @return this
      */
-    public ExcelSheetWriter<T, K> width(int width) {
+    public BaseExcelSheetWriter<K, V> width(int width) {
         sheet.setDefaultColumnWidth(width);
         return this;
     }
@@ -249,7 +255,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param height 行高
      * @return this
      */
-    public ExcelSheetWriter<T, K> height(int height) {
+    public BaseExcelSheetWriter<K, V> height(int height) {
         sheet.setDefaultRowHeightInPoints(this.rowHeight = height);
         this.titleHeight = height;
         this.headerHeight = (short) height;
@@ -262,7 +268,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param height 行高
      * @return this
      */
-    public ExcelSheetWriter<T, K> rowHeight(int height) {
+    public BaseExcelSheetWriter<K, V> rowHeight(int height) {
         sheet.setDefaultRowHeightInPoints(this.rowHeight = height);
         return this;
     }
@@ -273,7 +279,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param height 行高
      * @return this
      */
-    public ExcelSheetWriter<T, K> titleHeight(int height) {
+    public BaseExcelSheetWriter<K, V> titleHeight(int height) {
         this.titleHeight = height;
         return this;
     }
@@ -284,7 +290,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param height 行高
      * @return this
      */
-    public ExcelSheetWriter<T, K> headerHeight(int height) {
+    public BaseExcelSheetWriter<K, V> headerHeight(int height) {
         this.headerHeight = (short) height;
         return this;
     }
@@ -294,7 +300,7 @@ public abstract class ExcelSheetWriter<T, K> {
      *
      * @return this
      */
-    public ExcelSheetWriter<T, K> headerUseRowStyle() {
+    public BaseExcelSheetWriter<K, V> headerUseRowStyle() {
         this.headerUseRowStyle = true;
         return this;
     }
@@ -306,7 +312,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param style  style
      * @return this
      */
-    public ExcelSheetWriter<T, K> style(int column, CellStyle style) {
+    public BaseExcelSheetWriter<K, V> style(int column, CellStyle style) {
         if (headerUseRowStyle && !headerStyles.containsKey(column)) {
             headerStyles.put(column, style);
         }
@@ -321,7 +327,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param style  style
      * @return this
      */
-    public ExcelSheetWriter<T, K> headerStyle(int column, CellStyle style) {
+    public BaseExcelSheetWriter<K, V> headerStyle(int column, CellStyle style) {
         headerStyles.put(column, style);
         return this;
     }
@@ -332,7 +338,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param style style
      * @return this
      */
-    public ExcelSheetWriter<T, K> titleStyle(CellStyle style) {
+    public BaseExcelSheetWriter<K, V> titleStyle(CellStyle style) {
         this.titleStyle = style;
         return this;
     }
@@ -342,7 +348,7 @@ public abstract class ExcelSheetWriter<T, K> {
      *
      * @return this
      */
-    public ExcelSheetWriter<T, K> selected() {
+    public BaseExcelSheetWriter<K, V> selected() {
         workbook.setActiveSheet(workbook.getSheetIndex(sheet));
         return this;
     }
@@ -352,7 +358,7 @@ public abstract class ExcelSheetWriter<T, K> {
      *
      * @return this
      */
-    public ExcelSheetWriter<T, K> hidden() {
+    public BaseExcelSheetWriter<K, V> hidden() {
         workbook.setSheetHidden(workbook.getSheetIndex(sheet), true);
         return this;
     }
@@ -363,7 +369,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param column 列
      * @return this
      */
-    public ExcelSheetWriter<T, K> hidden(int column) {
+    public BaseExcelSheetWriter<K, V> hidden(int column) {
         sheet.setColumnHidden(column, true);
         return this;
     }
@@ -373,7 +379,7 @@ public abstract class ExcelSheetWriter<T, K> {
      *
      * @return this
      */
-    public ExcelSheetWriter<T, K> filter() {
+    public BaseExcelSheetWriter<K, V> filter() {
         return filter(0, columnMaxIndex);
     }
 
@@ -383,7 +389,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param rowIndex rowIndex
      * @return this
      */
-    public ExcelSheetWriter<T, K> filter(int rowIndex) {
+    public BaseExcelSheetWriter<K, V> filter(int rowIndex) {
         return filter(rowIndex, columnMaxIndex);
     }
 
@@ -394,7 +400,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param lastColumn lastColumn
      * @return this
      */
-    public ExcelSheetWriter<T, K> filter(int rowIndex, int lastColumn) {
+    public BaseExcelSheetWriter<K, V> filter(int rowIndex, int lastColumn) {
         Excels.filterRow(sheet, rowIndex, lastColumn);
         return this;
     }
@@ -404,7 +410,7 @@ public abstract class ExcelSheetWriter<T, K> {
      *
      * @return this
      */
-    public ExcelSheetWriter<T, K> freeze() {
+    public BaseExcelSheetWriter<K, V> freeze() {
         return this.freeze(0);
     }
 
@@ -414,7 +420,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param row row
      * @return this
      */
-    public ExcelSheetWriter<T, K> freeze(int row) {
+    public BaseExcelSheetWriter<K, V> freeze(int row) {
         Excels.freezeRow(sheet, row);
         return this;
     }
@@ -426,7 +432,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param column column
      * @return this
      */
-    public ExcelSheetWriter<T, K> option(K k, int column) {
+    public BaseExcelSheetWriter<K, V> option(K k, int column) {
         this.addOption(k, new WriteFieldOption(column));
         return this;
     }
@@ -439,7 +445,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param type   type
      * @return this
      */
-    public ExcelSheetWriter<T, K> option(K k, int column, ExcelFieldType type) {
+    public BaseExcelSheetWriter<K, V> option(K k, int column, ExcelFieldType type) {
         this.addOption(k, new WriteFieldOption(column, type));
         return this;
     }
@@ -453,7 +459,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param format format
      * @return this
      */
-    public ExcelSheetWriter<T, K> option(K k, int column, ExcelFieldType type, String format) {
+    public BaseExcelSheetWriter<K, V> option(K k, int column, ExcelFieldType type, String format) {
         this.addOption(k, new WriteFieldOption(column, type, format));
         return this;
     }
@@ -465,8 +471,20 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param option option
      * @return this
      */
-    public ExcelSheetWriter<T, K> option(K k, WriteFieldOption option) {
+    public BaseExcelSheetWriter<K, V> option(K k, WriteFieldOption option) {
         this.addOption(k, option);
+        return this;
+    }
+
+    /**
+     * 设置默认值
+     *
+     * @param k     K
+     * @param value 默认值
+     * @return this
+     */
+    public BaseExcelSheetWriter<K, V> defaultValue(K k, Object value) {
+        defaultValue.put(k, value);
         return this;
     }
 
@@ -490,7 +508,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param lastCol  合并结束列索引
      * @return this
      */
-    public ExcelSheetWriter<T, K> merge(int row, int firstCol, int lastCol) {
+    public BaseExcelSheetWriter<K, V> merge(int row, int firstCol, int lastCol) {
         return merge(new CellRangeAddress(row, row, firstCol, lastCol), true);
     }
 
@@ -503,7 +521,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param mergeBorder 是否合并边框
      * @return this
      */
-    public ExcelSheetWriter<T, K> merge(int row, int firstCol, int lastCol, boolean mergeBorder) {
+    public BaseExcelSheetWriter<K, V> merge(int row, int firstCol, int lastCol, boolean mergeBorder) {
         return merge(new CellRangeAddress(row, row, firstCol, lastCol), mergeBorder);
     }
 
@@ -516,7 +534,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param lastCol  合并结束列索引
      * @return this
      */
-    public ExcelSheetWriter<T, K> merge(int firstRow, int lastRow, int firstCol, int lastCol) {
+    public BaseExcelSheetWriter<K, V> merge(int firstRow, int lastRow, int firstCol, int lastCol) {
         return merge(new CellRangeAddress(firstRow, lastRow, firstCol, lastCol), true);
     }
 
@@ -530,7 +548,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param mergeBorder 是否合并边框
      * @return this
      */
-    public ExcelSheetWriter<T, K> merge(int firstRow, int lastRow, int firstCol, int lastCol, boolean mergeBorder) {
+    public BaseExcelSheetWriter<K, V> merge(int firstRow, int lastRow, int firstCol, int lastCol, boolean mergeBorder) {
         return merge(new CellRangeAddress(firstRow, lastRow, firstCol, lastCol), mergeBorder);
     }
 
@@ -541,7 +559,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param mergeBorder 是否合并边框
      * @return this
      */
-    public ExcelSheetWriter<T, K> merge(CellRangeAddress region, boolean mergeBorder) {
+    public BaseExcelSheetWriter<K, V> merge(CellRangeAddress region, boolean mergeBorder) {
         Excels.mergeCell(sheet, region);
         if (mergeBorder) {
             Optional.ofNullable(Excels.getCell(sheet, region.getFirstRow(), 0))
@@ -554,23 +572,23 @@ public abstract class ExcelSheetWriter<T, K> {
     }
 
     /**
-     * 添加列
+     * 添加行
      *
-     * @param list 列
+     * @param list 行
      * @return this
      */
-    public ExcelSheetWriter<T, K> addRows(List<T> list) {
+    public BaseExcelSheetWriter<K, V> addRows(List<V> list) {
         list.forEach(this::addRow);
         return this;
     }
 
     /**
-     * 添加列
+     * 添加行
      *
-     * @param row 列
+     * @param row 行
      * @return this
      */
-    public ExcelSheetWriter<T, K> addRow(T row) {
+    public BaseExcelSheetWriter<K, V> addRow(V row) {
         if (row == null && skipNullRows) {
             return this;
         }
@@ -591,7 +609,7 @@ public abstract class ExcelSheetWriter<T, K> {
             if (style != null) {
                 cell.setCellStyle(style);
             }
-            Object value = this.getValue(row, k);
+            Object value = Objects1.def(this.getValue(row, k), defaultValue.get(k));
             if (trim && value instanceof String) {
                 value = ((String) value).trim();
             }
@@ -606,7 +624,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param option option
      * @return this
      */
-    public ExcelSheetWriter<T, K> header(HeaderOption option) {
+    public BaseExcelSheetWriter<K, V> header(HeaderOption option) {
         Excels.setHeader(sheet, option);
         return this;
     }
@@ -617,7 +635,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param option option
      * @return this
      */
-    public ExcelSheetWriter<T, K> footer(FooterOption option) {
+    public BaseExcelSheetWriter<K, V> footer(FooterOption option) {
         Excels.setFooter(sheet, option);
         return this;
     }
@@ -628,7 +646,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param option option
      * @return this
      */
-    public ExcelSheetWriter<T, K> print(PrintOption option) {
+    public BaseExcelSheetWriter<K, V> print(PrintOption option) {
         Excels.parsePrint(sheet, option);
         return this;
     }
@@ -639,7 +657,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param password password
      * @return this
      */
-    public ExcelSheetWriter<T, K> protect(String password) {
+    public BaseExcelSheetWriter<K, V> protect(String password) {
         sheet.protectSheet(password);
         return this;
     }
@@ -649,7 +667,7 @@ public abstract class ExcelSheetWriter<T, K> {
      *
      * @return this
      */
-    public ExcelSheetWriter<T, K> displayGridLines() {
+    public BaseExcelSheetWriter<K, V> displayGridLines() {
         sheet.setDisplayGridlines(false);
         return this;
     }
@@ -659,7 +677,7 @@ public abstract class ExcelSheetWriter<T, K> {
      *
      * @return this
      */
-    public ExcelSheetWriter<T, K> displayRowColHeadings() {
+    public BaseExcelSheetWriter<K, V> displayRowColHeadings() {
         sheet.setDisplayRowColHeadings(false);
         return this;
     }
@@ -669,7 +687,7 @@ public abstract class ExcelSheetWriter<T, K> {
      *
      * @return this
      */
-    public ExcelSheetWriter<T, K> displayFormulas() {
+    public BaseExcelSheetWriter<K, V> displayFormulas() {
         sheet.setDisplayFormulas(true);
         return this;
     }
@@ -681,7 +699,7 @@ public abstract class ExcelSheetWriter<T, K> {
      * @param key keyIndex
      * @return value
      */
-    protected abstract Object getValue(T row, K key);
+    protected abstract Object getValue(V row, K key);
 
     public Workbook getWorkbook() {
         return workbook;

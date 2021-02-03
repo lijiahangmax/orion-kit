@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * @version 1.0.0
  * @since 2021/1/13 14:22
  */
-public class ExcelBeanWriter<T> extends ExcelSheetWriter<T, String> {
+public class ExcelBeanWriter<T> extends BaseExcelSheetWriter<String, T> {
 
     /**
      * getter

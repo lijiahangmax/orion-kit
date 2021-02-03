@@ -2,7 +2,6 @@ package com.orion.excel.reader;
 
 import com.monitorjbl.xlsx.impl.StreamingSheet;
 import com.orion.able.SafeCloseable;
-import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
 import com.orion.utils.io.Streams;
@@ -23,7 +22,7 @@ import java.util.function.Consumer;
  * @version 1.0.0
  * @since 2021/1/4 17:09
  */
-public abstract class ExcelReader<T> implements SafeCloseable, Iterator<T>, Iterable<T> {
+public abstract class BaseExcelReader<T> implements SafeCloseable {
 
     protected Workbook workbook;
 
@@ -77,16 +76,6 @@ public abstract class ExcelReader<T> implements SafeCloseable, Iterator<T>, Iter
     protected boolean streaming;
 
     /**
-     * 读取的列
-     */
-    protected int[] columns;
-
-    /**
-     * 列数
-     */
-    protected int columnSize;
-
-    /**
      * 读取的记录
      */
     protected List<T> rows;
@@ -101,12 +90,7 @@ public abstract class ExcelReader<T> implements SafeCloseable, Iterator<T>, Iter
      */
     protected boolean store;
 
-    /**
-     * 下一个元素
-     */
-    protected T next;
-
-    protected ExcelReader(Workbook workbook, Sheet sheet, List<T> rows, Consumer<T> consumer) {
+    protected BaseExcelReader(Workbook workbook, Sheet sheet, List<T> rows, Consumer<T> consumer) {
         Valid.notNull(workbook, "workbook is null");
         Valid.notNull(sheet, "sheet is null");
         if (rows == null && consumer == null) {
@@ -123,11 +107,20 @@ public abstract class ExcelReader<T> implements SafeCloseable, Iterator<T>, Iter
     }
 
     /**
+     * Excel 迭代器
+     *
+     * @return 迭代器
+     */
+    public ExcelReaderIterator<T> iterator() {
+        return new ExcelReaderIterator<>(this);
+    }
+
+    /**
      * 初始化 默认实现
      *
      * @return this
      */
-    public ExcelReader<T> init() {
+    public BaseExcelReader<T> init() {
         return this;
     }
 
@@ -136,7 +129,7 @@ public abstract class ExcelReader<T> implements SafeCloseable, Iterator<T>, Iter
      *
      * @return this
      */
-    public ExcelReader<T> skip() {
+    public BaseExcelReader<T> skip() {
         rowIndex++;
         return this;
     }
@@ -147,7 +140,7 @@ public abstract class ExcelReader<T> implements SafeCloseable, Iterator<T>, Iter
      * @param i 行
      * @return this
      */
-    public ExcelReader<T> skip(int i) {
+    public BaseExcelReader<T> skip(int i) {
         rowIndex += i;
         return this;
     }
@@ -158,7 +151,7 @@ public abstract class ExcelReader<T> implements SafeCloseable, Iterator<T>, Iter
      * @param skip 是否跳过空行
      * @return this
      */
-    public ExcelReader<T> skipNullRows(boolean skip) {
+    public BaseExcelReader<T> skipNullRows(boolean skip) {
         this.skipNullRows = skip;
         return this;
     }
@@ -168,7 +161,7 @@ public abstract class ExcelReader<T> implements SafeCloseable, Iterator<T>, Iter
      *
      * @return this
      */
-    public ExcelReader<T> trim() {
+    public BaseExcelReader<T> trim() {
         this.trim = true;
         return this;
     }
@@ -178,34 +171,8 @@ public abstract class ExcelReader<T> implements SafeCloseable, Iterator<T>, Iter
      *
      * @return this
      */
-    public ExcelReader<T> recalculationFormula() {
+    public BaseExcelReader<T> recalculationFormula() {
         sheet.setForceFormulaRecalculation(true);
-        return this;
-    }
-
-    /**
-     * 设置读取的列
-     *
-     * @param columns 列
-     * @return this
-     */
-    public ExcelReader<T> columns(int... columns) {
-        this.columns = columns;
-        this.columnSize = Arrays1.length(columns);
-        return this;
-    }
-
-    /**
-     * 设置列容量
-     *
-     * @param capacity capacity
-     * @return this
-     */
-    public ExcelReader<T> capacity(int capacity) {
-        if (!Arrays1.isEmpty(columns)) {
-            throw Exceptions.unSupport("if the column is set, the capacity is not supported");
-        }
-        this.columnSize = capacity;
         return this;
     }
 
@@ -214,7 +181,7 @@ public abstract class ExcelReader<T> implements SafeCloseable, Iterator<T>, Iter
      *
      * @return this
      */
-    public ExcelReader<T> read() {
+    public BaseExcelReader<T> read() {
         while (!end) {
             this.readRow();
         }
@@ -227,8 +194,8 @@ public abstract class ExcelReader<T> implements SafeCloseable, Iterator<T>, Iter
      * @param i 行
      * @return this
      */
-    public ExcelReader<T> read(int i) {
-        for (int j = 0; j < i; j++) {
+    public BaseExcelReader<T> read(int i) {
+        for (int j = 0; j < i && !end; j++) {
             this.readRow();
         }
         return this;
@@ -239,7 +206,7 @@ public abstract class ExcelReader<T> implements SafeCloseable, Iterator<T>, Iter
      */
     protected void readRow() {
         T row = nextRow();
-        if (row == null && skipNullRows) {
+        if (end || (row == null && skipNullRows)) {
             return;
         }
         if (store) {
@@ -256,6 +223,9 @@ public abstract class ExcelReader<T> implements SafeCloseable, Iterator<T>, Iter
      * @return row
      */
     protected T nextRow() {
+        if (end) {
+            return null;
+        }
         if (!iterator.hasNext()) {
             end = true;
             return null;
@@ -275,34 +245,6 @@ public abstract class ExcelReader<T> implements SafeCloseable, Iterator<T>, Iter
      * @return row
      */
     protected abstract T parserRow(Row row);
-
-    /**
-     * 迭代器 不会存储也不会消费
-     *
-     * @return 迭代器
-     */
-    @Override
-    public Iterator<T> iterator() {
-        return this;
-    }
-
-    @Override
-    public boolean hasNext() {
-        if (end) {
-            return false;
-        }
-        next = nextRow();
-        if (next == null && skipNullRows) {
-            return hasNext();
-        }
-        return true;
-    }
-
-    @Override
-    public T next() {
-        rowNum++;
-        return next;
-    }
 
     @Override
     public void close() {

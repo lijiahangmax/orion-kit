@@ -28,7 +28,7 @@ import java.util.function.Consumer;
  * @version 1.0.0
  * @since 2021/1/6 17:10
  */
-public class ExcelImport<T> extends ExcelReader<T> {
+public class ExcelImport<T> extends BaseExcelReader<T> {
 
     private Class<T> targetClass;
 
