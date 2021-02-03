@@ -23,7 +23,7 @@ public class Strings {
 
     public static final String SPACE = " ";
 
-    private static final String UTF8 = "UTF-8";
+    public static final String UTF8 = "UTF-8";
 
     private Strings() {
     }
@@ -399,7 +399,7 @@ public class Strings {
         if (isBlank(str)) {
             return false;
         }
-        return Matches.isInteger(str) || Matches.isDouble(str);
+        return Matches.isNumber(str);
     }
 
     /**

@@ -5,7 +5,7 @@ import com.orion.excel.option.ImportFieldOption;
 import com.orion.excel.reader.ExcelArrayReader;
 import com.orion.excel.reader.ExcelImport;
 import com.orion.excel.reader.ExcelMapReader;
-import com.orion.excel.reader.ExcelReader;
+import com.orion.excel.reader.ExcelReaderIterator;
 import com.orion.excel.type.ExcelReadType;
 import com.orion.lang.Console;
 import com.orion.lang.collect.MutableMap;
@@ -39,13 +39,13 @@ public class ImportShopTest {
 
     @Test
     public void testImport2() {
-        ExcelReader<ImportShop> reader = new ExcelImport<>(workbook, sheet, ImportShop.class)
+        ExcelReaderIterator<ImportShop> iterator = new ExcelImport<>(workbook, sheet, ImportShop.class)
                 .init()
-                .skip(2);
-        for (ImportShop s : reader) {
+                .skip(2).iterator();
+        for (ImportShop s : iterator) {
             System.out.println(Objects1.toString(s));
         }
-        reader.close();
+        iterator.close();
     }
 
     @Test
@@ -64,16 +64,17 @@ public class ImportShopTest {
 
     @Test
     public void testImport4() {
-        ExcelReader<ImportShop> reader = new ExcelImport<>(workbook, sheet, ImportShop.class)
+        ExcelReaderIterator<ImportShop> iterator = new ExcelImport<>(workbook, sheet, ImportShop.class)
                 .init()
                 .option("comment", 4, ExcelReadType.TEXT)
                 .option("businessFile", 5, ExcelReadType.TEXT)
                 .nullInvoke()
-                .skip(2);
-        for (ImportShop s : reader) {
+                .skip(2)
+                .iterator();
+        for (ImportShop s : iterator) {
             System.out.println(Objects1.toString(s));
         }
-        reader.close();
+        iterator.close();
     }
 
     @Test
@@ -89,13 +90,14 @@ public class ImportShopTest {
 
     @Test
     public void testArray2() {
-        ExcelReader<String[]> reader = new ExcelArrayReader(workbook, sheet, Console::trace)
+        ExcelReaderIterator<String[]> iterator = new ExcelArrayReader(workbook, sheet, Console::trace)
                 .columns(0, 1, 2)
-                .skip(2);
-        for (String[] s : reader) {
+                .skip(2)
+                .iterator();
+        for (String[] s : iterator) {
             System.out.println(Objects1.toString(s));
         }
-        reader.close();
+        iterator.close();
     }
 
     @Test
@@ -126,7 +128,7 @@ public class ImportShopTest {
 
     @Test
     public void testMap2() {
-        ExcelReader<MutableMap<String, Object>> reader = new ExcelMapReader<String>(workbook, sheet, Console::trace)
+        ExcelReaderIterator<MutableMap<String, Object>> iterator = new ExcelMapReader<String>(workbook, sheet, Console::trace)
                 .linked()
                 .option("shopId", 0, ExcelReadType.TEXT)
                 .option("shopName", 1, ExcelReadType.TEXT)
@@ -142,11 +144,12 @@ public class ImportShopTest {
                 .defaultValue("picture", "默认图片")
                 .defaultValue("comment", "默认批注")
                 .init()
-                .skip(2);
-        for (MutableMap<String, Object> s : reader) {
+                .skip(2)
+                .iterator();
+        for (MutableMap<String, Object> s : iterator) {
             System.out.println(Objects1.toString(s));
         }
-        reader.close();
+        iterator.close();
     }
 
 }

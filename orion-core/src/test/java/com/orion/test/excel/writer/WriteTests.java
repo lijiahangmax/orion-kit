@@ -6,7 +6,7 @@ import com.orion.excel.option.PrintOption;
 import com.orion.excel.option.PropertiesOption;
 import com.orion.excel.type.ExcelFieldType;
 import com.orion.excel.type.ExcelPaperType;
-import com.orion.excel.writer.ExcelSheetWriter;
+import com.orion.excel.writer.BaseExcelSheetWriter;
 import com.orion.excel.writer.ExcelWriterBuilder;
 import com.orion.utils.Strings;
 import com.orion.utils.random.Randoms;
@@ -77,7 +77,7 @@ public class WriteTests {
 
     @Test
     public void arrayTests1() {
-        ExcelSheetWriter<Object[], Integer> writer = build.createArrayWriter("array")
+        BaseExcelSheetWriter<Integer, Object[]> writer = build.createArrayWriter("array")
                 .option(0, 0, ExcelFieldType.NUMBER)
                 .option(1, 2)
                 .option(2, 1, ExcelFieldType.FORMULA)
@@ -116,7 +116,7 @@ public class WriteTests {
 
     @Test
     public void mapTests1() {
-        ExcelSheetWriter<Map<String, Object>, String> writer = build.<String, Object>createMapWriter("map")
+        BaseExcelSheetWriter<String, Map<String, Object>> writer = build.<String, Object>createMapWriter("map")
                 .option("id", 0, ExcelFieldType.NUMBER)
                 .option("formula", 1, ExcelFieldType.FORMULA)
                 .option("name", 2)
@@ -154,7 +154,7 @@ public class WriteTests {
 
     @Test
     public void beanTest1() {
-        ExcelSheetWriter<WriteUser, String> writer = build.createBeanWriter("bean", WriteUser.class)
+        BaseExcelSheetWriter<String, WriteUser> writer = build.createBeanWriter("bean", WriteUser.class)
                 .option("id", 0, ExcelFieldType.NUMBER)
                 .option("formula", 1, ExcelFieldType.FORMULA)
                 .option("name", 2)

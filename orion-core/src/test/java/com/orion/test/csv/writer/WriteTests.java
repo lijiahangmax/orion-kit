@@ -1,9 +1,9 @@
 package com.orion.test.csv.writer;
 
+import com.orion.csv.core.CsvWriter;
 import com.orion.csv.writer.CsvArrayWriter;
 import com.orion.csv.writer.CsvExport;
 import com.orion.csv.writer.CsvMapWriter;
-import com.orion.csv.writer.CsvWriter;
 import com.orion.utils.Strings;
 import com.orion.utils.time.Dates;
 import org.junit.Test;

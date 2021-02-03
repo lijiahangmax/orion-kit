@@ -460,7 +460,7 @@ public class Maps {
      * @param <V> ignore
      * @return 第一个元素
      */
-    public static <K, V> Map.Entry<K, V> getFirst(Map<K, V> m) {
+    public static <K, V> Map.Entry<K, V> first(Map<K, V> m) {
         if (size(m) == 0) {
             return null;
         }
@@ -475,7 +475,7 @@ public class Maps {
      * @param <V> ignore
      * @return 最后一个元素
      */
-    public static <K, V> Map.Entry<K, V> getLast(Map<K, V> m) {
+    public static <K, V> Map.Entry<K, V> last(Map<K, V> m) {
         if (size(m) == 0) {
             return null;
         }

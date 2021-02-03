@@ -55,12 +55,22 @@ public class Matches {
     /**
      * integer正则
      */
-    public static final Pattern INTEGER = Pattern.compile("^[-+]?[\\d]*$");
+    public static final Pattern INTEGER = Pattern.compile("^[-+]?[\\d]+$");
 
     /**
      * double正则
      */
     public static final Pattern DOUBLE = Pattern.compile("^[-+]?\\d*[.]\\d+$");
+
+    /**
+     * number正则
+     */
+    public static final Pattern NUMBER = Pattern.compile("^([-+]?\\d*[.]\\d+)$|^([-+]?[\\d]+)$");
+
+    /**
+     * number正则 提取
+     */
+    public static final Pattern NUMBER_EXT = Pattern.compile("([-+]?\\d*[.]\\d+)|([-+]?[\\d]+)");
 
     /**
      * IPV4正则
@@ -257,6 +267,16 @@ public class Matches {
      */
     public static boolean isInteger(String str) {
         return INTEGER.matcher(str).matches();
+    }
+
+    /**
+     * 匹配是否为数字
+     *
+     * @param str 待匹配的字符
+     * @return true数字
+     */
+    public static boolean isNumber(String str) {
+        return NUMBER.matcher(str).matches();
     }
 
     /**
@@ -627,6 +647,26 @@ public class Matches {
      */
     public static List<String> extDoubleList(String s) {
         return extGroups(s, getPatternExt(DOUBLE));
+    }
+
+    /**
+     * 提取数字
+     *
+     * @param s 字符
+     * @return 提取到的第一个数字
+     */
+    public static String extNumber(String s) {
+        return extGroup(s, getPatternExt(NUMBER_EXT));
+    }
+
+    /**
+     * 提取数字
+     *
+     * @param s 字符
+     * @return 提取到的所有数字
+     */
+    public static List<String> extNumberList(String s) {
+        return extGroups(s, getPatternExt(NUMBER_EXT));
     }
 
     /**
