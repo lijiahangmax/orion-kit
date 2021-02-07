@@ -67,7 +67,69 @@ public class Excels {
      */
     private static final int BUFFER_SIZE = 1024 * 4;
 
+    /**
+     * 英文字母 数组
+     */
+    private static final String[] LETTERS = new String[]{
+            "A", "B", "C", "D", "E", "F", "G",
+            "H", "I", "J", "K", "L", "M", "N",
+            "O", "P", "Q", "R", "S", "T", "U",
+            "V", "W", "X", "Y", "Z"};
+
+
     private Excels() {
+    }
+
+    /**
+     * 获取列对应的数值
+     * A -> 1
+     * Z -> 26
+     * AA -> 27
+     *
+     * @param s 列
+     * @return number
+     */
+    public static int getColumnNumber(String s) {
+        if (Strings.isBlank(s)) {
+            return -1;
+        }
+        char[] ss = s.toUpperCase().toCharArray();
+        int count = 0, mi = 1;
+        for (int i = ss.length - 1; i >= 0; i--) {
+            int t = ss[i] - 'A' + 1;
+            count += t * mi;
+            mi *= 26;
+        }
+        return count;
+    }
+
+    /**
+     * 获取数值对应的列
+     * 1 -> A
+     * 26 -> Z
+     * 27 -> AA
+     *
+     * @param column 列
+     * @return symbol
+     */
+    public static String getColumnSymbol(int column) {
+        Valid.gt(column, 0);
+        if (column == 26) {
+            return LETTERS[25];
+        }
+        String out = "";
+        if (column / 26 != 0) {
+            if (column % 26 == 0) {
+                out = LETTERS[column / 26 - 2];
+                out = out + LETTERS[25];
+            } else {
+                out = LETTERS[column / 26 - 1];
+                out = out + LETTERS[column % 26 - 1];
+            }
+        } else {
+            out = LETTERS[column - 1];
+        }
+        return out;
     }
 
     /**
@@ -232,10 +294,11 @@ public class Excels {
             case NUMERIC:
                 return BigDecimal.valueOf(cell.getNumericCellValue());
             case STRING:
+                String str = cell.getStringCellValue().trim();
                 if (option != null && !Strings.isEmpty(option.getFormat())) {
-                    return BigDecimals.parse(cell.getStringCellValue(), option.getFormat());
+                    return BigDecimals.parse(str, option.getFormat());
                 } else {
-                    return BigDecimals.toBigDecimal(cell.getStringCellValue());
+                    return BigDecimals.toBigDecimal(str);
                 }
             default:
                 return null;
@@ -294,7 +357,7 @@ public class Excels {
                     return DateUtil.getJavaDate(cell.getNumericCellValue());
                 }
             default:
-                String o = cell.getStringCellValue();
+                String o = cell.getStringCellValue().trim();
                 if (option != null && !Strings.isEmpty(option.getFormat())) {
                     return Dates.parse(o, option.getFormat());
                 } else {
@@ -334,7 +397,7 @@ public class Excels {
             case STRING:
                 return new DecimalFormat("#").format(Double.parseDouble(cell.toString()));
             default:
-                return cell.toString();
+                return cell.toString().trim();
         }
     }
 
