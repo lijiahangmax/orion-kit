@@ -1,4 +1,4 @@
-package com.orion.csv.importing;
+package com.orion.csv.reader;
 
 import com.orion.csv.core.CsvReader;
 import com.orion.utils.Exceptions;
@@ -102,8 +102,8 @@ public class CsvStream {
      */
     public CsvStream readLine() {
         try {
-            if (reader.readRecord()) {
-                String[] line = reader.getValues();
+            if (reader.readRow()) {
+                String[] line = reader.getRow();
                 lines.add(line);
             }
         } catch (Exception e) {
@@ -121,8 +121,8 @@ public class CsvStream {
     public CsvStream readLines(int line) {
         try {
             int i = 0;
-            while (i++ < line && reader.readRecord()) {
-                lines.add(reader.getValues());
+            while (i++ < line && reader.readRow()) {
+                lines.add(reader.getRow());
             }
         } catch (Exception e) {
             Exceptions.printStacks(e);
@@ -137,8 +137,8 @@ public class CsvStream {
      */
     public CsvStream readLines() {
         try {
-            while (reader.readRecord()) {
-                lines.add(reader.getValues());
+            while (reader.readRow()) {
+                lines.add(reader.getRow());
             }
         } catch (Exception e) {
             Exceptions.printStacks(e);
@@ -164,7 +164,7 @@ public class CsvStream {
      * @return 列数
      */
     public int columnCount() {
-        return reader.getColumnCount();
+        return reader.getCurrentColumnCount();
     }
 
     /**

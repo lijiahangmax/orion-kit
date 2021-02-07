@@ -2,7 +2,7 @@ package com.orion.csv.convert;
 
 import com.orion.csv.CsvExt;
 import com.orion.csv.convert.adapter.ExcelAdapter;
-import com.orion.csv.importing.CsvStream;
+import com.orion.csv.reader.CsvStream;
 
 /**
  * CSV 转换器

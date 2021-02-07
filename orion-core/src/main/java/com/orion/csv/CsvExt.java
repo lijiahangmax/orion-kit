@@ -1,15 +1,13 @@
 package com.orion.csv;
 
 import com.orion.csv.core.CsvReader;
-import com.orion.csv.core.CsvSymbol;
-import com.orion.csv.importing.CsvStream;
+import com.orion.csv.reader.CsvStream;
 import com.orion.utils.Exceptions;
 import com.orion.utils.io.Files1;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 
 /**
  * CSV 提取
@@ -23,37 +21,37 @@ public class CsvExt {
 
     private CsvReader reader;
 
-    public CsvExt(File file) {
-        this(getInputStream(file), CsvSymbol.DEFAULT_SYMBOL, CsvSymbol.DEFAULT_CHARSET);
-    }
-
-    public CsvExt(File file, CsvSymbol s) {
-        this(getInputStream(file), s.getSymbol(), s.getCharset());
-    }
-
-    public CsvExt(String file) {
-        this(CsvExt.class.getClassLoader().getResourceAsStream(file), CsvSymbol.DEFAULT_SYMBOL, CsvSymbol.DEFAULT_CHARSET);
-    }
-
-    public CsvExt(String file, CsvSymbol s) {
-        this(CsvExt.class.getClassLoader().getResourceAsStream(file), s.getSymbol(), s.getCharset());
-    }
-
-    public CsvExt(InputStream in) {
-        this(in, CsvSymbol.DEFAULT_SYMBOL, CsvSymbol.DEFAULT_CHARSET);
-    }
-
-    public CsvExt(InputStream in, CsvSymbol s) {
-        this(in, s.getSymbol(), s.getCharset());
-    }
-
-    private CsvExt(InputStream in, char symbol, Charset charset) {
-        this.reader = new CsvReader(in, symbol, charset);
-    }
-
-    private CsvExt(CsvReader reader) {
-        this.reader = reader;
-    }
+    // public CsvExt(File file) {
+    //     this(getInputStream(file), CsvSymbol.DEFAULT_SYMBOL, CsvSymbol.DEFAULT_CHARSET);
+    // }
+    //
+    // public CsvExt(File file, CsvSymbol s) {
+    //     this(getInputStream(file), s.getSymbol(), s.getCharset());
+    // }
+    //
+    // public CsvExt(String file) {
+    //     this(CsvExt.class.getClassLoader().getResourceAsStream(file), CsvSymbol.DEFAULT_SYMBOL, CsvSymbol.DEFAULT_CHARSET);
+    // }
+    //
+    // public CsvExt(String file, CsvSymbol s) {
+    //     this(CsvExt.class.getClassLoader().getResourceAsStream(file), s.getSymbol(), s.getCharset());
+    // }
+    //
+    // public CsvExt(InputStream in) {
+    //     this(in, CsvSymbol.DEFAULT_SYMBOL, CsvSymbol.DEFAULT_CHARSET);
+    // }
+    //
+    // public CsvExt(InputStream in, CsvSymbol s) {
+    //     this(in, s.getSymbol(), s.getCharset());
+    // }
+    //
+    // private CsvExt(InputStream in, char symbol, Charset charset) {
+    //     this.reader = new CsvReader(in, symbol, charset);
+    // }
+    //
+    // private CsvExt(CsvReader reader) {
+    //     this.reader = reader;
+    // }
 
     /**
      * CSV 读取流
@@ -70,16 +68,16 @@ public class CsvExt {
     public void close() {
         reader.close();
     }
-
-    /**
-     * 将文本转化为 CsvExt
-     *
-     * @param s s
-     * @return CsvExt
-     */
-    public static CsvExt parse(String s) {
-        return new CsvExt(CsvReader.parse(s));
-    }
+    //
+    // /**
+    //  * 将文本转化为 CsvExt
+    //  *
+    //  * @param s s
+    //  * @return CsvExt
+    //  */
+    // public static CsvExt parse(String s) {
+    //     return new CsvExt(CsvReader.parse(s));
+    // }
 
     private static InputStream getInputStream(File file) {
         try {

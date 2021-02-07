@@ -1133,7 +1133,7 @@ public class Strings {
      * @return 如果字符串为空返回默认值
      */
     public static String def(String str) {
-        if (str == null) {
+        if (isBlank(str)) {
             return Strings.EMPTY;
         }
         return str;
@@ -1147,7 +1147,34 @@ public class Strings {
      * @return 如果字符串为空返回默认值
      */
     public static String def(String str, String def) {
-        if (str == null) {
+        if (isBlank(str)) {
+            return def;
+        }
+        return str;
+    }
+
+    /**
+     * 默认值
+     *
+     * @param str 字符串
+     * @return 如果字符串为空返回默认值
+     */
+    public static String defIfEmpty(String str) {
+        if (isEmpty(str)) {
+            return Strings.EMPTY;
+        }
+        return str;
+    }
+
+    /**
+     * 默认值
+     *
+     * @param str 字符串
+     * @param def 默认值
+     * @return 如果字符串为空返回默认值
+     */
+    public static String defIfEmpty(String str, String def) {
+        if (isEmpty(str)) {
             return def;
         }
         return str;

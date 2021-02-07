@@ -3,7 +3,7 @@ package com.orion.excel;
 import com.monitorjbl.xlsx.impl.StreamingWorkbook;
 import com.orion.able.SafeCloseable;
 import com.orion.excel.reader.ExcelArrayReader;
-import com.orion.excel.reader.ExcelImport;
+import com.orion.excel.reader.ExcelBeanReader;
 import com.orion.excel.reader.ExcelMapReader;
 import com.orion.lang.collect.MutableMap;
 import com.orion.utils.Valid;
@@ -177,20 +177,20 @@ public class ExcelExt implements SafeCloseable {
 
     // -------------------- import --------------------
 
-    public <T> ExcelImport<T> sheetImport(Class<T> targetClass) {
-        return new ExcelImport<>(workbook, workbook.getSheetAt(0), targetClass);
+    public <T> ExcelBeanReader<T> sheetImport(Class<T> targetClass) {
+        return new ExcelBeanReader<>(workbook, workbook.getSheetAt(0), targetClass);
     }
 
-    public <T> ExcelImport<T> sheetImport(int sheetIndex, Class<T> targetClass) {
-        return new ExcelImport<>(workbook, workbook.getSheetAt(sheetIndex), targetClass);
+    public <T> ExcelBeanReader<T> sheetImport(int sheetIndex, Class<T> targetClass) {
+        return new ExcelBeanReader<>(workbook, workbook.getSheetAt(sheetIndex), targetClass);
     }
 
-    public <T> ExcelImport<T> sheetImport(Class<T> targetClass, List<T> rows) {
-        return new ExcelImport<>(workbook, workbook.getSheetAt(0), targetClass, rows);
+    public <T> ExcelBeanReader<T> sheetImport(Class<T> targetClass, List<T> rows) {
+        return new ExcelBeanReader<>(workbook, workbook.getSheetAt(0), targetClass, rows);
     }
 
-    public <T> ExcelImport<T> sheetImport(int sheetIndex, Class<T> targetClass, List<T> rows) {
-        return new ExcelImport<>(workbook, workbook.getSheetAt(sheetIndex), targetClass, rows);
+    public <T> ExcelBeanReader<T> sheetImport(int sheetIndex, Class<T> targetClass, List<T> rows) {
+        return new ExcelBeanReader<>(workbook, workbook.getSheetAt(sheetIndex), targetClass, rows);
     }
 
     /**
@@ -201,8 +201,8 @@ public class ExcelExt implements SafeCloseable {
      * @param <T>         T
      * @return ExcelImport
      */
-    public <T> ExcelImport<T> sheetImport(Class<T> targetClass, Consumer<T> consumer) {
-        return new ExcelImport<>(workbook, workbook.getSheetAt(0), targetClass, consumer);
+    public <T> ExcelBeanReader<T> sheetImport(Class<T> targetClass, Consumer<T> consumer) {
+        return new ExcelBeanReader<>(workbook, workbook.getSheetAt(0), targetClass, consumer);
     }
 
     /**
@@ -214,8 +214,8 @@ public class ExcelExt implements SafeCloseable {
      * @param <T>         T
      * @return ExcelImport
      */
-    public <T> ExcelImport<T> sheetImport(int sheetIndex, Class<T> targetClass, Consumer<T> consumer) {
-        return new ExcelImport<>(workbook, workbook.getSheetAt(sheetIndex), targetClass, consumer);
+    public <T> ExcelBeanReader<T> sheetImport(int sheetIndex, Class<T> targetClass, Consumer<T> consumer) {
+        return new ExcelBeanReader<>(workbook, workbook.getSheetAt(sheetIndex), targetClass, consumer);
     }
 
     public Workbook getWorkbook() {

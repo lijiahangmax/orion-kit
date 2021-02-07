@@ -1,26 +1,22 @@
-package com.orion.excel.reader;
+package com.orion.csv.reader;
 
-import com.orion.excel.Excels;
+import com.orion.csv.core.CsvReader;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * Excel 文本读取器
+ * Csv Array 读取器
  *
  * @author ljh15
  * @version 1.0.0
- * @since 2021/1/5 10:04
+ * @since 2021/2/2 18:48
  */
-public class ExcelArrayReader extends BaseExcelReader<String[]> {
+public class CsvArrayReader extends BaseCsvReader<String[]> {
 
     /**
      * 读取的列
@@ -42,16 +38,20 @@ public class ExcelArrayReader extends BaseExcelReader<String[]> {
      */
     private String[] emptyArray;
 
-    public ExcelArrayReader(Workbook workbook, Sheet sheet) {
-        super(workbook, sheet, new ArrayList<>(), null);
+    public CsvArrayReader(CsvReader reader) {
+        this(reader, new ArrayList<>(), null);
     }
 
-    public ExcelArrayReader(Workbook workbook, Sheet sheet, List<String[]> rows) {
-        super(workbook, sheet, rows, null);
+    public CsvArrayReader(CsvReader reader, List<String[]> rows) {
+        this(reader, rows, null);
     }
 
-    public ExcelArrayReader(Workbook workbook, Sheet sheet, Consumer<String[]> consumer) {
-        super(workbook, sheet, null, consumer);
+    public CsvArrayReader(CsvReader reader, Consumer<String[]> consumer) {
+        this(reader, null, consumer);
+    }
+
+    protected CsvArrayReader(CsvReader reader, List<String[]> rows, Consumer<String[]> consumer) {
+        super(reader, rows, consumer);
     }
 
     /**
@@ -60,7 +60,7 @@ public class ExcelArrayReader extends BaseExcelReader<String[]> {
      * @param text text
      * @return this
      */
-    public ExcelArrayReader columnOfNull(String text) {
+    public CsvArrayReader columnOfNull(String text) {
         this.columnEmpty = text;
         return this;
     }
@@ -71,7 +71,7 @@ public class ExcelArrayReader extends BaseExcelReader<String[]> {
      * @return this
      * @see Strings#EMPTY
      */
-    public ExcelArrayReader columnOfNullToEmpty() {
+    public CsvArrayReader columnOfNullToEmpty() {
         this.columnEmpty = Strings.EMPTY;
         return this;
     }
@@ -81,7 +81,7 @@ public class ExcelArrayReader extends BaseExcelReader<String[]> {
      *
      * @return this
      */
-    public ExcelArrayReader rowOfNullToEmpty() {
+    public CsvArrayReader rowOfNullToEmpty() {
         this.emptyArray = new String[0];
         return this;
     }
@@ -92,7 +92,7 @@ public class ExcelArrayReader extends BaseExcelReader<String[]> {
      * @param length 长度
      * @return this
      */
-    public ExcelArrayReader rowOfNullToEmpty(int length) {
+    public CsvArrayReader rowOfNullToEmpty(int length) {
         this.emptyArray = new String[length];
         return this;
     }
@@ -103,7 +103,7 @@ public class ExcelArrayReader extends BaseExcelReader<String[]> {
      * @param emptyArray 数组
      * @return this
      */
-    public ExcelArrayReader rowOfNullToEmpty(String[] emptyArray) {
+    public CsvArrayReader rowOfNullToEmpty(String[] emptyArray) {
         this.emptyArray = emptyArray;
         return this;
     }
@@ -114,7 +114,7 @@ public class ExcelArrayReader extends BaseExcelReader<String[]> {
      * @param columns 列
      * @return this
      */
-    public ExcelArrayReader columns(int... columns) {
+    public CsvArrayReader columns(int... columns) {
         this.columns = columns;
         this.columnSize = Arrays1.length(columns);
         return this;
@@ -126,7 +126,7 @@ public class ExcelArrayReader extends BaseExcelReader<String[]> {
      * @param capacity capacity
      * @return this
      */
-    public ExcelArrayReader capacity(int capacity) {
+    public CsvArrayReader capacity(int capacity) {
         if (!Arrays1.isEmpty(columns)) {
             throw Exceptions.unSupport("if the column is set, the capacity is not supported");
         }
@@ -134,32 +134,20 @@ public class ExcelArrayReader extends BaseExcelReader<String[]> {
         return this;
     }
 
-
     @Override
-    protected String[] parserRow(Row row) {
+    protected String[] parserRow(String[] row) {
         if (row == null) {
             return emptyArray;
         }
-        if (columnSize == 0) {
-            columnSize = row.getLastCellNum();
+        if (Arrays1.isEmpty(columns) && (columnSize == 0 || row.length == columnSize)) {
+            return row;
         }
         String[] array = new String[columnSize];
         for (int i = 0; i < columnSize; i++) {
-            Cell cell;
             if (Arrays1.isEmpty(columns)) {
-                cell = row.getCell(i);
+                array[i] = get(row, i, columnEmpty);
             } else {
-                cell = row.getCell(columns[i]);
-            }
-            if (cell == null) {
-                array[i] = columnEmpty;
-            } else {
-                String value = Excels.getCellValue(cell);
-                if (trim) {
-                    array[i] = value.trim();
-                } else {
-                    array[i] = value;
-                }
+                array[i] = get(row, columns[i], columnEmpty);
             }
         }
         return array;

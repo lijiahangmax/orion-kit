@@ -2,23 +2,25 @@ package com.orion.csv.writer;
 
 import com.alibaba.fastjson.JSON;
 import com.orion.able.SafeCloseable;
+import com.orion.csv.core.CsvWriter;
 import com.orion.csv.option.CsvWriterOption;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Csv 写入器 基类
+ * Csv 导出器 基类
  *
  * @author ljh15
  * @version 1.0.0
  * @since 2021/1/22 17:53
  */
-public abstract class BaseCsvWriter<T, V> implements SafeCloseable {
+public abstract class BaseCsvWriter<K, V> implements SafeCloseable {
 
     /**
      * writer
@@ -38,7 +40,7 @@ public abstract class BaseCsvWriter<T, V> implements SafeCloseable {
     /**
      * 默认值
      */
-    protected Map<Integer, String> defaultValue = new TreeMap<>();
+    protected Map<K, String> defaultValue = new HashMap<>();
 
     /**
      * 数组容量
@@ -52,7 +54,7 @@ public abstract class BaseCsvWriter<T, V> implements SafeCloseable {
      * key: column
      * value: valueKey
      */
-    protected Map<Integer, V> mapping = new TreeMap<>();
+    protected Map<Integer, K> mapping = new TreeMap<>();
 
     public BaseCsvWriter(CsvWriter writer) {
         Valid.notNull(writer, "csv writer is null");
@@ -64,7 +66,7 @@ public abstract class BaseCsvWriter<T, V> implements SafeCloseable {
      *
      * @return this
      */
-    public BaseCsvWriter<T, V> skip() {
+    public BaseCsvWriter<K, V> skip() {
         try {
             writer.newLine();
         } catch (IOException e) {
@@ -79,7 +81,7 @@ public abstract class BaseCsvWriter<T, V> implements SafeCloseable {
      * @param i 行
      * @return this
      */
-    public BaseCsvWriter<T, V> skip(int i) {
+    public BaseCsvWriter<K, V> skip(int i) {
         for (int j = 0; j < i; j++) {
             skip();
         }
@@ -91,7 +93,7 @@ public abstract class BaseCsvWriter<T, V> implements SafeCloseable {
      *
      * @return this
      */
-    public BaseCsvWriter<T, V> trim() {
+    public BaseCsvWriter<K, V> trim() {
         this.trim = true;
         return this;
     }
@@ -102,7 +104,7 @@ public abstract class BaseCsvWriter<T, V> implements SafeCloseable {
      * @param capacity capacity
      * @return this
      */
-    public BaseCsvWriter<T, V> capacity(int capacity) {
+    public BaseCsvWriter<K, V> capacity(int capacity) {
         this.capacity = capacity;
         return this;
     }
@@ -113,7 +115,7 @@ public abstract class BaseCsvWriter<T, V> implements SafeCloseable {
      * @param skip 是否跳过
      * @return this
      */
-    public BaseCsvWriter<T, V> skipNullRows(boolean skip) {
+    public BaseCsvWriter<K, V> skipNullRows(boolean skip) {
         this.skipNullRows = skip;
         return this;
     }
@@ -121,36 +123,36 @@ public abstract class BaseCsvWriter<T, V> implements SafeCloseable {
     /**
      * 默认值
      *
-     * @param column 列
-     * @param value  value
+     * @param k     k
+     * @param value value
      * @return this
      */
-    public BaseCsvWriter<T, V> defaultValue(int column, String value) {
-        defaultValue.put(column, value);
+    public BaseCsvWriter<K, V> defaultValue(K k, String value) {
+        defaultValue.put(k, value);
         return this;
     }
 
     /**
      * 映射
      *
-     * @param v      valueKey
+     * @param k      valueKey
      * @param column column
      * @return this
      */
-    public BaseCsvWriter<T, V> mapping(V v, int column) {
-        return mapping(column, v);
+    public BaseCsvWriter<K, V> mapping(K k, int column) {
+        return mapping(column, k);
     }
 
     /**
      * 映射
      *
      * @param column column
-     * @param v      valueKey
+     * @param k      valueKey
      * @return this
      */
-    public BaseCsvWriter<T, V> mapping(int column, V v) {
+    public BaseCsvWriter<K, V> mapping(int column, K k) {
         maxColumnIndex = Math.max(maxColumnIndex, column);
-        mapping.put(column, v);
+        mapping.put(column, k);
         return this;
     }
 
@@ -160,7 +162,7 @@ public abstract class BaseCsvWriter<T, V> implements SafeCloseable {
      * @param headers 表头
      * @return this
      */
-    public BaseCsvWriter<T, V> headers(String... headers) {
+    public BaseCsvWriter<K, V> headers(String... headers) {
         if (headers == null) {
             if (skipNullRows) {
                 return this;
@@ -182,7 +184,7 @@ public abstract class BaseCsvWriter<T, V> implements SafeCloseable {
      * @param list 行
      * @return this
      */
-    public BaseCsvWriter<T, V> addRows(List<T> list) {
+    public BaseCsvWriter<K, V> addRows(List<V> list) {
         list.forEach(this::addRow);
         return this;
     }
@@ -193,7 +195,7 @@ public abstract class BaseCsvWriter<T, V> implements SafeCloseable {
      * @param row 行
      * @return this
      */
-    public BaseCsvWriter<T, V> addRow(T row) {
+    public BaseCsvWriter<K, V> addRow(V row) {
         System.out.println(JSON.toJSONString(row));
         if (row == null) {
             if (skipNullRows) {
@@ -224,7 +226,7 @@ public abstract class BaseCsvWriter<T, V> implements SafeCloseable {
      * @param comments comments
      * @return this
      */
-    public BaseCsvWriter<T, V> addComments(List<String> comments) {
+    public BaseCsvWriter<K, V> addComments(List<String> comments) {
         comments.forEach(this::addComment);
         return this;
     }
@@ -235,7 +237,7 @@ public abstract class BaseCsvWriter<T, V> implements SafeCloseable {
      * @param comment comment
      * @return this
      */
-    public BaseCsvWriter<T, V> addComment(String comment) {
+    public BaseCsvWriter<K, V> addComment(String comment) {
         try {
             writer.writeComment(comment);
         } catch (Exception e) {
@@ -250,9 +252,9 @@ public abstract class BaseCsvWriter<T, V> implements SafeCloseable {
      * @param row 行
      * @return String[]
      */
-    protected abstract String[] parseRow(T row);
+    protected abstract String[] parseRow(V row);
 
-    public BaseCsvWriter<T, V> flush() {
+    public BaseCsvWriter<K, V> flush() {
         try {
             writer.flush();
         } catch (IOException e) {

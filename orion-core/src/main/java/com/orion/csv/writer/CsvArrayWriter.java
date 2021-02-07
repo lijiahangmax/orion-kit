@@ -1,7 +1,12 @@
 package com.orion.csv.writer;
 
+import com.orion.csv.core.CsvWriter;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
+
+import java.io.File;
+import java.io.OutputStream;
+import java.io.Writer;
 
 /**
  * Csv 数组导出器
@@ -10,7 +15,23 @@ import com.orion.utils.Strings;
  * @version 1.0.0
  * @since 2021/1/22 18:31
  */
-public class CsvArrayWriter extends BaseCsvWriter<String[], Integer> {
+public class CsvArrayWriter extends BaseCsvWriter<Integer, String[]> {
+
+    public CsvArrayWriter(String file) {
+        this(new CsvWriter(file));
+    }
+
+    public CsvArrayWriter(File file) {
+        this(new CsvWriter(file));
+    }
+
+    public CsvArrayWriter(OutputStream out) {
+        this(new CsvWriter(out));
+    }
+
+    public CsvArrayWriter(Writer writer) {
+        this(new CsvWriter(writer));
+    }
 
     public CsvArrayWriter(CsvWriter writer) {
         super(writer);

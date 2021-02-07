@@ -83,6 +83,6 @@ public @interface ImportSetting {
     /**
      * 是否跳过raw记录
      */
-    boolean skipRawRow() default false;
+    boolean skipRawRow() default true;
 
 }

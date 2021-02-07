@@ -1,8 +1,12 @@
 package com.orion.csv.writer;
 
+import com.orion.csv.core.CsvWriter;
 import com.orion.utils.Objects1;
 import com.orion.utils.Strings;
 
+import java.io.File;
+import java.io.OutputStream;
+import java.io.Writer;
 import java.util.Map;
 
 /**
@@ -12,7 +16,23 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2021/1/22 21:55
  */
-public class CsvMapWriter<K, V> extends BaseCsvWriter<Map<K, V>, K> {
+public class CsvMapWriter<K, V> extends BaseCsvWriter<K, Map<K, V>> {
+
+    public CsvMapWriter(String file) {
+        this(new CsvWriter(file));
+    }
+
+    public CsvMapWriter(File file) {
+        this(new CsvWriter(file));
+    }
+
+    public CsvMapWriter(OutputStream out) {
+        this(new CsvWriter(out));
+    }
+
+    public CsvMapWriter(Writer writer) {
+        this(new CsvWriter(writer));
+    }
 
     public CsvMapWriter(CsvWriter writer) {
         super(writer);
@@ -28,15 +48,14 @@ public class CsvMapWriter<K, V> extends BaseCsvWriter<Map<K, V>, K> {
         }
         for (int i = 0; i < store.length; i++) {
             K k = mapping.get(i);
-            if (k != null) {
-                V v = row.get(k);
-                if (v != null) {
-                    store[i] = Objects1.toString(v);
-                } else {
-                    store[i] = defaultValue.getOrDefault(i, Strings.EMPTY);
-                }
+            if (k == null) {
+                continue;
+            }
+            V v = row.get(k);
+            if (v != null) {
+                store[i] = Objects1.toString(v);
             } else {
-                store[i] = defaultValue.getOrDefault(i, Strings.EMPTY);
+                store[i] = defaultValue.getOrDefault(k, Strings.EMPTY);
             }
         }
         return store;

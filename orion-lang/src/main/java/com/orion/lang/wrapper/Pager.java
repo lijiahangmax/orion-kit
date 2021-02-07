@@ -18,7 +18,6 @@ import java.util.function.Consumer;
  * @version 1.0.0
  * @since 2019/5/30 22:52
  */
-@SuppressWarnings("ALL")
 public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, JsonAble, Iterable<T> {
 
     private static final long serialVersionUID = 6354348839019830L;
@@ -40,12 +39,12 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, Js
     /**
      * 当前页
      */
-    private int page = 1;
+    private int page;
 
     /**
      * 每页显示记录数
      */
-    private int limit = 10;
+    private int limit;
 
     /**
      * 分页数据
@@ -86,7 +85,7 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, Js
      * 默认当前页为1, 每页显示数为10
      */
     public Pager() {
-        this.sql = "LIMIT " + 0 + ", " + limit;
+        this(1, 10);
     }
 
     /**
@@ -95,9 +94,7 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, Js
      * @param page 当前页
      */
     public Pager(int page) {
-        this.page = page;
-        this.offset = (page - 1) * limit;
-        this.sql = "LIMIT " + offset + ", " + limit;
+        this(page, 10);
     }
 
     /**
@@ -109,8 +106,7 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, Js
     public Pager(int page, int limit) {
         this.page = page;
         this.limit = limit;
-        this.offset = (page - 1) * limit;
-        this.sql = "LIMIT " + offset + ", " + limit;
+        this.resetOffset();
     }
 
     public List<T> getRows() {
@@ -128,8 +124,7 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, Js
 
     public Pager<T> setPage(int page) {
         this.page = page;
-        this.offset = (page - 1) * limit;
-        this.sql = "LIMIT " + offset + ", " + limit;
+        this.resetOffset();
         return this;
     }
 
@@ -139,8 +134,7 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, Js
 
     public Pager<T> setLimit(int limit) {
         this.limit = limit;
-        this.offset = (page - 1) * limit;
-        this.sql = "LIMIT " + offset + ", " + limit;
+        this.resetOffset();
         return this;
     }
 
@@ -168,18 +162,17 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, Js
     public Pager<T> setTotal(int total) {
         this.total = total;
         if (total != 0) {
-            setPages(total % limit == 0 ? total / limit : (total / limit + 1));
+            return this.setPages(total % limit == 0 ? total / limit : (total / limit + 1));
         }
         return this;
     }
 
-    public int getOffset() {
-        return offset;
+    private void resetOffset() {
+        this.setOffset((page - 1) * limit);
     }
 
-    public Pager<T> setOffset() {
-        setOffset((page - 1) * limit);
-        return this;
+    public int getOffset() {
+        return offset;
     }
 
     public Pager<T> setOffset(int offset) {
@@ -215,6 +208,7 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, Js
         return this;
     }
 
+
     /**
      * 转化为数据表格容器
      *
@@ -231,7 +225,7 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, Js
      * @param pager 分页
      * @return 页数
      */
-    public static int getPages(int total, Pager pager) {
+    public static int getPages(int total, Pager<?> pager) {
         if (pager == null) {
             return total >= 1 ? 1 : 0;
         }

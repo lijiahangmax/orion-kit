@@ -3,6 +3,7 @@ package com.orion.csv.writer;
 import com.orion.csv.annotation.ExportField;
 import com.orion.csv.annotation.ExportIgnore;
 import com.orion.csv.annotation.ExportSetting;
+import com.orion.csv.core.CsvWriter;
 import com.orion.csv.option.CsvWriterOption;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Objects1;
@@ -33,7 +34,7 @@ import java.util.stream.Collectors;
  * @version 1.0.0
  * @since 2021/1/25 10:33
  */
-public class CsvExport<T> extends BaseCsvWriter<T, String> {
+public class CsvBeanWriter<T> extends BaseCsvWriter<String, T> {
 
     private int maxColumnIndex;
 
@@ -45,34 +46,31 @@ public class CsvExport<T> extends BaseCsvWriter<T, String> {
 
     private Map<Integer, String> headers = new TreeMap<>();
 
-    public CsvExport(String file, Class<T> targetClass) {
+    public CsvBeanWriter(String file, Class<T> targetClass) {
         this(new CsvWriter(file), targetClass);
     }
 
-    public CsvExport(File file, Class<T> targetClass) {
+    public CsvBeanWriter(File file, Class<T> targetClass) {
         this(new CsvWriter(file), targetClass);
     }
 
-    public CsvExport(OutputStream out, Class<T> targetClass) {
+    public CsvBeanWriter(OutputStream out, Class<T> targetClass) {
         this(new CsvWriter(out), targetClass);
     }
 
-    public CsvExport(Writer writer, Class<T> targetClass) {
+    public CsvBeanWriter(Writer writer, Class<T> targetClass) {
         this(new CsvWriter(writer), targetClass);
     }
 
-    /**
-     * 此方法不会解析setting
-     */
-    public CsvExport(CsvWriter writer, Class<T> targetClass) {
+    public CsvBeanWriter(CsvWriter writer, Class<T> targetClass) {
         super(writer);
         Valid.notNull(this.targetClass = targetClass, "target class is null");
-        writer.setOption(parseClass(targetClass));
+        writer.setOption(this.parseClass());
         this.parseField();
     }
 
     @Override
-    public CsvExport<T> mapping(int column, String field) {
+    public CsvBeanWriter<T> mapping(int column, String field) {
         Method method = getters.get(field);
         if (method == null) {
             throw Exceptions.parse("not found " + field + " getter method");
@@ -92,16 +90,15 @@ public class CsvExport<T> extends BaseCsvWriter<T, String> {
         }
         for (int i = 0; i < store.length; i++) {
             String getter = mapping.get(i);
-            if (getter != null) {
-                Method method = getters.get(getter);
-                Object value = Methods.invokeMethod(row, method);
-                if (value != null) {
-                    store[i] = Objects1.toString(value);
-                } else {
-                    store[i] = defaultValue.getOrDefault(i, Strings.EMPTY);
-                }
+            if (getter == null) {
+                continue;
+            }
+            Method method = getters.get(getter);
+            Object value = Methods.invokeMethod(row, method);
+            if (value != null) {
+                store[i] = Objects1.toString(value);
             } else {
-                store[i] = defaultValue.getOrDefault(i, Strings.EMPTY);
+                store[i] = defaultValue.getOrDefault(getter, Strings.EMPTY);
             }
         }
         return store;
@@ -110,11 +107,9 @@ public class CsvExport<T> extends BaseCsvWriter<T, String> {
     /**
      * 解析class
      *
-     * @param targetClass targetClass
      * @return CsvWriterOption
      */
-    protected static CsvWriterOption parseClass(Class<?> targetClass) {
-        Valid.notNull(targetClass, "target class is null");
+    protected CsvWriterOption parseClass() {
         ExportSetting setting = Annotations.getAnnotation(targetClass, ExportSetting.class);
         if (setting == null) {
             return new CsvWriterOption();

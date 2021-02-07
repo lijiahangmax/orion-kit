@@ -1,23 +1,13 @@
 package com.orion.csv.split;
 
 import com.orion.csv.CsvExt;
-import com.orion.csv.core.CsvSymbol;
-import com.orion.csv.core.CsvWriter;
-import com.orion.csv.importing.CsvStream;
+import com.orion.csv.reader.CsvStream;
 import com.orion.utils.Arrays1;
-import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
-import com.orion.utils.collect.Lists;
-import com.orion.utils.io.Files1;
-import com.orion.utils.io.Streams;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * CSV 列拆分器 可以保存数据 可以拆分多个文件
@@ -62,11 +52,6 @@ public class CsvColumnBatchSplit {
      * 流式读取缓冲区
      */
     private int bufferLine = 100;
-
-    /**
-     * symbol
-     */
-    private CsvSymbol symbol;
 
     public CsvColumnBatchSplit(CsvExt ext, List<int[]> columns) {
         Valid.notNull(ext, "split ext is null");
@@ -156,177 +141,177 @@ public class CsvColumnBatchSplit {
         this.bufferLine = bufferLine;
         return this;
     }
-
-    /**
-     * 执行拆分
-     *
-     * @return this
-     */
-    public CsvColumnBatchSplit execute() {
-        Valid.notEmpty(dist, "dist file is empty");
-        stream.skipLines(skip);
-        try {
-            if (streaming) {
-                List<String[]> lines;
-                Map<Integer, CsvWriter> ws = new HashMap<>();
-                for (int i = 0; i < columns.size(); i++) {
-                    OutputStream out = dist.get(i);
-                    CsvWriter csvWriter = new CsvWriter(out, symbol.getSymbol(), symbol.getCharset());
-                    ws.put(i, csvWriter);
-                    this.writeHeader(i, csvWriter);
-                }
-                while (!Lists.isEmpty(lines = stream.clean().readLines(bufferLine).lines())) {
-                    for (Map.Entry<Integer, CsvWriter> e : ws.entrySet()) {
-                        this.write(lines, e.getValue(), columns.get(e.getKey()));
-                    }
-                }
-                for (Map.Entry<Integer, CsvWriter> e : ws.entrySet()) {
-                    e.getValue().close();
-                }
-            } else {
-                stream.readLines();
-                for (int i = 0; i < columns.size(); i++) {
-                    OutputStream out = dist.get(i);
-                    CsvWriter csvWriter = new CsvWriter(out, symbol.getSymbol(), symbol.getCharset());
-                    this.writeHeader(i, csvWriter);
-                    this.write(stream.lines(), csvWriter, columns.get(i));
-                    Streams.close(csvWriter);
-                }
-            }
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
-        }
-        return this;
-    }
-
-    /**
-     * 写入数据到流
-     *
-     * @param lines     lines
-     * @param csvWriter write
-     */
-    private void write(List<String[]> lines, CsvWriter csvWriter, int[] columns) throws IOException {
-        for (String[] line : lines) {
-            String[] c = new String[columns.length];
-            for (int i = 0; i < columns.length; i++) {
-                int column = columns[i];
-                if (column >= 0 && column < line.length) {
-                    c[i] = line[column];
-                }
-            }
-            csvWriter.writeRecord(c);
-        }
-    }
-
-    /**
-     * 写入头到流
-     *
-     * @param index     头索引
-     * @param csvWriter writer
-     */
-    private void writeHeader(int index, CsvWriter csvWriter) throws IOException {
-        int size = Lists.size(headers);
-        if (index >= size) {
-            return;
-        }
-        String[] header = headers.get(index);
-        if (header != null) {
-            csvWriter.writeRecord(header);
-        }
-    }
-
-    /**
-     * 设置拆分文件输出流
-     *
-     * @param dist dist
-     * @return this
-     */
-    public CsvColumnBatchSplit dist(CsvSymbol s, OutputStream... dist) {
-        Valid.notEmpty(dist, "dist file is empty");
-        Valid.eq(dist.length, columns.size(), "dist length must eq columns size");
-        Valid.notNull(s, "csvSymbol is null");
-        this.dist = Lists.of(dist);
-        this.symbol = s;
-        return this;
-    }
-
-    /**
-     * 设置拆分文件输出文件
-     *
-     * @param dist dist
-     * @return this
-     */
-    public CsvColumnBatchSplit dist(CsvSymbol s, File... dist) {
-        Valid.notEmpty(dist, "dist file is empty");
-        Valid.eq(dist.length, columns.size(), "dist length must eq columns size");
-        Valid.notNull(s, "csvSymbol is null");
-        List<OutputStream> out = new ArrayList<>();
-        for (File file : dist) {
-            Files1.touch(file);
-            out.add(Files1.openOutputStreamSafe(file));
-        }
-        this.dist = out;
-        this.symbol = s;
-        return this;
-    }
-
-    /**
-     * 设置拆分文件输出文件路径
-     *
-     * @param dist dist
-     * @return this
-     */
-    public CsvColumnBatchSplit dist(CsvSymbol s, String... dist) {
-        Valid.notEmpty(dist, "dist file is empty");
-        Valid.eq(dist.length, columns.size(), "dist length must eq columns size");
-        Valid.notNull(s, "csvSymbol is null");
-        List<OutputStream> out = new ArrayList<>();
-        for (String file : dist) {
-            Files1.touch(file);
-            out.add(Files1.openOutputStreamSafe(file));
-        }
-        this.dist = out;
-        this.symbol = s;
-        return this;
-    }
-
-    /**
-     * 设置拆分文件输出文件路径
-     *
-     * @param pathDir  目标文件目录
-     * @param baseName 文件名称 不包含后缀
-     * @return this
-     */
-    public CsvColumnBatchSplit distPath(String pathDir, String baseName, CsvSymbol s) {
-        Valid.notNull(pathDir, "dist path dir is null");
-        Valid.notNull(baseName, "dist file base name is null");
-        Valid.notNull(s, "csvSymbol is null");
-        List<OutputStream> out = new ArrayList<>();
-        for (int i = 0; i < columns.size(); i++) {
-            String path = Files1.getPath(pathDir + "/" + baseName + "_column_split_" + (i + 1) + "." + s.getSuffix());
-            Files1.touch(path);
-            out.add(Files1.openOutputStreamSafe(path));
-        }
-        this.dist = out;
-        this.symbol = s;
-        return this;
-    }
-
-    /**
-     * 关闭流
-     */
-    public void close() {
-        for (OutputStream out : dist) {
-            Streams.close(out);
-        }
-    }
-
-    public CsvStream getStream() {
-        return stream;
-    }
-
-    public List<String[]> lines() {
-        return stream.lines();
-    }
+    //
+    // /**
+    //  * 执行拆分
+    //  *
+    //  * @return this
+    //  */
+    // public CsvColumnBatchSplit execute() {
+    //     Valid.notEmpty(dist, "dist file is empty");
+    //     stream.skipLines(skip);
+    //     try {
+    //         if (streaming) {
+    //             List<String[]> lines;
+    //             Map<Integer, CsvWriter> ws = new HashMap<>();
+    //             for (int i = 0; i < columns.size(); i++) {
+    //                 OutputStream out = dist.get(i);
+    //                 CsvWriter csvWriter = new CsvWriter(out, symbol.getSymbol(), symbol.getCharset());
+    //                 ws.put(i, csvWriter);
+    //                 this.writeHeader(i, csvWriter);
+    //             }
+    //             while (!Lists.isEmpty(lines = stream.clean().readLines(bufferLine).lines())) {
+    //                 for (Map.Entry<Integer, CsvWriter> e : ws.entrySet()) {
+    //                     this.write(lines, e.getValue(), columns.get(e.getKey()));
+    //                 }
+    //             }
+    //             for (Map.Entry<Integer, CsvWriter> e : ws.entrySet()) {
+    //                 e.getValue().close();
+    //             }
+    //         } else {
+    //             stream.readLines();
+    //             for (int i = 0; i < columns.size(); i++) {
+    //                 OutputStream out = dist.get(i);
+    //                 CsvWriter csvWriter = new CsvWriter(out, symbol.getSymbol(), symbol.getCharset());
+    //                 this.writeHeader(i, csvWriter);
+    //                 this.write(stream.lines(), csvWriter, columns.get(i));
+    //                 Streams.close(csvWriter);
+    //             }
+    //         }
+    //     } catch (Exception e) {
+    //         throw Exceptions.ioRuntime(e);
+    //     }
+    //     return this;
+    // }
+    //
+    // /**
+    //  * 写入数据到流
+    //  *
+    //  * @param lines     lines
+    //  * @param csvWriter write
+    //  */
+    // private void write(List<String[]> lines, CsvWriter csvWriter, int[] columns) throws IOException {
+    //     for (String[] line : lines) {
+    //         String[] c = new String[columns.length];
+    //         for (int i = 0; i < columns.length; i++) {
+    //             int column = columns[i];
+    //             if (column >= 0 && column < line.length) {
+    //                 c[i] = line[column];
+    //             }
+    //         }
+    //         csvWriter.writeLine(c);
+    //     }
+    // }
+    //
+    // /**
+    //  * 写入头到流
+    //  *
+    //  * @param index     头索引
+    //  * @param csvWriter writer
+    //  */
+    // private void writeHeader(int index, CsvWriter csvWriter) throws IOException {
+    //     int size = Lists.size(headers);
+    //     if (index >= size) {
+    //         return;
+    //     }
+    //     String[] header = headers.get(index);
+    //     if (header != null) {
+    //         csvWriter.writeLine(header);
+    //     }
+    // }
+    //
+    // /**
+    //  * 设置拆分文件输出流
+    //  *
+    //  * @param dist dist
+    //  * @return this
+    //  */
+    // public CsvColumnBatchSplit dist(CsvSymbol s, OutputStream... dist) {
+    //     Valid.notEmpty(dist, "dist file is empty");
+    //     Valid.eq(dist.length, columns.size(), "dist length must eq columns size");
+    //     Valid.notNull(s, "csvSymbol is null");
+    //     this.dist = Lists.of(dist);
+    //     this.symbol = s;
+    //     return this;
+    // }
+    //
+    // /**
+    //  * 设置拆分文件输出文件
+    //  *
+    //  * @param dist dist
+    //  * @return this
+    //  */
+    // public CsvColumnBatchSplit dist(CsvSymbol s, File... dist) {
+    //     Valid.notEmpty(dist, "dist file is empty");
+    //     Valid.eq(dist.length, columns.size(), "dist length must eq columns size");
+    //     Valid.notNull(s, "csvSymbol is null");
+    //     List<OutputStream> out = new ArrayList<>();
+    //     for (File file : dist) {
+    //         Files1.touch(file);
+    //         out.add(Files1.openOutputStreamSafe(file));
+    //     }
+    //     this.dist = out;
+    //     this.symbol = s;
+    //     return this;
+    // }
+    //
+    // /**
+    //  * 设置拆分文件输出文件路径
+    //  *
+    //  * @param dist dist
+    //  * @return this
+    //  */
+    // public CsvColumnBatchSplit dist(CsvSymbol s, String... dist) {
+    //     Valid.notEmpty(dist, "dist file is empty");
+    //     Valid.eq(dist.length, columns.size(), "dist length must eq columns size");
+    //     Valid.notNull(s, "csvSymbol is null");
+    //     List<OutputStream> out = new ArrayList<>();
+    //     for (String file : dist) {
+    //         Files1.touch(file);
+    //         out.add(Files1.openOutputStreamSafe(file));
+    //     }
+    //     this.dist = out;
+    //     this.symbol = s;
+    //     return this;
+    // }
+    //
+    // /**
+    //  * 设置拆分文件输出文件路径
+    //  *
+    //  * @param pathDir  目标文件目录
+    //  * @param baseName 文件名称 不包含后缀
+    //  * @return this
+    //  */
+    // public CsvColumnBatchSplit distPath(String pathDir, String baseName, CsvSymbol s) {
+    //     Valid.notNull(pathDir, "dist path dir is null");
+    //     Valid.notNull(baseName, "dist file base name is null");
+    //     Valid.notNull(s, "csvSymbol is null");
+    //     List<OutputStream> out = new ArrayList<>();
+    //     for (int i = 0; i < columns.size(); i++) {
+    //         String path = Files1.getPath(pathDir + "/" + baseName + "_column_split_" + (i + 1) + "." + s.getSuffix());
+    //         Files1.touch(path);
+    //         out.add(Files1.openOutputStreamSafe(path));
+    //     }
+    //     this.dist = out;
+    //     this.symbol = s;
+    //     return this;
+    // }
+    //
+    // /**
+    //  * 关闭流
+    //  */
+    // public void close() {
+    //     for (OutputStream out : dist) {
+    //         Streams.close(out);
+    //     }
+    // }
+    //
+    // public CsvStream getStream() {
+    //     return stream;
+    // }
+    //
+    // public List<String[]> lines() {
+    //     return stream.lines();
+    // }
 
 }

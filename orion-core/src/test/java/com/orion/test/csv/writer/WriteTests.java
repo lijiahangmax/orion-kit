@@ -2,7 +2,7 @@ package com.orion.test.csv.writer;
 
 import com.orion.csv.core.CsvWriter;
 import com.orion.csv.writer.CsvArrayWriter;
-import com.orion.csv.writer.CsvExport;
+import com.orion.csv.writer.CsvBeanWriter;
 import com.orion.csv.writer.CsvMapWriter;
 import com.orion.utils.Strings;
 import com.orion.utils.time.Dates;
@@ -78,7 +78,7 @@ public class WriteTests {
                 .mapping(3, "name")
                 .mapping(4, "id")
                 .mapping(5, "desc")
-                .defaultValue(5, "def")
+                .defaultValue("desc", "def")
                 .trim()
                 .skip()
                 .headers("a", "b", "c", "d", "e")
@@ -90,8 +90,8 @@ public class WriteTests {
 
     @Test
     public void beanTests() {
-        new CsvExport<>("C:\\Users\\ljh15\\Desktop\\csv\\bean.csv", ExportUser.class)
-                .defaultValue(4, "def")
+        new CsvBeanWriter<>("C:\\Users\\ljh15\\Desktop\\csv\\bean.csv", ExportUser.class)
+                .defaultValue("desc", "def")
                 .trim()
                 .skip()
                 .headers("a", "b", "c", "d", "e")

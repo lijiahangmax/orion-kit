@@ -3,7 +3,7 @@ package com.orion.test.excel.reader;
 import com.orion.excel.Excels;
 import com.orion.excel.option.ImportFieldOption;
 import com.orion.excel.reader.ExcelArrayReader;
-import com.orion.excel.reader.ExcelImport;
+import com.orion.excel.reader.ExcelBeanReader;
 import com.orion.excel.reader.ExcelMapReader;
 import com.orion.excel.reader.ExcelReaderIterator;
 import com.orion.excel.type.ExcelReadType;
@@ -27,7 +27,7 @@ public class ImportShopTest {
 
     @Test
     public void testImport1() {
-        new ExcelImport<>(workbook, sheet, ImportShop.class, Console::trace)
+        new ExcelBeanReader<>(workbook, sheet, ImportShop.class, Console::trace)
                 .trim()
                 .init()
                 .skip(2)
@@ -39,7 +39,7 @@ public class ImportShopTest {
 
     @Test
     public void testImport2() {
-        ExcelReaderIterator<ImportShop> iterator = new ExcelImport<>(workbook, sheet, ImportShop.class)
+        ExcelReaderIterator<ImportShop> iterator = new ExcelBeanReader<>(workbook, sheet, ImportShop.class)
                 .init()
                 .skip(2).iterator();
         for (ImportShop s : iterator) {
@@ -50,7 +50,7 @@ public class ImportShopTest {
 
     @Test
     public void testImport3() {
-        new ExcelImport<>(workbook, sheet, ImportShop.class, Console::trace)
+        new ExcelBeanReader<>(workbook, sheet, ImportShop.class, Console::trace)
                 .init()
                 .option("comment", 4, ExcelReadType.TEXT)
                 .option("businessFile", 5, ExcelReadType.TEXT)
@@ -64,7 +64,7 @@ public class ImportShopTest {
 
     @Test
     public void testImport4() {
-        ExcelReaderIterator<ImportShop> iterator = new ExcelImport<>(workbook, sheet, ImportShop.class)
+        ExcelReaderIterator<ImportShop> iterator = new ExcelBeanReader<>(workbook, sheet, ImportShop.class)
                 .init()
                 .option("comment", 4, ExcelReadType.TEXT)
                 .option("businessFile", 5, ExcelReadType.TEXT)

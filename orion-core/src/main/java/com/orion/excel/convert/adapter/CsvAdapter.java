@@ -2,7 +2,7 @@ package com.orion.excel.convert.adapter;
 
 import com.orion.able.Adaptable;
 import com.orion.able.SafeCloseable;
-import com.orion.csv.writer.CsvExport;
+import com.orion.csv.writer.CsvBeanWriter;
 import com.orion.excel.Excels;
 import com.orion.utils.io.Streams;
 import org.apache.poi.ss.usermodel.Cell;
@@ -29,7 +29,7 @@ public class CsvAdapter implements Adaptable<CsvAdapter>, SafeCloseable {
     /**
      * CsvExport
      */
-    private CsvExport export;
+    private CsvBeanWriter export;
 
     /**
      * 跳过的行数
@@ -41,7 +41,7 @@ public class CsvAdapter implements Adaptable<CsvAdapter>, SafeCloseable {
      */
     private String[] header;
 
-    public CsvAdapter(Sheet sheet, CsvExport export) {
+    public CsvAdapter(Sheet sheet, CsvBeanWriter export) {
         this.sheet = sheet;
         this.export = export;
     }
@@ -119,7 +119,7 @@ public class CsvAdapter implements Adaptable<CsvAdapter>, SafeCloseable {
         return sheet;
     }
 
-    public CsvExport getExport() {
+    public CsvBeanWriter getExport() {
         return export;
     }
 

@@ -1,15 +1,9 @@
 package com.orion.csv.split;
 
 import com.orion.csv.CsvExt;
-import com.orion.csv.core.CsvSymbol;
-import com.orion.csv.exporting.CsvBuilder;
-import com.orion.csv.importing.CsvStream;
-import com.orion.utils.Exceptions;
+import com.orion.csv.reader.CsvStream;
 import com.orion.utils.Valid;
-import com.orion.utils.io.Files1;
 
-import java.io.File;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -127,108 +121,108 @@ public class CsvRowSplit {
         return this;
     }
 
-    /**
-     * 将数据写入到拆分文件
-     *
-     * @param s     symbol
-     * @param files files
-     * @return this
-     */
-    public CsvRowSplit write(CsvSymbol s, String... files) {
-        Valid.notNull(s, "csvSymbol is null");
-        Valid.notEmpty(files, "write file is empty");
-        for (int i = 0; i < fileLines.size(); i++) {
-            if (i < files.length) {
-                write(new File(files[i]), i, s);
-            }
-        }
-        return this;
-    }
-
-    /**
-     * 将数据写入到拆分文件
-     *
-     * @param s     symbol
-     * @param files files
-     * @return this
-     */
-    public CsvRowSplit write(CsvSymbol s, File... files) {
-        Valid.notNull(s, "csvSymbol is null");
-        Valid.notEmpty(files, "write file is empty");
-        for (int i = 0; i < fileLines.size(); i++) {
-            if (i < files.length) {
-                write(files[i], i, s);
-            }
-        }
-        return this;
-    }
-
-    /**
-     * 将数据写入到拆分文件流
-     *
-     * @param outs 流
-     * @param s    symbol
-     * @return this
-     */
-    public CsvRowSplit write(CsvSymbol s, OutputStream... outs) {
-        Valid.notNull(s, "csvSymbol is null");
-        Valid.notEmpty(outs, "write stream is empty");
-        for (int i = 0; i < fileLines.size(); i++) {
-            if (i < outs.length) {
-                List<String[]> row = fileLines.get(i);
-                OutputStream out = outs[i];
-                try {
-                    new CsvBuilder(row)
-                            .symbol(s.getSymbol())
-                            .charset(s.getCharset())
-                            .dist(out)
-                            .build();
-                } catch (Exception e) {
-                    throw Exceptions.ioRuntime(e);
-                }
-            }
-        }
-        return this;
-    }
-
-    /**
-     * 写入数据到文件
-     *
-     * @param pathDir  目标文件目录
-     * @param baseName 文件名称 不包含后缀
-     * @param s        symbol
-     * @return this
-     */
-    public CsvRowSplit writeToPath(String pathDir, String baseName, CsvSymbol s) {
-        Valid.notNull(pathDir, "dist path dir is null");
-        Valid.notNull(baseName, "dist file base name is null");
-        Valid.notNull(s, "csvSymbol is null");
-        for (int i = 0; i < fileLines.size(); i++) {
-            String path = Files1.getPath(pathDir + "/" + baseName + "_row_split_" + (i + 1) + "." + s.getSuffix());
-            write(new File(path), i, s);
-        }
-        return this;
-    }
-
-    /**
-     * 写入数据到文件
-     *
-     * @param file     文件
-     * @param rowIndex 文件数据索引
-     * @param s        symbol
-     */
-    private void write(File file, int rowIndex, CsvSymbol s) {
-        try {
-            new CsvBuilder(fileLines.get(rowIndex))
-                    .symbol(s.getSymbol())
-                    .charset(s.getCharset())
-                    .dist(file)
-                    .build()
-                    .close();
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
-        }
-    }
+    // /**
+    //  * 将数据写入到拆分文件
+    //  *
+    //  * @param s     symbol
+    //  * @param files files
+    //  * @return this
+    //  */
+    // public CsvRowSplit write(CsvSymbol s, String... files) {
+    //     Valid.notNull(s, "csvSymbol is null");
+    //     Valid.notEmpty(files, "write file is empty");
+    //     for (int i = 0; i < fileLines.size(); i++) {
+    //         if (i < files.length) {
+    //             write(new File(files[i]), i, s);
+    //         }
+    //     }
+    //     return this;
+    // }
+    //
+    // /**
+    //  * 将数据写入到拆分文件
+    //  *
+    //  * @param s     symbol
+    //  * @param files files
+    //  * @return this
+    //  */
+    // public CsvRowSplit write(CsvSymbol s, File... files) {
+    //     Valid.notNull(s, "csvSymbol is null");
+    //     Valid.notEmpty(files, "write file is empty");
+    //     for (int i = 0; i < fileLines.size(); i++) {
+    //         if (i < files.length) {
+    //             write(files[i], i, s);
+    //         }
+    //     }
+    //     return this;
+    // }
+    //
+    // /**
+    //  * 将数据写入到拆分文件流
+    //  *
+    //  * @param outs 流
+    //  * @param s    symbol
+    //  * @return this
+    //  */
+    // public CsvRowSplit write(CsvSymbol s, OutputStream... outs) {
+    //     Valid.notNull(s, "csvSymbol is null");
+    //     Valid.notEmpty(outs, "write stream is empty");
+    //     for (int i = 0; i < fileLines.size(); i++) {
+    //         if (i < outs.length) {
+    //             List<String[]> row = fileLines.get(i);
+    //             OutputStream out = outs[i];
+    //             try {
+    //                 // new CsvBuilder(row)
+    //                 //         .symbol(s.getSymbol())
+    //                 //         .charset(s.getCharset())
+    //                 //         .dist(out)
+    //                 //         .build();
+    //             } catch (Exception e) {
+    //                 throw Exceptions.ioRuntime(e);
+    //             }
+    //         }
+    //     }
+    //     return this;
+    // }
+    //
+    // /**
+    //  * 写入数据到文件
+    //  *
+    //  * @param pathDir  目标文件目录
+    //  * @param baseName 文件名称 不包含后缀
+    //  * @param s        symbol
+    //  * @return this
+    //  */
+    // public CsvRowSplit writeToPath(String pathDir, String baseName, CsvSymbol s) {
+    //     Valid.notNull(pathDir, "dist path dir is null");
+    //     Valid.notNull(baseName, "dist file base name is null");
+    //     Valid.notNull(s, "csvSymbol is null");
+    //     for (int i = 0; i < fileLines.size(); i++) {
+    //         String path = Files1.getPath(pathDir + "/" + baseName + "_row_split_" + (i + 1) + "." + s.getSuffix());
+    //         write(new File(path), i, s);
+    //     }
+    //     return this;
+    // }
+    //
+    // /**
+    //  * 写入数据到文件
+    //  *
+    //  * @param file     文件
+    //  * @param rowIndex 文件数据索引
+    //  * @param s        symbol
+    //  */
+    // private void write(File file, int rowIndex, CsvSymbol s) {
+    //     try {
+    //        new CsvBuilder(fileLines.get(rowIndex))
+    //                .symbol(s.getSymbol())
+    //                .charset(s.getCharset())
+    //                .dist(file)
+    //                .build()
+    //                .close();
+    //     } catch (Exception e) {
+    //         throw Exceptions.ioRuntime(e);
+    //     }
+    // }
 
     public List<String[]> lines() {
         return stream.lines();

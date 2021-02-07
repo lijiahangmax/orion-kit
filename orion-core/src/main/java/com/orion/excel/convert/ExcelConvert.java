@@ -1,6 +1,6 @@
 package com.orion.excel.convert;
 
-import com.orion.csv.writer.CsvExport;
+import com.orion.csv.writer.CsvBeanWriter;
 import com.orion.excel.convert.adapter.CsvAdapter;
 import org.apache.poi.ss.usermodel.Sheet;
 
@@ -23,7 +23,7 @@ public class ExcelConvert {
      * @param export csvExport
      * @return adapter
      */
-    public static CsvAdapter csvAdapter(Sheet sheet, CsvExport export) {
+    public static CsvAdapter csvAdapter(Sheet sheet, CsvBeanWriter export) {
         return new CsvAdapter(sheet, export);
     }
 

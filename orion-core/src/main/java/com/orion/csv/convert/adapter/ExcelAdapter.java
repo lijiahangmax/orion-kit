@@ -3,7 +3,7 @@ package com.orion.csv.convert.adapter;
 import com.orion.able.Adaptable;
 import com.orion.able.SafeCloseable;
 import com.orion.csv.CsvExt;
-import com.orion.csv.importing.CsvStream;
+import com.orion.csv.reader.CsvStream;
 import com.orion.excel.Excels;
 import com.orion.utils.io.Streams;
 import org.apache.poi.ss.usermodel.Cell;

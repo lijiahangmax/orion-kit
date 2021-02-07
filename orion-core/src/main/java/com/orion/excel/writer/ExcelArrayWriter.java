@@ -16,7 +16,6 @@ public class ExcelArrayWriter<T> extends BaseExcelSheetWriter<Integer, T[]> {
         super(workbook, sheet);
     }
 
-
     @Override
     protected Object getValue(T[] row, Integer key) {
         T value = null;

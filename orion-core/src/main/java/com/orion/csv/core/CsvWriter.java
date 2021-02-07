@@ -1,326 +1,327 @@
 package com.orion.csv.core;
 
 import com.orion.able.SafeCloseable;
+import com.orion.csv.option.CsvOption;
+import com.orion.csv.option.CsvWriterOption;
+import com.orion.exception.IORuntimeException;
 import com.orion.utils.Strings;
+import com.orion.utils.Systems;
+import com.orion.utils.Valid;
+import com.orion.utils.constant.Letters;
+import com.orion.utils.io.Files1;
+import com.orion.utils.io.Streams;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
- * CSV 写入类
+ * CSV 写入器 core
  *
  * @author ljh15
  * @version 1.0.0
  * @since 2020/4/1 23:23
  */
-@SuppressWarnings("ALL")
 public class CsvWriter implements SafeCloseable {
 
-    private PrintWriter outputStream;
-    private String fileName;
-    private boolean firstColumn;
-    private boolean useCustomRecordDelimiter;
-    private Charset charset;
-    private CsvWriter.UserSettings userSettings;
-    private boolean initialized;
+    private Writer writer;
+
+    private boolean firstColumn = true;
+
+    /**
+     * 是否已关闭
+     */
     private boolean closed;
 
-    public CsvWriter(String fileName, char delimiter, Charset charset) {
-        this.outputStream = null;
-        this.fileName = null;
-        this.firstColumn = true;
-        this.useCustomRecordDelimiter = false;
-        this.charset = null;
-        this.userSettings = new CsvWriter.UserSettings();
-        this.initialized = false;
-        this.closed = false;
-        if (fileName == null) {
-            throw new IllegalArgumentException("Parameter fileName can not be null.");
-        } else if (charset == null) {
-            throw new IllegalArgumentException("Parameter charset can not be null.");
-        } else {
-            this.fileName = fileName;
-            this.userSettings.delimiter = delimiter;
-            this.charset = charset;
-        }
+    /**
+     * 配置
+     */
+    private CsvWriterOption option;
+
+    public CsvWriter(String file) {
+        this(file, Letters.COMMA, StandardCharsets.UTF_8);
     }
 
-    public CsvWriter(String fileName) {
-        this(fileName, ',', Charset.forName("ISO-8859-1"));
+    public CsvWriter(String file, char delimiter) {
+        this(file, delimiter, StandardCharsets.UTF_8);
     }
 
-    public CsvWriter(Writer writer, char delimiter) {
-        this.outputStream = null;
-        this.fileName = null;
-        this.firstColumn = true;
-        this.useCustomRecordDelimiter = false;
-        this.charset = null;
-        this.userSettings = new CsvWriter.UserSettings();
-        this.initialized = false;
-        this.closed = false;
-        if (writer == null) {
-            throw new IllegalArgumentException("Parameter outputStream can not be null.");
-        } else {
-            this.outputStream = new PrintWriter(writer);
-            this.userSettings.delimiter = delimiter;
-            this.initialized = true;
-        }
+    public CsvWriter(String file, char delimiter, Charset charset) {
+        Valid.notBlank(file, "file can not be null");
+        Valid.notNull(charset, "charset can not be null");
+        this.option = new CsvWriterOption(delimiter, charset);
+        this.writer = new BufferedWriter(new OutputStreamWriter(Files1.openOutputStreamSafe(file), charset));
+    }
+
+    public CsvWriter(String file, CsvWriterOption option) {
+        Valid.notBlank(file, "file can not be null");
+        Valid.notNull(option, "option not be null");
+        Valid.notNull(option.getCharset(), "charset can not be null");
+        this.option = option;
+        this.writer = new BufferedWriter(new OutputStreamWriter(Files1.openOutputStreamSafe(file), option.getCharset()));
+    }
+
+    public CsvWriter(File file) {
+        this(file, Letters.COMMA, StandardCharsets.UTF_8);
+    }
+
+    public CsvWriter(File file, char delimiter) {
+        this(file, delimiter, StandardCharsets.UTF_8);
+    }
+
+    public CsvWriter(File file, char delimiter, Charset charset) {
+        Valid.notNull(file, "file can not be null");
+        Valid.notNull(charset, "charset can not be null");
+        this.option = new CsvWriterOption(delimiter, charset);
+        this.writer = new BufferedWriter(new OutputStreamWriter(Files1.openOutputStreamSafe(file), charset));
+    }
+
+    public CsvWriter(File file, CsvWriterOption option) {
+        Valid.notNull(file, "file can not be null");
+        Valid.notNull(option, "option can not be null");
+        Valid.notNull(option.getCharset(), "charset can not be null");
+        this.option = option;
+        this.writer = new BufferedWriter(new OutputStreamWriter(Files1.openOutputStreamSafe(file), option.getCharset()));
+    }
+
+    public CsvWriter(OutputStream out) {
+        this(new OutputStreamWriter(out, StandardCharsets.UTF_8), Letters.COMMA);
+    }
+
+    public CsvWriter(OutputStream out, char delimiter) {
+        this(new OutputStreamWriter(out, StandardCharsets.UTF_8), delimiter);
     }
 
     public CsvWriter(OutputStream out, char delimiter, Charset charset) {
         this(new OutputStreamWriter(out, charset), delimiter);
     }
 
-    public char getDelimiter() {
-        return this.userSettings.delimiter;
+    public CsvWriter(OutputStream out, CsvWriterOption option) {
+        this(new OutputStreamWriter(out, option.getCharset()), option);
     }
 
-    public void setDelimiter(char delimiter) {
-        this.userSettings.delimiter = delimiter;
+    public CsvWriter(Writer writer) {
+        this(writer, Letters.COMMA);
     }
 
-    public char getRecordDelimiter() {
-        return this.userSettings.recordDelimiter;
+    public CsvWriter(Writer writer, char delimiter) {
+        Valid.notNull(writer, "writer can not be null");
+        this.writer = writer;
+        this.option = new CsvWriterOption(delimiter);
     }
 
-    public void setRecordDelimiter(char recordDelimiter) {
-        this.useCustomRecordDelimiter = true;
-        this.userSettings.recordDelimiter = recordDelimiter;
+    public CsvWriter(Writer writer, CsvWriterOption option) {
+        Valid.notNull(option, "option can not be null");
+        Valid.notNull(writer, "writer can not be null");
+        this.writer = writer;
+        this.option = option;
     }
 
-    public char getTextQualifier() {
-        return this.userSettings.textQualifier;
+    /**
+     * 写入列 不保留空格
+     *
+     * @param content 行
+     * @throws IOException IOException
+     */
+    public void write(String content) throws IOException {
+        write(content, false);
     }
 
-    public void setTextQualifier(char textQualifier) {
-        this.userSettings.textQualifier = textQualifier;
-    }
-
-    public boolean getUseTextQualifier() {
-        return this.userSettings.useTextQualifier;
-    }
-
-    public void setUseTextQualifier(boolean useTextQualifier) {
-        this.userSettings.useTextQualifier = useTextQualifier;
-    }
-
-    public int getEscapeMode() {
-        return this.userSettings.escapeMode;
-    }
-
-    public void setEscapeMode(int escapeMode) {
-        this.userSettings.escapeMode = escapeMode;
-    }
-
-    public void setComment(char comment) {
-        this.userSettings.comment = comment;
-    }
-
-    public char getComment() {
-        return this.userSettings.comment;
-    }
-
-    public boolean getForceQualifier() {
-        return this.userSettings.forceQualifier;
-    }
-
-    public void setForceQualifier(boolean forceQualifier) {
-        this.userSettings.forceQualifier = forceQualifier;
-    }
-
-    public void write(String s, boolean newLine) throws IOException {
+    /**
+     * 写入列
+     *
+     * @param content        行
+     * @param preserveSpaces 是否保留空格
+     * @throws IOException IOException
+     */
+    public void write(String content, boolean preserveSpaces) throws IOException {
         this.checkClosed();
-        this.checkInit();
-        if (s == null) {
-            s = Strings.EMPTY;
+        if (content == null) {
+            content = Strings.EMPTY;
         }
-        if (!this.firstColumn) {
-            this.outputStream.write(this.userSettings.delimiter);
+        if (!firstColumn) {
+            writer.write(option.getDelimiter());
         }
-        boolean var3 = this.userSettings.forceQualifier;
-        if (!newLine && s.length() > 0) {
-            s = s.trim();
+        boolean textQualify = option.isForceQualifier();
+        if (!preserveSpaces && content.length() > 0) {
+            content = content.trim();
         }
-        if (!var3 && this.userSettings.useTextQualifier && (s.indexOf(this.userSettings.textQualifier) > -1 ||
-                s.indexOf(this.userSettings.delimiter) > -1 || !this.useCustomRecordDelimiter && (s.indexOf(10) > -1 ||
-                s.indexOf(13) > -1) || this.useCustomRecordDelimiter && s.indexOf(this.userSettings.recordDelimiter) > -1 ||
-                this.firstColumn && s.length() > 0 && s.charAt(0) == this.userSettings.comment || this.firstColumn && s.length() == 0)) {
-            var3 = true;
+
+        if (!textQualify && option.isUseTextQualifier()
+                && (content.indexOf(option.getTextQualifier()) > -1
+                || content.indexOf(option.getDelimiter()) > -1
+                || (!option.isUseCustomLineDelimiter() && (content.indexOf(Letters.LF) > -1 || content.indexOf(Letters.CR) > -1))
+                || (option.isUseCustomLineDelimiter() && content.indexOf(option.getLineDelimiter()) > -1)
+                || (firstColumn && content.length() > 0 && content.charAt(0) == option.getComment()) || (firstColumn && content.length() == 0))) {
+            textQualify = true;
         }
-        if (this.userSettings.useTextQualifier && !var3 && s.length() > 0 && newLine) {
-            char var4 = s.charAt(0);
-            if (var4 == ' ' || var4 == '\t') {
-                var3 = true;
+
+        if (option.isUseTextQualifier() && !textQualify && content.length() > 0 && preserveSpaces) {
+            char firstLetter = content.charAt(0);
+            if (firstLetter == Letters.SPACE || firstLetter == Letters.TAB) {
+                textQualify = true;
             }
-            if (!var3 && s.length() > 1) {
-                char var5 = s.charAt(s.length() - 1);
-                if (var5 == ' ' || var5 == '\t') {
-                    var3 = true;
+            if (!textQualify && content.length() > 1) {
+                char lastLetter = content.charAt(content.length() - 1);
+                if (lastLetter == Letters.SPACE || lastLetter == Letters.TAB) {
+                    textQualify = true;
                 }
             }
         }
-        if (var3) {
-            this.outputStream.write(this.userSettings.textQualifier);
-            if (this.userSettings.escapeMode == 2) {
-                s = replace(s, "\\", "\\\\");
-                s = replace(s, Strings.EMPTY + this.userSettings.textQualifier, "\\" + this.userSettings.textQualifier);
+
+        if (textQualify) {
+            writer.write(option.getTextQualifier());
+            if (option.getEscapeMode() == CsvOption.ESCAPE_MODE_BACKSLASH) {
+                content = replace(content, Strings.EMPTY + Letters.BACKSLASH, Strings.EMPTY + Letters.BACKSLASH + Letters.BACKSLASH);
+                content = replace(content, Strings.EMPTY + option.getTextQualifier(), Strings.EMPTY + Letters.BACKSLASH + option.getTextQualifier());
             } else {
-                s = replace(s, Strings.EMPTY + this.userSettings.textQualifier, Strings.EMPTY + this.userSettings.textQualifier + this.userSettings.textQualifier);
+                content = replace(content, Strings.EMPTY + option.getTextQualifier(), Strings.EMPTY + option.getTextQualifier() + option.getTextQualifier());
             }
-        } else if (this.userSettings.escapeMode == 2) {
-            s = replace(s, "\\", "\\\\");
-            s = replace(s, Strings.EMPTY + this.userSettings.delimiter, "\\" + this.userSettings.delimiter);
-            if (this.useCustomRecordDelimiter) {
-                s = replace(s, Strings.EMPTY + this.userSettings.recordDelimiter, "\\" + this.userSettings.recordDelimiter);
+        } else if (option.getEscapeMode() == CsvOption.ESCAPE_MODE_BACKSLASH) {
+            content = replace(content, Strings.EMPTY + Letters.BACKSLASH, Strings.EMPTY + Letters.BACKSLASH + Letters.BACKSLASH);
+            content = replace(content, Strings.EMPTY + option.getDelimiter(), Strings.EMPTY + Letters.BACKSLASH + option.getDelimiter());
+
+            if (option.isUseCustomLineDelimiter()) {
+                content = replace(content, Strings.EMPTY + option.getLineDelimiter(), Strings.EMPTY + Letters.BACKSLASH + option.getLineDelimiter());
             } else {
-                s = replace(s, "\r", "\\\r");
-                s = replace(s, "\n", "\\\n");
+                content = replace(content, Strings.EMPTY + Letters.CR, Strings.EMPTY + Letters.BACKSLASH + Letters.CR);
+                content = replace(content, Strings.EMPTY + Letters.LF, Strings.EMPTY + Letters.BACKSLASH + Letters.LF);
             }
-            if (this.firstColumn && s.length() > 0 && s.charAt(0) == this.userSettings.comment) {
-                if (s.length() > 1) {
-                    s = "\\" + this.userSettings.comment + s.substring(1);
+
+            if (firstColumn && content.length() > 0 && content.charAt(0) == option.getComment()) {
+                if (content.length() > 1) {
+                    content = Strings.EMPTY + Letters.BACKSLASH + option.getComment() + content.substring(1);
                 } else {
-                    s = "\\" + this.userSettings.comment;
+                    content = Strings.EMPTY + Letters.BACKSLASH + option.getComment();
                 }
             }
         }
-        this.outputStream.write(s);
-        if (var3) {
-            this.outputStream.write(this.userSettings.textQualifier);
+        writer.write(content);
+        if (textQualify) {
+            writer.write(option.getTextQualifier());
         }
-        this.firstColumn = false;
+        firstColumn = false;
     }
 
-    public void write(String s) throws IOException {
-        this.write(s, false);
-    }
-
-    public void writeComment(String s) throws IOException {
+    /**
+     * 写入注释
+     *
+     * @param comment 注释
+     * @throws IOException IOException
+     */
+    public void writeComment(String comment) throws IOException {
         this.checkClosed();
-        this.checkInit();
-        this.outputStream.write(this.userSettings.comment);
-        this.outputStream.write(s);
-        if (this.useCustomRecordDelimiter) {
-            this.outputStream.write(this.userSettings.recordDelimiter);
+        writer.write(option.getComment());
+        writer.write(comment);
+        if (option.isUseCustomLineDelimiter()) {
+            writer.write(option.getLineDelimiter());
         } else {
-            this.outputStream.println();
+            writer.write(Systems.LINE_SEPARATOR);
         }
-        this.firstColumn = true;
+        firstColumn = true;
     }
 
-    public void writeRecord(String[] record, boolean newLine) throws IOException {
-        if (record != null && record.length > 0) {
-            for (int i = 0; i < record.length; ++i) {
-                this.write(record[i], newLine);
+    /**
+     * 写入行 不保留空格
+     *
+     * @param values 行
+     * @throws IOException IOException
+     */
+    public void writeLine(String[] values) throws IOException {
+        this.writeLine(values, false);
+    }
+
+    /**
+     * 写入行
+     *
+     * @param values         行
+     * @param preserveSpaces 是否保留空格
+     * @throws IOException IOException
+     */
+    public void writeLine(String[] values, boolean preserveSpaces) throws IOException {
+        if (values != null && values.length > 0) {
+            for (String value : values) {
+                this.write(value, preserveSpaces);
             }
-            this.endRecord();
+            this.newLine();
         }
     }
 
-    public void writeRecord(String[] record) throws IOException {
-        this.writeRecord(record, false);
-    }
-
-    public void endRecord() throws IOException {
+    /**
+     * 设置行边界符
+     *
+     * @throws IOException IOException
+     */
+    public void newLine() throws IOException {
         this.checkClosed();
-        this.checkInit();
-        if (this.useCustomRecordDelimiter) {
-            this.outputStream.write(this.userSettings.recordDelimiter);
+        if (option.isUseCustomLineDelimiter()) {
+            writer.write(option.getLineDelimiter());
         } else {
-            this.outputStream.println();
+            writer.write(Systems.LINE_SEPARATOR);
         }
-
-        this.firstColumn = true;
+        firstColumn = true;
     }
 
-    private void checkInit() throws IOException {
-        if (!this.initialized) {
-            if (this.fileName != null) {
-                this.outputStream = new PrintWriter(new OutputStreamWriter(new FileOutputStream(this.fileName), this.charset));
-            }
-            this.initialized = true;
-        }
-
+    /**
+     * 缓冲区写入
+     *
+     * @throws IOException IOException
+     */
+    public void flush() throws IOException {
+        writer.flush();
     }
 
-    public void flush() {
-        this.outputStream.flush();
+    /**
+     * 检查是否已关闭
+     */
+    private void checkClosed() {
+        if (closed) {
+            throw new IORuntimeException("this instance already been closed");
+        }
     }
 
     @Override
     public void close() {
-        if (!this.closed) {
-            this.close(true);
-            this.closed = true;
+        if (!closed) {
+            Streams.close(writer);
+            writer = null;
+            closed = true;
         }
     }
 
-    private void close(boolean var1) {
-        if (!this.closed) {
-            if (var1) {
-                this.charset = null;
+    public CsvWriter setOption(CsvWriterOption option) {
+        this.option = option;
+        return this;
+    }
+
+    public CsvWriterOption getOption() {
+        return option;
+    }
+
+    /**
+     * 替换
+     *
+     * @param original 原数据
+     * @param pattern  规则什么
+     * @param replace  替换为什么
+     * @return for new
+     */
+    private static String replace(String original, String pattern, String replace) {
+        int len = pattern.length();
+        int found = original.indexOf(pattern);
+        if (found > -1) {
+            StringBuilder sb = new StringBuilder();
+            int start = 0;
+            while (found != -1) {
+                sb.append(original, start, found);
+                sb.append(replace);
+                start = found + len;
+                found = original.indexOf(pattern, start);
             }
-            try {
-                if (this.initialized) {
-                    this.outputStream.close();
-                }
-            } catch (Exception var3) {
-                // ignore
-            }
-            this.outputStream = null;
-            this.closed = true;
-        }
-    }
-
-    private void checkClosed() throws IOException {
-        if (this.closed) {
-            throw new IOException("This instance of the CsvWriter class has already been closed.");
-        }
-    }
-
-    public static String replace(String var0, String var1, String var2) {
-        int var3 = var1.length();
-        int var4 = var0.indexOf(var1);
-        if (var4 <= -1) {
-            return var0;
+            sb.append(original.substring(start));
+            return sb.toString();
         } else {
-            StringBuffer var5 = new StringBuffer();
-            int var6;
-            for (var6 = 0; var4 != -1; var4 = var0.indexOf(var1, var6)) {
-                var5.append(var0.substring(var6, var4));
-                var5.append(var2);
-                var6 = var4 + var3;
-            }
-            var5.append(var0.substring(var6));
-            return var5.toString();
-        }
-    }
-
-    private static class UserSettings {
-        public char textQualifier = '"';
-        public boolean useTextQualifier = true;
-        public char delimiter = ',';
-        public char recordDelimiter = 0;
-        public char comment = '#';
-        public int escapeMode = 1;
-        public boolean forceQualifier = false;
-
-        private UserSettings() {
-        }
-    }
-
-    private static class Letters {
-        public static final char LF = '\n';
-        public static final char CR = '\r';
-        public static final char QUOTE = '"';
-        public static final char COMMA = ',';
-        public static final char SPACE = ' ';
-        public static final char TAB = '\t';
-        public static final char POUND = '#';
-        public static final char BACKSLASH = '\\';
-        public static final char NULL = '\u0000';
-
-        private Letters() {
+            return original;
         }
     }
 

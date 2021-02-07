@@ -6,7 +6,9 @@ import com.orion.excel.option.PrintOption;
 import com.orion.excel.option.PropertiesOption;
 import com.orion.excel.type.ExcelFieldType;
 import com.orion.excel.type.ExcelPaperType;
-import com.orion.excel.writer.BaseExcelSheetWriter;
+import com.orion.excel.writer.ExcelArrayWriter;
+import com.orion.excel.writer.ExcelBeanWriter;
+import com.orion.excel.writer.ExcelMapWriter;
 import com.orion.excel.writer.ExcelWriterBuilder;
 import com.orion.utils.Strings;
 import com.orion.utils.random.Randoms;
@@ -77,8 +79,8 @@ public class WriteTests {
 
     @Test
     public void arrayTests1() {
-        BaseExcelSheetWriter<Integer, Object[]> writer = build.createArrayWriter("array")
-                .option(0, 0, ExcelFieldType.NUMBER)
+        ExcelArrayWriter<Object> writer = build.createArrayWriter("array");
+        writer.option(0, 0, ExcelFieldType.NUMBER)
                 .option(1, 2)
                 .option(2, 1, ExcelFieldType.FORMULA)
                 .option(3, 3, ExcelFieldType.DATE_FORMAT, "yyyy-MM-dd HH:mm:ss")
@@ -103,7 +105,7 @@ public class WriteTests {
         font.setColor(Font.COLOR_RED);
         style.setFont(font);
         writer.style(0, style)
-                .addRows(array);
+                .addRows(this.array);
         PrintOption option = new PrintOption()
                 .setScale(50)
                 .setAutoLimit(true)
@@ -116,8 +118,8 @@ public class WriteTests {
 
     @Test
     public void mapTests1() {
-        BaseExcelSheetWriter<String, Map<String, Object>> writer = build.<String, Object>createMapWriter("map")
-                .option("id", 0, ExcelFieldType.NUMBER)
+        ExcelMapWriter<String, Object> writer = build.createMapWriter("map");
+        writer.option("id", 0, ExcelFieldType.NUMBER)
                 .option("formula", 1, ExcelFieldType.FORMULA)
                 .option("name", 2)
                 .option("date", 3, ExcelFieldType.DATE_FORMAT, "yyyy-MM-dd HH:mm:ss")
@@ -142,7 +144,7 @@ public class WriteTests {
         font.setColor(Font.COLOR_RED);
         style.setFont(font);
         writer.style(0, style)
-                .addRows(map);
+                .addRows(this.map);
         HeaderOption option = new HeaderOption()
                 .setLeft("left")
                 .setCenter("中心")
@@ -154,8 +156,8 @@ public class WriteTests {
 
     @Test
     public void beanTest1() {
-        BaseExcelSheetWriter<String, WriteUser> writer = build.createBeanWriter("bean", WriteUser.class)
-                .option("id", 0, ExcelFieldType.NUMBER)
+        ExcelBeanWriter<WriteUser> writer = build.createBeanWriter("bean", WriteUser.class);
+        writer.option("id", 0, ExcelFieldType.NUMBER)
                 .option("formula", 1, ExcelFieldType.FORMULA)
                 .option("name", 2)
                 .option("date", 3, ExcelFieldType.DATE_FORMAT, "yyyy-MM-dd HH:mm:ss")
@@ -181,7 +183,7 @@ public class WriteTests {
                 // 有样式
                 .headers("id", "公式", "名称", "时间", "金钱", "隐藏")
                 .skip()
-                .addRows(bean);
+                .addRows(this.bean);
         FooterOption option = new FooterOption()
                 .setLeft("left")
                 .setCenter("中心")

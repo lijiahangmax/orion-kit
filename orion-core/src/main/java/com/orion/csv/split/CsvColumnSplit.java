@@ -1,17 +1,11 @@
 package com.orion.csv.split;
 
 import com.orion.csv.CsvExt;
-import com.orion.csv.core.CsvSymbol;
 import com.orion.csv.core.CsvWriter;
-import com.orion.csv.importing.CsvStream;
+import com.orion.csv.reader.CsvStream;
 import com.orion.utils.Arrays1;
-import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
-import com.orion.utils.collect.Lists;
-import com.orion.utils.io.Files1;
-import com.orion.utils.io.Streams;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
@@ -59,11 +53,6 @@ public class CsvColumnSplit {
      * 流式读取缓冲区
      */
     private int bufferLine = 100;
-
-    /**
-     * symbol
-     */
-    private CsvSymbol symbol;
 
     /**
      * 输出流
@@ -141,75 +130,75 @@ public class CsvColumnSplit {
         return this;
     }
 
-    /**
-     * 设置数据写入的拆分文件
-     *
-     * @param file file
-     * @return this
-     */
-    public CsvColumnSplit dist(CsvSymbol s, String file) {
-        Valid.notNull(file, "write file is null");
-        Valid.notNull(s, "csvSymbol is null");
-        dist(s, new File(file));
-        return this;
-    }
-
-    /**
-     * 设置数据写入的拆分文件
-     *
-     * @param file file
-     * @return this
-     */
-    public CsvColumnSplit dist(CsvSymbol s, File file) {
-        Valid.notNull(file, "write file is null");
-        Valid.notNull(s, "csvSymbol is null");
-        Files1.touch(file);
-        this.out = Files1.openOutputStreamSafe(file);
-        this.symbol = s;
-        return this;
-    }
-
-    /**
-     * 设置数据写入的拆分文件流
-     *
-     * @param out 流
-     * @return this
-     */
-    public CsvColumnSplit dist(CsvSymbol s, OutputStream out) {
-        Valid.notNull(out, "write file is null");
-        Valid.notNull(s, "csvSymbol is null");
-        this.out = out;
-        this.symbol = s;
-        return this;
-    }
-
-    /**
-     * 执行拆分
-     *
-     * @return this
-     */
-    public CsvColumnSplit execute() {
-        Valid.notNull(out, "dist is null");
-        stream.skipLines(skip);
-        CsvWriter csvWriter = new CsvWriter(out, symbol.getSymbol(), symbol.getCharset());
-        try {
-            if (headers != null) {
-                csvWriter.writeRecord(headers);
-            }
-            if (streaming) {
-                List<String[]> lines;
-                while (!Lists.isEmpty(lines = stream.clean().readLines(bufferLine).lines())) {
-                    this.write(lines, csvWriter);
-                }
-            } else {
-                this.write(stream.readLines().lines(), csvWriter);
-            }
-            Streams.close(csvWriter);
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
-        }
-        return this;
-    }
+    // /**
+    //  * 设置数据写入的拆分文件
+    //  *
+    //  * @param file file
+    //  * @return this
+    //  */
+    // public CsvColumnSplit dist(CsvSymbol s, String file) {
+    //     Valid.notNull(file, "write file is null");
+    //     Valid.notNull(s, "csvSymbol is null");
+    //     dist(s, new File(file));
+    //     return this;
+    // }
+    //
+    // /**
+    //  * 设置数据写入的拆分文件
+    //  *
+    //  * @param file file
+    //  * @return this
+    //  */
+    // public CsvColumnSplit dist(CsvSymbol s, File file) {
+    //     Valid.notNull(file, "write file is null");
+    //     Valid.notNull(s, "csvSymbol is null");
+    //     Files1.touch(file);
+    //     this.out = Files1.openOutputStreamSafe(file);
+    //     this.symbol = s;
+    //     return this;
+    // }
+    //
+    // /**
+    //  * 设置数据写入的拆分文件流
+    //  *
+    //  * @param out 流
+    //  * @return this
+    //  */
+    // public CsvColumnSplit dist(CsvSymbol s, OutputStream out) {
+    //     Valid.notNull(out, "write file is null");
+    //     Valid.notNull(s, "csvSymbol is null");
+    //     this.out = out;
+    //     this.symbol = s;
+    //     return this;
+    // }
+    //
+    // /**
+    //  * 执行拆分
+    //  *
+    //  * @return this
+    //  */
+    // public CsvColumnSplit execute() {
+    //     Valid.notNull(out, "dist is null");
+    //     stream.skipLines(skip);
+    //     CsvWriter csvWriter = new CsvWriter(out, symbol.getSymbol(), symbol.getCharset());
+    //     try {
+    //         if (headers != null) {
+    //             csvWriter.writeLine(headers);
+    //         }
+    //         if (streaming) {
+    //             List<String[]> lines;
+    //             while (!Lists.isEmpty(lines = stream.clean().readLines(bufferLine).lines())) {
+    //                 this.write(lines, csvWriter);
+    //             }
+    //         } else {
+    //             this.write(stream.readLines().lines(), csvWriter);
+    //         }
+    //         Streams.close(csvWriter);
+    //     } catch (Exception e) {
+    //         throw Exceptions.ioRuntime(e);
+    //     }
+    //     return this;
+    // }
 
     /**
      * 写入数据到流
@@ -226,7 +215,7 @@ public class CsvColumnSplit {
                     c[i] = line[column];
                 }
             }
-            csvWriter.writeRecord(c);
+            csvWriter.writeLine(c);
         }
     }
 

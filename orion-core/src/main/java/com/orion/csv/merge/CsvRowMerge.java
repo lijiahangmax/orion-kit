@@ -1,15 +1,10 @@
 package com.orion.csv.merge;
 
-import com.orion.csv.core.CsvSymbol;
-import com.orion.csv.core.CsvWriter;
-import com.orion.csv.importing.CsvStream;
+import com.orion.csv.reader.CsvStream;
 import com.orion.utils.Arrays1;
-import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
-import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
 
-import java.io.File;
 import java.io.OutputStream;
 import java.util.List;
 
@@ -36,11 +31,6 @@ public class CsvRowMerge {
      * 合并csv跳过的行
      */
     private int[] skip;
-
-    /**
-     * symbol
-     */
-    private CsvSymbol symbol;
 
     /**
      * 输出流
@@ -73,68 +63,68 @@ public class CsvRowMerge {
         this.skip = skip;
         return this;
     }
-
-    /**
-     * 合并后输出的目标文件
-     *
-     * @param file 文件
-     * @return this
-     */
-    public CsvRowMerge dist(CsvSymbol s, String file) {
-        return dist(s, new File(file));
-    }
-
-    /**
-     * 合并后输出的目标文件
-     *
-     * @param file 文件
-     * @return this
-     */
-    public CsvRowMerge dist(CsvSymbol s, File file) {
-        Valid.notNull(s, "csvSymbol is null");
-        Files1.touch(file);
-        this.out = Files1.openOutputStreamSafe(file);
-        this.symbol = s;
-        return this;
-    }
-
-    /**
-     * 合并后输出的目标流
-     *
-     * @param out 流
-     * @return this
-     */
-    public CsvRowMerge dist(CsvSymbol s, OutputStream out) {
-        Valid.notNull(s, "csvSymbol is null");
-        this.out = out;
-        this.symbol = s;
-        return this;
-    }
-
-    /**
-     * 执行合并
-     *
-     * @return this
-     */
-    public CsvRowMerge execute() {
-        Valid.notNull(out, "dist is null");
-        CsvWriter csvWriter = new CsvWriter(out, symbol.getSymbol(), symbol.getCharset());
-        try {
-            if (!Arrays1.isEmpty(header)) {
-                csvWriter.writeRecord(header);
-            }
-            for (int i = 0; i < mergeStreams.size(); i++) {
-                CsvStream csvStream = mergeStreams.get(i).skipLines(this.getSkip(i));
-                for (String[] line : csvStream.readLines().lines()) {
-                    csvWriter.writeRecord(line);
-                }
-            }
-            Streams.close(csvWriter);
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
-        }
-        return this;
-    }
+    //
+    // /**
+    //  * 合并后输出的目标文件
+    //  *
+    //  * @param file 文件
+    //  * @return this
+    //  */
+    // public CsvRowMerge dist(CsvSymbol s, String file) {
+    //     return dist(s, new File(file));
+    // }
+    //
+    // /**
+    //  * 合并后输出的目标文件
+    //  *
+    //  * @param file 文件
+    //  * @return this
+    //  */
+    // public CsvRowMerge dist(CsvSymbol s, File file) {
+    //     Valid.notNull(s, "csvSymbol is null");
+    //     Files1.touch(file);
+    //     this.out = Files1.openOutputStreamSafe(file);
+    //     this.symbol = s;
+    //     return this;
+    // }
+    //
+    // /**
+    //  * 合并后输出的目标流
+    //  *
+    //  * @param out 流
+    //  * @return this
+    //  */
+    // public CsvRowMerge dist(CsvSymbol s, OutputStream out) {
+    //     Valid.notNull(s, "csvSymbol is null");
+    //     this.out = out;
+    //     this.symbol = s;
+    //     return this;
+    // }
+    //
+    // /**
+    //  * 执行合并
+    //  *
+    //  * @return this
+    //  */
+    // public CsvRowMerge execute() {
+    //     Valid.notNull(out, "dist is null");
+    //     CsvWriter csvWriter = new CsvWriter(out, symbol.getSymbol(), symbol.getCharset());
+    //     try {
+    //         if (!Arrays1.isEmpty(header)) {
+    //             csvWriter.writeLine(header);
+    //         }
+    //         for (int i = 0; i < mergeStreams.size(); i++) {
+    //             CsvStream csvStream = mergeStreams.get(i).skipLines(this.getSkip(i));
+    //             for (String[] line : csvStream.readLines().lines()) {
+    //                 csvWriter.writeLine(line);
+    //             }
+    //         }
+    //         Streams.close(csvWriter);
+    //     } catch (Exception e) {
+    //         throw Exceptions.ioRuntime(e);
+    //     }
+    //     return this;
+    // }
 
     /**
      * 获取csv需要跳过的行

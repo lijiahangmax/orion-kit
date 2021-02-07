@@ -28,7 +28,7 @@ import java.util.function.Consumer;
  * @version 1.0.0
  * @since 2021/1/6 17:10
  */
-public class ExcelImport<T> extends BaseExcelReader<T> {
+public class ExcelBeanReader<T> extends BaseExcelReader<T> {
 
     private Class<T> targetClass;
 
@@ -40,7 +40,7 @@ public class ExcelImport<T> extends BaseExcelReader<T> {
     private boolean nullInvoke;
 
     /**
-     * 如果行为null是否添加实例对象
+     * 如果行为null是否添加一个新的实例对象
      */
     private boolean nullAddEmptyBean;
 
@@ -61,19 +61,19 @@ public class ExcelImport<T> extends BaseExcelReader<T> {
      */
     private ReaderColumnAnalysis analysis;
 
-    public ExcelImport(Workbook workbook, Sheet sheet, Class<T> targetClass) {
+    public ExcelBeanReader(Workbook workbook, Sheet sheet, Class<T> targetClass) {
         this(workbook, sheet, targetClass, new ArrayList<>(), null);
     }
 
-    public ExcelImport(Workbook workbook, Sheet sheet, Class<T> targetClass, List<T> store) {
+    public ExcelBeanReader(Workbook workbook, Sheet sheet, Class<T> targetClass, List<T> store) {
         this(workbook, sheet, targetClass, store, null);
     }
 
-    public ExcelImport(Workbook workbook, Sheet sheet, Class<T> targetClass, Consumer<T> consumer) {
+    public ExcelBeanReader(Workbook workbook, Sheet sheet, Class<T> targetClass, Consumer<T> consumer) {
         this(workbook, sheet, targetClass, null, consumer);
     }
 
-    protected ExcelImport(Workbook workbook, Sheet sheet, Class<T> targetClass, List<T> rows, Consumer<T> consumer) {
+    protected ExcelBeanReader(Workbook workbook, Sheet sheet, Class<T> targetClass, List<T> rows, Consumer<T> consumer) {
         super(workbook, sheet, rows, consumer);
         Valid.notNull(targetClass, "target class is null");
         this.targetClass = targetClass;
@@ -91,7 +91,7 @@ public class ExcelImport<T> extends BaseExcelReader<T> {
      *
      * @return this
      */
-    public ExcelImport<T> nullInvoke() {
+    public ExcelBeanReader<T> nullInvoke() {
         this.nullInvoke = true;
         return this;
     }
@@ -101,7 +101,7 @@ public class ExcelImport<T> extends BaseExcelReader<T> {
      *
      * @return this
      */
-    public ExcelImport<T> nullAddEmptyBean() {
+    public ExcelBeanReader<T> nullAddEmptyBean() {
         this.nullAddEmptyBean = true;
         return this;
     }
@@ -113,7 +113,7 @@ public class ExcelImport<T> extends BaseExcelReader<T> {
      * @param option 配置
      * @return this
      */
-    public ExcelImport<T> option(String field, ImportFieldOption option) {
+    public ExcelBeanReader<T> option(String field, ImportFieldOption option) {
         this.addOption(field, option);
         return this;
     }
@@ -126,7 +126,7 @@ public class ExcelImport<T> extends BaseExcelReader<T> {
      * @param type   类型
      * @return this
      */
-    public ExcelImport<T> option(String field, int column, ExcelReadType type) {
+    public ExcelBeanReader<T> option(String field, int column, ExcelReadType type) {
         this.addOption(field, new ImportFieldOption(column, type));
         return this;
     }
@@ -144,7 +144,7 @@ public class ExcelImport<T> extends BaseExcelReader<T> {
     }
 
     @Override
-    public ExcelImport<T> init() {
+    public ExcelBeanReader<T> init() {
         boolean havePicture = options.values().stream()
                 .map(ImportFieldOption::getType)
                 .anyMatch(ExcelReadType.PICTURE::equals);
