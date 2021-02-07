@@ -17,13 +17,13 @@ import java.util.*;
 import java.util.function.Consumer;
 
 /**
- * Excel 类型读取器
+ * Excel Map 读取器
  *
  * @author ljh15
  * @version 1.0.0
  * @since 2021/1/5 11:52
  */
-public class ExcelMapReader<K> extends BaseExcelReader<MutableMap<K, Object>> {
+public class ExcelMapReader<K, V> extends BaseExcelReader<MutableMap<K, V>> {
 
     /**
      * 配置信息
@@ -37,7 +37,7 @@ public class ExcelMapReader<K> extends BaseExcelReader<MutableMap<K, Object>> {
      * key: 列
      * value: 默认值
      */
-    private Map<K, Object> defaultValue = new HashMap<>();
+    private Map<K, V> defaultValue = new HashMap<>();
 
     /**
      * 图片解析器
@@ -58,11 +58,11 @@ public class ExcelMapReader<K> extends BaseExcelReader<MutableMap<K, Object>> {
         super(workbook, sheet, new ArrayList<>(), null);
     }
 
-    public ExcelMapReader(Workbook workbook, Sheet sheet, List<MutableMap<K, Object>> rows) {
+    public ExcelMapReader(Workbook workbook, Sheet sheet, List<MutableMap<K, V>> rows) {
         super(workbook, sheet, rows, null);
     }
 
-    public ExcelMapReader(Workbook workbook, Sheet sheet, Consumer<MutableMap<K, Object>> consumer) {
+    public ExcelMapReader(Workbook workbook, Sheet sheet, Consumer<MutableMap<K, V>> consumer) {
         super(workbook, sheet, null, consumer);
     }
 
@@ -73,7 +73,7 @@ public class ExcelMapReader<K> extends BaseExcelReader<MutableMap<K, Object>> {
      * @param option 配置
      * @return this
      */
-    public ExcelMapReader<K> option(K key, ImportFieldOption option) {
+    public ExcelMapReader<K, V> option(K key, ImportFieldOption option) {
         this.addOption(key, option);
         return this;
     }
@@ -86,7 +86,7 @@ public class ExcelMapReader<K> extends BaseExcelReader<MutableMap<K, Object>> {
      * @param type   类型
      * @return this
      */
-    public ExcelMapReader<K> option(K key, int column, ExcelReadType type) {
+    public ExcelMapReader<K, V> option(K key, int column, ExcelReadType type) {
         this.addOption(key, new ImportFieldOption(column, type));
         return this;
     }
@@ -120,7 +120,7 @@ public class ExcelMapReader<K> extends BaseExcelReader<MutableMap<K, Object>> {
      *
      * @return this
      */
-    public ExcelMapReader<K> linked() {
+    public ExcelMapReader<K, V> linked() {
         this.linked = true;
         this.options = new LinkedHashMap<>(this.options);
         return this;
@@ -132,7 +132,7 @@ public class ExcelMapReader<K> extends BaseExcelReader<MutableMap<K, Object>> {
      * @param nullPutKey ignore
      * @return this
      */
-    public ExcelMapReader<K> nullPutKey(boolean nullPutKey) {
+    public ExcelMapReader<K, V> nullPutKey(boolean nullPutKey) {
         this.nullPutKey = nullPutKey;
         return this;
     }
@@ -144,13 +144,13 @@ public class ExcelMapReader<K> extends BaseExcelReader<MutableMap<K, Object>> {
      * @param defaultValue 默认值
      * @return this
      */
-    public ExcelMapReader<K> defaultValue(K key, Object defaultValue) {
+    public ExcelMapReader<K, V> defaultValue(K key, V defaultValue) {
         this.defaultValue.put(key, defaultValue);
         return this;
     }
 
     @Override
-    public ExcelMapReader<K> init() {
+    public ExcelMapReader<K, V> init() {
         boolean havePicture = options.values().stream()
                 .map(ImportFieldOption::getType)
                 .anyMatch(ExcelReadType.PICTURE::equals);
@@ -162,11 +162,12 @@ public class ExcelMapReader<K> extends BaseExcelReader<MutableMap<K, Object>> {
     }
 
     @Override
-    protected MutableMap<K, Object> parserRow(Row row) {
+    @SuppressWarnings("unchecked")
+    protected MutableMap<K, V> parserRow(Row row) {
         if (row == null) {
             return null;
         }
-        MutableMap<K, Object> map;
+        MutableMap<K, V> map;
         if (linked) {
             map = new MutableLinkedHashMap<>();
         } else {
@@ -185,7 +186,7 @@ public class ExcelMapReader<K> extends BaseExcelReader<MutableMap<K, Object>> {
                 }
             }
             if (value == null) {
-                Object defaultValue = this.defaultValue.get(key);
+                V defaultValue = this.defaultValue.get(key);
                 if (defaultValue == null) {
                     if (nullPutKey) {
                         map.put(key, null);
@@ -197,7 +198,7 @@ public class ExcelMapReader<K> extends BaseExcelReader<MutableMap<K, Object>> {
                 if (trim && value instanceof String) {
                     value = ((String) value).trim();
                 }
-                map.put(key, value);
+                map.put(key, (V) value);
             }
         });
         return map;

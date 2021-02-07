@@ -118,13 +118,13 @@ public class CsvWriter implements SafeCloseable {
     }
 
     /**
-     * 写入列 不保留空格
+     * 写入列
      *
      * @param content 行
      * @throws IOException IOException
      */
     public void write(String content) throws IOException {
-        write(content, false);
+        write(content, !option.isTrim());
     }
 
     /**
@@ -222,13 +222,13 @@ public class CsvWriter implements SafeCloseable {
     }
 
     /**
-     * 写入行 不保留空格
+     * 写入行
      *
      * @param values 行
      * @throws IOException IOException
      */
     public void writeLine(String[] values) throws IOException {
-        this.writeLine(values, false);
+        this.writeLine(values, !option.isTrim());
     }
 
     /**

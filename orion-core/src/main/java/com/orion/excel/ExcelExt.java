@@ -136,19 +136,19 @@ public class ExcelExt implements SafeCloseable {
 
     // -------------------- map reader --------------------
 
-    public <K> ExcelMapReader<K> mapReader() {
+    public <K, V> ExcelMapReader<K, V> mapReader() {
         return new ExcelMapReader<>(workbook, workbook.getSheetAt(0));
     }
 
-    public <K> ExcelMapReader<K> mapReader(int sheetIndex) {
+    public <K, V> ExcelMapReader<K, V> mapReader(int sheetIndex) {
         return new ExcelMapReader<>(workbook, workbook.getSheetAt(sheetIndex));
     }
 
-    public <K> ExcelMapReader<K> mapReader(List<MutableMap<K, Object>> rows) {
+    public <K, V> ExcelMapReader<K, V> mapReader(List<MutableMap<K, V>> rows) {
         return new ExcelMapReader<>(workbook, workbook.getSheetAt(0), rows);
     }
 
-    public <K> ExcelMapReader<K> mapReader(int sheetIndex, List<MutableMap<K, Object>> rows) {
+    public <K, V> ExcelMapReader<K, V> mapReader(int sheetIndex, List<MutableMap<K, V>> rows) {
         return new ExcelMapReader<>(workbook, workbook.getSheetAt(sheetIndex), rows);
     }
 
@@ -157,9 +157,10 @@ public class ExcelExt implements SafeCloseable {
      *
      * @param consumer consumer
      * @param <K>      K
+     * @param <V>      V
      * @return ExcelMapReader
      */
-    public <K> ExcelMapReader<K> mapReader(Consumer<MutableMap<K, Object>> consumer) {
+    public <K, V> ExcelMapReader<K, V> mapReader(Consumer<MutableMap<K, V>> consumer) {
         return new ExcelMapReader<>(workbook, workbook.getSheetAt(0), consumer);
     }
 
@@ -169,9 +170,10 @@ public class ExcelExt implements SafeCloseable {
      * @param sheetIndex 表格索引
      * @param consumer   consumer
      * @param <K>        K
+     * @param <V>        V
      * @return ExcelMapReader
      */
-    public <K> ExcelMapReader<K> mapReader(int sheetIndex, Consumer<MutableMap<K, Object>> consumer) {
+    public <K, V> ExcelMapReader<K, V> mapReader(int sheetIndex, Consumer<MutableMap<K, V>> consumer) {
         return new ExcelMapReader<>(workbook, workbook.getSheetAt(sheetIndex), consumer);
     }
 

@@ -1,6 +1,5 @@
 package com.orion.csv.writer;
 
-import com.alibaba.fastjson.JSON;
 import com.orion.able.SafeCloseable;
 import com.orion.csv.core.CsvWriter;
 import com.orion.csv.option.CsvWriterOption;
@@ -28,11 +27,6 @@ public abstract class BaseCsvWriter<K, V> implements SafeCloseable {
     protected CsvWriter writer;
 
     /**
-     * 是否去除首尾空格
-     */
-    protected boolean trim;
-
-    /**
      * 是否跳过空行
      */
     protected boolean skipNullRows = true;
@@ -47,6 +41,9 @@ public abstract class BaseCsvWriter<K, V> implements SafeCloseable {
      */
     protected int capacity = -1;
 
+    /**
+     * 映射最大列索引
+     */
     protected int maxColumnIndex;
 
     /**
@@ -85,16 +82,6 @@ public abstract class BaseCsvWriter<K, V> implements SafeCloseable {
         for (int j = 0; j < i; j++) {
             skip();
         }
-        return this;
-    }
-
-    /**
-     * 去除空格
-     *
-     * @return this
-     */
-    public BaseCsvWriter<K, V> trim() {
-        this.trim = true;
         return this;
     }
 
@@ -171,7 +158,7 @@ public abstract class BaseCsvWriter<K, V> implements SafeCloseable {
             }
         }
         try {
-            writer.writeLine(headers, !trim);
+            writer.writeLine(headers);
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         }
@@ -196,7 +183,6 @@ public abstract class BaseCsvWriter<K, V> implements SafeCloseable {
      * @return this
      */
     public BaseCsvWriter<K, V> addRow(V row) {
-        System.out.println(JSON.toJSONString(row));
         if (row == null) {
             if (skipNullRows) {
                 return this;
@@ -213,7 +199,7 @@ public abstract class BaseCsvWriter<K, V> implements SafeCloseable {
             }
         }
         try {
-            writer.writeLine(parseRow, !trim);
+            writer.writeLine(parseRow);
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         }

@@ -64,6 +64,15 @@ public abstract class BaseCsvReader<T> implements SafeCloseable {
     }
 
     /**
+     * Csv 迭代器 不会存储也不会消费
+     *
+     * @return 迭代器
+     */
+    public CsvReaderIterator<T> iterator() {
+        return new CsvReaderIterator<>(this);
+    }
+
+    /**
      * 跳过一行
      *
      * @return this

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * Excel 文本读取器
+ * Excel Array 读取器
  *
  * @author ljh15
  * @version 1.0.0

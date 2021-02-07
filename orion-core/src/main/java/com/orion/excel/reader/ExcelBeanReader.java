@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 /**
- * Excel 对象读取器
+ * Excel Bean 读取器
  *
  * @author ljh15
  * @version 1.0.0

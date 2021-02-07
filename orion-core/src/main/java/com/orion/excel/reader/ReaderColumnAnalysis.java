@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Import 列 解析器
+ * Excel 读取 列解析器
  *
  * @author ljh15
  * @version 1.0.0

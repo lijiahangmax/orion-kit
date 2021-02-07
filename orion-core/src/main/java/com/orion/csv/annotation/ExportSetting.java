@@ -60,4 +60,9 @@ public @interface ExportSetting {
      */
     boolean forceQualifier() default false;
 
+    /**
+     * 是否去除首尾空格
+     */
+    boolean trim() default true;
+
 }

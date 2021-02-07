@@ -28,7 +28,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Csv Bean导出器
+ * Csv Bean 导出器
  *
  * @author ljh15
  * @version 1.0.0
@@ -36,14 +36,24 @@ import java.util.stream.Collectors;
  */
 public class CsvBeanWriter<T> extends BaseCsvWriter<String, T> {
 
-    private int maxColumnIndex;
-
+    /**
+     * targetClass
+     */
     private Class<T> targetClass;
 
+    /**
+     * 是否需要添加注解表头
+     */
     private boolean addHeader;
 
+    /**
+     * all getter
+     */
     private Map<String, Method> getters;
 
+    /**
+     * 注解表头
+     */
     private Map<Integer, String> headers = new TreeMap<>();
 
     public CsvBeanWriter(String file, Class<T> targetClass) {
@@ -123,7 +133,8 @@ public class CsvBeanWriter<T> extends BaseCsvWriter<String, T> {
                 .setComment(setting.comment())
                 .setEscapeMode(setting.escapeMode())
                 .setUseTextQualifier(setting.useTextQualifier())
-                .setCharset(Charset.forName(setting.charset()));
+                .setCharset(Charset.forName(setting.charset()))
+                .setTrim(setting.trim());
         return option;
     }
 

@@ -43,12 +43,7 @@ public class CsvBeanReader<T> extends BaseCsvReader<T> {
     private boolean nullInvoke;
 
     /**
-     * 如果行为null是否添加一个新的实例对象
-     */
-    private boolean nullAddEmptyBean;
-
-    /**
-     * setter
+     * all setter
      */
     private Map<String, Method> setters;
 
@@ -89,16 +84,6 @@ public class CsvBeanReader<T> extends BaseCsvReader<T> {
     }
 
     /**
-     * 如果行为null是否添加实例对象
-     *
-     * @return this
-     */
-    public CsvBeanReader<T> nullAddEmptyBean() {
-        this.nullAddEmptyBean = true;
-        return this;
-    }
-
-    /**
      * 映射
      *
      * @param field  field
@@ -120,12 +105,6 @@ public class CsvBeanReader<T> extends BaseCsvReader<T> {
 
     @Override
     protected T parserRow(String[] row) {
-        if (row == null) {
-            if (nullAddEmptyBean) {
-                return Constructors.newInstance(constructor);
-            }
-            return null;
-        }
         T t = Constructors.newInstance(constructor);
         mapping.forEach((k, v) -> {
             Method setter = setters.get(v);
@@ -163,7 +142,6 @@ public class CsvBeanReader<T> extends BaseCsvReader<T> {
         }
         CsvReaderOption option = new CsvReaderOption()
                 .setCaseSensitive(setting.caseSensitive())
-                .setTrim(setting.trim())
                 .setUseComments(setting.useComments())
                 .setSafetySwitch(setting.safetySwitch())
                 .setSkipEmptyRows(setting.skipEmptyRows())
@@ -175,7 +153,8 @@ public class CsvBeanReader<T> extends BaseCsvReader<T> {
                 .setComment(setting.comment())
                 .setEscapeMode(setting.escapeMode())
                 .setUseTextQualifier(setting.useTextQualifier())
-                .setCharset(Charset.forName(setting.charset()));
+                .setCharset(Charset.forName(setting.charset()))
+                .setTrim(setting.trim());
         return option;
     }
 

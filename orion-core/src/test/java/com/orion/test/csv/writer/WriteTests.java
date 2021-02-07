@@ -54,11 +54,13 @@ public class WriteTests {
     @Test
     public void arrayTests() {
         CsvWriter writer = new CsvWriter("C:\\Users\\ljh15\\Desktop\\csv\\array.csv");
+        writer.getOption().setTrim(true);
         new CsvArrayWriter(writer)
-                .capacity(7)
+                .capacity(8)
                 .mapping(5, new Integer(0))
                 .mapping(6, new Integer(1))
-                .trim()
+                .mapping(7, new Integer(10))
+                .defaultValue(10, "def")
                 .addComment("comment")
                 .skip()
                 .addRow(null)
@@ -70,6 +72,7 @@ public class WriteTests {
     @Test
     public void mapTests() {
         CsvWriter writer = new CsvWriter("C:\\Users\\ljh15\\Desktop\\csv\\map.csv");
+        writer.getOption().setTrim(true);
         new CsvMapWriter<String, Object>(writer)
                 .capacity(6)
                 .mapping(0, "num")
@@ -79,7 +82,6 @@ public class WriteTests {
                 .mapping(4, "id")
                 .mapping(5, "desc")
                 .defaultValue("desc", "def")
-                .trim()
                 .skip()
                 .headers("a", "b", "c", "d", "e")
                 .skip()
@@ -90,9 +92,9 @@ public class WriteTests {
 
     @Test
     public void beanTests() {
-        new CsvBeanWriter<>("C:\\Users\\ljh15\\Desktop\\csv\\bean.csv", ExportUser.class)
-                .defaultValue("desc", "def")
-                .trim()
+        CsvBeanWriter<ExportUser> writer = new CsvBeanWriter<>("C:\\Users\\ljh15\\Desktop\\csv\\bean.csv", ExportUser.class);
+        writer.getOption().setTrim(true);
+        writer.defaultValue("desc", "def")
                 .skip()
                 .headers("a", "b", "c", "d", "e")
                 .skip()

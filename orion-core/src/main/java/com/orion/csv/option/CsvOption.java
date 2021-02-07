@@ -108,6 +108,11 @@ public class CsvOption implements Serializable {
      */
     protected Charset charset;
 
+    /**
+     * 是否去除首尾空格
+     */
+    protected boolean trim;
+
     public CsvOption() {
         textQualifier = Letters.QUOTE;
         useTextQualifier = true;
@@ -116,6 +121,7 @@ public class CsvOption implements Serializable {
         comment = Letters.POUND;
         escapeMode = ESCAPE_MODE_DOUBLED;
         charset = StandardCharsets.UTF_8;
+        trim = true;
     }
 
     public char getTextQualifier() {
@@ -189,6 +195,15 @@ public class CsvOption implements Serializable {
 
     public boolean isUseCustomLineDelimiter() {
         return useCustomLineDelimiter;
+    }
+
+    public boolean isTrim() {
+        return trim;
+    }
+
+    public CsvOption setTrim(boolean trim) {
+        this.trim = trim;
+        return this;
     }
 
 }

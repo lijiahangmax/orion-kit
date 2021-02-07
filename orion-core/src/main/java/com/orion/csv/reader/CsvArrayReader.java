@@ -33,11 +33,6 @@ public class CsvArrayReader extends BaseCsvReader<String[]> {
      */
     private String columnEmpty;
 
-    /**
-     * 空行
-     */
-    private String[] emptyArray;
-
     public CsvArrayReader(CsvReader reader) {
         this(reader, new ArrayList<>(), null);
     }
@@ -77,38 +72,6 @@ public class CsvArrayReader extends BaseCsvReader<String[]> {
     }
 
     /**
-     * 空行返回 长度为0的空数组
-     *
-     * @return this
-     */
-    public CsvArrayReader rowOfNullToEmpty() {
-        this.emptyArray = new String[0];
-        return this;
-    }
-
-    /**
-     * 空行返回 长度为length的空数组
-     *
-     * @param length 长度
-     * @return this
-     */
-    public CsvArrayReader rowOfNullToEmpty(int length) {
-        this.emptyArray = new String[length];
-        return this;
-    }
-
-    /**
-     * 空行返回 emptyArray
-     *
-     * @param emptyArray 数组
-     * @return this
-     */
-    public CsvArrayReader rowOfNullToEmpty(String[] emptyArray) {
-        this.emptyArray = emptyArray;
-        return this;
-    }
-
-    /**
      * 设置读取的列
      *
      * @param columns 列
@@ -136,9 +99,6 @@ public class CsvArrayReader extends BaseCsvReader<String[]> {
 
     @Override
     protected String[] parserRow(String[] row) {
-        if (row == null) {
-            return emptyArray;
-        }
         if (Arrays1.isEmpty(columns) && (columnSize == 0 || row.length == columnSize)) {
             return row;
         }

@@ -15,8 +15,6 @@ import java.util.function.Consumer;
 
 /**
  * Excel 读取器 基类
- * <p>
- * 使用迭代器不会存储也不会消费
  *
  * @author ljh15
  * @version 1.0.0
@@ -107,7 +105,7 @@ public abstract class BaseExcelReader<T> implements SafeCloseable {
     }
 
     /**
-     * Excel 迭代器
+     * Excel 迭代器 不会存储也不会消费
      *
      * @return 迭代器
      */

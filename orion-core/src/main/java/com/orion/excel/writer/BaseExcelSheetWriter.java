@@ -15,7 +15,9 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import java.util.*;
 
 /**
- * Excel sheet封装 不支持复杂类型 (图片 超链接 注释)
+ * Excel sheet写入器 基类
+ * <p>
+ * 不支持复杂类型 (图片 超链接 注释)
  *
  * @author ljh15
  * @version 1.0.0

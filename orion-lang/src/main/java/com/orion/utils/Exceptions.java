@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * 异常工具类
@@ -493,6 +494,14 @@ public class Exceptions {
 
     public static SignInvalidException sign(String s, Throwable t) {
         return new SignInvalidException(s, t);
+    }
+
+    public static NoSuchElementException noSuchElement() {
+        return new NoSuchElementException();
+    }
+
+    public static NoSuchElementException noSuchElement(String s) {
+        return new NoSuchElementException(s);
     }
 
     public static Error error() {

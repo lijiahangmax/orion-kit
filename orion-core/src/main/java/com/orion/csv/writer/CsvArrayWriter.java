@@ -1,7 +1,6 @@
 package com.orion.csv.writer;
 
 import com.orion.csv.core.CsvWriter;
-import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 
 import java.io.File;
@@ -9,7 +8,7 @@ import java.io.OutputStream;
 import java.io.Writer;
 
 /**
- * Csv 数组导出器
+ * Csv Array 导出器
  *
  * @author ljh15
  * @version 1.0.0
@@ -49,16 +48,13 @@ public class CsvArrayWriter extends BaseCsvWriter<Integer, String[]> {
         store = new String[length];
         for (int i = 0; i < length; i++) {
             Integer index = mapping.getOrDefault(i, i);
-            if (index >= length) {
-                throw Exceptions.index("array length: " + len + " mapping index: " + index);
-            }
-            if (index >= len) {
-                store[i] = defaultValue.getOrDefault(i, Strings.EMPTY);
+            if (index >= length || index >= len) {
+                store[i] = defaultValue.getOrDefault(index, Strings.EMPTY);
                 continue;
             }
             String s = row[index];
             if (s == null) {
-                store[i] = defaultValue.getOrDefault(i, Strings.EMPTY);
+                store[i] = defaultValue.getOrDefault(index, Strings.EMPTY);
             } else {
                 store[i] = s;
             }

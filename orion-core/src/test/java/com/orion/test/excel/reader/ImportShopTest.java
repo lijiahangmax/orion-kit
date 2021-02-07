@@ -102,7 +102,7 @@ public class ImportShopTest {
 
     @Test
     public void testMap1() {
-        new ExcelMapReader<String>(workbook, sheet, Console::trace)
+        new ExcelMapReader<String, Object>(workbook, sheet, Console::trace)
                 .linked()
                 .option("shopId", 0, ExcelReadType.TEXT)
                 .option("shopName", 1, ExcelReadType.TEXT)
@@ -128,7 +128,7 @@ public class ImportShopTest {
 
     @Test
     public void testMap2() {
-        ExcelReaderIterator<MutableMap<String, Object>> iterator = new ExcelMapReader<String>(workbook, sheet, Console::trace)
+        ExcelReaderIterator<MutableMap<String, Object>> iterator = new ExcelMapReader<String, Object>(workbook, sheet, Console::trace)
                 .linked()
                 .option("shopId", 0, ExcelReadType.TEXT)
                 .option("shopName", 1, ExcelReadType.TEXT)

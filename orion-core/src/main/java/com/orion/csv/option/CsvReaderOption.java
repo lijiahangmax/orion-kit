@@ -18,11 +18,6 @@ public class CsvReaderOption extends CsvOption implements Serializable {
     private boolean caseSensitive;
 
     /**
-     * 是否去除首尾空格
-     */
-    private boolean trim;
-
-    /**
      * 是否读取注释
      */
     private boolean useComments;
@@ -44,7 +39,6 @@ public class CsvReaderOption extends CsvOption implements Serializable {
 
     public CsvReaderOption() {
         caseSensitive = true;
-        trim = true;
         useComments = false;
         safetySwitch = true;
         skipEmptyRows = true;
@@ -68,15 +62,6 @@ public class CsvReaderOption extends CsvOption implements Serializable {
 
     public CsvReaderOption setCaseSensitive(boolean caseSensitive) {
         this.caseSensitive = caseSensitive;
-        return this;
-    }
-
-    public boolean isTrim() {
-        return trim;
-    }
-
-    public CsvReaderOption setTrim(boolean trim) {
-        this.trim = trim;
         return this;
     }
 
