@@ -1,5 +1,6 @@
 package com.orion.tail;
 
+import com.orion.constant.Const;
 import com.orion.tail.handler.LineHandler;
 import com.orion.tail.mode.FileMinusMode;
 import com.orion.tail.mode.FileNotFoundMode;
@@ -86,8 +87,8 @@ public class DelayTracker extends Tracker {
         Valid.notNull(handler, "LineHandler is null");
         this.tailFile = tailFile;
         this.handler = handler;
-        this.delayMillis = 1000;
-        this.charset = "UTF-8";
+        this.delayMillis = Const.MS_S_1;
+        this.charset = Const.UTF_8;
     }
 
     @Override

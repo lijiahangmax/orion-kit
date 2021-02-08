@@ -1,5 +1,7 @@
 package com.orion.utils.time.format;
 
+import com.orion.constant.Const;
+
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -8,7 +10,7 @@ import java.util.TimeZone;
  */
 class GmtTimeZone extends TimeZone {
 
-    private static final int MILLISECONDS_PER_MINUTE = 60 * 1000;
+    private static final int MILLISECONDS_PER_MINUTE = Const.MS_S_60;
     private static final int MINUTES_PER_HOUR = 60;
     private static final int HOURS_PER_DAY = 24;
 

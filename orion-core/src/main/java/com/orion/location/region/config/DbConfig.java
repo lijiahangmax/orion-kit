@@ -1,5 +1,7 @@
 package com.orion.location.region.config;
 
+import com.orion.constant.Const;
+
 import java.io.Serializable;
 
 /**
@@ -20,15 +22,14 @@ public class DbConfig implements Serializable {
 
     public DbConfig(int totalHeaderSize) {
         if ((totalHeaderSize % 8) != 0) {
-            totalHeaderSize = 8 * 2048;
+            totalHeaderSize = Const.BUFFER_KB_16;
         }
         this.totalHeaderSize = totalHeaderSize;
-        // 4 * 2048
-        this.indexBlockSize = 8192;
+        this.indexBlockSize = Const.BUFFER_KB_8;
     }
 
     public DbConfig() {
-        this(8 * 2048);
+        this(Const.BUFFER_KB_16);
     }
 
     public int getTotalHeaderSize() {

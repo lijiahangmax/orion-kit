@@ -1,5 +1,6 @@
 package com.orion.utils;
 
+import com.orion.constant.Const;
 import com.orion.lang.Null;
 import com.orion.utils.collect.Lists;
 import com.orion.utils.collect.Maps;
@@ -274,7 +275,7 @@ public class Objects1 {
         if (o == null) {
             return null;
         }
-        try (ByteArrayOutputStream bs = new ByteArrayOutputStream(1024);
+        try (ByteArrayOutputStream bs = new ByteArrayOutputStream(Const.BUFFER_KB_1);
              ObjectOutputStream oos = new ObjectOutputStream(bs)) {
             oos.writeObject(o);
             oos.flush();

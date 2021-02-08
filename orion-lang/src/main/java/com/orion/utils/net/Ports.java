@@ -1,5 +1,6 @@
 package com.orion.utils.net;
 
+import com.orion.constant.Const;
 import com.orion.utils.Valid;
 import com.orion.utils.io.Streams;
 
@@ -25,7 +26,7 @@ public class Ports {
     /**
      * 默认建立连接超时时间
      */
-    private static int timeout = 1000;
+    private static int timeout = Const.MS_S_3;
 
     /**
      * 获取一个空闲的本地端口

@@ -374,7 +374,6 @@ public class FastDatePrinter implements DatePrinter, Serializable {
         // see LANG-1248
         if (value < 10000) {
             // less memory allocation path works for four digits or less
-
             int nDigits = 4;
             if (value < 1000) {
                 --nDigits;

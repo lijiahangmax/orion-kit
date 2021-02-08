@@ -1,7 +1,7 @@
 package com.orion.csv.option;
 
+import com.orion.constant.Letters;
 import com.orion.csv.type.CsvEscapeMode;
-import com.orion.utils.constant.Letters;
 
 import java.io.Serializable;
 import java.nio.charset.Charset;
@@ -32,16 +32,6 @@ public class CsvOption implements Serializable {
      * 反斜杠转义
      */
     public static final int ESCAPE_MODE_BACKSLASH = CsvEscapeMode.BACKSLASH.getMode();
-
-    /**
-     * 缓冲区大小
-     */
-    public static final int MAX_BUFFER_SIZE = 1024;
-
-    /**
-     * 文件缓冲区大小
-     */
-    public static final int MAX_FILE_BUFFER_SIZE = 4 * 1024;
 
     /**
      * 初始化列数

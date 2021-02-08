@@ -1,5 +1,6 @@
 package com.orion.utils.io;
 
+import com.orion.constant.Const;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
 import com.orion.utils.crypto.AES;
@@ -21,8 +22,6 @@ import java.util.concurrent.Callable;
  */
 public class FileEncrypt implements Callable<Boolean> {
 
-    private static final int DEFAULT_BUFFER_SIZE = 8 * 1024;
-
     private InputStream in;
 
     private OutputStream out;
@@ -34,15 +33,15 @@ public class FileEncrypt implements Callable<Boolean> {
     private boolean autoClose = true;
 
     public FileEncrypt(File file, File dest, String password) {
-        this(file, dest, password, DEFAULT_BUFFER_SIZE);
+        this(file, dest, password, Const.BUFFER_KB_8);
     }
 
     public FileEncrypt(String file, String dest, String password) {
-        this(file, dest, password, DEFAULT_BUFFER_SIZE);
+        this(file, dest, password, Const.BUFFER_KB_8);
     }
 
     public FileEncrypt(InputStream in, OutputStream out, String password) {
-        this(in, out, password, DEFAULT_BUFFER_SIZE);
+        this(in, out, password, Const.BUFFER_KB_8);
     }
 
     public FileEncrypt(File file, File dest, String password, int bufferSize) {

@@ -1,5 +1,6 @@
 package com.orion.http.ok.ws;
 
+import com.orion.constant.Const;
 import com.orion.http.ok.ws.handler.*;
 import com.orion.id.Sequences;
 import com.orion.utils.Threads;
@@ -60,7 +61,7 @@ public class OkWebSocketServer {
     /**
      * 调用shutdown等待客户端的时间 ms
      */
-    private int shutDownWaitClientClientTime = 10000;
+    private int shutDownWaitClientTime = Const.MS_S_3;
 
     /**
      * 客户端最大连接客户端数量
@@ -153,19 +154,19 @@ public class OkWebSocketServer {
             clients.remove(webSocket);
         }
         // 等待客户端关闭
-        Threads.sleep(shutDownWaitClientClientTime);
+        Threads.sleep(shutDownWaitClientTime);
         MOCK_WEB_SERVER.shutdown();
     }
 
     /**
-     * 设置内容最大长度
+     * 关闭连接最大等待时长
      *
      * @param size size
      * @return this
      */
-    public OkWebSocketServer shutDownWaitClientClientTime(int shutdownTime) {
-        if (shutdownTime > 0 && shutdownTime >= 1000) {
-            this.shutDownWaitClientClientTime = shutdownTime;
+    public OkWebSocketServer shutDownWaitClientTime(int timeout) {
+        if (timeout >= Const.MS_S_1) {
+            this.shutDownWaitClientTime = timeout;
         }
         return this;
     }

@@ -1,5 +1,6 @@
 package com.orion.utils;
 
+import com.orion.constant.Const;
 import com.orion.utils.math.Numbers;
 import com.orion.utils.random.Randoms;
 
@@ -107,12 +108,12 @@ public class Systems {
         BE_UNIX = "/".equals(File.separator);
         BE_WINDOWS = "\\".equals(File.separator);
         USER_NAME = System.getProperty("user.name", "unknown");
-        FILE_ENCODING = System.getProperty("file.encoding", "UTF-8");
-        HOME_DIR = System.getProperty("user.home", "/");
-        THIS_DIR = System.getProperty("user.dir", "/");
-        TEMP_DIR = System.getProperty("java.io.tmpdir", "/");
+        FILE_ENCODING = System.getProperty("file.encoding", Const.UTF_8);
+        HOME_DIR = System.getProperty("user.home", File.separator);
+        THIS_DIR = System.getProperty("user.dir", File.separator);
+        TEMP_DIR = System.getProperty("java.io.tmpdir", File.separator);
         OS_NAME = System.getProperty("os.name", "unknown");
-        JAVA_HOME = System.getProperty("java.home", "/");
+        JAVA_HOME = System.getProperty("java.home", File.separator);
         if (BE_WINDOWS) {
             HOST_NAME = System.getenv("COMPUTERNAME");
         } else {

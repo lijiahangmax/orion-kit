@@ -1,5 +1,6 @@
 package com.orion.utils.io;
 
+import com.orion.constant.Const;
 import com.orion.lang.iterator.LineIterator;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
@@ -24,16 +25,6 @@ import java.util.function.Consumer;
  */
 @SuppressWarnings("ALL")
 public class Streams {
-
-    /**
-     * 默认缓冲区大小
-     */
-    public static final int BUFFER_SIZE = 1024 * 8;
-
-    /**
-     * 编码格式
-     */
-    public static final String UFT_8 = "UTF-8";
 
     private Streams() {
     }
@@ -80,7 +71,7 @@ public class Streams {
      * @throws IOException IO
      */
     public static String readLine(RandomAccessFile reader) throws IOException {
-        return readLine(reader, UFT_8);
+        return readLine(reader, Const.UTF_8);
     }
 
     /**
@@ -93,8 +84,8 @@ public class Streams {
      */
     public static String readLine(RandomAccessFile reader, String charset) throws IOException {
         long def = reader.getFilePointer();
-        byte[] bytes = new byte[BUFFER_SIZE];
-        byte[] line = new byte[BUFFER_SIZE];
+        byte[] bytes = new byte[Const.BUFFER_KB_8];
+        byte[] line = new byte[Const.BUFFER_KB_8];
         int linePos = 0;
         int seek = 0;
         int read;
@@ -154,7 +145,7 @@ public class Streams {
      * @throws IOException IOException
      */
     public static String readLines(RandomAccessFile reader) throws IOException {
-        return readLines(reader, UFT_8);
+        return readLines(reader, Const.UTF_8);
     }
 
     /**
@@ -168,7 +159,7 @@ public class Streams {
         long pos = reader.getFilePointer();
         int num;
         List<byte[]> lineBuffer = new ArrayList<>();
-        byte[] buffer = new byte[BUFFER_SIZE];
+        byte[] buffer = new byte[Const.BUFFER_KB_8];
         int allSize = 0;
         while ((num = reader.read(buffer)) != -1) {
             byte[] bs = new byte[num];
@@ -262,7 +253,7 @@ public class Streams {
     }
 
     public static long transferLarge(RandomAccessFile access, OutputStream output) throws IOException {
-        byte[] buffer = new byte[BUFFER_SIZE];
+        byte[] buffer = new byte[Const.BUFFER_KB_8];
         long count = 0;
         int n = 0;
         while (-1 != (n = access.read(buffer))) {
@@ -281,7 +272,7 @@ public class Streams {
     }
 
     public static long transferLarge(InputStream input, OutputStream output) throws IOException {
-        byte[] buffer = new byte[BUFFER_SIZE];
+        byte[] buffer = new byte[Const.BUFFER_KB_8];
         long count = 0;
         int n = 0;
         while (-1 != (n = input.read(buffer))) {
@@ -314,7 +305,7 @@ public class Streams {
     }
 
     public static long transferLarge(Reader input, Writer output) throws IOException {
-        char[] buffer = new char[BUFFER_SIZE];
+        char[] buffer = new char[Const.BUFFER_KB_8];
         long count = 0;
         int n;
         while (-1 != (n = input.read(buffer))) {
@@ -687,7 +678,7 @@ public class Streams {
     public static String sign(InputStream in, HashMessageDigest type) {
         try {
             MessageDigest m = type.getMessageDigest();
-            byte[] buffer = new byte[BUFFER_SIZE];
+            byte[] buffer = new byte[Const.BUFFER_KB_8];
             int length;
             while ((length = in.read(buffer)) != -1) {
                 m.update(buffer, 0, length);

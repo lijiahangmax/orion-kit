@@ -1,11 +1,12 @@
 package com.orion.location.ext.core;
 
+import com.orion.constant.Const;
 import com.orion.location.region.core.Region;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
+import com.orion.utils.io.Files1;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteOrder;
@@ -59,8 +60,12 @@ public class LocationSeeker {
     private byte[] b4;
     private byte[] b3;
 
-    public LocationSeeker(File file) throws FileNotFoundException {
-        this(new RandomAccessFile(file, "r"));
+    public LocationSeeker(String file) {
+        this(Files1.openRandomAccessSafe(file, "r"));
+    }
+
+    public LocationSeeker(File file) {
+        this(Files1.openRandomAccessSafe(file, "r"));
     }
 
     public LocationSeeker(RandomAccessFile accessFile) {
@@ -707,7 +712,7 @@ public class LocationSeeker {
             for (i = 0, buf[i] = ipFile.readByte(); buf[i] != 0; buf[++i] = ipFile.readByte()) {
             }
             if (i != 0) {
-                return SeekerSupport.getString(buf, 0, i, "GBK");
+                return SeekerSupport.getString(buf, 0, i, Const.GBK);
             }
         } catch (IOException e) {
             Exceptions.printStacks(e);
@@ -725,7 +730,7 @@ public class LocationSeeker {
             for (i = 0, buf[i] = mbb.get(); buf[i] != 0; buf[++i] = mbb.get()) {
             }
             if (i != 0) {
-                return SeekerSupport.getString(buf, 0, i, "GBK");
+                return SeekerSupport.getString(buf, 0, i, Const.GBK);
             }
         } catch (IllegalArgumentException e) {
             Exceptions.printStacks(e);

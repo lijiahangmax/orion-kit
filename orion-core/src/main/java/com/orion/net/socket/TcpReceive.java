@@ -1,5 +1,6 @@
 package com.orion.net.socket;
 
+import com.orion.constant.Const;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Threads;
 import com.orion.utils.io.Streams;
@@ -35,8 +36,8 @@ public class TcpReceive {
     public TcpReceive(int port) throws IOException {
         this.port = port;
         this.serverSocket = new ServerSocket(port);
-        this.serverSocket.setReceiveBufferSize(4 * 1024);
-        this.serverSocket.setSoTimeout(10 * 1000);
+        this.serverSocket.setReceiveBufferSize(Const.BUFFER_KB_4);
+        this.serverSocket.setSoTimeout(Const.MS_S_10);
         this.acceptThreadPool = Executors.newSingleThreadExecutor();
     }
 

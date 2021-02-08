@@ -1,6 +1,7 @@
 package com.orion.lang.thread;
 
 import com.orion.able.Buildable;
+import com.orion.constant.Const;
 import com.orion.utils.Objects1;
 import com.orion.utils.Systems;
 
@@ -33,7 +34,7 @@ public class ExecutorBuilder implements Buildable<ThreadPoolExecutor> {
     /**
      * 线程存活时间, 即当池中线程多于初始大小时, 多出的线程保留的时长
      */
-    private long keepAliveTime = 60 * 1000;
+    private long keepAliveTime = Const.MS_S_60;
 
     /**
      * 队列, 用于存在未执行的线程

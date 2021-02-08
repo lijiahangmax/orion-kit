@@ -1,8 +1,8 @@
 package com.orion.csv.annotation;
 
+import com.orion.constant.Const;
+import com.orion.constant.Letters;
 import com.orion.csv.type.CsvEscapeMode;
-import com.orion.utils.constant.Letters;
-import com.orion.utils.io.Streams;
 
 import java.lang.annotation.*;
 
@@ -53,7 +53,7 @@ public @interface ImportSetting {
     /**
      * 编码格式
      */
-    String charset() default Streams.UFT_8;
+    String charset() default Const.UTF_8;
 
     /**
      * 是否区分大小写

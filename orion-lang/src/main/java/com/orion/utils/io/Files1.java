@@ -1,5 +1,6 @@
 package com.orion.utils.io;
 
+import com.orion.constant.Const;
 import com.orion.id.UUIds;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Matches;
@@ -35,14 +36,9 @@ public class Files1 {
     }
 
     /**
-     * 缓冲区默认大小
-     */
-    private static final int BUFFER_SIZE = 1024 * 8;
-
-    /**
      * IO 临时文件夹
      */
-    private static final String IO_TEMP_DIR = File.separator + ".io.temp" + File.separator;
+    private static final String IO_TEMP_DIR = File.separator + "." + Const.ORION + File.separator + ".temp" + File.separator;
 
     private static final String[] SIZE_UNIT = {"K", "KB", "M", "MB", "MBPS", "G", "GB", "T", "TB", "B"};
 
@@ -673,7 +669,7 @@ public class Files1 {
                 return null;
             }
             try (OutputStream out = openOutputStream(file)) {
-                byte[] bs = new byte[BUFFER_SIZE];
+                byte[] bs = new byte[Const.BUFFER_KB_8];
                 int read;
                 while (-1 != (read = in.read(bs))) {
                     out.write(bs, 0, read);
@@ -716,7 +712,7 @@ public class Files1 {
             } else {
                 writer = new OutputStreamWriter(openOutputStream(file), charset);
             }
-            char[] cs = new char[BUFFER_SIZE];
+            char[] cs = new char[Const.BUFFER_KB_8];
             int read;
             while (-1 != (read = reader.read(cs))) {
                 writer.write(cs, 0, read);
@@ -740,7 +736,7 @@ public class Files1 {
     public static String streamToFile(InputStream in, File file) {
         touch(file);
         try (OutputStream out = openOutputStream(file)) {
-            byte[] bs = new byte[BUFFER_SIZE];
+            byte[] bs = new byte[Const.BUFFER_KB_8];
             int read;
             while (-1 != (read = in.read(bs))) {
                 out.write(bs, 0, read);
@@ -778,7 +774,7 @@ public class Files1 {
             for (File source : sources) {
                 in = openInputStream(source);
                 out = new FileOutputStream(target, true);
-                byte[] bytes = new byte[BUFFER_SIZE];
+                byte[] bytes = new byte[Const.BUFFER_KB_8];
                 int read;
                 while (-1 != (read = in.read(bytes))) {
                     out.write(bytes, 0, read);
@@ -815,7 +811,7 @@ public class Files1 {
         OutputStream out = null;
         try (InputStream in = openInputStream(source)) {
             out = new FileOutputStream(target, true);
-            byte[] bytes = new byte[BUFFER_SIZE];
+            byte[] bytes = new byte[Const.BUFFER_KB_8];
             int read;
             while (-1 != (read = in.read(bytes))) {
                 out.write(bytes, 0, read);
@@ -880,7 +876,7 @@ public class Files1 {
     public static void copy(File source, File target) {
         try (FileChannel inc = openInputStream(source).getChannel();
              FileChannel outc = openOutputStream(target).getChannel()) {
-            ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE);
+            ByteBuffer buffer = ByteBuffer.allocate(Const.BUFFER_KB_8);
             while (inc.read(buffer) != -1) {
                 buffer.flip();
                 outc.write(buffer);

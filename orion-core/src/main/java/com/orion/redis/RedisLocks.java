@@ -1,5 +1,6 @@
 package com.orion.redis;
 
+import com.orion.constant.Const;
 import com.orion.utils.Strings;
 import redis.clients.jedis.Jedis;
 
@@ -20,7 +21,7 @@ public class RedisLocks {
     /**
      * 默认锁过期时间
      */
-    private static final long EXPIRED = 1000 * 5;
+    private static final long EXPIRED = Const.MS_S_5;
 
     public static void setClient(Jedis redisTemplate) {
         RedisLocks.redisTemplate = redisTemplate;

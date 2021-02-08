@@ -1,12 +1,13 @@
 package com.orion.csv.core;
 
 import com.orion.able.SafeCloseable;
+import com.orion.constant.Const;
+import com.orion.constant.Letters;
 import com.orion.csv.option.CsvOption;
 import com.orion.csv.option.CsvReaderOption;
 import com.orion.exception.IORuntimeException;
 import com.orion.utils.Strings;
 import com.orion.utils.Valid;
-import com.orion.utils.constant.Letters;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
 
@@ -90,7 +91,7 @@ public class CsvReader implements SafeCloseable {
     public CsvReader(String file, char delimiter, Charset charset) {
         Valid.notBlank(file, "file can not be null");
         Valid.notNull(charset, "charset can not be null");
-        this.reader = new BufferedReader(new InputStreamReader(Files1.openInputStreamSafe(file), charset), CsvOption.MAX_FILE_BUFFER_SIZE);
+        this.reader = new BufferedReader(new InputStreamReader(Files1.openInputStreamSafe(file), charset), Const.BUFFER_KB_4);
         this.option = new CsvReaderOption(delimiter, charset);
         this.isQualified = new boolean[values.length];
     }
@@ -99,7 +100,7 @@ public class CsvReader implements SafeCloseable {
         Valid.notBlank(file, "file can not be null");
         Valid.notNull(option, "option can not be null");
         Valid.notNull(option.getCharset(), "chaset can not be null");
-        this.reader = new BufferedReader(new InputStreamReader(Files1.openInputStreamSafe(file), option.getCharset()), CsvOption.MAX_FILE_BUFFER_SIZE);
+        this.reader = new BufferedReader(new InputStreamReader(Files1.openInputStreamSafe(file), option.getCharset()), Const.BUFFER_KB_4);
         this.option = option;
         this.isQualified = new boolean[values.length];
     }
@@ -115,7 +116,7 @@ public class CsvReader implements SafeCloseable {
     public CsvReader(File file, char delimiter, Charset charset) {
         Valid.notNull(file, "file can not be null");
         Valid.notNull(charset, "charset can not be null");
-        this.reader = new BufferedReader(new InputStreamReader(Files1.openInputStreamSafe(file), charset), CsvOption.MAX_FILE_BUFFER_SIZE);
+        this.reader = new BufferedReader(new InputStreamReader(Files1.openInputStreamSafe(file), charset), Const.BUFFER_KB_4);
         this.option = new CsvReaderOption(delimiter, charset);
         this.isQualified = new boolean[values.length];
     }
@@ -124,7 +125,7 @@ public class CsvReader implements SafeCloseable {
         Valid.notNull(file, "file can not be null");
         Valid.notNull(option, "option can not be null");
         Valid.notNull(option.getCharset(), "charset can not be null");
-        this.reader = new BufferedReader(new InputStreamReader(Files1.openInputStreamSafe(file), option.getCharset()), CsvOption.MAX_FILE_BUFFER_SIZE);
+        this.reader = new BufferedReader(new InputStreamReader(Files1.openInputStreamSafe(file), option.getCharset()), Const.BUFFER_KB_4);
         this.option = option;
         this.isQualified = new boolean[values.length];
     }
@@ -994,7 +995,7 @@ public class CsvReader implements SafeCloseable {
         public int lineStart;
 
         public DataBuffer() {
-            buffer = new char[CsvOption.MAX_BUFFER_SIZE];
+            buffer = new char[Const.BUFFER_KB_1];
             position = 0;
             count = 0;
             columnStart = 0;

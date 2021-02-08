@@ -1,5 +1,6 @@
 package com.orion.net.socket;
 
+import com.orion.constant.Const;
 import com.orion.utils.Exceptions;
 import com.orion.utils.io.Streams;
 
@@ -38,8 +39,8 @@ public class UdpSend {
         try {
             this.ds = new DatagramSocket();
             this.inetAddress = InetAddress.getByName(host);
-            this.ds.setSendBufferSize(4 * 1024);
-            this.ds.setSoTimeout(10 * 1000);
+            this.ds.setSendBufferSize(Const.BUFFER_KB_4);
+            this.ds.setSoTimeout(Const.MS_S_10);
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         }

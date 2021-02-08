@@ -1,5 +1,6 @@
 package com.orion.utils.io;
 
+import com.orion.constant.Const;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.crypto.AES;
@@ -19,8 +20,6 @@ import java.util.concurrent.Callable;
  */
 public class FileDecrypt implements Callable<Boolean> {
 
-    private static final int DEFAULT_BUFFER_SIZE = 8 * 1024;
-
     private BufferedReader reader;
 
     private OutputStream out;
@@ -30,19 +29,19 @@ public class FileDecrypt implements Callable<Boolean> {
     private boolean autoClose = true;
 
     public FileDecrypt(File file, File dest, String password) {
-        this(file, dest, password, DEFAULT_BUFFER_SIZE);
+        this(file, dest, password, Const.BUFFER_KB_8);
     }
 
     public FileDecrypt(String file, String dest, String password) {
-        this(file, dest, password, DEFAULT_BUFFER_SIZE);
+        this(file, dest, password, Const.BUFFER_KB_8);
     }
 
     public FileDecrypt(InputStream in, OutputStream out, String password) {
-        this(in, out, password, DEFAULT_BUFFER_SIZE);
+        this(in, out, password, Const.BUFFER_KB_8);
     }
 
     public FileDecrypt(Reader reader, OutputStream out, String password) {
-        this(reader, out, password, DEFAULT_BUFFER_SIZE);
+        this(reader, out, password, Const.BUFFER_KB_8);
     }
 
     public FileDecrypt(File file, File dest, String password, int bufferSize) {

@@ -5,6 +5,7 @@ import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.orion.constant.Const;
 import com.orion.id.Sequences;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
@@ -51,7 +52,7 @@ public class QRCodes {
     /**
      * 编码
      */
-    private String charset = "UTF-8";
+    private String charset = Const.UTF_8;
 
     /**
      * 二维码尺寸
@@ -361,7 +362,7 @@ public class QRCodes {
             BufferedImageLuminanceSource source = new BufferedImageLuminanceSource(image);
             BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
             Map<DecodeHintType, Object> hint = new HashMap<>(4);
-            hint.put(DecodeHintType.CHARACTER_SET, "UTF-8");
+            hint.put(DecodeHintType.CHARACTER_SET, Const.UTF_8);
             return new MultiFormatReader().decode(bitmap, hint).getText();
         } catch (Exception e) {
             Exceptions.printStacks(e);

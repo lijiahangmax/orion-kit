@@ -4,6 +4,7 @@ import ch.ethz.ssh2.SFTPv3Client;
 import ch.ethz.ssh2.SFTPv3FileAttributes;
 import ch.ethz.ssh2.SFTPv3FileHandle;
 import com.orion.able.SafeCloseable;
+import com.orion.constant.Const;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Threads;
 import com.orion.utils.io.FileLocks;
@@ -87,11 +88,6 @@ public class SftpDownload implements Runnable, SafeCloseable {
      */
     private boolean close;
 
-    /**
-     * 一次 读取 最大长度
-     */
-    private static final int BUFFER_SIZE = 32 * 1024;
-
     public SftpDownload(SFTPv3Client client, String remote, String local) {
         this(client, remote, new File(local));
     }
@@ -113,7 +109,7 @@ public class SftpDownload implements Runnable, SafeCloseable {
                 Threads.start(() -> {
                     while (!done) {
                         long size = now;
-                        Threads.sleep(1000);
+                        Threads.sleep(Const.MS_S_1);
                         nowRate = now - size;
                     }
                 });
@@ -135,8 +131,8 @@ public class SftpDownload implements Runnable, SafeCloseable {
                 }
                 out = new BufferedOutputStream(new FileOutputStream(local, true));
                 int read;
-                byte[] bs = new byte[BUFFER_SIZE];
-                while (-1 != (read = client.read(readHandler, now, bs, 0, BUFFER_SIZE))) {
+                byte[] bs = new byte[Const.BUFFER_KB_32];
+                while (-1 != (read = client.read(readHandler, now, bs, 0, Const.BUFFER_KB_32))) {
                     now += read;
                     out.write(bs, 0, read);
                 }
@@ -149,8 +145,8 @@ public class SftpDownload implements Runnable, SafeCloseable {
                 lock.tryLock();
                 out = new BufferedOutputStream(new FileOutputStream(local));
                 int read;
-                byte[] bs = new byte[BUFFER_SIZE];
-                while (-1 != (read = client.read(readHandler, now, bs, 0, BUFFER_SIZE))) {
+                byte[] bs = new byte[Const.BUFFER_KB_32];
+                while (-1 != (read = client.read(readHandler, now, bs, 0, Const.BUFFER_KB_32))) {
                     now += read;
                     out.write(bs, 0, read);
                 }
@@ -200,7 +196,7 @@ public class SftpDownload implements Runnable, SafeCloseable {
         }
         double used = useDate - startTime;
         double uploadBytes = now - startSize;
-        return (uploadBytes / used) * 1000;
+        return (uploadBytes / used) * Const.MS_S_1;
     }
 
     /**

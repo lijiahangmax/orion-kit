@@ -1,5 +1,6 @@
 package com.orion.test.process;
 
+import com.orion.constant.Const;
 import com.orion.lang.Console;
 import com.orion.process.ProcessAwaitExecutor;
 import com.orion.utils.Threads;
@@ -48,7 +49,7 @@ public class ProcessAwaitTests {
 
     public static void ping() {
         ProcessAwaitExecutor e = new ProcessAwaitExecutor("ping www.baidu.com -n 100")
-                .lineHandler(Console::trace, "GBK");
+                .lineHandler(Console::trace, Const.GBK);
         e.terminal();
         e.exec();
         Threads.sleep(2000);

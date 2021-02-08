@@ -1,6 +1,7 @@
 package com.orion.http.ok.file;
 
-import com.orion.http.common.HttpContent;
+import com.orion.constant.Const;
+import com.orion.http.common.HttpContentType;
 import com.orion.http.common.HttpCookie;
 import com.orion.http.common.HttpMethod;
 import com.orion.utils.Exceptions;
@@ -44,7 +45,7 @@ public class OkAsyncDownload {
     /**
      * 缓冲区大小
      */
-    private int buffSize = 1024 * 4;
+    private int buffSize = Const.BUFFER_KB_4;
 
     /**
      * 下载状态 0未开始 1下载中 2下载成功 3下载失败
@@ -287,7 +288,7 @@ public class OkAsyncDownload {
      * @param contentType contentType
      * @return this
      */
-    public OkAsyncDownload contentType(HttpContent contentType) {
+    public OkAsyncDownload contentType(HttpContentType contentType) {
         this.contentType = contentType.getType();
         return this;
     }
@@ -721,7 +722,7 @@ public class OkAsyncDownload {
                         Threads.start(() -> {
                             while (!isDone()) {
                                 long size = nowLength;
-                                Threads.sleep(1000);
+                                Threads.sleep(Const.MS_S_1);
                                 nowRate = nowLength - size;
                             }
                         });
@@ -798,7 +799,7 @@ public class OkAsyncDownload {
             builder.head();
         } else {
             if (this.contentType == null) {
-                this.contentType = HttpContent.TEXT_PLAIN.getType();
+                this.contentType = HttpContentType.TEXT_PLAIN.getType();
             }
             if (this.charset == null) {
                 if (this.body != null) {
@@ -883,7 +884,7 @@ public class OkAsyncDownload {
             useDate = System.currentTimeMillis();
         }
         double used = useDate - startTime;
-        return ((nowLength - startLength) / used) * 1000;
+        return ((nowLength - startLength) / used) * Const.MS_S_1;
     }
 
     /**

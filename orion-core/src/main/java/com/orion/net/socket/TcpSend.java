@@ -1,5 +1,6 @@
 package com.orion.net.socket;
 
+import com.orion.constant.Const;
 import com.orion.utils.io.Streams;
 
 import java.io.IOException;
@@ -37,9 +38,9 @@ public class TcpSend {
         this.host = host;
         this.port = port;
         this.socket = new Socket(host, port);
-        this.socket.setSendBufferSize(4 * 1024);
+        this.socket.setSendBufferSize(Const.BUFFER_KB_4);
         this.socket.setTcpNoDelay(true);
-        this.socket.setSoTimeout(10 * 1000);
+        this.socket.setSoTimeout(Const.MS_S_10);
         this.socket.setKeepAlive(true);
         this.in = socket.getInputStream();
         this.out = socket.getOutputStream();

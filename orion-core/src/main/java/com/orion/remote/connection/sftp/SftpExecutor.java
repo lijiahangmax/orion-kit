@@ -5,6 +5,7 @@ import ch.ethz.ssh2.SFTPv3DirectoryEntry;
 import ch.ethz.ssh2.SFTPv3FileAttributes;
 import ch.ethz.ssh2.SFTPv3FileHandle;
 import com.orion.able.SafeCloseable;
+import com.orion.constant.Const;
 import com.orion.lang.StreamEntry;
 import com.orion.remote.connection.sftp.bigfile.SftpDownload;
 import com.orion.remote.connection.sftp.bigfile.SftpUpload;
@@ -46,7 +47,7 @@ public class SftpExecutor implements SafeCloseable {
     /**
      * 默认缓冲区大小 因为并行数为1 并且默认执行一次读写操作最大字节为32768
      */
-    private int bufferSize = 32 * 1024;
+    private int bufferSize = Const.BUFFER_KB_32;
 
     public SftpExecutor(SFTPv3Client client) {
         this(client, null);

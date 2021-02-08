@@ -4,6 +4,7 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.SftpATTRS;
 import com.jcraft.jsch.SftpException;
 import com.orion.able.SafeCloseable;
+import com.orion.constant.Const;
 import com.orion.remote.channel.executor.sftp.SftpExecutor;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Threads;
@@ -83,11 +84,6 @@ public class SftpUpload implements Runnable, SafeCloseable {
      */
     private volatile boolean done;
 
-    /**
-     * 缓冲区大小
-     */
-    private static final int BUFFER_SIZE = 8 * 1024;
-
     public SftpUpload(ChannelSftp channel, String remote, String local) {
         this(channel, remote, new File(local));
     }
@@ -140,7 +136,7 @@ public class SftpUpload implements Runnable, SafeCloseable {
                 Threads.start(() -> {
                     while (!done) {
                         long size = now;
-                        Threads.sleep(1000);
+                        Threads.sleep(Const.MS_S_1);
                         nowRate = now - size;
                     }
                 });
@@ -171,7 +167,7 @@ public class SftpUpload implements Runnable, SafeCloseable {
                 random = new RandomAccessFile(local, "r");
                 random.seek(startSize);
                 int read;
-                byte[] bs = new byte[BUFFER_SIZE];
+                byte[] bs = new byte[Const.BUFFER_KB_8];
                 while (-1 != (read = random.read(bs))) {
                     out.write(bs, 0, read);
                     now += read;
@@ -192,7 +188,7 @@ public class SftpUpload implements Runnable, SafeCloseable {
                 }
                 in = new BufferedInputStream(new FileInputStream(local));
                 int read;
-                byte[] bs = new byte[BUFFER_SIZE];
+                byte[] bs = new byte[Const.BUFFER_KB_8];
                 while (-1 != (read = in.read(bs))) {
                     out.write(bs, 0, read);
                     now += read;
@@ -239,7 +235,7 @@ public class SftpUpload implements Runnable, SafeCloseable {
         }
         double used = useDate - startTime;
         double uploadBytes = now - startSize;
-        return (uploadBytes / used) * 1000;
+        return (uploadBytes / used) * Const.MS_S_1;
     }
 
     /**

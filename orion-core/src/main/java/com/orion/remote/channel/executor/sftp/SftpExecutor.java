@@ -3,6 +3,7 @@ package com.orion.remote.channel.executor.sftp;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.SftpATTRS;
 import com.jcraft.jsch.SftpException;
+import com.orion.constant.Const;
 import com.orion.lang.StreamEntry;
 import com.orion.remote.channel.executor.BaseExecutor;
 import com.orion.remote.channel.executor.sftp.bigfile.SftpDownload;
@@ -37,7 +38,7 @@ public class SftpExecutor extends BaseExecutor {
     /**
      * 默认缓冲区大小
      */
-    private int bufferSize = 8 * 1024;
+    private int bufferSize = Const.BUFFER_KB_8;
 
     private ChannelSftp channel;
 
@@ -230,7 +231,7 @@ public class SftpExecutor extends BaseExecutor {
      */
     public boolean setModifyTime(String path, Date date) {
         try {
-            channel.setMtime(path, (int) (date.getTime() / 1000));
+            channel.setMtime(path, (int) (date.getTime() / Const.MS_S_1));
             return true;
         } catch (Exception e) {
             Exceptions.printStacks(e);

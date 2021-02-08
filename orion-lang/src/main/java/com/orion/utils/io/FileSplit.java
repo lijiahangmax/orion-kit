@@ -1,5 +1,6 @@
 package com.orion.utils.io;
 
+import com.orion.constant.Const;
 import com.orion.utils.Exceptions;
 
 import java.io.File;
@@ -20,11 +21,6 @@ public class FileSplit implements Callable<String[]> {
      * 默认分割为几块 8
      */
     private static int DEFAULT_SPLIT_BLOCK = 8;
-
-    /**
-     * 默认缓冲区大小 2m
-     */
-    private static int BUFFER_SIZE = 1024 * 2;
 
     /**
      * 文件
@@ -52,27 +48,27 @@ public class FileSplit implements Callable<String[]> {
     private boolean nothing;
 
     public FileSplit(String file) {
-        this(new File(file), DEFAULT_SPLIT_BLOCK, BUFFER_SIZE);
+        this(new File(file), DEFAULT_SPLIT_BLOCK, Const.BUFFER_KB_2);
     }
 
     public FileSplit(File file) {
-        this(file, DEFAULT_SPLIT_BLOCK, BUFFER_SIZE);
+        this(file, DEFAULT_SPLIT_BLOCK, Const.BUFFER_KB_2);
     }
 
     public FileSplit(String file, int blockCount) {
-        this(new File(file), blockCount, BUFFER_SIZE);
+        this(new File(file), blockCount, Const.BUFFER_KB_2);
     }
 
     public FileSplit(File file, int blockCount) {
-        this(file, blockCount, BUFFER_SIZE);
+        this(file, blockCount, Const.BUFFER_KB_2);
     }
 
     public FileSplit(String file, long blockSize) {
-        this(new File(file), blockSize, BUFFER_SIZE);
+        this(new File(file), blockSize, Const.BUFFER_KB_2);
     }
 
     public FileSplit(File file, long blockSize) {
-        this(file, blockSize, BUFFER_SIZE);
+        this(file, blockSize, Const.BUFFER_KB_2);
     }
 
     public FileSplit(String file, int blockCount, int bufferSize) {
@@ -88,8 +84,8 @@ public class FileSplit implements Callable<String[]> {
             blockCount = DEFAULT_SPLIT_BLOCK;
         }
         this.blockCount = blockCount;
-        if (bufferSize < BUFFER_SIZE) {
-            bufferSize = BUFFER_SIZE;
+        if (bufferSize < Const.BUFFER_KB_2) {
+            bufferSize = Const.BUFFER_KB_2;
         }
         this.bufferSize = bufferSize;
         if (file == null || !file.exists() || file.length() == 0) {
@@ -105,16 +101,16 @@ public class FileSplit implements Callable<String[]> {
     }
 
     public FileSplit(File file, long blockSize, int bufferSize) {
-        if (bufferSize < BUFFER_SIZE) {
-            bufferSize = BUFFER_SIZE;
+        if (bufferSize < Const.BUFFER_KB_2) {
+            bufferSize = Const.BUFFER_KB_2;
         }
         this.bufferSize = bufferSize;
         if (file == null || !file.exists() || file.length() == 0) {
             throw new RuntimeException("File is illegal");
         }
         this.file = file;
-        if (blockSize < 1024) {
-            blockSize = 1024;
+        if (blockSize < Const.BUFFER_KB_1) {
+            blockSize = Const.BUFFER_KB_1;
         }
         if (blockSize >= file.length()) {
             this.nothing = true;

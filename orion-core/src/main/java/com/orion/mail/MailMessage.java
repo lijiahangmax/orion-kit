@@ -1,5 +1,7 @@
 package com.orion.mail;
 
+import com.orion.constant.Const;
+import com.orion.constant.StandardContentType;
 import com.orion.utils.Strings;
 
 import java.io.Serializable;
@@ -15,12 +17,6 @@ import java.util.List;
  * @since 2020/3/15 18:27
  */
 public class MailMessage implements Serializable {
-
-    private static final String CHARSET = "UTF-8";
-
-    private static final String HTML = "text/html";
-
-    private static final String TEXT = "text/plain";
 
     /**
      * 发件人账号
@@ -55,12 +51,12 @@ public class MailMessage implements Serializable {
     /**
      * 邮件类型
      */
-    private String mimeType = TEXT;
+    private String mimeType = StandardContentType.TEXT_PLAIN;
 
     /**
      * 内容编码格式
      */
-    private String contentCharset = CHARSET;
+    private String contentCharset = Const.UTF_8;
 
     /**
      * 附件
@@ -263,7 +259,7 @@ public class MailMessage implements Serializable {
     /**
      * 邮件类型
      *
-     * @param mimeType {@link #TEXT} {@link #HTML}
+     * @param mimeType {@link StandardContentType#TEXT_PLAIN} {@link StandardContentType#TEXT_HTML}
      * @return this
      */
     public MailMessage mimeType(String mimeType) {
@@ -275,7 +271,7 @@ public class MailMessage implements Serializable {
      * 内容为html
      */
     public MailMessage html() {
-        this.mimeType = HTML;
+        this.mimeType = StandardContentType.TEXT_HTML;
         return this;
     }
 
@@ -283,7 +279,7 @@ public class MailMessage implements Serializable {
      * 内容为文本
      */
     public MailMessage text() {
-        this.mimeType = TEXT;
+        this.mimeType = StandardContentType.TEXT_PLAIN;
         return this;
     }
 
@@ -327,7 +323,7 @@ public class MailMessage implements Serializable {
     }
 
     private String eof() {
-        return HTML.equals(mimeType) ? "<br/>" : "\n";
+        return StandardContentType.TEXT_HTML.equals(mimeType) ? "<br/>" : "\n";
     }
 
     // -------------------- getter --------------------

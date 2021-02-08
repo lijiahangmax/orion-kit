@@ -1,6 +1,7 @@
 package com.orion.ftp.client;
 
 import com.orion.able.JsonAble;
+import com.orion.constant.Const;
 
 import java.io.Serializable;
 
@@ -41,22 +42,22 @@ public class FtpConfig implements Serializable, JsonAble {
     /**
      * 远程文件编码
      */
-    private String remoteContentCharset = "UTF-8";
+    private String remoteContentCharset = Const.UTF_8;
 
     /**
      * 本地文件编码
      */
-    private String localContentCharset = "UTF-8";
+    private String localContentCharset = Const.UTF_8;
 
     /**
      * 远程文件名称编码
      */
-    private String remoteFileNameCharset = "UTF-8";
+    private String remoteFileNameCharset = Const.UTF_8;
 
     /**
      * 本地文件名称编码
      */
-    private String localFileNameCharset = "UTF-8";
+    private String localFileNameCharset = Const.UTF_8;
 
     /**
      * 是否显示隐藏文件
@@ -64,9 +65,9 @@ public class FtpConfig implements Serializable, JsonAble {
     private Boolean showHidden = false;
 
     /**
-     * 缓冲区大小 2M
+     * 缓冲区大小
      */
-    public int buffSize = 2 * 1024 * 1024;
+    public int buffSize = Const.BUFFER_KB_8;
 
     /**
      * 被动模式
@@ -76,12 +77,12 @@ public class FtpConfig implements Serializable, JsonAble {
     /**
      * 数据超时时间
      */
-    private int dateTimeout = 60 * 1000;
+    private int dateTimeout = Const.MS_S_60;
 
     /**
      * 连接超时时间
      */
-    private int connTimeout = 60 * 1000;
+    private int connTimeout = Const.MS_S_60;
 
     public FtpConfig(String host) {
         this.host = host;

@@ -1,5 +1,6 @@
 package com.orion.utils.io;
 
+import com.orion.constant.Const;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
@@ -26,11 +27,6 @@ public class FileWriters {
 
     private FileWriters() {
     }
-
-    /**
-     * 缓冲区默认大小
-     */
-    private static final int BUFFER_SIZE = 1024 * 8;
 
     /**
      * 拼接到文件最后一行
@@ -175,7 +171,7 @@ public class FileWriters {
         FileInputStream in = null;
         RandomAccessFile r = null;
         try {
-            if (fileLen - offset <= BUFFER_SIZE) {
+            if (fileLen - offset <= Const.BUFFER_KB_8) {
                 byte[] bs = new byte[((int) (fileLen - offset + len))];
                 System.arraycopy(bytes, 0, bs, 0, len);
                 r = new RandomAccessFile(file, "rw");
@@ -190,7 +186,7 @@ public class FileWriters {
                 r.seek(offset);
                 r.write(bytes, off, len);
                 in = openInputStream(endFile);
-                byte[] buf = new byte[BUFFER_SIZE];
+                byte[] buf = new byte[Const.BUFFER_KB_8];
                 int read;
                 while (-1 != (read = in.read(buf))) {
                     r.write(buf, 0, read);
@@ -391,7 +387,7 @@ public class FileWriters {
             int read = 0;
             File endFile = null;
             if (!append) {
-                if (fileLen - offset <= BUFFER_SIZE) {
+                if (fileLen - offset <= Const.BUFFER_KB_8) {
                     bs = new byte[((int) (fileLen - offset))];
                     r.seek(offset);
                     read = r.read(bs);
@@ -416,7 +412,7 @@ public class FileWriters {
                     r.write(bs, 0, read);
                 } else {
                     in = openInputStream(endFile);
-                    bs = new byte[BUFFER_SIZE];
+                    bs = new byte[Const.BUFFER_KB_8];
                     while (-1 != (read = in.read(bs))) {
                         r.write(bs, 0, read);
                     }
@@ -692,9 +688,9 @@ public class FileWriters {
         BufferedWriter writer = null;
         try {
             if (charset == null) {
-                writer = new BufferedWriter(new OutputStreamWriter(openOutputStream(file, append)), BUFFER_SIZE);
+                writer = new BufferedWriter(new OutputStreamWriter(openOutputStream(file, append)), Const.BUFFER_KB_8);
             } else {
-                writer = new BufferedWriter(new OutputStreamWriter(openOutputStream(file, append), charset), BUFFER_SIZE);
+                writer = new BufferedWriter(new OutputStreamWriter(openOutputStream(file, append), charset), Const.BUFFER_KB_8);
             }
             if (beforeAppend) {
                 writer.write(lineSeparator);
@@ -781,10 +777,10 @@ public class FileWriters {
         }
         boolean startBuffer = false;
         boolean endBuffer = false;
-        if (rangeStart <= BUFFER_SIZE) {
+        if (rangeStart <= Const.BUFFER_KB_8) {
             startBuffer = true;
         }
-        if (fileLen - rangeEnd <= BUFFER_SIZE) {
+        if (fileLen - rangeEnd <= Const.BUFFER_KB_8) {
             endBuffer = true;
         }
         List<Closeable> close = new ArrayList<>();
@@ -834,7 +830,7 @@ public class FileWriters {
                     rw.seek(rangeStart);
                     rw.write(bytes, off, len);
                     int read;
-                    byte[] bs = new byte[BUFFER_SIZE];
+                    byte[] bs = new byte[Const.BUFFER_KB_8];
                     FileInputStream in = openInputStream(endFile);
                     close.add(in);
                     while (-1 != (read = in.read(bs))) {
@@ -895,7 +891,7 @@ public class FileWriters {
             }
             out = openOutputStream(targetFile);
             int read;
-            byte[] buf = new byte[BUFFER_SIZE];
+            byte[] buf = new byte[Const.BUFFER_KB_8];
             while (-1 != (read = in.read(buf))) {
                 out.write(buf, 0, read);
             }

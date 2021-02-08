@@ -1,7 +1,7 @@
 package com.orion.http.apache;
 
 import com.orion.able.Awaitable;
-import com.orion.http.common.HttpContent;
+import com.orion.http.common.HttpContentType;
 import com.orion.http.common.HttpCookie;
 import com.orion.http.common.HttpMethod;
 import com.orion.utils.Exceptions;
@@ -232,7 +232,7 @@ public class ApacheRequest implements Awaitable<ApacheResponse> {
      * @param contentType contentType
      * @return this
      */
-    public ApacheRequest contentType(HttpContent contentType) {
+    public ApacheRequest contentType(HttpContentType contentType) {
         this.contentType = contentType.getType();
         return this;
     }
@@ -565,7 +565,7 @@ public class ApacheRequest implements Awaitable<ApacheResponse> {
         }
         if (!HttpMethod.GET.getMethod().equals(this.method) && !HttpMethod.HEAD.getMethod().equals(this.method)) {
             if (this.contentType == null) {
-                this.contentType = HttpContent.TEXT_PLAIN.getType();
+                this.contentType = HttpContentType.TEXT_PLAIN.getType();
             }
             if (this.charset == null) {
                 this.request.setHeader(new BasicHeader("Content-type", this.contentType));
@@ -625,7 +625,7 @@ public class ApacheRequest implements Awaitable<ApacheResponse> {
             List<NameValuePair> pairs = new ArrayList<>();
             this.formParts.forEach((k, v) -> pairs.add(new BasicNameValuePair(k, v)));
             try {
-                this.contentType = HttpContent.APPLICATION_FORM.getType();
+                this.contentType = HttpContentType.APPLICATION_FORM.getType();
                 if (this.charset == null) {
                     return new UrlEncodedFormEntity(pairs);
                 } else {
@@ -712,7 +712,7 @@ public class ApacheRequest implements Awaitable<ApacheResponse> {
 
     @Override
     public String toString() {
-        return url;
+        return method + " " + url;
     }
 
 }

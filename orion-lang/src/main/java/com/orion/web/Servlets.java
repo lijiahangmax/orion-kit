@@ -1,5 +1,6 @@
 package com.orion.web;
 
+import com.orion.constant.StandardContentType;
 import com.orion.lang.collect.MutableHashMap;
 import com.orion.utils.Urls;
 import com.orion.utils.ext.StringExt;
@@ -25,8 +26,6 @@ import java.util.Map;
 public class Servlets {
 
     private static final String UA = "user-Agent";
-
-    private static final String CONTENT_TYPE = "Content-Type";
 
     private Servlets() {
     }
@@ -412,7 +411,7 @@ public class Servlets {
      * @return ContentType
      */
     public static String getContentType(HttpServletResponse response) {
-        return response.getHeader(CONTENT_TYPE);
+        return response.getHeader(StandardContentType.CONTENT_TYPE);
     }
 
     /**

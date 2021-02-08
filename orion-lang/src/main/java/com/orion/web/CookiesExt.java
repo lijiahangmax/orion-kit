@@ -1,5 +1,6 @@
 package com.orion.web;
 
+import com.orion.constant.Const;
 import com.orion.utils.time.Dates;
 
 import javax.servlet.http.Cookie;
@@ -161,11 +162,7 @@ public class CookiesExt {
      */
     public static void set(HttpServletResponse response, String key, String value, int expire, String path, String domain) {
         Cookie cookie = new Cookie(key, value);
-        if (expire <= -1) {
-            cookie.setMaxAge(-1);
-        } else {
-            cookie.setMaxAge(expire);
-        }
+        cookie.setMaxAge(Math.max(expire, -1));
         if (path != null) {
             cookie.setPath(path);
         } else {
@@ -213,7 +210,7 @@ public class CookiesExt {
      * @param domain   域名
      */
     public static void set(HttpServletResponse response, String key, String value, Date expire, String path, String domain) {
-        set(response, key, value, (int) (Dates.intervalMs(expire, new Date()) / 1000), path, domain);
+        set(response, key, value, (int) (Dates.intervalMs(expire, new Date()) / Const.MS_S_1), path, domain);
     }
 
     /**
@@ -282,7 +279,7 @@ public class CookiesExt {
      * @param domain   域名
      */
     public static void sets(HttpServletResponse response, Map<String, String> map, Date expire, String path, String domain) {
-        sets(response, map, (int) (Dates.intervalMs(expire, new Date()) / 1000), path, domain);
+        sets(response, map, (int) (Dates.intervalMs(expire, new Date()) / Const.MS_S_1), path, domain);
     }
 
     /**

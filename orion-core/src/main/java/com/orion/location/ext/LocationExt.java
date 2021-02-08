@@ -1,14 +1,19 @@
 package com.orion.location.ext;
 
+import com.orion.constant.Const;
+import com.orion.lang.Console;
 import com.orion.location.ext.core.LocationSeeker;
-import com.orion.location.region.LocationRegions;
 import com.orion.location.region.core.Region;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Systems;
+import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
 import com.orion.utils.net.IPs;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
 
 /**
  * 纯真ip地理位置提取器
@@ -23,19 +28,11 @@ public class LocationExt {
     }
 
     /**
-     * db文件路径
+     * dat文件
      */
-    private static final String DAT_PATH = Systems.HOME_DIR + "/region/" + "region.dat";
-
-    /**
-     * db文件
-     */
-    private static final File DAT_FILE = new File(DAT_PATH);
-
-    /**
-     * db文件目录
-     */
-    private static final File DAT_FILE_DIR = new File(Systems.HOME_DIR + "/region/");
+    private static final String DAT_PATH = Systems.HOME_DIR + Systems.FILE_SEPARATOR +
+            Const.ORION + Systems.FILE_SEPARATOR +
+            "region" + Systems.FILE_SEPARATOR + "region.dat";
 
     /**
      * 查询器
@@ -48,9 +45,9 @@ public class LocationExt {
     private static boolean init = true;
 
     /**
-     * 重新初始化
+     * 初始化
      */
-    public static void reinit() {
+    public static void init() {
         if (!init) {
             initDatFile();
         }
@@ -61,52 +58,47 @@ public class LocationExt {
      */
     private static void initDatFile() {
         File file = new File(DAT_PATH);
-        InputStream in = LocationRegions.class.getClassLoader().getResourceAsStream("region.dat");
-        if (!file.exists() || (file.exists() && !file.isFile())) {
-            if (in == null) {
-                init = false;
-                throw new RuntimeException("regionExt 服务初始化异常 未查询到dat文件");
-            }
+        InputStream in = LocationExt.class.getClassLoader().getResourceAsStream("region.dat");
+        boolean needInit = false;
+        if (!file.exists() || !file.isFile()) {
+            needInit = true;
+        }
+        // 检查是否需要重新初始化
+        if (!needInit) {
             try {
-                if (!DAT_FILE_DIR.exists() || (DAT_FILE_DIR.exists() && !DAT_FILE_DIR.isDirectory())) {
-                    if (!DAT_FILE_DIR.mkdirs()) {
-                        init = false;
-                        throw new RuntimeException("regionExt 服务初始化异常 不能创建本地临时文件夹");
-                    }
+                if (in != null && file.length() != in.available()) {
+                    needInit = true;
                 }
-                if (!DAT_FILE.createNewFile()) {
-                    init = false;
-                    throw new RuntimeException("regionExt 服务初始化异常 不能创建本地临时文件");
-                }
-                // 设置编码为gbk
-                OutputStreamWriter o = new OutputStreamWriter(new FileOutputStream(DAT_FILE), "GBK");
-                o.write("init");
-                o.flush();
-                o.close();
-                // 清空重新写入数据
-                FileOutputStream out = new FileOutputStream(DAT_FILE, false);
-                byte[] bs = new byte[2048 * 4];
-                int c;
-                while ((c = in.read(bs)) != -1) {
-                    out.write(bs, 0, c);
-                }
-                out.flush();
-                out.close();
             } catch (Exception e) {
+                // ignore
+            }
+        }
+        if (needInit && in == null) {
+            init = false;
+            throw Exceptions.init("region EXT 服务初始化异常 未找到地址库");
+        }
+        OutputStreamWriter writer = null;
+        FileOutputStream out = null;
+        try {
+            if (!Files1.touch(file)) {
                 init = false;
-                e.printStackTrace();
-                throw new RuntimeException("regionExt 服务初始化异常");
-            } finally {
-                Streams.close(in);
+                throw Exceptions.init("region EXT 服务初始化异常 不能创建本地文件");
             }
-        } else {
-            try {
-                if (in != null && DAT_FILE.length() != in.available() && DAT_FILE.delete()) {
-                    initDatFile();
-                }
-            } catch (IOException e) {
-                Exceptions.printStacks(e);
-            }
+            // 设置编码为gbk
+            writer = new OutputStreamWriter(new FileOutputStream(file), Const.GBK);
+            writer.write("init");
+            writer.flush();
+            // 清空重新写入数据
+            out = new FileOutputStream(file, false);
+            Streams.transfer(in, out);
+            out.flush();
+        } catch (Exception e) {
+            init = false;
+            throw Exceptions.init("region EXT 服务初始化异常 不能创建本地文件", e);
+        } finally {
+            Streams.close(in);
+            Streams.close(writer);
+            Streams.close(out);
         }
     }
 
@@ -114,13 +106,13 @@ public class LocationExt {
     static {
         initDatFile();
         if (!init) {
-            System.out.println("regionExt 服务未初始失败");
+            Console.error("regionExt 服务未初始化");
         } else {
             try {
                 seeker = new LocationSeeker(new File(DAT_PATH));
             } catch (Exception e) {
                 init = false;
-                System.out.println("regionExt 服务未初始失败");
+                Console.error("regionExt 服务未初始化");
                 Exceptions.printStacks(e);
             }
         }
@@ -132,9 +124,7 @@ public class LocationExt {
      * @return 实例
      */
     public static LocationSeeker getSeeker() {
-        if (!init) {
-            throw new RuntimeException("regionExt 未初始化成功");
-        }
+        checkInit();
         return seeker;
     }
 
@@ -145,9 +135,7 @@ public class LocationExt {
      * @return ignore
      */
     public static String getCountry(String ip) {
-        if (!init) {
-            throw new RuntimeException("regionExt 未初始化成功");
-        }
+        checkInit();
         if (!IPs.isIpv4(ip)) {
             return null;
         }
@@ -166,9 +154,7 @@ public class LocationExt {
      * @return ignore
      */
     public static String getAddress(String ip) {
-        if (!init) {
-            throw new RuntimeException("regionExt 未初始化成功");
-        }
+        checkInit();
         if (!IPs.isIpv4(ip)) {
             return null;
         }
@@ -187,9 +173,7 @@ public class LocationExt {
      * @return ignore
      */
     public static String getArea(String ip) {
-        if (!init) {
-            throw new RuntimeException("regionExt 未初始化成功");
-        }
+        checkInit();
         if (!IPs.isIpv4(ip)) {
             return null;
         }
@@ -208,9 +192,7 @@ public class LocationExt {
      * @return ignore
      */
     public static LocationSeeker.IpLocation getIpLocation(String ip) {
-        if (!init) {
-            throw new RuntimeException("regionExt 未初始化成功");
-        }
+        checkInit();
         if (!IPs.isIpv4(ip)) {
             return null;
         }
@@ -229,9 +211,7 @@ public class LocationExt {
      * @return ignore
      */
     public static Region getRegion(String ip) {
-        if (!init) {
-            throw new RuntimeException("regionExt 未初始化成功");
-        }
+        checkInit();
         if (!IPs.isIpv4(ip)) {
             return null;
         }
@@ -240,6 +220,12 @@ public class LocationExt {
         } catch (Exception e) {
             Exceptions.printStacks(e);
             return null;
+        }
+    }
+
+    private static void checkInit() {
+        if (!init) {
+            throw Exceptions.init("regionExt 未初始化成功");
         }
     }
 

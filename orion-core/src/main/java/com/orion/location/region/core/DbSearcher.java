@@ -3,8 +3,9 @@ package com.orion.location.region.core;
 import com.orion.location.region.block.DataBlock;
 import com.orion.location.region.block.IndexBlock;
 import com.orion.location.region.config.DbConfig;
+import com.orion.utils.io.Files1;
 
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.charset.StandardCharsets;
@@ -59,9 +60,14 @@ public class DbSearcher {
      */
     private byte[] dbBinStr = null;
 
-    public DbSearcher(DbConfig dbConfig, String dbFile) throws FileNotFoundException {
+    public DbSearcher(DbConfig dbConfig, String dbFile) {
         this.dbConfig = dbConfig;
-        raf = new RandomAccessFile(dbFile, "r");
+        raf = Files1.openRandomAccessSafe(dbFile, "r");
+    }
+
+    public DbSearcher(DbConfig dbConfig, File dbFile) {
+        this.dbConfig = dbConfig;
+        raf = Files1.openRandomAccessSafe(dbFile, "r");
     }
 
     public DbSearcher(DbConfig dbConfig, RandomAccessFile raf) {

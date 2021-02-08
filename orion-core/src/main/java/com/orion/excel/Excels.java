@@ -3,6 +3,7 @@ package com.orion.excel;
 import com.monitorjbl.xlsx.StreamingReader;
 import com.monitorjbl.xlsx.impl.StreamingSheet;
 import com.monitorjbl.xlsx.impl.StreamingWorkbook;
+import com.orion.constant.Const;
 import com.orion.excel.copy.CopySheet;
 import com.orion.excel.option.*;
 import com.orion.excel.picture.PictureParser;
@@ -62,21 +63,6 @@ public class Excels {
      */
     private static final int BUFFER_ROW = 100;
 
-    /**
-     * 流式读取缓冲区大小
-     */
-    private static final int BUFFER_SIZE = 1024 * 4;
-
-    /**
-     * 英文字母 数组
-     */
-    private static final String[] LETTERS = new String[]{
-            "A", "B", "C", "D", "E", "F", "G",
-            "H", "I", "J", "K", "L", "M", "N",
-            "O", "P", "Q", "R", "S", "T", "U",
-            "V", "W", "X", "Y", "Z"};
-
-
     private Excels() {
     }
 
@@ -113,21 +99,22 @@ public class Excels {
      * @return symbol
      */
     public static String getColumnSymbol(int column) {
-        Valid.gt(column, 0);
+        Valid.gt(column, 0, "column must > 0 && < 703");
+        Valid.lt(column, 703, "column must > 0 && < 703");
         if (column == 26) {
-            return LETTERS[25];
+            return Const.LETTERS[25];
         }
         String out = "";
         if (column / 26 != 0) {
             if (column % 26 == 0) {
-                out = LETTERS[column / 26 - 2];
-                out = out + LETTERS[25];
+                out = Const.LETTERS[column / 26 - 2];
+                out = out + Const.LETTERS[25];
             } else {
-                out = LETTERS[column / 26 - 1];
-                out = out + LETTERS[column % 26 - 1];
+                out = Const.LETTERS[column / 26 - 1];
+                out = out + Const.LETTERS[column % 26 - 1];
             }
         } else {
-            out = LETTERS[column - 1];
+            out = Const.LETTERS[column - 1];
         }
         return out;
     }
@@ -1829,51 +1816,51 @@ public class Excels {
     // --------------- open streaming ---------------
 
     public static Workbook openStreamingWorkbook(String file) {
-        return openStreamingWorkbook(new File(file), null, BUFFER_ROW, BUFFER_SIZE);
+        return openStreamingWorkbook(new File(file), null, BUFFER_ROW, Const.BUFFER_KB_4);
     }
 
     public static Workbook openStreamingWorkbook(File file) {
-        return openStreamingWorkbook(file, null, BUFFER_ROW, BUFFER_SIZE);
+        return openStreamingWorkbook(file, null, BUFFER_ROW, Const.BUFFER_KB_4);
     }
 
     public static Workbook openStreamingWorkbook(InputStream in) {
-        return openStreamingWorkbook(in, null, BUFFER_ROW, BUFFER_SIZE);
+        return openStreamingWorkbook(in, null, BUFFER_ROW, Const.BUFFER_KB_4);
     }
 
     public static Workbook openStreamingWorkbook(String file, String password) {
-        return openStreamingWorkbook(new File(file), password, BUFFER_ROW, BUFFER_SIZE);
+        return openStreamingWorkbook(new File(file), password, BUFFER_ROW, Const.BUFFER_KB_4);
     }
 
     public static Workbook openStreamingWorkbook(File file, String password) {
-        return openStreamingWorkbook(file, password, BUFFER_ROW, BUFFER_SIZE);
+        return openStreamingWorkbook(file, password, BUFFER_ROW, Const.BUFFER_KB_4);
     }
 
     public static Workbook openStreamingWorkbook(InputStream in, String password) {
-        return openStreamingWorkbook(in, password, BUFFER_ROW, BUFFER_SIZE);
+        return openStreamingWorkbook(in, password, BUFFER_ROW, Const.BUFFER_KB_4);
     }
 
     public static Workbook openStreamingWorkbook(String file, int rowCache) {
-        return openStreamingWorkbook(new File(file), null, rowCache, BUFFER_SIZE);
+        return openStreamingWorkbook(new File(file), null, rowCache, Const.BUFFER_KB_4);
     }
 
     public static Workbook openStreamingWorkbook(File file, int rowCache) {
-        return openStreamingWorkbook(file, null, rowCache, BUFFER_SIZE);
+        return openStreamingWorkbook(file, null, rowCache, Const.BUFFER_KB_4);
     }
 
     public static Workbook openStreamingWorkbook(InputStream in, int rowCache) {
-        return openStreamingWorkbook(in, null, rowCache, BUFFER_SIZE);
+        return openStreamingWorkbook(in, null, rowCache, Const.BUFFER_KB_4);
     }
 
     public static Workbook openStreamingWorkbook(String file, String password, int rowCache) {
-        return openStreamingWorkbook(new File(file), password, rowCache, BUFFER_SIZE);
+        return openStreamingWorkbook(new File(file), password, rowCache, Const.BUFFER_KB_4);
     }
 
     public static Workbook openStreamingWorkbook(File file, String password, int rowCache) {
-        return openStreamingWorkbook(file, password, rowCache, BUFFER_SIZE);
+        return openStreamingWorkbook(file, password, rowCache, Const.BUFFER_KB_4);
     }
 
     public static Workbook openStreamingWorkbook(InputStream in, String password, int rowCache) {
-        return openStreamingWorkbook(in, password, rowCache, BUFFER_SIZE);
+        return openStreamingWorkbook(in, password, rowCache, Const.BUFFER_KB_4);
     }
 
     public static Workbook openStreamingWorkbook(String file, int rowCache, int bufferSize) {

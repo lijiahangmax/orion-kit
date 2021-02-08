@@ -1,5 +1,6 @@
 package com.orion.utils.io;
 
+import com.orion.constant.Const;
 import com.orion.utils.Exceptions;
 
 import java.io.BufferedInputStream;
@@ -39,7 +40,7 @@ public class FileEncodes {
      * @return GBK UTF-16LE UTF-16BE UTF-8 默认GBK
      */
     public static String getEncoding(File file) {
-        String charset = "GBK";
+        String charset = Const.GBK;
         byte[] first3Bytes = new byte[3];
         try (BufferedInputStream bis = new BufferedInputStream(openInputStream(file))) {
             boolean checked = false;
@@ -50,13 +51,13 @@ public class FileEncodes {
                 bis.close();
                 return charset;
             } else if (first3Bytes[0] == (byte) 0xFF && first3Bytes[1] == (byte) 0xFE) {
-                charset = "UTF-16LE";
+                charset = Const.UTF_16LE;
                 checked = true;
             } else if (first3Bytes[0] == (byte) 0xFE && first3Bytes[1] == (byte) 0xFF) {
-                charset = "UTF-16BE";
+                charset = Const.UTF_16BE;
                 checked = true;
             } else if (first3Bytes[0] == (byte) 0xEF && first3Bytes[1] == (byte) 0xBB && first3Bytes[2] == (byte) 0xBF) {
-                charset = "UTF-8";
+                charset = Const.UTF_8;
                 checked = true;
             }
             bis.reset();
@@ -78,7 +79,7 @@ public class FileEncodes {
                         if (0x80 <= read && read <= 0xBF) {
                             read = bis.read();
                             if (0x80 <= read && read <= 0xBF) {
-                                charset = "UTF-8";
+                                charset = Const.UTF_8;
                                 break;
                             } else {
                                 break;

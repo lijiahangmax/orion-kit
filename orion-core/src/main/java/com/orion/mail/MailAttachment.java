@@ -1,6 +1,7 @@
 package com.orion.mail;
 
-import com.orion.utils.Strings;
+import com.orion.constant.Const;
+import com.orion.constant.StandardContentType;
 import com.orion.utils.Valid;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
@@ -35,12 +36,12 @@ public class MailAttachment implements Serializable {
     /**
      * 类型
      */
-    private String contentType = "application/octet-stream";
+    private String contentType = StandardContentType.APPLICATION_STREAM;
 
     /**
      * 编码
      */
-    private String charset = Strings.UTF8;
+    private String charset = Const.UTF_8;
 
     public MailAttachment() {
     }

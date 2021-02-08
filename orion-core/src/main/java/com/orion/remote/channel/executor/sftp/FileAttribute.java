@@ -1,6 +1,7 @@
 package com.orion.remote.channel.executor.sftp;
 
 import com.jcraft.jsch.SftpATTRS;
+import com.orion.constant.Const;
 import com.orion.utils.io.Files1;
 import com.orion.utils.time.Dates;
 
@@ -181,13 +182,13 @@ public class FileAttribute implements Serializable {
 
     public FileAttribute setModifyTime(Date modifyTime) {
         this.modifyTime = modifyTime;
-        this.attrs.setACMODTIME((int) (accessTime.getTime() / 1000), (int) (modifyTime.getTime() / 1000));
+        this.attrs.setACMODTIME((int) (accessTime.getTime() / Const.MS_S_1), (int) (modifyTime.getTime() / Const.MS_S_1));
         return this;
     }
 
     public FileAttribute setAccessTime(Date accessTime) {
         this.accessTime = accessTime;
-        this.attrs.setACMODTIME((int) (accessTime.getTime() / 1000), (int) (modifyTime.getTime() / 1000));
+        this.attrs.setACMODTIME((int) (accessTime.getTime() / Const.MS_S_1), (int) (modifyTime.getTime() / Const.MS_S_1));
         return this;
     }
 

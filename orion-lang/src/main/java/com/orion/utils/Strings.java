@@ -1,5 +1,7 @@
 package com.orion.utils;
 
+import com.orion.constant.Const;
+
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -23,8 +25,6 @@ public class Strings {
 
     public static final String SPACE = " ";
 
-    public static final String UTF8 = "UTF-8";
-
     private Strings() {
     }
 
@@ -35,7 +35,7 @@ public class Strings {
      * @return 字符串
      */
     public static String str(Object obj) {
-        return str(obj, UTF8);
+        return str(obj, Const.UTF_8);
     }
 
     /**
@@ -714,7 +714,7 @@ public class Strings {
                 byte[] b = new byte[2];
                 b[0] = (Integer.valueOf(highCode)).byteValue();
                 b[1] = (Integer.valueOf(lowCode)).byteValue();
-                build.append(new String(b, "GBK"));
+                build.append(new String(b, Const.GBK));
             }
         } catch (UnsupportedEncodingException e) {
             // ignore
@@ -1274,7 +1274,7 @@ public class Strings {
      * @return ignore
      */
     public static String toGBK(String s) {
-        return charset(s, "GBK");
+        return charset(s, Const.GBK);
     }
 
     /**
@@ -1284,7 +1284,7 @@ public class Strings {
      * @return ignore
      */
     public static String toUTF8(String s) {
-        return charset(s, "UTF-8");
+        return charset(s, Const.UTF_8);
     }
 
     /**
@@ -1294,7 +1294,7 @@ public class Strings {
      * @return ignore
      */
     public static String toASCII(String s) {
-        return charset(s, "US-ASCII");
+        return charset(s, Const.ASCII);
     }
 
     /**

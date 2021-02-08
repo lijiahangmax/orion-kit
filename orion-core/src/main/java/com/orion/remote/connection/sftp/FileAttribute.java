@@ -1,6 +1,7 @@
 package com.orion.remote.connection.sftp;
 
 import ch.ethz.ssh2.SFTPv3FileAttributes;
+import com.orion.constant.Const;
 import com.orion.utils.io.Files1;
 import com.orion.utils.time.Dates;
 
@@ -168,13 +169,13 @@ public class FileAttribute implements Serializable {
 
     public FileAttribute setModifyTime(Date modifyTime) {
         this.modifyTime = modifyTime;
-        this.attrs.mtime = ((int) (modifyTime.getTime() / 1000));
+        this.attrs.mtime = ((int) (modifyTime.getTime() / Const.MS_S_1));
         return this;
     }
 
     public FileAttribute setAccessTime(Date accessTime) {
         this.accessTime = accessTime;
-        this.attrs.atime = ((int) (accessTime.getTime() / 1000));
+        this.attrs.atime = ((int) (accessTime.getTime() / Const.MS_S_1));
         return this;
     }
 

@@ -1,5 +1,6 @@
 package com.orion.ftp.client.bigfile;
 
+import com.orion.constant.Const;
 import com.orion.ftp.client.FtpFileAttr;
 import com.orion.ftp.client.FtpInstance;
 import com.orion.utils.Exceptions;
@@ -101,7 +102,7 @@ public class FtpDownload implements Runnable {
                 Threads.start(() -> {
                     while (!done) {
                         long size = now;
-                        Threads.sleep(1000);
+                        Threads.sleep(Const.MS_S_1);
                         nowRate = now - size;
                     }
                 });
@@ -181,7 +182,7 @@ public class FtpDownload implements Runnable {
         }
         double used = useDate - startTime;
         double uploadBytes = now - startSize;
-        return (uploadBytes / used) * 1000;
+        return (uploadBytes / used) * Const.MS_S_1;
     }
 
     /**

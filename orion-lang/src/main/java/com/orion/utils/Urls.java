@@ -1,5 +1,6 @@
 package com.orion.utils;
 
+import com.orion.constant.Const;
 import com.orion.lang.collect.MutableHashMap;
 import com.orion.utils.ext.StringExt;
 import com.orion.utils.io.Streams;
@@ -17,8 +18,6 @@ import java.util.*;
  * @since 2019/9/10 14:26
  */
 public class Urls {
-
-    private static final String DEFAULT_CHARSET = "UTF-8";
 
     private Urls() {
     }
@@ -213,7 +212,7 @@ public class Urls {
      * @return 编码后的url
      */
     public static String encode(String url) {
-        return encode(url, DEFAULT_CHARSET);
+        return encode(url, Const.UTF_8);
     }
 
     /**
@@ -226,7 +225,7 @@ public class Urls {
     public static String encode(String url, String charset) {
         try {
             if (charset == null) {
-                return URLEncoder.encode(url, DEFAULT_CHARSET);
+                return URLEncoder.encode(url, Const.UTF_8);
             }
             return URLEncoder.encode(url, charset);
         } catch (Exception e) {
@@ -242,7 +241,7 @@ public class Urls {
      * @return 解码后的url
      */
     public static String decode(String url) {
-        return decode(url, DEFAULT_CHARSET);
+        return decode(url, Const.UTF_8);
     }
 
     /**
@@ -255,7 +254,7 @@ public class Urls {
     public static String decode(String url, String charset) {
         try {
             if (charset == null) {
-                return URLDecoder.decode(url, DEFAULT_CHARSET);
+                return URLDecoder.decode(url, Const.UTF_8);
             }
             return URLDecoder.decode(url, charset);
         } catch (Exception e) {

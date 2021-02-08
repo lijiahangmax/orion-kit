@@ -2,7 +2,7 @@ package com.orion.http.ok;
 
 import com.orion.able.Asyncable;
 import com.orion.able.Awaitable;
-import com.orion.http.common.HttpContent;
+import com.orion.http.common.HttpContentType;
 import com.orion.http.common.HttpCookie;
 import com.orion.http.common.HttpMethod;
 import com.orion.utils.Strings;
@@ -247,7 +247,7 @@ public class OkRequest implements Awaitable<OkResponse>, Asyncable<Consumer<OkRe
      * @param contentType contentType
      * @return this
      */
-    public OkRequest contentType(HttpContent contentType) {
+    public OkRequest contentType(HttpContentType contentType) {
         this.contentType = contentType.getType();
         return this;
     }
@@ -620,7 +620,7 @@ public class OkRequest implements Awaitable<OkResponse>, Asyncable<Consumer<OkRe
             requestBuilder.head();
         } else {
             if (this.contentType == null) {
-                this.contentType = HttpContent.TEXT_PLAIN.getType();
+                this.contentType = HttpContentType.TEXT_PLAIN.getType();
             }
             if (this.charset == null) {
                 if (this.body != null) {
@@ -773,7 +773,7 @@ public class OkRequest implements Awaitable<OkResponse>, Asyncable<Consumer<OkRe
 
     @Override
     public String toString() {
-        return url;
+        return method + " " + url;
     }
 
 }

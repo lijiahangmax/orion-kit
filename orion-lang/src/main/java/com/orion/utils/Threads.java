@@ -1,5 +1,6 @@
 package com.orion.utils;
 
+import com.orion.constant.Const;
 import com.orion.lang.Console;
 import com.orion.lang.thread.ConcurrentCallable;
 import com.orion.lang.thread.ConcurrentRunnable;
@@ -27,7 +28,7 @@ public class Threads {
             .setNamedThreadFactory("orion-global-thread-")
             .setCorePoolSize(2)
             .setMaxPoolSize(32)
-            .setKeepAliveTime(60 * 1000)
+            .setKeepAliveTime(Const.MS_S_60)
             .setWorkQueue(new LinkedBlockingQueue<>())
             .setAllowCoreThreadTimeOut(true)
             .build();

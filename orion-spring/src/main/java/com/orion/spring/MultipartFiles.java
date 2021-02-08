@@ -1,5 +1,7 @@
 package com.orion.spring;
 
+import com.orion.constant.Const;
+import com.orion.constant.StandardContentType;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.io.Streams;
@@ -19,12 +21,6 @@ import java.io.*;
  */
 public class MultipartFiles {
 
-    private static final int BUFFER_SIZE = 1024 * 8;
-
-    private static final String FILE_CONTENT_TYPE = "text/plain";
-
-    private static final String DEFAULT_CHARSET = "UTF-8";
-
     private MultipartFiles() {
     }
 
@@ -35,7 +31,7 @@ public class MultipartFiles {
      * @return MultipartFile
      */
     public static MultipartFile toMultiPartFile(File file) {
-        return toMultiPartFile(file, DEFAULT_CHARSET);
+        return toMultiPartFile(file, Const.UTF_8);
     }
 
     /**
@@ -72,7 +68,7 @@ public class MultipartFiles {
      * @return MultipartFile
      */
     public static MultipartFile toMultiPartFile(String src) {
-        return toMultiPartFile(src, DEFAULT_CHARSET);
+        return toMultiPartFile(src, Const.UTF_8);
     }
 
     /**
@@ -112,7 +108,7 @@ public class MultipartFiles {
      * @return MultipartFile
      */
     public static MultipartFile toMultiPartFile(InputStream in, String field, String fileName) {
-        return toMultiPartFile(in, DEFAULT_CHARSET, field, fileName);
+        return toMultiPartFile(in, Const.UTF_8, field, fileName);
     }
 
     /**
@@ -129,12 +125,12 @@ public class MultipartFiles {
         try {
             DiskFileItemFactory factory = new DiskFileItemFactory(16, null);
             factory.setDefaultCharset(charset);
-            FileItem item = factory.createItem(field, FILE_CONTENT_TYPE, true, fileName);
+            FileItem item = factory.createItem(field, StandardContentType.TEXT_PLAIN, true, fileName);
             int bytesRead;
-            byte[] buffer = new byte[BUFFER_SIZE];
+            byte[] buffer = new byte[Const.BUFFER_KB_8];
             try {
                 os = item.getOutputStream();
-                while ((bytesRead = in.read(buffer, 0, BUFFER_SIZE)) != -1) {
+                while ((bytesRead = in.read(buffer, 0, Const.BUFFER_KB_8)) != -1) {
                     os.write(buffer, 0, bytesRead);
                 }
                 os.close();

@@ -1,5 +1,6 @@
 package com.orion.utils.io;
 
+import com.orion.constant.Const;
 import com.orion.lang.wrapper.Args;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
@@ -23,11 +24,6 @@ import java.util.concurrent.Callable;
 public class FileMerge implements Callable<String> {
 
     /**
-     * 默认缓冲区大小 2m
-     */
-    private static int BUFFER_SIZE = 1024 * 2;
-
-    /**
      * 文件夹
      */
     private File file;
@@ -43,7 +39,7 @@ public class FileMerge implements Callable<String> {
     private int bufferSize;
 
     public FileMerge(String file) {
-        this(new File(file), BUFFER_SIZE);
+        this(new File(file), Const.BUFFER_KB_4);
     }
 
     public FileMerge(String file, int bufferSize) {
@@ -51,7 +47,7 @@ public class FileMerge implements Callable<String> {
     }
 
     public FileMerge(File file) {
-        this(file, BUFFER_SIZE);
+        this(file, Const.BUFFER_KB_4);
     }
 
     public FileMerge(File file, int bufferSize) {
@@ -64,8 +60,8 @@ public class FileMerge implements Callable<String> {
             throw new RuntimeException("File block does not exist");
         }
         this.blockFile = cf;
-        if (bufferSize < BUFFER_SIZE) {
-            bufferSize = BUFFER_SIZE;
+        if (bufferSize < Const.BUFFER_KB_4) {
+            bufferSize = Const.BUFFER_KB_4;
         }
         this.bufferSize = bufferSize;
     }

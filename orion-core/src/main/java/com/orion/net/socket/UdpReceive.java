@@ -1,5 +1,6 @@
 package com.orion.net.socket;
 
+import com.orion.constant.Const;
 import com.orion.utils.io.Streams;
 
 import java.io.IOException;
@@ -26,8 +27,8 @@ public class UdpReceive {
     public UdpReceive(int port) throws IOException {
         this.port = port;
         this.ds = new DatagramSocket(port);
-        this.ds.setSendBufferSize(4 * 1024);
-        this.ds.setSoTimeout(10 * 1000);
+        this.ds.setSendBufferSize(Const.BUFFER_KB_4);
+        this.ds.setSoTimeout(Const.MS_S_10);
     }
 
     public UdpReceive bufferSize(int bufferSize) throws SocketException {

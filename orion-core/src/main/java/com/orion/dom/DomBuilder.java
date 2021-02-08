@@ -1,6 +1,7 @@
 package com.orion.dom;
 
 import com.orion.able.Buildable;
+import com.orion.constant.Const;
 import com.orion.utils.Exceptions;
 import com.orion.utils.collect.Lists;
 import com.orion.utils.collect.Maps;
@@ -40,7 +41,7 @@ public class DomBuilder implements Buildable<DomBuilder> {
     /**
      * 编码格式
      */
-    private String charset = "UTF-8";
+    private String charset = Const.UTF_8;
 
     public DomBuilder() {
     }

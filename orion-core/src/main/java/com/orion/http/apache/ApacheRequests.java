@@ -2,7 +2,7 @@ package com.orion.http.apache;
 
 import com.orion.http.apache.file.ApacheDownload;
 import com.orion.http.apache.file.ApacheUpload;
-import com.orion.http.common.HttpContent;
+import com.orion.http.common.HttpContentType;
 import com.orion.http.common.HttpMethod;
 import org.apache.http.impl.client.CloseableHttpClient;
 
@@ -59,7 +59,7 @@ public class ApacheRequests {
      * @return response
      */
     public static ApacheResponse post(String url, byte[] body) {
-        return new ApacheRequest(url).method(HttpMethod.POST).contentType(HttpContent.APPLICATION_JSON).body(body).await();
+        return new ApacheRequest(url).method(HttpMethod.POST).contentType(HttpContentType.APPLICATION_JSON).body(body).await();
     }
 
     /**
@@ -70,7 +70,7 @@ public class ApacheRequests {
      * @return response
      */
     public static ApacheResponse post(String url, String body) {
-        return new ApacheRequest(url).method(HttpMethod.POST).contentType(HttpContent.APPLICATION_JSON).body(body).await();
+        return new ApacheRequest(url).method(HttpMethod.POST).contentType(HttpContentType.APPLICATION_JSON).body(body).await();
     }
 
     /**

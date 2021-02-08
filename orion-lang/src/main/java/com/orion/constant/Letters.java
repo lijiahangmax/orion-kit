@@ -1,7 +1,7 @@
-package com.orion.utils.constant;
+package com.orion.constant;
 
 /**
- * 符号常量
+ * 常量 符号 char
  *
  * @author ljh15
  * @version 1.0.0
@@ -18,6 +18,14 @@ public class Letters {
 
     public static final char QUOTE = '"';
 
+    public static final char SINGLE_QUOTE = '\'';
+
+    public static final char UNDERLINE = '_';
+
+    public static final char DASHED = '-';
+
+    public static final char COLON = ':';
+
     public static final char COMMA = ',';
 
     public static final char SPACE = ' ';
@@ -28,7 +36,11 @@ public class Letters {
 
     public static final char POUND = '#';
 
+    public static final char SLASH = '/';
+
     public static final char BACKSLASH = '\\';
+
+    public static final char AMP = '&';
 
     public static final char NULL = '\0';
 

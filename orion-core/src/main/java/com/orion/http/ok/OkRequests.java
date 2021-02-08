@@ -1,6 +1,6 @@
 package com.orion.http.ok;
 
-import com.orion.http.common.HttpContent;
+import com.orion.http.common.HttpContentType;
 import com.orion.http.common.HttpMethod;
 import com.orion.http.ok.file.OkAsyncDownload;
 import com.orion.http.ok.file.OkDownload;
@@ -63,7 +63,7 @@ public class OkRequests {
      * @return response
      */
     public static OkResponse post(String url, byte[] body) {
-        return new OkRequest(url).method(HttpMethod.POST).contentType(HttpContent.APPLICATION_JSON).body(body).await();
+        return new OkRequest(url).method(HttpMethod.POST).contentType(HttpContentType.APPLICATION_JSON).body(body).await();
     }
 
     /**
@@ -74,7 +74,7 @@ public class OkRequests {
      * @return response
      */
     public static OkResponse post(String url, String body) {
-        return new OkRequest(url).method(HttpMethod.POST).contentType(HttpContent.APPLICATION_JSON).body(body).await();
+        return new OkRequest(url).method(HttpMethod.POST).contentType(HttpContentType.APPLICATION_JSON).body(body).await();
     }
 
     /**
