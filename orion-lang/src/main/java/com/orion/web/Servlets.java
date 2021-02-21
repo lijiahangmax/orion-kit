@@ -2,8 +2,8 @@ package com.orion.web;
 
 import com.orion.constant.StandardContentType;
 import com.orion.lang.collect.MutableHashMap;
+import com.orion.lang.mutable.MutableString;
 import com.orion.utils.Urls;
-import com.orion.utils.ext.StringExt;
 import com.orion.utils.io.Streams;
 import com.orion.utils.net.IPs;
 
@@ -39,8 +39,8 @@ public class Servlets {
      * @param key     key
      * @return stringExt
      */
-    public static StringExt getParameter(HttpServletRequest request, String key) {
-        return new StringExt(request.getParameter(key));
+    public static MutableString getParameter(HttpServletRequest request, String key) {
+        return new MutableString(request.getParameter(key));
     }
 
     /**
@@ -90,8 +90,8 @@ public class Servlets {
      * @param key     keys
      * @return 请求头
      */
-    public static StringExt getHeader(HttpServletRequest request, String key) {
-        return new StringExt(request.getHeader(key));
+    public static MutableString getHeader(HttpServletRequest request, String key) {
+        return new MutableString(request.getHeader(key));
     }
 
     /**
@@ -421,8 +421,8 @@ public class Servlets {
      * @param key      keys
      * @return 请求头
      */
-    public static StringExt getHeader(HttpServletResponse response, String key) {
-        return new StringExt(response.getHeader(key));
+    public static MutableString getHeader(HttpServletResponse response, String key) {
+        return new MutableString(response.getHeader(key));
     }
 
     /**

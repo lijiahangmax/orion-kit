@@ -1,4 +1,4 @@
-package com.orion.remote.channel.executor.sftp;
+package com.orion.remote.channel.sftp;
 
 /**
  * SFTP 文件属性过滤器

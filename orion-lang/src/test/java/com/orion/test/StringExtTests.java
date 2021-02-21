@@ -1,6 +1,6 @@
 package com.orion.test;
 
-import com.orion.utils.ext.StringExt;
+import com.orion.lang.mutable.MutableString;
 import org.junit.Test;
 
 /**
@@ -12,7 +12,7 @@ public class StringExtTests {
 
     @Test
     public void s() {
-        StringExt e = new StringExt(null);
+        MutableString e = new MutableString(null);
         System.out.println("----------byte----------");
         System.out.println(e.toByte());
         System.out.println(e.toByteValue());

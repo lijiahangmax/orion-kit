@@ -15,12 +15,12 @@ public class HookRunnable implements Runnable {
     private Runnable task;
 
     /**
-     * 钩子任务
+     * hook
      */
     private Runnable hook;
 
     /**
-     * task 异常是否执行钩子
+     * task 异常是否执行hook
      */
     private boolean taskErrorRunHook = true;
 
@@ -43,7 +43,7 @@ public class HookRunnable implements Runnable {
         } catch (RuntimeException ex) {
             e = ex;
         }
-        if (e == null || taskErrorRunHook) {
+        if (hook != null && (e == null || taskErrorRunHook)) {
             hook.run();
         }
         if (e != null) {

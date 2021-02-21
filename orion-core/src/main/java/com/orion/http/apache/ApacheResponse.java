@@ -2,8 +2,8 @@ package com.orion.http.apache;
 
 import com.orion.http.common.HttpCookie;
 import com.orion.lang.collect.MutableArrayList;
+import com.orion.lang.mutable.MutableString;
 import com.orion.utils.Arrays1;
-import com.orion.utils.ext.StringExt;
 import com.orion.utils.io.Streams;
 import org.apache.http.*;
 
@@ -146,20 +146,20 @@ public class ApacheResponse implements Serializable {
         return list;
     }
 
-    public StringExt getHeader(String key) {
+    public MutableString getHeader(String key) {
         Header header = response.getFirstHeader(key);
         if (header != null) {
-            return new StringExt(header.getValue());
+            return new MutableString(header.getValue());
         }
-        return new StringExt(null);
+        return new MutableString(null);
     }
 
-    public StringExt getHeader(String key, String def) {
+    public MutableString getHeader(String key, String def) {
         Header header = response.getFirstHeader(key);
         if (header != null) {
-            return new StringExt(header.getValue(), def);
+            return new MutableString(header.getValue(), def);
         }
-        return new StringExt(def);
+        return new MutableString(def);
     }
 
     public List<HttpCookie> getCookies() {

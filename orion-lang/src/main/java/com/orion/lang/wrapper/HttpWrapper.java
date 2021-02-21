@@ -59,6 +59,14 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
         this.data = data;
     }
 
+    public HttpWrapper(CodeInfo info) {
+        this(info.code(), info.message(), null);
+    }
+
+    public HttpWrapper(CodeInfo info, T data) {
+        this(info.code(), info.message(), data);
+    }
+
     /**
      * 初始化
      */
@@ -69,27 +77,31 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
     /**
      * 定义
      */
-    public static <T> HttpWrapper<T> wrap(int code) {
-        return new HttpWrapper<>(code);
+    public static <T> HttpWrapper<T> of(CodeInfo info) {
+        return new HttpWrapper<>(info.code(), info.message());
     }
 
-    public static <T> HttpWrapper<T> wrap(int code, String msg) {
+    public static <T> HttpWrapper<T> of(CodeInfo info, T data) {
+        return new HttpWrapper<>(info.code(), info.message(), data);
+    }
+
+    public static <T> HttpWrapper<T> of(int code, String msg) {
         return new HttpWrapper<>(code, msg);
     }
 
-    public static <T> HttpWrapper<T> wrap(int code, String msg, Object... args) {
+    public static <T> HttpWrapper<T> of(int code, String msg, Object... args) {
         return new HttpWrapper<>(code, Strings.format(msg, args));
     }
 
-    public static <T> HttpWrapper<T> wrap(int code, String msg, T data) {
+    public static <T> HttpWrapper<T> of(int code, String msg, T data) {
         return new HttpWrapper<>(code, msg, data);
     }
 
-    public static <T> HttpWrapper<T> wrap(int code, T data) {
+    public static <T> HttpWrapper<T> of(int code, T data) {
         return new HttpWrapper<>(code, data);
     }
 
-    public static <T> HttpWrapper<T> wrap(T data, int code, String msg, Object... args) {
+    public static <T> HttpWrapper<T> of(T data, int code, String msg, Object... args) {
         return new HttpWrapper<>(code, Strings.format(msg, args), data);
     }
 

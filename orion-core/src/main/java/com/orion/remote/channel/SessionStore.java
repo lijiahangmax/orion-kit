@@ -1,11 +1,11 @@
 package com.orion.remote.channel;
 
 import com.jcraft.jsch.*;
-import com.orion.remote.channel.executor.CommandExecutor;
-import com.orion.remote.channel.executor.ShellExecutor;
-import com.orion.remote.channel.executor.sftp.SftpExecutor;
-import com.orion.remote.channel.executor.sftp.bigfile.SftpDownload;
-import com.orion.remote.channel.executor.sftp.bigfile.SftpUpload;
+import com.orion.remote.channel.sftp.SftpExecutor;
+import com.orion.remote.channel.sftp.bigfile.SftpDownload;
+import com.orion.remote.channel.sftp.bigfile.SftpUpload;
+import com.orion.remote.channel.ssh.CommandExecutor;
+import com.orion.remote.channel.ssh.ShellExecutor;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
 
@@ -22,13 +22,13 @@ public class SessionStore {
 
     private Session session;
 
-    protected SessionStore(String username, String host) {
+    public SessionStore(String username, String host) {
         this(username, host, 22);
     }
 
-    protected SessionStore(String username, String host, int port) {
+    public SessionStore(String username, String host, int port) {
         try {
-            this.session = SessionFactory.CH.getSession(username, host, port);
+            this.session = SessionHolder.CH.getSession(username, host, port);
         } catch (Exception e) {
             throw Exceptions.connection(e);
         }
@@ -77,6 +77,8 @@ public class SessionStore {
     public SessionStore setTimeout(int timeout) {
         Valid.gte(timeout, 0, "the time must greater than or equal 0");
         try {
+            session.setServerAliveInterval(timeout);
+            session.setServerAliveCountMax(2);
             session.setTimeout(timeout);
         } catch (Exception e) {
             // impossible
@@ -134,7 +136,7 @@ public class SessionStore {
      * @param password 密码
      * @return this
      */
-    public SessionStore seSocket4tProxy(String host, int port, String username, String password) {
+    public SessionStore setSocket4Proxy(String host, int port, String username, String password) {
         ProxySOCKS4 proxy = new ProxySOCKS4(host, port);
         proxy.setUserPasswd(username, password);
         session.setProxy(proxy);
@@ -243,6 +245,21 @@ public class SessionStore {
     public CommandExecutor getCommandExecutor(String command) {
         try {
             return new CommandExecutor((ChannelExec) session.openChannel("exec"), command);
+        } catch (JSchException e) {
+            throw Exceptions.state("could not open channel", e);
+        }
+    }
+
+    /**
+     * 获取 CommandExecutor
+     *
+     * @param command 命令
+     * @param charset 命令编码格式
+     * @return CommandExecutor
+     */
+    public CommandExecutor getCommandExecutor(String command, String charset) {
+        try {
+            return new CommandExecutor((ChannelExec) session.openChannel("exec"), command, charset);
         } catch (JSchException e) {
             throw Exceptions.state("could not open channel", e);
         }

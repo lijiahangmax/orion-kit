@@ -1,11 +1,11 @@
-package com.orion.remote.channel.executor.sftp.bigfile;
+package com.orion.remote.channel.sftp.bigfile;
 
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.SftpATTRS;
 import com.jcraft.jsch.SftpException;
 import com.orion.able.SafeCloseable;
 import com.orion.constant.Const;
-import com.orion.remote.channel.executor.sftp.SftpErrorMessage;
+import com.orion.remote.channel.sftp.SftpExecutor;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Threads;
 import com.orion.utils.io.FileLocks;
@@ -15,14 +15,14 @@ import com.orion.utils.io.Streams;
 import java.io.*;
 
 /**
- * SFTP 大文件下载
+ * SFTP 大文件上传
  * 支持断点续传, 实时速率, 平均速率
  *
  * @author ljh15
  * @version 1.0.0
- * @since 2020/10/13 18:26
+ * @since 2020/10/13 18:43
  */
-public class SftpDownload implements Runnable, SafeCloseable {
+public class SftpUpload implements Runnable, SafeCloseable {
 
     /**
      * channel
@@ -40,7 +40,7 @@ public class SftpDownload implements Runnable, SafeCloseable {
     private long endTime;
 
     /**
-     * 下载时文件大小
+     * 上传时文件大小
      */
     private long startSize;
 
@@ -72,7 +72,7 @@ public class SftpDownload implements Runnable, SafeCloseable {
     /**
      * 实时速率
      */
-    private volatile long nowRate;
+    private long nowRate;
 
     /**
      * 开启实时速率
@@ -84,15 +84,15 @@ public class SftpDownload implements Runnable, SafeCloseable {
      */
     private volatile boolean done;
 
-    public SftpDownload(ChannelSftp channel, String remote, String local) {
+    public SftpUpload(ChannelSftp channel, String remote, String local) {
         this(channel, remote, new File(local));
     }
 
-    public SftpDownload(ChannelSftp channel, String remote, File local) {
+    public SftpUpload(ChannelSftp channel, String remote, File local) {
         this.channel = channel;
         this.remote = remote;
         this.local = local;
-        this.lock = FileLocks.getSuffixFileLock("sftpdownload", local);
+        this.lock = FileLocks.getSuffixFileLock("sftpupload", local);
     }
 
     /**
@@ -100,7 +100,7 @@ public class SftpDownload implements Runnable, SafeCloseable {
      *
      * @return this
      */
-    public SftpDownload connect() {
+    public SftpUpload connect() {
         try {
             channel.connect();
             return this;
@@ -115,7 +115,7 @@ public class SftpDownload implements Runnable, SafeCloseable {
      * @param timeout 超时时间 ms
      * @return this
      */
-    public SftpDownload connect(int timeout) {
+    public SftpUpload connect(int timeout) {
         try {
             channel.connect(timeout);
             return this;
@@ -129,6 +129,8 @@ public class SftpDownload implements Runnable, SafeCloseable {
         this.startTime = System.currentTimeMillis();
         InputStream in = null;
         OutputStream out = null;
+        RandomAccessFile random = null;
+        size = local.length();
         try {
             if (openNowRate) {
                 Threads.start(() -> {
@@ -139,52 +141,70 @@ public class SftpDownload implements Runnable, SafeCloseable {
                     }
                 });
             }
-            SftpATTRS fileAttribute = channel.stat(remote);
-            size = fileAttribute.getSize();
+            SftpATTRS fileAttr = null;
+            try {
+                fileAttr = channel.stat(remote);
+            } catch (SftpException e) {
+                // 文件不存在
+                if (!new SftpExecutor(channel).touch(remote)) {
+                    throw Exceptions.ioRuntime("Cannot create remote file");
+                }
+            }
             if (local.exists() && lock.checkLock()) {
-                now = local.length();
-                in = channel.get(remote, null, now);
-                startSize = now;
-                if (startSize >= size) {
+                if (fileAttr == null) {
+                    now = 0;
+                    startSize = 0;
+                    out = channel.put(remote);
+                } else {
+                    now = fileAttr.getSize();
+                    startSize = fileAttr.getSize();
+                    out = channel.put(remote, 2);
+                }
+                if (now >= size) {
                     lock.unLock();
                     return;
                 }
-                out = new BufferedOutputStream(new FileOutputStream(local, true));
+                random = new RandomAccessFile(local, "r");
+                random.seek(startSize);
                 int read;
                 byte[] bs = new byte[Const.BUFFER_KB_8];
-                while (-1 != (read = in.read(bs, 0, Const.BUFFER_KB_8))) {
-                    now += read;
+                while (-1 != (read = random.read(bs))) {
                     out.write(bs, 0, read);
+                    now += read;
                 }
                 lock.unLock();
+                Streams.close(random);
             } else {
-                if (local.exists() && size == local.length()) {
-                    return;
+                if (fileAttr != null) {
+                    if (fileAttr.getSize() == size) {
+                        return;
+                    }
                 }
-                in = channel.get(remote);
-                Files1.touch(local);
+                out = channel.put(remote);
                 lock.tryLock();
-                out = new BufferedOutputStream(new FileOutputStream(local));
+                String parentPath = Files1.getParentPath(remote);
+                if (!new SftpExecutor(channel).mkdirs(parentPath)) {
+                    throw Exceptions.ioRuntime("Cannot create remote folder");
+                }
+                in = new BufferedInputStream(new FileInputStream(local));
                 int read;
                 byte[] bs = new byte[Const.BUFFER_KB_8];
-                while (-1 != (read = in.read(bs, 0, Const.BUFFER_KB_8))) {
-                    now += read;
+                while (-1 != (read = in.read(bs))) {
                     out.write(bs, 0, read);
+                    now += read;
                 }
                 lock.unLock();
             }
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         } catch (SftpException e) {
-            if (SftpErrorMessage.NO_SUCH_FILE.getMessage().equals(e.getMessage())) {
-                throw Exceptions.notFound("Not found remote file: " + remote);
-            }
             throw Exceptions.sftp(e);
         } finally {
             this.endTime = System.currentTimeMillis();
             this.done = true;
             Streams.close(in);
             Streams.close(out);
+            Streams.close(random);
         }
     }
 
@@ -198,7 +218,7 @@ public class SftpDownload implements Runnable, SafeCloseable {
      *
      * @return this
      */
-    public SftpDownload openNowRate() {
+    public SftpUpload openNowRate() {
         this.openNowRate = true;
         return this;
     }

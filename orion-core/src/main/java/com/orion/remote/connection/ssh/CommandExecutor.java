@@ -3,14 +3,15 @@ package com.orion.remote.connection.ssh;
 import ch.ethz.ssh2.ChannelCondition;
 import ch.ethz.ssh2.Session;
 import ch.ethz.ssh2.StreamGobbler;
-import com.orion.able.Executable;
-import com.orion.able.SafeCloseable;
+import com.orion.lang.thread.HookRunnable;
+import com.orion.remote.ExitCode;
 import com.orion.utils.Exceptions;
-import com.orion.utils.Strings;
 import com.orion.utils.Threads;
 import com.orion.utils.io.Streams;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.SequenceInputStream;
 import java.util.function.BiConsumer;
 
 /**
@@ -20,12 +21,7 @@ import java.util.function.BiConsumer;
  * @version 1.0.0
  * @since 2020/4/15 22:26
  */
-public class CommandExecutor implements Executable, SafeCloseable {
-
-    /**
-     * 会话
-     */
-    private Session session;
+public class CommandExecutor extends BaseRemoteExecutor {
 
     /**
      * 命令
@@ -57,16 +53,6 @@ public class CommandExecutor implements Executable, SafeCloseable {
     private long waitTime;
 
     /**
-     * 命令输入流
-     */
-    private OutputStream outputStream;
-
-    /**
-     * 命令输出流
-     */
-    private InputStream inputStream;
-
-    /**
      * 命令错误输出流
      */
     private InputStream errorStream;
@@ -77,37 +63,21 @@ public class CommandExecutor implements Executable, SafeCloseable {
     private InputStream inheritStream;
 
     /**
-     * 行处理器
+     * 错误输出流处理器
      */
-    private BiConsumer<CommandExecutor, String> lineHandler;
-
-    /**
-     * 行编码
-     */
-    private String lineCharset;
-
-    /**
-     * 命令输出处理器
-     */
-    private BiConsumer<CommandExecutor, InputStream> streamHandler;
+    private BiConsumer<? super BaseRemoteExecutor, InputStream> errorStreamHandler;
 
     /**
      * 执行状态 0未开始 1执行中 2执行完毕 3执行失败
      */
-    private volatile int runState;
-
-    /**
-     * 是否关闭
-     */
-    private boolean close;
+    private volatile int runStatus;
 
     public CommandExecutor(Session session, String command) {
-        this.session = session;
-        this.command = command;
+        this(session, command, null);
     }
 
     public CommandExecutor(Session session, String command, String commandCharset) {
-        this.session = session;
+        super(session);
         this.command = command;
         this.commandCharset = commandCharset;
     }
@@ -147,154 +117,76 @@ public class CommandExecutor implements Executable, SafeCloseable {
     }
 
     /**
-     * 写入命令
+     * 设置错误输出流处理器
      *
-     * @param command command
+     * @param errorStreamHandler 错误输出流处理器
      * @return this
      */
-    public CommandExecutor write(String command) {
-        return this.write(Strings.bytes(command));
-    }
-
-    /**
-     * 写入命令
-     *
-     * @param command command
-     * @param charset 编码格式
-     * @return this
-     */
-    public CommandExecutor write(String command, String charset) {
-        if (charset == null) {
-            return this.write(Strings.bytes(command));
-        } else {
-            return this.write(Strings.bytes(command, charset));
-        }
-    }
-
-    /**
-     * 写入命令
-     *
-     * @param command command
-     * @return this
-     */
-    public CommandExecutor write(byte[] command) {
-        try {
-            this.outputStream.write(command);
-            this.outputStream.write('\n');
-            this.outputStream.flush();
-        } catch (IOException e) {
-            throw Exceptions.ioRuntime(e);
-        }
+    public BaseRemoteExecutor errorStreamHandler(BiConsumer<? super BaseRemoteExecutor, InputStream> errorStreamHandler) {
+        this.errorStreamHandler = errorStreamHandler;
         return this;
     }
 
     /**
-     * 退出
-     *
-     * @return this
-     */
-    public CommandExecutor exit() {
-        return this.write(Strings.bytes("exit 0"));
-    }
-
-    /**
-     * 设置命令输出处理器
-     *
-     * @param streamHandler 命令输出处理器
-     * @return this
-     */
-    public CommandExecutor streamHandler(BiConsumer<CommandExecutor, InputStream> streamHandler) {
-        this.streamHandler = streamHandler;
-        return this;
-    }
-
-    /**
-     * 设置行处理器
-     *
-     * @param lineHandler 行处理器
-     * @return this
-     */
-    public CommandExecutor lineHandler(BiConsumer<CommandExecutor, String> lineHandler) {
-        this.lineHandler = lineHandler;
-        return this;
-    }
-
-    /**
-     * 设置行处理器
-     *
-     * @param lineHandler 行处理器
-     * @param lineCharset 行编码
-     * @return this
-     */
-    public CommandExecutor lineHandler(BiConsumer<CommandExecutor, String> lineHandler, String lineCharset) {
-        this.lineHandler = lineHandler;
-        this.lineCharset = lineCharset;
-        return this;
-    }
-
-    /**
-     * 启动并且读取输入
+     * 启动并且读取输出
      */
     @Override
     public void exec() {
-        if (lineHandler == null && streamHandler == null) {
-            throw Exceptions.runtime("lineHandler and streamHandler is null");
-        }
-        if (runState != 0) {
-            throw Exceptions.runtime("this executor can only be executed once");
-        }
+        super.exec();
         try {
             if (this.commandCharset != null) {
-                this.session.execCommand(this.command, this.commandCharset);
+                session.execCommand(this.command, this.commandCharset);
             } else {
-                this.session.execCommand(this.command);
+                session.execCommand(this.command);
             }
         } catch (Exception e) {
-            this.runState = 3;
+            runStatus = 3;
             throw Exceptions.runtime("execute command error", e);
         }
-        this.inputStream = new StreamGobbler(session.getStdout());
-        this.errorStream = new StreamGobbler(session.getStderr());
-        this.outputStream = session.getStdin();
-        if (this.inherit) {
-            this.inheritStream = new SequenceInputStream(this.inputStream, this.errorStream);
+        inputStream = new StreamGobbler(session.getStdout());
+        errorStream = new StreamGobbler(session.getStderr());
+        outputStream = session.getStdin();
+        if (inherit) {
+            inheritStream = new SequenceInputStream(inputStream, errorStream);
         }
-        this.runState = 1;
-        // read
-        if (lineHandler != null) {
-            Threads.start(() -> {
-                try {
-                    BufferedReader bufferedReader;
-                    if (lineCharset == null) {
-                        bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                    } else {
-                        bufferedReader = new BufferedReader(new InputStreamReader(inputStream, lineCharset));
-                    }
-                    String line;
-                    while (!close && (line = bufferedReader.readLine()) != null) {
-                        lineHandler.accept(this, line);
-                    }
-                } catch (Exception e) {
-                    throw Exceptions.ioRuntime(e);
-                }
-            });
-        } else if (streamHandler != null) {
-            Threads.start(() -> {
-                streamHandler.accept(this, inputStream);
-            });
-        }
+        runStatus = 1;
+        // read standard input & error stream
+        this.listenerInputAndError();
         // wait
         try {
-            if (this.waitFor == 0 && this.waitTime != 0) {
-                this.session.waitForCondition(ChannelCondition.CLOSED | ChannelCondition.EOF | ChannelCondition.EXIT_STATUS, this.waitTime);
+            if (waitFor == 0 && waitTime != 0) {
+                session.waitForCondition(ChannelCondition.CLOSED | ChannelCondition.EOF | ChannelCondition.EXIT_STATUS, this.waitTime);
             } else if (this.waitFor != 0) {
-                this.session.waitForCondition(this.waitFor, this.waitTime);
+                session.waitForCondition(waitFor, waitTime);
             }
+            done = true;
+            runStatus = 2;
         } catch (IOException e) {
-            this.runState = 3;
+            runStatus = 3;
             throw Exceptions.timeout(e);
         }
-        this.runState = 2;
+    }
+
+    /**
+     * 监听标准输出流和错误流
+     */
+    private void listenerInputAndError() {
+        Runnable runnable = new HookRunnable(() -> {
+            if (inherit) {
+                streamHandler.accept(this, inheritStream);
+            } else {
+                streamHandler.accept(this, inputStream);
+            }
+            if (errorStreamHandler != null && !inherit) {
+                errorStreamHandler.accept(this, errorStream);
+            }
+        }, () -> {
+            done = true;
+            if (this.callback != null) {
+                this.callback.accept(this);
+            }
+        }, true);
+        Threads.start(runnable, scheduler);
     }
 
     /**
@@ -303,15 +195,11 @@ public class CommandExecutor implements Executable, SafeCloseable {
     @Override
     public void close() {
         this.close = true;
-        Streams.close(this.outputStream);
-        Streams.close(this.inputStream);
-        Streams.close(this.errorStream);
-        Streams.close(this.inheritStream);
-        this.session.close();
-    }
-
-    public Session getSession() {
-        return session;
+        Streams.close(outputStream);
+        Streams.close(inputStream);
+        Streams.close(errorStream);
+        Streams.close(inheritStream);
+        session.close();
     }
 
     public String getCommand() {
@@ -329,12 +217,13 @@ public class CommandExecutor implements Executable, SafeCloseable {
         return session.getExitStatus();
     }
 
-    public OutputStream getOutputStream() {
-        return outputStream;
-    }
-
-    public InputStream getInputStream() {
-        return inputStream;
+    /**
+     * 是否正常退出
+     *
+     * @return ignore
+     */
+    public boolean isSuccessExit() {
+        return ExitCode.SUCCESS.getCode().equals(session.getExitStatus());
     }
 
     public InputStream getErrorStream() {
@@ -357,16 +246,8 @@ public class CommandExecutor implements Executable, SafeCloseable {
         return waitTime;
     }
 
-    public int getRunState() {
-        return runState;
-    }
-
-    public boolean isClose() {
-        return close;
-    }
-
-    public boolean isDone() {
-        return runState == 2 || runState == 3;
+    public int getRunStatus() {
+        return runStatus;
     }
 
     @Override

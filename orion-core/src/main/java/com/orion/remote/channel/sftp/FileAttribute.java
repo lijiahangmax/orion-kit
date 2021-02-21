@@ -1,4 +1,4 @@
-package com.orion.remote.channel.executor.sftp;
+package com.orion.remote.channel.sftp;
 
 import com.jcraft.jsch.SftpATTRS;
 import com.orion.constant.Const;

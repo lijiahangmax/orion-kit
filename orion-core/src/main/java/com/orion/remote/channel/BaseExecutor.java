@@ -1,4 +1,4 @@
-package com.orion.remote.channel.executor;
+package com.orion.remote.channel;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.Session;
@@ -7,18 +7,13 @@ import com.orion.able.SafeCloseable;
 import com.orion.utils.Exceptions;
 
 /**
- * BaseExecutor
+ * Executor 基类
  *
  * @author ljh15
  * @version 1.0.0
  * @since 2020/10/5 23:37
  */
 public abstract class BaseExecutor implements Executable, SafeCloseable {
-
-    /**
-     * 正常退出嘛
-     */
-    private static final Integer NORMAL_EXIT_CODE = 0;
 
     protected Channel channel;
 
@@ -42,6 +37,8 @@ public abstract class BaseExecutor implements Executable, SafeCloseable {
 
     /**
      * 打开连接
+     * 使用此方法可能会导致连接不上 但是还不会抛出异常! 即 isConnected() 返回false
+     * 因为设置了超时时间 会将 Channel#sendChannelOpen 的 retry 设置为1
      *
      * @param timeout 超时时间 ms
      * @return this
@@ -71,7 +68,7 @@ public abstract class BaseExecutor implements Executable, SafeCloseable {
      * @return this
      */
     public BaseExecutor disconnectSession() {
-        getSession().disconnect();
+        this.getSession().disconnect();
         return this;
     }
 
@@ -82,7 +79,7 @@ public abstract class BaseExecutor implements Executable, SafeCloseable {
      */
     public BaseExecutor disconnect() {
         channel.disconnect();
-        getSession().disconnect();
+        this.getSession().disconnect();
         return this;
     }
 
@@ -98,24 +95,6 @@ public abstract class BaseExecutor implements Executable, SafeCloseable {
      */
     public boolean isClosed() {
         return channel.isClosed();
-    }
-
-    /**
-     * 获取执行码
-     *
-     * @return 0正常结束
-     */
-    public int getExitCode() {
-        return channel.getExitStatus();
-    }
-
-    /**
-     * 是否正常退出
-     *
-     * @return ignore
-     */
-    public boolean isNormalExit() {
-        return NORMAL_EXIT_CODE.equals(channel.getExitStatus());
     }
 
     public Session getSession() {

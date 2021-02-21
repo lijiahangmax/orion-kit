@@ -4,6 +4,7 @@ import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.ConnectionInfo;
 import ch.ethz.ssh2.HTTPProxyData;
 import ch.ethz.ssh2.SFTPv3Client;
+import ch.ethz.ssh2.log.Logger;
 import com.orion.remote.connection.scp.ScpExecutor;
 import com.orion.remote.connection.sftp.SftpExecutor;
 import com.orion.remote.connection.sftp.bigfile.SftpDownload;
@@ -69,6 +70,20 @@ public class ConnectionStore {
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         }
+    }
+
+    /**
+     * 开启日志
+     */
+    public static void enableLogger() {
+        Logger.enabled = true;
+    }
+
+    /**
+     * 关闭日志
+     */
+    public static void disableLogger() {
+        Logger.enabled = false;
     }
 
     public ConnectionStore auth(String username) {

@@ -14,27 +14,27 @@ import org.slf4j.LoggerFactory;
 public enum SessionLogger {
 
     /**
-     * DEBUG
+     * DEBUG 0
      */
     DEBUG(com.jcraft.jsch.Logger.DEBUG),
 
     /**
-     * INFO
+     * INFO 1
      */
     INFO(com.jcraft.jsch.Logger.INFO),
 
     /**
-     * WARN
+     * WARN 2
      */
     WARN(com.jcraft.jsch.Logger.WARN),
 
     /**
-     * ERROR
+     * ERROR 3
      */
     ERROR(com.jcraft.jsch.Logger.ERROR),
 
     /**
-     * FATAL
+     * FATAL 4
      */
     FATAL(com.jcraft.jsch.Logger.FATAL);
 
@@ -63,7 +63,7 @@ public enum SessionLogger {
         return level;
     }
 
-    public static SessionLogger getSessionLogger(int level) {
+    public static SessionLogger getLogger(int level) {
         for (SessionLogger value : values()) {
             if (value.level == level) {
                 return value;
@@ -72,7 +72,7 @@ public enum SessionLogger {
         throw Exceptions.runtime();
     }
 
-    public static void log(int level, String msg) {
+    protected static void log(int level, String msg) {
         switch (level) {
             case com.jcraft.jsch.Logger.DEBUG:
                 LOGGER.debug(debugTag, msg);
@@ -91,7 +91,6 @@ public enum SessionLogger {
                 return;
             default:
         }
-
     }
 
     public static void setDebugTag(String debugTag) {

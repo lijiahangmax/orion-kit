@@ -1,11 +1,11 @@
 package com.orion.lang.collect;
 
+import com.orion.lang.mutable.MutableString;
 import com.orion.lang.wrapper.Args;
 import com.orion.lang.wrapper.Pair;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Valid;
 import com.orion.utils.convert.Converts;
-import com.orion.utils.ext.StringExt;
 import com.orion.utils.math.BigDecimals;
 import com.orion.utils.math.BigIntegers;
 
@@ -324,24 +324,24 @@ public interface MutableMap<K, V> extends Map<K, V> {
         return Converts.toString(v);
     }
 
-    default StringExt getStringExt(K k) {
-        return new StringExt(Converts.toString(get(k)));
+    default MutableString getStringExt(K k) {
+        return new MutableString(Converts.toString(get(k)));
     }
 
-    default StringExt getStringExt(K k, String def) {
+    default MutableString getStringExt(K k, String def) {
         V v = get(k);
         if (v == null) {
-            return new StringExt(def);
+            return new MutableString(def);
         }
-        return new StringExt(Converts.toString(v));
+        return new MutableString(Converts.toString(v));
     }
 
-    default StringExt getStringExt(K k, StringExt def) {
+    default MutableString getStringExt(K k, MutableString def) {
         V v = get(k);
         if (v == null) {
             return def;
         }
-        return new StringExt(Converts.toString(v));
+        return new MutableString(Converts.toString(v));
     }
 
     default Date getDate(K k) {

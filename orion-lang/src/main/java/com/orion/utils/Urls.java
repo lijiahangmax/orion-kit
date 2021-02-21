@@ -2,7 +2,7 @@ package com.orion.utils;
 
 import com.orion.constant.Const;
 import com.orion.lang.collect.MutableHashMap;
-import com.orion.utils.ext.StringExt;
+import com.orion.lang.mutable.MutableString;
 import com.orion.utils.io.Streams;
 
 import java.io.IOException;
@@ -166,8 +166,8 @@ public class Urls {
      * @param key key
      * @return value
      */
-    public static StringExt queryExt(String url, String key) {
-        return new StringExt(query(url, key));
+    public static MutableString queryExt(String url, String key) {
+        return new MutableString(query(url, key));
     }
 
     /**

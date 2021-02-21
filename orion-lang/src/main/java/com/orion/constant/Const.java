@@ -28,9 +28,11 @@ public class Const {
 
     public static final String ORION = "orion";
 
+    public static final String ORION_DISPLAY = ".orion";
+
     public static final String ORION_VERSION = "1.0.0";
 
-    public static final String ORION_AUTHOR = "Li Jiahang";
+    public static final String ORION_AUTHOR = "Jiahang Li";
 
     public static final String ORION_EMAIL = "li1553488@aliyun.com";
 
@@ -75,5 +77,9 @@ public class Const {
     public static final int MS_S_10 = 1000 * 10;
 
     public static final int MS_S_60 = 1000 * 60;
+
+    // --------------- io ---------------
+
+    public static final String STREAM_CLOSE = "Stream closed";
 
 }

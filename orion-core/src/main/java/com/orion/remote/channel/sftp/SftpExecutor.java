@@ -1,13 +1,13 @@
-package com.orion.remote.channel.executor.sftp;
+package com.orion.remote.channel.sftp;
 
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.SftpATTRS;
 import com.jcraft.jsch.SftpException;
 import com.orion.constant.Const;
 import com.orion.lang.StreamEntry;
-import com.orion.remote.channel.executor.BaseExecutor;
-import com.orion.remote.channel.executor.sftp.bigfile.SftpDownload;
-import com.orion.remote.channel.executor.sftp.bigfile.SftpUpload;
+import com.orion.remote.channel.BaseExecutor;
+import com.orion.remote.channel.sftp.bigfile.SftpDownload;
+import com.orion.remote.channel.sftp.bigfile.SftpUpload;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Matches;
 import com.orion.utils.Strings;

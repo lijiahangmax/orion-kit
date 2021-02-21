@@ -7,15 +7,15 @@ import com.orion.utils.Exceptions;
 import java.io.InputStream;
 
 /**
- * Session Factory
+ * Session Holder
  *
  * @author ljh15
  * @version 1.0.0
  * @since 2020/9/23 17:48
  */
-public class SessionFactory {
+public class SessionHolder {
 
-    private SessionFactory() {
+    private SessionHolder() {
     }
 
     protected static final JSch CH = new JSch();
@@ -32,7 +32,7 @@ public class SessionFactory {
         JSch.setLogger(new Logger() {
             @Override
             public boolean isEnabled(int level) {
-                return level <= loggerLevel;
+                return loggerLevel <= level;
             }
 
             @Override
@@ -150,15 +150,6 @@ public class SessionFactory {
      */
     public static SessionStore getSession(String username, String host, int port) {
         return new SessionStore(username, host, port);
-    }
-
-    /**
-     * 关闭session
-     *
-     * @param store SessionStore
-     */
-    public static void disconnectSession(SessionStore store) {
-        store.disconnect();
     }
 
 }

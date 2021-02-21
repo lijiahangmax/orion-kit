@@ -1,8 +1,9 @@
 package com.orion.test.remote.channel;
 
-import com.orion.remote.channel.SessionFactory;
+import com.orion.function.impl.ReaderLineBiConsumer;
+import com.orion.remote.channel.SessionHolder;
 import com.orion.remote.channel.SessionLogger;
-import com.orion.remote.channel.executor.ShellExecutor;
+import com.orion.remote.channel.ssh.ShellExecutor;
 import com.orion.utils.Threads;
 
 /**
@@ -13,31 +14,28 @@ import com.orion.utils.Threads;
 public class ShellExecutorTests {
 
     public static void main(String[] args) {
-        SessionFactory.setLogger(SessionLogger.INFO);
-        ShellExecutor e = SessionFactory.getSession("root", "192.168.146.230")
+        SessionHolder.setLogger(SessionLogger.INFO);
+        ShellExecutor e = SessionHolder.getSession("root", "192.168.146.230")
                 .setPassword("admin123")
                 .setTimeout(20000)
                 .connect(20000)
-                .getShellExecutor()
-                .lineHandler((exec, s) -> {
-                    System.out.println(s);
-                });
+                .getShellExecutor();
+        e.streamHandler(ReaderLineBiConsumer.getDefaultPrint2());
+        e.callback(exe -> System.out.println("end...."));
         e.connect(20000).exec();
         e.write("ps -ef | grep java")
                 .write("ps -ef | grep ssh")
-                .write("ping www.baidu.com");
-        Threads.sleep(2000);
+                .write("ping www.baidu.com")
+                // block
+                .write("ping www.jd.com");
+        Threads.sleep(4000);
         System.out.println("--------------------------");
         System.out.println(e.isClosed());
         System.out.println(e.isConnected());
-        System.out.println(e.getExitCode());
-        System.out.println(e.isNormalExit());
         System.out.println("--------------------------");
-        e.disconnect().close();
+        e.close();
         System.out.println(e.isClosed());
         System.out.println(e.isConnected());
-        System.out.println(e.getExitCode());
-        System.out.println(e.isNormalExit());
         System.out.println("--------------------------");
     }
 

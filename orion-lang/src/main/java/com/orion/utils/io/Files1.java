@@ -38,7 +38,7 @@ public class Files1 {
     /**
      * IO 临时文件夹
      */
-    private static final String IO_TEMP_DIR = File.separator + "." + Const.ORION + File.separator + ".temp" + File.separator;
+    private static final String IO_TEMP_DIR = File.separator + Const.ORION_DISPLAY + File.separator + ".temp" + File.separator;
 
     private static final String[] SIZE_UNIT = {"K", "KB", "M", "MB", "MBPS", "G", "GB", "T", "TB", "B"};
 
@@ -644,44 +644,62 @@ public class Files1 {
     }
 
     /**
-     * 将resource文件保存到本地
+     * 将资源文件保存到本地
      *
-     * @param source   文件
-     * @param childDir 子文件夹
-     * @param charset  编码格式
-     * @param force    如果存在是否覆盖
-     * @return 文件路径 null未找到资源
+     * @param source 资源
+     * @param file   file
+     * @throws IOException exception
      */
-    public static String resourceToFile(String source, String childDir, String charset, boolean force) {
-        File file = new File(getRootPathFile(childDir, source));
-        boolean write = false;
-        if (file.exists() && file.isFile()) {
-            if (force) {
-                write = true;
-            }
-        } else {
-            touch(file, charset);
-            write = true;
+    public static boolean resourceToFile(String source, String file) throws IOException {
+        return resourceToFile(source, file, null);
+    }
+
+    /**
+     * 将资源文件保存到本地
+     *
+     * @param source  资源
+     * @param file    file
+     * @param charset 编码
+     * @return 是否保存成功
+     * @throws IOException exception
+     */
+    public static boolean resourceToFile(String source, String path, String charset) throws IOException {
+        File file = new File(path);
+        InputStream in = Files1.class.getClassLoader().getResourceAsStream(source);
+        boolean needInit = false;
+        if (!file.exists() || !file.isFile()) {
+            needInit = true;
         }
-        if (write) {
-            InputStream in = Files1.class.getClassLoader().getResourceAsStream(source);
-            if (in == null) {
-                return null;
-            }
-            try (OutputStream out = openOutputStream(file)) {
-                byte[] bs = new byte[Const.BUFFER_KB_8];
-                int read;
-                while (-1 != (read = in.read(bs))) {
-                    out.write(bs, 0, read);
+        if (!needInit) {
+            try {
+                if (in != null && file.length() != in.available()) {
+                    needInit = true;
                 }
-                out.flush();
             } catch (Exception e) {
-                throw Exceptions.ioRuntime(e);
-            } finally {
-                Streams.close(in);
+                // ignore
             }
         }
-        return file.getAbsolutePath();
+        if (needInit && in == null) {
+            return false;
+        }
+        OutputStreamWriter writer = null;
+        FileOutputStream out = null;
+        try {
+            if (!Files1.touch(file, charset)) {
+                return false;
+            }
+            // 清空重新写入数据
+            out = new FileOutputStream(file, false);
+            Streams.transfer(in, out);
+            out.flush();
+        } catch (IOException e) {
+            throw e;
+        } finally {
+            Streams.close(in);
+            Streams.close(writer);
+            Streams.close(out);
+        }
+        return true;
     }
 
     /**
@@ -1020,7 +1038,7 @@ public class Files1 {
             try {
                 if (charset != null) {
                     try (OutputStreamWriter w = new OutputStreamWriter(openOutputStream(file), charset)) {
-                        w.write(Strings.EMPTY);
+                        w.write(Strings.SPACE);
                     } catch (IOException e) {
                         return false;
                     }

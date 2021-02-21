@@ -6,9 +6,14 @@ import com.orion.utils.Strings;
 import com.orion.utils.Threads;
 import com.orion.utils.io.Streams;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * 同步进程执行器
@@ -60,14 +65,19 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
     private BiConsumer<ProcessAwaitExecutor, InputStream> streamHandler;
 
     /**
-     * 行处理器
+     * 流处理器
      */
-    private BiConsumer<ProcessAwaitExecutor, String> lineHandler;
+    private BiConsumer<ProcessAwaitExecutor, InputStream> errorStreamHandler;
 
     /**
-     * 行处理器编码
+     * 执行完毕回调
      */
-    private String lineCharset;
+    protected Consumer<? super ProcessAwaitExecutor> callback;
+
+    /**
+     * pool
+     */
+    protected ExecutorService scheduler;
 
     /**
      * 是否已完成
@@ -128,9 +138,9 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
     }
 
     /**
-     * 设置命令输出处理器
+     * 设置标准输出流处理器
      *
-     * @param streamHandler 命令输出处理器
+     * @param streamHandler 标准输出流处理器
      * @return this
      */
     public ProcessAwaitExecutor streamHandler(BiConsumer<ProcessAwaitExecutor, InputStream> streamHandler) {
@@ -139,26 +149,35 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
     }
 
     /**
-     * 设置行处理器
+     * 设置标错误出流处理器
      *
-     * @param lineHandler 行处理器
+     * @param errorStreamHandler 错误输出流处理器
      * @return this
      */
-    public ProcessAwaitExecutor lineHandler(BiConsumer<ProcessAwaitExecutor, String> lineHandler) {
-        this.lineHandler = lineHandler;
+    public ProcessAwaitExecutor errorStreamHandler(BiConsumer<ProcessAwaitExecutor, InputStream> errorStreamHandler) {
+        this.errorStreamHandler = errorStreamHandler;
         return this;
     }
 
     /**
-     * 设置行处理器
+     * 设置读取线程池
      *
-     * @param lineHandler 行处理器
-     * @param lineCharset 行编码
+     * @param scheduler pool
      * @return this
      */
-    public ProcessAwaitExecutor lineHandler(BiConsumer<ProcessAwaitExecutor, String> lineHandler, String lineCharset) {
-        this.lineHandler = lineHandler;
-        this.lineCharset = lineCharset;
+    public ProcessAwaitExecutor scheduler(ExecutorService scheduler) {
+        this.scheduler = scheduler;
+        return this;
+    }
+
+    /**
+     * 回调
+     *
+     * @param callback 回调方法
+     * @return this
+     */
+    public ProcessAwaitExecutor callback(Consumer<ProcessAwaitExecutor> callback) {
+        this.callback = callback;
         return this;
     }
 
@@ -206,8 +225,8 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
 
     @Override
     public void exec() {
-        if (lineHandler == null && streamHandler == null) {
-            throw Exceptions.runtime("lineHandler and streamHandler is null");
+        if (streamHandler == null) {
+            throw Exceptions.runtime("streamHandler is null");
         }
         try {
             this.pb = new ProcessBuilder(command);
@@ -231,32 +250,7 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
             this.errorStream = this.process.getErrorStream();
 
             // 如果流不处理可能会阻塞
-            if (streamHandler != null) {
-                Threads.start(new HookRunnable(() -> {
-                    streamHandler.accept(this, this.inputStream);
-                }, () -> {
-                    this.done = true;
-                }, true));
-            } else if (lineHandler != null) {
-                Threads.start(new HookRunnable(() -> {
-                    try {
-                        BufferedReader bufferedReader;
-                        if (lineCharset == null) {
-                            bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                        } else {
-                            bufferedReader = new BufferedReader(new InputStreamReader(inputStream, lineCharset));
-                        }
-                        String line;
-                        while (!close && (line = bufferedReader.readLine()) != null) {
-                            lineHandler.accept(this, line);
-                        }
-                    } catch (Exception e) {
-                        throw Exceptions.ioRuntime(e);
-                    }
-                }, () -> {
-                    this.done = true;
-                }, true));
-            }
+            this.listenerInputAndError();
 
             if (this.waitFor != -1) {
                 if (this.waitFor != 0) {
@@ -311,7 +305,16 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
     }
 
     /**
-     * 获取exit code
+     * 退出
+     *
+     * @return this
+     */
+    public ProcessAwaitExecutor exit() {
+        return this.write(Strings.bytes("exit 0"));
+    }
+
+    /**
+     * 获取exit code 会阻塞
      *
      * @return -1 未执行完毕  0 成功  1 失败
      */
@@ -331,6 +334,24 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
     @Override
     public ProcessBuilder getProcessBuilder() {
         return pb;
+    }
+
+    /**
+     * 监听标准输出流和错误流
+     */
+    private void listenerInputAndError() {
+        Runnable runnable = new HookRunnable(() -> {
+            streamHandler.accept(this, inputStream);
+            if (errorStreamHandler != null && !redirectError) {
+                errorStreamHandler.accept(this, errorStream);
+            }
+        }, () -> {
+            done = true;
+            if (this.callback != null) {
+                this.callback.accept(this);
+            }
+        }, true);
+        Threads.start(runnable, scheduler);
     }
 
     public InputStream getInputStream() {

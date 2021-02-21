@@ -74,6 +74,14 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
         this.data = data;
     }
 
+    public RpcWrapper(CodeInfo info) {
+        this(info.code(), info.message(), null);
+    }
+
+    public RpcWrapper(CodeInfo info, T data) {
+        this(info.code(), info.message(), data);
+    }
+
     /**
      * 初始化
      */
@@ -84,27 +92,35 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
     /**
      * 定义
      */
-    public static <T> RpcWrapper<T> wrap(int code) {
+    public static <T> RpcWrapper<T> of(CodeInfo info) {
+        return new RpcWrapper<>(info.code(), info.message());
+    }
+
+    public static <T> RpcWrapper<T> of(CodeInfo info, T data) {
+        return new RpcWrapper<>(info.code(), info.message(), data);
+    }
+
+    public static <T> RpcWrapper<T> of(int code) {
         return new RpcWrapper<>(code);
     }
 
-    public static <T> RpcWrapper<T> wrap(int code, String msg) {
+    public static <T> RpcWrapper<T> of(int code, String msg) {
         return new RpcWrapper<>(code, msg);
     }
 
-    public static <T> RpcWrapper<T> wrap(int code, String msg, Object... args) {
+    public static <T> RpcWrapper<T> of(int code, String msg, Object... args) {
         return new RpcWrapper<>(code, Strings.format(msg, args));
     }
 
-    public static <T> RpcWrapper<T> wrap(int code, String msg, T data) {
+    public static <T> RpcWrapper<T> of(int code, String msg, T data) {
         return new RpcWrapper<>(code, msg, data);
     }
 
-    public static <T> RpcWrapper<T> wrap(int code, T data) {
+    public static <T> RpcWrapper<T> of(int code, T data) {
         return new RpcWrapper<>(code, data);
     }
 
-    public static <T> RpcWrapper<T> wrap(T data, int code, String msg, Object... args) {
+    public static <T> RpcWrapper<T> of(T data, int code, String msg, Object... args) {
         return new RpcWrapper<>(code, Strings.format(msg, args), data);
     }
 

@@ -1,9 +1,9 @@
 package com.orion.test.remote.channel;
 
-import com.orion.remote.channel.SessionFactory;
+import com.orion.function.impl.ReaderLineBiConsumer;
+import com.orion.remote.channel.SessionHolder;
 import com.orion.remote.channel.SessionLogger;
-import com.orion.remote.channel.executor.CommandExecutor;
-import com.orion.utils.Threads;
+import com.orion.remote.channel.ssh.CommandExecutor;
 
 /**
  * @author ljh15
@@ -13,33 +13,42 @@ import com.orion.utils.Threads;
 public class CommandExecutorTests {
 
     public static void main(String[] args) {
-        SessionFactory.setLogger(SessionLogger.INFO);
-        CommandExecutor executeChannel = SessionFactory.getSession("root", "192.168.146.230")
+        ls();
+        System.out.println("/---------------------------/");
+        echo();
+    }
+
+    private static void ls() {
+        SessionHolder.setLogger(SessionLogger.ERROR);
+        CommandExecutor e = SessionHolder.getSession("root", "192.168.146.230")
                 .setPassword("admin123")
                 .setTimeout(20000)
                 .connect(20000)
-                .getCommandExecutor("ls -la /")
-                .inherit()
-                .lineHandler((exec, l) -> {
-                    System.out.println(l);
-                });
-        // .streamHandler((exec, in) -> {
-        //     try {
-        //         Streams.copy(in, Files1.openOutputStream("C:\\Users\\ljh15\\Desktop\\key\\1"));
-        //     } catch (IOException e) {
-        //         // ignore
-        //     }
-        // });
-        executeChannel.connect(20000).exec();
-        Threads.sleep(2000);
-        System.out.println("--------------------------");
-        System.out.println(executeChannel.isDone());
-        System.out.println(executeChannel.isClosed());
-        System.out.println(executeChannel.isConnected());
-        System.out.println(executeChannel.getExitCode());
-        System.out.println(executeChannel.isNormalExit());
-        System.out.println("--------------------------");
-        executeChannel.disconnect().close();
+                .getCommandExecutor("ls -la /a/b/c");
+        e.callback(exe -> {
+            System.out.println("end....");
+            System.out.println(e.getExitCode());
+            e.close();
+        });
+        e.streamHandler(ReaderLineBiConsumer.getDefaultPrint2());
+        e.errorStreamHandler(ReaderLineBiConsumer.getDefaultPrint2());
+        e.connect().exec();
+    }
+
+    private static void echo() {
+        SessionHolder.setLogger(SessionLogger.INFO);
+        CommandExecutor e = SessionHolder.getSession("root", "192.168.146.230")
+                .setPassword("admin123")
+                .setTimeout(20000)
+                .connect(20000)
+                .getCommandExecutor("echo $PATH");
+        e.inherit().streamHandler(ReaderLineBiConsumer.getDefaultPrint2());
+        e.callback(exe -> {
+            System.out.println("结束....");
+            System.out.println(e.getExitCode());
+            e.close();
+        });
+        e.connect().exec();
     }
 
 }

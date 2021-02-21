@@ -2,9 +2,9 @@ package com.orion.http.ok;
 
 import com.orion.able.SafeCloseable;
 import com.orion.http.common.HttpCookie;
+import com.orion.lang.mutable.MutableString;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
-import com.orion.utils.ext.StringExt;
 import com.orion.utils.io.Streams;
 import okhttp3.Call;
 import okhttp3.Request;
@@ -314,12 +314,12 @@ public class OkResponse implements Serializable, SafeCloseable {
         return response.headers(key);
     }
 
-    public StringExt getHeader(String key) {
-        return new StringExt(response.header(key));
+    public MutableString getHeader(String key) {
+        return new MutableString(response.header(key));
     }
 
-    public StringExt getHeader(String key, String def) {
-        return new StringExt(response.header(key, def));
+    public MutableString getHeader(String key, String def) {
+        return new MutableString(response.header(key, def));
     }
 
     public List<HttpCookie> getCookies() {

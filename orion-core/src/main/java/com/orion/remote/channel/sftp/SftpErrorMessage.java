@@ -1,4 +1,4 @@
-package com.orion.remote.channel.executor.sftp;
+package com.orion.remote.channel.sftp;
 
 /**
  * SFTP 错误信息

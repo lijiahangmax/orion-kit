@@ -1,7 +1,8 @@
 package com.orion.test.process;
 
 import com.orion.constant.Const;
-import com.orion.lang.Console;
+import com.orion.function.FunctionConst;
+import com.orion.function.impl.ReaderLineBiConsumer;
 import com.orion.process.ProcessAwaitExecutor;
 import com.orion.utils.Threads;
 
@@ -18,8 +19,10 @@ public class ProcessAwaitTests {
 
     public static void echo() {
         new ProcessAwaitExecutor("echo %JAVA_HOME%")
-                .lineHandler((e, l) -> {
-                    System.out.println(l);
+                .streamHandler(ReaderLineBiConsumer.getDefaultPrint2())
+                .callback(e -> {
+                    System.out.println("end");
+                    e.close();
                 })
                 .terminal()
                 .exec();
@@ -27,8 +30,10 @@ public class ProcessAwaitTests {
 
     public static void sql() {
         ProcessAwaitExecutor exec = new ProcessAwaitExecutor("mysql -u root -padmin123")
-                .lineHandler((e, l) -> {
-                    System.out.println(l);
+                .streamHandler(ReaderLineBiConsumer.getDefaultPrint2())
+                .callback(e -> {
+                    System.out.println("end");
+                    e.close();
                 });
         exec.terminal()
                 .redirectError()
@@ -41,15 +46,17 @@ public class ProcessAwaitTests {
 
     public static void bat() {
         new ProcessAwaitExecutor("C:\\Users\\ljh15\\Desktop\\1.bat")
-                .lineHandler((e, l) -> {
-                    System.out.println(l);
-                })
+                .streamHandler(ReaderLineBiConsumer.getDefaultPrint2())
                 .exec();
     }
 
     public static void ping() {
         ProcessAwaitExecutor e = new ProcessAwaitExecutor("ping www.baidu.com -n 100")
-                .lineHandler(Console::trace, Const.GBK);
+                .streamHandler(new ReaderLineBiConsumer().charset(Const.GBK).lineConsumer(FunctionConst.PRINT_2_BI_CONSUMER));
+        e.callback(ex -> {
+            System.out.println("end");
+            ex.close();
+        });
         e.terminal();
         e.exec();
         Threads.sleep(2000);

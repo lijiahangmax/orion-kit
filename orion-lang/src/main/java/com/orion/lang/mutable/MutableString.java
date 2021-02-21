@@ -1,4 +1,4 @@
-package com.orion.utils.ext;
+package com.orion.lang.mutable;
 
 import com.orion.utils.Objects1;
 import com.orion.utils.Strings;
@@ -12,29 +12,30 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Objects;
 
 /**
- * String 拓展类
+ * 可变 String
  *
  * @author ljh15
  * @version 1.0.0
  * @since 2020/3/13 14:11
  */
-public class StringExt implements CharSequence, Serializable {
+public class MutableString implements CharSequence, Serializable {
 
     private static final long serialVersionUID = 8675244107435484L;
 
     private String s;
 
-    public StringExt() {
+    public MutableString() {
         s = Strings.EMPTY;
     }
 
-    public StringExt(Object o) {
+    public MutableString(Object o) {
         this.s = Strings.str(o);
     }
 
-    public StringExt(Object o, String def) {
+    public MutableString(Object o, String def) {
         if (o == null) {
             this.s = def;
         } else {
@@ -42,20 +43,20 @@ public class StringExt implements CharSequence, Serializable {
         }
     }
 
-    public StringExt(String s) {
+    public MutableString(String s) {
         this.s = s;
     }
 
-    public StringExt(String s, String def) {
+    public MutableString(String s, String def) {
         this.s = Objects1.def(s, def);
     }
 
-    public StringExt of(String s) {
-        return new StringExt(s);
+    public MutableString of(String s) {
+        return new MutableString(s);
     }
 
-    public StringExt of(String s, String def) {
-        return new StringExt(s, def);
+    public MutableString of(String s, String def) {
+        return new MutableString(s, def);
     }
 
     /**
@@ -83,7 +84,7 @@ public class StringExt implements CharSequence, Serializable {
      * @param s string
      * @return this
      */
-    public StringExt set(String s) {
+    public MutableString set(String s) {
         this.s = s;
         return this;
     }
@@ -95,7 +96,7 @@ public class StringExt implements CharSequence, Serializable {
      * @param def 默认值
      * @return this
      */
-    public StringExt set(String s, String def) {
+    public MutableString set(String s, String def) {
         this.s = Objects1.def(s, def);
         return this;
     }
@@ -159,7 +160,7 @@ public class StringExt implements CharSequence, Serializable {
      *
      * @return this
      */
-    public StringExt trim() {
+    public MutableString trim() {
         s = s.trim();
         return this;
     }
@@ -169,7 +170,7 @@ public class StringExt implements CharSequence, Serializable {
      *
      * @return this
      */
-    public StringExt trimPunct() {
+    public MutableString trimPunct() {
         s = Strings.trimPunct(s);
         return this;
     }
@@ -180,7 +181,7 @@ public class StringExt implements CharSequence, Serializable {
      * @param ss 字符
      * @return this
      */
-    public StringExt concat(String... ss) {
+    public MutableString concat(String... ss) {
         StringBuilder sb = new StringBuilder(s);
         for (String s1 : ss) {
             sb.append(s1);
@@ -195,7 +196,7 @@ public class StringExt implements CharSequence, Serializable {
      * @param ss 字符
      * @return this
      */
-    public StringExt concatBefore(String... ss) {
+    public MutableString concatBefore(String... ss) {
         StringBuilder sb = new StringBuilder();
         for (String s1 : ss) {
             sb.append(s1);
@@ -210,7 +211,7 @@ public class StringExt implements CharSequence, Serializable {
      * @param os 参数
      * @return this
      */
-    public StringExt format(Object... os) {
+    public MutableString format(Object... os) {
         s = Strings.format(s, os);
         return this;
     }
@@ -220,7 +221,7 @@ public class StringExt implements CharSequence, Serializable {
      *
      * @return this
      */
-    public StringExt reverse() {
+    public MutableString reverse() {
         s = new StringBuilder(s).reverse().toString();
         return this;
     }
@@ -232,7 +233,7 @@ public class StringExt implements CharSequence, Serializable {
      * @param end   结束下标
      * @return this
      */
-    public StringExt substring(int begin, int end) {
+    public MutableString substring(int begin, int end) {
         s = s.substring(begin, end);
         return this;
     }
@@ -243,7 +244,7 @@ public class StringExt implements CharSequence, Serializable {
      * @param begin 开始下标
      * @return this
      */
-    public StringExt substring(int begin) {
+    public MutableString substring(int begin) {
         s = s.substring(begin);
         return this;
     }
@@ -795,6 +796,19 @@ public class StringExt implements CharSequence, Serializable {
     @Override
     public CharSequence subSequence(int start, int end) {
         return s.subSequence(start, end);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MutableString that = (MutableString) o;
+        return Objects.equals(s, that.s);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(s);
     }
 
     /**

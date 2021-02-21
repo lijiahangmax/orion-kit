@@ -1,8 +1,8 @@
 package com.orion.test.remote.channel;
 
-import com.orion.remote.channel.SessionFactory;
+import com.orion.remote.channel.SessionHolder;
 import com.orion.remote.channel.SessionLogger;
-import com.orion.remote.channel.executor.sftp.bigfile.SftpUpload;
+import com.orion.remote.channel.sftp.bigfile.SftpUpload;
 import com.orion.utils.Threads;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,8 +22,8 @@ public class UploadTests {
     private static SftpUpload s;
 
     static {
-        SessionFactory.setLogger(SessionLogger.INFO);
-        s = SessionFactory.getSession("root", "192.168.146.230")
+        SessionHolder.setLogger(SessionLogger.INFO);
+        s = SessionHolder.getSession("root", "192.168.146.230")
                 .setPassword("admin123")
                 .setTimeout(20000)
                 .connect(20000)

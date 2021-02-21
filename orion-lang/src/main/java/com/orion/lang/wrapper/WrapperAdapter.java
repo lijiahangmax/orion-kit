@@ -116,9 +116,9 @@ public class WrapperAdapter {
         }
         T data = dataAdapter(dataClass, dataArr);
         if (http) {
-            return HttpWrapper.wrap(code, msg, data);
+            return HttpWrapper.of(code, msg, data);
         } else {
-            return RpcWrapper.wrap(code, msg, data);
+            return RpcWrapper.of(code, msg, data);
         }
     }
 

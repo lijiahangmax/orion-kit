@@ -1,9 +1,9 @@
 package com.orion.test.remote.channel;
 
-import com.orion.remote.channel.SessionFactory;
+import com.orion.remote.channel.SessionHolder;
 import com.orion.remote.channel.SessionLogger;
-import com.orion.remote.channel.executor.sftp.FileAttribute;
-import com.orion.remote.channel.executor.sftp.SftpExecutor;
+import com.orion.remote.channel.sftp.FileAttribute;
+import com.orion.remote.channel.sftp.SftpExecutor;
 import com.orion.utils.Strings;
 import com.orion.utils.collect.Lists;
 import org.junit.After;
@@ -23,8 +23,8 @@ public class SftpExecutorTests {
 
     @Before
     public void before() {
-        SessionFactory.setLogger(SessionLogger.INFO);
-        e = SessionFactory.getSession("root", "192.168.146.230")
+        SessionHolder.setLogger(SessionLogger.INFO);
+        e = SessionHolder.getSession("root", "192.168.146.230")
                 .setPassword("admin123")
                 .setTimeout(20000)
                 .connect(20000)

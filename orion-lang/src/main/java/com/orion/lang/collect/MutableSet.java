@@ -1,9 +1,9 @@
 package com.orion.lang.collect;
 
+import com.orion.lang.mutable.MutableString;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Valid;
 import com.orion.utils.convert.Converts;
-import com.orion.utils.ext.StringExt;
 import com.orion.utils.math.BigDecimals;
 import com.orion.utils.math.BigIntegers;
 
@@ -326,24 +326,24 @@ public interface MutableSet<E> extends Set<E> {
         return Converts.toString(e);
     }
 
-    default StringExt getStringExt(int i) {
-        return new StringExt(Converts.toString(get(i)));
+    default MutableString getStringExt(int i) {
+        return new MutableString(Converts.toString(get(i)));
     }
 
-    default StringExt getStringExt(int i, StringExt def) {
+    default MutableString getStringExt(int i, MutableString def) {
         E e = get(i);
         if (e == null) {
             return def;
         }
-        return new StringExt(Converts.toString(e));
+        return new MutableString(Converts.toString(e));
     }
 
-    default StringExt getStringExt(int i, String def) {
+    default MutableString getStringExt(int i, String def) {
         E e = get(i);
         if (e == null) {
-            return new StringExt(def);
+            return new MutableString(def);
         }
-        return new StringExt(Converts.toString(e));
+        return new MutableString(Converts.toString(e));
     }
 
     default Date getDate(int i) {
