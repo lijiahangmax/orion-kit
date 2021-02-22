@@ -170,6 +170,7 @@
                     <include>region.dat</include>
                 </includes>
             </resource>
+
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
