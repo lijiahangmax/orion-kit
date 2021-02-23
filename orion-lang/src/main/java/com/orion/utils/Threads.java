@@ -2,10 +2,8 @@ package com.orion.utils;
 
 import com.orion.constant.Const;
 import com.orion.lang.Console;
-import com.orion.lang.thread.ConcurrentCallable;
-import com.orion.lang.thread.ConcurrentRunnable;
-import com.orion.lang.thread.ExecutorBuilder;
-import com.orion.lang.thread.NamedThreadFactory;
+import com.orion.lang.thread.*;
+import com.orion.lang.wrapper.Tuple;
 import com.orion.utils.collect.Lists;
 
 import java.util.ArrayList;
@@ -34,6 +32,10 @@ public class Threads {
             .build();
 
     private Threads() {
+    }
+
+    static {
+        Systems.addShutdownHook(() -> shutdownPoolNow(GLOBAL_EXECUTOR, Const.MS_S_3));
     }
 
     /**
@@ -185,6 +187,18 @@ public class Threads {
         } catch (InterruptedException e) {
             Exceptions.printStacks(e);
         }
+    }
+
+    /**
+     * 多线程执行任务并且收集结果
+     *
+     * @param tasks 任务
+     * @return 元组
+     */
+    public static Tuple collect(Callable<?>... tasks) {
+        return new TaskCollect(GLOBAL_EXECUTOR)
+                .tasks(tasks)
+                .collect();
     }
 
     /**

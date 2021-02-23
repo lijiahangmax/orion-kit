@@ -2,7 +2,7 @@ package com.orion.csv.convert;
 
 import com.orion.csv.CsvExt;
 import com.orion.csv.convert.adapter.ExcelAdapter;
-import com.orion.csv.reader.CsvStream;
+import com.orion.csv.reader.CsvArrayReader;
 
 /**
  * CSV 转换器
@@ -29,11 +29,11 @@ public class CsvConvert {
     /**
      * Excel 适配器
      *
-     * @param csvStream csvStream
+     * @param reader reader
      * @return adapter
      */
-    public static ExcelAdapter excelAdapter(CsvStream csvStream) {
-        return new ExcelAdapter(csvStream);
+    public static ExcelAdapter excelAdapter(CsvArrayReader reader) {
+        return new ExcelAdapter(reader);
     }
 
 }

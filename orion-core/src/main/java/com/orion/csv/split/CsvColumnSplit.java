@@ -1,33 +1,32 @@
 package com.orion.csv.split;
 
+import com.orion.able.SafeCloseable;
+import com.orion.constant.Const;
 import com.orion.csv.CsvExt;
-import com.orion.csv.core.CsvWriter;
-import com.orion.csv.reader.CsvStream;
+import com.orion.csv.reader.CsvArrayReader;
+import com.orion.csv.writer.CsvArrayWriter;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Valid;
+import com.orion.utils.collect.Lists;
+import com.orion.utils.io.Files1;
 
-import java.io.IOException;
+import java.io.File;
 import java.io.OutputStream;
 import java.util.List;
 
 /**
- * CSV 列拆分器 可以保存数据 只能拆分一个文件
+ * CSV 拆分一个文件 占用内存少
  *
  * @author ljh15
  * @version 1.0.0
  * @since 2020/9/15 15:15
  */
-public class CsvColumnSplit {
+public class CsvColumnSplit implements SafeCloseable {
 
     /**
      * 读取流
      */
-    private CsvStream stream;
-
-    /**
-     * 头部跳过行数
-     */
-    private int skip;
+    private CsvArrayReader reader;
 
     /**
      * 表头
@@ -40,39 +39,31 @@ public class CsvColumnSplit {
     private int[] columns;
 
     /**
-     * 列数
-     */
-    private int length;
-
-    /**
-     * 是否流读取 true则不保存数据
-     */
-    private boolean streaming;
-
-    /**
      * 流式读取缓冲区
      */
-    private int bufferLine = 100;
-
-    /**
-     * 输出流
-     */
-    private OutputStream out;
+    private int bufferLine;
 
     public CsvColumnSplit(CsvExt ext, int... columns) {
-        Valid.notNull(ext, "split ext is null");
-        Valid.isFalse(Arrays1.isEmpty(columns), "split columns is null");
-        this.stream = ext.stream();
-        this.columns = columns;
-        this.length = columns.length;
+        this(ext.arrayReader(), columns);
     }
 
-    public CsvColumnSplit(CsvStream stream, int... columns) {
-        Valid.notNull(stream, "split stream is null");
+    public CsvColumnSplit(CsvArrayReader reader, int... columns) {
+        Valid.notNull(reader, "split reader is null");
         Valid.isFalse(Arrays1.isEmpty(columns), "split columns is null");
-        this.stream = stream;
+        this.reader = reader;
         this.columns = columns;
-        this.length = columns.length;
+        this.bufferLine = Const.BUFFER_L_100;
+    }
+
+    /**
+     * 设置 读取行缓冲区
+     *
+     * @param bufferLine 缓冲区行数
+     * @return this
+     */
+    public CsvColumnSplit bufferLine(int bufferLine) {
+        this.bufferLine = bufferLine;
+        return this;
     }
 
     /**
@@ -81,7 +72,7 @@ public class CsvColumnSplit {
      * @return this
      */
     public CsvColumnSplit skip() {
-        this.skip += 1;
+        reader.skip();
         return this;
     }
 
@@ -92,30 +83,7 @@ public class CsvColumnSplit {
      * @return this
      */
     public CsvColumnSplit skip(int skip) {
-        this.skip += skip;
-        return this;
-    }
-
-    /**
-     * 是否流读取
-     *
-     * @return this
-     */
-    public CsvColumnSplit streaming() {
-        this.streaming = true;
-        return this;
-    }
-
-    /**
-     * 是否流读取
-     *
-     * @param bufferLine 流式读取缓冲区
-     * @return this
-     */
-    public CsvColumnSplit streaming(int bufferLine) {
-        Valid.lte(0, bufferLine, "bufferLine not be lte 0");
-        this.streaming = true;
-        this.bufferLine = bufferLine;
+        reader.skip(skip);
         return this;
     }
 
@@ -130,101 +98,63 @@ public class CsvColumnSplit {
         return this;
     }
 
-    // /**
-    //  * 设置数据写入的拆分文件
-    //  *
-    //  * @param file file
-    //  * @return this
-    //  */
-    // public CsvColumnSplit dist(CsvSymbol s, String file) {
-    //     Valid.notNull(file, "write file is null");
-    //     Valid.notNull(s, "csvSymbol is null");
-    //     dist(s, new File(file));
-    //     return this;
-    // }
-    //
-    // /**
-    //  * 设置数据写入的拆分文件
-    //  *
-    //  * @param file file
-    //  * @return this
-    //  */
-    // public CsvColumnSplit dist(CsvSymbol s, File file) {
-    //     Valid.notNull(file, "write file is null");
-    //     Valid.notNull(s, "csvSymbol is null");
-    //     Files1.touch(file);
-    //     this.out = Files1.openOutputStreamSafe(file);
-    //     this.symbol = s;
-    //     return this;
-    // }
-    //
-    // /**
-    //  * 设置数据写入的拆分文件流
-    //  *
-    //  * @param out 流
-    //  * @return this
-    //  */
-    // public CsvColumnSplit dist(CsvSymbol s, OutputStream out) {
-    //     Valid.notNull(out, "write file is null");
-    //     Valid.notNull(s, "csvSymbol is null");
-    //     this.out = out;
-    //     this.symbol = s;
-    //     return this;
-    // }
-    //
-    // /**
-    //  * 执行拆分
-    //  *
-    //  * @return this
-    //  */
-    // public CsvColumnSplit execute() {
-    //     Valid.notNull(out, "dist is null");
-    //     stream.skipLines(skip);
-    //     CsvWriter csvWriter = new CsvWriter(out, symbol.getSymbol(), symbol.getCharset());
-    //     try {
-    //         if (headers != null) {
-    //             csvWriter.writeLine(headers);
-    //         }
-    //         if (streaming) {
-    //             List<String[]> lines;
-    //             while (!Lists.isEmpty(lines = stream.clean().readLines(bufferLine).lines())) {
-    //                 this.write(lines, csvWriter);
-    //             }
-    //         } else {
-    //             this.write(stream.readLines().lines(), csvWriter);
-    //         }
-    //         Streams.close(csvWriter);
-    //     } catch (Exception e) {
-    //         throw Exceptions.ioRuntime(e);
-    //     }
-    //     return this;
-    // }
+    public CsvColumnSplit split(File file) {
+        return this.split(Files1.openOutputStreamSafe(file), false);
+    }
+
+    public CsvColumnSplit split(String file) {
+        return this.split(Files1.openOutputStreamSafe(file), false);
+    }
+
+    public CsvColumnSplit split(OutputStream out) {
+        return this.split(out, false);
+    }
 
     /**
-     * 写入数据到流
+     * 执行拆分
      *
-     * @param lines     lines
-     * @param csvWriter write
+     * @param out   out
+     * @param close 是否关闭流
+     * @return this
      */
-    private void write(List<String[]> lines, CsvWriter csvWriter) throws IOException {
-        for (String[] line : lines) {
-            String[] c = new String[length];
-            for (int i = 0; i < columns.length; i++) {
-                int column = this.columns[i];
-                if (column >= 0 && column < line.length) {
-                    c[i] = line[column];
-                }
-            }
-            csvWriter.writeLine(c);
+    public CsvColumnSplit split(OutputStream out, boolean close) {
+        CsvArrayWriter writer = new CsvArrayWriter(out);
+        int length = columns.length;
+        writer.capacity(length);
+        if (!Arrays1.isEmpty(headers)) {
+            writer.headers(headers);
         }
+        List<String[]> rows;
+        while (!Lists.isEmpty(rows = reader.clear().read(bufferLine).getRows())) {
+            for (String[] row : rows) {
+                int rowLength = row.length;
+                String[] newRow = new String[length];
+                for (int i = 0; i < length; i++) {
+                    if (rowLength > columns[i]) {
+                        newRow[i] = row[columns[i]];
+                    }
+                }
+                writer.addRow(newRow);
+            }
+        }
+        writer.flush();
+        if (close) {
+            writer.close();
+        }
+        return this;
     }
 
-    public CsvStream getStream() {
-        return stream;
+    @Override
+    public void close() {
+        reader.close();
     }
 
-    public List<String[]> lines() {
-        return stream.lines();
+    public CsvArrayReader getReader() {
+        return reader;
+    }
+
+    public int[] getColumns() {
+        return columns;
     }
 
 }

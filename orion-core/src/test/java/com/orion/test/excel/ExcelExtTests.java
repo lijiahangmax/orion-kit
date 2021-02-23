@@ -2,6 +2,7 @@ package com.orion.test.excel;
 
 import com.orion.excel.ExcelExt;
 import com.orion.excel.Excels;
+import com.orion.lang.Console;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Test;
 
@@ -43,6 +44,12 @@ public class ExcelExtTests {
     public void openExt() {
         System.out.println(new ExcelExt("C:\\Users\\ljh15\\Desktop\\data\\user.xlsx"));
         System.out.println(new ExcelExt("C:\\Users\\ljh15\\Desktop\\data\\user_password.xlsx"));
+    }
+
+    @Test
+    public void openExtReader() {
+        ExcelExt x = new ExcelExt("C:\\Users\\ljh15\\Desktop\\data\\user.xlsx", true);
+        x.arrayReader(Console::trace).read().close();
     }
 
     @Test

@@ -2,7 +2,7 @@ package com.orion.excel.convert.adapter;
 
 import com.orion.able.Adaptable;
 import com.orion.able.SafeCloseable;
-import com.orion.csv.writer.CsvBeanWriter;
+import com.orion.csv.writer.CsvArrayWriter;
 import com.orion.excel.Excels;
 import com.orion.utils.io.Streams;
 import org.apache.poi.ss.usermodel.Cell;
@@ -27,9 +27,9 @@ public class CsvAdapter implements Adaptable<CsvAdapter>, SafeCloseable {
     private Sheet sheet;
 
     /**
-     * CsvExport
+     * CsvArrayWriter
      */
-    private CsvBeanWriter export;
+    private CsvArrayWriter writer;
 
     /**
      * 跳过的行数
@@ -41,9 +41,9 @@ public class CsvAdapter implements Adaptable<CsvAdapter>, SafeCloseable {
      */
     private String[] header;
 
-    public CsvAdapter(Sheet sheet, CsvBeanWriter export) {
+    public CsvAdapter(Sheet sheet, CsvArrayWriter writer) {
         this.sheet = sheet;
-        this.export = export;
+        this.writer = writer;
     }
 
     /**
@@ -85,7 +85,7 @@ public class CsvAdapter implements Adaptable<CsvAdapter>, SafeCloseable {
     @Override
     public CsvAdapter forNew() {
         if (header != null) {
-            export.headers(header);
+            writer.headers(header);
         }
         int i = 0;
         for (Row cells : sheet) {
@@ -97,9 +97,9 @@ public class CsvAdapter implements Adaptable<CsvAdapter>, SafeCloseable {
                 String value = Excels.getCellValue(cell);
                 row.add(value);
             }
-            // export.addRecord(row.toArray(new String[0]));
+            writer.addRow(row.toArray(new String[0]));
         }
-        export.flush().close();
+        writer.flush().close();
         return this;
     }
 
@@ -119,8 +119,8 @@ public class CsvAdapter implements Adaptable<CsvAdapter>, SafeCloseable {
         return sheet;
     }
 
-    public CsvBeanWriter getExport() {
-        return export;
+    public CsvArrayWriter getWriter() {
+        return writer;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.orion.utils.codec;
 
+import com.orion.constant.Const;
 import com.orion.utils.Strings;
 
 import java.util.Base64;
@@ -23,7 +24,7 @@ public class Base64s {
      * @return base64
      */
     public static String img64Encode(byte[] bs) {
-        return img64Encode(bs, "png");
+        return img64Encode(bs, Const.SUFFIX_PNG);
     }
 
     /**

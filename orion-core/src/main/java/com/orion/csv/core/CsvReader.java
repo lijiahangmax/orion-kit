@@ -6,6 +6,7 @@ import com.orion.constant.Letters;
 import com.orion.csv.option.CsvOption;
 import com.orion.csv.option.CsvReaderOption;
 import com.orion.exception.IORuntimeException;
+import com.orion.utils.Objects1;
 import com.orion.utils.Strings;
 import com.orion.utils.Valid;
 import com.orion.utils.io.Files1;
@@ -89,20 +90,11 @@ public class CsvReader implements SafeCloseable {
     }
 
     public CsvReader(String file, char delimiter, Charset charset) {
-        Valid.notBlank(file, "file can not be null");
-        Valid.notNull(charset, "charset can not be null");
-        this.reader = new BufferedReader(new InputStreamReader(Files1.openInputStreamSafe(file), charset), Const.BUFFER_KB_4);
-        this.option = new CsvReaderOption(delimiter, charset);
-        this.isQualified = new boolean[values.length];
+        this(file, new CsvReaderOption(delimiter, charset));
     }
 
     public CsvReader(String file, CsvReaderOption option) {
-        Valid.notBlank(file, "file can not be null");
-        Valid.notNull(option, "option can not be null");
-        Valid.notNull(option.getCharset(), "chaset can not be null");
-        this.reader = new BufferedReader(new InputStreamReader(Files1.openInputStreamSafe(file), option.getCharset()), Const.BUFFER_KB_4);
-        this.option = option;
-        this.isQualified = new boolean[values.length];
+        this(Files1.openInputStreamSafe(file), option);
     }
 
     public CsvReader(File file) {
@@ -114,20 +106,15 @@ public class CsvReader implements SafeCloseable {
     }
 
     public CsvReader(File file, char delimiter, Charset charset) {
-        Valid.notNull(file, "file can not be null");
-        Valid.notNull(charset, "charset can not be null");
-        this.reader = new BufferedReader(new InputStreamReader(Files1.openInputStreamSafe(file), charset), Const.BUFFER_KB_4);
-        this.option = new CsvReaderOption(delimiter, charset);
-        this.isQualified = new boolean[values.length];
+        this(file, new CsvReaderOption(delimiter, charset));
     }
 
     public CsvReader(File file, CsvReaderOption option) {
-        Valid.notNull(file, "file can not be null");
-        Valid.notNull(option, "option can not be null");
-        Valid.notNull(option.getCharset(), "charset can not be null");
-        this.reader = new BufferedReader(new InputStreamReader(Files1.openInputStreamSafe(file), option.getCharset()), Const.BUFFER_KB_4);
-        this.option = option;
-        this.isQualified = new boolean[values.length];
+        this(Files1.openInputStreamSafe(file), option);
+    }
+
+    public CsvReader(InputStream in) {
+        this(new InputStreamReader(in, StandardCharsets.UTF_8));
     }
 
     public CsvReader(InputStream in, Charset charset) {
@@ -139,25 +126,24 @@ public class CsvReader implements SafeCloseable {
     }
 
     public CsvReader(InputStream in, CsvReaderOption option) {
-        this(new InputStreamReader(in, option.getCharset()), option);
+        Valid.notNull(in, "inputStream can not be null");
+        this.option = Objects1.def(option, CsvReaderOption::new);
+        this.reader = new InputStreamReader(in, this.option.getCharset());
+        this.isQualified = new boolean[values.length];
     }
 
     public CsvReader(Reader reader) {
-        this(reader, Letters.COMMA);
+        this(reader, new CsvReaderOption(Letters.COMMA));
     }
 
     public CsvReader(Reader reader, char delimiter) {
-        Valid.notNull(reader, "reader can not be null");
-        this.reader = reader;
-        this.option = new CsvReaderOption(delimiter);
-        this.isQualified = new boolean[values.length];
+        this(reader, new CsvReaderOption(delimiter));
     }
 
     public CsvReader(Reader reader, CsvReaderOption option) {
         Valid.notNull(reader, "reader can not be null");
-        Valid.notNull(option, "option can not be null");
         this.reader = reader;
-        this.option = option;
+        this.option = Objects1.def(option, CsvReaderOption::new);
         this.isQualified = new boolean[values.length];
     }
 
@@ -181,7 +167,7 @@ public class CsvReader implements SafeCloseable {
      */
     public static CsvReader parse(String data, char delimiter) {
         Valid.notBlank(data, "data is blank");
-        return new CsvReader(new StringReader(data), delimiter);
+        return new CsvReader(new StringReader(data), new CsvReaderOption(delimiter));
     }
 
     /**

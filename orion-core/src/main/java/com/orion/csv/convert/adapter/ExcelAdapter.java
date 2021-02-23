@@ -2,9 +2,10 @@ package com.orion.csv.convert.adapter;
 
 import com.orion.able.Adaptable;
 import com.orion.able.SafeCloseable;
+import com.orion.constant.Const;
 import com.orion.csv.CsvExt;
-import com.orion.csv.reader.CsvStream;
-import com.orion.excel.Excels;
+import com.orion.csv.reader.CsvArrayReader;
+import com.orion.excel.writer.BaseExcelWriteable;
 import com.orion.utils.io.Streams;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -12,23 +13,16 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
-import java.io.OutputStream;
 import java.util.List;
 
 /**
- * CSV -> Excel 适配器
+ * CSV -> Excel 文本适配器
  *
  * @author ljh15
  * @version 1.0.0
  * @since 2020/9/18 2:36
  */
-public class ExcelAdapter implements Adaptable<ExcelAdapter>, SafeCloseable {
-
-    /**
-     * workbook
-     */
-    private Workbook workbook;
+public class ExcelAdapter extends BaseExcelWriteable implements Adaptable<ExcelAdapter>, SafeCloseable {
 
     /**
      * sheet
@@ -38,7 +32,7 @@ public class ExcelAdapter implements Adaptable<ExcelAdapter>, SafeCloseable {
     /**
      * csvStream
      */
-    private CsvStream csvStream;
+    private CsvArrayReader reader;
 
     /**
      * 跳过的行数
@@ -53,16 +47,17 @@ public class ExcelAdapter implements Adaptable<ExcelAdapter>, SafeCloseable {
     /**
      * 读取行缓冲区
      */
-    private int bufferLine = 100;
+    private int bufferLine;
 
     public ExcelAdapter(CsvExt csvExt) {
-        this(csvExt.stream());
+        this(csvExt.arrayReader());
     }
 
-    public ExcelAdapter(CsvStream csvStream) {
-        this.csvStream = csvStream;
-        this.workbook = new XSSFWorkbook();
-        this.sheet = this.workbook.createSheet();
+    public ExcelAdapter(CsvArrayReader reader) {
+        super(new XSSFWorkbook());
+        this.reader = reader;
+        this.sheet = workbook.createSheet();
+        this.bufferLine = Const.BUFFER_L_100;
     }
 
     /**
@@ -77,7 +72,7 @@ public class ExcelAdapter implements Adaptable<ExcelAdapter>, SafeCloseable {
     }
 
     /**
-     * 跳过CSV一多
+     * 跳过CSV一行
      *
      * @return this
      */
@@ -123,10 +118,10 @@ public class ExcelAdapter implements Adaptable<ExcelAdapter>, SafeCloseable {
                 hc.setCellValue(header[hi]);
             }
         }
-        csvStream.skipLines(skip);
+        reader.skip(skip);
         // 数据
         List<String[]> lines;
-        while (!(lines = csvStream.clean().readLines(bufferLine).lines()).isEmpty()) {
+        while (!(lines = reader.clear().read(bufferLine).getRows()).isEmpty()) {
             for (String[] line : lines) {
                 Row rr = sheet.createRow(i++);
                 for (int ri = 0; ri < line.length; ri++) {
@@ -139,44 +134,11 @@ public class ExcelAdapter implements Adaptable<ExcelAdapter>, SafeCloseable {
     }
 
     /**
-     * 写入workbook到文件
-     *
-     * @param file file
-     * @return this
-     */
-    public ExcelAdapter write(File file) {
-        Excels.write(workbook, file);
-        return this;
-    }
-
-    /**
-     * 写入workbook到文件
-     *
-     * @param file file
-     * @return this
-     */
-    public ExcelAdapter write(String file) {
-        Excels.write(workbook, file);
-        return this;
-    }
-
-    /**
-     * 写入workbook到流
-     *
-     * @param out out
-     * @return this
-     */
-    public ExcelAdapter write(OutputStream out) {
-        Excels.write(workbook, out);
-        return this;
-    }
-
-    /**
      * 关闭workbook
      */
     @Override
     public void close() {
-        Streams.close(sheet.getWorkbook());
+        Streams.close(workbook);
     }
 
     public Workbook getWorkbook() {
@@ -187,8 +149,8 @@ public class ExcelAdapter implements Adaptable<ExcelAdapter>, SafeCloseable {
         return sheet;
     }
 
-    public CsvStream getCsvStream() {
-        return csvStream;
+    public CsvArrayReader getReader() {
+        return reader;
     }
 
 }

@@ -244,6 +244,18 @@ public abstract class BaseExcelReader<T> implements SafeCloseable {
      */
     protected abstract T parserRow(Row row);
 
+    /**
+     * 清空读取的行
+     *
+     * @return this
+     */
+    public BaseExcelReader<T> clear() {
+        if (store && this.rows != null) {
+            this.rows.clear();
+        }
+        return this;
+    }
+
     @Override
     public void close() {
         Streams.close(workbook);

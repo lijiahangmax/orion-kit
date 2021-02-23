@@ -66,6 +66,16 @@ public class Const {
 
     public static final int BUFFER_KB_32 = 1024 * 32;
 
+    // --------------- buffer line ---------------
+
+    public static final int BUFFER_L_10 = 10;
+
+    public static final int BUFFER_L_50 = 50;
+
+    public static final int BUFFER_L_100 = 100;
+
+    public static final int BUFFER_L_1000 = 1000;
+
     // --------------- ms ---------------
 
     public static final int MS_S_1 = 1000;
@@ -81,5 +91,25 @@ public class Const {
     // --------------- io ---------------
 
     public static final String STREAM_CLOSE = "Stream closed";
+
+    // --------------- suffix ---------------
+
+    public static final String SUFFIX_CSV = "csv";
+
+    public static final String SUFFIX_XLS = "xls";
+
+    public static final String SUFFIX_XLSX = "xlsx";
+
+    public static final String SUFFIX_PNG = "png";
+
+    public static final String SUFFIX_JAR = "jar";
+
+    public static final String SUFFIX_WAR = "war";
+
+    public static final String SUFFIX_ZIP = "zip";
+
+    // --------------- others ---------------
+
+    public static final String NULL = "null";
 
 }

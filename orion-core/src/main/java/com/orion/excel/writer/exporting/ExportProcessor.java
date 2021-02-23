@@ -196,11 +196,11 @@ public class ExportProcessor<T> {
             titleOption.setTitle(sheetOption.getTitle());
         }
         titleOption.setPaletteColorIndex(this.colorIndex);
-        CellStyle titleStyle = Objects1.def(Excels.parseTitleStyle(workbook, titleOption), workbook.createCellStyle());
+        CellStyle titleStyle = Objects1.def(Excels.parseTitleStyle(workbook, titleOption), workbook::createCellStyle);
         this.colorIndex = titleOption.getPaletteColorIndex();
         FontOption fontOption = titleOption.getFont();
         fontOption.setPaletteColorIndex(this.colorIndex);
-        Font font = Objects1.def(Excels.parseFont(workbook, fontOption), workbook.createFont());
+        Font font = Objects1.def(Excels.parseFont(workbook, fontOption), workbook::createFont);
         titleStyle.setFont(font);
         this.colorIndex = fontOption.getPaletteColorIndex();
         Row titleRow = sheet.createRow(rowIndex);
@@ -461,16 +461,16 @@ public class ExportProcessor<T> {
         option.setPaletteColorIndex(this.colorIndex);
         CellStyle style;
         if (isColumn) {
-            style = Objects1.def(Excels.parseColumnStyle(workbook, option), workbook.createCellStyle());
+            style = Objects1.def(Excels.parseColumnStyle(workbook, option), workbook::createCellStyle);
         } else {
-            style = Objects1.def(Excels.parseStyle(workbook, option), workbook.createCellStyle());
+            style = Objects1.def(Excels.parseStyle(workbook, option), workbook::createCellStyle);
         }
         this.colorIndex = option.getPaletteColorIndex();
         // 字体
         Font font;
         if (option.getFontOption() != null) {
             option.getFontOption().setPaletteColorIndex(this.colorIndex);
-            font = Objects1.def(Excels.parseFont(workbook, option.getFontOption()), workbook.createFont());
+            font = Objects1.def(Excels.parseFont(workbook, option.getFontOption()), workbook::createFont);
             this.colorIndex = option.getFontOption().getPaletteColorIndex();
         } else {
             font = workbook.createFont();

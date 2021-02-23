@@ -18,7 +18,7 @@ public class CsvWriterOption extends CsvOption implements Serializable {
     private boolean forceQualifier;
 
     public CsvWriterOption() {
-        forceQualifier = false;
+        this.forceQualifier = false;
     }
 
     public CsvWriterOption(char delimiter) {
@@ -32,6 +32,10 @@ public class CsvWriterOption extends CsvOption implements Serializable {
         super.charset = charset;
     }
 
+    protected CsvWriterOption(CsvOption csvOption) {
+        super(csvOption);
+    }
+
     public boolean isForceQualifier() {
         return forceQualifier;
     }
@@ -39,6 +43,10 @@ public class CsvWriterOption extends CsvOption implements Serializable {
     public CsvWriterOption setForceQualifier(boolean forceQualifier) {
         this.forceQualifier = forceQualifier;
         return this;
+    }
+
+    public CsvReaderOption toReaderOption() {
+        return new CsvReaderOption(this);
     }
 
 }

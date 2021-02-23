@@ -1,22 +1,16 @@
 package com.orion.excel.split;
 
-import com.orion.able.SafeCloseable;
+import com.orion.constant.Const;
 import com.orion.excel.Excels;
+import com.orion.support.DestinationGenerator;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
-import com.orion.utils.Strings;
 import com.orion.utils.Valid;
-import com.orion.utils.collect.Lists;
-import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
-import java.io.File;
-import java.io.OutputStream;
-import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * Excel 行拆分器 能拆分多个文件一个sheet 不支持复杂类型
@@ -25,7 +19,7 @@ import java.util.List;
  * @version 1.0.0
  * @since 2020/8/21 16:01
  */
-public class ExcelRowSplit implements SafeCloseable {
+public class ExcelRowSplit extends DestinationGenerator {
 
     /**
      * sheet
@@ -53,29 +47,9 @@ public class ExcelRowSplit implements SafeCloseable {
     private String[] header;
 
     /**
-     * 拆分输出对流
-     */
-    private List<OutputStream> dest;
-
-    /**
-     * 自动生成的文件目录
-     */
-    private String generatorPathDir;
-
-    /**
-     * 自动生成的文件名称
-     */
-    private String generatorBaseName;
-
-    /**
-     * 自动生成的文件名称后缀
-     */
-    private String generatorNameSuffix;
-
-    /**
      * 列
      */
-    private int[] column;
+    private int[] columns;
 
     /**
      * 列数
@@ -90,8 +64,6 @@ public class ExcelRowSplit implements SafeCloseable {
 
     private int currentIndex;
 
-    private int currentWorkbookIndex;
-
     private boolean end;
 
     public ExcelRowSplit(Sheet sheet, int limit) {
@@ -100,77 +72,7 @@ public class ExcelRowSplit implements SafeCloseable {
         this.sheet = sheet;
         this.limit = limit;
         this.streaming = Excels.isStreamingSheet(sheet);
-    }
-
-    /**
-     * 设置拆分文件输出流
-     *
-     * @param dist dist
-     * @return this
-     */
-    public ExcelRowSplit dest(OutputStream... dist) {
-        Valid.notEmpty(dist, "dist file is empty");
-        this.dest = Lists.of(dist);
-        this.generatorPathDir = null;
-        this.generatorBaseName = null;
-        return this;
-    }
-
-    /**
-     * 设置拆分文件输出文件
-     *
-     * @param dist dist
-     * @return this
-     */
-    public ExcelRowSplit dest(File... dist) {
-        Valid.notEmpty(dist, "dist file is empty");
-        OutputStream[] streams = Arrays.stream(dist)
-                .map(Files1::openOutputStreamSafe)
-                .toArray(OutputStream[]::new);
-        return this.dest(streams);
-    }
-
-    /**
-     * 设置拆分文件输出文件路径
-     *
-     * @param dist dist
-     * @return this
-     */
-    public ExcelRowSplit dest(String... dist) {
-        Valid.notEmpty(dist, "dist file is empty");
-        OutputStream[] streams = Arrays.stream(dist)
-                .map(Files1::openOutputStreamSafe)
-                .toArray(OutputStream[]::new);
-        return this.dest(streams);
-    }
-
-    /**
-     * 设置拆分文件输出文件路径
-     *
-     * @param pathDir  目标文件目录
-     * @param baseName 文件名称
-     * @return this
-     */
-    public ExcelRowSplit destPath(String pathDir, String baseName) {
-        return this.destPath(pathDir, baseName, null);
-    }
-
-    /**
-     * 设置拆分文件输出文件路径
-     *
-     * @param pathDir    目标文件目录
-     * @param baseName   文件名称
-     * @param nameSuffix 文件名称后缀
-     * @return this
-     */
-    public ExcelRowSplit destPath(String pathDir, String baseName, String nameSuffix) {
-        Valid.notNull(pathDir, "dist path dir is null");
-        Valid.notNull(baseName, "dist file base name is null");
-        this.dest = null;
-        this.generatorPathDir = pathDir;
-        this.generatorBaseName = baseName;
-        this.generatorNameSuffix = Strings.def(nameSuffix);
-        return this;
+        super.suffix = Const.SUFFIX_XLSX;
     }
 
     /**
@@ -206,15 +108,15 @@ public class ExcelRowSplit implements SafeCloseable {
     }
 
     /**
-     * 设置列
+     * 设置读取的列
      *
-     * @param column 列
+     * @param columns 列
      * @return this
      */
-    public ExcelRowSplit column(int... column) {
-        if (!Arrays1.isEmpty(column)) {
-            this.column = column;
-            this.columnSize = Arrays1.max(column) + 1;
+    public ExcelRowSplit columns(int... columns) {
+        if (!Arrays1.isEmpty(columns)) {
+            this.columns = columns;
+            this.columnSize = Arrays1.max(columns) + 1;
         }
         return this;
     }
@@ -226,7 +128,7 @@ public class ExcelRowSplit implements SafeCloseable {
      * @return this
      */
     public ExcelRowSplit columnSize(int columnSize) {
-        if (Arrays1.isEmpty(column)) {
+        if (Arrays1.isEmpty(columns)) {
             this.columnSize = columnSize;
         }
         return this;
@@ -256,24 +158,35 @@ public class ExcelRowSplit implements SafeCloseable {
                 iterator.next();
             } else {
                 end = true;
+                return this;
             }
         }
-        this.initNext();
-        while (iterator.hasNext()) {
-            this.addRow(currentIndex++, iterator.next());
-            if (currentIndex == limit && !end) {
-                this.initNext();
+        do {
+            if (!super.hasNext()) {
+                end = true;
+                return this;
             }
-            if (end) {
+            this.nextWorkbook();
+            int border = limit;
+            if (!Arrays1.isEmpty(header)) {
+                border = limit + 1;
+            }
+            while (iterator.hasNext()) {
+                this.addRow(currentIndex++, iterator.next());
+                if (currentIndex == border) {
+                    break;
+                }
+            }
+            if (currentIndex == 0) {
+                end = true;
                 break;
             }
-        }
-        end = true;
-        if (currentIndex == 0 || (currentIndex == 1 && !Arrays1.isEmpty(header))) {
-            Streams.close(currentWorkbook);
-        } else {
-            this.initNext();
-        }
+            super.next();
+            if (currentIndex < border) {
+                end = true;
+            }
+            this.write();
+        } while (!end);
         return this;
     }
 
@@ -289,12 +202,12 @@ public class ExcelRowSplit implements SafeCloseable {
             target.setHeightInPoints(sheet.getDefaultRowHeightInPoints());
         }
         int i = 0;
-        if (Arrays1.isEmpty(column)) {
+        if (Arrays1.isEmpty(columns)) {
             for (Cell cell : row) {
                 this.setCellValue(cell, target.createCell(i++));
             }
         } else {
-            for (int col : column) {
+            for (int col : columns) {
                 this.setCellValue(row.getCell(col), target.createCell(i++));
             }
         }
@@ -318,87 +231,41 @@ public class ExcelRowSplit implements SafeCloseable {
     /**
      * 设置下一个workbook
      */
-    private void initNext() {
-        if (currentWorkbook != null) {
-            OutputStream out;
-            if (dest == null) {
-                out = generatorOutputStream(currentWorkbookIndex++);
-            } else {
-                int size = dest.size();
-                if (size > currentWorkbookIndex) {
-                    out = dest.get(currentWorkbookIndex++);
-                    if (size == currentWorkbookIndex) {
-                        end = true;
-                        currentIndex = 0;
-                    }
-                } else {
-                    end = true;
-                    return;
-                }
+    private void nextWorkbook() {
+        currentIndex = 0;
+        currentWorkbook = new SXSSFWorkbook();
+        currentSheet = currentWorkbook.createSheet(sheet.getSheetName());
+        if (!streaming) {
+            for (int i = 0; i < columnSize; i++) {
+                currentSheet.setColumnWidth(i, sheet.getColumnWidth(i));
+                currentSheet.setDefaultColumnStyle(i, sheet.getColumnStyle(i));
             }
+            currentSheet.setDefaultColumnWidth(sheet.getDefaultColumnWidth());
+            currentSheet.setDefaultRowHeightInPoints(sheet.getDefaultRowHeightInPoints());
+        }
+        if (!Arrays1.isEmpty(header)) {
+            Row headerRow = currentSheet.createRow(0);
+            for (int headerIndex = 0; headerIndex < header.length; headerIndex++) {
+                Cell headerRowCell = headerRow.createCell(headerIndex);
+                headerRowCell.setCellValue(header[headerIndex]);
+            }
+            currentIndex = 1;
+        }
+    }
+
+    private void write() {
+        try {
             if (password != null && !streaming) {
                 currentSheet.protectSheet(password);
             }
-            this.write(currentWorkbook, out);
+            currentWorkbook.write(currentOutputStream);
             Streams.close(currentWorkbook);
-        }
-        if (!end) {
-            currentWorkbook = new SXSSFWorkbook();
-            currentSheet = currentWorkbook.createSheet(sheet.getSheetName());
-            if (!streaming) {
-                for (int i = 0; i < columnSize; i++) {
-                    currentSheet.setColumnWidth(i, sheet.getColumnWidth(i));
-                    currentSheet.setDefaultColumnStyle(i, sheet.getColumnStyle(i));
-                }
-                currentSheet.setDefaultColumnWidth(sheet.getDefaultColumnWidth());
-                currentSheet.setDefaultRowHeightInPoints(sheet.getDefaultRowHeightInPoints());
+            if (super.autoClose) {
+                Streams.close(currentOutputStream);
             }
-            if (!Arrays1.isEmpty(header)) {
-                currentIndex = 1;
-                Row headerRow = currentSheet.createRow(0);
-                for (int headerIndex = 0; headerIndex < header.length; headerIndex++) {
-                    Cell headerRowCell = headerRow.createCell(headerIndex);
-                    headerRowCell.setCellValue(header[headerIndex]);
-                }
-            } else {
-                currentIndex = 0;
-            }
-        }
-    }
-
-    @Override
-    public void close() {
-        if (dest != null) {
-            for (OutputStream outputStream : dest) {
-                Streams.close(outputStream);
-            }
-        }
-    }
-
-    /**
-     * 写入 Workbook 到 流
-     *
-     * @param wb  wb
-     * @param out out
-     */
-    private void write(Workbook wb, OutputStream out) {
-        try {
-            wb.write(out);
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         }
-    }
-
-    /**
-     * 生成OutputStream
-     *
-     * @param i index
-     * @return ignore
-     */
-    private OutputStream generatorOutputStream(int i) {
-        String path = Files1.getPath(generatorPathDir + "/" + generatorBaseName + generatorNameSuffix + (i + 1) + ".xlsx");
-        Files1.touch(path);
-        return Files1.openOutputStreamSafe(path);
     }
 
     public Sheet getSheet() {

@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Object工具类
@@ -36,6 +37,20 @@ public class Objects1 {
     public static <T> T def(T o, T def) {
         if (isNull(o)) {
             return def;
+        }
+        return o;
+    }
+
+    /**
+     * 默认值
+     *
+     * @param o        对象
+     * @param supplier 默认值提供者
+     * @return 如果对象为空返回默认值
+     */
+    public static <T> T def(T o, Supplier<T> supplier) {
+        if (isNull(o)) {
+            return supplier.get();
         }
         return o;
     }

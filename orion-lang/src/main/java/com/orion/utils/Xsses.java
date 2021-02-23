@@ -31,11 +31,11 @@ public class Xsses {
             return s;
         }
         // 过滤script标签
-        s = SCRIPT_PATTERN.matcher(s).replaceAll("");
+        s = SCRIPT_PATTERN.matcher(s).replaceAll(Strings.EMPTY);
         // 过滤style标签
-        s = STYLE_PATTERN.matcher(s).replaceAll("");
+        s = STYLE_PATTERN.matcher(s).replaceAll(Strings.EMPTY);
         // 过滤html标签
-        // s = HTML_TAG_PATTERN.matcher(s).replaceAll("");
+        // s = HTML_TAG_PATTERN.matcher(s).replaceAll(Strings.EMPTY);
 
         // 过滤特殊字符
         s = s.replaceAll("&", "&amp;");

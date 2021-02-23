@@ -19,11 +19,6 @@ public class CsvOption implements Serializable {
     // -------------------- const start --------------------
 
     /**
-     * 默认文件后缀
-     */
-    public static final String DEFAULT_SUFFIX = "csv";
-
-    /**
      * 双文本限定符转义
      */
     public static final int ESCAPE_MODE_DOUBLED = CsvEscapeMode.DOUBLE_QUALIFIER.getMode();
@@ -112,6 +107,18 @@ public class CsvOption implements Serializable {
         escapeMode = ESCAPE_MODE_DOUBLED;
         charset = StandardCharsets.UTF_8;
         trim = true;
+    }
+
+    protected CsvOption(CsvOption option) {
+        this.textQualifier = option.textQualifier;
+        this.useTextQualifier = option.useTextQualifier;
+        this.delimiter = option.delimiter;
+        this.lineDelimiter = option.lineDelimiter;
+        this.useCustomLineDelimiter = option.useCustomLineDelimiter;
+        this.comment = option.comment;
+        this.escapeMode = option.escapeMode;
+        this.charset = option.charset;
+        this.trim = option.trim;
     }
 
     public char getTextQualifier() {

@@ -1,5 +1,6 @@
 package com.orion.utils.io;
 
+import com.orion.constant.Const;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 
@@ -23,16 +24,12 @@ public class FileCompress {
     private FileCompress() {
     }
 
-    private static final String ZIP_FORMAT = "zip";
-
-    private static final String JAR_FORMAT = "jar";
-
     public static String compress(String path) {
-        return compress(new File(path), null, ZIP_FORMAT);
+        return compress(new File(path), null, Const.SUFFIX_ZIP);
     }
 
     public static String compress(File file) {
-        return compress(file, null, ZIP_FORMAT);
+        return compress(file, null, Const.SUFFIX_ZIP);
     }
 
     public static String compress(String path, String format) {
@@ -56,7 +53,7 @@ public class FileCompress {
      * @return 压缩文件目录 null压缩失败
      */
     public static String compress(File file, String dest, String format) {
-        format = Strings.def(format, ZIP_FORMAT);
+        format = Strings.def(format, Const.SUFFIX_ZIP);
         if (!file.exists()) {
             throw Exceptions.runtime("File not found " + file);
         }
@@ -68,7 +65,7 @@ public class FileCompress {
 
         ZipOutputStream zos = null;
         try {
-            if (format.endsWith(JAR_FORMAT)) {
+            if (format.endsWith(Const.SUFFIX_JAR)) {
                 zos = new JarOutputStream(new BufferedOutputStream(Files1.openOutputStreamFast(dest)));
             } else {
                 zos = new ZipOutputStream(new BufferedOutputStream(Files1.openOutputStreamFast(dest)));
@@ -137,7 +134,7 @@ public class FileCompress {
         }
         ZipFile zipFile = null;
         try {
-            if (file.getAbsolutePath().endsWith(JAR_FORMAT)) {
+            if (file.getAbsolutePath().endsWith(Const.SUFFIX_JAR)) {
                 zipFile = new JarFile(file);
             } else {
                 zipFile = new ZipFile(file);

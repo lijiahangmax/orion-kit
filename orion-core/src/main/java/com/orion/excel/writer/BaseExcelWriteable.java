@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.OutputStream;
 
 /**
- * Excel Write 基类
+ * Excel Writer 基类
  *
  * @author ljh15
  * @version 1.0.0

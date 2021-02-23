@@ -16,7 +16,7 @@ public enum ExcelPictureType {
     /**
      * 自动
      */
-    AUTO(0, 0, ""),
+    AUTO(0, 0, Strings.EMPTY),
 
     /**
      * EMF Windows

@@ -38,11 +38,11 @@ public class CsvReaderOption extends CsvOption implements Serializable {
     private boolean skipRawRow;
 
     public CsvReaderOption() {
-        caseSensitive = true;
-        useComments = false;
-        safetySwitch = true;
-        skipEmptyRows = true;
-        skipRawRow = false;
+        this.caseSensitive = true;
+        this.useComments = false;
+        this.safetySwitch = true;
+        this.skipEmptyRows = true;
+        this.skipRawRow = false;
     }
 
     public CsvReaderOption(char delimiter) {
@@ -54,6 +54,10 @@ public class CsvReaderOption extends CsvOption implements Serializable {
         this();
         super.delimiter = delimiter;
         super.charset = charset;
+    }
+
+    protected CsvReaderOption(CsvOption csvOption) {
+        super(csvOption);
     }
 
     public boolean isCaseSensitive() {
@@ -99,6 +103,10 @@ public class CsvReaderOption extends CsvOption implements Serializable {
     public CsvReaderOption setSkipRawRow(boolean skipRawRow) {
         this.skipRawRow = skipRawRow;
         return this;
+    }
+
+    public CsvWriterOption toWriterOption() {
+        return new CsvWriterOption(this);
     }
 
 }

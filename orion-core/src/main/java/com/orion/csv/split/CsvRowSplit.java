@@ -1,10 +1,14 @@
 package com.orion.csv.split;
 
+import com.orion.constant.Const;
 import com.orion.csv.CsvExt;
-import com.orion.csv.reader.CsvStream;
+import com.orion.csv.core.CsvWriter;
+import com.orion.csv.reader.CsvArrayReader;
+import com.orion.csv.writer.CsvArrayWriter;
+import com.orion.support.DestinationGenerator;
+import com.orion.utils.Arrays1;
 import com.orion.utils.Valid;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,22 +18,17 @@ import java.util.List;
  * @version 1.0.0
  * @since 2020/9/15 10:44
  */
-public class CsvRowSplit {
+public class CsvRowSplit extends DestinationGenerator {
 
     /**
-     * 读取流
+     * reader
      */
-    private CsvStream stream;
+    private CsvArrayReader reader;
 
     /**
-     * 每个文件的数据行数
+     * 拆分文件最大行数
      */
-    private int rowSize;
-
-    /**
-     * 头部跳过行数
-     */
-    private int skip;
+    private int limit;
 
     /**
      * 表头
@@ -37,22 +36,33 @@ public class CsvRowSplit {
     private String[] header;
 
     /**
-     * 每个文件的数据
+     * 列
      */
-    private List<List<String[]>> fileLines = new ArrayList<>();
+    private int[] columns;
 
-    public CsvRowSplit(CsvExt ext, int rowSize) {
-        Valid.notNull(ext, "split ext is null");
-        Valid.lte(0, rowSize, "row size not be lte 0");
-        this.stream = ext.stream();
-        this.rowSize = rowSize;
+    private boolean end;
+
+    public CsvRowSplit(CsvExt ext, int limit) {
+        this(ext.arrayReader(), limit);
     }
 
-    public CsvRowSplit(CsvStream stream, int rowSize) {
-        Valid.notNull(stream, "split stream is null");
-        Valid.lte(0, rowSize, "row size not be lte 0");
-        this.stream = stream;
-        this.rowSize = rowSize;
+    public CsvRowSplit(CsvArrayReader reader, int limit) {
+        Valid.notNull(reader, "reader is null");
+        Valid.lte(0, limit, "limit not be lte 0");
+        this.reader = reader;
+        this.limit = limit;
+        this.suffix = Const.SUFFIX_CSV;
+    }
+
+    /**
+     * 设置后缀
+     *
+     * @param suffix suffix
+     * @return this
+     */
+    public CsvRowSplit suffix(String suffix) {
+        this.suffix = suffix;
+        return this;
     }
 
     /**
@@ -61,8 +71,7 @@ public class CsvRowSplit {
      * @return this
      */
     public CsvRowSplit skip() {
-        this.skip += 1;
-        return this;
+        return skip(1);
     }
 
     /**
@@ -72,7 +81,20 @@ public class CsvRowSplit {
      * @return this
      */
     public CsvRowSplit skip(int skip) {
-        this.skip += skip;
+        reader.skip(skip);
+        return this;
+    }
+
+    /**
+     * 设置读取的列
+     *
+     * @param columns 列
+     * @return this
+     */
+    public CsvRowSplit columns(int... columns) {
+        if (!Arrays1.isEmpty(columns)) {
+            this.columns = columns;
+        }
         return this;
     }
 
@@ -92,144 +114,53 @@ public class CsvRowSplit {
      *
      * @return this
      */
-    public CsvRowSplit execute() {
-        List<String[]> lines = stream.skipLines(skip).readLines().lines();
-        int size = lines.size(), loop = size / rowSize, mod = size % rowSize;
-        if (mod != 0) {
-            loop++;
-        }
-        for (int i = 0; i < loop; i++) {
-            int start = i * rowSize;
-            int end = start + rowSize;
-            if (i == loop - 1) {
-                // last
-                end = size;
+    public CsvRowSplit split() {
+        do {
+            if (!super.hasNext()) {
+                end = true;
+                break;
             }
-            boolean addHeader = header != null;
-            List<String[]> fileLine = new ArrayList<>();
-            for (int is = 0; start < end; start++, is++) {
-                if (addHeader) {
-                    fileLine.add(header);
-                    start--;
-                    addHeader = false;
-                } else {
-                    fileLine.add(lines.get(start));
+            List<String[]> rows = reader.clear().read(limit).getRows();
+            if (rows.isEmpty()) {
+                end = true;
+                break;
+            }
+            if (rows.size() < limit) {
+                end = true;
+            }
+            super.next();
+            CsvArrayWriter currentWriter = new CsvArrayWriter(new CsvWriter(currentOutputStream, reader.getOption().toWriterOption()));
+            if (!Arrays1.isEmpty(header)) {
+                currentWriter.addRow(header);
+            }
+            if (Arrays1.isEmpty(columns)) {
+                currentWriter.addRows(rows);
+            } else {
+                for (String[] row : rows) {
+                    int length = row.length;
+                    String[] newRow = new String[columns.length];
+                    for (int i = 0; i < columns.length; i++) {
+                        if (length > columns[i]) {
+                            newRow[i] = row[columns[i]];
+                        }
+                    }
+                    currentWriter.addRow(newRow);
                 }
             }
-            this.fileLines.add(fileLine);
-        }
+            currentWriter.flush();
+            if (autoClose) {
+                currentWriter.close();
+            }
+        } while (!end);
         return this;
     }
 
-    // /**
-    //  * 将数据写入到拆分文件
-    //  *
-    //  * @param s     symbol
-    //  * @param files files
-    //  * @return this
-    //  */
-    // public CsvRowSplit write(CsvSymbol s, String... files) {
-    //     Valid.notNull(s, "csvSymbol is null");
-    //     Valid.notEmpty(files, "write file is empty");
-    //     for (int i = 0; i < fileLines.size(); i++) {
-    //         if (i < files.length) {
-    //             write(new File(files[i]), i, s);
-    //         }
-    //     }
-    //     return this;
-    // }
-    //
-    // /**
-    //  * 将数据写入到拆分文件
-    //  *
-    //  * @param s     symbol
-    //  * @param files files
-    //  * @return this
-    //  */
-    // public CsvRowSplit write(CsvSymbol s, File... files) {
-    //     Valid.notNull(s, "csvSymbol is null");
-    //     Valid.notEmpty(files, "write file is empty");
-    //     for (int i = 0; i < fileLines.size(); i++) {
-    //         if (i < files.length) {
-    //             write(files[i], i, s);
-    //         }
-    //     }
-    //     return this;
-    // }
-    //
-    // /**
-    //  * 将数据写入到拆分文件流
-    //  *
-    //  * @param outs 流
-    //  * @param s    symbol
-    //  * @return this
-    //  */
-    // public CsvRowSplit write(CsvSymbol s, OutputStream... outs) {
-    //     Valid.notNull(s, "csvSymbol is null");
-    //     Valid.notEmpty(outs, "write stream is empty");
-    //     for (int i = 0; i < fileLines.size(); i++) {
-    //         if (i < outs.length) {
-    //             List<String[]> row = fileLines.get(i);
-    //             OutputStream out = outs[i];
-    //             try {
-    //                 // new CsvBuilder(row)
-    //                 //         .symbol(s.getSymbol())
-    //                 //         .charset(s.getCharset())
-    //                 //         .dist(out)
-    //                 //         .build();
-    //             } catch (Exception e) {
-    //                 throw Exceptions.ioRuntime(e);
-    //             }
-    //         }
-    //     }
-    //     return this;
-    // }
-    //
-    // /**
-    //  * 写入数据到文件
-    //  *
-    //  * @param pathDir  目标文件目录
-    //  * @param baseName 文件名称 不包含后缀
-    //  * @param s        symbol
-    //  * @return this
-    //  */
-    // public CsvRowSplit writeToPath(String pathDir, String baseName, CsvSymbol s) {
-    //     Valid.notNull(pathDir, "dist path dir is null");
-    //     Valid.notNull(baseName, "dist file base name is null");
-    //     Valid.notNull(s, "csvSymbol is null");
-    //     for (int i = 0; i < fileLines.size(); i++) {
-    //         String path = Files1.getPath(pathDir + "/" + baseName + "_row_split_" + (i + 1) + "." + s.getSuffix());
-    //         write(new File(path), i, s);
-    //     }
-    //     return this;
-    // }
-    //
-    // /**
-    //  * 写入数据到文件
-    //  *
-    //  * @param file     文件
-    //  * @param rowIndex 文件数据索引
-    //  * @param s        symbol
-    //  */
-    // private void write(File file, int rowIndex, CsvSymbol s) {
-    //     try {
-    //        new CsvBuilder(fileLines.get(rowIndex))
-    //                .symbol(s.getSymbol())
-    //                .charset(s.getCharset())
-    //                .dist(file)
-    //                .build()
-    //                .close();
-    //     } catch (Exception e) {
-    //         throw Exceptions.ioRuntime(e);
-    //     }
-    // }
-
-    public List<String[]> lines() {
-        return stream.lines();
+    public CsvArrayReader getReader() {
+        return reader;
     }
 
-    public CsvStream getStream() {
-        return stream;
+    public int getLimit() {
+        return limit;
     }
 
 }

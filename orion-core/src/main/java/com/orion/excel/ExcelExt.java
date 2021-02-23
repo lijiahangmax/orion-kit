@@ -77,7 +77,7 @@ public class ExcelExt implements SafeCloseable {
         this(in, password, streaming, false);
     }
 
-    private ExcelExt(InputStream in, String password, boolean streaming, boolean close) {
+    public ExcelExt(InputStream in, String password, boolean streaming, boolean close) {
         if (streaming) {
             // 使用流式读取文件必须是 xlsx 文件
             this.workbook = Excels.openStreamingWorkbook(in, password);

@@ -611,7 +611,7 @@ public abstract class BaseExcelSheetWriter<K, V> {
             if (style != null) {
                 cell.setCellStyle(style);
             }
-            Object value = Objects1.def(this.getValue(row, k), defaultValue.get(k));
+            Object value = Objects1.def(this.getValue(row, k), () -> defaultValue.get(k));
             if (trim && value instanceof String) {
                 value = ((String) value).trim();
             }

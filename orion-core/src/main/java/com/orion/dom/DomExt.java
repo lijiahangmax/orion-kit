@@ -116,7 +116,7 @@ public class DomExt {
      * 获取解析的element
      *
      * @param element element
-     * @param formula 如: bean[1] > property > list > ref[0]:name=c   [n] 下标  k:v 属性     不需要包含跟元素
+     * @param formula 如: bean[1] > property > list > ref[0]:name=c   [n] 下标  k:v 属性  不需要包含跟元素
      * @return element
      */
     public static Element parse(Element element, String formula) {

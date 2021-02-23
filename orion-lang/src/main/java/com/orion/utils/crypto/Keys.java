@@ -79,7 +79,7 @@ public class Keys {
      * @param close 是否关闭流
      * @return PublicKey
      */
-    private static PublicKey getCerPublicKey(InputStream in, boolean close) {
+    public static PublicKey getCerPublicKey(InputStream in, boolean close) {
         try {
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
             X509Certificate cert = (X509Certificate) cf.generateCertificate(in);
@@ -137,7 +137,7 @@ public class Keys {
      * @param close    是否关闭流
      * @return PublicKey, PrivateKey
      */
-    private static Args.Two<PublicKey, PrivateKey> getPfxKeys(InputStream in, String password, boolean close) {
+    public static Args.Two<PublicKey, PrivateKey> getPfxKeys(InputStream in, String password, boolean close) {
         try {
             char[] ps = password == null ? null : password.toCharArray();
             KeyStore ks = KeyStore.getInstance("PKCS12");
@@ -267,7 +267,7 @@ public class Keys {
      * @param close  是否关闭流
      * @return Key
      */
-    private static String getKey(Reader reader, boolean close) {
+    public static String getKey(Reader reader, boolean close) {
         StringBuilder key = new StringBuilder();
         int c = 0;
         BufferedReader r = new BufferedReader(reader);

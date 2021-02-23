@@ -1,5 +1,6 @@
 package com.orion.utils.image;
 
+import com.orion.constant.Const;
 import com.orion.utils.Exceptions;
 import com.orion.utils.codec.Base64s;
 import com.orion.utils.io.Files1;
@@ -18,11 +19,6 @@ import java.io.*;
  * @since 2020/7/15 11:06
  */
 public class Images {
-
-    /**
-     * 默认格式
-     */
-    private static final String FORMAT = "png";
 
     private Images() {
     }
@@ -216,7 +212,7 @@ public class Images {
      * @return byte[]
      */
     public static byte[] getBytes(BufferedImage img) {
-        return getBytes(img, FORMAT);
+        return getBytes(img, Const.SUFFIX_PNG);
     }
 
     /**
@@ -245,7 +241,7 @@ public class Images {
      * @throws IOException IOException
      */
     public static void write(BufferedImage img, OutputStream out) throws IOException {
-        ImageIO.write(img, FORMAT, out);
+        ImageIO.write(img, Const.SUFFIX_PNG, out);
     }
 
     /**
@@ -269,7 +265,7 @@ public class Images {
      */
     public static void write(BufferedImage img, String path) throws IOException {
         Files1.touch(path);
-        ImageIO.write(img, FORMAT, new File(path));
+        ImageIO.write(img, Const.SUFFIX_PNG, new File(path));
     }
 
     /**
@@ -294,7 +290,7 @@ public class Images {
      */
     public static void write(BufferedImage img, File file) throws IOException {
         Files1.touch(file);
-        ImageIO.write(img, FORMAT, file);
+        ImageIO.write(img, Const.SUFFIX_PNG, file);
     }
 
     /**
@@ -317,7 +313,7 @@ public class Images {
      * @return base64
      */
     public static String base64Encode(BufferedImage img) {
-        return base64Encode(img, FORMAT);
+        return base64Encode(img, Const.SUFFIX_PNG);
     }
 
     /**

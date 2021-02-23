@@ -28,7 +28,7 @@ public class ExcelMerge extends BaseExcelWriteable {
     private int rowIndex;
 
     /**
-     * 跳过的行
+     * 跳过合并sheet的行
      */
     private int skipRows;
 
@@ -74,7 +74,7 @@ public class ExcelMerge extends BaseExcelWriteable {
     }
 
     /**
-     * 跳过多行sheet数据
+     * 跳过一行合并sheet
      *
      * @return this
      */
@@ -84,7 +84,7 @@ public class ExcelMerge extends BaseExcelWriteable {
     }
 
     /**
-     * 跳过多行sheet数据
+     * 跳过多行合并sheet
      *
      * @param skip skip
      * @return this

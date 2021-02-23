@@ -88,7 +88,7 @@ public class ScpExecutor {
      * @param close      是否关闭 out/writer
      * @throws IOException IOException
      */
-    private void downloadFile(String remoteFile, OutputStream out, Writer writer, boolean close) throws IOException {
+    public void downloadFile(String remoteFile, OutputStream out, Writer writer, boolean close) throws IOException {
         InputStream in = this.getFileInputStream(remoteFile);
         try {
             if (out != null) {
@@ -235,7 +235,7 @@ public class ScpExecutor {
      * @param close          是否关闭in流
      * @throws IOException IOException
      */
-    private void uploadFile(InputStream in, long len, String remoteDir, String remoteFileName, boolean close) throws IOException {
+    public void uploadFile(InputStream in, long len, String remoteDir, String remoteFileName, boolean close) throws IOException {
         OutputStream out = null;
         try {
             out = this.client.put(remoteFileName, len, remoteDir, "0600");

@@ -58,11 +58,6 @@ import java.util.Optional;
  */
 public class Excels {
 
-    /**
-     * 流式读取缓存行数
-     */
-    private static final int BUFFER_ROW = 100;
-
     private Excels() {
     }
 
@@ -1672,7 +1667,7 @@ public class Excels {
      * @param out      流
      * @param close    是否关闭流
      */
-    private static void write(Workbook workbook, OutputStream out, boolean close) {
+    public static void write(Workbook workbook, OutputStream out, boolean close) {
         Valid.notNull(workbook, "workbook is null");
         Valid.notNull(out, "outputStream is null");
         try {
@@ -1706,7 +1701,7 @@ public class Excels {
      * @param password password
      * @param close    是否关闭流
      */
-    private static void write(Workbook workbook, OutputStream out, String password, boolean close) {
+    public static void write(Workbook workbook, OutputStream out, String password, boolean close) {
         Valid.notNull(workbook, "workbook is null");
         Valid.notNull(out, "outputStream is null");
         try (POIFSFileSystem fs = new POIFSFileSystem()) {
@@ -1816,27 +1811,27 @@ public class Excels {
     // --------------- open streaming ---------------
 
     public static Workbook openStreamingWorkbook(String file) {
-        return openStreamingWorkbook(new File(file), null, BUFFER_ROW, Const.BUFFER_KB_4);
+        return openStreamingWorkbook(new File(file), null, Const.BUFFER_L_100, Const.BUFFER_KB_4);
     }
 
     public static Workbook openStreamingWorkbook(File file) {
-        return openStreamingWorkbook(file, null, BUFFER_ROW, Const.BUFFER_KB_4);
+        return openStreamingWorkbook(file, null, Const.BUFFER_L_100, Const.BUFFER_KB_4);
     }
 
     public static Workbook openStreamingWorkbook(InputStream in) {
-        return openStreamingWorkbook(in, null, BUFFER_ROW, Const.BUFFER_KB_4);
+        return openStreamingWorkbook(in, null, Const.BUFFER_L_100, Const.BUFFER_KB_4);
     }
 
     public static Workbook openStreamingWorkbook(String file, String password) {
-        return openStreamingWorkbook(new File(file), password, BUFFER_ROW, Const.BUFFER_KB_4);
+        return openStreamingWorkbook(new File(file), password, Const.BUFFER_L_100, Const.BUFFER_KB_4);
     }
 
     public static Workbook openStreamingWorkbook(File file, String password) {
-        return openStreamingWorkbook(file, password, BUFFER_ROW, Const.BUFFER_KB_4);
+        return openStreamingWorkbook(file, password, Const.BUFFER_L_100, Const.BUFFER_KB_4);
     }
 
     public static Workbook openStreamingWorkbook(InputStream in, String password) {
-        return openStreamingWorkbook(in, password, BUFFER_ROW, Const.BUFFER_KB_4);
+        return openStreamingWorkbook(in, password, Const.BUFFER_L_100, Const.BUFFER_KB_4);
     }
 
     public static Workbook openStreamingWorkbook(String file, int rowCache) {
@@ -1880,7 +1875,7 @@ public class Excels {
     }
 
     public static Workbook openStreamingWorkbook(File file, String password, int rowCache, int bufferSize) {
-        if (file.getName().toLowerCase().endsWith("xls")) {
+        if (file.getName().toLowerCase().endsWith(Const.SUFFIX_XLS)) {
             throw Exceptions.parse("Cannot using streaming open 2003 workbook");
         }
         return openStreamingWorkbook(Files1.openInputStreamSafe(file), password, rowCache, bufferSize);

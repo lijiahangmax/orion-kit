@@ -139,7 +139,7 @@ public class ExcelColumnMultiSplit implements SafeCloseable {
      * @param close    是否关闭
      * @return this
      */
-    private ExcelColumnMultiSplit split(int[] columns, String[] headers, String password, OutputStream out, boolean close) {
+    public ExcelColumnMultiSplit split(int[] columns, String[] headers, String password, OutputStream out, boolean close) {
         Valid.notNull(out, "dest stream is null");
         Sheet sourceSheet;
         if (!Strings.isBlank(sourceSheetName)) {

@@ -212,6 +212,18 @@ public abstract class BaseCsvReader<T> implements SafeCloseable {
         reader.close();
     }
 
+    /**
+     * 清空读取的行
+     *
+     * @return this
+     */
+    public BaseCsvReader<T> clear() {
+        if (store && this.rows != null) {
+            this.rows.clear();
+        }
+        return this;
+    }
+
     public CsvReader getReader() {
         return reader;
     }
