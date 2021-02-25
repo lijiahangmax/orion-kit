@@ -32,7 +32,7 @@ public class Numbers {
         return startRange + (num % (endRange - startRange));
     }
 
-    // -------------------- isZero --------------------
+    // -------------------- zero --------------------
 
     /**
      * 是否为0
@@ -40,28 +40,28 @@ public class Numbers {
      * @param x ignore
      * @return true 0
      */
-    public static boolean isZero(Byte x) {
-        return x != null && x == 0;
+    public static boolean isZero(byte x) {
+        return x == 0;
     }
 
-    public static boolean isZero(Short x) {
-        return x != null && x == 0;
+    public static boolean isZero(short x) {
+        return x == 0;
     }
 
-    public static boolean isZero(Integer x) {
-        return x != null && x == 0;
+    public static boolean isZero(int x) {
+        return x == 0;
     }
 
-    public static boolean isZero(Long x) {
-        return x != null && x == 0;
+    public static boolean isZero(long x) {
+        return x == 0;
     }
 
-    public static boolean isZero(Float x) {
-        return x != null && x == 0;
+    public static boolean isZero(float x) {
+        return x == 0;
     }
 
-    public static boolean isZero(Double x) {
-        return x != null && x == 0;
+    public static boolean isZero(double x) {
+        return x == 0;
     }
 
     /**
@@ -70,28 +70,148 @@ public class Numbers {
      * @param x ignore
      * @return true 非0
      */
-    public static boolean isNotZero(Byte x) {
-        return x == null || x != 0;
+    public static boolean isNotZero(byte x) {
+        return x != 0;
     }
 
-    public static boolean isNotZero(Short x) {
-        return x == null || x != 0;
+    public static boolean isNotZero(short x) {
+        return x != 0;
     }
 
-    public static boolean isNotZero(Integer x) {
-        return x == null || x != 0;
+    public static boolean isNotZero(int x) {
+        return x != 0;
     }
 
-    public static boolean isNotZero(Long x) {
-        return x == null || x != 0;
+    public static boolean isNotZero(long x) {
+        return x != 0;
     }
 
-    public static boolean isNotZero(Float x) {
-        return x == null || x != 0;
+    public static boolean isNotZero(float x) {
+        return x != 0;
     }
 
-    public static boolean isNotZero(Double x) {
-        return x == null || x != 0;
+    public static boolean isNotZero(double x) {
+        return x != 0;
+    }
+
+    /**
+     * 是否小于0
+     *
+     * @param x x
+     * @return true 小于0
+     */
+    public static boolean ltZero(byte x) {
+        return x < 0;
+    }
+
+    public static boolean ltZero(short x) {
+        return x < 0;
+    }
+
+    public static boolean ltZero(int x) {
+        return x < 0;
+    }
+
+    public static boolean ltZero(long x) {
+        return x < 0;
+    }
+
+    public static boolean ltZero(float x) {
+        return x < 0;
+    }
+
+    public static boolean ltZero(double x) {
+        return x < 0;
+    }
+
+    /**
+     * 是否小于等于0
+     *
+     * @param x x
+     * @return true 小于等于0
+     */
+    public static boolean lteZero(byte x) {
+        return x <= 0;
+    }
+
+    public static boolean lteZero(short x) {
+        return x <= 0;
+    }
+
+    public static boolean lteZero(int x) {
+        return x <= 0;
+    }
+
+    public static boolean lteZero(long x) {
+        return x <= 0;
+    }
+
+    public static boolean lteZero(float x) {
+        return x <= 0;
+    }
+
+    public static boolean lteZero(double x) {
+        return x <= 0;
+    }
+
+    /**
+     * 是否大于0
+     *
+     * @param x x
+     * @return true 大于0
+     */
+    public static boolean gtZero(byte x) {
+        return x > 0;
+    }
+
+    public static boolean gtZero(short x) {
+        return x > 0;
+    }
+
+    public static boolean gtZero(int x) {
+        return x > 0;
+    }
+
+    public static boolean gtZero(long x) {
+        return x > 0;
+    }
+
+    public static boolean gtZero(float x) {
+        return x > 0;
+    }
+
+    public static boolean gtZero(double x) {
+        return x > 0;
+    }
+
+    /**
+     * 是否大于等于0
+     *
+     * @param x x
+     * @return true 大于等于0
+     */
+    public static boolean gteZero(byte x) {
+        return x >= 0;
+    }
+
+    public static boolean gteZero(short x) {
+        return x >= 0;
+    }
+
+    public static boolean gteZero(int x) {
+        return x >= 0;
+    }
+
+    public static boolean gteZero(long x) {
+        return x >= 0;
+    }
+
+    public static boolean gteZero(float x) {
+        return x >= 0;
+    }
+
+    public static boolean gteZero(double x) {
+        return x >= 0;
     }
 
     /**
@@ -101,9 +221,7 @@ public class Numbers {
      * @return true 全为0
      */
     public static boolean isAllZero(byte... array) {
-        if (array == null) {
-            return false;
-        } else if (array.length == 0) {
+        if (Arrays1.isEmpty(array)) {
             return false;
         }
         for (byte b : array) {
@@ -115,9 +233,7 @@ public class Numbers {
     }
 
     public static boolean isAllZero(short... array) {
-        if (array == null) {
-            return false;
-        } else if (array.length == 0) {
+        if (Arrays1.isEmpty(array)) {
             return false;
         }
         for (short b : array) {
@@ -129,9 +245,7 @@ public class Numbers {
     }
 
     public static boolean isAllZero(int... array) {
-        if (array == null) {
-            return false;
-        } else if (array.length == 0) {
+        if (Arrays1.isEmpty(array)) {
             return false;
         }
         for (int b : array) {
@@ -143,9 +257,7 @@ public class Numbers {
     }
 
     public static boolean isAllZero(long... array) {
-        if (array == null) {
-            return false;
-        } else if (array.length == 0) {
+        if (Arrays1.isEmpty(array)) {
             return false;
         }
         for (long b : array) {
@@ -157,9 +269,7 @@ public class Numbers {
     }
 
     public static boolean isAllZero(float... array) {
-        if (array == null) {
-            return false;
-        } else if (array.length == 0) {
+        if (Arrays1.isEmpty(array)) {
             return false;
         }
         for (float b : array) {
@@ -171,9 +281,7 @@ public class Numbers {
     }
 
     public static boolean isAllZero(double... array) {
-        if (array == null) {
-            return false;
-        } else if (array.length == 0) {
+        if (Arrays1.isEmpty(array)) {
             return false;
         }
         for (double b : array) {
@@ -191,9 +299,7 @@ public class Numbers {
      * @return true 全不为0
      */
     public static boolean isNoneZero(byte... array) {
-        if (array == null) {
-            return true;
-        } else if (array.length == 0) {
+        if (Arrays1.isEmpty(array)) {
             return true;
         }
         for (byte b : array) {
@@ -205,9 +311,7 @@ public class Numbers {
     }
 
     public static boolean isNoneZero(short... array) {
-        if (array == null) {
-            return true;
-        } else if (array.length == 0) {
+        if (Arrays1.isEmpty(array)) {
             return true;
         }
         for (short b : array) {
@@ -219,9 +323,7 @@ public class Numbers {
     }
 
     public static boolean isNoneZero(int... array) {
-        if (array == null) {
-            return true;
-        } else if (array.length == 0) {
+        if (Arrays1.isEmpty(array)) {
             return true;
         }
         for (int b : array) {
@@ -233,9 +335,7 @@ public class Numbers {
     }
 
     public static boolean isNoneZero(long... array) {
-        if (array == null) {
-            return true;
-        } else if (array.length == 0) {
+        if (Arrays1.isEmpty(array)) {
             return true;
         }
         for (long b : array) {
@@ -247,9 +347,7 @@ public class Numbers {
     }
 
     public static boolean isNoneZero(float... array) {
-        if (array == null) {
-            return true;
-        } else if (array.length == 0) {
+        if (Arrays1.isEmpty(array)) {
             return true;
         }
         for (float b : array) {
@@ -261,9 +359,7 @@ public class Numbers {
     }
 
     public static boolean isNoneZero(double... array) {
-        if (array == null) {
-            return true;
-        } else if (array.length == 0) {
+        if (Arrays1.isEmpty(array)) {
             return true;
         }
         for (double b : array) {
@@ -282,28 +378,28 @@ public class Numbers {
      * @param x ignore
      * @return true 负数
      */
-    public static boolean isNegative(Byte x) {
-        return x != null && x < 0;
+    public static boolean isNegative(byte x) {
+        return x < 0;
     }
 
-    public static boolean isNegative(Short x) {
-        return x != null && x < 0;
+    public static boolean isNegative(short x) {
+        return x < 0;
     }
 
-    public static boolean isNegative(Integer x) {
-        return x != null && x < 0;
+    public static boolean isNegative(int x) {
+        return x < 0;
     }
 
-    public static boolean isNegative(Long x) {
-        return x != null && x < 0;
+    public static boolean isNegative(long x) {
+        return x < 0;
     }
 
-    public static boolean isNegative(Float x) {
-        return x != null && x < 0;
+    public static boolean isNegative(float x) {
+        return x < 0;
     }
 
-    public static boolean isNegative(Double x) {
-        return x != null && x < 0;
+    public static boolean isNegative(double x) {
+        return x < 0;
     }
 
     /**
@@ -312,28 +408,28 @@ public class Numbers {
      * @param x ignore
      * @return true 非负数
      */
-    public static boolean isNotNegative(Byte x) {
-        return x == null || x >= 0;
+    public static boolean isNotNegative(byte x) {
+        return x >= 0;
     }
 
-    public static boolean isNotNegative(Short x) {
-        return x == null || x >= 0;
+    public static boolean isNotNegative(short x) {
+        return x >= 0;
     }
 
-    public static boolean isNotNegative(Integer x) {
-        return x == null || x >= 0;
+    public static boolean isNotNegative(int x) {
+        return x >= 0;
     }
 
-    public static boolean isNotNegative(Long x) {
-        return x == null || x >= 0;
+    public static boolean isNotNegative(long x) {
+        return x >= 0;
     }
 
-    public static boolean isNotNegative(Float x) {
-        return x == null || x >= 0;
+    public static boolean isNotNegative(float x) {
+        return x >= 0;
     }
 
-    public static boolean isNotNegative(Double x) {
-        return x == null || x >= 0;
+    public static boolean isNotNegative(double x) {
+        return x >= 0;
     }
 
     /**
@@ -343,9 +439,7 @@ public class Numbers {
      * @return true 全为负数
      */
     public static boolean isAllNegative(byte... array) {
-        if (array == null) {
-            return false;
-        } else if (array.length == 0) {
+        if (Arrays1.isEmpty(array)) {
             return false;
         }
         for (byte b : array) {
@@ -357,9 +451,7 @@ public class Numbers {
     }
 
     public static boolean isAllNegative(short... array) {
-        if (array == null) {
-            return false;
-        } else if (array.length == 0) {
+        if (Arrays1.isEmpty(array)) {
             return false;
         }
         for (short b : array) {
@@ -371,9 +463,7 @@ public class Numbers {
     }
 
     public static boolean isAllNegative(int... array) {
-        if (array == null) {
-            return false;
-        } else if (array.length == 0) {
+        if (Arrays1.isEmpty(array)) {
             return false;
         }
         for (int b : array) {
@@ -385,9 +475,7 @@ public class Numbers {
     }
 
     public static boolean isAllNegative(long... array) {
-        if (array == null) {
-            return false;
-        } else if (array.length == 0) {
+        if (Arrays1.isEmpty(array)) {
             return false;
         }
         for (long b : array) {
@@ -399,9 +487,7 @@ public class Numbers {
     }
 
     public static boolean isAllNegative(float... array) {
-        if (array == null) {
-            return false;
-        } else if (array.length == 0) {
+        if (Arrays1.isEmpty(array)) {
             return false;
         }
         for (float b : array) {
@@ -413,9 +499,7 @@ public class Numbers {
     }
 
     public static boolean isAllNegative(double... array) {
-        if (array == null) {
-            return false;
-        } else if (array.length == 0) {
+        if (Arrays1.isEmpty(array)) {
             return false;
         }
         for (double b : array) {
@@ -433,9 +517,7 @@ public class Numbers {
      * @return true 全不为负数
      */
     public static boolean isNoneNegative(byte... array) {
-        if (array == null) {
-            return true;
-        } else if (array.length == 0) {
+        if (Arrays1.isEmpty(array)) {
             return true;
         }
         for (byte b : array) {
@@ -447,9 +529,7 @@ public class Numbers {
     }
 
     public static boolean isNoneNegative(short... array) {
-        if (array == null) {
-            return true;
-        } else if (array.length == 0) {
+        if (Arrays1.isEmpty(array)) {
             return true;
         }
         for (short b : array) {
@@ -461,9 +541,7 @@ public class Numbers {
     }
 
     public static boolean isNoneNegative(int... array) {
-        if (array == null) {
-            return true;
-        } else if (array.length == 0) {
+        if (Arrays1.isEmpty(array)) {
             return true;
         }
         for (int b : array) {
@@ -475,9 +553,7 @@ public class Numbers {
     }
 
     public static boolean isNoneNegative(long... array) {
-        if (array == null) {
-            return true;
-        } else if (array.length == 0) {
+        if (Arrays1.isEmpty(array)) {
             return true;
         }
         for (long b : array) {
@@ -489,9 +565,7 @@ public class Numbers {
     }
 
     public static boolean isNoneNegative(float... array) {
-        if (array == null) {
-            return true;
-        } else if (array.length == 0) {
+        if (Arrays1.isEmpty(array)) {
             return true;
         }
         for (float b : array) {
@@ -503,9 +577,7 @@ public class Numbers {
     }
 
     public static boolean isNoneNegative(double... array) {
-        if (array == null) {
-            return true;
-        } else if (array.length == 0) {
+        if (Arrays1.isEmpty(array)) {
             return true;
         }
         for (double b : array) {
@@ -525,11 +597,11 @@ public class Numbers {
      * @return true 为NaN
      */
     public static boolean isNaN(Float x) {
-        return x != null && x.isNaN();
+        return x.isNaN();
     }
 
     public static boolean isNaN(Double x) {
-        return x != null && x.isNaN();
+        return x.isNaN();
     }
 
     /**
@@ -539,11 +611,11 @@ public class Numbers {
      * @return true 不为NaN
      */
     public static boolean isNotNaN(Float x) {
-        return x == null || !x.isNaN();
+        return !x.isNaN();
     }
 
     public static boolean isNotNaN(Double x) {
-        return x == null || !x.isNaN();
+        return !x.isNaN();
     }
 
     /**
@@ -553,9 +625,7 @@ public class Numbers {
      * @return true 全为NaN
      */
     public static boolean isAllNaN(float... array) {
-        if (array == null) {
-            return false;
-        } else if (array.length == 0) {
+        if (Arrays1.isEmpty(array)) {
             return false;
         }
         for (float b : array) {
@@ -567,9 +637,7 @@ public class Numbers {
     }
 
     public static boolean isAllNaN(double... array) {
-        if (array == null) {
-            return false;
-        } else if (array.length == 0) {
+        if (Arrays1.isEmpty(array)) {
             return false;
         }
         for (double b : array) {
@@ -587,9 +655,7 @@ public class Numbers {
      * @return true 全不为NaN
      */
     public static boolean isNoneNaN(float... array) {
-        if (array == null) {
-            return true;
-        } else if (array.length == 0) {
+        if (Arrays1.isEmpty(array)) {
             return true;
         }
         for (float b : array) {
@@ -601,9 +667,7 @@ public class Numbers {
     }
 
     public static boolean isNoneNaN(double... array) {
-        if (array == null) {
-            return true;
-        } else if (array.length == 0) {
+        if (Arrays1.isEmpty(array)) {
             return true;
         }
         for (double b : array) {
@@ -898,6 +962,252 @@ public class Numbers {
             return 0;
         }
         return sum(array) / len;
+    }
+
+    // -------------------- range --------------------
+
+    /**
+     * 判断是否在区间内 开区间
+     *
+     * @param start 区间开始
+     * @param end   区间结束
+     * @param num   测试的数字
+     * @return true 在区间内
+     */
+    public static boolean inRange(byte start, byte end, byte num) {
+        return start <= num && num <= end;
+    }
+
+    public static boolean inRange(short start, short end, short num) {
+        return start <= num && num <= end;
+    }
+
+    public static boolean inRange(int start, int end, int num) {
+        return start <= num && num <= end;
+    }
+
+    public static boolean inRange(long start, long end, long num) {
+        return start <= num && num <= end;
+    }
+
+    public static boolean inRange(float start, float end, float num) {
+        return start <= num && num <= end;
+    }
+
+    public static boolean inRange(double start, double end, double num) {
+        return start <= num && num <= end;
+    }
+
+    /**
+     * 判断是否不在区间内 开区间
+     *
+     * @param start 区间开始
+     * @param end   区间结束
+     * @param num   测试的数字
+     *              [1, 1] 1 true
+     *              [1, 2] 1 true
+     * @return true 不在区间内
+     */
+    public static boolean notInRange(byte start, byte end, byte num) {
+        return !inRange(start, end, num);
+    }
+
+    public static boolean notInRange(short start, short end, short num) {
+        return !inRange(start, end, num);
+    }
+
+    public static boolean notInRange(int start, int end, int num) {
+        return !inRange(start, end, num);
+    }
+
+    public static boolean notInRange(long start, long end, long num) {
+        return !inRange(start, end, num);
+    }
+
+    public static boolean notInRange(float start, float end, float num) {
+        return !inRange(start, end, num);
+    }
+
+    public static boolean notInRange(double start, double end, double num) {
+        return !inRange(start, end, num);
+    }
+
+    /**
+     * 判断一个区间是否在另一个区间内 开区间
+     *
+     * @param rangeStart     区间开始
+     * @param rangeEnd       区间结束
+     * @param testRangeStart 测试的区间开始
+     * @param testRangeEnd   测试的区间结束
+     *                       [1, 1], [1, 1] true
+     *                       [1, 2], [1, 1] true
+     *                       [1, 2], [1, 2] true
+     * @return true 在区间内
+     */
+    public static boolean rangeInRange(byte rangeStart, byte rangeEnd, byte testRangeStart, byte testRangeEnd) {
+        return (rangeStart <= testRangeStart && rangeStart <= testRangeEnd) &&
+                (testRangeStart <= rangeEnd && testRangeEnd <= rangeEnd);
+    }
+
+    public static boolean rangeInRange(short rangeStart, short rangeEnd, short testRangeStart, short testRangeEnd) {
+        return (rangeStart <= testRangeStart && rangeStart <= testRangeEnd) &&
+                (testRangeStart <= rangeEnd && testRangeEnd <= rangeEnd);
+    }
+
+    public static boolean rangeInRange(int rangeStart, int rangeEnd, int testRangeStart, int testRangeEnd) {
+        return (rangeStart <= testRangeStart && rangeStart <= testRangeEnd) &&
+                (testRangeStart <= rangeEnd && testRangeEnd <= rangeEnd);
+    }
+
+    public static boolean rangeInRange(long rangeStart, long rangeEnd, long testRangeStart, long testRangeEnd) {
+        return (rangeStart <= testRangeStart && rangeStart <= testRangeEnd) &&
+                (testRangeStart <= rangeEnd && testRangeEnd <= rangeEnd);
+    }
+
+    public static boolean rangeInRange(float rangeStart, float rangeEnd, float testRangeStart, float testRangeEnd) {
+        return (rangeStart <= testRangeStart && rangeStart <= testRangeEnd) &&
+                (testRangeStart <= rangeEnd && testRangeEnd <= rangeEnd);
+    }
+
+    public static boolean rangeInRange(double rangeStart, double rangeEnd, double testRangeStart, double testRangeEnd) {
+        return (rangeStart <= testRangeStart && rangeStart <= testRangeEnd) &&
+                (testRangeStart <= rangeEnd && testRangeEnd <= rangeEnd);
+    }
+
+    /**
+     * 判断一个区间是否不在另一个区间内 开区间
+     *
+     * @param rangeStart     区间开始
+     * @param rangeEnd       区间结束
+     * @param testRangeStart 测试的区间开始
+     * @param testRangeEnd   测试的区间结束
+     * @return true 不在区间内
+     */
+    public static boolean rangeNotInRange(byte rangeStart, byte rangeEnd, byte testRangeStart, byte testRangeEnd) {
+        return !rangeInRange(rangeStart, rangeEnd, testRangeStart, testRangeEnd);
+    }
+
+    public static boolean rangeNotInRange(short rangeStart, short rangeEnd, short testRangeStart, short testRangeEnd) {
+        return !rangeInRange(rangeStart, rangeEnd, testRangeStart, testRangeEnd);
+    }
+
+    public static boolean rangeNotInRange(int rangeStart, int rangeEnd, int testRangeStart, int testRangeEnd) {
+        return !rangeInRange(rangeStart, rangeEnd, testRangeStart, testRangeEnd);
+    }
+
+    public static boolean rangeNotInRange(long rangeStart, long rangeEnd, long testRangeStart, long testRangeEnd) {
+        return !rangeInRange(rangeStart, rangeEnd, testRangeStart, testRangeEnd);
+    }
+
+    public static boolean rangeNotInRange(float rangeStart, float rangeEnd, float testRangeStart, float testRangeEnd) {
+        return !rangeInRange(rangeStart, rangeEnd, testRangeStart, testRangeEnd);
+    }
+
+    public static boolean rangeNotInRange(double rangeStart, double rangeEnd, double testRangeStart, double testRangeEnd) {
+        return !rangeInRange(rangeStart, rangeEnd, testRangeStart, testRangeEnd);
+    }
+
+    // -------------------- cross --------------------
+
+    /**
+     * 交差
+     *
+     * @param start1 开始区间1
+     * @param end1   结束区间1
+     * @param start2 开始区间2
+     * @param end2   结束区间2
+     *               [1, 1] [1, 1] false
+     *               [1, 1] [1, 2] false
+     *               [1, 2] [1, 1] false
+     *               [1, 2] [2, 3] false
+     *               [1, 2] [1, 2] true
+     * @return 是否有交差
+     */
+    public static boolean cross(byte start1, byte end1, byte start2, byte end2) {
+        if (end1 <= start2 || end2 <= start1) {
+            return false;
+        }
+        return (start1 == start2 && end1 == end2) ||
+                Numbers.rangeInRange(start1, end1, start2, end2) || Numbers.inRange(start1, end1, start2) ||
+                Numbers.rangeInRange(start2, end2, start1, end1) || Numbers.inRange(start2, end2, start1);
+    }
+
+    public static boolean cross(short start1, short end1, short start2, short end2) {
+        if (end1 <= start2 || end2 <= start1) {
+            return false;
+        }
+        return (start1 == start2 && end1 == end2) ||
+                Numbers.rangeInRange(start1, end1, start2, end2) || Numbers.inRange(start1, end1, start2) ||
+                Numbers.rangeInRange(start2, end2, start1, end1) || Numbers.inRange(start2, end2, start1);
+    }
+
+    public static boolean cross(int start1, int end1, int start2, int end2) {
+        if (end1 <= start2 || end2 <= start1) {
+            return false;
+        }
+        return (start1 == start2 && end1 == end2) ||
+                Numbers.rangeInRange(start1, end1, start2, end2) || Numbers.inRange(start1, end1, start2) ||
+                Numbers.rangeInRange(start2, end2, start1, end1) || Numbers.inRange(start2, end2, start1);
+    }
+
+    public static boolean cross(long start1, long end1, long start2, long end2) {
+        if (end1 <= start2 || end2 <= start1) {
+            return false;
+        }
+        return (start1 == start2 && end1 == end2) ||
+                Numbers.rangeInRange(start1, end1, start2, end2) || Numbers.inRange(start1, end1, start2) ||
+                Numbers.rangeInRange(start2, end2, start1, end1) || Numbers.inRange(start2, end2, start1);
+    }
+
+    public static boolean cross(float start1, float end1, float start2, float end2) {
+        if (end1 <= start2 || end2 <= start1) {
+            return false;
+        }
+        return (start1 == start2 && end1 == end2) ||
+                Numbers.rangeInRange(start1, end1, start2, end2) || Numbers.inRange(start1, end1, start2) ||
+                Numbers.rangeInRange(start2, end2, start1, end1) || Numbers.inRange(start2, end2, start1);
+    }
+
+    public static boolean cross(double start1, double end1, double start2, double end2) {
+        if (end1 <= start2 || end2 <= start1) {
+            return false;
+        }
+        return (start1 == start2 && end1 == end2) ||
+                Numbers.rangeInRange(start1, end1, start2, end2) || Numbers.inRange(start1, end1, start2) ||
+                Numbers.rangeInRange(start2, end2, start1, end1) || Numbers.inRange(start2, end2, start1);
+    }
+
+    /**
+     * 不交叉
+     *
+     * @param start1 开始区间1
+     * @param end1   结束区间1
+     * @param start2 开始区间2
+     * @param end2   结束区间2
+     * @return 是否不交叉
+     */
+    public static boolean uncross(byte start1, byte end1, byte start2, byte end2) {
+        return !cross(start1, end1, start2, end2);
+    }
+
+    public static boolean uncross(short start1, short end1, short start2, short end2) {
+        return !cross(start1, end1, start2, end2);
+    }
+
+    public static boolean uncross(int start1, int end1, int start2, int end2) {
+        return !cross(start1, end1, start2, end2);
+    }
+
+    public static boolean uncross(long start1, long end1, long start2, long end2) {
+        return !cross(start1, end1, start2, end2);
+    }
+
+    public static boolean uncross(float start1, float end1, float start2, float end2) {
+        return !cross(start1, end1, start2, end2);
+    }
+
+    public static boolean uncross(double start1, double end1, double start2, double end2) {
+        return !cross(start1, end1, start2, end2);
     }
 
     // -------------------- scale --------------------

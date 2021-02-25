@@ -298,8 +298,8 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
      * @param end   结束区间
      * @return true包含
      */
-    public boolean include(Date start, Date end) {
-        return DateRanges.include(this.c.getTime(), start, end);
+    public boolean inRange(Date start, Date end) {
+        return DateRanges.inRange(start, end, this.c.getTime());
     }
 
     /**
@@ -309,8 +309,8 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
      * @param end   结束区间
      * @return true不包含
      */
-    public boolean exclude(Date start, Date end) {
-        return DateRanges.exclude(this.c.getTime(), start, end);
+    public boolean notInRange(Date start, Date end) {
+        return DateRanges.notInRange(start, end, this.c.getTime());
     }
 
     /**

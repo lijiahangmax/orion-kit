@@ -19,6 +19,8 @@ import java.util.function.Consumer;
  */
 public class ReaderLineConsumer implements Consumer<InputStream> {
 
+    private static final ReaderLineConsumer DEFAULT_PRINT = new ReaderLineConsumer(FunctionConst.getPrintConsumer());
+
     /**
      * 编码格式
      */
@@ -33,11 +35,6 @@ public class ReaderLineConsumer implements Consumer<InputStream> {
      * lineConsumer
      */
     private Consumer<String> lineConsumer;
-
-    /**
-     * 停止标识符
-     */
-    private volatile boolean stop;
 
     public ReaderLineConsumer() {
         this(FunctionConst.getEmptyConsumer());
@@ -78,25 +75,7 @@ public class ReaderLineConsumer implements Consumer<InputStream> {
      * @return ReaderLineConsumer
      */
     public static ReaderLineConsumer getDefaultPrint() {
-        return new ReaderLineConsumer(FunctionConst.getPrintConsumer());
-    }
-
-    /**
-     * 关闭
-     *
-     * @param o o
-     */
-    public static void close(Object o) {
-        if (o instanceof ReaderLineConsumer) {
-            ((ReaderLineConsumer) o).stop();
-        }
-    }
-
-    /**
-     * 停止
-     */
-    public void stop() {
-        this.stop = true;
+        return DEFAULT_PRINT;
     }
 
     @Override
@@ -104,7 +83,7 @@ public class ReaderLineConsumer implements Consumer<InputStream> {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(input, charset), bufferSize);
             String line;
-            while (!stop && (line = reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null) {
                 lineConsumer.accept(line);
             }
         } catch (Exception e) {

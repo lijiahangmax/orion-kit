@@ -20,6 +20,10 @@ import java.util.function.BiConsumer;
  */
 public class ReaderLineBiConsumer<T> implements BiConsumer<T, InputStream> {
 
+    private static ReaderLineBiConsumer<?> DEFAULT_PRINT_1 = new ReaderLineBiConsumer<>(FunctionConst.getPrint1BiConsumer());
+    private static ReaderLineBiConsumer<?> DEFAULT_PRINT_2 = new ReaderLineBiConsumer<>(FunctionConst.getPrint2BiConsumer());
+    private static ReaderLineBiConsumer<?> DEFAULT_PRINT = new ReaderLineBiConsumer<>(FunctionConst.getPrintBiConsumer());
+
     /**
      * 编码格式
      */
@@ -34,11 +38,6 @@ public class ReaderLineBiConsumer<T> implements BiConsumer<T, InputStream> {
      * lineConsumer
      */
     private BiConsumer<T, String> lineConsumer;
-
-    /**
-     * 停止标识符
-     */
-    private volatile boolean stop;
 
     public ReaderLineBiConsumer() {
         this(FunctionConst.getEmptyBiConsumer());
@@ -75,24 +74,17 @@ public class ReaderLineBiConsumer<T> implements BiConsumer<T, InputStream> {
 
     @SuppressWarnings("unchecked")
     public static <T> ReaderLineBiConsumer<T> getDefaultPrint1() {
-        return (ReaderLineBiConsumer<T>) new ReaderLineBiConsumer<>(FunctionConst.getPrint1BiConsumer());
+        return (ReaderLineBiConsumer<T>) DEFAULT_PRINT_1;
     }
 
     @SuppressWarnings("unchecked")
     public static <T> ReaderLineBiConsumer<T> getDefaultPrint2() {
-        return (ReaderLineBiConsumer<T>) new ReaderLineBiConsumer<>(FunctionConst.getPrint2BiConsumer());
+        return (ReaderLineBiConsumer<T>) DEFAULT_PRINT_2;
     }
 
     @SuppressWarnings("unchecked")
     public static <T> ReaderLineBiConsumer<T> getDefaultPrint() {
-        return (ReaderLineBiConsumer<T>) new ReaderLineBiConsumer<>(FunctionConst.getPrintBiConsumer());
-    }
-
-    /**
-     * 停止
-     */
-    public void stop() {
-        this.stop = true;
+        return (ReaderLineBiConsumer<T>) DEFAULT_PRINT;
     }
 
     @Override
@@ -100,7 +92,7 @@ public class ReaderLineBiConsumer<T> implements BiConsumer<T, InputStream> {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(input, charset), bufferSize);
             String line;
-            while (!stop && (line = reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null) {
                 lineConsumer.accept(t, line);
             }
         } catch (IOException e) {
