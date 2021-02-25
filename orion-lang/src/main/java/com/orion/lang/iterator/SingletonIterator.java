@@ -1,7 +1,8 @@
 package com.orion.lang.iterator;
 
+import com.orion.utils.Exceptions;
+
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -33,12 +34,12 @@ public class SingletonIterator<E> implements Iterator<E>, Iterable<E> {
             hasNext = false;
             return element;
         }
-        throw new NoSuchElementException();
+        throw Exceptions.noSuchElement();
     }
 
     @Override
     public void remove() {
-        throw new UnsupportedOperationException();
+        throw Exceptions.unSupport();
     }
 
     @Override

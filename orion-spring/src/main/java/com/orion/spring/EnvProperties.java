@@ -3,6 +3,7 @@ package com.orion.spring;
 import com.orion.lang.Console;
 import com.orion.lang.collect.MutableHashMap;
 import com.orion.lang.collect.MutableHashSet;
+import com.orion.utils.Exceptions;
 import com.orion.utils.ext.PropertiesExt;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -54,11 +55,11 @@ public class EnvProperties {
         return propertiesExt.getValue(key, def);
     }
 
-    public static MutableHashMap getValues() {
+    public static MutableHashMap<Object, Object> getValues() {
         return propertiesExt.getValues();
     }
 
-    public static MutableHashSet getKeys() {
+    public static MutableHashSet<Object> getKeys() {
         return propertiesExt.getKeys();
     }
 
@@ -98,7 +99,7 @@ public class EnvProperties {
                 Console.log("EnvProperties: load env properties success...");
             } catch (Exception e) {
                 Console.error("EnvProperties: load env properties fail...");
-                throw new RuntimeException(e);
+                throw Exceptions.init(e);
             }
         }
     }

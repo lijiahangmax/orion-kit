@@ -54,7 +54,7 @@ public class Constructors {
      * @return 构造方法
      */
     public static <T> Constructor<T> getDefaultConstructor(Class<T> clazz) {
-        Valid.notNull(clazz, "Class is null");
+        Valid.notNull(clazz, "class is null");
         try {
             Constructor<T> constructor = clazz.getDeclaredConstructor();
             constructor.setAccessible(true);
@@ -73,7 +73,7 @@ public class Constructors {
      * @return 构造方法
      */
     public static <T> Constructor<T> getConstructor(Class<T> clazz, Class<?>... parameterTypes) {
-        Valid.notNull(clazz, "Class is null");
+        Valid.notNull(clazz, "class is null");
         if (Arrays1.length(parameterTypes) == 0) {
             return getDefaultConstructor(clazz);
         }
@@ -95,7 +95,7 @@ public class Constructors {
      * @return 构造方法
      */
     public static <T> Constructor<T> getConstructor(Class<T> clazz, int len) {
-        Valid.notNull(clazz, "Class is null");
+        Valid.notNull(clazz, "class is null");
         if (len == 0) {
             return getDefaultConstructor(clazz);
         }
@@ -122,7 +122,7 @@ public class Constructors {
      * @return 构造方法
      */
     public static <T> List<Constructor<T>> getConstructors(Class<T> clazz, int len) {
-        Valid.notNull(clazz, "Class is null");
+        Valid.notNull(clazz, "class is null");
         List<Constructor<T>> list = new ArrayList<>();
         if (len == 0) {
             list.add(getDefaultConstructor(clazz));
@@ -150,7 +150,7 @@ public class Constructors {
      * @return 构造方法
      */
     public static <T> List<Constructor<T>> getConstructors(Class<T> clazz) {
-        Valid.notNull(clazz, "Class is null");
+        Valid.notNull(clazz, "class is null");
         List<Constructor<T>> list = new ArrayList<>();
         try {
             Constructor<?>[] constructors = clazz.getConstructors();
@@ -168,7 +168,7 @@ public class Constructors {
      * 设置构造方法可访问
      */
     public static void setAccessible(Constructor<?> constructor) {
-        Valid.notNull(constructor, "Set Accessible Constructor class is null");
+        Valid.notNull(constructor, "set accessible constructor class is null");
         if ((!Modifier.isPublic(constructor.getModifiers()) || !Modifier.isPublic(constructor.getDeclaringClass().getModifiers())) && !constructor.isAccessible()) {
             constructor.setAccessible(true);
         }
@@ -182,12 +182,12 @@ public class Constructors {
      * @return 实例
      */
     public static <T> T newInstance(Constructor<T> constructor) {
-        Valid.notNull(constructor, "Constructor is null");
+        Valid.notNull(constructor, "constructor is null");
         try {
             constructor.setAccessible(true);
             return constructor.newInstance();
         } catch (Exception e) {
-            throw Exceptions.invoke("Cannot initialize class", e);
+            throw Exceptions.invoke("cannot initialize class", e);
         }
     }
 
@@ -200,12 +200,12 @@ public class Constructors {
      * @return 实例
      */
     public static <T> T newInstance(Constructor<T> constructor, Object... values) {
-        Valid.notNull(constructor, "Constructor is null");
+        Valid.notNull(constructor, "constructor is null");
         try {
             constructor.setAccessible(true);
             return constructor.newInstance(values);
         } catch (Exception e) {
-            throw Exceptions.invoke("Cannot initialize class", e);
+            throw Exceptions.invoke("cannot initialize class", e);
         }
     }
 
@@ -217,13 +217,13 @@ public class Constructors {
      * @return 实例
      */
     public static <T> T newInstance(Class<T> clazz) {
-        Valid.notNull(clazz, "Class is null");
+        Valid.notNull(clazz, "class is null");
         try {
             Constructor<T> constructor = clazz.getDeclaredConstructor();
             constructor.setAccessible(true);
             return constructor.newInstance();
         } catch (Exception e) {
-            throw Exceptions.invoke(Strings.format("Cannot initialize class: {}", clazz.getName()), e);
+            throw Exceptions.invoke(Strings.format("cannot initialize class: {}", clazz.getName()), e);
         }
     }
 
@@ -237,13 +237,13 @@ public class Constructors {
      * @return 实例
      */
     public static <T> T newInstance(Class<T> clazz, Class<?>[] parameterTypes, Object... values) {
-        Valid.notNull(clazz, "Class is null");
+        Valid.notNull(clazz, "class is null");
         try {
             Constructor<T> constructor = clazz.getDeclaredConstructor(parameterTypes);
             constructor.setAccessible(true);
             return constructor.newInstance(values);
         } catch (Exception e) {
-            throw Exceptions.invoke(Strings.format("Cannot initialize class: {}, parameterTypes: {}, values: {}", clazz.getName(), Arrays.toString(parameterTypes), Arrays.toString(values)), e);
+            throw Exceptions.invoke(Strings.format("cannot initialize class: {}, parameterTypes: {}, values: {}", clazz.getName(), Arrays.toString(parameterTypes), Arrays.toString(values)), e);
         }
     }
 
@@ -270,7 +270,7 @@ public class Constructors {
      * @return 实例
      */
     public static <T> T newInstanceInfer(Class<T> clazz, Object... args) {
-        Valid.notNull(clazz, "Class is null");
+        Valid.notNull(clazz, "class is null");
         if (Arrays1.isEmpty(args)) {
             return newInstance(clazz);
         }

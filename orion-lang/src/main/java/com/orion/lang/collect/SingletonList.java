@@ -1,6 +1,7 @@
 package com.orion.lang.collect;
 
 import com.orion.lang.iterator.SingletonIterator;
+import com.orion.utils.Exceptions;
 import com.orion.utils.Objects1;
 
 import java.io.Serializable;
@@ -42,7 +43,7 @@ public class SingletonList<E> extends AbstractList<E> implements RandomAccess, S
     @Override
     public E get(int index) {
         if (index != 0) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: 1");
+            throw Exceptions.index("index: " + index + ", size: 1");
         }
         return element;
     }
@@ -59,12 +60,12 @@ public class SingletonList<E> extends AbstractList<E> implements RandomAccess, S
 
     @Override
     public boolean removeIf(Predicate<? super E> filter) {
-        throw new UnsupportedOperationException();
+        throw Exceptions.unSupport();
     }
 
     @Override
     public void replaceAll(UnaryOperator<E> operator) {
-        throw new UnsupportedOperationException();
+        throw Exceptions.unSupport();
     }
 
     @Override

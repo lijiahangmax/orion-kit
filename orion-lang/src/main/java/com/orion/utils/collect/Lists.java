@@ -4,6 +4,7 @@ import com.orion.lang.collect.EmptyList;
 import com.orion.lang.collect.MutableArrayList;
 import com.orion.lang.collect.SingletonList;
 import com.orion.utils.Arrays1;
+import com.orion.utils.Exceptions;
 import com.orion.utils.Objects1;
 import com.orion.utils.Valid;
 import com.orion.utils.random.Randoms;
@@ -209,7 +210,7 @@ public class Lists extends Collections {
                 list.remove(0);
             }
         } else {
-            throw new IndexOutOfBoundsException("Cut List Error: startIndex: " + start + ", cutLength: " + len + ", needSize: " + (start + len) + ", but maxSize: " + size);
+            throw Exceptions.index("cut list error: startIndex: " + start + ", cutLength: " + len + ", needSize: " + (start + len) + ", but maxSize: " + size);
         }
     }
 
@@ -349,7 +350,7 @@ public class Lists extends Collections {
             return null;
         }
         if (i >= size) {
-            throw new IndexOutOfBoundsException("list length: " + size + " get index: " + i);
+            throw Exceptions.index("list length: " + size + " get index: " + i);
         }
         return list.get(i);
     }
@@ -376,7 +377,7 @@ public class Lists extends Collections {
             return null;
         }
         if (i >= size) {
-            throw new IndexOutOfBoundsException("list length: " + size + " get index: " + i);
+            throw Exceptions.index("list length: " + size + " get index: " + i);
         }
         E o = list.get(i);
         if (force) {

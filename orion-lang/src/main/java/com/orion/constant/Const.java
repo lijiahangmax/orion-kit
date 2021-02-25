@@ -36,6 +36,26 @@ public class Const {
 
     public static final String ORION_EMAIL = "li1553488@aliyun.com";
 
+    // --------------- letter ---------------
+
+    public static final String CR = "\r";
+
+    public static final String LF = "\n";
+
+    public static final String CR_LF = "\r\n";
+
+    public static final String TAB = "\t";
+
+    public static final String DOT = ".";
+
+    public static final String POUND = "#";
+
+    public static final String DOLLAR = "$";
+
+    public static final String SLASH = "/";
+
+    public static final String BACKSLASH = "\\";
+
     // --------------- charset ---------------
 
     public static final String ASCII = "US-ASCII";

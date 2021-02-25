@@ -1,10 +1,10 @@
 package com.orion.lang.iterator;
 
 import com.orion.utils.Arrays1;
+import com.orion.utils.Exceptions;
 
 import java.io.Serializable;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 /**
  * 数组迭代器
@@ -68,12 +68,12 @@ public class ArrayIterator<E> implements Iterator<E>, Iterable<E>, Serializable 
         if (hasNext()) {
             return array[index++];
         }
-        throw new NoSuchElementException();
+        throw Exceptions.noSuchElement();
     }
 
     @Override
     public void remove() {
-        throw new UnsupportedOperationException("This is a read-only iterator.");
+        throw Exceptions.unSupport("this is a read-only iterator");
     }
 
     /**

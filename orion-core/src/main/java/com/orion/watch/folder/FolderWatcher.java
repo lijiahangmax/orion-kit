@@ -3,7 +3,6 @@ package com.orion.watch.folder;
 import com.orion.able.SafeCloseable;
 import com.orion.able.Stoppable;
 import com.orion.able.Watchable;
-import com.orion.exception.IORuntimeException;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
@@ -53,7 +52,7 @@ public abstract class FolderWatcher implements Runnable, Watchable, Stoppable, S
     }
 
     protected FolderWatcher(WatchHandler handler, WatchEvent.Modifier[] modifiers, WatchEvent.Kind<?>... kinds) {
-        Valid.notNull(handler, "Watch handler is null");
+        Valid.notNull(handler, "watch handler is null");
         this.handler = handler;
         this.modifiers = modifiers;
         this.kinds = Arrays1.def(kinds, WatchEventKind.ALL);
@@ -117,7 +116,7 @@ public abstract class FolderWatcher implements Runnable, Watchable, Stoppable, S
             try {
                 Files.createDirectories(path);
             } catch (IOException e) {
-                throw new IORuntimeException(e);
+                throw Exceptions.ioRuntime(e);
             }
         }
         try {

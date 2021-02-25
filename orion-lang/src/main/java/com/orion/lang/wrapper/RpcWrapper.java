@@ -5,6 +5,7 @@ import com.orion.able.Logable;
 import com.orion.able.Mapable;
 import com.orion.id.UUIds;
 import com.orion.lang.support.CloneSupport;
+import com.orion.utils.Exceptions;
 import com.orion.utils.Objects1;
 import com.orion.utils.Strings;
 import com.orion.utils.collect.Lists;
@@ -216,15 +217,15 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
         if (!isSuccess()) {
             if (appendErrMsg) {
                 if (msg == null) {
-                    throw new RuntimeException(Objects1.toString(errorMessages));
+                    throw Exceptions.runtime(Objects1.toString(errorMessages));
                 } else {
-                    throw new RuntimeException(msg + Strings.SPACE + Objects1.toString(errorMessages));
+                    throw Exceptions.runtime(msg + Strings.SPACE + Objects1.toString(errorMessages));
                 }
             }
             if (msg == null) {
-                throw new RuntimeException();
+                throw Exceptions.runtime();
             } else {
-                throw new RuntimeException(msg);
+                throw Exceptions.runtime(msg);
             }
         }
     }

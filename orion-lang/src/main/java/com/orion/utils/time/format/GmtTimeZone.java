@@ -1,6 +1,7 @@
 package com.orion.utils.time.format;
 
 import com.orion.constant.Const;
+import com.orion.utils.Exceptions;
 
 import java.util.Date;
 import java.util.TimeZone;
@@ -21,10 +22,10 @@ class GmtTimeZone extends TimeZone {
 
     GmtTimeZone(boolean negate, int hours, int minutes) {
         if (hours >= HOURS_PER_DAY) {
-            throw new IllegalArgumentException(hours + " hours out of range");
+            throw Exceptions.argument(hours + " hours out of range");
         }
         if (minutes >= MINUTES_PER_HOUR) {
-            throw new IllegalArgumentException(minutes + " minutes out of range");
+            throw Exceptions.argument(minutes + " minutes out of range");
         }
         int milliseconds = (minutes + (hours * MINUTES_PER_HOUR)) * MILLISECONDS_PER_MINUTE;
         offset = negate ? -milliseconds : milliseconds;
@@ -45,7 +46,7 @@ class GmtTimeZone extends TimeZone {
 
     @Override
     public void setRawOffset(int offsetMillis) {
-        throw new UnsupportedOperationException();
+        throw Exceptions.unSupport();
     }
 
     @Override

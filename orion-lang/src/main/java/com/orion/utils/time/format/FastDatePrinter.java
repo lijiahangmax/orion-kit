@@ -170,7 +170,7 @@ public class FastDatePrinter implements DatePrinter, Serializable {
                     }
                     break;
                 default:
-                    throw new IllegalArgumentException("Illegal pattern component: " + token);
+                    throw Exceptions.argument("illegal pattern component: " + token);
             }
 
             rules.add(rule);
@@ -187,8 +187,7 @@ public class FastDatePrinter implements DatePrinter, Serializable {
 
         char c = pattern.charAt(i);
         if (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z') {
-            // Scan a run of the same character, which indicates a time
-            // pattern.
+            // scan a run of the same character, which indicates a time pattern
             buf.append(c);
 
             while (i + 1 < length) {
@@ -201,7 +200,7 @@ public class FastDatePrinter implements DatePrinter, Serializable {
                 }
             }
         } else {
-            // This will identify token as text.
+            // this will identify token as text.
             buf.append('\'');
 
             boolean inLiteral = false;
@@ -250,7 +249,7 @@ public class FastDatePrinter implements DatePrinter, Serializable {
         } else if (obj instanceof Long) {
             return format(((Long) obj).longValue());
         } else {
-            throw new IllegalArgumentException("Unknown class: " +
+            throw Exceptions.argument("unknown class: " +
                     (obj == null ? "<null>" : obj.getClass().getName()));
         }
     }
@@ -657,8 +656,8 @@ public class FastDatePrinter implements DatePrinter, Serializable {
          */
         PaddedNumberField(int field, int size) {
             if (size < 3) {
-                // Should use UnpaddedNumberField or TwoDigitNumberField.
-                throw new IllegalArgumentException();
+                // Should use unPaddedNumberField or TwoDigitNumberField.
+                throw Exceptions.argument();
             }
             mField = field;
             mSize = size;
@@ -1009,7 +1008,7 @@ public class FastDatePrinter implements DatePrinter, Serializable {
                 case 3:
                     return ISO8601_HOURS_COLON_MINUTES;
                 default:
-                    throw new IllegalArgumentException("invalid number of X");
+                    throw Exceptions.argument("invalid number of X");
             }
         }
 

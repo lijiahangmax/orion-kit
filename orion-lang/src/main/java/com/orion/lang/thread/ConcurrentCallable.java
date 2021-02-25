@@ -1,5 +1,7 @@
 package com.orion.lang.thread;
 
+import com.orion.utils.Exceptions;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
@@ -35,10 +37,10 @@ public class ConcurrentCallable<V> implements Callable<V> {
             } else if (cd != null) {
                 cd.await();
             } else {
-                throw new NullPointerException("countDownLatch or cyclicBarrier is null");
+                throw Exceptions.nullPoint("countDownLatch or cyclicBarrier is null");
             }
         } else {
-            throw new NullPointerException("callable or consumer is null");
+            throw Exceptions.nullPoint("callable or consumer is null");
         }
         return c.call();
     }

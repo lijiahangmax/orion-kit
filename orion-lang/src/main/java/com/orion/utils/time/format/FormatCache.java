@@ -1,5 +1,6 @@
 package com.orion.utils.time.format;
 
+import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
 
 import java.text.DateFormat;
@@ -89,7 +90,7 @@ abstract class FormatCache<F extends Format> {
                     pattern = previous;
                 }
             } catch (ClassCastException ex) {
-                throw new IllegalArgumentException("No date time pattern for locale: " + locale);
+                throw Exceptions.argument("no date time pattern for locale: " + locale);
             }
         }
         return pattern;

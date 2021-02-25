@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Serializable;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 /**
  * 行迭代器
@@ -64,7 +63,7 @@ public class LineIterator implements Iterator<String>, Iterable<String>, SafeClo
     @Override
     public String next() {
         if (!hasNext()) {
-            throw new NoSuchElementException("No more lines");
+            throw Exceptions.noSuchElement("no more lines");
         }
         String currentLine = line;
         line = null;
@@ -73,7 +72,7 @@ public class LineIterator implements Iterator<String>, Iterable<String>, SafeClo
 
     @Override
     public void remove() {
-        throw new UnsupportedOperationException("Remove unsupported on LineIterator");
+        throw Exceptions.unSupport("remove unsupported on lineIterator");
     }
 
     @Override

@@ -144,16 +144,16 @@ public class Fields {
      * @return 对象
      */
     public static <E> E getFieldValue(Object obj, String fieldName) {
-        Valid.notNull(obj, "Invoker object is null");
-        Valid.notBlank(fieldName, "Invoke Field is null");
+        Valid.notNull(obj, "invoker object is null");
+        Valid.notBlank(fieldName, "invoke field is null");
         Field field = getAccessibleField(obj.getClass(), fieldName);
         if (field == null) {
-            throw Exceptions.invoke(Strings.format("Get Field Value not found field: {}, class {}", fieldName, obj.getClass().getName()));
+            throw Exceptions.invoke(Strings.format("get field value not found field: {}, class {}", fieldName, obj.getClass().getName()));
         }
         try {
             return (E) field.get(obj);
         } catch (Exception e) {
-            throw Exceptions.invoke(Strings.format("Get Field Value error: {}, field: {}, class: {}", e.getMessage(), fieldName, obj.getClass().getName()), e);
+            throw Exceptions.invoke(Strings.format("get field value error: {}, field: {}, class: {}", e.getMessage(), fieldName, obj.getClass().getName()), e);
         }
     }
 
@@ -166,13 +166,13 @@ public class Fields {
      * @return 对象
      */
     public static <E> E getFieldValue(Object obj, Field field) {
-        Valid.notNull(obj, "Invoker object is null");
-        Valid.notNull(field, "Invoke Field is null");
+        Valid.notNull(obj, "invoker object is null");
+        Valid.notNull(field, "invoke field is null");
         try {
             setAccessible(field);
             return (E) field.get(obj);
         } catch (Exception e) {
-            throw Exceptions.invoke(Strings.format("Get Field Value error: {}, field: {}, class: {}", e.getMessage(), field.getName(), obj.getClass().getName()), e);
+            throw Exceptions.invoke(Strings.format("get field value error: {}, field: {}, class: {}", e.getMessage(), field.getName(), obj.getClass().getName()), e);
         }
     }
 
@@ -185,16 +185,16 @@ public class Fields {
      * @param <E>       属性类型
      */
     public static <E> void setFieldValue(Object obj, String fieldName, E value) {
-        Valid.notNull(obj, "Invoker object is null");
-        Valid.notBlank(fieldName, "Invoke Field is null");
+        Valid.notNull(obj, "invoker object is null");
+        Valid.notBlank(fieldName, "invoke field is null");
         Field field = getAccessibleField(obj.getClass(), fieldName);
         if (field == null) {
-            throw Exceptions.invoke(Strings.format("Set Field Value not found field: {}, class {}", fieldName, obj.getClass().getName()));
+            throw Exceptions.invoke(Strings.format("set field value not found field: {}, class {}", fieldName, obj.getClass().getName()));
         }
         try {
             field.set(obj, value);
         } catch (Exception e) {
-            throw Exceptions.invoke(Strings.format("Set Field Value error: {}, field: {}, class: {}", e.getMessage(), fieldName, obj.getClass().getName(), value), e);
+            throw Exceptions.invoke(Strings.format("set field value error: {}, field: {}, class: {}", e.getMessage(), fieldName, obj.getClass().getName(), value), e);
         }
     }
 
@@ -207,13 +207,13 @@ public class Fields {
      * @param <E>   属性类型
      */
     public static <E> void setFieldValue(Object obj, Field field, E value) {
-        Valid.notNull(obj, "Invoker object is null");
-        Valid.notNull(field, "Invoke Field is null");
+        Valid.notNull(obj, "invoker object is null");
+        Valid.notNull(field, "invoke field is null");
         try {
             setAccessible(field);
             field.set(obj, value);
         } catch (Exception e) {
-            throw Exceptions.invoke(Strings.format("Set Field Value error: {}, field: {}, class: {}", e.getMessage(), field.getName(), obj.getClass().getName(), value), e);
+            throw Exceptions.invoke(Strings.format("set field value error: {}, field: {}, class: {}", e.getMessage(), field.getName(), obj.getClass().getName(), value), e);
         }
     }
 
@@ -226,8 +226,8 @@ public class Fields {
      * @param <E>       属性类型
      */
     public static <E> void setFieldValueInfer(Object obj, String fieldName, E value) {
-        Valid.notNull(obj, "Invoker object is null");
-        Valid.notNull(fieldName, "Invoke Field is null");
+        Valid.notNull(obj, "invoker object is null");
+        Valid.notNull(fieldName, "invoke field is null");
         Field field = getAccessibleField(obj.getClass(), fieldName);
         try {
             if (TypeStore.canConvert(value.getClass(), field.getType())) {
@@ -236,7 +236,7 @@ public class Fields {
             }
             throw Exceptions.invoke(Strings.format("could infer set field value, field: {}, class: {}", fieldName, obj.getClass().getName()));
         } catch (Exception e) {
-            throw Exceptions.invoke(Strings.format("Set Field Value error: {}, field: {}, class: {}", e.getMessage(), fieldName, obj.getClass().getName()), e);
+            throw Exceptions.invoke(Strings.format("set field value error: {}, field: {}, class: {}", e.getMessage(), fieldName, obj.getClass().getName()), e);
         }
     }
 
@@ -249,8 +249,8 @@ public class Fields {
      * @param <E>   属性类型
      */
     public static <E> void setFieldValueInfer(Object obj, Field field, E value) {
-        Valid.notNull(obj, "Invoker object is null");
-        Valid.notNull(field, "Invoke Field is null");
+        Valid.notNull(obj, "invoker object is null");
+        Valid.notNull(field, "invoke field is null");
         try {
             setAccessible(field);
             if (TypeStore.canConvert(value.getClass(), field.getType())) {
@@ -259,7 +259,7 @@ public class Fields {
             }
             throw Exceptions.invoke(Strings.format("could infer set field value, field: {}, class: {}", field.getName(), obj.getClass().getName()));
         } catch (Exception e) {
-            throw Exceptions.invoke(Strings.format("Set Field Value error: {}, field: {}, class: {}", e.getMessage(), field.getName(), obj.getClass().getName()), e);
+            throw Exceptions.invoke(Strings.format("set field value error: {}, field: {}, class: {}", e.getMessage(), field.getName(), obj.getClass().getName()), e);
         }
     }
 
@@ -280,7 +280,7 @@ public class Fields {
      * @return 属性
      */
     public static List<Field> getFieldList(Class<?> clazz) {
-        Valid.notNull(clazz, "Field class is null");
+        Valid.notNull(clazz, "field class is null");
         if (clazz.getSuperclass() != null) {
             List<Field> fieldList = Stream.of(clazz.getDeclaredFields())
                     .filter(field -> !Modifier.isStatic(field.getModifiers()))
@@ -319,7 +319,7 @@ public class Fields {
      * @return 字段对象
      */
     public static Field getAccessibleField(Class<?> clazz, String fieldName) {
-        Valid.notNull(clazz, "Field class is null");
+        Valid.notNull(clazz, "field class is null");
         for (Class<?> superClass = clazz; superClass != Object.class; superClass = superClass.getSuperclass()) {
             try {
                 Field field = superClass.getDeclaredField(fieldName);
@@ -338,7 +338,7 @@ public class Fields {
      * @param field 属性
      */
     public static void setAccessible(Field field) {
-        Valid.notNull(field, "Set Accessible Field class is null");
+        Valid.notNull(field, "set accessible field class is null");
         if ((!Modifier.isPublic(field.getModifiers()) || !Modifier.isPublic(field.getDeclaringClass().getModifiers()) || Modifier.isFinal(field.getModifiers())) && !field.isAccessible()) {
             field.setAccessible(true);
         }

@@ -4,7 +4,7 @@ import com.orion.able.SafeCloseable;
 import com.orion.constant.Letters;
 import com.orion.csv.option.CsvOption;
 import com.orion.csv.option.CsvWriterOption;
-import com.orion.exception.IORuntimeException;
+import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.Systems;
 import com.orion.utils.Valid;
@@ -276,7 +276,7 @@ public class CsvWriter implements SafeCloseable {
      */
     private void checkClosed() {
         if (closed) {
-            throw new IORuntimeException("this instance already been closed");
+            throw Exceptions.ioRuntime("this instance already been closed");
         }
     }
 

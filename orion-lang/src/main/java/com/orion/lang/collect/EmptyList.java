@@ -1,5 +1,7 @@
 package com.orion.lang.collect;
 
+import com.orion.utils.Exceptions;
+
 import java.io.Serializable;
 import java.util.*;
 import java.util.function.Consumer;
@@ -36,7 +38,7 @@ public class EmptyList<E> extends AbstractList<E> implements RandomAccess, Seria
 
     @Override
     public E get(int index) {
-        throw new IndexOutOfBoundsException("Index: " + index + ", Size: 0");
+        throw Exceptions.index("index: " + index + ", size: 0");
     }
 
     @Override
@@ -49,7 +51,7 @@ public class EmptyList<E> extends AbstractList<E> implements RandomAccess, Seria
 
             @Override
             public E next() {
-                throw new NoSuchElementException();
+                throw Exceptions.noSuchElement();
             }
         };
     }
@@ -60,12 +62,12 @@ public class EmptyList<E> extends AbstractList<E> implements RandomAccess, Seria
 
     @Override
     public boolean removeIf(Predicate<? super E> filter) {
-        throw new UnsupportedOperationException();
+        throw Exceptions.unSupport();
     }
 
     @Override
     public void replaceAll(UnaryOperator<E> operator) {
-        throw new UnsupportedOperationException();
+        throw Exceptions.unSupport();
     }
 
     @Override

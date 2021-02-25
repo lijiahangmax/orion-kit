@@ -52,12 +52,12 @@ public class FileMerge implements Callable<String> {
 
     public FileMerge(File file, int bufferSize) {
         if (file == null || !file.isDirectory()) {
-            throw new RuntimeException("The folder path is incorrect");
+            throw Exceptions.runtime("the folder path is incorrect");
         }
         this.file = file;
         String[] cf = file.list();
         if (cf == null || cf.length == 0) {
-            throw new RuntimeException("File block does not exist");
+            throw Exceptions.runtime("file block does not exist");
         }
         this.blockFile = cf;
         if (bufferSize < Const.BUFFER_KB_4) {
@@ -102,7 +102,7 @@ public class FileMerge implements Callable<String> {
                 filePath = ff.substring(0, ff.lastIndexOf("."));
             }
             if (last++ != is.getKey()) {
-                throw new RuntimeException("缺少 " + (last - 1) + " 文件");
+                throw Exceptions.runtime("not found " + (last - 1) + " block file");
             }
             fileList.add(is.getValue());
         }
@@ -138,7 +138,7 @@ public class FileMerge implements Callable<String> {
             fo.flush();
             return wf.getAbsolutePath();
         } catch (Exception e) {
-            throw new RuntimeException("merge error: " + e.getMessage());
+            throw Exceptions.runtime("merge error: " + e.getMessage());
         } finally {
             Streams.close(fo);
         }

@@ -343,7 +343,7 @@ public class Methods {
      * @return 方法对象
      */
     public static Method getAccessibleMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
-        Valid.notNull(clazz, "Method class is null");
+        Valid.notNull(clazz, "method class is null");
         for (Class<?> searchType = clazz; searchType != Object.class; searchType = searchType.getSuperclass()) {
             try {
                 Method method = searchType.getDeclaredMethod(methodName, parameterTypes);
@@ -365,7 +365,7 @@ public class Methods {
      * @return 方法对象
      */
     public static Method getAccessibleMethod(Class<?> clazz, String methodName, int argsNum) {
-        Valid.notNull(clazz, "Method class is null");
+        Valid.notNull(clazz, "method class is null");
         for (Class<?> searchType = clazz; searchType != Object.class; searchType = searchType.getSuperclass()) {
             Method[] methods = searchType.getDeclaredMethods();
             for (Method method : methods) {
@@ -407,7 +407,7 @@ public class Methods {
      * @return 方法对象
      */
     public static List<Method> getAccessibleMethods(Class<?> clazz, String methodName, int argsNum) {
-        Valid.notNull(clazz, "Method class is null");
+        Valid.notNull(clazz, "method class is null");
         List<Method> methods = new ArrayList<>();
         for (Class<?> searchType = clazz; searchType != Object.class; searchType = searchType.getSuperclass()) {
             Method[] searchMethods = searchType.getDeclaredMethods();
@@ -429,7 +429,7 @@ public class Methods {
      * @return 方法对象
      */
     public static List<Method> getAccessibleMethods(Class<?> clazz, String methodName) {
-        Valid.notNull(clazz, "Method class is null");
+        Valid.notNull(clazz, "method class is null");
         List<Method> methods = new ArrayList<>();
         for (Class<?> searchType = clazz; searchType != Object.class; searchType = searchType.getSuperclass()) {
             Method[] searchMethods = searchType.getDeclaredMethods();
@@ -461,7 +461,7 @@ public class Methods {
      * @return 方法
      */
     public static List<Method> getMethodList(Class<?> clazz) {
-        Valid.notNull(clazz, "Method class is null");
+        Valid.notNull(clazz, "method class is null");
         if (clazz.getSuperclass() != null) {
             List<Method> methodList = Stream.of(clazz.getDeclaredMethods())
                     .filter(field -> !Modifier.isStatic(field.getModifiers()))
@@ -481,7 +481,7 @@ public class Methods {
      * 设置方法可访问
      */
     public static void setAccessible(Method method) {
-        Valid.notNull(method, "Set Accessible Method class is null");
+        Valid.notNull(method, "set accessible method class is null");
         if ((!Modifier.isPublic(method.getModifiers()) || !Modifier.isPublic(method.getDeclaringClass().getModifiers())) && !method.isAccessible()) {
             method.setAccessible(true);
         }
@@ -494,7 +494,7 @@ public class Methods {
      * @return static方法
      */
     public static List<Method> getStaticMethods(Class<?> clazz) {
-        Valid.notNull(clazz, "Class is null");
+        Valid.notNull(clazz, "class is null");
         Method[] methods = clazz.getDeclaredMethods();
         return Arrays.stream(methods)
                 .filter(m -> Modifier.isStatic(m.getModifiers()))
@@ -510,8 +510,8 @@ public class Methods {
      * @return ignore
      */
     public static <E> E invokeGetter(Object obj, String fieldName) {
-        Valid.notNull(obj, "Invoke object is null");
-        Valid.notBlank(fieldName, "Invoke Getter Field is null");
+        Valid.notNull(obj, "invoke object is null");
+        Valid.notBlank(fieldName, "invoke getter field is null");
         try {
             Field field = Fields.getAccessibleField(obj.getClass(), fieldName);
             if (field == null || !field.getType().equals(Boolean.TYPE)) {
@@ -520,7 +520,7 @@ public class Methods {
                 return invokeMethod(obj, BOOLEAN_GETTER_PREFIX + Strings.firstUpper(fieldName), null, (Object[]) null);
             }
         } catch (Exception e) {
-            throw Exceptions.invoke(Strings.format("Invoke Field: {} Setter Method error {}", fieldName, e.getMessage()), e);
+            throw Exceptions.invoke(Strings.format("invoke field: {} setter method error {}", fieldName, e.getMessage()), e);
         }
     }
 
@@ -546,11 +546,11 @@ public class Methods {
      */
     @SafeVarargs
     public static <E, R> R invokeSetter(Object obj, String fieldSetterMethodName, E... values) {
-        Valid.notNull(obj, "Invoke object is null");
-        Valid.notBlank(fieldSetterMethodName, "Invoke Setter Method is null");
+        Valid.notNull(obj, "invoke object is null");
+        Valid.notBlank(fieldSetterMethodName, "invoke Setter Method is null");
         String[] names = fieldSetterMethodName.split("\\.");
         if (names.length != Arrays1.length(values)) {
-            throw Exceptions.argument("Setting method and parameter length are inconsistent");
+            throw Exceptions.argument("setting method and parameter length are inconsistent");
         }
         if (names.length == 1) {
             return (R) invokeMethod(obj, SETTER_PREFIX + Strings.firstUpper(names[0]), new Class[]{values[0].getClass()}, new Object[]{values[0]});
@@ -599,16 +599,16 @@ public class Methods {
      * @return ignore
      */
     public static <E> E invokeMethod(Object obj, String methodName, Class<?>[] parameterTypes, Object... args) {
-        Valid.notNull(obj, "Invoker object is null");
-        Valid.notBlank(methodName, "Invoke Method is null");
+        Valid.notNull(obj, "invoker object is null");
+        Valid.notBlank(methodName, "invoke method is null");
         Method method = Methods.getAccessibleMethod(obj.getClass(), methodName, parameterTypes);
         if (method == null) {
-            throw Exceptions.invoke(Strings.format("Method {} not found in class {}", methodName, obj.getClass()));
+            throw Exceptions.invoke(Strings.format("method {} not found in class {}", methodName, obj.getClass()));
         }
         try {
             return (E) method.invoke(obj, args);
         } catch (Exception e) {
-            throw Exceptions.invoke(Strings.format("Invoke Method error: {}, class: {}, args: {}", methodName, obj.getClass(), Arrays.toString(args)), e);
+            throw Exceptions.invoke(Strings.format("invoke method error: {}, class: {}, args: {}", methodName, obj.getClass(), Arrays.toString(args)), e);
         }
     }
 
@@ -646,16 +646,16 @@ public class Methods {
      * @return 对象
      */
     public static <E> E invokeMethod(Object obj, String methodName, Object... args) {
-        Valid.notNull(obj, "Invoker object is null");
-        Valid.notBlank(methodName, "Invoke Method is null");
+        Valid.notNull(obj, "invoker object is null");
+        Valid.notBlank(methodName, "invoke method is null");
         Method method = Methods.getAccessibleMethod(obj.getClass(), methodName, Arrays1.length(args));
         if (method == null) {
-            throw Exceptions.invoke(Strings.format("Invoke Method error: {} not found in class {}", methodName, obj.getClass().getName()));
+            throw Exceptions.invoke(Strings.format("invoke method error: {} not found in class {}", methodName, obj.getClass().getName()));
         }
         try {
             return (E) method.invoke(obj, args);
         } catch (Exception e) {
-            throw Exceptions.invoke(Strings.format("Invoke Method error: {}, class: {}, args: {}", methodName, obj.getClass().getName(), Arrays.toString(args)), e);
+            throw Exceptions.invoke(Strings.format("invoke method error: {}, class: {}, args: {}", methodName, obj.getClass().getName(), Arrays.toString(args)), e);
         }
     }
 
@@ -669,13 +669,13 @@ public class Methods {
      * @return 对象
      */
     public static <E> E invokeMethod(Object obj, Method method, Object... args) {
-        Valid.notNull(obj, "Invoker object is null");
-        Valid.notNull(method, "Invoke Method is null");
+        Valid.notNull(obj, "invoke object is null");
+        Valid.notNull(method, "invoke method is null");
         try {
             Methods.setAccessible(method);
             return (E) method.invoke(obj, args);
         } catch (Exception e) {
-            throw Exceptions.invoke(Strings.format("Invoke Method error: {}, class: {}, args: {}", method.getName(), obj.getClass().getName(), Arrays.toString(args)), e);
+            throw Exceptions.invoke(Strings.format("invoke method error: {}, class: {}, args: {}", method.getName(), obj.getClass().getName(), Arrays.toString(args)), e);
         }
     }
 
@@ -689,8 +689,8 @@ public class Methods {
      * @return 对象
      */
     public static <E> E invokeMethodInfer(Object obj, Method method, Object... args) {
-        Valid.notNull(obj, "Invoker object is null");
-        Valid.notNull(method, "Invoke Method is null");
+        Valid.notNull(obj, "invoke object is null");
+        Valid.notNull(method, "invoke method is null");
         if (Arrays1.isEmpty(args)) {
             return invokeMethod(obj, method, (Object[]) null);
         }
@@ -707,8 +707,8 @@ public class Methods {
      * @return 对象
      */
     public static <E> E invokeMethodInfer(Object obj, String methodName, Object... args) {
-        Valid.notNull(obj, "Invoker object is null");
-        Valid.notBlank(methodName, "Invoke Method is null");
+        Valid.notNull(obj, "invoke object is null");
+        Valid.notBlank(methodName, "invoke method is null");
         if (Arrays1.isEmpty(args)) {
             return invokeMethod(obj, methodName, (Object[]) null);
         }

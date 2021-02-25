@@ -2,6 +2,7 @@ package com.orion.lang.wrapper;
 
 import com.orion.lang.iterator.ArrayIterator;
 import com.orion.lang.support.CloneSupport;
+import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 
 import java.io.Serializable;
@@ -40,7 +41,7 @@ public class Args implements Serializable {
         } else if (os.length == 5) {
             return of(os[0], os[1], os[2], os[3], os[4]);
         } else {
-            throw new IllegalArgumentException("ConvertError: maxSize: 5, thisSize: " + os.length);
+            throw Exceptions.argument("convert error: max size: 5, current size: " + os.length);
         }
     }
 

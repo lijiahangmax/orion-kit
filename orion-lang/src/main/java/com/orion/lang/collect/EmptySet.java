@@ -1,10 +1,11 @@
 package com.orion.lang.collect;
 
+import com.orion.utils.Exceptions;
+
 import java.io.Serializable;
 import java.util.AbstractSet;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -64,7 +65,7 @@ public class EmptySet<E> extends AbstractSet<E> implements Serializable {
 
             @Override
             public E next() {
-                throw new NoSuchElementException();
+                throw Exceptions.noSuchElement();
             }
         };
     }

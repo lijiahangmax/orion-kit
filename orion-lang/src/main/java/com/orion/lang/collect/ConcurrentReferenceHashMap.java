@@ -1,5 +1,6 @@
 package com.orion.lang.collect;
 
+import com.orion.utils.Exceptions;
 import com.orion.utils.Objects1;
 import com.orion.utils.Valid;
 
@@ -629,7 +630,7 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
         public Entry<K, V> next() {
             getNextIfNecessary();
             if (this.next == null) {
-                throw new NoSuchElementException();
+                throw Exceptions.noSuchElement();
             }
             this.last = this.next;
             this.next = null;

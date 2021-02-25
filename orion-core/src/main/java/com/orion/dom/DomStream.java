@@ -27,7 +27,7 @@ public class DomStream {
     }
 
     public DomStream(Element element) {
-        Valid.notNull(element, "The Element is null");
+        Valid.notNull(element, "the element is null");
         this.element = element;
     }
 
@@ -39,7 +39,7 @@ public class DomStream {
             this.element = elements.get(0);
             return this;
         }
-        throw Exceptions.argument("Not Found Child Element");
+        throw Exceptions.argument("not found child element");
     }
 
     public DomStream childLast() {
@@ -48,7 +48,7 @@ public class DomStream {
             this.element = elements.get(elements.size() - 1);
             return this;
         }
-        throw Exceptions.argument("Not Found Child Element");
+        throw Exceptions.argument("not found child element");
     }
 
     public DomStream childFirst(String tag) {
@@ -57,7 +57,7 @@ public class DomStream {
             this.element = element;
             return this;
         }
-        throw Exceptions.argument(Strings.format("Not Found Child Element tag: {}", tag));
+        throw Exceptions.argument(Strings.format("not found child element tag: {}", tag));
     }
 
     public DomStream childLast(String tag) {
@@ -66,7 +66,7 @@ public class DomStream {
             this.element = elements.get(elements.size() - 1);
             return this;
         }
-        throw Exceptions.argument(Strings.format("Not Found Child Element tag: {}", tag));
+        throw Exceptions.argument(Strings.format("not found child element tag: {}", tag));
     }
 
     public DomStream child() {
@@ -79,7 +79,7 @@ public class DomStream {
             this.element = elements.get(index);
             return this;
         }
-        throw Exceptions.argument(Strings.format("Not Found Child Element index: {}", index));
+        throw Exceptions.argument(Strings.format("not found child element index: {}", index));
     }
 
     public DomStream child(String tag) {
@@ -88,7 +88,7 @@ public class DomStream {
             this.element = element;
             return this;
         }
-        throw Exceptions.argument(Strings.format("Not Found Child Element tag: {}", tag));
+        throw Exceptions.argument(Strings.format("not found child element tag: {}", tag));
     }
 
     public DomStream child(String tag, int index) {
@@ -97,7 +97,7 @@ public class DomStream {
             this.element = elements.get(index);
             return this;
         }
-        throw Exceptions.argument(Strings.format("Not Found Child Element tag: {}, index: {}", tag, index));
+        throw Exceptions.argument(Strings.format("not found child element tag: {}, index: {}", tag, index));
     }
 
     public DomStream child(String tag, String attrKey) {
@@ -132,9 +132,9 @@ public class DomStream {
             }
         }
         if (attrValue == null) {
-            throw Exceptions.argument(Strings.format("Not Found Child Element tag: {}, key: {}, index: {}", tag, attrKey, index));
+            throw Exceptions.argument(Strings.format("not found child element tag: {}, key: {}, index: {}", tag, attrKey, index));
         } else {
-            throw Exceptions.argument(Strings.format("Not Found Child Element tag: {}, key: {}, value: {}, index: {}", tag, attrKey, attrValue, index));
+            throw Exceptions.argument(Strings.format("not found child element tag: {}, key: {}, value: {}, index: {}", tag, attrKey, attrValue, index));
         }
     }
 
@@ -163,19 +163,19 @@ public class DomStream {
             this.element = parent;
             return this;
         }
-        throw Exceptions.argument("Not Found Parent Element");
+        throw Exceptions.argument("not found parent element");
     }
 
     public DomStream parent(int index) {
         if (index < 0) {
-            throw Exceptions.argument("Not Found Parent Element index: {}" + index);
+            throw Exceptions.argument("not found parent element index: {}" + index);
         }
         for (int i = 0; i < index + 1; i++) {
             Element parent = this.element.getParent();
             if (parent != null) {
                 this.element = parent;
             } else {
-                throw Exceptions.argument(Strings.format("Not Found Parent Element index: {}", i));
+                throw Exceptions.argument(Strings.format("not found parent element index: {}", i));
             }
         }
         return this;
@@ -187,7 +187,7 @@ public class DomStream {
 
     public DomStream parent(String tag, int index) {
         if (tag == null) {
-            throw Exceptions.argument("Not Found Parent Element Because tag is null");
+            throw Exceptions.argument("not found parent element because tag is null");
         }
         int i = 0;
         Element parent = this.element.getParent();
@@ -204,7 +204,7 @@ public class DomStream {
                     parent = parent.getParent();
                 }
             } else {
-                throw Exceptions.argument(Strings.format("Not Found Parent Element tag: {}, index: {}", tag, index));
+                throw Exceptions.argument(Strings.format("not found parent element tag: {}, index: {}", tag, index));
             }
         }
     }
@@ -223,7 +223,7 @@ public class DomStream {
 
     public DomStream parent(String tag, int index, String attrKey, String attrValue) {
         if (tag == null) {
-            throw Exceptions.argument("Not Found Parent Element Because tag is null");
+            throw Exceptions.argument("not found parent element because tag is null");
         }
         Element parent = this.element.getParent();
         int i = 0;
@@ -252,7 +252,7 @@ public class DomStream {
                 }
                 parent = parent.getParent();
             } else {
-                throw Exceptions.argument(Strings.format("Not Found Parent Element tag: {}, key: {}, value: {}, index: {}", tag, attrKey, attrValue, index));
+                throw Exceptions.argument(Strings.format("not found parent element tag: {}, key: {}, value: {}, index: {}", tag, attrKey, attrValue, index));
             }
         }
     }
@@ -272,16 +272,16 @@ public class DomStream {
 
     public DomStream next(int index) {
         if (index < 0) {
-            throw Exceptions.argument(Strings.format("Not Found Next Element index: {}", index));
+            throw Exceptions.argument(Strings.format("not found next element index: {}", index));
         }
         Element parent = this.element.getParent();
         List<Element> elements = parent.elements();
         int len = elements.size();
         if (len == 1) {
-            throw Exceptions.argument("Not Found Next Element");
+            throw Exceptions.argument("not found next element");
         }
         if (len < index + 1) {
-            throw Exceptions.argument(Strings.format("Not Found Next Element index: {}", index));
+            throw Exceptions.argument(Strings.format("not found next element index: {}", index));
         }
         int thisIndex = 0;
         for (int i = 0; i < len; i++) {
@@ -292,7 +292,7 @@ public class DomStream {
         }
         int nextIndex = thisIndex + index + 1;
         if (len <= nextIndex) {
-            throw Exceptions.argument(Strings.format("Not Found Next Element index: {}, thisIndex: {}, nextIndex: {}, count: {}", index, thisIndex, nextIndex, len));
+            throw Exceptions.argument(Strings.format("not found next element index: {}, thisIndex: {}, nextIndex: {}, count: {}", index, thisIndex, nextIndex, len));
         }
         this.element = elements.get(nextIndex);
         return this;
@@ -304,16 +304,16 @@ public class DomStream {
 
     public DomStream next(String tag, int index) {
         if (tag == null) {
-            throw Exceptions.argument("Not Found Next Element Because tag is null");
+            throw Exceptions.argument("not found next element because tag is null");
         }
         Element parent = this.element.getParent();
         List<Element> elements = parent.elements();
         int len = elements.size();
         if (len == 1) {
-            throw Exceptions.argument("Not Found Next Element");
+            throw Exceptions.argument("not found next element");
         }
         if (len < index + 1) {
-            throw Exceptions.argument(Strings.format("Not Found Next Element tag: {}, index: {}", tag, index));
+            throw Exceptions.argument(Strings.format("not found next element tag: {}, index: {}", tag, index));
         }
         int thisIndex = 0;
         for (int i = 0; i < len; i++) {
@@ -332,7 +332,7 @@ public class DomStream {
                 }
             }
         }
-        throw Exceptions.argument(Strings.format("Not Found Next Element tag: {}, index: {}", tag, index));
+        throw Exceptions.argument(Strings.format("not found next element tag: {}, index: {}", tag, index));
     }
 
     public DomStream next(String tag, String attrKey) {
@@ -349,16 +349,16 @@ public class DomStream {
 
     public DomStream next(String tag, int index, String attrKey, String attrValue) {
         if (tag == null) {
-            throw Exceptions.argument("Not Found Next Element Because tag is null");
+            throw Exceptions.argument("not found next element because tag is null");
         }
         Element parent = this.element.getParent();
         List<Element> elements = parent.elements();
         int len = elements.size();
         if (len == 1) {
-            throw Exceptions.argument("Not Found Next Element");
+            throw Exceptions.argument("not found next element");
         }
         if (len < index + 1) {
-            throw Exceptions.argument(Strings.format("Not Found Next Element tag: {}, index: {}, key: {}, value: {}", tag, index, attrKey, attrValue));
+            throw Exceptions.argument(Strings.format("not found next element tag: {}, index: {}, key: {}, value: {}", tag, index, attrKey, attrValue));
         }
         int thisIndex = 0;
         for (int i = 0; i < len; i++) {
@@ -394,7 +394,7 @@ public class DomStream {
                 }
             }
         }
-        throw Exceptions.argument(Strings.format("Not Found Next Element tag: {}, index: {}, key: {}, value: {}", tag, index, attrKey, attrValue));
+        throw Exceptions.argument(Strings.format("not found next element tag: {}, index: {}, key: {}, value: {}", tag, index, attrKey, attrValue));
     }
 
     // ---------------- prev ----------------
@@ -412,16 +412,16 @@ public class DomStream {
 
     public DomStream prev(int index) {
         if (index < 0) {
-            throw Exceptions.argument(Strings.format("Not Found Previous Element index: {}", index));
+            throw Exceptions.argument(Strings.format("not found previous element index: {}", index));
         }
         Element parent = this.element.getParent();
         List<Element> elements = parent.elements();
         int len = elements.size();
         if (len == 1) {
-            throw Exceptions.argument("Not Found Previous Element");
+            throw Exceptions.argument("not found previous element");
         }
         if (len < index + 1) {
-            throw Exceptions.argument(Strings.format("Not Found Previous Element index: {}", index));
+            throw Exceptions.argument(Strings.format("not found previous element index: {}", index));
         }
         int thisIndex = 0;
         for (int i = 0; i < len; i++) {
@@ -432,7 +432,7 @@ public class DomStream {
         }
         int prevIndex = thisIndex - index - 1;
         if (len <= prevIndex || prevIndex < 0) {
-            throw Exceptions.argument(Strings.format("Not Found Previous Element index: {}, thisIndex: {}, prevIndex: {}, count: {}", index, thisIndex, prevIndex, len));
+            throw Exceptions.argument(Strings.format("not found previous element index: {}, thisIndex: {}, prevIndex: {}, count: {}", index, thisIndex, prevIndex, len));
         }
         this.element = elements.get(prevIndex);
         return this;
@@ -444,16 +444,16 @@ public class DomStream {
 
     public DomStream prev(String tag, int index) {
         if (index < 0) {
-            throw Exceptions.argument(Strings.format("Not Found Previous Element index: {}", index));
+            throw Exceptions.argument(Strings.format("not found previous element index: {}", index));
         }
         Element parent = this.element.getParent();
         List<Element> elements = parent.elements();
         int len = elements.size();
         if (len == 1) {
-            throw Exceptions.argument("Not Found Previous Element");
+            throw Exceptions.argument("not found previous element");
         }
         if (len < index + 1) {
-            throw Exceptions.argument(Strings.format("Not Found Previous Element index: {}", index));
+            throw Exceptions.argument(Strings.format("not found previous element index: {}", index));
         }
         int thisIndex = 0;
         for (int i = 0; i < len; i++) {
@@ -473,7 +473,7 @@ public class DomStream {
                 }
             }
         }
-        throw Exceptions.argument(Strings.format("Not Found Previous Element tag: {}, index: {}", tag, index));
+        throw Exceptions.argument(Strings.format("not found previous element tag: {}, index: {}", tag, index));
     }
 
     public DomStream prev(String tag, String attrKey) {
@@ -490,16 +490,16 @@ public class DomStream {
 
     public DomStream prev(String tag, int index, String attrKey, String attrValue) {
         if (tag == null) {
-            throw Exceptions.argument("Not Found Previous Element Because tag is null");
+            throw Exceptions.argument("not found previous element because tag is null");
         }
         Element parent = this.element.getParent();
         List<Element> elements = parent.elements();
         int len = elements.size();
         if (len == 1) {
-            throw Exceptions.argument("Not Found Previous Element");
+            throw Exceptions.argument("not found previous element");
         }
         if (len < index + 1) {
-            throw Exceptions.argument(Strings.format("Not Found Previous Element tag: {}, index: {}, key: {}, value: {}", tag, index, attrKey, attrValue));
+            throw Exceptions.argument(Strings.format("not found previous element tag: {}, index: {}, key: {}, value: {}", tag, index, attrKey, attrValue));
         }
         int thisIndex = 0;
         for (int i = 0; i < len; i++) {
@@ -535,7 +535,7 @@ public class DomStream {
                 }
             }
         }
-        throw Exceptions.argument(Strings.format("Not Found Previous Element tag: {}, index: {}, key: {}, value: {}", tag, index, attrKey, attrValue));
+        throw Exceptions.argument(Strings.format("not found previous element tag: {}, index: {}, key: {}, value: {}", tag, index, attrKey, attrValue));
     }
 
     // ---------------- result ----------------

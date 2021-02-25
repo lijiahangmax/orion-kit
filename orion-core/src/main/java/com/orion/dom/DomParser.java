@@ -60,7 +60,7 @@ class DomParser {
                 domParserParams.add(domParserParam);
             }
         } catch (Exception e) {
-            throw Exceptions.parse("Cannot parse formula " + formula, e);
+            throw Exceptions.parse("cannot parse formula " + formula, e);
         }
     }
 
@@ -84,36 +84,36 @@ class DomParser {
             if (domParserParam.getIndex() != 0 && domParserParam.getKey() != null) {
                 List<Element> elements = now.elements(domParserParam.getName());
                 if (elements == null || elements.size() < domParserParam.getIndex() + 1) {
-                    throw new RuntimeException(Strings.format("Not Found Element {}, index: {}, attr: {}, attrValue: {}", domParserParam.getName(), domParserParam.getIndex(), domParserParam.getKey(), domParserParam.getValue()));
+                    throw Exceptions.runtime(Strings.format("not found element {}, index: {}, attr: {}, attrValue: {}", domParserParam.getName(), domParserParam.getIndex(), domParserParam.getKey(), domParserParam.getValue()));
                 }
                 Element element = elements.get(domParserParam.getIndex());
                 String attribute = DomExt.getAttribute(element, domParserParam.getKey());
                 if (attribute != null && attribute.equals(domParserParam.getValue())) {
                     now = element;
                 } else {
-                    throw new RuntimeException(Strings.format("Not Found Element {}, index: {}, attr: {}, attrValue: {}", domParserParam.getName(), domParserParam.getIndex(), domParserParam.getKey(), domParserParam.getValue()));
+                    throw Exceptions.runtime(Strings.format("not found element {}, index: {}, attr: {}, attrValue: {}", domParserParam.getName(), domParserParam.getIndex(), domParserParam.getKey(), domParserParam.getValue()));
                 }
             } else if (domParserParam.getIndex() != 0) {
                 List<Element> elements = now.elements(domParserParam.getName());
                 if (elements == null || elements.size() < domParserParam.getIndex() + 1) {
-                    throw new RuntimeException(Strings.format("Not Found Element {}, index: {}", domParserParam.getName(), domParserParam.getIndex()));
+                    throw Exceptions.runtime(Strings.format("not found element {}, index: {}", domParserParam.getName(), domParserParam.getIndex()));
                 }
                 now = elements.get(domParserParam.getIndex());
             } else if (domParserParam.getKey() != null) {
                 Element element = now.element(domParserParam.getName());
                 if (element == null) {
-                    throw new RuntimeException(Strings.format("Not Found Element {}", domParserParam.getName()));
+                    throw Exceptions.runtime(Strings.format("not found element {}", domParserParam.getName()));
                 }
                 String attribute = DomExt.getAttribute(element, domParserParam.getKey());
                 if (attribute != null && attribute.equals(domParserParam.getValue())) {
                     now = element;
                 } else {
-                    throw new RuntimeException(Strings.format("Not Found Element {}, attr: {}, attrValue: {}", domParserParam.getName(), domParserParam.getKey(), domParserParam.getValue()));
+                    throw Exceptions.runtime(Strings.format("not found element {}, attr: {}, attrValue: {}", domParserParam.getName(), domParserParam.getKey(), domParserParam.getValue()));
                 }
             } else {
                 Element element = now.element(domParserParam.getName());
                 if (element == null) {
-                    throw new RuntimeException(Strings.format("Not Found Element {}", domParserParam.getName()));
+                    throw Exceptions.runtime(Strings.format("not found element {}", domParserParam.getName()));
                 }
                 now = element;
             }

@@ -208,97 +208,97 @@ public class Arrays1 {
     @SuppressWarnings("unchecked")
     public static <T> T gets(Object arr, int i) {
         if (arr == null) {
-            throw new RuntimeException("array is undefined");
+            throw Exceptions.runtime("array is undefined");
         }
         return (T) Array.get(arr, i);
     }
 
     public static <T> T get(T[] arr, int i) {
         if (arr == null) {
-            throw new RuntimeException("array is undefined");
+            throw Exceptions.runtime("array is undefined");
         }
         if (arr.length <= i) {
-            throw new ArrayIndexOutOfBoundsException("array length: " + arr.length + " get index: " + i);
+            throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
         return arr[i];
     }
 
     public static byte get(byte[] arr, int i) {
         if (arr == null) {
-            throw new RuntimeException("array is undefined");
+            throw Exceptions.runtime("array is undefined");
         }
         if (arr.length <= i) {
-            throw new ArrayIndexOutOfBoundsException("array length: " + arr.length + " get index: " + i);
+            throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
         return arr[i];
     }
 
     public static short get(short[] arr, int i) {
         if (arr == null) {
-            throw new RuntimeException("array is undefined");
+            throw Exceptions.runtime("array is undefined");
         }
         if (arr.length <= i) {
-            throw new ArrayIndexOutOfBoundsException("array length: " + arr.length + " get index: " + i);
+            throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
         return arr[i];
     }
 
     public static int get(int[] arr, int i) {
         if (arr == null) {
-            throw new RuntimeException("array is undefined");
+            throw Exceptions.runtime("array is undefined");
         }
         if (arr.length <= i) {
-            throw new ArrayIndexOutOfBoundsException("array length: " + arr.length + " get index: " + i);
+            throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
         return arr[i];
     }
 
     public static long get(long[] arr, int i) {
         if (arr == null) {
-            throw new RuntimeException("array is undefined");
+            throw Exceptions.runtime("array is undefined");
         }
         if (arr.length <= i) {
-            throw new ArrayIndexOutOfBoundsException("array length: " + arr.length + " get index: " + i);
+            throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
         return arr[i];
     }
 
     public static float get(float[] arr, int i) {
         if (arr == null) {
-            throw new RuntimeException("array is undefined");
+            throw Exceptions.runtime("array is undefined");
         }
         if (arr.length <= i) {
-            throw new ArrayIndexOutOfBoundsException("array length: " + arr.length + " get index: " + i);
+            throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
         return arr[i];
     }
 
     public static double get(double[] arr, int i) {
         if (arr == null) {
-            throw new RuntimeException("array is undefined");
+            throw Exceptions.runtime("array is undefined");
         }
         if (arr.length <= i) {
-            throw new ArrayIndexOutOfBoundsException("array length: " + arr.length + " get index: " + i);
+            throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
         return arr[i];
     }
 
     public static boolean get(boolean[] arr, int i) {
         if (arr == null) {
-            throw new RuntimeException("array is undefined");
+            throw Exceptions.runtime("array is undefined");
         }
         if (arr.length <= i) {
-            throw new ArrayIndexOutOfBoundsException("array length: " + arr.length + " get index: " + i);
+            throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
         return arr[i];
     }
 
     public static char get(char[] arr, int i) {
         if (arr == null) {
-            throw new RuntimeException("array is undefined");
+            throw Exceptions.runtime("array is undefined");
         }
         if (arr.length <= i) {
-            throw new ArrayIndexOutOfBoundsException("array length: " + arr.length + " get index: " + i);
+            throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
         return arr[i];
     }
@@ -315,97 +315,97 @@ public class Arrays1 {
      */
     public static <T> void sets(Object arr, int i, T value) {
         if (arr == null) {
-            throw new RuntimeException("array is undefined");
+            throw Exceptions.runtime("array is undefined");
         }
         Array.set(arr, i, value);
     }
 
     public static <T> void set(T[] arr, int i, T value) {
         if (arr == null) {
-            throw new RuntimeException("array is undefined");
+            throw Exceptions.runtime("array is undefined");
         }
         if (arr.length <= i) {
-            throw new ArrayIndexOutOfBoundsException("array length: " + arr.length + " get index: " + i);
+            throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
         arr[i] = value;
     }
 
     public static void set(byte[] arr, int i, byte value) {
         if (arr == null) {
-            throw new RuntimeException("array is undefined");
+            throw Exceptions.runtime("array is undefined");
         }
         if (arr.length <= i) {
-            throw new ArrayIndexOutOfBoundsException("array length: " + arr.length + " get index: " + i);
+            throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
         arr[i] = value;
     }
 
     public static void set(short[] arr, int i, short value) {
         if (arr == null) {
-            throw new RuntimeException("array is undefined");
+            throw Exceptions.runtime("array is undefined");
         }
         if (arr.length <= i) {
-            throw new ArrayIndexOutOfBoundsException("array length: " + arr.length + " get index: " + i);
+            throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
         arr[i] = value;
     }
 
     public static void set(int[] arr, int i, int value) {
         if (arr == null) {
-            throw new RuntimeException("array is undefined");
+            throw Exceptions.runtime("array is undefined");
         }
         if (arr.length <= i) {
-            throw new ArrayIndexOutOfBoundsException("array length: " + arr.length + " get index: " + i);
+            throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
         arr[i] = value;
     }
 
     public static void set(long[] arr, int i, long value) {
         if (arr == null) {
-            throw new RuntimeException("array is undefined");
+            throw Exceptions.runtime("array is undefined");
         }
         if (arr.length <= i) {
-            throw new ArrayIndexOutOfBoundsException("array length: " + arr.length + " get index: " + i);
+            throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
         arr[i] = value;
     }
 
     public static void set(float[] arr, int i, float value) {
         if (arr == null) {
-            throw new RuntimeException("array is undefined");
+            throw Exceptions.runtime("array is undefined");
         }
         if (arr.length <= i) {
-            throw new ArrayIndexOutOfBoundsException("array length: " + arr.length + " get index: " + i);
+            throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
         arr[i] = value;
     }
 
     public static void set(double[] arr, int i, double value) {
         if (arr == null) {
-            throw new RuntimeException("array is undefined");
+            throw Exceptions.runtime("array is undefined");
         }
         if (arr.length <= i) {
-            throw new ArrayIndexOutOfBoundsException("array length: " + arr.length + " get index: " + i);
+            throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
         arr[i] = value;
     }
 
     public static void set(boolean[] arr, int i, boolean value) {
         if (arr == null) {
-            throw new RuntimeException("array is undefined");
+            throw Exceptions.runtime("array is undefined");
         }
         if (arr.length <= i) {
-            throw new ArrayIndexOutOfBoundsException("array length: " + arr.length + " get index: " + i);
+            throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
         arr[i] = value;
     }
 
     public static void set(char[] arr, int i, char value) {
         if (arr == null) {
-            throw new RuntimeException("array is undefined");
+            throw Exceptions.runtime("array is undefined");
         }
         if (arr.length <= i) {
-            throw new ArrayIndexOutOfBoundsException("array length: " + arr.length + " get index: " + i);
+            throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
         arr[i] = value;
     }
@@ -447,7 +447,7 @@ public class Arrays1 {
     public static <V, R> R reduce(V[] v, Reduce<? super V, ? extends R> reduce) {
         int len = length(v);
         if (len == 0) {
-            throw new IllegalArgumentException("array length is 0");
+            throw Exceptions.argument("array length is 0");
         }
         return reduce.accept(v);
     }

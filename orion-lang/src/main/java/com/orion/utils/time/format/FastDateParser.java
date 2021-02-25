@@ -1,5 +1,7 @@
 package com.orion.utils.time.format;
 
+import com.orion.utils.Exceptions;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -135,7 +137,7 @@ public class FastDateParser implements DateParser, Serializable {
                 sb.append(c);
             }
             if (activeQuote) {
-                throw new IllegalArgumentException("Unterminated quote");
+                throw Exceptions.argument("unterminated quote");
             }
             String formatField = sb.toString();
             return new StrategyAndWidth(new CopyQuotedStrategy(formatField), formatField.length());
@@ -202,10 +204,10 @@ public class FastDateParser implements DateParser, Serializable {
             // Add a note re supported date range
             if (locale.equals(JAPANESE_IMPERIAL)) {
                 throw new ParseException(
-                        "(The " + locale + " locale does not support dates before 1868 AD)\n" +
-                                "Unparseable date: \"" + source, pp.getErrorIndex());
+                        "(the " + locale + " locale does not support dates before 1868 AD)\n" +
+                                "unParse date: \"" + source, pp.getErrorIndex());
             }
-            throw new ParseException("Unparseable date: " + source, pp.getErrorIndex());
+            throw new ParseException("unParse date: " + source, pp.getErrorIndex());
         }
         return date;
     }
@@ -329,7 +331,7 @@ public class FastDateParser implements DateParser, Serializable {
     private Strategy getStrategy(char f, int width, Calendar definingCalendar) {
         switch (f) {
             default:
-                throw new IllegalArgumentException("Format '" + f + "' not supported");
+                throw Exceptions.argument("format '" + f + "' not supported");
             case 'D':
                 return DAY_OF_YEAR_STRATEGY;
             case 'E':
@@ -633,7 +635,7 @@ public class FastDateParser implements DateParser, Serializable {
                 case 3:
                     return ISO_8601_3_STRATEGY;
                 default:
-                    throw new IllegalArgumentException("invalid number of X");
+                    throw Exceptions.argument("invalid number of X");
             }
         }
     }

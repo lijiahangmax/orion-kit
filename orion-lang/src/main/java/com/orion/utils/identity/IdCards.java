@@ -1,5 +1,6 @@
 package com.orion.utils.identity;
 
+import com.orion.utils.Exceptions;
 import com.orion.utils.Matches;
 import com.orion.utils.Valid;
 import com.orion.utils.time.DateStream;
@@ -440,7 +441,7 @@ public class IdCards {
      */
     public static int age(long birthday, long range) {
         if (birthday > range) {
-            throw new IllegalArgumentException("Birthday is after range!");
+            throw Exceptions.argument("birthday is after range!");
         }
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(range);

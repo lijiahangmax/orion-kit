@@ -1,6 +1,7 @@
 package com.orion.lang.collect;
 
 import com.orion.lang.iterator.SingletonIterator;
+import com.orion.utils.Exceptions;
 import com.orion.utils.Objects1;
 
 import java.io.Serializable;
@@ -52,7 +53,7 @@ public class SingletonSet<E> extends AbstractSet<E> implements Serializable {
 
     @Override
     public boolean removeIf(Predicate<? super E> filter) {
-        throw new UnsupportedOperationException();
+        throw Exceptions.unSupport();
     }
 
 }

@@ -1,5 +1,7 @@
 package com.orion.lang.thread;
 
+import com.orion.utils.Exceptions;
+
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
 
@@ -33,19 +35,19 @@ public class ConcurrentRunnable implements Runnable {
                 try {
                     cb.await();
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    throw Exceptions.task(e);
                 }
             } else if (cd != null) {
                 try {
                     cd.await();
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    throw Exceptions.task(e);
                 }
             } else {
-                throw new NullPointerException("cyclicBarrier or countDownLatch is null");
+                throw Exceptions.nullPoint("cyclicBarrier or countDownLatch is null");
             }
         } else {
-            throw new NullPointerException("runnable or consumer is null");
+            throw Exceptions.nullPoint("runnable or consumer is null");
         }
         r.run();
     }

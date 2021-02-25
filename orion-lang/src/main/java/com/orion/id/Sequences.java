@@ -1,6 +1,7 @@
 package com.orion.id;
 
 import com.orion.lang.SystemClock;
+import com.orion.utils.Exceptions;
 
 import java.net.InetAddress;
 import java.util.concurrent.ThreadLocalRandom;
@@ -88,10 +89,10 @@ public class Sequences {
      */
     public Sequences(long dataCenterId, long workerId, boolean clock, long timeOffset, boolean randomSequence) {
         if (dataCenterId > MAX_DATA_CENTER_ID || dataCenterId < 0) {
-            throw new IllegalArgumentException("Data Center Id can't be greater than " + MAX_DATA_CENTER_ID + " or less than 0");
+            throw Exceptions.argument("data center id can't be greater than " + MAX_DATA_CENTER_ID + " or less than 0");
         }
         if (workerId > MAX_WORKER_ID || workerId < 0) {
-            throw new IllegalArgumentException("Worker Id can't be greater than " + MAX_WORKER_ID + " or less than 0");
+            throw Exceptions.argument("worker id can't be greater than " + MAX_WORKER_ID + " or less than 0");
         }
         this.workerId = workerId;
         this.dataCenterId = dataCenterId;
@@ -112,19 +113,19 @@ public class Sequences {
             // 校验时间偏移回拨量
             long offset = lastTimestamp - currentTimestamp;
             if (offset > timeOffset) {
-                throw new RuntimeException("Clock moved backwards, refusing to generate id for [" + offset + "ms]");
+                throw Exceptions.runtime("clock moved backwards, refusing to generate id for [" + offset + "ms]");
             }
             try {
                 // 时间回退timeOffset毫秒内, 则允许等待2倍的偏移量后重新获取, 解决小范围的时间回拨问题
                 this.wait(offset << 1);
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                throw Exceptions.runtime(e);
             }
             // 再次获取
             currentTimestamp = this.timeGen();
             // 再次校验
             if (currentTimestamp < lastTimestamp) {
-                throw new RuntimeException("Clock moved backwards, refusing to generate id for [" + offset + "ms]");
+                throw Exceptions.runtime("clock moved backwards, refusing to generate id for [" + offset + "ms]");
             }
         }
 
@@ -200,7 +201,7 @@ public class Sequences {
             byte[] addressByte = inetAddress.getAddress();
             LAST_IP = addressByte[addressByte.length - 1];
         } catch (Exception e) {
-            throw new RuntimeException("Unknown Host Exception", e);
+            throw Exceptions.runtime("unknown host exception", e);
         }
         return (byte) Math.abs(LAST_IP % 3);
     }

@@ -36,6 +36,8 @@ public class Letters {
 
     public static final char POUND = '#';
 
+    public static final char DOLLAR = '$';
+
     public static final char SLASH = '/';
 
     public static final char BACKSLASH = '\\';

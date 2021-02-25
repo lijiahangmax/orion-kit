@@ -1,6 +1,7 @@
 package com.orion.lang.thread;
 
 import com.orion.lang.wrapper.Tuple;
+import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
 
 import java.util.concurrent.Callable;
@@ -44,7 +45,7 @@ public class TaskCollect {
             try {
                 futures[i] = dispatch.submit(task);
             } catch (Exception e) {
-                throw new RuntimeException("an exception occurred while the task was running", e);
+                throw Exceptions.task("an exception occurred while the task was running", e);
             }
         }
         return this;
@@ -62,9 +63,9 @@ public class TaskCollect {
             try {
                 result[i] = future.get();
             } catch (InterruptedException e) {
-                throw new RuntimeException("collect result timeout", e);
+                throw Exceptions.task("collect result timeout", e);
             } catch (Exception e) {
-                throw new RuntimeException("collect result error", e);
+                throw Exceptions.task("collect result error", e);
             }
         }
         return Tuple.of(result);

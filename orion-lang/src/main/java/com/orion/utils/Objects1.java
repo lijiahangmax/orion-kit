@@ -314,7 +314,7 @@ public class Objects1 {
         try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes))) {
             return (T) ois.readObject();
         } catch (Exception e) {
-            throw new IllegalArgumentException("failed to deserialize object", e);
+            throw Exceptions.argument("failed to deserialize object", e);
         }
     }
 

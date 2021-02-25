@@ -10,6 +10,7 @@ import com.orion.utils.crypto.enums.HashMessageDigest;
 
 import java.io.*;
 import java.net.URI;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
@@ -1687,13 +1688,13 @@ public class Files1 {
     public static FileInputStream openInputStream(File file) throws IOException {
         if (file.exists()) {
             if (file.isDirectory()) {
-                throw new IOException("File '" + file + "' exists but is a directory");
+                throw Exceptions.io("file '" + file + "' exists but is a directory");
             }
             if (!file.canRead()) {
-                throw new IOException("File '" + file + "' cannot be read");
+                throw Exceptions.io("file '" + file + "' cannot be read");
             }
         } else {
-            throw new FileNotFoundException("File '" + file + "' does not exist");
+            throw Exceptions.io("file '" + file + "' does not exist");
         }
         return new FileInputStream(file);
     }
@@ -1789,16 +1790,16 @@ public class Files1 {
     public static FileOutputStream openOutputStream(File file, boolean append) throws IOException {
         if (file.exists()) {
             if (file.isDirectory()) {
-                throw new IOException("File '" + file + "' exists but is a directory");
+                throw Exceptions.io("file '" + file + "' exists but is a directory");
             }
             if (!file.canWrite()) {
-                throw new IOException("File '" + file + "' cannot be written to");
+                throw Exceptions.io("file '" + file + "' cannot be written to");
             }
         } else {
             File parent = file.getParentFile();
             if (parent != null && !parent.exists()) {
                 if (!parent.mkdirs()) {
-                    throw new IOException("File '" + file + "' could not be created");
+                    throw Exceptions.io("file '" + file + "' could not be created");
                 }
             }
         }
@@ -1858,16 +1859,16 @@ public class Files1 {
     public static RandomAccessFile openRandomAccess(File file, String mode) throws IOException {
         if (file.exists()) {
             if (file.isDirectory()) {
-                throw new IOException("File '" + file + "' exists but is a directory");
+                throw Exceptions.io("file '" + file + "' exists but is a directory");
             }
             if (!file.canWrite()) {
-                throw new IOException("File '" + file + "' cannot be written to");
+                throw Exceptions.io("file '" + file + "' cannot be written to");
             }
         } else {
             File parent = file.getParentFile();
             if (parent != null && !parent.exists()) {
                 if (!parent.mkdirs()) {
-                    throw new IOException("File '" + file + "' could not be created");
+                    throw Exceptions.io("file '" + file + "' could not be created");
                 }
             }
         }
@@ -1950,13 +1951,13 @@ public class Files1 {
     public static InputStream openInputStreamFast(Path file) throws IOException {
         if (Files.exists(file)) {
             if (Files.isDirectory(file)) {
-                throw new IOException("File '" + file + "' exists but is a directory");
+                throw Exceptions.io("file '" + file + "' exists but is a directory");
             }
             if (!Files.isReadable(file)) {
-                throw new IOException("File '" + file + "' cannot be read");
+                throw Exceptions.io("file '" + file + "' cannot be read");
             }
         } else {
-            throw new FileNotFoundException("File '" + file + "' does not exist");
+            throw Exceptions.io("file '" + file + "' does not exist");
         }
         return Files.newInputStream(file);
     }
@@ -2116,10 +2117,10 @@ public class Files1 {
     public static OutputStream openOutputStreamFast(Path file, boolean append) throws IOException {
         if (Files.exists(file)) {
             if (Files.isDirectory(file)) {
-                throw new IOException("File '" + file + "' exists but is a directory");
+                throw Exceptions.io("file '" + file + "' exists but is a directory");
             }
             if (!Files.isWritable(file)) {
-                throw new IOException("File '" + file + "' cannot be written to");
+                throw Exceptions.io("file '" + file + "' cannot be written to");
             }
         } else {
             Path parent = file.getParent();
@@ -2135,6 +2136,70 @@ public class Files1 {
     }
 
     // -------------------- path --------------------
+
+    /**
+     * File -> URL
+     *
+     * @param path path
+     * @return URL
+     */
+    public static URL toUrl(Path path) {
+        return toUrl(path.toFile());
+    }
+
+    /**
+     * File -> URL
+     *
+     * @param file file
+     * @return URL
+     */
+    public static URL toUrl(String file) {
+        return toUrl(new File(file));
+    }
+
+    /**
+     * File -> URL
+     *
+     * @param file file
+     * @return URL
+     */
+    public static URL toUrl(File file) {
+        try {
+            return file.toURI().toURL();
+        } catch (Exception e) {
+            throw Exceptions.runtime("file to url error", e);
+        }
+    }
+
+    /**
+     * File -> URI
+     *
+     * @param path path
+     * @return URI
+     */
+    public static URI toUri(Path path) {
+        return toUri(path.toFile());
+    }
+
+    /**
+     * File -> URI
+     *
+     * @param file file
+     * @return URI
+     */
+    public static URI toUri(String file) {
+        return toUri(new File(file));
+    }
+
+    /**
+     * File -> URI
+     *
+     * @param file file
+     * @return URI
+     */
+    public static URI toUri(File file) {
+        return file.toURI();
+    }
 
     /**
      * 文件转路径
@@ -2192,6 +2257,64 @@ public class Files1 {
             ss[i] = new File(files[i]);
         }
         return ss;
+    }
+
+    /**
+     * File -> URL
+     *
+     * @param files files
+     * @return URL
+     */
+    public static List<URL> toUrls(List<File> files) {
+        List<URL> urls = new ArrayList<>();
+        for (File file : files) {
+            urls.add(toUrl(file));
+        }
+        return urls;
+    }
+
+    /**
+     * File -> URI
+     *
+     * @param files files
+     * @return URI
+     */
+    public static URL[] toUrls(File[] files) {
+        int len = files.length;
+        URL[] urls = new URL[len];
+        for (int i = 0; i < len; i++) {
+            urls[i] = toUrl(files[i]);
+        }
+        return urls;
+    }
+
+    /**
+     * File -> URI
+     *
+     * @param files files
+     * @return URI
+     */
+    public static List<URI> toUris(List<File> files) {
+        List<URI> uris = new ArrayList<>();
+        for (File file : files) {
+            uris.add(toUri(file));
+        }
+        return uris;
+    }
+
+    /**
+     * File -> URI
+     *
+     * @param files files
+     * @return URI
+     */
+    public static URI[] toUris(File[] files) {
+        int len = files.length;
+        URI[] uris = new URI[len];
+        for (int i = 0; i < len; i++) {
+            uris[i] = toUri(files[i]);
+        }
+        return uris;
     }
 
     /**

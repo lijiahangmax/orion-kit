@@ -1,6 +1,8 @@
 package com.orion.id;
 
+import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
+import com.orion.utils.Valid;
 
 import java.util.Base64;
 import java.util.HashMap;
@@ -107,14 +109,12 @@ public class UUIds {
      * @param radix 进制数
      */
     private static long toNumber(String s, int radix) {
-        if (s == null) {
-            throw new NumberFormatException("null");
-        }
+        Valid.notNull(s, "number is null");
         if (radix < MIN_RADIX) {
-            throw new NumberFormatException("radix " + radix + " less than Numbers.MIN_RADIX");
+            throw Exceptions.numberFormat("radix " + radix + " less than Numbers.MIN_RADIX");
         }
         if (radix > MAX_RADIX) {
-            throw new NumberFormatException("radix " + radix + " greater than Numbers.MAX_RADIX");
+            throw Exceptions.numberFormat("radix " + radix + " greater than Numbers.MAX_RADIX");
         }
         boolean negative = false;
         Integer digit;
@@ -189,7 +189,7 @@ public class UUIds {
     }
 
     private static NumberFormatException swap(String s) {
-        return new NumberFormatException("For input string: " + s);
+        return Exceptions.numberFormat("for input string: " + s);
     }
 
     private static class UUIDMaker {

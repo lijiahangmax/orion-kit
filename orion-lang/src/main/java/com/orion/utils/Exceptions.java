@@ -25,7 +25,7 @@ public class Exceptions {
     }
 
     public static void impossible() {
-        throw new RuntimeException("Impossible exceptions...");
+        throw new RuntimeException("impossible exceptions...");
     }
 
     /**
@@ -136,12 +136,32 @@ public class Exceptions {
         return new IllegalArgumentException(s, t);
     }
 
+    public static NumberFormatException numberFormat() {
+        return new NumberFormatException();
+    }
+
+    public static NumberFormatException numberFormat(String s) {
+        return new NumberFormatException(s);
+    }
+
     public static IndexOutOfBoundsException index() {
         return new IndexOutOfBoundsException();
     }
 
     public static IndexOutOfBoundsException index(String s) {
         return new IndexOutOfBoundsException(s);
+    }
+
+    public static ArrayIndexOutOfBoundsException arrayIndex() {
+        return new ArrayIndexOutOfBoundsException();
+    }
+
+    public static ArrayIndexOutOfBoundsException arrayIndex(String s) {
+        return new ArrayIndexOutOfBoundsException(s);
+    }
+
+    public static ArrayIndexOutOfBoundsException arrayIndex(int index) {
+        return new ArrayIndexOutOfBoundsException(index);
     }
 
     public static Exception exception() {
@@ -254,6 +274,38 @@ public class Exceptions {
 
     public static LockException lock(String s, Throwable t) {
         return new LockException(s, t);
+    }
+
+    public static LoadException load() {
+        return new LoadException();
+    }
+
+    public static LoadException load(Throwable t) {
+        return new LoadException(t);
+    }
+
+    public static LoadException load(String s) {
+        return new LoadException(s);
+    }
+
+    public static LoadException load(String s, Throwable t) {
+        return new LoadException(s, t);
+    }
+
+    public static UnsafeException unsafe() {
+        return new UnsafeException();
+    }
+
+    public static UnsafeException unsafe(Throwable t) {
+        return new UnsafeException(t);
+    }
+
+    public static UnsafeException unsafe(String s) {
+        return new UnsafeException(s);
+    }
+
+    public static UnsafeException unsafe(String s, Throwable t) {
+        return new UnsafeException(s, t);
     }
 
     public static IORuntimeException ioRuntime() {
@@ -502,6 +554,22 @@ public class Exceptions {
 
     public static NoSuchElementException noSuchElement(String s) {
         return new NoSuchElementException(s);
+    }
+
+    public static TaskExecuteException task() {
+        return new TaskExecuteException();
+    }
+
+    public static TaskExecuteException task(Throwable t) {
+        return new TaskExecuteException(t);
+    }
+
+    public static TaskExecuteException task(String s) {
+        return new TaskExecuteException(s);
+    }
+
+    public static TaskExecuteException task(String s, Throwable t) {
+        return new TaskExecuteException(s, t);
     }
 
     public static Error error() {

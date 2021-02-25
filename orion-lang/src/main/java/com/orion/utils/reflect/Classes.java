@@ -177,7 +177,7 @@ public class Classes {
      * @return 父类对象
      */
     public static Class<?> getSuperClass(Class<?> clazz) {
-        Valid.notNull(clazz, "Class is null");
+        Valid.notNull(clazz, "class is null");
         Class<?> superClass = clazz.getSuperclass();
         if (!clazz.getName().contains(CGLIB_CLASS_SEPARATOR)) {
             return superClass;
@@ -193,7 +193,7 @@ public class Classes {
      * @return 父类对象
      */
     public static List<Class<?>> getSuperClasses(Class<?> clazz) {
-        Valid.notNull(clazz, "Class is null");
+        Valid.notNull(clazz, "class is null");
         if (!clazz.getName().contains(CGLIB_CLASS_SEPARATOR)) {
             List<Class<?>> list = new ArrayList<>();
             for (Class<?> superClass = clazz.getSuperclass(); superClass != null && superClass != Object.class; superClass = superClass.getSuperclass()) {
@@ -212,7 +212,7 @@ public class Classes {
      * @return 接口
      */
     public static List<Class<?>> getInterfaces(Class<?> clazz) {
-        Valid.notNull(clazz, "Class is null");
+        Valid.notNull(clazz, "class is null");
         if (clazz.isInterface()) {
             return Lists.of(clazz);
         }
@@ -234,7 +234,7 @@ public class Classes {
      * @return true接口
      */
     public static boolean isInterface(Class<?> clazz) {
-        Valid.notNull(clazz, "Class is null");
+        Valid.notNull(clazz, "class is null");
         return Modifier.isInterface(clazz.getModifiers());
     }
 
@@ -246,8 +246,8 @@ public class Classes {
      * @return true 是实现类或本类
      */
     public static boolean isImplClass(Class<?> requireClass, Class<?> argClass) {
-        Valid.notNull(requireClass, "RequireClass is null");
-        Valid.notNull(argClass, "ArgClass is null");
+        Valid.notNull(requireClass, "require class is null");
+        Valid.notNull(argClass, "arg class is null");
         if (requireClass.equals(argClass) || requireClass.equals(Object.class)) {
             return true;
         }
@@ -266,7 +266,7 @@ public class Classes {
      * @return true数组
      */
     public static boolean isArray(Class<?> clazz) {
-        Valid.notNull(clazz, "Class is null");
+        Valid.notNull(clazz, "class is null");
         return clazz.isArray();
     }
 
@@ -277,7 +277,7 @@ public class Classes {
      * @return 基本类型true
      */
     public static boolean isBaseClass(Class<?> clazz) {
-        Valid.notNull(clazz, "Class is null");
+        Valid.notNull(clazz, "class is null");
         for (Class<?> baseClass : BASE_CLASS) {
             if (clazz.equals(baseClass)) {
                 return true;
@@ -293,7 +293,7 @@ public class Classes {
      * @return 包装类型true
      */
     public static boolean isWrapClass(Class<?> clazz) {
-        Valid.notNull(clazz, "Class is null");
+        Valid.notNull(clazz, "class is null");
         for (Class<?> wrapClass : WRAP_CLASS) {
             if (clazz.equals(wrapClass)) {
                 return true;
@@ -309,7 +309,7 @@ public class Classes {
      * @return class
      */
     public static Class<?> getWrapClass(Class<?> clazz) {
-        Valid.notNull(clazz, "Class is null");
+        Valid.notNull(clazz, "class is null");
         for (int i = 0; i < BASE_CLASS.length; i++) {
             if (clazz.equals(BASE_CLASS[i])) {
                 return WRAP_CLASS[i];
@@ -325,7 +325,7 @@ public class Classes {
      * @return class
      */
     public static Class<?> getBaseClass(Class<?> clazz) {
-        Valid.notNull(clazz, "Class is null");
+        Valid.notNull(clazz, "class is null");
         for (int i = 0; i < WRAP_CLASS.length; i++) {
             if (clazz.equals(WRAP_CLASS[i])) {
                 return BASE_CLASS[i];
@@ -341,7 +341,7 @@ public class Classes {
      * @return 基本数组类型true
      */
     public static boolean isBaseArrayClass(Class<?> clazz) {
-        Valid.notNull(clazz, "Class is null");
+        Valid.notNull(clazz, "class is null");
         for (Class<?> baseClass : BASE_ARRAY_CLASS) {
             if (clazz.equals(baseClass)) {
                 return true;
@@ -357,7 +357,7 @@ public class Classes {
      * @return 包装数组类型true
      */
     public static boolean isWrapArrayClass(Class<?> clazz) {
-        Valid.notNull(clazz, "Class is null");
+        Valid.notNull(clazz, "class is null");
         for (Class<?> wrapClass : WRAP_ARRAY_CLASS) {
             if (clazz.equals(wrapClass)) {
                 return true;
@@ -373,7 +373,7 @@ public class Classes {
      * @return class
      */
     public static Class<?> getWrapArrayClass(Class<?> clazz) {
-        Valid.notNull(clazz, "Class is null");
+        Valid.notNull(clazz, "class is null");
         for (int i = 0; i < BASE_ARRAY_CLASS.length; i++) {
             if (clazz.equals(BASE_ARRAY_CLASS[i])) {
                 return WRAP_ARRAY_CLASS[i];
@@ -389,7 +389,7 @@ public class Classes {
      * @return class
      */
     public static Class<?> getBaseArrayClass(Class<?> clazz) {
-        Valid.notNull(clazz, "Class is null");
+        Valid.notNull(clazz, "class is null");
         for (int i = 0; i < WRAP_ARRAY_CLASS.length; i++) {
             if (clazz.equals(WRAP_ARRAY_CLASS[i])) {
                 return BASE_ARRAY_CLASS[i];
@@ -405,7 +405,7 @@ public class Classes {
      * @return true number
      */
     public static boolean isNumberClass(Class<?> clazz) {
-        Valid.notNull(clazz, "Class is null");
+        Valid.notNull(clazz, "class is null");
         boolean n = clazz == Byte.TYPE || clazz == Short.TYPE ||
                 clazz == Integer.TYPE || clazz == Long.TYPE ||
                 clazz == Float.TYPE || clazz == Double.TYPE ||

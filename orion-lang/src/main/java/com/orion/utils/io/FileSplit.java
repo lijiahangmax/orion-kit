@@ -89,7 +89,7 @@ public class FileSplit implements Callable<String[]> {
         }
         this.bufferSize = bufferSize;
         if (file == null || !file.exists() || file.length() == 0) {
-            throw new RuntimeException("File is illegal");
+            throw Exceptions.runtime("file is illegal");
         }
         this.file = file;
         double size = (double) file.length() / (double) blockCount;
@@ -106,7 +106,7 @@ public class FileSplit implements Callable<String[]> {
         }
         this.bufferSize = bufferSize;
         if (file == null || !file.exists() || file.length() == 0) {
-            throw new RuntimeException("File is illegal");
+            throw Exceptions.runtime("file is illegal");
         }
         this.file = file;
         if (blockSize < Const.BUFFER_KB_1) {

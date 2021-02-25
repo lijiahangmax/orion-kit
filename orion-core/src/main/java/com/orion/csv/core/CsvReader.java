@@ -5,7 +5,7 @@ import com.orion.constant.Const;
 import com.orion.constant.Letters;
 import com.orion.csv.option.CsvOption;
 import com.orion.csv.option.CsvReaderOption;
-import com.orion.exception.IORuntimeException;
+import com.orion.utils.Exceptions;
 import com.orion.utils.Objects1;
 import com.orion.utils.Strings;
 import com.orion.utils.Valid;
@@ -463,7 +463,7 @@ public class CsvReader implements SafeCloseable {
                                     dataBuffer.position++;
                                     if (option.isSafetySwitch() && dataBuffer.position - dataBuffer.columnStart + columnBuffer.position > 100000) {
                                         this.close();
-                                        throw new IOException("maximum column length of 100,000 exceeded in column "
+                                        throw Exceptions.unsafe("maximum column length of 100,000 exceeded in column "
                                                 + NumberFormat.getIntegerInstance().format(currentColumnCount)
                                                 + " in record "
                                                 + NumberFormat.getIntegerInstance().format(currentRecord)
@@ -650,7 +650,7 @@ public class CsvReader implements SafeCloseable {
                                     dataBuffer.position++;
                                     if (option.isSafetySwitch() && dataBuffer.position - dataBuffer.columnStart + columnBuffer.position > 100000) {
                                         this.close();
-                                        throw new IOException("maximum column length of 100,000 exceeded in column "
+                                        throw Exceptions.unsafe("maximum column length of 100,000 exceeded in column "
                                                 + NumberFormat.getIntegerInstance().format(currentColumnCount)
                                                 + " in record "
                                                 + NumberFormat.getIntegerInstance().format(currentRecord)
@@ -798,7 +798,7 @@ public class CsvReader implements SafeCloseable {
         startedColumn = false;
         if (currentColumnCount >= 100000 && option.isSafetySwitch()) {
             this.close();
-            throw new RuntimeException("maximum column count of 100,000 exceeded in record "
+            throw Exceptions.unsafe("maximum column count of 100,000 exceeded in record "
                     + NumberFormat.getIntegerInstance().format(currentRecord)
                     + ". Set the SafetySwitch property to false"
                     + " if you're expecting more than 100,000 columns per record to"
@@ -854,7 +854,7 @@ public class CsvReader implements SafeCloseable {
      */
     private void checkClosed() {
         if (closed) {
-            throw new IORuntimeException("this instance already been closed");
+            throw Exceptions.ioRuntime("this instance already been closed");
         }
     }
 

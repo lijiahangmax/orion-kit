@@ -376,8 +376,8 @@ public class Annotations {
      */
     @SafeVarargs
     public static boolean present(Class<?> clazz, Class<? extends Annotation>... annotatedClasses) {
-        Valid.notNull(clazz, "Class is null");
-        Valid.notEmpty(annotatedClasses, "AnnotatedClasses length is 0");
+        Valid.notNull(clazz, "class is null");
+        Valid.notEmpty(annotatedClasses, "annotated classes length is 0");
         if (annotatedClasses.length == 1) {
             return clazz.isAnnotationPresent(annotatedClasses[0]);
         } else {
@@ -394,8 +394,8 @@ public class Annotations {
      */
     @SafeVarargs
     public static boolean present(Constructor<?> constructor, Class<? extends Annotation>... annotatedClasses) {
-        Valid.notNull(constructor, "Constructor is null");
-        Valid.notEmpty(annotatedClasses, "AnnotatedClasses length is 0");
+        Valid.notNull(constructor, "constructor is null");
+        Valid.notEmpty(annotatedClasses, "annotated classes length is 0");
         if (annotatedClasses.length == 1) {
             return constructor.isAnnotationPresent(annotatedClasses[0]);
         } else {
@@ -412,8 +412,8 @@ public class Annotations {
      */
     @SafeVarargs
     public static boolean present(Method method, Class<? extends Annotation>... annotatedClasses) {
-        Valid.notNull(method, "Method is null");
-        Valid.notEmpty(annotatedClasses, "AnnotatedClasses length is 0");
+        Valid.notNull(method, "method is null");
+        Valid.notEmpty(annotatedClasses, "annotated classes length is 0");
         if (annotatedClasses.length == 1) {
             return method.isAnnotationPresent(annotatedClasses[0]);
         } else {
@@ -430,8 +430,8 @@ public class Annotations {
      */
     @SafeVarargs
     public static boolean present(Field field, Class<? extends Annotation>... annotatedClasses) {
-        Valid.notNull(field, "Field is null");
-        Valid.notEmpty(annotatedClasses, "AnnotatedClasses length is 0");
+        Valid.notNull(field, "field is null");
+        Valid.notEmpty(annotatedClasses, "annotated classes length is 0");
         if (annotatedClasses.length == 1) {
             return field.isAnnotationPresent(annotatedClasses[0]);
         } else {
@@ -499,7 +499,7 @@ public class Annotations {
             try {
                 attrs.put(method.getName(), method.invoke(annotated));
             } catch (Exception e) {
-                throw Exceptions.invoke("Could not obtain annotation attribute values", e);
+                throw Exceptions.invoke("could not obtain annotation attribute values", e);
             }
         }
         return attrs;

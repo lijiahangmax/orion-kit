@@ -1,5 +1,6 @@
 package com.orion.id;
 
+import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.Systems;
 import com.orion.utils.random.Randoms;
@@ -98,10 +99,10 @@ public class SnowFlakes {
      */
     private SnowFlakes(long workerId, long dataCenterId) {
         if (workerId > MAX_WORKER_ID || workerId < 0) {
-            throw new IllegalArgumentException(String.format("workerId can't be greater than %d or less than 0", MAX_WORKER_ID));
+            throw Exceptions.argument(String.format("workerId can't be greater than %d or less than 0", MAX_WORKER_ID));
         }
         if (dataCenterId > MAX_DATA_CENTER_ID || dataCenterId < 0) {
-            throw new IllegalArgumentException(String.format("dataCenterId can't be greater than %d or less than 0", MAX_DATA_CENTER_ID));
+            throw Exceptions.argument(String.format("dataCenterId can't be greater than %d or less than 0", MAX_DATA_CENTER_ID));
         }
         this.workerId = workerId;
         this.dataCenterId = dataCenterId;
@@ -114,7 +115,7 @@ public class SnowFlakes {
         long timestamp = timeGen();
         // 如果当前时间小于上一次ID生成的时间戳, 说明系统时钟回退过这个时候应当抛出异常
         if (timestamp < lastTimestamp) {
-            throw new RuntimeException(String.format("clock moved backwards. refusing to generate id for %d milliseconds", lastTimestamp - timestamp));
+            throw Exceptions.runtime(String.format("clock moved backwards. refusing to generate id for %d milliseconds", lastTimestamp - timestamp));
         }
 
         // 如果是同一时间生成的, 则进行毫秒内序列
