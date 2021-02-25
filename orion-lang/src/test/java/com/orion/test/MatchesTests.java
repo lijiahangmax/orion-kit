@@ -1,5 +1,6 @@
 package com.orion.test;
 
+import com.orion.constant.Const;
 import com.orion.utils.Matches;
 import com.orion.utils.Valid;
 import com.orion.utils.identity.CreditCodes;
@@ -73,7 +74,7 @@ public class MatchesTests {
                 "asd:7777";
         System.out.println(Matches.extIpv6(s));
         System.out.println(Matches.extIpv6List(s));
-        s = IntStream.rangeClosed(1, 5).mapToObj((__) -> CreditCodes.random() + "\n").collect(Collectors.joining());
+        s = IntStream.rangeClosed(1, 5).mapToObj((__) -> CreditCodes.random() + Const.LF).collect(Collectors.joining());
         System.out.println(Matches.extCreditCode(s));
         System.out.println(Matches.extCreditCodeList(s));
         s = "15865238745,16859635685,17759685658,888555,18457965832,13111258895,2";

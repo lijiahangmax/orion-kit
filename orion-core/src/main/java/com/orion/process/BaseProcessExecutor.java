@@ -2,6 +2,7 @@ package com.orion.process;
 
 import com.orion.able.Executable;
 import com.orion.able.SafeCloseable;
+import com.orion.constant.Const;
 import com.orion.utils.Strings;
 import com.orion.utils.Systems;
 import com.orion.utils.collect.Lists;
@@ -120,7 +121,7 @@ public abstract class BaseProcessExecutor implements Executable, SafeCloseable {
     public BaseProcessExecutor terminal() {
         List<String> c = getTerminalCommand();
         for (String s : this.command) {
-            c.add(s.replaceAll("\n", Strings.SPACE).replaceAll("\r", Strings.SPACE));
+            c.add(s.replaceAll(Const.LF, Strings.SPACE).replaceAll(Const.CR, Strings.SPACE));
         }
         this.command = c.toArray(new String[0]);
         return this;

@@ -720,11 +720,11 @@ public class SftpExecutor extends BaseExecutor {
     }
 
     public void writeLine(String path, String line) throws IOException {
-        this.write(path, null, new StreamEntry(Strings.bytes(line + "\n")), null, null, 0);
+        this.write(path, null, new StreamEntry(Strings.bytes(line + Const.LF)), null, null, 0);
     }
 
     public void writeLine(String path, String line, String charset) throws IOException {
-        this.write(path, null, new StreamEntry(Strings.bytes(line + "\n", charset)), null, null, 0);
+        this.write(path, null, new StreamEntry(Strings.bytes(line + Const.LF, charset)), null, null, 0);
     }
 
     public void writeLines(String path, List<String> lines) throws IOException {
@@ -748,11 +748,11 @@ public class SftpExecutor extends BaseExecutor {
     }
 
     public void appendLine(String path, String line) throws IOException {
-        this.write(path, null, new StreamEntry(Strings.bytes(line + "\n")), null, null, 2);
+        this.write(path, null, new StreamEntry(Strings.bytes(line + Const.LF)), null, null, 2);
     }
 
     public void appendLine(String path, String line, String charset) throws IOException {
-        this.write(path, null, new StreamEntry(Strings.bytes(line + "\n", charset)), null, null, 2);
+        this.write(path, null, new StreamEntry(Strings.bytes(line + Const.LF, charset)), null, null, 2);
     }
 
     public void appendLines(String path, List<String> lines) throws IOException {
@@ -794,9 +794,9 @@ public class SftpExecutor extends BaseExecutor {
         } else if (lines != null) {
             for (String line : lines) {
                 if (charset == null) {
-                    out.write(Strings.bytes(line + "\n"));
+                    out.write(Strings.bytes(line + Const.LF));
                 } else {
-                    out.write(Strings.bytes(line + "\n", charset));
+                    out.write(Strings.bytes(line + Const.LF, charset));
                 }
             }
         }

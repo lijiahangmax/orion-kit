@@ -1,5 +1,6 @@
 package com.orion.utils.crypto;
 
+import com.orion.constant.Const;
 import com.orion.lang.wrapper.Args;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
@@ -283,7 +284,7 @@ public class Keys {
                 }
                 s = r.readLine();
             }
-            return key.toString().replaceAll("\n", Strings.EMPTY).replaceAll("\r", Strings.EMPTY);
+            return key.toString().replaceAll(Const.LF, Strings.EMPTY).replaceAll(Const.CR, Strings.EMPTY);
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         } finally {

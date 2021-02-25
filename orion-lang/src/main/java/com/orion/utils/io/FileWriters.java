@@ -1,6 +1,7 @@
 package com.orion.utils.io;
 
 import com.orion.constant.Const;
+import com.orion.constant.Letters;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
@@ -405,7 +406,7 @@ public class FileWriters {
                 } else {
                     r.write(Strings.bytes(line, charset));
                 }
-                r.write('\n');
+                r.write(Letters.LF);
             }
             if (!append) {
                 if (useBuffer) {
@@ -676,12 +677,12 @@ public class FileWriters {
      * @param append  true 拼接
      */
     private static void writeLines(File file, List<String> list, String charset, boolean append) {
-        String lineSeparator = "\n";
+        String lineSeparator = Const.LF;
         boolean beforeAppend = false;
         if (append) {
             lineSeparator = getFileEndLineSeparator(file);
             if (lineSeparator == null) {
-                lineSeparator = "\n";
+                lineSeparator = Const.LF;
                 beforeAppend = true;
             }
         }

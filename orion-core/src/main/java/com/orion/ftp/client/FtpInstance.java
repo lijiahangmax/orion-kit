@@ -1,5 +1,6 @@
 package com.orion.ftp.client;
 
+import com.orion.constant.Letters;
 import com.orion.ftp.client.bigfile.FtpDownload;
 import com.orion.ftp.client.bigfile.FtpUpload;
 import com.orion.utils.Exceptions;
@@ -902,7 +903,7 @@ public class FtpInstance {
             out = client.appendFileStream(serverCharset(config.getRemoteBaseDir() + file));
             for (String line : lines) {
                 out.write(Strings.bytes(line));
-                out.write('\n');
+                out.write(Letters.LF);
             }
         } finally {
             Streams.close(out);

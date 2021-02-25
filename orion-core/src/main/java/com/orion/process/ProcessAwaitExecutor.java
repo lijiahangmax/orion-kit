@@ -1,5 +1,6 @@
 package com.orion.process;
 
+import com.orion.constant.Letters;
 import com.orion.lang.thread.HookRunnable;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
@@ -215,7 +216,7 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
     public ProcessAwaitExecutor write(byte[] command) {
         try {
             this.outputStream.write(command);
-            this.outputStream.write('\n');
+            this.outputStream.write(Letters.LF);
             this.outputStream.flush();
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);

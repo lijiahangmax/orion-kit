@@ -3,6 +3,7 @@ package com.orion.lang.wrapper;
 import com.orion.able.JsonAble;
 import com.orion.able.Logable;
 import com.orion.able.Mapable;
+import com.orion.constant.Letters;
 import com.orion.id.UUIds;
 import com.orion.lang.support.CloneSupport;
 import com.orion.utils.Exceptions;
@@ -331,10 +332,10 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
     public String toLogString() {
         StringBuilder builder = new StringBuilder();
         boolean success = isSuccess();
-        builder.append("RpcWrapper:\n\tisSuccess ==> ").append(success).append("\n\t")
-                .append("traceId ==> ").append(traceId).append("\n\t")
-                .append("code ==> ").append(code).append("\n\t")
-                .append("msg ==> ").append(msg).append("\n\t")
+        builder.append("RpcWrapper:\n\tisSuccess ==> ").append(success).append(Letters.LF).append(Letters.TAB)
+                .append("traceId ==> ").append(traceId).append(Letters.LF).append(Letters.TAB)
+                .append("code ==> ").append(code).append(Letters.LF).append(Letters.TAB)
+                .append("msg ==> ").append(msg).append(Letters.LF).append(Letters.TAB)
                 .append("data ==> ").append(Jsons.toJsonWriteNull(data));
         if (!success) {
             builder.append("errorMsg ==> ").append(errorMessages);

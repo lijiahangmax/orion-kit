@@ -1,6 +1,7 @@
 package com.orion.mail;
 
 import com.orion.constant.Const;
+import com.orion.constant.Letters;
 import com.orion.constant.StandardContentType;
 import com.orion.utils.Strings;
 
@@ -323,7 +324,7 @@ public class MailMessage implements Serializable {
     }
 
     private String eof() {
-        return StandardContentType.TEXT_HTML.equals(mimeType) ? "<br/>" : "\n";
+        return StandardContentType.TEXT_HTML.equals(mimeType) ? "<br/>" : Const.LF;
     }
 
     // -------------------- getter --------------------
@@ -367,15 +368,15 @@ public class MailMessage implements Serializable {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("EML-form: [");
-        sb.append(from).append("]\n");
-        sb.append("  ==> to: ").append(to == null ? "[]" : to.toString()).append(" \n");
+        sb.append(from).append("]").append(Letters.LF);
+        sb.append("  ==> to: ").append(to == null ? "[]" : to.toString()).append(" ").append(Letters.LF);
         if (cc != null) {
-            sb.append("  ==> cc: ").append(cc.toString()).append(" \n");
+            sb.append("  ==> cc: ").append(cc.toString()).append(" ").append(Letters.LF);
         }
         if (bcc != null) {
-            sb.append("  ==> bcc: ").append(bcc.toString()).append(" \n");
+            sb.append("  ==> bcc: ").append(bcc.toString()).append(" ").append(Letters.LF);
         }
-        sb.append("  ==> title: [").append(title).append("] \n");
+        sb.append("  ==> title: [").append(title).append("] ").append(Letters.LF);
         return sb.toString();
     }
 

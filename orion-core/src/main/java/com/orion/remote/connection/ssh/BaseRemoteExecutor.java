@@ -3,6 +3,7 @@ package com.orion.remote.connection.ssh;
 import ch.ethz.ssh2.Session;
 import com.orion.able.Executable;
 import com.orion.able.SafeCloseable;
+import com.orion.constant.Letters;
 import com.orion.lang.thread.HookRunnable;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
@@ -136,7 +137,7 @@ public abstract class BaseRemoteExecutor implements Executable, SafeCloseable {
     public BaseRemoteExecutor write(byte[] command) {
         try {
             outputStream.write(command);
-            outputStream.write('\n');
+            outputStream.write(Letters.LF);
             outputStream.flush();
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);

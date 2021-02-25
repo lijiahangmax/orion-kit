@@ -3,6 +3,7 @@ package com.orion.utils.json;
 import com.alibaba.fastjson.*;
 import com.alibaba.fastjson.parser.Feature;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.orion.constant.Const;
 import com.orion.utils.Strings;
 
 import java.util.*;
@@ -253,8 +254,8 @@ public class Jsons {
         if (Strings.isBlank(json)) {
             return Strings.EMPTY;
         }
-        return json.replaceAll("\n", Strings.EMPTY)
-                .replaceAll("\r", Strings.EMPTY);
+        return json.replaceAll(Const.LF, Strings.EMPTY)
+                .replaceAll(Const.CR, Strings.EMPTY);
     }
 
 }

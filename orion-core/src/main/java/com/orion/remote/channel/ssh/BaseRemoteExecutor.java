@@ -1,6 +1,7 @@
 package com.orion.remote.channel.ssh;
 
 import com.jcraft.jsch.Channel;
+import com.orion.constant.Letters;
 import com.orion.lang.thread.HookRunnable;
 import com.orion.remote.channel.BaseExecutor;
 import com.orion.utils.Exceptions;
@@ -135,7 +136,7 @@ public abstract class BaseRemoteExecutor extends BaseExecutor {
     public BaseRemoteExecutor write(byte[] command) {
         try {
             outputStream.write(command);
-            outputStream.write('\n');
+            outputStream.write(Letters.LF);
             outputStream.flush();
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);

@@ -113,8 +113,8 @@ public class DelayTracker extends Tracker {
                     String s = Streams.readLines(reader, charset);
                     if (s != null) {
                         if (handler != null) {
-                            s = s.replaceAll("\r\n", "\n").replaceAll("\r", "\n");
-                            String[] ls = s.split("\n");
+                            s = s.replaceAll(Const.CR_LF, Const.LF).replaceAll(Const.CR, Const.LF);
+                            String[] ls = s.split(Const.LF);
                             for (String l : ls) {
                                 if (accessCount == 0) {
                                     // skip

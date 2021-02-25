@@ -1510,20 +1510,20 @@ public class Files1 {
             r = new RandomAccessFile(file, "r");
             long length = r.length();
             if (length == 0) {
-                return "\n";
+                return Const.LF;
             } else if (length >= 2) {
                 r.seek(length - 2);
                 byte[] bs = new byte[2];
                 r.read(bs);
                 if (bs[0] == 13 && bs[1] == 10) {
-                    return "\r\n";
+                    return Const.CR_LF;
                 } else if (bs[1] == 13) {
-                    return "\r";
+                    return Const.CR;
                 }
             } else if (length == 1) {
                 r.seek(length - 1);
                 if (r.read() == 13) {
-                    return "\r";
+                    return Const.CR;
                 }
             }
         } catch (IOException e) {
@@ -1531,7 +1531,7 @@ public class Files1 {
         } finally {
             Streams.close(r);
         }
-        return "\n";
+        return Const.LF;
     }
 
     /**
@@ -1554,25 +1554,25 @@ public class Files1 {
         try (RandomAccessFile r = new RandomAccessFile(file, "r")) {
             long length = r.length();
             if (length == 0) {
-                return "\n";
+                return Const.LF;
             } else if (length >= 2) {
                 r.seek(length - 2);
                 byte[] bs = new byte[2];
                 r.read(bs);
                 if (bs[0] == 13 && bs[1] == 10) {
-                    return "\r\n";
+                    return Const.CR_LF;
                 } else if (bs[1] == 13) {
-                    return "\r";
+                    return Const.CR;
                 } else if (bs[1] == 10) {
-                    return "\n";
+                    return Const.LF;
                 }
             } else if (length == 1) {
                 r.seek(length - 1);
                 int read = r.read();
                 if (read == 13) {
-                    return "\r";
+                    return Const.CR;
                 } else if (read == 10) {
-                    return "\n";
+                    return Const.LF;
                 }
             }
         } catch (IOException e) {

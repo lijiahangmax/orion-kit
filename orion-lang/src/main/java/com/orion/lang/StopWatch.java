@@ -1,5 +1,6 @@
 package com.orion.lang;
 
+import com.orion.constant.Const;
 import com.orion.utils.Strings;
 import com.orion.utils.math.Numbers;
 import com.orion.utils.time.Dates;
@@ -220,7 +221,7 @@ public class StopWatch {
         if (tags == null) {
             return prefix;
         }
-        StringBuilder sb = new StringBuilder(prefix).append("\n");
+        StringBuilder sb = new StringBuilder(prefix).append(Const.LF);
         for (int i = 0; i < tags.size(); i++) {
             StopTag tag = tags.get(i);
             sb.append(String.format("  -> %5s: %d%s  %5s%%",
@@ -230,7 +231,7 @@ public class StopWatch {
                     this.getUse(tag)
             ));
             if (i < tags.size() - 1) {
-                sb.append("\n");
+                sb.append(Const.LF);
             }
         }
         return sb.toString();

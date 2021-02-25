@@ -1,5 +1,6 @@
 package com.orion.lang.wrapper;
 
+import com.orion.constant.Const;
 import com.orion.lang.iterator.ArrayIterator;
 import com.orion.lang.support.CloneSupport;
 import com.orion.utils.Exceptions;
@@ -286,7 +287,7 @@ public class Args implements Serializable {
 
         @Override
         public String toString() {
-            return "arg1=" + arg1 + "\n" +
+            return "arg1=" + arg1 + Const.LF +
                     "arg2=" + arg2;
         }
 
@@ -317,8 +318,8 @@ public class Args implements Serializable {
 
         @Override
         public String toString() {
-            return "arg1=" + arg1 + "\n" +
-                    "arg2=" + arg2 + "\n" +
+            return "arg1=" + arg1 + Const.LF +
+                    "arg2=" + arg2 + Const.LF +
                     "arg3=" + arg3;
         }
 
@@ -349,9 +350,9 @@ public class Args implements Serializable {
 
         @Override
         public String toString() {
-            return "arg1=" + arg1 + "\n" +
-                    "arg2=" + arg2 + "\n" +
-                    "arg3=" + arg3 + "\n" +
+            return "arg1=" + arg1 + Const.LF +
+                    "arg2=" + arg2 + Const.LF +
+                    "arg3=" + arg3 + Const.LF +
                     "arg4=" + arg4;
         }
 
@@ -382,10 +383,10 @@ public class Args implements Serializable {
 
         @Override
         public String toString() {
-            return "arg1=" + arg1 + "\n" +
-                    "arg2=" + arg2 + "\n" +
-                    "arg3=" + arg3 + "\n" +
-                    "arg4=" + arg4 + "\n" +
+            return "arg1=" + arg1 + Const.LF +
+                    "arg2=" + arg2 + Const.LF +
+                    "arg3=" + arg3 + Const.LF +
+                    "arg4=" + arg4 + Const.LF +
                     "arg5=" + arg5;
         }
 

@@ -103,7 +103,7 @@ public class Systems {
     public static final int VM_PROCESS_NUM;
 
     static {
-        LINE_SEPARATOR = System.getProperty("line.separator", "\n");
+        LINE_SEPARATOR = System.getProperty("line.separator", Const.LF);
         FILE_SEPARATOR = File.separator;
         BE_UNIX = "/".equals(File.separator);
         BE_WINDOWS = "\\".equals(File.separator);

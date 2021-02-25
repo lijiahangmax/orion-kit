@@ -1,6 +1,7 @@
 package com.orion.utils.io;
 
 import com.orion.constant.Const;
+import com.orion.constant.Letters;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
 import com.orion.utils.crypto.AES;
@@ -77,7 +78,7 @@ public class FileEncrypt implements Callable<Boolean> {
             while ((read = in.read(bs)) != -1) {
                 byte[] ebs = AES.encrypt(Arrays1.resize(bs, read), secretKey);
                 out.write(ebs);
-                out.write('\n');
+                out.write(Letters.LF);
             }
             out.flush();
             return true;

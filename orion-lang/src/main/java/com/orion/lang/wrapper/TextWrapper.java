@@ -1,5 +1,6 @@
 package com.orion.lang.wrapper;
 
+import com.orion.constant.Const;
 import com.orion.lang.support.CloneSupport;
 import com.orion.utils.Urls;
 import com.orion.utils.Xsses;
@@ -52,12 +53,12 @@ public class TextWrapper extends CloneSupport<TextWrapper> implements Wrapper<St
     }
 
     public TextWrapper appendLine(String s) {
-        sb.append(s).append("\n");
+        sb.append(s).append(Const.LF);
         return this;
     }
 
     public TextWrapper newLine() {
-        sb.append("\n");
+        sb.append(Const.LF);
         return this;
     }
 
