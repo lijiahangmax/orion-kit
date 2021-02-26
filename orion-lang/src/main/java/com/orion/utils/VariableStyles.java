@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  * @version 1.0.0
  * @since 2019/9/22 21:53
  */
-public enum VariableStyles implements ConvertToSmallHump, ConvertToBigHump, ConvertToSerpentine, ConvertToSpine {
+public enum VariableStyles {
 
     /**
      * 小驼峰命名法
@@ -281,21 +281,15 @@ public enum VariableStyles implements ConvertToSmallHump, ConvertToBigHump, Conv
         }
     }
 
-}
-
-interface ConvertToSmallHump {
-
     /**
      * 转为小驼峰命名
      *
      * @param variable 变量
      * @return ignore
      */
-    String toSmallHump(String variable);
-
-}
-
-interface ConvertToBigHump {
+    public String toSmallHump(String variable) {
+        throw Exceptions.unSupport();
+    }
 
     /**
      * 转为大驼峰命名
@@ -303,11 +297,9 @@ interface ConvertToBigHump {
      * @param variable 变量
      * @return ignore
      */
-    String toBigHump(String variable);
-
-}
-
-interface ConvertToSerpentine {
+    public String toBigHump(String variable) {
+        throw Exceptions.unSupport();
+    }
 
     /**
      * 转为蛇形命名
@@ -315,11 +307,9 @@ interface ConvertToSerpentine {
      * @param variable 变量
      * @return ignore
      */
-    String toSerpentine(String variable);
-
-}
-
-interface ConvertToSpine {
+    public String toSerpentine(String variable) {
+        throw Exceptions.unSupport();
+    }
 
     /**
      * 转为脊柱命名
@@ -327,6 +317,9 @@ interface ConvertToSpine {
      * @param variable 变量
      * @return ignore
      */
-    String toSpine(String variable);
+    public String toSpine(String variable) {
+        throw Exceptions.unSupport();
+    }
 
 }
+
