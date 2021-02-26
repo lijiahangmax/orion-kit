@@ -1,5 +1,6 @@
 package com.orion.utils.time;
 
+import com.orion.lang.collect.ConcurrentReferenceHashMap;
 import com.orion.utils.Strings;
 import com.orion.utils.Valid;
 import com.orion.utils.convert.Converts;
@@ -9,7 +10,6 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 日期时间工具类
@@ -46,7 +46,7 @@ public class Dates {
     private static final ZoneOffset DEFAULT_ZONE_OFFSET = ZoneOffset.of("+8");
     private static final ZoneOffset DEFAULT_ZERO_ZONE_OFFSET = ZoneOffset.ofHours(0);
 
-    private static final Map<String, DateTimeFormatter> DATE_TIME_FORMAT_CONTAINER = new ConcurrentHashMap<>();
+    private static final Map<String, DateTimeFormatter> DATE_TIME_FORMAT_CONTAINER = new ConcurrentReferenceHashMap<>(16, ConcurrentReferenceHashMap.ReferenceType.SOFT);
 
     private Dates() {
     }

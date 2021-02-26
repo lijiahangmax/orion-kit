@@ -1,5 +1,6 @@
 package com.orion.utils.reflect;
 
+import com.orion.lang.collect.ConcurrentReferenceHashMap;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
@@ -12,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 反射 构造方法工具类
@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @SuppressWarnings("ALL")
 public class Constructors {
 
-    private static final Map<Class<?>, Constructor<?>> CLASS_DEFAULT_CONSTRUCTOR_CACHE = new ConcurrentHashMap<>(16);
+    private static final Map<Class<?>, Constructor<?>> CLASS_DEFAULT_CONSTRUCTOR_CACHE = new ConcurrentReferenceHashMap<>(16, ConcurrentReferenceHashMap.ReferenceType.SOFT);
 
     private Constructors() {
     }

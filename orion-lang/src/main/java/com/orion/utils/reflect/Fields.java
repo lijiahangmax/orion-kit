@@ -1,5 +1,6 @@
 package com.orion.utils.reflect;
 
+import com.orion.lang.collect.ConcurrentReferenceHashMap;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.Valid;
@@ -10,7 +11,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -28,7 +28,7 @@ import static java.util.stream.Collectors.toMap;
 @SuppressWarnings("ALL")
 public class Fields {
 
-    private static final Map<Class<?>, List<Field>> FIELD_CACHE = new ConcurrentHashMap<>(16);
+    private static final Map<Class<?>, List<Field>> FIELD_CACHE = new ConcurrentReferenceHashMap<>(16, ConcurrentReferenceHashMap.ReferenceType.SOFT);
 
     private Fields() {
     }
