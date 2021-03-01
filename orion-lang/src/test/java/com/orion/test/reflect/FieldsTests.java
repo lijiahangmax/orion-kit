@@ -1,6 +1,7 @@
 package com.orion.test.reflect;
 
 import com.orion.lang.Console;
+import com.orion.test.reflect.value.BaseTypeUser;
 import com.orion.test.reflect.value.User;
 import com.orion.utils.reflect.Fields;
 import com.orion.utils.reflect.Methods;
@@ -46,6 +47,20 @@ public class FieldsTests {
         Fields.getFieldMap(User.class).forEach(Console::trace);
         System.out.println("------");
         Fields.getStaticFields(User.class).forEach(Console::trace);
+    }
+
+    @Test
+    public void getBaseFieldTests() {
+        BaseTypeUser u = new BaseTypeUser();
+        Fields.setFieldValueInfer(u, "id", 1L);
+        Fields.setFieldValue(u, "time", 2L);
+        Fields.setFieldValue(u, "sex", true);
+        Fields.setFieldValue(u, "name", 'n');
+        System.out.println(u.toString());
+        System.out.println((Object) Fields.getFieldValue(u, "id"));
+        System.out.println((Object) Fields.getFieldValue(u, "time"));
+        System.out.println((Object) Fields.getFieldValue(u, "sex"));
+        System.out.println((Object) Fields.getFieldValue(u, "name"));
     }
 
 }

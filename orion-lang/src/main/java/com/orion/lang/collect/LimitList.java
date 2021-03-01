@@ -44,6 +44,11 @@ public class LimitList<E> extends ArrayList<E> implements Serializable {
         this.limit = limit;
     }
 
+    public LimitList<E> limit(int limit) {
+        this.limit = limit;
+        return this;
+    }
+
     public List<E> page(int p) {
         int offset = (p - 1) * limit;
         int size = size();
@@ -58,11 +63,6 @@ public class LimitList<E> extends ArrayList<E> implements Serializable {
 
     public int getLimit() {
         return limit;
-    }
-
-    public LimitList<E> setLimit(int limit) {
-        this.limit = limit;
-        return this;
     }
 
     public int getTotal() {

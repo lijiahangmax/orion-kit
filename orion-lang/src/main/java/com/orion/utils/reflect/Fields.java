@@ -177,7 +177,7 @@ public class Fields {
     }
 
     /**
-     * 直接设置对象属性值
+     * 直接设置对象属性值 可用于基本类型字段
      *
      * @param obj       对象
      * @param fieldName 字段名称
@@ -199,7 +199,7 @@ public class Fields {
     }
 
     /**
-     * 直接设置对象属性值
+     * 直接设置对象属性值 可用于基本类型字段
      *
      * @param obj   对象
      * @param field 字段
@@ -218,7 +218,7 @@ public class Fields {
     }
 
     /**
-     * 直接设置对象属性值 类型推断
+     * 直接设置对象属性值 类型推断 可用于基本类型字段
      *
      * @param obj       对象
      * @param fieldName 字段
@@ -241,7 +241,7 @@ public class Fields {
     }
 
     /**
-     * 直接设置对象属性值 类型推断
+     * 直接设置对象属性值 类型推断 可用于基本类型字段
      *
      * @param obj   对象
      * @param field 字段

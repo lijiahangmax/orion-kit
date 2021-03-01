@@ -55,6 +55,9 @@
         <nginxparser.version>0.9.3</nginxparser.version>
         <ssh2.version>262</ssh2.version>
         <jsch.version>0.1.55</jsch.version>
+        <python.script.version>2.7.2</python.script.version>
+        <lua.script.version>3.0.1</lua.script.version>
+        <groovy.script.version>3.0.4</groovy.script.version>
     </properties>
 
     <developers>

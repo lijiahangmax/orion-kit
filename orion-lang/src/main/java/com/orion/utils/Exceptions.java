@@ -6,6 +6,7 @@ import com.orion.exception.argument.InvalidArgumentException;
 import com.orion.exception.argument.NullArgumentException;
 import com.orion.exception.argument.UnMatchArgumentException;
 
+import javax.script.ScriptException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -570,6 +571,26 @@ public class Exceptions {
 
     public static TaskExecuteException task(String s, Throwable t) {
         return new TaskExecuteException(s, t);
+    }
+
+    public static ScriptExecuteException script() {
+        return new ScriptExecuteException();
+    }
+
+    public static ScriptExecuteException script(Throwable t) {
+        return new ScriptExecuteException(t);
+    }
+
+    public static ScriptExecuteException script(String s) {
+        return new ScriptExecuteException(s);
+    }
+
+    public static ScriptExecuteException script(String s, Throwable t) {
+        return new ScriptExecuteException(s, t);
+    }
+
+    public static ScriptExecuteException script(ScriptException e) {
+        return new ScriptExecuteException(e);
     }
 
     public static Error error() {

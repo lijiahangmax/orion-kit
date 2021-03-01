@@ -307,7 +307,7 @@ public class BeanWrapper {
                         }
                         break;
                     } catch (Exception e) {
-                        throw Exceptions.parse("Could not copy source property " + sourceFieldName + " to target " + targetFieldName);
+                        throw Exceptions.parse("could not copy source property " + sourceFieldName + " to target " + targetFieldName);
                     }
                 }
             }

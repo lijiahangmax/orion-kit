@@ -107,6 +107,27 @@
             <version>${yaml.version}</version>
         </dependency>
 
+        <!-- python -->
+        <dependency>
+            <groupId>org.python</groupId>
+            <artifactId>jython</artifactId>
+            <version>${python.script.version}</version>
+        </dependency>
+
+        <!-- lua -->
+        <dependency>
+            <groupId>org.luaj</groupId>
+            <artifactId>luaj-jse</artifactId>
+            <version>${lua.script.version}</version>
+        </dependency>
+
+        <!-- groovy -->
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>${groovy.script.version}</version>
+        </dependency>
+
         <!--        <dependency>-->
         <!--            <groupId>com.sun</groupId>-->
         <!--            <artifactId>tools</artifactId>-->
