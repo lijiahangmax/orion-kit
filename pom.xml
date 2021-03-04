@@ -9,11 +9,17 @@
     <packaging>pom</packaging>
     <artifactId>orion-kit</artifactId>
     <name>${project.artifactId}</name>
-    <description>Orion Dev Kit</description>
+    <description>orion dev kit</description>
 
     <modules>
         <module>orion-lang</module>
-        <module>orion-core</module>
+        <module>orion-ext</module>
+        <module>orion-office</module>
+        <module>orion-log</module>
+        <module>orion-http</module>
+        <module>orion-net</module>
+        <module>orion-web</module>
+        <module>orion-redis</module>
         <module>orion-spring</module>
         <module>orion-all</module>
     </modules>

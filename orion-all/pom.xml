@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>com.orion.kit</groupId>
@@ -12,21 +11,66 @@
     <packaging>jar</packaging>
     <artifactId>orion-all</artifactId>
     <name>${project.artifactId}</name>
-    <description>Orion Kit All</description>
+    <description>orion kit all</description>
 
     <dependencies>
+        <!-- lang -->
         <dependency>
             <groupId>com.orion.kit</groupId>
             <artifactId>orion-lang</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
+        <!-- ext -->
         <dependency>
             <groupId>com.orion.kit</groupId>
-            <artifactId>orion-core</artifactId>
+            <artifactId>orion-ext</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
+        <!-- log -->
+        <dependency>
+            <groupId>com.orion.kit</groupId>
+            <artifactId>orion-log</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- office -->
+        <dependency>
+            <groupId>com.orion.kit</groupId>
+            <artifactId>orion-office</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- http -->
+        <dependency>
+            <groupId>com.orion.kit</groupId>
+            <artifactId>orion-http</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- net -->
+        <dependency>
+            <groupId>com.orion.kit</groupId>
+            <artifactId>orion-net</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- web -->
+        <dependency>
+            <groupId>com.orion.kit</groupId>
+            <artifactId>orion-web</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- redis -->
+        <dependency>
+            <groupId>com.orion.kit</groupId>
+            <artifactId>orion-redis</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- spring -->
         <dependency>
             <groupId>com.orion.kit</groupId>
             <artifactId>orion-spring</artifactId>

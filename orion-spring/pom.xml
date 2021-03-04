@@ -11,9 +11,10 @@
     <packaging>jar</packaging>
     <artifactId>orion-spring</artifactId>
     <name>${project.artifactId}</name>
-    <description>Orion Integrated Spring</description>
+    <description>orion integrated spring</description>
 
     <dependencies>
+        <!-- lang -->
         <dependency>
             <groupId>com.orion.kit</groupId>
             <artifactId>orion-lang</artifactId>
@@ -27,7 +28,7 @@
             <version>${spring.version}</version>
         </dependency>
 
-        <!-- springmvc -->
+        <!-- spring-mvc -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
@@ -61,7 +62,6 @@
             <artifactId>cglib</artifactId>
             <version>${cglib.version}</version>
         </dependency>
-
     </dependencies>
 
 </project>
