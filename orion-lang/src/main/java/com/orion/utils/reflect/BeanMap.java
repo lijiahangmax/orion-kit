@@ -55,7 +55,7 @@ public class BeanMap extends MutableLinkedHashMap<String, Object> {
         this.variableStyle = variableStyle;
         this.addNull = addNull;
         this.ignoreFields = ignoreFields;
-        this.invokeGetter(Methods.getAllGetterMethodByCache(o.getClass()));
+        this.invokeGetter(Methods.getGetterMethodsByCache(o.getClass()));
     }
 
     public static BeanMap create(Object o, String... ignoreFields) {

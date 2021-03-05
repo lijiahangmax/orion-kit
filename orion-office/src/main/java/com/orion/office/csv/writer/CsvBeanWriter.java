@@ -143,9 +143,9 @@ public class CsvBeanWriter<T> extends BaseCsvWriter<String, T> {
      */
     protected void parseField() {
         // 注解field
-        List<Field> fieldList = Fields.getFieldByCache(targetClass);
+        List<Field> fieldList = Fields.getFieldsByCache(targetClass);
         // 注解method
-        List<Method> methodList = Methods.getAllGetterMethodByCache(targetClass);
+        List<Method> methodList = Methods.getGetterMethodsByCache(targetClass);
         this.getters = methodList.stream().collect(Collectors.toMap(Fields::getFieldNameByMethod, Function.identity()));
         for (Field field : fieldList) {
             this.parseColumn(Annotations.getAnnotation(field, ExportField.class),

@@ -62,7 +62,7 @@ public class Methods {
      * @return getter
      */
     public static Method getGetterMethodByCache(Class<?> clazz, String field) {
-        List<Method> methods = getAllGetterMethodByCache(clazz);
+        List<Method> methods = getGetterMethodsByCache(clazz);
         if (methods == null) {
             return null;
         }
@@ -89,7 +89,7 @@ public class Methods {
      * @return method
      */
     public static Method getSetterMethodByCache(Class<?> clazz, String field) {
-        List<Method> methods = getAllSetterMethodByCache(clazz);
+        List<Method> methods = getSetterMethodsByCache(clazz);
         if (methods == null) {
             return null;
         }
@@ -108,10 +108,10 @@ public class Methods {
      * @param clazz class
      * @return method
      */
-    public static List<Method> getAllGetterMethodByCache(Class<?> clazz) {
+    public static List<Method> getGetterMethodsByCache(Class<?> clazz) {
         List<Method> methodList = CLASS_GET_METHOD_CACHE.get(clazz);
         if (methodList == null) {
-            CLASS_GET_METHOD_CACHE.put(clazz, methodList = getAllGetterMethod(clazz));
+            CLASS_GET_METHOD_CACHE.put(clazz, methodList = getGetterMethods(clazz));
         }
         return methodList;
     }
@@ -122,15 +122,25 @@ public class Methods {
      * @param clazz class
      * @return method
      */
-    public static List<Method> getAllSetterMethodByCache(Class<?> clazz) {
+    public static List<Method> getSetterMethodsByCache(Class<?> clazz) {
         List<Method> methodList = CLASS_SET_METHOD_CACHE.get(clazz);
         if (methodList == null) {
-            CLASS_SET_METHOD_CACHE.put(clazz, methodList = getAllSetterMethod(clazz));
+            CLASS_SET_METHOD_CACHE.put(clazz, methodList = getSetterMethods(clazz));
         }
         return methodList;
     }
 
     // -------------------- cache end --------------------
+
+    /**
+     * 通过字段获取getter方法
+     *
+     * @param field field
+     * @return getter方法
+     */
+    public static String getGetterMethodNameByField(Field field) {
+        return getGetterMethodNameByFieldName(field.getName(), field.getType().equals(Boolean.TYPE));
+    }
 
     /**
      * 通过字段名称获取getter方法
@@ -160,6 +170,16 @@ public class Methods {
     }
 
     /**
+     * 通过字段获取setter方法
+     *
+     * @param field field
+     * @return setter方法
+     */
+    public static String getSetterMethodNameByField(Field field) {
+        return SETTER_PREFIX + Strings.firstUpper(field.getName());
+    }
+
+    /**
      * 通过字段名称获取setter方法
      *
      * @param fieldName fieldName
@@ -178,7 +198,7 @@ public class Methods {
      * @param clazz class
      * @return getter方法
      */
-    public static List<Method> getAllGetterMethod(Class<?> clazz) {
+    public static List<Method> getGetterMethods(Class<?> clazz) {
         List<Method> list = new ArrayList<>();
         // get super class methods
         for (Method method : clazz.getMethods()) {
@@ -202,7 +222,7 @@ public class Methods {
      * @param clazz class
      * @return setter方法
      */
-    public static List<Method> getAllSetterMethod(Class<?> clazz) {
+    public static List<Method> getSetterMethods(Class<?> clazz) {
         List<Method> list = new ArrayList<>();
         // get super class methods
         for (Method method : clazz.getMethods()) {
@@ -221,9 +241,9 @@ public class Methods {
      * @param clazz class
      * @return getter方法
      */
-    public static List<Method> getAllGetterMethodByField(Class<?> clazz) {
+    public static List<Method> getGetterMethodsByField(Class<?> clazz) {
         List<Method> list = new ArrayList<>();
-        List<Field> fields = Fields.getFieldList(clazz);
+        List<Field> fields = Fields.getFields(clazz);
         for (Field field : fields) {
             if (!Modifier.isStatic(field.getModifiers())) {
                 Method method;
@@ -250,9 +270,9 @@ public class Methods {
      * @param clazz class
      * @return setter方法
      */
-    public static List<Method> getAllSetterMethodByField(Class<?> clazz) {
+    public static List<Method> getSetterMethodsByField(Class<?> clazz) {
         List<Method> list = new ArrayList<>();
-        List<Field> fields = Fields.getFieldList(clazz);
+        List<Field> fields = Fields.getFields(clazz);
         for (Field field : fields) {
             if (!Modifier.isStatic(field.getModifiers())) {
                 String methodName = SETTER_PREFIX + Strings.firstUpper(field.getName());
@@ -444,37 +464,38 @@ public class Methods {
     }
 
     /**
-     * 获取该类的所有方法列表
-     *
-     * @param clazz 反射类
-     * @return 方法
-     */
-    public static Map<String, Method> getMethodMap(Class<?> clazz) {
-        List<Method> methodList = getMethodList(clazz);
-        return Lists.isNotEmpty(methodList) ? methodList.stream().collect(Collectors.toMap(Method::getName, identity())) : new HashMap<>();
-    }
-
-    /**
      * 获取该类的所有方法
      *
      * @param clazz 反射类
      * @return 方法
      */
-    public static List<Method> getMethodList(Class<?> clazz) {
+    public static List<Method> getAccessibleMethods(Class<?> clazz) {
         Valid.notNull(clazz, "method class is null");
         if (clazz.getSuperclass() != null) {
             List<Method> methodList = Stream.of(clazz.getDeclaredMethods())
                     .filter(field -> !Modifier.isStatic(field.getModifiers()))
+                    .peek(Methods::setAccessible)
                     .collect(toCollection(ArrayList::new));
             Class<?> superClass = clazz.getSuperclass();
             // 当前类方法
             Map<String, Method> methodMap = methodList.stream().collect(toMap(Method::getName, identity()));
             // 父类方法
-            getMethodList(superClass).stream().filter(m -> !methodMap.containsKey(m.getName())).forEach(methodList::add);
+            getAccessibleMethods(superClass).stream().filter(m -> !methodMap.containsKey(m.getName())).forEach(methodList::add);
             return methodList;
         } else {
             return new ArrayList<>();
         }
+    }
+
+    /**
+     * 获取该类的所有方法列表
+     *
+     * @param clazz 反射类
+     * @return 方法
+     */
+    public static Map<String, Method> getAccessibleMethodMap(Class<?> clazz) {
+        List<Method> methodList = getAccessibleMethods(clazz);
+        return Lists.isNotEmpty(methodList) ? methodList.stream().collect(Collectors.toMap(Method::getName, identity())) : new HashMap<>();
     }
 
     /**

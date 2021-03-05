@@ -242,4 +242,27 @@ public class Sets extends Collections {
         }
     }
 
+    /**
+     * 删除元素到指定大小
+     *
+     * @param set  set
+     * @param size 大小
+     * @param <E>  E
+     */
+    public static <E> void removeToSize(Set<E> set, int size) {
+        int oldSize = size(set);
+        if (size >= oldSize) {
+            return;
+        }
+        Iterator<E> iter = set.iterator();
+        int d = oldSize - size;
+        for (int i = 0; i < size; i++) {
+            iter.next();
+        }
+        for (int i = 0; i < d; i++) {
+            iter.next();
+            iter.remove();
+        }
+    }
+
 }

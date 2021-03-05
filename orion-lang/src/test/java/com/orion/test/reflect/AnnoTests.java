@@ -1,9 +1,7 @@
 package com.orion.test.reflect;
 
 import com.orion.lang.Console;
-import com.orion.test.reflect.value.User;
-import com.orion.test.reflect.value.UserAnno1;
-import com.orion.test.reflect.value.UserAnno2;
+import com.orion.test.reflect.value.*;
 import com.orion.utils.Valid;
 import com.orion.utils.reflect.Annotations;
 import com.orion.utils.reflect.Constructors;
@@ -71,6 +69,22 @@ public class AnnoTests {
         Valid.isFalse(Annotations.present(Methods.getAccessibleMethod(User.class, "getId"), UserAnno2.class));
         Valid.isFalse(Annotations.present(Methods.getAccessibleMethod(User.class, "setId"), UserAnno1.class));
         Valid.isFalse(Annotations.present(Methods.getAccessibleMethod(User.class, "isOk"), UserAnno1.class, UserAnno2.class));
+    }
+
+    @Test
+    public void getTest1() {
+        System.out.println(Annotations.getAnnotatedConstructor(Order.class, OrderAnno.class));
+        System.out.println();
+        System.out.println(Annotations.getAnnotatedFields(Order.class, OrderAnno.class));
+        System.out.println();
+        System.out.println(Annotations.getAnnotatedGetterMethods(Order.class, OrderAnno.class));
+        System.out.println();
+        System.out.println(Annotations.getAnnotatedSetterMethods(Order.class, OrderAnno.class));
+        System.out.println();
+        System.out.println(Annotations.getAnnotatedGetterMethodsMergeField(Order.class, OrderAnno.class));
+        System.out.println();
+        System.out.println(Annotations.getAnnotatedSetterMethodsMergeField(Order.class, OrderAnno.class));
+        System.out.println();
     }
 
 }

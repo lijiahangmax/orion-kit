@@ -11,9 +11,9 @@ import java.util.ServiceLoader;
  * @version 1.0.0
  * @since 2021/2/25 12:11
  */
-public class ServiceLoaderUtils {
+public class ServiceLoaders {
 
-    private ServiceLoaderUtils() {
+    private ServiceLoaders() {
     }
 
     /**

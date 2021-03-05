@@ -14,29 +14,29 @@ public class MethodTests {
 
     @Test
     public void getGetter() {
-        Methods.getAllGetterMethod(User.class).forEach(Console::trace);
+        Methods.getGetterMethods(User.class).forEach(Console::trace);
     }
 
     @Test
     public void getGetter1() {
-        Methods.getAllGetterMethodByField(User.class).forEach(Console::trace);
+        Methods.getGetterMethodsByField(User.class).forEach(Console::trace);
     }
 
     @Test
     public void getSetter() {
-        Methods.getAllSetterMethod(User.class).forEach(Console::trace);
+        Methods.getSetterMethods(User.class).forEach(Console::trace);
     }
 
     @Test
     public void getSetter1() {
-        Methods.getAllSetterMethodByField(User.class).forEach(Console::trace);
+        Methods.getSetterMethodsByField(User.class).forEach(Console::trace);
     }
 
     @Test
     public void getMethods() {
-        Methods.getMethodList(User.class).forEach(Console::trace);
+        Methods.getAccessibleMethods(User.class).forEach(Console::trace);
         System.out.println("--------");
-        Methods.getMethodMap(User.class).forEach(Console::trace);
+        Methods.getAccessibleMethodMap(User.class).forEach(Console::trace);
         System.out.println("--------");
         Methods.getStaticMethods(User.class).forEach(Console::trace);
 

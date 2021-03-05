@@ -42,7 +42,7 @@ public class FieldsTests {
     @Test
     public void getFieldTests() {
         System.out.println("------");
-        Fields.getFieldList(User.class).forEach(Console::trace);
+        Fields.getFields(User.class).forEach(Console::trace);
         System.out.println("------");
         Fields.getFieldMap(User.class).forEach(Console::trace);
         System.out.println("------");

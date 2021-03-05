@@ -29,7 +29,7 @@ public class ExcelBeanWriter<T> extends BaseExcelSheetWriter<String, T> {
     public ExcelBeanWriter(Workbook workbook, Sheet sheet, Class<T> targetClass) {
         super(workbook, sheet);
         Valid.notNull(targetClass, "target class is null");
-        this.getter = Methods.getAllGetterMethodByCache(targetClass).stream().collect(Collectors.toMap(Fields::getFieldNameByMethod, m -> m));
+        this.getter = Methods.getGetterMethodsByCache(targetClass).stream().collect(Collectors.toMap(Fields::getFieldNameByMethod, m -> m));
     }
 
     @Override

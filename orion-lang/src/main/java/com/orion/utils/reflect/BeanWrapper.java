@@ -54,7 +54,7 @@ public class BeanWrapper {
         if (bean == null) {
             return map;
         }
-        List<Method> getterMethods = Methods.getAllGetterMethodByCache(bean.getClass());
+        List<Method> getterMethods = Methods.getGetterMethodsByCache(bean.getClass());
         for (Method getterMethod : getterMethods) {
             String fieldName = Fields.getFieldNameByMethodName(getterMethod.getName());
             if (fieldMapper != null) {
@@ -129,7 +129,7 @@ public class BeanWrapper {
     public static <T> T toBean(Map<?, ?> map, Map<String, ?> fieldMapper, Class<T> clazz) {
         T t = Constructors.newInstance(Constructors.getDefaultConstructorByCache(clazz));
         for (Map.Entry<?, ?> entry : map.entrySet()) {
-            List<Method> setterMethods = Methods.getAllSetterMethodByCache(clazz);
+            List<Method> setterMethods = Methods.getSetterMethodsByCache(clazz);
             String key = Objects1.toString(entry.getKey());
             Map<String, ?> keyMap = null;
             if (fieldMapper != null) {
@@ -289,8 +289,8 @@ public class BeanWrapper {
     private static <R, T> void copy(R source, T target, Map<String, String> fieldMapper, String[] ignoreFields) {
         Valid.notNull(source, "source object is null");
         Valid.notNull(target, "target object is null");
-        List<Method> sourceGetters = Methods.getAllGetterMethodByCache(source.getClass());
-        List<Method> targetSetters = Methods.getAllSetterMethodByCache(target.getClass());
+        List<Method> sourceGetters = Methods.getGetterMethodsByCache(source.getClass());
+        List<Method> targetSetters = Methods.getSetterMethodsByCache(target.getClass());
         for (Method targetSetter : targetSetters) {
             String targetSetterName = targetSetter.getName();
             String targetFieldName = Strings.firstLower(targetSetterName.substring(3));

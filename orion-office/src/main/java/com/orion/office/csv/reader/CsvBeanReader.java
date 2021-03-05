@@ -163,9 +163,9 @@ public class CsvBeanReader<T> extends BaseCsvReader<T> {
      */
     protected void parseField() {
         // 注解field
-        List<Field> fieldList = Fields.getFieldByCache(targetClass);
+        List<Field> fieldList = Fields.getFieldsByCache(targetClass);
         // 注解method
-        List<Method> methodList = Methods.getAllSetterMethodByCache(targetClass);
+        List<Method> methodList = Methods.getSetterMethodsByCache(targetClass);
         this.setters = methodList.stream().collect(Collectors.toMap(Fields::getFieldNameByMethod, Function.identity()));
         for (Field field : fieldList) {
             this.parseColumn(Annotations.getAnnotation(field, ImportField.class),

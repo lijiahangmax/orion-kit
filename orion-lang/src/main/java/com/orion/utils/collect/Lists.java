@@ -342,6 +342,23 @@ public class Lists extends Collections {
         return true;
     }
 
+    /**
+     * 删除元素到指定大小
+     *
+     * @param list list
+     * @param size 大小
+     * @param <E>  E
+     */
+    public static <E> void removeToSize(List<E> list, int size) {
+        int oldSize = size(list);
+        if (size >= oldSize) {
+            return;
+        }
+        for (int i = size; i < oldSize; i++) {
+            list.remove(size);
+        }
+    }
+
     // --------------- getset ---------------
 
     public static <E> E get(List<E> list, int i) {

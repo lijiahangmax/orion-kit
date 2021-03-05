@@ -35,10 +35,10 @@ public class Fields {
 
     // -------------------- cache start --------------------
 
-    public static List<Field> getFieldByCache(Class<?> clazz) {
+    public static List<Field> getFieldsByCache(Class<?> clazz) {
         List<Field> fields = FIELD_CACHE.get(clazz);
         if (fields == null) {
-            FIELD_CACHE.put(clazz, fields = getFieldList(clazz));
+            FIELD_CACHE.put(clazz, fields = getFields(clazz));
         }
         return fields;
     }
@@ -46,7 +46,7 @@ public class Fields {
     public static Field getFieldByCache(Class<?> clazz, String fieldName) {
         List<Field> fields = FIELD_CACHE.get(clazz);
         if (fields == null) {
-            FIELD_CACHE.put(clazz, fields = getFieldList(clazz));
+            FIELD_CACHE.put(clazz, fields = getFields(clazz));
         }
         if (fields == null) {
             return null;
@@ -269,7 +269,7 @@ public class Fields {
      * @param clazz 反射类
      */
     public static Map<String, Field> getFieldMap(Class<?> clazz) {
-        List<Field> fieldList = getFieldList(clazz);
+        List<Field> fieldList = getFields(clazz);
         return Lists.isNotEmpty(fieldList) ? fieldList.stream().collect(Collectors.toMap(Field::getName, field -> field)) : Collections.emptyMap();
     }
 
@@ -279,7 +279,7 @@ public class Fields {
      * @param clazz 反射类
      * @return 属性
      */
-    public static List<Field> getFieldList(Class<?> clazz) {
+    public static List<Field> getFields(Class<?> clazz) {
         Valid.notNull(clazz, "field class is null");
         if (clazz.getSuperclass() != null) {
             List<Field> fieldList = Stream.of(clazz.getDeclaredFields())
@@ -290,7 +290,7 @@ public class Fields {
             // 当前类属性
             Map<String, Field> fieldMap = fieldList.stream().collect(toMap(Field::getName, identity()));
             // 父类属性
-            getFieldList(superClass).stream().filter(field -> !fieldMap.containsKey(field.getName())).forEach(fieldList::add);
+            getFields(superClass).stream().filter(field -> !fieldMap.containsKey(field.getName())).forEach(fieldList::add);
             return fieldList;
         } else {
             return new ArrayList<>();

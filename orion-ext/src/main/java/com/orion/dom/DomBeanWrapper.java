@@ -70,7 +70,7 @@ class DomBeanWrapper {
     static <T> T toBean(Element element, Map<String, Object> convertMap, Class<T> clazz) {
         T t = Constructors.newInstance(clazz);
         List<Element> elements = element.elements();
-        List<Method> setterMethod = Methods.getAllSetterMethod(clazz);
+        List<Method> setterMethod = Methods.getSetterMethods(clazz);
         Map<String, Integer> normMap = new LinkedHashMap<>();
         Map<String, Integer> childMap = new LinkedHashMap<>();
         for (Element e : elements) {

@@ -9,9 +9,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+
+import static java.util.stream.Collectors.toMap;
 
 /**
  * 反射 注解工具类
@@ -557,6 +557,252 @@ public class Annotations {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    // -------------------- get annotated --------------------
+
+    /**
+     * 获取注释的 Constructor
+     *
+     * @param targetClass    targetClass
+     * @param annotatedClass annotatedClass
+     * @param <C>            class
+     * @param <T>            T
+     * @return map
+     */
+    public static <C, T extends Annotation> Map<Constructor<C>, T> getAnnotatedConstructor(Class<C> targetClass, Class<T> annotatedClass) {
+        Map<Constructor<C>, T> map = new LinkedHashMap<>();
+        List<Constructor<C>> constructors = Constructors.getConstructors(targetClass);
+        for (Constructor<C> c : constructors) {
+            T annotation = getAnnotation(c, annotatedClass);
+            if (annotation != null) {
+                map.put(c, annotation);
+            }
+        }
+        return map;
+    }
+
+    /**
+     * 获取注解字段
+     *
+     * @param targetClass    targetClass
+     * @param annotatedClass annotatedClass
+     * @param <T>            T
+     * @return map
+     */
+    public static <T extends Annotation> Map<Field, T> getAnnotatedFields(Class<?> targetClass, Class<T> annotatedClass) {
+        return getAnnotatedFields(targetClass, annotatedClass, false);
+    }
+
+    /**
+     * 获取注解字段
+     *
+     * @param targetClass    targetClass
+     * @param annotatedClass annotatedClass
+     * @param byCache        是否使用缓存
+     * @param <T>            T
+     * @return map
+     */
+    public static <T extends Annotation> Map<Field, T> getAnnotatedFields(Class<?> targetClass, Class<T> annotatedClass, boolean byCache) {
+        List<Field> fields;
+        if (byCache) {
+            fields = Fields.getFieldsByCache(targetClass);
+        } else {
+            fields = Fields.getFields(targetClass);
+        }
+        Map<Field, T> map = new LinkedHashMap<>();
+        for (Field field : fields) {
+            T annotation = getAnnotation(field, annotatedClass);
+            if (annotation != null) {
+                map.put(field, annotation);
+            }
+        }
+        return map;
+    }
+
+    /**
+     * 获取注解getter方法
+     *
+     * @param targetClass    targetClass
+     * @param annotatedClass annotatedClass
+     * @param <T>            T
+     * @return map
+     */
+    public static <T extends Annotation> Map<Method, T> getAnnotatedGetterMethods(Class<?> targetClass, Class<T> annotatedClass) {
+        return getAnnotatedGetterMethods(targetClass, annotatedClass, false);
+    }
+
+    /**
+     * 获取注解getter方法
+     *
+     * @param targetClass    targetClass
+     * @param annotatedClass annotatedClass
+     * @param byCache        是否使用缓存
+     * @param <T>            T
+     * @return map
+     */
+    public static <T extends Annotation> Map<Method, T> getAnnotatedGetterMethods(Class<?> targetClass, Class<T> annotatedClass, boolean byCache) {
+        List<Method> methods;
+        if (byCache) {
+            methods = Methods.getGetterMethodsByCache(targetClass);
+        } else {
+            methods = Methods.getGetterMethods(targetClass);
+        }
+        return getAnnotatedMethods(methods, annotatedClass);
+    }
+
+    /**
+     * 获取注解setter方法
+     *
+     * @param targetClass    targetClass
+     * @param annotatedClass annotatedClass
+     * @param <T>            T
+     * @return map
+     */
+    public static <T extends Annotation> Map<Method, T> getAnnotatedSetterMethods(Class<?> targetClass, Class<T> annotatedClass) {
+        return getAnnotatedSetterMethods(targetClass, annotatedClass, false);
+    }
+
+    /**
+     * 获取注解setter方法
+     *
+     * @param targetClass    targetClass
+     * @param annotatedClass annotatedClass
+     * @param byCache        是否使用缓存
+     * @param <T>            T
+     * @return map
+     */
+    public static <T extends Annotation> Map<Method, T> getAnnotatedSetterMethods(Class<?> targetClass, Class<T> annotatedClass, boolean byCache) {
+        List<Method> methods;
+        if (byCache) {
+            methods = Methods.getSetterMethodsByCache(targetClass);
+        } else {
+            methods = Methods.getSetterMethods(targetClass);
+        }
+        return getAnnotatedMethods(methods, annotatedClass);
+    }
+
+    /**
+     * 获取注解方法
+     *
+     * @param methods        methods
+     * @param annotatedClass annotatedClass
+     * @param <T>            T
+     * @return map
+     */
+    public static <T extends Annotation> Map<Method, T> getAnnotatedMethods(List<Method> methods, Class<T> annotatedClass) {
+        Map<Method, T> map = new LinkedHashMap<>();
+        for (Method method : methods) {
+            T annotation = getAnnotation(method, annotatedClass);
+            if (annotation != null) {
+                map.put(method, annotation);
+            }
+        }
+        return map;
+    }
+
+    /**
+     * 获取注解getter方法 合并field
+     *
+     * @param targetClass    targetClass
+     * @param annotatedClass annotatedClass
+     * @param <T>            T
+     * @return map
+     */
+    public static <T extends Annotation> Map<Method, T> getAnnotatedGetterMethodsMergeField(Class<?> targetClass, Class<T> annotatedClass) {
+        return getAnnotatedMethodsMergeField(targetClass, annotatedClass, true, false);
+    }
+
+    /**
+     * 获取注解getter方法 合并field
+     *
+     * @param targetClass    targetClass
+     * @param annotatedClass annotatedClass
+     * @param byCache        是否使用缓存
+     * @param <T>            T
+     * @return map
+     */
+    public static <T extends Annotation> Map<Method, T> getAnnotatedGetterMethodsMergeField(Class<?> targetClass, Class<T> annotatedClass, boolean byCache) {
+        return getAnnotatedMethodsMergeField(targetClass, annotatedClass, true, byCache);
+    }
+
+    /**
+     * 获取注解setter方法 合并field
+     *
+     * @param targetClass    targetClass
+     * @param annotatedClass annotatedClass
+     * @param <T>            T
+     * @return map
+     */
+    public static <T extends Annotation> Map<Method, T> getAnnotatedSetterMethodsMergeField(Class<?> targetClass, Class<T> annotatedClass) {
+        return getAnnotatedMethodsMergeField(targetClass, annotatedClass, false, false);
+    }
+
+    /**
+     * 获取注解setter方法 合并field
+     *
+     * @param targetClass    targetClass
+     * @param annotatedClass annotatedClass
+     * @param byCache        是否使用缓存
+     * @param <T>            T
+     * @return map
+     */
+    public static <T extends Annotation> Map<Method, T> getAnnotatedSetterMethodsMergeField(Class<?> targetClass, Class<T> annotatedClass, boolean byCache) {
+        return getAnnotatedMethodsMergeField(targetClass, annotatedClass, false, byCache);
+    }
+
+    /**
+     * 获取注解方法 合并field
+     *
+     * @param targetClass    targetClass
+     * @param annotatedClass annotatedClass
+     * @param isGetter       是否是getter
+     * @param byCache        是否使用缓存
+     * @param <T>            T
+     * @return map
+     */
+    private static <T extends Annotation> Map<Method, T> getAnnotatedMethodsMergeField(Class<?> targetClass, Class<T> annotatedClass, boolean isGetter, boolean byCache) {
+        Map<Method, T> map = new LinkedHashMap<>();
+        List<Field> fields = new ArrayList<>();
+        List<Method> methods = new ArrayList<>();
+        if (byCache) {
+            if (isGetter) {
+                methods = Methods.getGetterMethodsByCache(targetClass);
+            } else {
+                methods = Methods.getSetterMethodsByCache(targetClass);
+            }
+            fields = Fields.getFields(targetClass);
+        } else {
+            if (isGetter) {
+                methods = Methods.getGetterMethods(targetClass);
+            } else {
+                methods = Methods.getSetterMethods(targetClass);
+            }
+            fields = Fields.getFields(targetClass);
+        }
+        Map<String, Method> mapping = methods.stream().collect(toMap(Method::getName, s -> s));
+        for (Field field : fields) {
+            T annotation = getAnnotation(field, annotatedClass);
+            if (annotation != null) {
+                String methodName;
+                if (isGetter) {
+                    methodName = Methods.getGetterMethodNameByField(field);
+                } else {
+                    methodName = Methods.getSetterMethodNameByField(field);
+                }
+                Method method = mapping.get(methodName);
+                if (method != null) {
+                    map.put(method, annotation);
+                }
+            }
+        }
+        for (Method method : methods) {
+            T annotation = getAnnotation(method, annotatedClass);
+            if (annotation != null) {
+                map.put(method, annotation);
+            }
+        }
+        return map;
     }
 
 }

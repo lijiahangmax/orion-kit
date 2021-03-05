@@ -31,8 +31,14 @@ public class Dates {
     public static final String YMDHM1 = "yyyy/MM/dd HH/mm";
     public static final String YMDHMS1 = "yyyy/MM/dd HH/mm/ss";
     public static final String YMDHMSS1 = "yyyy/MM/dd HH/mm/ss SSS";
+    public static final String YM2 = "yyyyMM";
+    public static final String YMD2 = "yyyyMMdd";
+    public static final String YMDHM2 = "yyyyMMddHHmm";
+    public static final String YMDHMS2 = "yyyyMMddHHmmss";
+    public static final String YMDHMSS2 = "yyyyMMddHHmmssSSS";
     private static final String[] PARSE_PATTERN = {YMDHMS, YMD, YM, YMDHM, YMDHMSS};
     private static final String[] PARSE_PATTERN1 = {YMDHMS1, YMD1, YM1, YMDHM1, YMDHMSS1};
+    private static final String[] PARSE_PATTERN2 = {YMDHMS2, YMD2, YM2, YMDHM2, YMDHMSS2};
 
     private static final long WEEK_STAMP = 604800000L;
     private static final long YEAR_STAMP = 31536000000L;
@@ -334,7 +340,7 @@ public class Dates {
      * @param clearHms 是否清除HMS
      * @return 时间
      */
-    private static Date clearDay(Date d, boolean clearHms) {
+    public static Date clearDay(Date d, boolean clearHms) {
         Calendar c = Calendar.getInstance();
         c.setTime(d);
         return clearDay(c, clearHms);
@@ -347,7 +353,7 @@ public class Dates {
      * @param clearHms 是否清除HMS
      * @return 时间
      */
-    private static Date clearDay(Calendar c, boolean clearHms) {
+    public static Date clearDay(Calendar c, boolean clearHms) {
         c.set(Calendar.DAY_OF_MONTH, 1);
         if (clearHms) {
             c.set(Calendar.HOUR_OF_DAY, 0);
@@ -458,7 +464,7 @@ public class Dates {
      * @param dayEnd 是否将时间 转化为 23:59:59
      * @return 时间
      */
-    private static Date monthDayEnd(Date d, boolean dayEnd) {
+    public static Date monthDayEnd(Date d, boolean dayEnd) {
         Calendar c = Calendar.getInstance();
         c.setTime(d);
         return monthDayEnd(c, dayEnd);
@@ -471,7 +477,7 @@ public class Dates {
      * @param dayEnd 是否将时间 转化为 23:59:59
      * @return 时间
      */
-    private static Date monthDayEnd(Calendar c, boolean dayEnd) {
+    public static Date monthDayEnd(Calendar c, boolean dayEnd) {
         c.set(Calendar.DAY_OF_MONTH, getMonthLastDay(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1));
         if (dayEnd) {
             c.set(Calendar.HOUR_OF_DAY, 23);
@@ -480,6 +486,87 @@ public class Dates {
             c.set(Calendar.MILLISECOND, 999);
         }
         return c.getTime();
+    }
+
+    /**
+     * 获取自增时间
+     *
+     * @param incr  自增时间(+ -)
+     * @param times 自增次数
+     * @return 时间
+     */
+    public static Date[] getIncrementDayDates(int incr, int times) {
+        return getIncrementDates(null, Calendar.DAY_OF_MONTH, incr, times);
+    }
+
+    /**
+     * 获取自增时间
+     *
+     * @param d     开始时间
+     * @param incr  自增时间(+ -)
+     * @param times 自增次数
+     * @return 时间
+     */
+    public static Date[] getIncrementDayDates(Date d, int incr, int times) {
+        return getIncrementDates(d, Calendar.DAY_OF_MONTH, incr, times);
+    }
+
+    /**
+     * 获取自增时间
+     *
+     * @param incr  自增时间(+ -)
+     * @param times 自增次数
+     * @return 时间
+     */
+    public static Date[] getIncrementHourDates(int incr, int times) {
+        return getIncrementDates(null, Calendar.HOUR_OF_DAY, incr, times);
+    }
+
+    /**
+     * 获取自增时间
+     *
+     * @param d     开始时间
+     * @param incr  自增时间(+ -)
+     * @param times 自增次数
+     * @return 时间
+     */
+    public static Date[] getIncrementHourDates(Date d, int incr, int times) {
+        return getIncrementDates(d, Calendar.HOUR_OF_DAY, incr, times);
+    }
+
+    /**
+     * 获取自增时间
+     *
+     * @param field 时间字段
+     * @param incr  自增时间(+ -)
+     * @param times 自增次数
+     * @return 时间
+     */
+    public static Date[] getIncrementDates(int field, int incr, int times) {
+        return getIncrementDates(null, field, incr, times);
+    }
+
+    /**
+     * 获取自增时间
+     *
+     * @param d     开始时间
+     * @param field 时间字段
+     * @param incr  自增时间(+ -)
+     * @param times 自增次数
+     * @return 时间
+     */
+    public static Date[] getIncrementDates(Date d, int field, int incr, int times) {
+        Date[] dates = new Date[times];
+        Calendar c = Calendar.getInstance();
+        if (d != null) {
+            c.setTime(d);
+        }
+        dates[0] = c.getTime();
+        for (int i = 0; i < times - 1; i++) {
+            c.add(field, incr);
+            dates[i + 1] = c.getTime();
+        }
+        return dates;
     }
 
     /**
@@ -603,8 +690,8 @@ public class Dates {
         if (Strings.isBlank(d)) {
             return null;
         }
+        String pattern = null;
         if (d.contains("-")) {
-            String pattern = null;
             for (String s : PARSE_PATTERN) {
                 if (d.length() == s.length()) {
                     pattern = s;
@@ -615,8 +702,17 @@ public class Dates {
                 return parse(d, pattern);
             }
         } else if (d.contains("/")) {
-            String pattern = null;
             for (String s : PARSE_PATTERN1) {
+                if (d.length() == s.length()) {
+                    pattern = s;
+                    break;
+                }
+            }
+            if (pattern != null) {
+                return parse(d, pattern);
+            }
+        } else if (Strings.isNumber(d)) {
+            for (String s : PARSE_PATTERN2) {
                 if (d.length() == s.length()) {
                     pattern = s;
                     break;
@@ -1625,8 +1721,8 @@ public class Dates {
      */
     public static TemporalAccessor parser(String d) {
         TemporalAccessor r = null;
+        String pattern = null;
         if (d.contains("-")) {
-            String pattern = null;
             for (String s : PARSE_PATTERN) {
                 if (d.length() == s.length()) {
                     pattern = s;
@@ -1637,8 +1733,17 @@ public class Dates {
                 return parser(d, pattern);
             }
         } else if (d.contains("/")) {
-            String pattern = null;
             for (String s : PARSE_PATTERN1) {
+                if (d.length() == s.length()) {
+                    pattern = s;
+                    break;
+                }
+            }
+            if (pattern != null) {
+                return parser(d, pattern);
+            }
+        } else if (Strings.isNumber(d)) {
+            for (String s : PARSE_PATTERN2) {
                 if (d.length() == s.length()) {
                     pattern = s;
                     break;

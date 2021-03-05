@@ -44,9 +44,9 @@ public class ExportColumnAnalysis implements Analysable {
     @Override
     public void analysis() {
         // 注解field
-        List<Field> fieldList = Fields.getFieldByCache(targetClass);
+        List<Field> fieldList = Fields.getFieldsByCache(targetClass);
         // 注解method
-        List<Method> methodList = Methods.getAllGetterMethodByCache(targetClass);
+        List<Method> methodList = Methods.getGetterMethodsByCache(targetClass);
         for (Field field : fieldList) {
             this.analysisColumn(Annotations.getAnnotation(field, ExportField.class),
                     Annotations.getAnnotation(field, ExportFont.class),

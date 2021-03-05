@@ -211,7 +211,7 @@ public class Enums {
      * @return 字段名
      */
     public static List<String> getFields(Class<? extends Enum<?>> clazz) {
-        return Fields.getFieldList(clazz)
+        return Fields.getFields(clazz)
                 .stream()
                 .filter(field -> !field.getType().isEnum())
                 .filter(field -> !field.getName().contains("$VALUES"))

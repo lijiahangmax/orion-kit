@@ -44,9 +44,9 @@ public class ReaderColumnAnalysis implements Analysable {
     @Override
     public void analysis() {
         // 扫描setter
-        List<Method> setterMethodList = Methods.getAllSetterMethod(this.targetClass);
+        List<Method> setterMethodList = Methods.getSetterMethodsByCache(this.targetClass);
         // 扫描field
-        List<Field> fieldList = Fields.getFieldList(this.targetClass);
+        List<Field> fieldList = Fields.getFieldsByCache(this.targetClass);
         for (Field field : fieldList) {
             this.analysisColumn(Annotations.getAnnotation(field, ImportField.class),
                     Annotations.getAnnotation(field, ImportIgnore.class),
