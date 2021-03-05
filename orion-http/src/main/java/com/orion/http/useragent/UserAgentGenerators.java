@@ -1,0 +1,121 @@
+package com.orion.http.useragent;
+
+import com.orion.utils.Strings;
+import com.orion.utils.random.Randoms;
+
+/**
+ * UA 生成器
+ *
+ * @author ljh15
+ * @version 1.0.0
+ * @since 2021/3/6 0:06
+ */
+public class UserAgentGenerators {
+
+    /**
+     * 浏览器特性
+     */
+    private static final String[] BROWSER_FEATURES = {"Mozilla/4.0", "Mozilla/5.0"};
+
+    /**
+     * 浏览器特性
+     * N: 表示无安全加密
+     * I: 表示弱安全加密
+     * U: 表示强安全加密
+     */
+    private static final String[] SYSTEM_GROUP = {"Windows; U; Windows NT 6.1",
+            "Windows NT 6.1; rv:2.0.1",
+            "Windows NT 6.1; WOW64",
+            "Windows NT 10.0; WOW64",
+            "Windows NT 10.0; WOW64; x64",
+            "iPhone; CPU iPhone OS 8_0_2 like Mac OS X",
+            "iPad; CPU OS 8_1_3 like Mac OS X",
+            "Macintosh; Intel Mac OS X 10.6.8; U",
+            "Macintosh; Intel Mac OS X 10.6",
+            "Macintosh; Intel Mac OS X; rv:10.0",
+            "X11; U; Linux x86_64",
+            "X11; Linux x86_64; rv:10.0",
+            "Android; Mobile; rv:40.0",
+            "Android; Tablet; rv:40.0"};
+
+    /**
+     * 渲染引擎
+     * Gecko WebKit KHTML
+     */
+    private static final String[] BROWSER_ENGINE = {"AppleWebKit/537.36 (KHTML, like Gecko)",
+            "AppleWebKit/600.1.4 (KHTML, like Gecko)",
+            "AppleWebKit/533.20.25 (KHTML, like Gecko)",
+            "Gecko/20100101",
+            "Gecko/20130331",
+            "Gecko/14.0",
+            "Gecko/40.0",
+            "Gecko/44.0"};
+
+    /**
+     * 浏览器版本
+     */
+    private static final String[] BROWSER_VERSION = {"Chrome/78.0.3904.108",
+            "Chrome/46.0.2486.0",
+            "Chrome/86.0.4240.111",
+            "Chrome/88.0.4324.182",
+            "Safari/537.36",
+            "Safari/600.1.4",
+            "Safari/7534.48.3",
+            "Version/5.1",
+            "Version/8.0",
+            "Mobile/12A366",
+            "Mobile/12B466",
+            "Edge/88.0.705.81",
+            "Edge/13.10586",
+            "Mobile Safari/533.1",
+            "Firefox/21.0",
+            "Firefox/40.0",
+            "Firefox/44.0",
+            "Firefox/72.0"};
+
+    private static final int FIRE_FOX_VERSION_NUM = 4;
+
+    private static final String GECKO = "Gecko";
+
+    /**
+     * 生成UA
+     *
+     * @return UA
+     */
+    public static String generator() {
+        StringBuilder ua = new StringBuilder();
+        // feat
+        int feat = Randoms.randomInt(0, 10);
+        if (feat == 0) {
+            ua.append(BROWSER_FEATURES[0]);
+        } else {
+            ua.append(BROWSER_FEATURES[1]);
+        }
+        // group
+        ua.append(Strings.SPACE)
+                .append("(")
+                .append(SYSTEM_GROUP[Randoms.randomInt(0, SYSTEM_GROUP.length)])
+                .append(")")
+                .append(Strings.SPACE);
+        // engine
+        String engine = BROWSER_ENGINE[Randoms.randomInt(0, BROWSER_ENGINE.length)];
+        ua.append(engine).append(Strings.SPACE);
+        if (engine.startsWith(GECKO)) {
+            ua.append(BROWSER_VERSION[Randoms.randomInt(BROWSER_VERSION.length - FIRE_FOX_VERSION_NUM, BROWSER_VERSION.length)]);
+            return ua.toString();
+        }
+        // version
+        int versionNum = Randoms.randomInt(2);
+        if (versionNum == 0) {
+            // 1
+            ua.append(BROWSER_VERSION[Randoms.randomInt(0, BROWSER_VERSION.length - FIRE_FOX_VERSION_NUM)]);
+        } else if (versionNum == 1) {
+            // 2
+            ua.append(BROWSER_VERSION[Randoms.randomInt(0, BROWSER_VERSION.length - FIRE_FOX_VERSION_NUM)])
+                    .append(Strings.SPACE)
+                    .append(BROWSER_VERSION[Randoms.randomInt(0, BROWSER_VERSION.length - FIRE_FOX_VERSION_NUM)]);
+        }
+        return ua.toString();
+    }
+
+}

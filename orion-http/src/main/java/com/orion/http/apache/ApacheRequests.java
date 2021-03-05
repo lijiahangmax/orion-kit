@@ -2,8 +2,8 @@ package com.orion.http.apache;
 
 import com.orion.http.apache.file.ApacheDownload;
 import com.orion.http.apache.file.ApacheUpload;
-import com.orion.http.common.HttpContentType;
-import com.orion.http.common.HttpMethod;
+import com.orion.http.support.HttpContentType;
+import com.orion.http.support.HttpMethod;
 import org.apache.http.impl.client.CloseableHttpClient;
 
 import java.util.Map;
@@ -38,7 +38,9 @@ public class ApacheRequests {
      * @return response
      */
     public static ApacheResponse get(String url, Map<String, String> params) {
-        return new ApacheRequest(url).queryParams(params).await();
+        ApacheRequest request = new ApacheRequest(url);
+        request.queryParams(params);
+        return request.await();
     }
 
     /**
@@ -48,7 +50,9 @@ public class ApacheRequests {
      * @return response
      */
     public static ApacheResponse post(String url) {
-        return new ApacheRequest(url).method(HttpMethod.POST).await();
+        ApacheRequest request = new ApacheRequest(url);
+        request.method(HttpMethod.POST);
+        return request.await();
     }
 
     /**
@@ -59,7 +63,11 @@ public class ApacheRequests {
      * @return response
      */
     public static ApacheResponse post(String url, byte[] body) {
-        return new ApacheRequest(url).method(HttpMethod.POST).contentType(HttpContentType.APPLICATION_JSON).body(body).await();
+        ApacheRequest request = new ApacheRequest(url);
+        request.method(HttpMethod.POST)
+                .contentType(HttpContentType.APPLICATION_JSON)
+                .body(body);
+        return request.await();
     }
 
     /**
@@ -70,7 +78,11 @@ public class ApacheRequests {
      * @return response
      */
     public static ApacheResponse post(String url, String body) {
-        return new ApacheRequest(url).method(HttpMethod.POST).contentType(HttpContentType.APPLICATION_JSON).body(body).await();
+        ApacheRequest request = new ApacheRequest(url);
+        request.method(HttpMethod.POST)
+                .contentType(HttpContentType.APPLICATION_JSON)
+                .body(body);
+        return request.await();
     }
 
     /**
@@ -82,7 +94,11 @@ public class ApacheRequests {
      * @return response
      */
     public static ApacheResponse post(String url, String contentType, byte[] body) {
-        return new ApacheRequest(url).method(HttpMethod.POST).contentType(contentType).body(body).await();
+        ApacheRequest request = new ApacheRequest(url);
+        request.method(HttpMethod.POST)
+                .contentType(contentType)
+                .body(body);
+        return request.await();
     }
 
     /**
@@ -94,7 +110,11 @@ public class ApacheRequests {
      * @return response
      */
     public static ApacheResponse post(String url, String contentType, String body) {
-        return new ApacheRequest(url).method(HttpMethod.POST).contentType(contentType).body(body).await();
+        ApacheRequest request = new ApacheRequest(url);
+        request.method(HttpMethod.POST)
+                .contentType(contentType)
+                .body(body);
+        return request.await();
     }
 
     /**
@@ -112,7 +132,9 @@ public class ApacheRequests {
      * @return post
      */
     public static ApacheRequest post() {
-        return new ApacheRequest().method(HttpMethod.POST);
+        ApacheRequest request = new ApacheRequest();
+        request.method(HttpMethod.POST);
+        return request;
     }
 
     /**

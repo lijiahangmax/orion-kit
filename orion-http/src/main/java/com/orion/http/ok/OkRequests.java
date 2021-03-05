@@ -1,12 +1,12 @@
 package com.orion.http.ok;
 
-import com.orion.http.common.HttpContentType;
-import com.orion.http.common.HttpMethod;
 import com.orion.http.ok.file.OkAsyncDownload;
 import com.orion.http.ok.file.OkDownload;
 import com.orion.http.ok.file.OkUpload;
 import com.orion.http.ok.ws.OkWebSocketClient;
 import com.orion.http.ok.ws.OkWebSocketServer;
+import com.orion.http.support.HttpContentType;
+import com.orion.http.support.HttpMethod;
 import okhttp3.OkHttpClient;
 
 import java.net.InetAddress;
@@ -42,7 +42,9 @@ public class OkRequests {
      * @return response
      */
     public static OkResponse get(String url, Map<String, String> params) {
-        return new OkRequest(url).queryParams(params).await();
+        OkRequest request = new OkRequest(url);
+        request.queryParams(params);
+        return request.await();
     }
 
     /**
@@ -52,7 +54,9 @@ public class OkRequests {
      * @return response
      */
     public static OkResponse post(String url) {
-        return new OkRequest(url).method(HttpMethod.POST).await();
+        OkRequest request = new OkRequest(url);
+        request.method(HttpMethod.POST);
+        return request.await();
     }
 
     /**
@@ -63,7 +67,11 @@ public class OkRequests {
      * @return response
      */
     public static OkResponse post(String url, byte[] body) {
-        return new OkRequest(url).method(HttpMethod.POST).contentType(HttpContentType.APPLICATION_JSON).body(body).await();
+        OkRequest request = new OkRequest(url);
+        request.method(HttpMethod.POST)
+                .contentType(HttpContentType.APPLICATION_JSON)
+                .body(body);
+        return request.await();
     }
 
     /**
@@ -74,7 +82,11 @@ public class OkRequests {
      * @return response
      */
     public static OkResponse post(String url, String body) {
-        return new OkRequest(url).method(HttpMethod.POST).contentType(HttpContentType.APPLICATION_JSON).body(body).await();
+        OkRequest request = new OkRequest(url);
+        request.method(HttpMethod.POST)
+                .contentType(HttpContentType.APPLICATION_JSON)
+                .body(body);
+        return request.await();
     }
 
     /**
@@ -86,7 +98,11 @@ public class OkRequests {
      * @return response
      */
     public static OkResponse post(String url, String contentType, byte[] body) {
-        return new OkRequest(url).method(HttpMethod.POST).contentType(contentType).body(body).await();
+        OkRequest request = new OkRequest(url);
+        request.method(HttpMethod.POST)
+                .contentType(contentType)
+                .body(body);
+        return request.await();
     }
 
     /**
@@ -98,7 +114,11 @@ public class OkRequests {
      * @return response
      */
     public static OkResponse post(String url, String contentType, String body) {
-        return new OkRequest(url).method(HttpMethod.POST).contentType(contentType).body(body).await();
+        OkRequest request = new OkRequest(url);
+        request.method(HttpMethod.POST)
+                .contentType(contentType)
+                .body(body);
+        return request.await();
     }
 
     /**
@@ -109,7 +129,10 @@ public class OkRequests {
      * @return response
      */
     public static OkResponse post(String url, Map<String, String> formParts) {
-        return new OkRequest(url).method(HttpMethod.POST).formParts(formParts).await();
+        OkRequest request = new OkRequest(url);
+        request.method(HttpMethod.POST)
+                .formParts(formParts);
+        return request.await();
     }
 
     /**
@@ -127,7 +150,9 @@ public class OkRequests {
      * @return post
      */
     public static OkRequest post() {
-        return new OkRequest().method(HttpMethod.POST);
+        OkRequest request = new OkRequest();
+        request.method(HttpMethod.POST);
+        return request;
     }
 
     /**

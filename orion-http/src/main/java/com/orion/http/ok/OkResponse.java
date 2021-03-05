@@ -1,7 +1,7 @@
 package com.orion.http.ok;
 
 import com.orion.able.SafeCloseable;
-import com.orion.http.common.HttpCookie;
+import com.orion.http.support.HttpCookie;
 import com.orion.lang.mutable.MutableString;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;

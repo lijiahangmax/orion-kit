@@ -1,9 +1,10 @@
 package com.orion.http.ok.file;
 
 import com.orion.constant.Const;
-import com.orion.http.common.HttpContentType;
-import com.orion.http.common.HttpCookie;
-import com.orion.http.common.HttpMethod;
+import com.orion.http.support.HttpContentType;
+import com.orion.http.support.HttpCookie;
+import com.orion.http.support.HttpMethod;
+import com.orion.http.useragent.StandardUserAgent;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.Threads;
@@ -477,7 +478,7 @@ public class OkAsyncDownload {
         if (this.headers == null) {
             this.headers = new LinkedHashMap<>();
         }
-        this.headers.put("User-Agent", value);
+        this.headers.put(StandardUserAgent.USER_AGENT, value);
         return this;
     }
 

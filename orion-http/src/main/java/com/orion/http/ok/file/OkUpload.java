@@ -1,8 +1,9 @@
 package com.orion.http.ok.file;
 
-import com.orion.http.common.HttpCookie;
-import com.orion.http.common.HttpUploadPart;
 import com.orion.http.ok.OkResponse;
+import com.orion.http.support.HttpCookie;
+import com.orion.http.support.HttpUploadPart;
+import com.orion.http.useragent.StandardUserAgent;
 import com.orion.utils.Strings;
 import com.orion.utils.Urls;
 import com.orion.utils.collect.Lists;
@@ -250,7 +251,7 @@ public class OkUpload {
         if (this.headers == null) {
             this.headers = new LinkedHashMap<>();
         }
-        this.headers.put("User-Agent", value);
+        this.headers.put(StandardUserAgent.USER_AGENT, value);
         return this;
     }
 

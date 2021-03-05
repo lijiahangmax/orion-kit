@@ -1,6 +1,6 @@
 package com.orion.http.apache;
 
-import com.orion.http.common.HttpCookie;
+import com.orion.http.support.HttpCookie;
 import com.orion.lang.collect.MutableArrayList;
 import com.orion.lang.mutable.MutableString;
 import com.orion.utils.Arrays1;
