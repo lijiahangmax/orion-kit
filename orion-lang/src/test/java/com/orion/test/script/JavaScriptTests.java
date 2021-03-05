@@ -6,6 +6,7 @@ import com.orion.utils.script.Scripts;
 import org.junit.Test;
 
 import javax.script.ScriptEngine;
+import java.math.BigDecimal;
 
 /**
  * @author ljh15
@@ -46,6 +47,15 @@ public class JavaScriptTests {
     public void eval() {
         System.out.println(Scripts.eval("1+2"));
         System.out.println(Scripts.eval("parseInt(a)+parseInt(b)", Maps.of("a", "1", "b", "2")));
+
+        Exp e = new Exp();
+        e.setId(1);
+        e.setName("whh");
+        e.setNum(BigDecimal.valueOf(2));
+        e.setPrice(BigDecimal.valueOf(10));
+        System.out.println(Scripts.eval("js", "'用户:' + id + ' 名称: ' + name + ' 总金额: ' + (num * price)", e));
+        System.out.println(Scripts.eval("js", "function a(){return 1} a();", e));
+
     }
 
 }

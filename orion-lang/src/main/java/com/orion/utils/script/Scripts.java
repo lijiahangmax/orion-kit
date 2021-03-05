@@ -4,8 +4,12 @@ import com.orion.exception.ScriptExecuteException;
 import com.orion.lang.collect.ConcurrentReferenceHashMap;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
+import com.orion.utils.reflect.Annotations;
+import com.orion.utils.reflect.Methods;
 
 import javax.script.*;
+import java.lang.reflect.Method;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -177,6 +181,42 @@ public class Scripts {
     public static Object eval(ScriptEngine engine, String script, ScriptContext context) {
         try {
             return engine.eval(script, context);
+        } catch (ScriptException e) {
+            throw Exceptions.script(e);
+        }
+    }
+
+    /**
+     * 执行脚本
+     *
+     * @param engine 引擎
+     * @param script 脚本
+     * @param args   参数
+     * @param <T>    T
+     * @return 脚本结果
+     */
+    public static <T> Object eval(String engine, String script, T args) {
+        return eval(createScript(engine), script, args);
+    }
+
+    /**
+     * 执行脚本
+     *
+     * @param engine 引擎
+     * @param script 脚本
+     * @param args   参数
+     * @param <T>    T
+     * @return 脚本结果
+     */
+    public static <T> Object eval(ScriptEngine engine, String script, T args) {
+        Valid.notNull(args, "eval args is null");
+        try {
+            Map<Method, Bind> methods = Annotations.getAnnotatedGetterMethodsMergeField(args.getClass(), Bind.class, true);
+            Map<String, Object> binds = new LinkedHashMap<>();
+            methods.forEach((m, a) -> {
+                binds.put(a.value(), Methods.invokeMethod(args, m));
+            });
+            return engine.eval(script, new SimpleBindings(binds));
         } catch (ScriptException e) {
             throw Exceptions.script(e);
         }
