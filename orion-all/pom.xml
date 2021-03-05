@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.orion.kit</groupId>
         <artifactId>orion-kit</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -18,63 +18,63 @@
         <dependency>
             <groupId>com.orion.kit</groupId>
             <artifactId>orion-lang</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${orion.lang.version}</version>
         </dependency>
 
         <!-- ext -->
         <dependency>
             <groupId>com.orion.kit</groupId>
             <artifactId>orion-ext</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${orion.ext.version}</version>
         </dependency>
 
         <!-- log -->
         <dependency>
             <groupId>com.orion.kit</groupId>
             <artifactId>orion-log</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${orion.log.version}</version>
         </dependency>
 
         <!-- office -->
         <dependency>
             <groupId>com.orion.kit</groupId>
             <artifactId>orion-office</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${orion.office.version}</version>
         </dependency>
 
         <!-- http -->
         <dependency>
             <groupId>com.orion.kit</groupId>
             <artifactId>orion-http</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${orion.http.version}</version>
         </dependency>
 
         <!-- net -->
         <dependency>
             <groupId>com.orion.kit</groupId>
             <artifactId>orion-net</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${orion.net.version}</version>
         </dependency>
 
         <!-- web -->
         <dependency>
             <groupId>com.orion.kit</groupId>
             <artifactId>orion-web</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${orion.web.version}</version>
         </dependency>
 
         <!-- redis -->
         <dependency>
             <groupId>com.orion.kit</groupId>
             <artifactId>orion-redis</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${orion.redis.version}</version>
         </dependency>
 
         <!-- spring -->
         <dependency>
             <groupId>com.orion.kit</groupId>
             <artifactId>orion-spring</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${orion.spring.version}</version>
         </dependency>
     </dependencies>
 

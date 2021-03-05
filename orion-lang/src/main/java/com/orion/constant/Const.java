@@ -132,4 +132,6 @@ public class Const {
 
     public static final String NULL = "null";
 
+    public static final String UNKNOWN = "unknown";
+
 }

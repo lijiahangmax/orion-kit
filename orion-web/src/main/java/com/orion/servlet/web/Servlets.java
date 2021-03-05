@@ -25,7 +25,7 @@ import java.util.Map;
  */
 public class Servlets {
 
-    private static final String UA = "user-Agent";
+    private static final String USER_AGENT = "User-Agent";
 
     private Servlets() {
     }
@@ -79,8 +79,8 @@ public class Servlets {
      * @param request request
      * @return UA
      */
-    public static String getUA(HttpServletRequest request) {
-        return request.getHeader(UA);
+    public static String getUserAgent(HttpServletRequest request) {
+        return request.getHeader(USER_AGENT);
     }
 
     /**
@@ -400,8 +400,8 @@ public class Servlets {
      * @param response response
      * @return UA
      */
-    public static String getUA(HttpServletResponse response) {
-        return response.getHeader(UA);
+    public static String getUserAgent(HttpServletResponse response) {
+        return response.getHeader(USER_AGENT);
     }
 
     /**

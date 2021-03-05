@@ -102,7 +102,7 @@ public class Randoms {
     /**
      * 随机一个数字
      *
-     * @param max 最大值
+     * @param max 最大值 不包含
      * @return ignore
      */
     public static int randomInt(int max) {
@@ -112,8 +112,8 @@ public class Randoms {
     /**
      * 随机一个数字
      *
-     * @param min 最小值
-     * @param max 最大值
+     * @param min 最小值 包含
+     * @param max 最大值 不包含
      * @return ignore
      */
     public static int randomInt(int min, int max) {
@@ -132,7 +132,7 @@ public class Randoms {
     /**
      * 随机一个数字
      *
-     * @param max 最大值
+     * @param max 最大值 不包含
      * @return ignore
      */
     public static double randomDouble(double max) {
@@ -142,8 +142,8 @@ public class Randoms {
     /**
      * 随机一个数字
      *
-     * @param min 最小值
-     * @param max 最大值
+     * @param min 最小值 包含
+     * @param max 最大值 不包含
      * @return ignore
      */
     public static double randomDouble(double min, double max) {
@@ -162,7 +162,7 @@ public class Randoms {
     /**
      * 随机一个数字
      *
-     * @param max 最大值
+     * @param max 最大值 不包含
      * @return ignore
      */
     public static long randomLong(long max) {
@@ -172,8 +172,8 @@ public class Randoms {
     /**
      * 随机一个数字
      *
-     * @param min 最小值
-     * @param max 最大值
+     * @param min 最小值 包含
+     * @param max 最大值 不包含
      * @return ignore
      */
     public static long randomLong(long min, long max) {

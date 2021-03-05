@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.orion.kit</groupId>
         <artifactId>orion-kit</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -18,14 +18,14 @@
         <dependency>
             <groupId>com.orion.kit</groupId>
             <artifactId>orion-lang</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${orion.lang.version}</version>
         </dependency>
 
         <!-- log -->
         <dependency>
             <groupId>com.orion.kit</groupId>
             <artifactId>orion-log</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${orion.log.version}</version>
         </dependency>
     </dependencies>
 

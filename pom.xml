@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.orion.kit</groupId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
     <artifactId>orion-kit</artifactId>
     <name>${project.artifactId}</name>
@@ -29,6 +29,17 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.charset>UTF-8</maven.compiler.charset>
+        <orion.parent.version>1.0.0</orion.parent.version>
+        <orion.lang.version>1.0.0</orion.lang.version>
+        <orion.ext.version>1.0.0</orion.ext.version>
+        <orion.office.version>1.0.0</orion.office.version>
+        <orion.log.version>1.0.0</orion.log.version>
+        <orion.http.version>1.0.0</orion.http.version>
+        <orion.net.version>1.0.0</orion.net.version>
+        <orion.web.version>1.0.0</orion.web.version>
+        <orion.redis.version>1.0.0</orion.redis.version>
+        <orion.spring.version>1.0.0</orion.spring.version>
+        <orion.all.version>1.0.0</orion.all.version>
         <junit.version>4.12</junit.version>
         <spring.version>4.3.10.RELEASE</spring.version>
         <spring.mvc.version>4.3.10.RELEASE</spring.mvc.version>
@@ -64,6 +75,8 @@
         <python.script.version>2.7.2</python.script.version>
         <lua.script.version>3.0.1</lua.script.version>
         <groovy.script.version>3.0.4</groovy.script.version>
+        <jsoup.version>1.13.1</jsoup.version>
+        <ua.utils.version>1.21</ua.utils.version>
     </properties>
 
     <developers>

@@ -26,11 +26,6 @@ import java.util.List;
 @SuppressWarnings("ALL")
 public class LocationSeeker {
 
-    /**
-     * dat文件默认值
-     */
-    private static final String DATA_UNKNOWN = "unknown";
-
     private static final int IP_RECORD_LENGTH = 7;
     private static final byte AREA_FOLLOWED = 0x01;
     private static final byte NO_AREA = 0x2;
@@ -367,7 +362,7 @@ public class LocationSeeker {
                                         info.setCity(country.substring(0, Math.min(index + 1, country.length())));
                                     }
                                 }
-                                if (DATA_UNKNOWN.equals(info.getCity())) {
+                                if (Const.UNKNOWN.equals(info.getCity())) {
                                     index = country.indexOf('县');
                                     if (index > 0) {
                                         info.setCity(country.substring(0, Math.min(index + 1, country.length())));
