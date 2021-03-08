@@ -1,11 +1,10 @@
 package com.orion.http.support;
 
+import com.orion.constant.StandardContentType;
 import com.orion.id.UUIds;
 import com.orion.utils.io.Files1;
-import com.orion.utils.io.Streams;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -18,9 +17,14 @@ import java.io.InputStream;
 public class HttpUploadPart {
 
     /**
-     * serverKey
+     * server param
      */
-    private String key;
+    private String param;
+
+    /**
+     * 后缀
+     */
+    private String suffix;
 
     /**
      * 文件名称
@@ -30,11 +34,13 @@ public class HttpUploadPart {
     private String fileName;
 
     /**
-     * contentType 默认null
+     * contentType
      */
-    private String contentType;
+    private String contentType = StandardContentType.APPLICATION_STREAM;
 
     private File file;
+
+    private InputStream in;
 
     private byte[] bytes;
 
@@ -48,37 +54,62 @@ public class HttpUploadPart {
      */
     private int len;
 
-    private InputStream in;
-
-    public HttpUploadPart(String key) {
-        this.key = key;
+    public HttpUploadPart(String param) {
+        this.param = param;
     }
 
-    public HttpUploadPart(String key, File file) {
-        this.key = key;
+    public HttpUploadPart(String param, String suffix) {
+        this.param = param;
+        this.suffix = suffix;
+    }
+
+    public HttpUploadPart(String param, File file) {
+        this.param = param;
         this.file = file;
+        this.suffix = Files1.getSuffix(file);
     }
 
-    public HttpUploadPart(String key, byte[] bytes) {
-        this.key = key;
+    public HttpUploadPart(String param, byte[] bytes) {
+        this.param = param;
         this.bytes = bytes;
         this.len = bytes.length;
     }
 
-    public HttpUploadPart(String key, byte[] bytes, int off, int len) {
-        this.key = key;
+    public HttpUploadPart(String param, byte[] bytes, String suffix) {
+        this.param = param;
+        this.bytes = bytes;
+        this.len = bytes.length;
+        this.suffix = suffix;
+    }
+
+    public HttpUploadPart(String param, byte[] bytes, int off, int len) {
+        this.param = param;
         this.bytes = bytes;
         this.off = off;
         this.len = len;
     }
 
-    public HttpUploadPart(String key, InputStream in) {
-        this.key = key;
+    public HttpUploadPart(String param, byte[] bytes, int off, int len, String suffix) {
+        this.param = param;
+        this.bytes = bytes;
+        this.off = off;
+        this.len = len;
+        this.suffix = suffix;
+    }
+
+    public HttpUploadPart(String param, InputStream in) {
+        this.param = param;
         this.in = in;
     }
 
-    public String getKey() {
-        return key;
+    public HttpUploadPart(String param, InputStream in, String suffix) {
+        this.param = param;
+        this.in = in;
+        this.suffix = suffix;
+    }
+
+    public String getParam() {
+        return param;
     }
 
     public String getFileName() {
@@ -87,37 +118,21 @@ public class HttpUploadPart {
                 fileName = Files1.getFileName(file);
             } else {
                 fileName = UUIds.random32();
+                if (suffix != null) {
+                    fileName += suffix;
+                }
             }
         }
         return fileName;
     }
 
-    public String getContentType() {
-        return contentType;
+    public HttpUploadPart setParam(String param) {
+        this.param = param;
+        return this;
     }
 
-    public File getFile() {
-        return file;
-    }
-
-    public byte[] getBytes() {
-        return bytes;
-    }
-
-    public int getOff() {
-        return off;
-    }
-
-    public int getLen() {
-        return len;
-    }
-
-    public InputStream getIn() {
-        return in;
-    }
-
-    public HttpUploadPart setKey(String key) {
-        this.key = key;
+    public HttpUploadPart setSuffix(String suffix) {
+        this.suffix = suffix;
         return this;
     }
 
@@ -128,6 +143,11 @@ public class HttpUploadPart {
 
     public HttpUploadPart setContentType(String contentType) {
         this.contentType = contentType;
+        return this;
+    }
+
+    public HttpUploadPart setIn(InputStream in) {
+        this.in = in;
         return this;
     }
 
@@ -149,11 +169,33 @@ public class HttpUploadPart {
         return this;
     }
 
-    public HttpUploadPart setIn(InputStream in) throws IOException {
-        this.in = in;
-        this.bytes = Streams.toByteArray(in);
-        this.len = bytes.length;
-        return this;
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public String getSuffix() {
+        return suffix;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public byte[] getBytes() {
+        return bytes;
+    }
+
+    public int getOff() {
+        return off;
+    }
+
+    public int getLen() {
+        return len;
+    }
+
+    public InputStream getIn() {
+        return in;
     }
 
 }

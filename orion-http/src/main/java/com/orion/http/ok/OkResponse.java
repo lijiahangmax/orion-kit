@@ -1,12 +1,10 @@
 package com.orion.http.ok;
 
-import com.orion.able.SafeCloseable;
 import com.orion.http.support.HttpCookie;
 import com.orion.lang.mutable.MutableString;
-import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
-import com.orion.utils.io.Streams;
-import okhttp3.Call;
+import com.orion.utils.Strings;
+import com.orion.utils.Valid;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
@@ -24,52 +22,7 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2020/4/7 23:52
  */
-public class OkResponse implements Serializable, SafeCloseable {
-
-    /**
-     * 状态码
-     */
-    private int code;
-
-    /**
-     * message
-     */
-    private String message;
-
-    /**
-     * 响应体
-     */
-    private byte[] body;
-
-    /**
-     * url
-     */
-    private String url;
-
-    /**
-     * method
-     */
-    private String method;
-
-    /**
-     * tag
-     */
-    private Object tag;
-
-    /**
-     * protocol
-     */
-    private String protocol;
-
-    /**
-     * headers
-     */
-    private Map<String, List<String>> headers;
-
-    /**
-     * call
-     */
-    private Call call;
+public class OkResponse implements Serializable {
 
     /**
      * response
@@ -82,204 +35,75 @@ public class OkResponse implements Serializable, SafeCloseable {
     private Response response;
 
     /**
-     * exception
+     * 响应体
+     * <p>
+     * 如果是 {@link com.orion.http.ok.file.OkAsyncDownload} 则不能获取body
+     */
+    private byte[] body;
+
+    /**
+     * 用于异步 exception
      */
     private Exception exception;
 
     /**
-     * OkHttp Request
+     * 用于异步 是否已经执行完毕
      */
-    private OkRequest okRequest;
-
-    /**
-     * 是否已经执行完毕
-     */
-    private boolean done = true;
+    private volatile boolean done;
 
     /**
      * 用于异步
      */
-    OkResponse() {
-        done = false;
+    public OkResponse(Request request) {
+        this.done = false;
+        this.request = request;
     }
 
     public OkResponse(Request request, Response response) {
-        this(request, response, null);
-    }
-
-    public OkResponse(Request request, Exception exception) {
-        this(request, null, exception);
-    }
-
-    public OkResponse(Request request, Response response, Exception exception) {
-        this.request = request;
-        this.response = response;
-        this.exception = exception;
-        if (this.exception == null) {
-            if (this.request != null) {
-                this.url = this.request.url().toString();
-                this.tag = this.request.tag();
-                this.method = this.request.method();
-            }
-            if (this.response != null) {
-                this.code = this.response.code();
-                this.message = this.response.message();
-                this.headers = this.response.headers().toMultimap();
-                this.protocol = this.response.protocol().toString();
-                try {
-                    ResponseBody b;
-                    if ((b = this.response.body()) != null) {
-                        this.body = b.bytes();
-                    }
-                } catch (IOException e) {
-                    Exceptions.printStacks(e);
-                }
-            }
-        }
-    }
-
-    /**
-     * 异步请求是否执行完毕
-     *
-     * @return true完毕
-     */
-    public boolean isDone() {
-        return this.done;
-    }
-
-    /**
-     * 是否执行失败
-     *
-     * @return true失败
-     */
-    public boolean isError() {
-        return this.exception != null;
-    }
-
-    /**
-     * 请求是否成功
-     *
-     * @return true成功
-     */
-    public boolean isOk() {
-        return this.code >= 200 && this.code < 400;
-    }
-
-    /**
-     * call
-     *
-     * @param call call
-     * @return this
-     */
-    public OkResponse call(Call call) {
-        this.call = call;
-        return this;
-    }
-
-    /**
-     * done
-     *
-     * @return this
-     */
-    protected OkResponse done() {
         this.done = true;
-        if (this.exception == null) {
-            if (this.request != null) {
-                this.url = this.request.url().toString();
-                this.tag = this.request.tag();
-                this.method = this.request.method();
-            }
-            if (this.response != null) {
-                this.code = this.response.code();
-                this.message = this.response.message();
-                this.headers = this.response.headers().toMultimap();
-                this.protocol = this.response.protocol().toString();
-                try {
-                    ResponseBody b;
-                    if ((b = this.response.body()) != null) {
-                        this.body = b.bytes();
-                    }
-                } catch (IOException e) {
-                    Exceptions.printStacks(e);
-                }
-            }
-        }
-        return this;
-    }
-
-    /**
-     * request
-     *
-     * @param request request
-     * @return this
-     */
-    public OkResponse request(Request request) {
         this.request = request;
-        return this;
-    }
-
-    /**
-     * response
-     *
-     * @param response response
-     * @return this
-     */
-    public OkResponse response(Response response) {
         this.response = response;
-        return this;
+        this.setBody();
     }
 
-    /**
-     * exception
-     *
-     * @param exception exception
-     * @return this
-     */
-    public OkResponse exception(Exception exception) {
+    public void response(Response response) {
+        this.done = true;
+        this.response = response;
+        this.setBody();
+    }
+
+    public void responseDownload(Response response) {
+        this.done = true;
+        this.response = response;
+    }
+
+    public void error(Exception exception) {
+        this.done = true;
         this.exception = exception;
-        return this;
-    }
-
-    /**
-     * OkHttp Request
-     *
-     * @param okRequest OkHttp Request
-     * @return this
-     */
-    public OkResponse okRequest(OkRequest okRequest) {
-        this.okRequest = okRequest;
-        return this;
     }
 
     public int getCode() {
-        return code;
+        this.validDone();
+        return response.code();
     }
 
     public String getMessage() {
-        return message;
+        this.validDone();
+        return response.message();
     }
 
     public byte[] getBody() {
+        this.validDone();
         return body;
     }
 
     public String getBodyString() {
-        if (body != null) {
-            return new String(body);
-        }
-        return null;
-    }
-
-    public Call getCall() {
-        return call;
+        this.validDone();
+        return new String(body);
     }
 
     public Request getRequest() {
         return request;
-    }
-
-    public OkRequest getOkRequest() {
-        return okRequest;
     }
 
     public Response getResponse() {
@@ -291,34 +115,39 @@ public class OkResponse implements Serializable, SafeCloseable {
     }
 
     public String getUrl() {
-        return url;
+        return request.url().toString();
     }
 
     public String getMethod() {
-        return method;
+        return request.method();
     }
 
     public Object getTag() {
-        return tag;
+        return request.tag();
     }
 
     public String getProtocol() {
-        return protocol;
+        this.validDone();
+        return this.response.protocol().toString();
     }
 
     public Map<String, List<String>> getHeaders() {
-        return headers;
+        this.validDone();
+        return this.response.headers().toMultimap();
     }
 
     public List<String> getHeaders(String key) {
+        this.validDone();
         return response.headers(key);
     }
 
     public MutableString getHeader(String key) {
+        this.validDone();
         return new MutableString(response.header(key));
     }
 
     public MutableString getHeader(String key, String def) {
+        this.validDone();
         return new MutableString(response.header(key, def));
     }
 
@@ -330,24 +159,52 @@ public class OkResponse implements Serializable, SafeCloseable {
         return list;
     }
 
-    @Override
-    public void close() {
-        Streams.close(this.response);
+    /**
+     * @return 是否执行完毕
+     */
+    public boolean isDone() {
+        return this.done;
+    }
+
+    /**
+     * @return 是否执行失败
+     */
+    public boolean isError() {
+        return this.exception != null;
+    }
+
+    /**
+     * @return 是否执行完成
+     */
+    public boolean isOk() {
+        this.validDone();
+        return this.getCode() >= 200 && this.getCode() < 300;
+    }
+
+    /**
+     * 检查请求是否完毕
+     */
+    private void validDone() {
+        Valid.isTrue(done, "ok request not done");
+    }
+
+    /**
+     * 设置body
+     */
+    private void setBody() {
+        try {
+            ResponseBody b;
+            if ((b = this.response.body()) != null) {
+                this.body = b.bytes();
+            }
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime("ok response get body error", e);
+        }
     }
 
     @Override
     public String toString() {
-        return "OkHttpResult{" +
-                "code=" + code +
-                ", message='" + message + '\'' +
-                ", bodyLength=" + Arrays1.length(body) +
-                ", url='" + url + '\'' +
-                ", method='" + method + '\'' +
-                ", tag=" + tag +
-                ", protocol='" + protocol + '\'' +
-                ", headers=" + headers +
-                ", exception=" + exception +
-                ", done=" + done +
-                '}';
+        return this.getCode() + Strings.SPACE + Strings.def(this.getMessage());
     }
+
 }

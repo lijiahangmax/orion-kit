@@ -1,6 +1,7 @@
 package com.orion.http.ok;
 
 import com.orion.http.ok.file.OkAsyncDownload;
+import com.orion.http.ok.file.OkAsyncUpload;
 import com.orion.http.ok.file.OkDownload;
 import com.orion.http.ok.file.OkUpload;
 import com.orion.http.ok.ws.OkWebSocketClient;
@@ -198,7 +199,28 @@ public class OkRequests {
     }
 
     /**
-     * 上传文件
+     * 异步上传文件
+     *
+     * @param url url
+     * @return ignore
+     */
+    public static OkAsyncUpload uploadAsync(String url) {
+        return new OkAsyncUpload(url);
+    }
+
+    /**
+     * 异步上传文件
+     *
+     * @param url    url
+     * @param client client
+     * @return ignore
+     */
+    public static OkAsyncUpload uploadAsync(String url, OkHttpClient client) {
+        return new OkAsyncUpload(url, client);
+    }
+
+    /**
+     * 同步上传文件
      *
      * @param url url
      * @return ignore
@@ -208,7 +230,7 @@ public class OkRequests {
     }
 
     /**
-     * 上传文件
+     * 同步上传文件
      *
      * @param url    url
      * @param client client

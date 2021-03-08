@@ -27,22 +27,22 @@ public class OkClientConfig implements Serializable {
     /**
      * call超时时间
      */
-    private long callTimeout = 15000;
+    private long callTimeout;
 
     /**
      * 连接超时时间
      */
-    private long connectTimeout = 3000;
+    private long connectTimeout;
 
     /**
      * 读超时时间
      */
-    private long readTimeout = 15000;
+    private long readTimeout;
 
     /**
      * 写超时时间
      */
-    private long writeTimeout = 15000;
+    private long writeTimeout;
 
     /**
      * 是否开启logInterceptor
@@ -67,12 +67,12 @@ public class OkClientConfig implements Serializable {
     /**
      * 同一域名下同时访问支持的次数
      */
-    private int maxRoute = 12;
+    private int maxRoute;
 
     /**
      * 最大请求数量
      */
-    private int maxRequest = 64;
+    private int maxRequest;
 
     /**
      * 调度器线程池
@@ -84,11 +84,29 @@ public class OkClientConfig implements Serializable {
      */
     private Dispatcher dispatcher;
 
+    /**
+     * ssl factory
+     */
     private SSLSocketFactory sslSocketFactory;
 
+    /**
+     * 凭证管理器
+     */
     private X509TrustManager trustManager;
 
+    /**
+     * ssl 版本规范
+     */
     private List<ConnectionSpec> connectionSpecs;
+
+    public OkClientConfig() {
+        this.callTimeout = 15000;
+        this.connectTimeout = 3000;
+        this.readTimeout = 15000;
+        this.writeTimeout = 15000;
+        this.maxRoute = 12;
+        this.maxRequest = 64;
+    }
 
     public OkClientConfig proxy(String host, int port) {
         this.proxyHost = host;

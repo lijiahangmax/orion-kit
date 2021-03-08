@@ -28,17 +28,17 @@ public class ApacheClientConfig implements Serializable {
     /**
      * 连接超时时间
      */
-    private int connectTimeout = 3000;
+    private int connectTimeout;
 
     /**
      * socket超时时间
      */
-    private int socketTimeout = 15000;
+    private int socketTimeout;
 
     /**
      * 请求超时时间
      */
-    private int requestTimeout = 15000;
+    private int requestTimeout;
 
     /**
      * 是否开启logInterceptor
@@ -48,22 +48,22 @@ public class ApacheClientConfig implements Serializable {
     /**
      * 同一域名下同时访问支持的次数
      */
-    private int maxRoute = 12;
+    private int maxRoute;
 
     /**
      * 最大连接数
      */
-    private int maxRequest = 64;
+    private int maxRequest;
 
     /**
      * 连接存活时间
      */
-    private long connTimeToLive = -1;
+    private long connTimeToLive;
 
     /**
      * 连接存活时间单位
      */
-    private TimeUnit connTimeToLiveTimeUnit = TimeUnit.MILLISECONDS;
+    private TimeUnit connTimeToLiveTimeUnit;
 
     /**
      * UA
@@ -104,6 +104,16 @@ public class ApacheClientConfig implements Serializable {
      * SSL Socket Factory
      */
     private LayeredConnectionSocketFactory sslSocketFactory;
+
+    public ApacheClientConfig() {
+        this.connectTimeout = 3000;
+        this.socketTimeout = 15000;
+        this.requestTimeout = 15000;
+        this.maxRoute = 12;
+        this.maxRequest = 64;
+        this.connTimeToLive = -1;
+        this.connTimeToLiveTimeUnit = TimeUnit.MILLISECONDS;
+    }
 
     public ApacheClientConfig proxy(String host, int port) {
         this.proxyHost = host;

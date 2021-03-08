@@ -51,13 +51,13 @@ public enum HttpMethod {
      */
     TRACE("TRACE");
 
-    String method;
+    private String method;
 
     HttpMethod(String method) {
         this.method = method;
     }
 
-    public String getMethod() {
+    public String method() {
         return method;
     }
 
@@ -65,24 +65,29 @@ public enum HttpMethod {
      * 方法是否支持
      *
      * @param method method
-     * @param skip   是否跳过 options trace
      */
-    public static void validMethod(String method, boolean skip) {
+    public static void valid(String method) {
+        valid(method, values().length);
+    }
+
+    /**
+     * 方法是否支持
+     *
+     * @param method method
+     * @param length 判断的数量
+     */
+    public static void valid(String method, int length) {
         boolean opt = false;
-        int length = values().length;
-        if (skip) {
-            length -= 2;
-        }
         method = method.trim().toUpperCase();
         for (int i = 0; i < length; i++) {
             HttpMethod m = values()[i];
-            if (m.getMethod().equals(method)) {
+            if (m.method().equals(method)) {
                 opt = true;
                 break;
             }
         }
         if (!opt) {
-            throw Exceptions.unSupport("the method is not supported");
+            throw Exceptions.httpUnsupportedMethod("the method is not supported");
         }
     }
 

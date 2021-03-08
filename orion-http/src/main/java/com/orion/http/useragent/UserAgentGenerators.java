@@ -77,6 +77,9 @@ public class UserAgentGenerators {
 
     private static final String GECKO = "Gecko";
 
+    private UserAgentGenerators() {
+    }
+
     /**
      * 生成UA
      *

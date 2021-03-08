@@ -1,5 +1,6 @@
 package com.orion.http.apache;
 
+import com.orion.constant.StandardTlsVersion;
 import com.orion.lang.DefaultX509TrustManager;
 import com.orion.utils.Exceptions;
 import com.orion.utils.io.Streams;
@@ -21,7 +22,7 @@ public class ApacheClient {
     static {
         ClientInstance.init(new ApacheClientConfig().logInterceptor());
         try {
-            SSLContext sc = SSLContext.getInstance("TLSv1.1");
+            SSLContext sc = SSLContext.getInstance(StandardTlsVersion.TLS_1_1);
             sc.init(null, new TrustManager[]{DefaultX509TrustManager.DEFAULT_X509_TRUST_MANAGER}, null);
             ClientInstance.initSsl(new ApacheClientConfig()
                     .sslContext(sc)

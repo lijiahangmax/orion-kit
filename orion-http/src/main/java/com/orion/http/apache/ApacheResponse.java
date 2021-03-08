@@ -3,9 +3,12 @@ package com.orion.http.apache;
 import com.orion.http.support.HttpCookie;
 import com.orion.lang.collect.MutableArrayList;
 import com.orion.lang.mutable.MutableString;
-import com.orion.utils.Arrays1;
+import com.orion.utils.Strings;
 import com.orion.utils.io.Streams;
-import org.apache.http.*;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -34,16 +37,6 @@ public class ApacheResponse implements Serializable {
     private HttpResponse response;
 
     /**
-     * 状态码
-     */
-    private int code;
-
-    /**
-     * message
-     */
-    private String message;
-
-    /**
      * 响应体
      */
     private byte[] body;
@@ -58,41 +51,15 @@ public class ApacheResponse implements Serializable {
      */
     private String method;
 
-    /**
-     * protocol
-     */
-    private String protocol;
-
-    /**
-     * headers
-     */
-    private Map<String, MutableArrayList<String>> headers = new LinkedHashMap<>();
-
-    public ApacheResponse(HttpRequest request, HttpResponse response) throws IOException {
+    public ApacheResponse(String url, String method, HttpRequest request, HttpResponse response) throws IOException {
+        this.url = url;
+        this.method = method;
         this.request = request;
         this.response = response;
-        StatusLine statusLine = response.getStatusLine();
-        this.code = statusLine.getStatusCode();
-        this.message = statusLine.getReasonPhrase();
-        this.protocol = statusLine.getProtocolVersion().getProtocol();
-        for (Header header : response.getAllHeaders()) {
-            MutableArrayList<String> list = headers.computeIfAbsent(header.getName(), k -> new MutableArrayList<>());
-            list.add(header.getValue());
-        }
         HttpEntity entity = response.getEntity();
         if (entity != null) {
             this.body = Streams.toByteArray(entity.getContent());
         }
-    }
-
-    public ApacheResponse url(String url) {
-        this.url = url;
-        return this;
-    }
-
-    public ApacheResponse method(String method) {
-        this.method = method;
-        return this;
     }
 
     public HttpRequest getRequest() {
@@ -103,12 +70,21 @@ public class ApacheResponse implements Serializable {
         return response;
     }
 
+    /**
+     * 请求是否成功
+     *
+     * @return true成功
+     */
+    public boolean isOk() {
+        return this.getCode() >= 200 && this.getCode() < 300;
+    }
+
     public int getCode() {
-        return code;
+        return response.getStatusLine().getStatusCode();
     }
 
     public String getMessage() {
-        return message;
+        return response.getStatusLine().getReasonPhrase();
     }
 
     public byte[] getBody() {
@@ -131,10 +107,15 @@ public class ApacheResponse implements Serializable {
     }
 
     public String getProtocol() {
-        return protocol;
+        return response.getStatusLine().getProtocolVersion().getProtocol();
     }
 
     public Map<String, MutableArrayList<String>> getHeaders() {
+        Map<String, MutableArrayList<String>> headers = new LinkedHashMap<>();
+        for (Header header : response.getAllHeaders()) {
+            MutableArrayList<String> list = headers.computeIfAbsent(header.getName(), k -> new MutableArrayList<>());
+            list.add(header.getValue());
+        }
         return headers;
     }
 
@@ -172,15 +153,7 @@ public class ApacheResponse implements Serializable {
 
     @Override
     public String toString() {
-        return "ApacheResponse{" +
-                "code=" + code +
-                ", message='" + message + '\'' +
-                ", bodyLength=" + Arrays1.length(body) +
-                ", url='" + url + '\'' +
-                ", method='" + method + '\'' +
-                ", protocol='" + protocol + '\'' +
-                ", headers=" + headers +
-                '}';
+        return this.getCode() + Strings.SPACE + Strings.def(this.getMessage());
     }
 
 }

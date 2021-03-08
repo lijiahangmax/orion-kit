@@ -24,19 +24,21 @@ public class ApacheDownload {
     private ApacheResponse response;
 
     public ApacheDownload(String url) {
-        this.request = new ApacheRequest(url).client(null);
+        this.request = new ApacheRequest(url);
     }
 
     public ApacheDownload(String url, CloseableHttpClient client) {
-        this.request = new ApacheRequest(url).client(client);
+        this.request = new ApacheRequest(url);
+        this.request.client(client);
     }
 
     public ApacheDownload(ApacheRequest request) {
-        this.request = request.client(null);
+        this.request = request;
     }
 
     public ApacheDownload(ApacheRequest request, CloseableHttpClient client) {
-        this.request = request.client(client);
+        this.request = request;
+        this.request.client(client);
     }
 
     public ApacheDownload client(CloseableHttpClient client) {
