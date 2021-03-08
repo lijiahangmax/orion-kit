@@ -72,7 +72,7 @@ public class LineIterator implements Iterator<String>, Iterable<String>, SafeClo
 
     @Override
     public void remove() {
-        throw Exceptions.unSupport("remove unsupported on lineIterator");
+        throw Exceptions.unsupported("remove unsupported on lineIterator");
     }
 
     @Override

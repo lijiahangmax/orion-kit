@@ -99,7 +99,7 @@ public class Excels {
         if (column == 26) {
             return Const.LETTERS[25];
         }
-        String out = "";
+        String out = Strings.EMPTY;
         if (column / 26 != 0) {
             if (column % 26 == 0) {
                 out = Const.LETTERS[column / 26 - 2];

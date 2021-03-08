@@ -12,6 +12,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Map;
@@ -195,7 +196,7 @@ public class Servlets {
      * @param request request
      * @return 资源路径
      */
-    public static String getRequestURI(HttpServletRequest request) {
+    public static String getRequestUri(HttpServletRequest request) {
         return request.getRequestURI();
     }
 
@@ -205,7 +206,7 @@ public class Servlets {
      * @param request request
      * @return 全路径
      */
-    public static String getRequestURL(HttpServletRequest request) {
+    public static String getRequestUrl(HttpServletRequest request) {
         return request.getRequestURL().toString();
     }
 
@@ -462,7 +463,7 @@ public class Servlets {
      * @param key      key
      * @param value    value
      */
-    public static void setHander(HttpServletResponse response, String key, String value) {
+    public static void setHeader(HttpServletResponse response, String key, String value) {
         response.setHeader(key, value);
     }
 
@@ -472,7 +473,7 @@ public class Servlets {
      * @param response response
      * @param handler  key,value
      */
-    public static void setHanders(HttpServletResponse response, Map<String, String> handler) {
+    public static void setHeaders(HttpServletResponse response, Map<String, String> handler) {
         for (Map.Entry<String, String> entry : handler.entrySet()) {
             response.setHeader(entry.getKey(), entry.getValue());
         }
@@ -564,6 +565,46 @@ public class Servlets {
      * 将输入流设置到response的输出流
      *
      * @param response response
+     * @param bs       bs
+     * @throws IOException IOException
+     */
+    public static void transfer(HttpServletResponse response, byte[] bs) throws IOException {
+        response.setContentType("application/octet-stream");
+        Streams.transfer(Streams.toInputStream(bs), response.getOutputStream());
+    }
+
+    /**
+     * 将输入流设置到response的输出流
+     *
+     * @param response response
+     * @param bs       bs
+     * @param fileName 文件名
+     * @throws IOException IOException
+     */
+    public static void transfer(HttpServletResponse response, byte[] bs, String fileName) throws IOException {
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+        Streams.transfer(Streams.toInputStream(bs), response.getOutputStream());
+    }
+
+    /**
+     * 将输入流设置到response的输出流
+     *
+     * @param response response
+     * @param bs       bs
+     * @param fileName 文件名
+     * @throws IOException IOException
+     */
+    public static void transfer(HttpServletResponse response, byte[] bs, byte[] fileName) throws IOException {
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment;filename=" + new String(fileName, StandardCharsets.ISO_8859_1));
+        Streams.transfer(Streams.toInputStream(bs), response.getOutputStream());
+    }
+
+    /**
+     * 将输入流设置到response的输出流
+     *
+     * @param response response
      * @param in       输入流
      * @throws IOException IOException
      */
@@ -590,6 +631,20 @@ public class Servlets {
      * 将输入流设置到response的输出流
      *
      * @param response response
+     * @param in       输入流
+     * @param fileName 文件名
+     * @throws IOException IOException
+     */
+    public static void transfer(HttpServletResponse response, InputStream in, byte[] fileName) throws IOException {
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment;filename=" + new String(fileName, StandardCharsets.ISO_8859_1));
+        Streams.transfer(in, response.getOutputStream());
+    }
+
+    /**
+     * 将输入流设置到response的输出流
+     *
+     * @param response response
      * @param reader   输入流
      * @throws IOException IOException
      */
@@ -609,6 +664,20 @@ public class Servlets {
     public static void transfer(HttpServletResponse response, Reader reader, String fileName) throws IOException {
         response.setContentType("application/octet-stream");
         response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+        Streams.transfer(reader, response.getWriter());
+    }
+
+    /**
+     * 将输入流设置到response的输出流
+     *
+     * @param response response
+     * @param reader   输入流
+     * @param fileName 文件名
+     * @throws IOException IOException
+     */
+    public static void transfer(HttpServletResponse response, Reader reader, byte[] fileName) throws IOException {
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment;filename=" + new String(fileName, StandardCharsets.ISO_8859_1));
         Streams.transfer(reader, response.getWriter());
     }
 

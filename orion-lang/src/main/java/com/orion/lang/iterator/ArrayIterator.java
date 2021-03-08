@@ -73,7 +73,7 @@ public class ArrayIterator<E> implements Iterator<E>, Iterable<E>, Serializable 
 
     @Override
     public void remove() {
-        throw Exceptions.unSupport("this is a read-only iterator");
+        throw Exceptions.unsupported("this is a read-only iterator");
     }
 
     /**

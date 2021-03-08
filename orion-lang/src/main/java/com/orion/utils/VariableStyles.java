@@ -288,7 +288,7 @@ public enum VariableStyles {
      * @return ignore
      */
     public String toSmallHump(String variable) {
-        throw Exceptions.unSupport();
+        throw Exceptions.unsupported();
     }
 
     /**
@@ -298,7 +298,7 @@ public enum VariableStyles {
      * @return ignore
      */
     public String toBigHump(String variable) {
-        throw Exceptions.unSupport();
+        throw Exceptions.unsupported();
     }
 
     /**
@@ -308,7 +308,7 @@ public enum VariableStyles {
      * @return ignore
      */
     public String toSerpentine(String variable) {
-        throw Exceptions.unSupport();
+        throw Exceptions.unsupported();
     }
 
     /**
@@ -318,7 +318,7 @@ public enum VariableStyles {
      * @return ignore
      */
     public String toSpine(String variable) {
-        throw Exceptions.unSupport();
+        throw Exceptions.unsupported();
     }
 
 }

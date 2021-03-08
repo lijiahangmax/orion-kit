@@ -696,7 +696,7 @@ public class Streams {
         try {
             lineConsumer(new InputStreamReader(in), c);
         } catch (UnsupportedEncodingException e) {
-            throw Exceptions.unCoding();
+            throw Exceptions.unsupportedEncoding(e);
         }
     }
 
@@ -708,7 +708,7 @@ public class Streams {
         try {
             lineConsumer(new InputStreamReader(in, charset), c);
         } catch (UnsupportedEncodingException e) {
-            throw Exceptions.unCoding();
+            throw Exceptions.unsupportedEncoding(e);
         }
     }
 

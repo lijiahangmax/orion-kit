@@ -26,7 +26,7 @@ public class Exceptions {
     }
 
     public static void impossible() {
-        throw new RuntimeException("impossible exceptions...");
+        throw runtime("impossible exceptions...");
     }
 
     /**
@@ -325,20 +325,20 @@ public class Exceptions {
         return new IORuntimeException(s, t);
     }
 
-    public static UnsupportedEncodingRuntimeException unCoding() {
+    public static UnsupportedEncodingRuntimeException unsupportedEncoding() {
         return new UnsupportedEncodingRuntimeException();
     }
 
-    public static UnsupportedEncodingRuntimeException unCoding(Throwable t) {
+    public static UnsupportedEncodingRuntimeException unsupportedEncoding(Throwable t) {
         return new UnsupportedEncodingRuntimeException(t);
     }
 
-    public static TimeoutException unCoding(String s) {
-        return new TimeoutException(s);
+    public static UnsupportedEncodingRuntimeException unsupportedEncoding(String s) {
+        return new UnsupportedEncodingRuntimeException(s);
     }
 
-    public static TimeoutException unCoding(String s, Throwable t) {
-        return new TimeoutException(s, t);
+    public static UnsupportedEncodingRuntimeException unsupportedEncoding(String s, Throwable t) {
+        return new UnsupportedEncodingRuntimeException(s, t);
     }
 
     public static TimeoutException timeout() {
@@ -405,6 +405,38 @@ public class Exceptions {
         return new SftpException(s, t);
     }
 
+    public static HttpRequestException httpRequest() {
+        return new HttpRequestException();
+    }
+
+    public static HttpRequestException httpRequest(Throwable t) {
+        return new HttpRequestException(t);
+    }
+
+    public static HttpRequestException httpRequest(String s) {
+        return new HttpRequestException(s);
+    }
+
+    public static HttpRequestException httpRequest(String s, Throwable t) {
+        return new HttpRequestException(s, t);
+    }
+
+    public static HttpUnsupportedMethodException httpUnsupportedMethod() {
+        return new HttpUnsupportedMethodException();
+    }
+
+    public static HttpUnsupportedMethodException httpUnsupportedMethod(Throwable t) {
+        return new HttpUnsupportedMethodException(t);
+    }
+
+    public static HttpUnsupportedMethodException httpUnsupportedMethod(String s) {
+        return new HttpUnsupportedMethodException(s);
+    }
+
+    public static HttpUnsupportedMethodException httpUnsupportedMethod(String s, Throwable t) {
+        return new HttpUnsupportedMethodException(s, t);
+    }
+
     public static ParseRuntimeException parse() {
         return new ParseRuntimeException();
     }
@@ -469,19 +501,19 @@ public class Exceptions {
         return new ConvertException(s, t);
     }
 
-    public static UnsupportedOperationException unSupport() {
+    public static UnsupportedOperationException unsupported() {
         return new UnsupportedOperationException();
     }
 
-    public static UnsupportedOperationException unSupport(Throwable t) {
+    public static UnsupportedOperationException unsupported(Throwable t) {
         return new UnsupportedOperationException(t);
     }
 
-    public static UnsupportedOperationException unSupport(String s) {
+    public static UnsupportedOperationException unsupported(String s) {
         return new UnsupportedOperationException(s);
     }
 
-    public static UnsupportedOperationException unSupport(String s, Throwable t) {
+    public static UnsupportedOperationException unsupported(String s, Throwable t) {
         return new UnsupportedOperationException(s, t);
     }
 

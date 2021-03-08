@@ -62,12 +62,12 @@ public class EmptyList<E> extends AbstractList<E> implements RandomAccess, Seria
 
     @Override
     public boolean removeIf(Predicate<? super E> filter) {
-        throw Exceptions.unSupport();
+        throw Exceptions.unsupported();
     }
 
     @Override
     public void replaceAll(UnaryOperator<E> operator) {
-        throw Exceptions.unSupport();
+        throw Exceptions.unsupported();
     }
 
     @Override

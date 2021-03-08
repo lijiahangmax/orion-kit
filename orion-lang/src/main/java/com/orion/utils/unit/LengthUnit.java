@@ -231,7 +231,7 @@ public enum LengthUnit {
      * @return MM
      */
     public BigDecimal toMillimetre(BigDecimal u) {
-        throw Exceptions.unSupport();
+        throw Exceptions.unsupported();
     }
 
     /**
@@ -251,7 +251,7 @@ public enum LengthUnit {
      * @return CM
      */
     public BigDecimal toCentimeter(BigDecimal u) {
-        throw Exceptions.unSupport();
+        throw Exceptions.unsupported();
     }
 
     /**
@@ -271,7 +271,7 @@ public enum LengthUnit {
      * @return DM
      */
     public BigDecimal toDecimetre(BigDecimal u) {
-        throw Exceptions.unSupport();
+        throw Exceptions.unsupported();
     }
 
     /**
@@ -291,7 +291,7 @@ public enum LengthUnit {
      * @return M
      */
     public BigDecimal toMetre(BigDecimal u) {
-        throw Exceptions.unSupport();
+        throw Exceptions.unsupported();
     }
 
     /**
@@ -311,7 +311,7 @@ public enum LengthUnit {
      * @return KM
      */
     public BigDecimal toKilometre(BigDecimal u) {
-        throw Exceptions.unSupport();
+        throw Exceptions.unsupported();
     }
 
 }

@@ -2,7 +2,6 @@ package com.orion.utils.time.format;
 
 import java.text.FieldPosition;
 import java.text.Format;
-import java.text.ParseException;
 import java.text.ParsePosition;
 import java.util.Calendar;
 import java.util.Date;
@@ -139,7 +138,7 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
     }
 
     @Override
-    public Date parse(String source) throws ParseException {
+    public Date parse(String source) {
         return parser.parse(source);
     }
 

@@ -1,7 +1,7 @@
 package com.orion.constant;
 
 /**
- * 标准 contentType
+ * 标准 ContentType
  *
  * @author ljh15
  * @version 1.0.0

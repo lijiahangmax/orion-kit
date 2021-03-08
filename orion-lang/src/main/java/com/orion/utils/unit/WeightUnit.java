@@ -166,7 +166,7 @@ public enum WeightUnit {
      * @return MG
      */
     public BigDecimal toMilligram(BigDecimal u) {
-        throw Exceptions.unSupport();
+        throw Exceptions.unsupported();
     }
 
     /**
@@ -186,7 +186,7 @@ public enum WeightUnit {
      * @return G
      */
     public BigDecimal toGram(BigDecimal u) {
-        throw Exceptions.unSupport();
+        throw Exceptions.unsupported();
     }
 
     /**
@@ -206,7 +206,7 @@ public enum WeightUnit {
      * @return KG
      */
     public BigDecimal toKilogram(BigDecimal u) {
-        throw Exceptions.unSupport();
+        throw Exceptions.unsupported();
     }
 
     /**
@@ -226,7 +226,7 @@ public enum WeightUnit {
      * @return T
      */
     public BigDecimal toTon(BigDecimal u) {
-        throw Exceptions.unSupport();
+        throw Exceptions.unsupported();
     }
 
 }

@@ -1529,7 +1529,7 @@ public class Strings {
                 return s.getBytes();
             }
         } catch (UnsupportedEncodingException e) {
-            throw Exceptions.unCoding(e);
+            throw Exceptions.unsupportedEncoding(e);
         }
     }
 

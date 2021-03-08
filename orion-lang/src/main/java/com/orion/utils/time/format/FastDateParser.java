@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.text.DateFormatSymbols;
-import java.text.ParseException;
 import java.text.ParsePosition;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -192,22 +191,21 @@ public class FastDateParser implements DateParser, Serializable {
     }
 
     @Override
-    public Object parseObject(String source) throws ParseException {
+    public Object parseObject(String source) {
         return parse(source);
     }
 
     @Override
-    public Date parse(String source) throws ParseException {
+    public Date parse(String source) {
         ParsePosition pp = new ParsePosition(0);
         Date date = parse(source, pp);
         if (date == null) {
             // Add a note re supported date range
             if (locale.equals(JAPANESE_IMPERIAL)) {
-                throw new ParseException(
-                        "(the " + locale + " locale does not support dates before 1868 AD)\n" +
-                                "unParse date: \"" + source, pp.getErrorIndex());
+                throw Exceptions.parseDate("(the " + locale + " locale does not support dates before 1868 AD)\n" +
+                        "unParse date: \"" + source + " " + pp.getErrorIndex());
             }
-            throw new ParseException("unParse date: " + source, pp.getErrorIndex());
+            throw Exceptions.parseDate("un parse date: " + source + " " + pp.getErrorIndex());
         }
         return date;
     }

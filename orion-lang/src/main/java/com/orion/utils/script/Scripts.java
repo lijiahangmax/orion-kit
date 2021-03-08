@@ -1,6 +1,5 @@
 package com.orion.utils.script;
 
-import com.orion.exception.ScriptExecuteException;
 import com.orion.lang.collect.ConcurrentReferenceHashMap;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
@@ -68,7 +67,7 @@ public class Scripts {
             engine = MANAGER.getEngineByMimeType(type);
         }
         if (null == engine) {
-            throw Exceptions.unSupport("unsupported script type [" + type + "]");
+            throw Exceptions.unsupported("unsupported script type [" + type + "]");
         }
         return engine;
     }
@@ -260,7 +259,7 @@ public class Scripts {
         try {
             return invocable.invokeFunction(func, args);
         } catch (ScriptException | NoSuchMethodException e) {
-            throw new ScriptExecuteException(e);
+            throw Exceptions.script(e);
         }
     }
 

@@ -46,7 +46,7 @@ class GmtTimeZone extends TimeZone {
 
     @Override
     public void setRawOffset(int offsetMillis) {
-        throw Exceptions.unSupport();
+        throw Exceptions.unsupported();
     }
 
     @Override

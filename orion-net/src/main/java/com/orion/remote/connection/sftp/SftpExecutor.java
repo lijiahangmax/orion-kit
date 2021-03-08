@@ -61,7 +61,7 @@ public class SftpExecutor implements SafeCloseable {
             try {
                 this.client.setCharset(fileNameCharset);
             } catch (IOException e) {
-                throw Exceptions.unCoding(e);
+                throw Exceptions.unsupportedEncoding(e);
             }
         }
     }
@@ -86,7 +86,7 @@ public class SftpExecutor implements SafeCloseable {
         try {
             client.setCharset(charset);
         } catch (IOException e) {
-            throw Exceptions.unCoding(e);
+            throw Exceptions.unsupportedEncoding(e);
         }
         return this;
     }

@@ -369,12 +369,12 @@ public class MailMessage implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder("EML-form: [");
         sb.append(from).append("]").append(Letters.LF);
-        sb.append("  ==> to: ").append(to == null ? "[]" : to.toString()).append(" ").append(Letters.LF);
+        sb.append("  ==> to: ").append(to == null ? "[]" : to.toString()).append(Strings.SPACE).append(Letters.LF);
         if (cc != null) {
-            sb.append("  ==> cc: ").append(cc.toString()).append(" ").append(Letters.LF);
+            sb.append("  ==> cc: ").append(cc.toString()).append(Strings.SPACE).append(Letters.LF);
         }
         if (bcc != null) {
-            sb.append("  ==> bcc: ").append(bcc.toString()).append(" ").append(Letters.LF);
+            sb.append("  ==> bcc: ").append(bcc.toString()).append(Strings.SPACE).append(Letters.LF);
         }
         sb.append("  ==> title: [").append(title).append("] ").append(Letters.LF);
         return sb.toString();

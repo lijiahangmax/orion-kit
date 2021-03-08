@@ -100,47 +100,47 @@ public class SingletonMap<K, V> extends AbstractMap<K, V> implements Serializabl
 
     @Override
     public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
-        throw Exceptions.unSupport();
+        throw Exceptions.unsupported();
     }
 
     @Override
     public V putIfAbsent(K key, V value) {
-        throw Exceptions.unSupport();
+        throw Exceptions.unsupported();
     }
 
     @Override
     public boolean remove(Object key, Object value) {
-        throw Exceptions.unSupport();
+        throw Exceptions.unsupported();
     }
 
     @Override
     public boolean replace(K key, V oldValue, V newValue) {
-        throw Exceptions.unSupport();
+        throw Exceptions.unsupported();
     }
 
     @Override
     public V replace(K key, V value) {
-        throw Exceptions.unSupport();
+        throw Exceptions.unsupported();
     }
 
     @Override
     public V computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction) {
-        throw Exceptions.unSupport();
+        throw Exceptions.unsupported();
     }
 
     @Override
     public V computeIfPresent(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
-        throw Exceptions.unSupport();
+        throw Exceptions.unsupported();
     }
 
     @Override
     public V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
-        throw Exceptions.unSupport();
+        throw Exceptions.unsupported();
     }
 
     @Override
     public V merge(K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
-        throw Exceptions.unSupport();
+        throw Exceptions.unsupported();
     }
 
 }

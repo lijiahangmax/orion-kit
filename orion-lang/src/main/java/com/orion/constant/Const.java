@@ -106,6 +106,8 @@ public class Const {
 
     public static final int MS_S_10 = 1000 * 10;
 
+    public static final int MS_S_30 = 1000 * 30;
+
     public static final int MS_S_60 = 1000 * 60;
 
     // --------------- io ---------------

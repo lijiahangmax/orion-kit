@@ -91,7 +91,7 @@ public class CsvArrayReader extends BaseCsvReader<String[]> {
      */
     public CsvArrayReader capacity(int capacity) {
         if (!Arrays1.isEmpty(columns)) {
-            throw Exceptions.unSupport("if the column is set, the capacity is not supported");
+            throw Exceptions.unsupported("if the column is set, the capacity is not supported");
         }
         this.columnSize = capacity;
         return this;

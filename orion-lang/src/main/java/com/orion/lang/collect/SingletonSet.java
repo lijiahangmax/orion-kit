@@ -53,7 +53,7 @@ public class SingletonSet<E> extends AbstractSet<E> implements Serializable {
 
     @Override
     public boolean removeIf(Predicate<? super E> filter) {
-        throw Exceptions.unSupport();
+        throw Exceptions.unsupported();
     }
 
 }

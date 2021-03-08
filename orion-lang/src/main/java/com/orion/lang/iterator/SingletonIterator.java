@@ -39,7 +39,7 @@ public class SingletonIterator<E> implements Iterator<E>, Iterable<E> {
 
     @Override
     public void remove() {
-        throw Exceptions.unSupport();
+        throw Exceptions.unsupported();
     }
 
     @Override
