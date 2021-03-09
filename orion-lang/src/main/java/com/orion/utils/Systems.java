@@ -105,15 +105,15 @@ public class Systems {
     static {
         LINE_SEPARATOR = System.getProperty("line.separator", Const.LF);
         FILE_SEPARATOR = File.separator;
-        BE_UNIX = "/".equals(File.separator);
-        BE_WINDOWS = "\\".equals(File.separator);
-        USER_NAME = System.getProperty("user.name", "unknown");
+        BE_UNIX = Const.SLASH.equals(File.separator);
+        BE_WINDOWS = Const.BACKSLASH.equals(File.separator);
+        USER_NAME = System.getProperty("user.name", Const.UNKNOWN);
         FILE_ENCODING = System.getProperty("file.encoding", Const.UTF_8);
-        HOME_DIR = System.getProperty("user.home", File.separator);
-        THIS_DIR = System.getProperty("user.dir", File.separator);
-        TEMP_DIR = System.getProperty("java.io.tmpdir", File.separator);
-        OS_NAME = System.getProperty("os.name", "unknown");
-        JAVA_HOME = System.getProperty("java.home", File.separator);
+        HOME_DIR = System.getProperty("user.home", Const.ROOT);
+        THIS_DIR = System.getProperty("user.dir", Const.ROOT);
+        TEMP_DIR = System.getProperty("java.io.tmpdir", Const.ROOT);
+        OS_NAME = System.getProperty("os.name", Const.UNKNOWN);
+        JAVA_HOME = System.getProperty("java.home", Const.ROOT);
         if (BE_WINDOWS) {
             HOST_NAME = System.getenv("COMPUTERNAME");
         } else {

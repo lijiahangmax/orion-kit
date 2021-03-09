@@ -28,8 +28,6 @@ public class CookiesExt {
     public static final int ONE_DAY = 3600 * 24;
     public static final int ONE_WEEK = 3600 * 24 * 7;
 
-    private static final String PATH = "/";
-
     /**
      * 获取cookie
      *
@@ -166,9 +164,9 @@ public class CookiesExt {
         if (path != null) {
             cookie.setPath(path);
         } else {
-            cookie.setPath(PATH);
+            cookie.setPath(Const.ROOT);
         }
-        if (domain != null && !"localhost".equals(domain)) {
+        if (domain != null && !Const.LOCALHOST.equals(domain)) {
             cookie.setDomain(domain);
         }
         response.addCookie(cookie);
@@ -306,7 +304,7 @@ public class CookiesExt {
     public static void delete(HttpServletResponse response, String key) {
         Cookie cookie = new Cookie(key, null);
         cookie.setMaxAge(NO_SAVE);
-        cookie.setPath(PATH);
+        cookie.setPath(Const.ROOT);
         response.addCookie(cookie);
     }
 
@@ -320,7 +318,7 @@ public class CookiesExt {
         for (String key : keys) {
             Cookie cookie = new Cookie(key, null);
             cookie.setMaxAge(NO_SAVE);
-            cookie.setPath(PATH);
+            cookie.setPath(Const.ROOT);
             response.addCookie(cookie);
         }
     }

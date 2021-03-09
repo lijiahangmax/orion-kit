@@ -1,5 +1,6 @@
 package com.orion.utils.net;
 
+import com.orion.constant.Const;
 import com.orion.utils.Matches;
 import com.orion.utils.Strings;
 import com.orion.utils.collect.Lists;
@@ -26,7 +27,7 @@ public class IPs {
     }
 
     static {
-        String i = "127.0.0.1";
+        String i = Const.LOCALHOST_IP_V4;
         try {
             Enumeration<NetworkInterface> allNetInterfaces = NetworkInterface.getNetworkInterfaces();
             while (allNetInterfaces.hasMoreElements()) {
@@ -52,8 +53,8 @@ public class IPs {
      * @return ip地址
      */
     public static String checkIp(String ip) {
-        if (!Strings.isBlank(ip) && !"unknown".equalsIgnoreCase(ip)) {
-            return "0:0:0:0:0:0:0:1".equals(ip) ? "127.0.0.1" : ip;
+        if (!Strings.isBlank(ip) && !Const.UNKNOWN.equalsIgnoreCase(ip)) {
+            return Const.LOCALHOST_IP_V6.equals(ip) ? Const.LOCALHOST_IP_V4 : ip;
         } else {
             return null;
         }
@@ -69,13 +70,13 @@ public class IPs {
         if (Strings.isBlank(ip)) {
             return false;
         }
-        if ("localhost".equalsIgnoreCase(ip.trim())) {
+        if (Const.LOCALHOST.equalsIgnoreCase(ip.trim())) {
             return true;
         }
-        if ("0:0:0:0:0:0:0:1".equals(ip.trim())) {
+        if (Const.LOCALHOST_IP_V4.equals(ip.trim())) {
             return true;
         }
-        if ("127.0.0.1".equals(ip.trim())) {
+        if (Const.LOCALHOST_IP_V6.equals(ip.trim())) {
             return true;
         }
         for (String s : getLocalHosts().keySet()) {
@@ -141,7 +142,7 @@ public class IPs {
      * @return true内网 false外网
      */
     public static boolean isInternalIp(String ip) {
-        return isInternalIp(ipv4ToBytes(ip)) || "127.0.0.1".equals(ip) || "localhost".equals(ip);
+        return isInternalIp(ipv4ToBytes(ip)) || Const.LOCALHOST_IP_V4.equals(ip) || Const.LOCALHOST.equals(ip);
     }
 
     /**
@@ -252,7 +253,7 @@ public class IPs {
         try {
             return InetAddress.getByName(host).getHostAddress();
         } catch (Exception e) {
-            return "127.0.0.1";
+            return Const.LOCALHOST_IP_V4;
         }
     }
 
@@ -265,7 +266,7 @@ public class IPs {
         try {
             return InetAddress.getLocalHost().getHostAddress();
         } catch (Exception e) {
-            return "127.0.0.1";
+            return Const.LOCALHOST_IP_V4;
         }
     }
 
@@ -278,7 +279,7 @@ public class IPs {
         try {
             return InetAddress.getLocalHost().getHostName();
         } catch (Exception e) {
-            return "unknown";
+            return Const.UNKNOWN;
         }
     }
 

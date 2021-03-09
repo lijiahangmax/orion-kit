@@ -36,9 +36,14 @@ import java.util.regex.Pattern;
 public class SftpExecutor extends BaseExecutor {
 
     /**
+     * 分隔符
+     */
+    private static final String SEPARATOR = Const.SLASH;
+
+    /**
      * 默认缓冲区大小
      */
-    private int bufferSize = Const.BUFFER_KB_8;
+    private int bufferSize;
 
     private ChannelSftp channel;
 
@@ -54,6 +59,7 @@ public class SftpExecutor extends BaseExecutor {
     public SftpExecutor(ChannelSftp channel, String fileNameEncoding) {
         super(channel);
         this.channel = channel;
+        this.bufferSize = Const.BUFFER_KB_8;
         if (fileNameEncoding != null) {
             try {
                 channel.setFilenameEncoding(fileNameEncoding);
@@ -333,14 +339,14 @@ public class SftpExecutor extends BaseExecutor {
     public List<FileAttribute> ll(String path) {
         List<FileAttribute> list = new ArrayList<>();
         try {
-            Vector files = channel.ls(path);
+            Vector<?> files = channel.ls(path);
             for (Object l : files) {
                 ChannelSftp.LsEntry ls = (ChannelSftp.LsEntry) l;
                 String filename = ls.getFilename();
                 if (".".equals(filename) || "..".equals(filename)) {
                     continue;
                 }
-                list.add(new FileAttribute(Files1.getPath(path + "/" + filename), ls.getLongname(), ls.getAttrs()));
+                list.add(new FileAttribute(Files1.getPath(path + SEPARATOR + filename), ls.getLongname(), ls.getAttrs()));
             }
         } catch (Exception e) {
             Exceptions.printStacks(e);
@@ -889,7 +895,7 @@ public class SftpExecutor extends BaseExecutor {
                         list.add(l);
                     }
                     if (child) {
-                        list.addAll(this.listFiles(Files1.getPath(path + "/" + l.getFileName()), true, dir));
+                        list.addAll(this.listFiles(Files1.getPath(path + SEPARATOR + l.getFileName()), true, dir));
                     }
                 } else {
                     list.add(l);
@@ -926,7 +932,7 @@ public class SftpExecutor extends BaseExecutor {
                 if (l.isDirectory()) {
                     list.add(l);
                     if (child) {
-                        list.addAll(this.listDirs(Files1.getPath(path + "/" + l.getFileName()), true));
+                        list.addAll(this.listDirs(Files1.getPath(path + SEPARATOR + l.getFileName()), true));
                     }
                 }
             }
@@ -1117,7 +1123,7 @@ public class SftpExecutor extends BaseExecutor {
                     }
                 }
                 if (isDir && child) {
-                    list.addAll(this.listFilesSearch(Files1.getPath(path + "/" + fn), search, pattern, filter, type, true, dir));
+                    list.addAll(this.listFilesSearch(Files1.getPath(path + SEPARATOR + fn), search, pattern, filter, type, true, dir));
                 }
             }
         } catch (Exception e) {

@@ -1,6 +1,7 @@
 package com.orion.remote.connection.scp;
 
 import ch.ethz.ssh2.SCPClient;
+import com.orion.constant.Const;
 import com.orion.utils.Exceptions;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
@@ -20,6 +21,11 @@ import java.util.Map;
  */
 public class ScpExecutor {
 
+    /**
+     * 分隔符
+     */
+    private static final String SEPARATOR = Const.SLASH;
+
     private SCPClient client;
 
     public ScpExecutor(SCPClient client) {
@@ -36,7 +42,7 @@ public class ScpExecutor {
      * @return 是否下载成功
      */
     public boolean downloadFile(String remoteFile, String localDir) {
-        return this.downloadFile(remoteFile, new File(Files1.getPath(localDir + "/" + Files1.getFileName(remoteFile))));
+        return this.downloadFile(remoteFile, new File(Files1.getPath(localDir + SEPARATOR + Files1.getFileName(remoteFile))));
     }
 
     /**
@@ -126,7 +132,7 @@ public class ScpExecutor {
     public Map<String, Boolean> downloadFiles(String localDir, List<String> remoteFiles) {
         Map<String, Boolean> result = new HashMap<>();
         for (String remoteFile : remoteFiles) {
-            File localFile = new File(Files1.getPath(localDir + "/" + Files1.getFileName(remoteFile)));
+            File localFile = new File(Files1.getPath(localDir + SEPARATOR + Files1.getFileName(remoteFile)));
             result.put(remoteFile, this.downloadFile(remoteFile, localFile));
         }
         return result;
@@ -318,7 +324,7 @@ public class ScpExecutor {
         String path = localDir.getAbsolutePath();
         for (File file : files) {
             String filePath = file.getAbsolutePath();
-            boolean upload = this.uploadFile(file, Files1.getPath(remoteDir + "/" + filePath.substring(path.length(), filePath.length() - file.getName().length())), file.getName());
+            boolean upload = this.uploadFile(file, Files1.getPath(remoteDir + SEPARATOR + filePath.substring(path.length(), filePath.length() - file.getName().length())), file.getName());
             result.put(filePath, upload);
         }
         return result;

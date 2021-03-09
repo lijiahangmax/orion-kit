@@ -40,6 +40,11 @@ public class SftpExecutor implements SafeCloseable {
     private static final Integer DEFAULT_PERMISSIONS = 0700;
 
     /**
+     * 分隔符
+     */
+    private static final String SEPARATOR = Const.SLASH;
+
+    /**
      * SFTP客户端
      */
     private SFTPv3Client client;
@@ -247,7 +252,7 @@ public class SftpExecutor implements SafeCloseable {
                 if (".".equals(filename) || "..".equals(filename)) {
                     continue;
                 }
-                list.add(new FileAttribute(Files1.getPath(path + "/" + filename), l.longEntry, l.attributes));
+                list.add(new FileAttribute(Files1.getPath(path + SEPARATOR + filename), l.longEntry, l.attributes));
             }
             return list;
         } catch (Exception e) {
@@ -778,7 +783,7 @@ public class SftpExecutor implements SafeCloseable {
                         list.add(l);
                     }
                     if (child) {
-                        list.addAll(this.listFiles(Files1.getPath(path + "/" + fn), true, dir));
+                        list.addAll(this.listFiles(Files1.getPath(path + SEPARATOR + fn), true, dir));
                     }
                 } else {
                     list.add(l);
@@ -816,7 +821,7 @@ public class SftpExecutor implements SafeCloseable {
                 if (l.isDirectory()) {
                     list.add(l);
                     if (child) {
-                        list.addAll(this.listDirs(Files1.getPath(path + "/" + fn), true));
+                        list.addAll(this.listDirs(Files1.getPath(path + SEPARATOR + fn), true));
                     }
                 }
             }
@@ -1006,7 +1011,7 @@ public class SftpExecutor implements SafeCloseable {
                     }
                 }
                 if (isDir && child) {
-                    list.addAll(this.listFilesSearch(Files1.getPath(path + "/" + fn), search, pattern, filter, type, true, dir));
+                    list.addAll(this.listFilesSearch(Files1.getPath(path + SEPARATOR + fn), search, pattern, filter, type, true, dir));
                 }
             }
         } catch (Exception e) {

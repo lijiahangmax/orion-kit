@@ -1,6 +1,7 @@
 package com.orion.utils.io;
 
 import com.orion.able.Lockable;
+import com.orion.constant.Const;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 
@@ -300,7 +301,7 @@ public class FileLocks {
         public boolean tryLock() {
             init();
             if (!file.exists()) {
-                throw Exceptions.ioRuntime("File Not Found Error: " + file.getAbsolutePath());
+                throw Exceptions.ioRuntime("file not found error: " + file.getAbsolutePath());
             }
             if (lockFile.exists()) {
                 return true;
@@ -309,7 +310,7 @@ public class FileLocks {
                 Files1.mkdirs(lockFile.getParentFile());
                 return lockFile.createNewFile();
             } catch (Exception e) {
-                throw Exceptions.ioRuntime("Create Lock File Error: " + file.getAbsolutePath());
+                throw Exceptions.ioRuntime("create lock file error: " + file.getAbsolutePath());
             }
         }
 
@@ -329,7 +330,7 @@ public class FileLocks {
 
         private void init() {
             if (this.lockFile == null) {
-                this.lockFile = new File(this.file.getParent() + "/" + this.prefix + this.file.getName() + this.suffix);
+                this.lockFile = new File(this.file.getParent() + Const.SEPARATOR + this.prefix + this.file.getName() + this.suffix);
             }
         }
 

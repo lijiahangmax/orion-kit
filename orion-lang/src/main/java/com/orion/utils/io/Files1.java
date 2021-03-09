@@ -39,7 +39,7 @@ public class Files1 {
     /**
      * IO 临时文件夹
      */
-    private static final String IO_TEMP_DIR = File.separator + Const.ORION_DISPLAY + File.separator + ".temp" + File.separator;
+    public static final String IO_TEMP_DIR = File.separator + Const.ORION_DISPLAY + File.separator + ".temp" + File.separator;
 
     private static final String[] SIZE_UNIT = {"K", "KB", "M", "MB", "MBPS", "G", "GB", "T", "TB", "B"};
 

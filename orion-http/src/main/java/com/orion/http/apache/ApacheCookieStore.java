@@ -1,5 +1,6 @@
 package com.orion.http.apache;
 
+import com.orion.constant.Const;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.cookie.BasicClientCookie;
 
@@ -15,7 +16,7 @@ import java.util.Map;
 public class ApacheCookieStore extends BasicCookieStore {
 
     public ApacheCookieStore addCookie(String key, String value, String domain) {
-        return this.addCookie(key, value, domain, "/");
+        return this.addCookie(key, value, domain, Const.ROOT);
     }
 
     public ApacheCookieStore addCookie(String key, String value, String domain, String path) {
@@ -27,7 +28,7 @@ public class ApacheCookieStore extends BasicCookieStore {
     }
 
     public ApacheCookieStore addCookies(Map<String, String> map, String domain) {
-        return this.addCookies(map, domain, "/");
+        return this.addCookies(map, domain, Const.ROOT);
     }
 
     public ApacheCookieStore addCookies(Map<String, String> map, String domain, String path) {

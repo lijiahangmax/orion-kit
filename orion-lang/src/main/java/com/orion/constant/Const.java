@@ -51,6 +51,8 @@ public class Const {
 
     public static final String DOLLAR = "$";
 
+    public static final String DASHED = "-";
+
     public static final String SLASH = "/";
 
     public static final String BACKSLASH = "\\";
@@ -111,6 +113,12 @@ public class Const {
 
     public static final int MS_S_60 = 1000 * 60;
 
+    // --------------- file path ---------------
+
+    public static final String ROOT = SLASH;
+
+    public static final String SEPARATOR = SLASH;
+
     // --------------- io ---------------
 
     public static final String STREAM_CLOSE = "Stream closed";
@@ -131,10 +139,18 @@ public class Const {
 
     public static final String SUFFIX_ZIP = "zip";
 
+    public static final String SUFFIX_FILE = "file";
+
     // --------------- others ---------------
 
     public static final String NULL = "null";
 
     public static final String UNKNOWN = "unknown";
+
+    public static final String LOCALHOST = "localhost";
+
+    public static final String LOCALHOST_IP_V4 = "127.0.0.1";
+
+    public static final String LOCALHOST_IP_V6 = "0:0:0:0:0:0:0:1";
 
 }

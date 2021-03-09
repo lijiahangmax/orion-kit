@@ -1,5 +1,6 @@
 package com.orion.utils.reflect;
 
+import com.orion.constant.Const;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.Valid;
@@ -47,7 +48,7 @@ public class Jars {
      */
     public static JarFile getJarFile() {
         URL targetUrl = getTargetUrl();
-        if (targetUrl != null && "jar".equals(targetUrl.getProtocol())) {
+        if (targetUrl != null && Const.SUFFIX_JAR.equals(targetUrl.getProtocol())) {
             try {
                 return ((JarURLConnection) targetUrl.openConnection()).getJarFile();
             } catch (Exception e) {
@@ -82,9 +83,9 @@ public class Jars {
         String protocol = url.getProtocol();
         try {
             switch (protocol) {
-                case "jar":
+                case Const.SUFFIX_JAR:
                     return ((JarURLConnection) url.openConnection()).getJarFile();
-                case "file":
+                case Const.SUFFIX_FILE:
                     return new JarFile(url.getFile());
                 default:
                     return null;
@@ -102,7 +103,7 @@ public class Jars {
      * @return 类名
      */
     public static List<String> getClassByJar(String jarPath) {
-        Valid.notBlank(jarPath, "Jar Path is null");
+        Valid.notBlank(jarPath, "jar path is null");
         List<String> classes = new ArrayList<>();
         try (JarFile jarFile = new JarFile(jarPath)) {
             return getClassByJar(jarFile);
@@ -119,7 +120,7 @@ public class Jars {
      * @return 类名
      */
     public static List<String> getClassByJar(JarFile jarFile) {
-        Valid.notNull(jarFile, "Jar File is null");
+        Valid.notNull(jarFile, "jar file is null");
         List<String> classes = new ArrayList<>();
         Enumeration<JarEntry> entries = jarFile.entries();
         while (entries.hasMoreElements()) {
@@ -138,7 +139,7 @@ public class Jars {
      * @return 资源名称
      */
     public static List<String> getSourceByJar(String jarPath) {
-        Valid.notBlank(jarPath, "Jar Path is null");
+        Valid.notBlank(jarPath, "jar path is null");
         List<String> sources = new ArrayList<>();
         try (JarFile jarFile = new JarFile(jarPath)) {
             Enumeration<JarEntry> entries = jarFile.entries();
@@ -161,7 +162,7 @@ public class Jars {
      * @return 资源名称
      */
     public static List<String> getSourceByJar(JarFile jarFile) {
-        Valid.notNull(jarFile, "jar File is null");
+        Valid.notNull(jarFile, "jar file is null");
         List<String> sources = new ArrayList<>();
         Enumeration<JarEntry> entries = jarFile.entries();
         while (entries.hasMoreElements()) {
@@ -181,7 +182,7 @@ public class Jars {
      * @return 资源名称
      */
     public static List<String> getSourceByJar(String jarPath, String suffix) {
-        Valid.notBlank(jarPath, "Jar Path is null");
+        Valid.notBlank(jarPath, "jar path is null");
         List<String> sources = new ArrayList<>();
         try (JarFile jarFile = new JarFile(jarPath)) {
             Enumeration<JarEntry> entries = jarFile.entries();
@@ -205,7 +206,7 @@ public class Jars {
      * @return 资源名称
      */
     public static List<String> getSourceByJar(JarFile jarFile, String suffix) {
-        Valid.notNull(jarFile, "Jar File is null");
+        Valid.notNull(jarFile, "jar file is null");
         List<String> sources = new ArrayList<>();
         Enumeration<JarEntry> entries = jarFile.entries();
         while (entries.hasMoreElements()) {

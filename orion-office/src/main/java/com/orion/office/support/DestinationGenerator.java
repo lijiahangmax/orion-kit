@@ -1,6 +1,7 @@
 package com.orion.office.support;
 
 import com.orion.able.SafeCloseable;
+import com.orion.constant.Const;
 import com.orion.utils.Strings;
 import com.orion.utils.Valid;
 import com.orion.utils.collect.Lists;
@@ -150,7 +151,7 @@ public abstract class DestinationGenerator implements SafeCloseable {
      * @return ignore
      */
     protected OutputStream generatorOutputStream() {
-        String path = Files1.getPath(generatorPathDir + "/" + generatorBaseName + generatorNameSuffix + (++currentDestIndex) + "." + suffix);
+        String path = Files1.getPath(generatorPathDir + Const.SEPARATOR + generatorBaseName + generatorNameSuffix + (++currentDestIndex) + "." + suffix);
         Files1.touch(path);
         return Files1.openOutputStreamSafe(path);
     }
