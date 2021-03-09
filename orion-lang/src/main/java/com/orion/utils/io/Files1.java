@@ -47,32 +47,14 @@ public class Files1 {
 
     // -------------------- attr --------------------
 
-    /**
-     * 获取文件属性
-     *
-     * @param file 文件
-     * @return FileAttribute
-     */
     public static FileAttribute getAttribute(String file) {
         return getAttribute(Paths.get(file));
     }
 
-    /**
-     * 获取文件属性
-     *
-     * @param file 文件
-     * @return FileAttribute
-     */
     public static FileAttribute getAttribute(File file) {
         return getAttribute(Paths.get(file.getAbsolutePath()));
     }
 
-    /**
-     * 获取文件属性
-     *
-     * @param file 文件
-     * @return FileAttribute
-     */
     public static FileAttribute getAttribute(URI file) {
         return getAttribute(Paths.get(file));
     }
@@ -96,22 +78,10 @@ public class Files1 {
         }
     }
 
-    /**
-     * 文件是否可执行
-     *
-     * @param file 文件
-     * @return 可执行true
-     */
     public static boolean isExecutable(String file) {
         return new File(file).canExecute();
     }
 
-    /**
-     * 文件是否可执行
-     *
-     * @param file 文件
-     * @return 可执行true
-     */
     public static boolean isExecutable(File file) {
         return file.canExecute();
     }
@@ -126,24 +96,10 @@ public class Files1 {
         return Files.isExecutable(file);
     }
 
-    /**
-     * 设置文件是否可执行
-     *
-     * @param file 文件
-     * @param exec 设置文件是否可执行
-     * @return 是否执行成功
-     */
     public static boolean setExecutable(String file, boolean exec) {
         return new File(file).setExecutable(exec);
     }
 
-    /**
-     * 设置文件是否可执行
-     *
-     * @param file 文件
-     * @param exec 设置文件是否可执行
-     * @return 是否执行成功
-     */
     public static boolean setExecutable(File file, boolean exec) {
         return file.setExecutable(exec);
     }
@@ -159,22 +115,10 @@ public class Files1 {
         return file.toFile().setExecutable(exec);
     }
 
-    /**
-     * 文件是否可读
-     *
-     * @param file 文件
-     * @return 读true
-     */
     public static boolean isReadable(String file) {
         return new File(file).canRead();
     }
 
-    /**
-     * 文件是否可读
-     *
-     * @param file 文件
-     * @return 可读true
-     */
     public static boolean isReadable(File file) {
         return file.canRead();
     }
@@ -189,24 +133,10 @@ public class Files1 {
         return Files.isReadable(file);
     }
 
-    /**
-     * 设置文件是否可读
-     *
-     * @param file 文件
-     * @param exec 设置文件是否可读
-     * @return 是否执行成功
-     */
     public static boolean setReadable(String file, boolean readable) {
         return new File(file).setReadable(readable);
     }
 
-    /**
-     * 设置文件是否可读
-     *
-     * @param file 文件
-     * @param exec 设置文件是否可读
-     * @return 是否执行成功
-     */
     public static boolean setReadable(File file, boolean readable) {
         return file.setReadable(readable);
     }
@@ -222,22 +152,10 @@ public class Files1 {
         return file.toFile().setReadable(readable);
     }
 
-    /**
-     * 文件是否可写
-     *
-     * @param file 文件
-     * @return 可写true
-     */
     public static boolean isWritable(String file) {
         return new File(file).canWrite();
     }
 
-    /**
-     * 文件是否可写
-     *
-     * @param file 文件
-     * @return 可写true
-     */
     public static boolean isWritable(File file) {
         return file.canWrite();
     }
@@ -252,24 +170,10 @@ public class Files1 {
         return Files.isWritable(file);
     }
 
-    /**
-     * 设置文件是否可写
-     *
-     * @param file 文件
-     * @param exec 设置文件是否可写
-     * @return 是否执行成功
-     */
     public static boolean setWritable(String file, boolean writable) {
         return new File(file).setWritable(writable);
     }
 
-    /**
-     * 设置文件是否可写
-     *
-     * @param file 文件
-     * @param exec 设置文件是否可写
-     * @return 是否执行成功
-     */
     public static boolean setWritable(File file, boolean writable) {
         return file.setWritable(writable);
     }
@@ -285,22 +189,10 @@ public class Files1 {
         return file.toFile().setWritable(writable);
     }
 
-    /**
-     * 文件是否隐藏
-     *
-     * @param file 文件
-     * @return 隐藏true
-     */
     public static boolean isHidden(String file) {
         return new File(file).isHidden();
     }
 
-    /**
-     * 文件是否隐藏
-     *
-     * @param file 文件
-     * @return 隐藏true
-     */
     public static boolean isHidden(File file) {
         return file.isHidden();
     }
@@ -319,22 +211,10 @@ public class Files1 {
         }
     }
 
-    /**
-     * 是否为普通文件
-     *
-     * @param file 文件
-     * @return 普通文件true
-     */
     public static boolean isRegularFile(String file) {
         return new File(file).isFile();
     }
 
-    /**
-     * 是否为普通文件
-     *
-     * @param file 文件
-     * @return 普通文件true
-     */
     public static boolean isRegularFile(File file) {
         return file.isFile();
     }
@@ -349,22 +229,10 @@ public class Files1 {
         return Files.isRegularFile(file);
     }
 
-    /**
-     * 是否为文件夹
-     *
-     * @param file 文件
-     * @return 文件夹true
-     */
     public static boolean isDirectory(String file) {
         return new File(file).isDirectory();
     }
 
-    /**
-     * 是否为文件夹
-     *
-     * @param file 文件
-     * @return 文件夹true
-     */
     public static boolean isDirectory(File file) {
         return file.isDirectory();
     }
@@ -379,22 +247,10 @@ public class Files1 {
         return Files.isDirectory(file);
     }
 
-    /**
-     * 是否为连接文件
-     *
-     * @param file 文件
-     * @return 连接文件true
-     */
     public static boolean isSymbolicLink(String file) {
         return Files.isSymbolicLink(Paths.get(file));
     }
 
-    /**
-     * 是否为连接文件
-     *
-     * @param file 文件
-     * @return 连接文件true
-     */
     public static boolean isSymbolicLink(File file) {
         return Files.isSymbolicLink(Paths.get(file.getAbsolutePath()));
     }
@@ -409,12 +265,6 @@ public class Files1 {
         return Files.isSymbolicLink(file);
     }
 
-    /**
-     * 获取连接源文件
-     *
-     * @param file 连接文件
-     * @return 源文件
-     */
     public static Path getSymbolicLink(String file) {
         try {
             return Files.readSymbolicLink(Paths.get(file));
@@ -423,12 +273,6 @@ public class Files1 {
         }
     }
 
-    /**
-     * 获取连接源文件
-     *
-     * @param file 连接文件
-     * @return 源文件
-     */
     public static File getSymbolicLink(File file) {
         try {
             return Files.readSymbolicLink(Paths.get(file.getAbsolutePath())).toFile();
@@ -451,24 +295,10 @@ public class Files1 {
         }
     }
 
-    /**
-     * 创建连接文件
-     *
-     * @param source 源文件
-     * @param link   连接文件
-     * @return 是否成功
-     */
     public static boolean createLink(String source, String link) {
         return createLink(Paths.get(source), Paths.get(link));
     }
 
-    /**
-     * 创建连接文件
-     *
-     * @param source 源文件
-     * @param link   连接文件
-     * @return 是否成功
-     */
     public static boolean createLink(File source, File link) {
         return createLink(Paths.get(source.getAbsolutePath()), Paths.get(link.getAbsolutePath()));
     }
@@ -490,24 +320,10 @@ public class Files1 {
         }
     }
 
-    /**
-     * 创建连接符号文件
-     *
-     * @param source 源文件
-     * @param link   连接文件
-     * @return 是否成功
-     */
     public static boolean createSymbolLink(String source, String link) {
         return createSymbolLink(Paths.get(source), Paths.get(link));
     }
 
-    /**
-     * 创建连接符号文件
-     *
-     * @param source 源文件
-     * @param link   连接文件
-     * @return 是否成功
-     */
     public static boolean createSymbolLink(File source, File link) {
         return createSymbolLink(Paths.get(source.getAbsolutePath()), Paths.get(link.getAbsolutePath()));
     }
@@ -529,22 +345,10 @@ public class Files1 {
         }
     }
 
-    /**
-     * 获取文件所有人
-     *
-     * @param file 文件
-     * @return 文件所有人
-     */
     public static String getOwner(String file) {
         return getOwner(Paths.get(file));
     }
 
-    /**
-     * 获取文件所有人
-     *
-     * @param file 文件
-     * @return 文件所有人
-     */
     public static String getOwner(File file) {
         return getOwner(Paths.get(file.getAbsolutePath()));
     }
@@ -565,12 +369,6 @@ public class Files1 {
 
     // -------------------- file --------------------
 
-    /**
-     * 获取文件或文件夹大小
-     *
-     * @param file 文件
-     * @return ignore
-     */
     public static long getSize(File file) {
         if (file.exists()) {
             if (file.isFile()) {
@@ -644,13 +442,6 @@ public class Files1 {
         return (long) (d * SIZE_UNIT_EFFECT[effectIndex]);
     }
 
-    /**
-     * 将资源文件保存到本地
-     *
-     * @param source 资源
-     * @param file   file
-     * @throws IOException exception
-     */
     public static boolean resourceToFile(String source, String file) throws IOException {
         return resourceToFile(source, file, null);
     }
@@ -703,13 +494,6 @@ public class Files1 {
         return true;
     }
 
-    /**
-     * 将流保存为文件
-     *
-     * @param reader 流
-     * @param file   文件
-     * @return 文件路径
-     */
     public static String streamToFile(InputStreamReader reader, File file) {
         return streamToFile(reader, file, null);
     }
@@ -767,12 +551,6 @@ public class Files1 {
         return file.getAbsolutePath();
     }
 
-    /**
-     * 合并文件内容到target
-     *
-     * @param sources 文件
-     * @param target  合并的文件
-     */
     public static void mergeFile(List<String> sources, String target) {
         mergeFile(toFiles(sources), new File(target));
     }
@@ -810,12 +588,6 @@ public class Files1 {
 
     }
 
-    /**
-     * 合并文件内容到target
-     *
-     * @param source 文件
-     * @param target 合并的文件
-     */
     public static void mergeFile(String source, String target) {
         mergeFile(new File(source), new File(target));
     }
@@ -843,12 +615,6 @@ public class Files1 {
         }
     }
 
-    /**
-     * 复制目录
-     *
-     * @param source 源目录
-     * @param target 目标目录
-     */
     public static void copyDir(String source, String target) {
         copyDir(new File(source), new File(target));
     }
@@ -876,12 +642,6 @@ public class Files1 {
         }
     }
 
-    /**
-     * 复制文件
-     *
-     * @param source 源文件
-     * @param target 目标文件
-     */
     public static void copy(String source, String target) {
         copy(new File(source), new File(target));
     }
@@ -906,22 +666,10 @@ public class Files1 {
         }
     }
 
-    /**
-     * 创建文件
-     *
-     * @param file 文件
-     * @return 是否处理成功
-     */
     public static boolean touch(String file) {
         return touch(new File(file), null, false);
     }
 
-    /**
-     * 创建文件
-     *
-     * @param file 文件
-     * @return 是否处理成功
-     */
     public static boolean touch(File file) {
         return touch(file, null, false);
     }
@@ -936,24 +684,10 @@ public class Files1 {
         return touch(file, null, false);
     }
 
-    /**
-     * 创建文件
-     *
-     * @param file    文件
-     * @param charset 编码格式
-     * @return 是否处理成功
-     */
     public static boolean touch(String file, String charset) {
         return touch(new File(file), charset, false);
     }
 
-    /**
-     * 创建文件
-     *
-     * @param file    文件
-     * @param charset 编码格式
-     * @return 是否处理成功
-     */
     public static boolean touch(File file, String charset) {
         return touch(file, charset, false);
     }
@@ -969,24 +703,10 @@ public class Files1 {
         return touch(file, charset, false);
     }
 
-    /**
-     * 创建文件
-     *
-     * @param file  文件
-     * @param clean 如果文件存在是否清除文件内容
-     * @return 是否处理成功
-     */
     public static boolean touch(String file, boolean clean) {
         return touch(new File(file), null, clean);
     }
 
-    /**
-     * 创建文件
-     *
-     * @param file  文件
-     * @param clean 如果文件存在是否清除文件内容
-     * @return 是否处理成功
-     */
     public static boolean touch(File file, boolean clean) {
         return touch(file, null, clean);
     }
@@ -1002,26 +722,10 @@ public class Files1 {
         return touch(file, null, clean);
     }
 
-    /**
-     * 创建文件
-     *
-     * @param file    文件
-     * @param charset 编码格式
-     * @param clean   如果文件存在是否清除文件内容
-     * @return 是否处理成功
-     */
     public static boolean touch(String file, String charset, boolean clean) {
         return touch(new File(file), charset, clean);
     }
 
-    /**
-     * 创建文件
-     *
-     * @param file    文件
-     * @param charset 编码格式
-     * @param clean   如果文件存在是否清除文件内容
-     * @return 是否处理成功
-     */
     public static boolean touch(File file, String charset, boolean clean) {
         File dir = file.getParentFile();
         boolean create = false;
@@ -1108,11 +812,6 @@ public class Files1 {
         return Systems.HOME_DIR + IO_TEMP_DIR + UUIds.random32() + ".temp";
     }
 
-    /**
-     * 创建一个IO临时文件
-     *
-     * @return io临时文件路径
-     */
     public static File touchTempFile() {
         String path = getTempFilePath();
         touch(path);
@@ -1135,6 +834,14 @@ public class Files1 {
         return file;
     }
 
+    public static boolean mv(String file, File target) {
+        return new File(file).renameTo(target);
+    }
+
+    public static boolean mv(File file, File target) {
+        return file.renameTo(target);
+    }
+
     /**
      * 文件移动
      *
@@ -1142,55 +849,19 @@ public class Files1 {
      * @param target 目标位置
      * @return 是否处理成功
      */
-    public static boolean mv(String file, File target) {
-        return new File(file).renameTo(target);
-    }
-
-    /**
-     * 文件移动
-     *
-     * @param file   文件
-     * @param targer 目标位置
-     * @return 是否处理成功
-     */
-    public static boolean mv(File file, File targer) {
-        return file.renameTo(targer);
-    }
-
-    /**
-     * 文件移动
-     *
-     * @param file   文件
-     * @param targer 目标位置
-     * @return 是否处理成功
-     */
-    public static boolean mv(Path file, Path targer) {
+    public static boolean mv(Path file, Path target) {
         try {
-            Files.move(file, targer);
+            Files.move(file, target);
             return true;
         } catch (IOException e) {
             return false;
         }
     }
 
-    /**
-     * 文件重命名
-     *
-     * @param file 文件
-     * @param name 名称
-     * @return 是否处理成功
-     */
     public static boolean mv(File file, String name) {
         return file.renameTo(new File(file.getParentFile() + "/" + name));
     }
 
-    /**
-     * 文件重命名
-     *
-     * @param file 文件
-     * @param name 名称
-     * @return 是否处理成功
-     */
     public static boolean mv(String file, String name) {
         File f = new File(file);
         return f.renameTo(new File(f.getParentFile() + "/" + name));
@@ -1212,22 +883,10 @@ public class Files1 {
         }
     }
 
-    /**
-     * 创建文件夹
-     *
-     * @param path 文件夹
-     * @return 是否处理成功
-     */
     public static boolean mkdirs(String path) {
         return new File(path).mkdirs();
     }
 
-    /**
-     * 创建文件夹
-     *
-     * @param path 文件夹
-     * @return 是否处理成功
-     */
     public static boolean mkdirs(File path) {
         return path.mkdirs();
     }
@@ -1247,22 +906,10 @@ public class Files1 {
         }
     }
 
-    /**
-     * 删除文件或文件夹
-     *
-     * @param file 文件
-     * @return 是否处理成功
-     */
     public static boolean delete(String file) {
         return delete(new File(file));
     }
 
-    /**
-     * 删除文件或文件夹
-     *
-     * @param file 文件
-     * @return 是否处理成功
-     */
     public static boolean delete(File file) {
         if (file.isFile()) {
             return deleteFile(file);
@@ -1285,22 +932,10 @@ public class Files1 {
         }
     }
 
-    /**
-     * 删除一个文件夹
-     *
-     * @param path 文件夹
-     * @return 是否处理成功
-     */
     public static boolean deleteDir(String path) {
         return deleteDir(new File(path));
     }
 
-    /**
-     * 删除一个文件夹
-     *
-     * @param path 文件夹
-     * @return 是否处理成功
-     */
     public static boolean deleteDir(File path) {
         List<File> files = listFiles(path, true, true);
         for (File f : files) {
@@ -1339,12 +974,6 @@ public class Files1 {
         return true;
     }
 
-    /**
-     * 删除文件
-     *
-     * @param file 文件
-     * @return 是否处理成功
-     */
     public static boolean deleteFile(String file) {
         File f = new File(file);
         if (f.isFile()) {
@@ -1353,12 +982,6 @@ public class Files1 {
         return false;
     }
 
-    /**
-     * 删除文件
-     *
-     * @param file 文件
-     * @return 是否处理成功
-     */
     public static boolean deleteFile(File file) {
         if (file.isFile()) {
             return file.delete();
@@ -1381,12 +1004,6 @@ public class Files1 {
         }
     }
 
-    /**
-     * 删除大文件
-     *
-     * @param file 文件
-     * @return 是否处理成功
-     */
     public static boolean deleteBigFile(String file) {
         return deleteBigFile(new File(file));
     }
@@ -1402,22 +1019,10 @@ public class Files1 {
         return file.delete();
     }
 
-    /**
-     * 清空文件
-     *
-     * @param file 文件
-     * @return 是否处理成功
-     */
     public static boolean cleanFile(String file) {
         return cleanFile(new File(file));
     }
 
-    /**
-     * 清空文件
-     *
-     * @param file 文件
-     * @return 是否处理成功
-     */
     public static boolean cleanFile(File file) {
         if (!file.exists()) {
             return true;
@@ -1448,12 +1053,6 @@ public class Files1 {
         return true;
     }
 
-    /**
-     * 获取文件最后的修改时间
-     *
-     * @param file 文件
-     * @return 最后修改时间
-     */
     public static Date getModifyTime(File file) {
         return new Date(file.lastModified());
     }
@@ -1468,12 +1067,6 @@ public class Files1 {
         return new Date(new File(file).lastModified());
     }
 
-    /**
-     * 判断文件是否为空
-     *
-     * @param file 文件
-     * @return true 空
-     */
     public static boolean isEmpty(File file) {
         return file.length() == 0;
     }
@@ -1488,12 +1081,6 @@ public class Files1 {
         return new File(file).length() == 0;
     }
 
-    /**
-     * 获取文件行分隔符
-     *
-     * @param file 文件
-     * @return \n \r \r\n
-     */
     public static String getFileLineSeparator(String file) {
         return getFileLineSeparator(new File(file));
     }
@@ -1534,12 +1121,6 @@ public class Files1 {
         return Const.LF;
     }
 
-    /**
-     * 获取文件行分隔符
-     *
-     * @param file 文件
-     * @return \n \r \r\n null
-     */
     public static String getFileEndLineSeparator(String file) {
         return getFileEndLineSeparator(new File(file));
     }
@@ -1581,12 +1162,6 @@ public class Files1 {
         return null;
     }
 
-    /**
-     * 文件是否以行分隔符结尾
-     *
-     * @param file 文件
-     * @return true 是 \n \r \r\n结尾
-     */
     public static boolean hasEndLineSeparator(String file) {
         return hasEndLineSeparator(new File(file));
     }
@@ -1615,12 +1190,6 @@ public class Files1 {
         return false;
     }
 
-    /**
-     * 获取文件的行数
-     *
-     * @param file 统计的文件
-     * @return 文件行数
-     */
     public static int countLines(String file) {
         return countLines(new File(file));
     }
@@ -1643,12 +1212,6 @@ public class Files1 {
 
     // -------------------- stream --------------------
 
-    /**
-     * 打开文件输入流
-     *
-     * @param file 文件
-     * @return 输入流
-     */
     public static FileInputStream openInputStreamSafe(String file) {
         return openInputStreamSafe(new File(file));
     }
@@ -1667,13 +1230,6 @@ public class Files1 {
         }
     }
 
-    /**
-     * 打开文件输入流
-     *
-     * @param file 文件
-     * @return 输入流
-     * @throws IOException IO
-     */
     public static FileInputStream openInputStream(String file) throws IOException {
         return openInputStream(new File(file));
     }
@@ -1699,12 +1255,6 @@ public class Files1 {
         return new FileInputStream(file);
     }
 
-    /**
-     * 打开文件输出流
-     *
-     * @param file 文件
-     * @return 输出流
-     */
     public static FileOutputStream openOutputStreamSafe(String file) {
         return openOutputStreamSafe(new File(file), false);
     }
@@ -1719,13 +1269,6 @@ public class Files1 {
         return openOutputStreamSafe(file, false);
     }
 
-    /**
-     * 打开文件输出流
-     *
-     * @param file   文件
-     * @param append 是否拼接
-     * @return 输出流
-     */
     public static FileOutputStream openOutputStreamSafe(String file, boolean append) {
         return openOutputStreamSafe(new File(file), append);
     }
@@ -1745,13 +1288,6 @@ public class Files1 {
         }
     }
 
-    /**
-     * 打开文件输出流
-     *
-     * @param file 文件
-     * @return 输出流
-     * @throws IOException IO
-     */
     public static FileOutputStream openOutputStream(String file) throws IOException {
         return openOutputStream(new File(file), false);
     }
@@ -1767,14 +1303,6 @@ public class Files1 {
         return openOutputStream(file, false);
     }
 
-    /**
-     * 打开文件输出流
-     *
-     * @param file   文件
-     * @param append 是否拼接
-     * @return 输出流
-     * @throws IOException IO
-     */
     public static FileOutputStream openOutputStream(String file, boolean append) throws IOException {
         return openOutputStream(new File(file), append);
     }
@@ -1810,13 +1338,6 @@ public class Files1 {
         }
     }
 
-    /**
-     * 打开文件随机读取
-     *
-     * @param file file
-     * @param mode r rw rws rwd
-     * @return RandomAccessFile
-     */
     public static RandomAccessFile openRandomAccessSafe(String file, String mode) {
         return openRandomAccessSafe(new File(file), mode);
     }
@@ -1836,14 +1357,6 @@ public class Files1 {
         }
     }
 
-    /**
-     * 打开文件随机读取
-     *
-     * @param file file
-     * @param mode r rw rws rwd
-     * @return RandomAccessFile
-     * @throws IOException IOException
-     */
     public static RandomAccessFile openRandomAccess(String file, String mode) throws IOException {
         return openRandomAccess(new File(file), mode);
     }
@@ -1877,12 +1390,6 @@ public class Files1 {
 
     // -------------------- path fast --------------------
 
-    /**
-     * 打开文件输入流
-     *
-     * @param file 文件
-     * @return 输入流
-     */
     public static InputStream openInputStreamSafeFast(String file) {
         try {
             return openInputStreamFast(Paths.get(file));
@@ -1891,12 +1398,6 @@ public class Files1 {
         }
     }
 
-    /**
-     * 打开文件输入流
-     *
-     * @param file 文件
-     * @return 输入流
-     */
     public static InputStream openInputStreamSafeFast(File file) {
         try {
             return openInputStreamFast(Paths.get(file.getAbsolutePath()));
@@ -1919,24 +1420,10 @@ public class Files1 {
         }
     }
 
-    /**
-     * 打开文件输入流
-     *
-     * @param file 文件
-     * @return 输入流
-     * @throws IOException IO
-     */
     public static InputStream openInputStreamFast(String file) throws IOException {
         return openInputStreamFast(Paths.get(file));
     }
 
-    /**
-     * 打开文件输入流
-     *
-     * @param file 文件
-     * @return 输入流
-     * @throws IOException IO
-     */
     public static InputStream openInputStreamFast(File file) throws IOException {
         return openInputStreamFast(Paths.get(file.getAbsolutePath()));
     }
@@ -1962,12 +1449,6 @@ public class Files1 {
         return Files.newInputStream(file);
     }
 
-    /**
-     * 打开文件输出流
-     *
-     * @param file 文件
-     * @return 输出流
-     */
     public static OutputStream openOutputStreamFastSafe(String file) {
         try {
             return openOutputStreamFast(Paths.get(file), false);
@@ -1976,12 +1457,6 @@ public class Files1 {
         }
     }
 
-    /**
-     * 打开文件输出流
-     *
-     * @param file 文件
-     * @return 输出流
-     */
     public static OutputStream openOutputStreamFastSafe(File file) {
         try {
             return openOutputStreamFast(Paths.get(file.getAbsolutePath()), false);
@@ -2004,13 +1479,6 @@ public class Files1 {
         }
     }
 
-    /**
-     * 打开文件输出流
-     *
-     * @param file   文件
-     * @param append append
-     * @return 输出流
-     */
     public static OutputStream openOutputStreamFastSafe(String file, boolean append) {
         try {
             return openOutputStreamFast(Paths.get(file), append);
@@ -2019,13 +1487,6 @@ public class Files1 {
         }
     }
 
-    /**
-     * 打开文件输出流
-     *
-     * @param file   文件
-     * @param append append
-     * @return 输出流
-     */
     public static OutputStream openOutputStreamFastSafe(File file, boolean append) {
         try {
             return openOutputStreamFast(Paths.get(file.getAbsolutePath()), append);
@@ -2049,24 +1510,10 @@ public class Files1 {
         }
     }
 
-    /**
-     * 打开文件输出流
-     *
-     * @param file 文件
-     * @return 输出流
-     * @throws IOException IO
-     */
     public static OutputStream openOutputStreamFast(String file) throws IOException {
         return openOutputStreamFast(Paths.get(file), false);
     }
 
-    /**
-     * 打开文件输出流
-     *
-     * @param file 文件
-     * @return 输出流
-     * @throws IOException IO
-     */
     public static OutputStream openOutputStreamFast(File file) throws IOException {
         return openOutputStreamFast(Paths.get(file.getAbsolutePath()), false);
     }
@@ -2082,26 +1529,10 @@ public class Files1 {
         return openOutputStreamFast(file, false);
     }
 
-    /**
-     * 打开文件输出流
-     *
-     * @param file   文件
-     * @param append append
-     * @return 输出流
-     * @throws IOException IO
-     */
     public static OutputStream openOutputStreamFast(String file, boolean append) throws IOException {
         return openOutputStreamFast(Paths.get(file), append);
     }
 
-    /**
-     * 打开文件输出流
-     *
-     * @param file   文件
-     * @param append append
-     * @return 输出流
-     * @throws IOException IO
-     */
     public static OutputStream openOutputStreamFast(File file, boolean append) throws IOException {
         return openOutputStreamFast(Paths.get(file.getAbsolutePath()), append);
     }
@@ -2691,33 +2122,14 @@ public class Files1 {
 
     // -------------------- list --------------------
 
-    /**
-     * 获取路径下的全部文件夹 递归
-     *
-     * @param path 需要处理的文件夹
-     * @return 文件夹
-     */
-    public static List<File> listDirs(File path) {
-        return listDirs(path, false);
-    }
-
-    /**
-     * 获取路径下的全部文件夹 递归
-     *
-     * @param path 需要处理的文件夹
-     * @return 文件夹
-     */
     public static List<File> listDirs(String path) {
         return listDirs(new File(path), false);
     }
 
-    /**
-     * 获取路径下的全部文件夹
-     *
-     * @param path  文件夹
-     * @param child 是否递归子文件夹
-     * @return 文件夹
-     */
+    public static List<File> listDirs(File path) {
+        return listDirs(path, false);
+    }
+
     public static List<File> listDirs(String path, boolean child) {
         return listDirs(new File(path), child);
     }
@@ -2745,33 +2157,14 @@ public class Files1 {
         return list;
     }
 
-    /**
-     * 获取路径下的全部文件 递归
-     *
-     * @param path 需要处理的文件
-     * @return 文件
-     */
     public static List<File> listFiles(File path) {
         return listFiles(path, false, false);
     }
 
-    /**
-     * 获取路径下的全部文件 递归
-     *
-     * @param path 需要处理的文件
-     * @return 文件
-     */
     public static List<File> listFiles(String path) {
         return listFiles(new File(path), false, false);
     }
 
-    /**
-     * 获取路径下的全部文件
-     *
-     * @param path  文件夹
-     * @param child 是否递归子文件夹
-     * @return 文件
-     */
     public static List<File> listFiles(String path, boolean child) {
         return listFiles(new File(path), child, false);
     }
@@ -2787,14 +2180,6 @@ public class Files1 {
         return listFiles(path, child, false);
     }
 
-    /**
-     * 获取路径下的全部文件包括文件夹
-     *
-     * @param path  文件夹
-     * @param child 是否递归子文件夹
-     * @param dir   是否添加文件夹
-     * @return 文件
-     */
     public static List<File> listFiles(String path, boolean child, boolean dir) {
         return listFiles(new File(path), child, dir);
     }
@@ -2827,63 +2212,24 @@ public class Files1 {
         return list;
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param suffix  后缀
-     * @return 文件
-     */
     public static List<File> listFilesSuffix(File dirPath, String suffix) {
-        return listFilesSearch(dirPath, suffix, null, null, 1, false, false);
+        return listFilesSearch(dirPath, (d, n) -> n.toLowerCase().endsWith(suffix.toLowerCase()), false, false);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param suffix  后缀
-     * @param child   是否递归子文件夹
-     * @return 文件
-     */
     public static List<File> listFilesSuffix(File dirPath, String suffix, boolean child) {
-        return listFilesSearch(dirPath, suffix, null, null, 1, child, false);
+        return listFilesSearch(dirPath, (d, n) -> n.toLowerCase().endsWith(suffix.toLowerCase()), child, false);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param suffix  后缀
-     * @param child   是否递归子文件夹
-     * @param dir     是否包含文件夹
-     * @return 文件
-     */
     public static List<File> listFilesSuffix(File dirPath, String suffix, boolean child, boolean dir) {
-        return listFilesSearch(dirPath, suffix, null, null, 1, child, dir);
+        return listFilesSearch(dirPath, (d, n) -> n.toLowerCase().endsWith(suffix.toLowerCase()), child, dir);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param suffix  后缀
-     * @return 文件
-     */
     public static List<File> listFilesSuffix(String dirPath, String suffix) {
-        return listFilesSearch(new File(dirPath), suffix, null, null, 1, false, false);
+        return listFilesSearch(new File(dirPath), (d, n) -> n.toLowerCase().endsWith(suffix.toLowerCase()), false, false);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param suffix  后缀
-     * @param child   是否递归子文件夹
-     * @return 文件
-     */
     public static List<File> listFilesSuffix(String dirPath, String suffix, boolean child) {
-        return listFilesSearch(new File(dirPath), suffix, null, null, 1, child, false);
+        return listFilesSearch(new File(dirPath), (d, n) -> n.toLowerCase().endsWith(suffix.toLowerCase()), child, false);
     }
 
     /**
@@ -2896,66 +2242,27 @@ public class Files1 {
      * @return 文件
      */
     public static List<File> listFilesSuffix(String dirPath, String suffix, boolean child, boolean dir) {
-        return listFilesSearch(new File(dirPath), suffix, null, null, 1, child, dir);
+        return listFilesSearch(new File(dirPath), (d, n) -> n.toLowerCase().endsWith(suffix.toLowerCase()), child, dir);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param name    搜索
-     * @return 文件
-     */
     public static List<File> listFilesMatch(File dirPath, String name) {
-        return listFilesSearch(dirPath, name, null, null, 2, false, false);
+        return listFilesSearch(dirPath, (d, n) -> n.toLowerCase().contains(name.toLowerCase()), false, false);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param name    搜索
-     * @param child   是否递归子文件夹
-     * @return 文件
-     */
     public static List<File> listFilesMatch(File dirPath, String name, boolean child) {
-        return listFilesSearch(dirPath, name, null, null, 2, child, false);
+        return listFilesSearch(dirPath, (d, n) -> n.toLowerCase().contains(name.toLowerCase()), child, false);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param name    搜索
-     * @param child   是否递归子文件夹
-     * @param dir     是否包含文件夹
-     * @return 文件
-     */
     public static List<File> listFilesMatch(File dirPath, String name, boolean child, boolean dir) {
-        return listFilesSearch(dirPath, name, null, null, 2, child, dir);
+        return listFilesSearch(dirPath, (d, n) -> n.toLowerCase().contains(name.toLowerCase()), child, dir);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param name    搜索
-     * @return 文件
-     */
     public static List<File> listFilesMatch(String dirPath, String name) {
-        return listFilesSearch(new File(dirPath), name, null, null, 2, false, false);
+        return listFilesSearch(new File(dirPath), (d, n) -> n.toLowerCase().contains(name.toLowerCase()), false, false);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param name    搜索
-     * @param child   是否递归子文件夹
-     * @return 文件
-     */
     public static List<File> listFilesMatch(String dirPath, String name, boolean child) {
-        return listFilesSearch(new File(dirPath), name, null, null, 2, child, false);
+        return listFilesSearch(new File(dirPath), (d, n) -> n.toLowerCase().contains(name.toLowerCase()), child, false);
     }
 
     /**
@@ -2968,66 +2275,27 @@ public class Files1 {
      * @return 文件
      */
     public static List<File> listFilesMatch(String dirPath, String name, boolean child, boolean dir) {
-        return listFilesSearch(new File(dirPath), name, null, null, 2, child, dir);
+        return listFilesSearch(new File(dirPath), (d, n) -> n.toLowerCase().contains(name.toLowerCase()), child, dir);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param pattern 正则
-     * @return 文件
-     */
     public static List<File> listFilesPattern(File dirPath, Pattern pattern) {
-        return listFilesSearch(dirPath, null, pattern, null, 3, false, false);
+        return listFilesSearch(dirPath, (d, n) -> Matches.test(n, pattern), false, false);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param pattern 正则
-     * @param child   是否递归子文件夹
-     * @return 文件
-     */
     public static List<File> listFilesPattern(File dirPath, Pattern pattern, boolean child) {
-        return listFilesSearch(dirPath, null, pattern, null, 3, child, false);
+        return listFilesSearch(dirPath, (d, n) -> Matches.test(n, pattern), child, false);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param pattern 正则
-     * @param child   是否递归子文件夹
-     * @param dir     是否包含文件夹
-     * @return 文件
-     */
     public static List<File> listFilesPattern(File dirPath, Pattern pattern, boolean child, boolean dir) {
-        return listFilesSearch(dirPath, null, pattern, null, 3, child, dir);
+        return listFilesSearch(dirPath, (d, n) -> Matches.test(n, pattern), child, dir);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param pattern 正则
-     * @return 文件
-     */
     public static List<File> listFilesPattern(String dirPath, Pattern pattern) {
-        return listFilesSearch(new File(dirPath), null, pattern, null, 3, false, false);
+        return listFilesSearch(new File(dirPath), (d, n) -> Matches.test(n, pattern), false, false);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param pattern 正则
-     * @param child   是否递归子文件夹
-     * @return 文件
-     */
     public static List<File> listFilesPattern(String dirPath, Pattern pattern, boolean child) {
-        return listFilesSearch(new File(dirPath), null, pattern, null, 3, child, false);
+        return listFilesSearch(new File(dirPath), (d, n) -> Matches.test(n, pattern), child, false);
     }
 
     /**
@@ -3040,66 +2308,27 @@ public class Files1 {
      * @return 文件
      */
     public static List<File> listFilesPattern(String dirPath, Pattern pattern, boolean child, boolean dir) {
-        return listFilesSearch(new File(dirPath), null, pattern, null, 3, child, dir);
+        return listFilesSearch(new File(dirPath), (d, n) -> Matches.test(n, pattern), child, dir);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param filter  过滤器
-     * @return 文件
-     */
     public static List<File> listFilesFilter(File dirPath, FilenameFilter filter) {
-        return listFilesSearch(dirPath, null, null, filter, 4, false, false);
+        return listFilesSearch(dirPath, filter, false, false);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param filter  过滤器
-     * @param child   是否递归子文件夹
-     * @return 文件
-     */
     public static List<File> listFilesFilter(File dirPath, FilenameFilter filter, boolean child) {
-        return listFilesSearch(dirPath, null, null, filter, 4, child, false);
+        return listFilesSearch(dirPath, filter, child, false);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param filter  过滤器
-     * @param child   是否递归子文件夹
-     * @param dir     是否包含文件夹
-     * @return 文件
-     */
     public static List<File> listFilesFilter(File dirPath, FilenameFilter filter, boolean child, boolean dir) {
-        return listFilesSearch(dirPath, null, null, filter, 4, child, dir);
+        return listFilesSearch(dirPath, filter, child, dir);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param filter  过滤器
-     * @return 文件
-     */
     public static List<File> listFilesFilter(String dirPath, FilenameFilter filter) {
-        return listFilesSearch(new File(dirPath), null, null, filter, 4, false, false);
+        return listFilesSearch(new File(dirPath), filter, false, false);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param dirPath 文件夹
-     * @param filter  过滤器
-     * @param child   是否递归子文件夹
-     * @return 文件
-     */
     public static List<File> listFilesFilter(String dirPath, FilenameFilter filter, boolean child) {
-        return listFilesSearch(new File(dirPath), null, null, filter, 4, child, false);
+        return listFilesSearch(new File(dirPath), filter, child, false);
     }
 
     /**
@@ -3112,41 +2341,31 @@ public class Files1 {
      * @return 文件
      */
     public static List<File> listFilesFilter(String dirPath, FilenameFilter filter, boolean child, boolean dir) {
-        return listFilesSearch(new File(dirPath), null, null, filter, 4, child, dir);
+        return listFilesSearch(new File(dirPath), filter, child, dir);
     }
 
     /**
      * 搜索文件
      *
      * @param dirPath 文件夹
-     * @param search  搜索
-     * @param pattern 正则
      * @param filter  过滤器
-     * @param type    类型 1后缀 2匹配 3正则 4过滤器
      * @param child   是否递归子文件夹
      * @param dir     是否包含文件夹
      * @return 文件
      */
-    private static List<File> listFilesSearch(File dirPath, String search, Pattern pattern, FilenameFilter filter, int type, boolean child, boolean dir) {
+    private static List<File> listFilesSearch(File dirPath, FilenameFilter filter, boolean child, boolean dir) {
         List<File> list = new ArrayList<>();
         File[] files = dirPath.listFiles();
         if (files != null) {
             for (File file : files) {
                 boolean isDir = file.isDirectory();
                 if (!isDir || dir) {
-                    String fn = file.getName();
-                    if (type == 1 && fn.toLowerCase().endsWith(search.toLowerCase())) {
-                        list.add(file);
-                    } else if (type == 2 && fn.toLowerCase().contains(search.toLowerCase())) {
-                        list.add(file);
-                    } else if (type == 3 && Matches.test(fn, pattern)) {
-                        list.add(file);
-                    } else if (type == 4 && filter.accept(file, fn)) {
+                    if (filter.accept(file, file.getName())) {
                         list.add(file);
                     }
                 }
                 if (isDir && child) {
-                    list.addAll(listFilesSearch(file, search, pattern, filter, type, true, dir));
+                    list.addAll(listFilesSearch(file, filter, true, dir));
                 }
             }
         }

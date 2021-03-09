@@ -29,12 +29,6 @@ public class FileWriters {
     private FileWriters() {
     }
 
-    /**
-     * 拼接到文件最后一行
-     *
-     * @param file 文件
-     * @param bs   bytes
-     */
     public static void append(File file, byte[] bs) {
         append(file, bs, 0, bs.length);
     }
@@ -49,14 +43,6 @@ public class FileWriters {
         append(new File(file), bs, 0, bs.length);
     }
 
-    /**
-     * 拼接到文件最后一行
-     *
-     * @param file 文件
-     * @param bs   bytes
-     * @param off  offset
-     * @param len  length
-     */
     public static void append(String file, byte[] bs, int off, int len) {
         append(new File(file), bs, off, len);
     }
@@ -77,12 +63,6 @@ public class FileWriters {
         }
     }
 
-    /**
-     * 拼接到文件最后一行
-     *
-     * @param file 文件
-     * @param s    string
-     */
     public static void append(File file, String s) {
         append(file, Strings.bytes(s));
     }
@@ -97,13 +77,6 @@ public class FileWriters {
         append(new File(file), Strings.bytes(s));
     }
 
-    /**
-     * 拼接到文件最后一行
-     *
-     * @param file    文件
-     * @param s       string
-     * @param charset 编码格式
-     */
     public static void append(File file, String s, String charset) {
         append(file, Strings.bytes(s, charset));
     }
@@ -119,13 +92,6 @@ public class FileWriters {
         append(new File(file), Strings.bytes(s, charset));
     }
 
-    /**
-     * 拼接到偏移处
-     *
-     * @param file   文件
-     * @param offset 拼接偏移量
-     * @param bytes  bytes
-     */
     public static void append(String file, long offset, byte[] bytes) {
         append(new File(file), offset, bytes, 0, bytes.length);
     }
@@ -141,15 +107,6 @@ public class FileWriters {
         append(file, offset, bytes, 0, bytes.length);
     }
 
-    /**
-     * 拼接到偏移处
-     *
-     * @param file   文件
-     * @param offset 拼接偏移量
-     * @param bytes  bytes
-     * @param off    偏移量
-     * @param len    长度
-     */
     public static void append(String file, long offset, byte[] bytes, int off, int len) {
         append(new File(file), offset, bytes, off, len);
     }
@@ -201,12 +158,6 @@ public class FileWriters {
         }
     }
 
-    /**
-     * 拼接一行 可能在开头拼接\n 尾行拼接\n
-     *
-     * @param file 文件
-     * @param line string
-     */
     public static void appendLine(File file, String line) {
         appendLines(file, Lists.singleton(line), null);
     }
@@ -221,13 +172,6 @@ public class FileWriters {
         appendLines(new File(file), Lists.singleton(line), null);
     }
 
-    /**
-     * 拼接一行 可能在开头拼接\n 尾行拼接\n
-     *
-     * @param file    文件
-     * @param line    string
-     * @param charset 编码格式
-     */
     public static void appendLine(File file, String line, String charset) {
         appendLines(file, Lists.singleton(line), charset);
     }
@@ -243,12 +187,6 @@ public class FileWriters {
         appendLines(new File(file), Lists.singleton(line), charset);
     }
 
-    /**
-     * 拼接多行 可能在开头拼接\n 尾行拼接\n
-     *
-     * @param file 文件
-     * @param list strings
-     */
     public static void appendLines(File file, List<String> list) {
         appendLines(file, list, null);
     }
@@ -263,13 +201,6 @@ public class FileWriters {
         appendLines(new File(file), list, null);
     }
 
-    /**
-     * 拼接多行 可能在开头拼接\n 尾行拼接\n
-     *
-     * @param file    文件
-     * @param list    strings
-     * @param charset 编码格式
-     */
     public static void appendLines(String file, List<String> list, String charset) {
         writeLines(new File(file), list, charset, true);
     }
@@ -285,13 +216,6 @@ public class FileWriters {
         writeLines(file, list, charset, true);
     }
 
-    /**
-     * 拼接行到偏移处 不会在首行开头拼接\n 尾行拼接\n
-     *
-     * @param file   文件
-     * @param offset 拼接偏移量
-     * @param line   行
-     */
     public static void appendLine(String file, long offset, String line) {
         appendLines(new File(file), offset, Lists.singleton(line), null);
     }
@@ -307,14 +231,6 @@ public class FileWriters {
         appendLines(file, offset, Lists.singleton(line), null);
     }
 
-    /**
-     * 拼接行到偏移处 不会在首行开头拼接\n 尾行拼接\n
-     *
-     * @param file    文件
-     * @param offset  拼接偏移量
-     * @param line    行
-     * @param charset 编码格式
-     */
     public static void appendLine(String file, long offset, String line, String charset) {
         appendLines(new File(file), offset, Lists.singleton(line), charset);
     }
@@ -331,13 +247,6 @@ public class FileWriters {
         appendLines(file, offset, Lists.singleton(line), charset);
     }
 
-    /**
-     * 拼接行到偏移处 不会在首行开头拼接\n 尾行拼接\n
-     *
-     * @param file   文件
-     * @param offset 拼接偏移量
-     * @param lines  行
-     */
     public static void appendLines(File file, long offset, List<String> lines) {
         appendLines(file, offset, lines, null);
     }
@@ -353,14 +262,6 @@ public class FileWriters {
         appendLines(new File(file), offset, lines, null);
     }
 
-    /**
-     * 拼接行到偏移处 不会在首行开头拼接\n 尾行拼接\n
-     *
-     * @param file    文件
-     * @param offset  拼接偏移量
-     * @param lines   行
-     * @param charset 编码格式
-     */
     public static void appendLines(String file, long offset, List<String> lines, String charset) {
         appendLines(new File(file), offset, lines, charset);
     }
@@ -427,12 +328,6 @@ public class FileWriters {
         }
     }
 
-    /**
-     * 写入到文件
-     *
-     * @param file 文件
-     * @param bs   bytes
-     */
     public static void write(File file, byte[] bs) {
         write(file, bs, 0, bs.length);
     }
@@ -447,14 +342,6 @@ public class FileWriters {
         write(new File(file), bs, 0, bs.length);
     }
 
-    /**
-     * 写入到文件
-     *
-     * @param file 文件
-     * @param bs   bytes
-     * @param off  offset
-     * @param len  length
-     */
     public static void write(String file, byte[] bs, int off, int len) {
         write(new File(file), bs, off, len);
     }
@@ -475,12 +362,6 @@ public class FileWriters {
         }
     }
 
-    /**
-     * 写入到文件
-     *
-     * @param file 文件
-     * @param s    string
-     */
     public static void write(File file, String s) {
         write(file, Strings.bytes(s));
     }
@@ -495,13 +376,6 @@ public class FileWriters {
         write(new File(file), Strings.bytes(s));
     }
 
-    /**
-     * 写入到文件
-     *
-     * @param file    文件
-     * @param s       string
-     * @param charset 编码格式
-     */
     public static void write(File file, String s, String charset) {
         write(file, Strings.bytes(s, charset));
     }
@@ -517,13 +391,6 @@ public class FileWriters {
         write(new File(file), Strings.bytes(s, charset));
     }
 
-    /**
-     * 写入到文件
-     *
-     * @param file      文件
-     * @param skipBytes 跳过前几位
-     * @param bs        写入数组
-     */
     public static void write(String file, int skipBytes, byte[] bs) {
         write(new File(file), skipBytes, bs, 0, bs.length);
     }
@@ -539,15 +406,6 @@ public class FileWriters {
         write(file, skipBytes, bs, 0, bs.length);
     }
 
-    /**
-     * 写入到文件
-     *
-     * @param file      文件
-     * @param skipBytes 跳过前几位
-     * @param bs        写入数组
-     * @param off       偏移量
-     * @param len       写入长度
-     */
     public static void write(String file, int skipBytes, byte[] bs, int off, int len) {
         write(new File(file), skipBytes, bs, off, len);
     }
@@ -584,12 +442,6 @@ public class FileWriters {
         }
     }
 
-    /**
-     * 写入一行 尾行拼接\n
-     *
-     * @param file 文件
-     * @param str  string
-     */
     public static void writeLine(File file, String str) {
         writeLines(file, Lists.singleton(str), null, false);
     }
@@ -604,13 +456,6 @@ public class FileWriters {
         writeLines(new File(file), Lists.singleton(str), null, false);
     }
 
-    /**
-     * 写入一行 尾行拼接\n
-     *
-     * @param file    文件
-     * @param str     string
-     * @param charset 编码格式
-     */
     public static void writeLine(File file, String str, String charset) {
         writeLines(file, Lists.singleton(str), charset, false);
     }
@@ -626,12 +471,6 @@ public class FileWriters {
         writeLines(new File(file), Lists.singleton(str), charset, false);
     }
 
-    /**
-     * 写入多行 尾行拼接\n
-     *
-     * @param file 文件
-     * @param list strings
-     */
     public static void writeLines(String file, List<String> list) {
         writeLines(new File(file), list, null, false);
     }
@@ -646,13 +485,6 @@ public class FileWriters {
         writeLines(file, list, null, false);
     }
 
-    /**
-     * 写入多行 尾行拼接\n
-     *
-     * @param file    文件
-     * @param list    strings
-     * @param charset 编码格式
-     */
     public static void writeLines(File file, List<String> list, String charset) {
         writeLines(file, list, charset, false);
     }
@@ -708,14 +540,6 @@ public class FileWriters {
 
     // -------------------- replace --------------------
 
-    /**
-     * 写入到文件
-     *
-     * @param file       文件
-     * @param rangeStart 写入指定区域开始
-     * @param rangeEnd   写入指定区域结束
-     * @param bytes      数据
-     */
     public static void replace(String file, int rangeStart, int rangeEnd, byte[] bytes) {
         replace(new File(file), rangeStart, rangeEnd, bytes, 0, bytes.length);
     }
@@ -732,16 +556,6 @@ public class FileWriters {
         replace(file, rangeStart, rangeEnd, bytes, 0, bytes.length);
     }
 
-    /**
-     * 写入到文件
-     *
-     * @param file       文件
-     * @param rangeStart 写入指定区域开始
-     * @param rangeEnd   写入指定区域结束
-     * @param bytes      数据
-     * @param off        偏移量
-     * @param len        长度
-     */
     public static void replace(String file, int rangeStart, int rangeEnd, byte[] bytes, int off, int len) {
         replace(new File(file), rangeStart, rangeEnd, bytes, off, len);
     }
@@ -846,13 +660,6 @@ public class FileWriters {
         }
     }
 
-    /**
-     * 写入文件到文件
-     *
-     * @param file       文件
-     * @param off        文件偏移量
-     * @param targetFile 目标文件
-     */
     public static void writeToFile(File file, long off, File targetFile) {
         writeToFile(file, off, ((int) (file.length() - off)), targetFile);
     }
@@ -906,22 +713,10 @@ public class FileWriters {
 
     // -------------------- fast --------------------
 
-    /**
-     * 写入
-     *
-     * @param file file
-     * @param bs   bs
-     */
     public static void writeFast(String file, byte[] bs) {
         writeFast(Paths.get(file), bs, 0, bs.length, false);
     }
 
-    /**
-     * 写入
-     *
-     * @param file file
-     * @param bs   bs
-     */
     public static void writeFast(File file, byte[] bs) {
         writeFast(Paths.get(file.getAbsolutePath()), bs, 0, bs.length, false);
     }
@@ -936,26 +731,10 @@ public class FileWriters {
         writeFast(file, bs, 0, bs.length, false);
     }
 
-    /**
-     * 写入
-     *
-     * @param file file
-     * @param off  offset
-     * @param len  len
-     * @param bs   bs
-     */
     public static void writeFast(String file, byte[] bs, int off, int len) {
         writeFast(Paths.get(file), bs, off, len, false);
     }
 
-    /**
-     * 写入
-     *
-     * @param file file
-     * @param off  offset
-     * @param len  len
-     * @param bs   bs
-     */
     public static void writeFast(File file, byte[] bs, int off, int len) {
         writeFast(Paths.get(file.getAbsolutePath()), bs, off, len, false);
     }
@@ -972,22 +751,10 @@ public class FileWriters {
         writeFast(file, bs, off, len, false);
     }
 
-    /**
-     * 拼接
-     *
-     * @param file file
-     * @param bs   bs
-     */
     public static void appendFast(String file, byte[] bs) {
         writeFast(Paths.get(file), bs, 0, bs.length, true);
     }
 
-    /**
-     * 拼接
-     *
-     * @param file file
-     * @param bs   bs
-     */
     public static void appendFast(File file, byte[] bs) {
         writeFast(Paths.get(file.getAbsolutePath()), bs, 0, bs.length, true);
     }
@@ -1002,26 +769,10 @@ public class FileWriters {
         writeFast(file, bs, 0, bs.length, true);
     }
 
-    /**
-     * 拼接
-     *
-     * @param file file
-     * @param off  offset
-     * @param len  len
-     * @param bs   bs
-     */
     public static void appendFast(String file, byte[] bs, int off, int len) {
         writeFast(Paths.get(file), bs, off, len, true);
     }
 
-    /**
-     * 拼接
-     *
-     * @param file file
-     * @param off  offset
-     * @param len  len
-     * @param bs   bs
-     */
     public static void appendFast(File file, byte[] bs, int off, int len) {
         writeFast(Paths.get(file.getAbsolutePath()), bs, off, len, true);
     }
@@ -1055,22 +806,10 @@ public class FileWriters {
         }
     }
 
-    /**
-     * 写入 尾拼接\n
-     *
-     * @param file file
-     * @param line line
-     */
     public static void writeLineFast(String file, String line) {
         writeLinesFast(Paths.get(file), Lists.singleton(line), null, false);
     }
 
-    /**
-     * 写入 尾拼接\n
-     *
-     * @param file file
-     * @param line line
-     */
     public static void writeLineFast(File file, String line) {
         writeLinesFast(Paths.get(file.getAbsolutePath()), Lists.singleton(line), null, false);
     }
@@ -1085,22 +824,10 @@ public class FileWriters {
         writeLinesFast(file, Lists.singleton(line), null, false);
     }
 
-    /**
-     * 拼接 首不拼接\n 尾拼接\n
-     *
-     * @param file file
-     * @param line line
-     */
     public static void appendLineFast(String file, String line) {
         writeLinesFast(Paths.get(file), Lists.singleton(line), null, true);
     }
 
-    /**
-     * 拼接 首不拼接\n 尾拼接\n
-     *
-     * @param file file
-     * @param line line
-     */
     public static void appendLineFast(File file, String line) {
         writeLinesFast(Paths.get(file.getAbsolutePath()), Lists.singleton(line), null, true);
     }
@@ -1115,24 +842,10 @@ public class FileWriters {
         writeLinesFast(file, Lists.singleton(line), null, true);
     }
 
-    /**
-     * 写入 尾拼接\n
-     *
-     * @param file    file
-     * @param line    line
-     * @param charset charset
-     */
     public static void writeLineFast(String file, String line, String charset) {
         writeLinesFast(Paths.get(file), Lists.singleton(line), Charset.forName(charset), false);
     }
 
-    /**
-     * 写入 尾拼接\n
-     *
-     * @param file    file
-     * @param line    line
-     * @param charset charset
-     */
     public static void writeLineFast(File file, String line, String charset) {
         writeLinesFast(Paths.get(file.getAbsolutePath()), Lists.singleton(line), Charset.forName(charset), false);
     }
@@ -1148,24 +861,10 @@ public class FileWriters {
         writeLinesFast(file, Lists.singleton(line), charset, false);
     }
 
-    /**
-     * 拼接 首不拼接\n 尾拼接\n
-     *
-     * @param file    file
-     * @param line    line
-     * @param charset charset
-     */
     public static void appendLineFast(String file, String line, String charset) {
         writeLinesFast(Paths.get(file), Lists.singleton(line), Charset.forName(charset), true);
     }
 
-    /**
-     * 拼接 首不拼接\n 尾拼接\n
-     *
-     * @param file    file
-     * @param line    line
-     * @param charset charset
-     */
     public static void appendLineFast(File file, String line, String charset) {
         writeLinesFast(Paths.get(file.getAbsolutePath()), Lists.singleton(line), Charset.forName(charset), true);
     }
@@ -1181,22 +880,10 @@ public class FileWriters {
         writeLinesFast(file, Lists.singleton(line), charset, true);
     }
 
-    /**
-     * 写入 尾行拼接\n
-     *
-     * @param file  file
-     * @param lines lines
-     */
     public static void writeLinesFast(String file, List<String> lines) {
         writeLinesFast(Paths.get(file), lines, null, false);
     }
 
-    /**
-     * 写入 尾行拼接\n
-     *
-     * @param file  file
-     * @param lines lines
-     */
     public static void writeLinesFast(File file, List<String> lines) {
         writeLinesFast(Paths.get(file.getAbsolutePath()), lines, null, false);
     }
@@ -1211,22 +898,10 @@ public class FileWriters {
         writeLinesFast(file, lines, null, false);
     }
 
-    /**
-     * 拼接 首行不拼接\n 尾行拼接\n
-     *
-     * @param file  file
-     * @param lines lines
-     */
     public static void appendLinesFast(String file, List<String> lines) {
         writeLinesFast(Paths.get(file), lines, null, true);
     }
 
-    /**
-     * 拼接 首行不拼接\n 尾行拼接\n
-     *
-     * @param file  file
-     * @param lines lines
-     */
     public static void appendLinesFast(File file, List<String> lines) {
         writeLinesFast(Paths.get(file.getAbsolutePath()), lines, null, true);
     }
@@ -1241,24 +916,10 @@ public class FileWriters {
         writeLinesFast(file, lines, null, true);
     }
 
-    /**
-     * 写入 尾行拼接\n
-     *
-     * @param file    file
-     * @param lines   lines
-     * @param charset charset
-     */
     public static void writeLinesFast(String file, List<String> lines, String charset) {
         writeLinesFast(Paths.get(file), lines, Charset.forName(charset), false);
     }
 
-    /**
-     * 写入 尾行拼接\n
-     *
-     * @param file    file
-     * @param lines   lines
-     * @param charset charset
-     */
     public static void writeLinesFast(File file, List<String> lines, String charset) {
         writeLinesFast(Paths.get(file.getAbsolutePath()), lines, Charset.forName(charset), false);
     }
@@ -1274,24 +935,10 @@ public class FileWriters {
         writeLinesFast(file, lines, charset, false);
     }
 
-    /**
-     * 拼接 首行不拼接\n 尾行拼接\n
-     *
-     * @param file    file
-     * @param lines   lines
-     * @param charset charset
-     */
     public static void appendLinesFast(String file, List<String> lines, String charset) {
         writeLinesFast(Paths.get(file), lines, Charset.forName(charset), true);
     }
 
-    /**
-     * 拼接 首行不拼接\n 尾行拼接\n
-     *
-     * @param file    file
-     * @param lines   lines
-     * @param charset charset
-     */
     public static void appendLinesFast(File file, List<String> lines, String charset) {
         writeLinesFast(Paths.get(file.getAbsolutePath()), lines, Charset.forName(charset), true);
     }

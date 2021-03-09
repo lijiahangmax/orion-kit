@@ -192,29 +192,10 @@ public class Dates {
         };
     }
 
-    /**
-     * 构建时间
-     *
-     * @param year  年
-     * @param month 月
-     * @param day   日
-     * @return 时间
-     */
     public static Date build(int year, int month, int day) {
         return build(year, month, day, 0, 0, 0, 0);
     }
 
-    /**
-     * 构建时间
-     *
-     * @param year  年
-     * @param month 月
-     * @param day   日
-     * @param h     时
-     * @param m     分
-     * @param s     秒
-     * @return 时间
-     */
     public static Date build(int year, int month, int day, int h, int m, int s) {
         return build(year, month, day, h, m, s, 0);
     }
@@ -240,21 +221,10 @@ public class Dates {
         return c.getTime();
     }
 
-    /**
-     * 清除时分秒
-     *
-     * @return 清除后的时间
-     */
     public static Date clearHms() {
         return clearHms(Calendar.getInstance());
     }
 
-    /**
-     * 清除时分秒
-     *
-     * @param d 时间
-     * @return 清除后的时间
-     */
     public static Date clearHms(Date d) {
         Calendar c = Calendar.getInstance();
         c.setTime(d);
@@ -275,42 +245,12 @@ public class Dates {
         return c.getTime();
     }
 
-    /**
-     * 清除当前时间为当月1号
-     *
-     * @return 时间
-     */
     public static Date clearDay() {
         return clearDay(Calendar.getInstance(), false);
     }
 
-    /**
-     * 清除当前时间为当月1号, 清除HMS
-     *
-     * @return 时间
-     */
-    public static Date clearDayHms() {
-        return clearDay(Calendar.getInstance(), true);
-    }
-
-    /**
-     * 清除时间为1号
-     *
-     * @param d 时间
-     * @return 时间
-     */
     public static Date clearDay(Date d) {
         return clearDay(d, false);
-    }
-
-    /**
-     * 清除时间为1号, 清除HMS
-     *
-     * @param d 时间
-     * @return 时间
-     */
-    public static Date clearDayHms(Date d) {
-        return clearDay(d, true);
     }
 
     /**
@@ -323,6 +263,14 @@ public class Dates {
         return clearDay(c, false);
     }
 
+    public static Date clearDayHms() {
+        return clearDay(Calendar.getInstance(), true);
+    }
+
+    public static Date clearDayHms(Date d) {
+        return clearDay(d, true);
+    }
+
     /**
      * 清除时间为1号, 清除HMS
      *
@@ -333,13 +281,6 @@ public class Dates {
         return clearDay(c, true);
     }
 
-    /**
-     * 清除时间为当月1号
-     *
-     * @param d        时间
-     * @param clearHms 是否清除HMS
-     * @return 时间
-     */
     public static Date clearDay(Date d, boolean clearHms) {
         Calendar c = Calendar.getInstance();
         c.setTime(d);
@@ -364,21 +305,10 @@ public class Dates {
         return c.getTime();
     }
 
-    /**
-     * 今天的 23:59:59
-     *
-     * @return 23:59:59
-     */
     public static Date dayEnd() {
         return dayEnd(Calendar.getInstance());
     }
 
-    /**
-     * 日期的  23:59:59
-     *
-     * @param d 时间
-     * @return 23:59:59
-     */
     public static Date dayEnd(Date d) {
         Calendar c = Calendar.getInstance();
         c.setTime(d);
@@ -399,21 +329,10 @@ public class Dates {
         return c.getTime();
     }
 
-    /**
-     * 当前月份的最后一天
-     *
-     * @return 时间
-     */
     public static Date monthEnd() {
         return monthDayEnd(new Date(), false);
     }
 
-    /**
-     * 月份的最后一天
-     *
-     * @param d 时间
-     * @return 时间
-     */
     public static Date monthEnd(Date d) {
         return monthDayEnd(d, false);
     }
@@ -428,21 +347,10 @@ public class Dates {
         return monthDayEnd(c, false);
     }
 
-    /**
-     * 当前月份的最后一天 时间的最后一秒
-     *
-     * @return 时间
-     */
     public static Date monthDayEnd() {
         return monthDayEnd(new Date(), true);
     }
 
-    /**
-     * 月份的最后一天 时间的最后一秒
-     *
-     * @param d 时间
-     * @return 时间
-     */
     public static Date monthDayEnd(Date d) {
         return monthDayEnd(d, true);
     }
@@ -457,13 +365,6 @@ public class Dates {
         return monthDayEnd(c, true);
     }
 
-    /**
-     * 月份的最后一天
-     *
-     * @param d      时间
-     * @param dayEnd 是否将时间 转化为 23:59:59
-     * @return 时间
-     */
     public static Date monthDayEnd(Date d, boolean dayEnd) {
         Calendar c = Calendar.getInstance();
         c.setTime(d);
@@ -488,13 +389,6 @@ public class Dates {
         return c.getTime();
     }
 
-    /**
-     * 获取自增时间
-     *
-     * @param incr  自增时间(+ -)
-     * @param times 自增次数
-     * @return 时间
-     */
     public static Date[] getIncrementDayDates(int incr, int times) {
         return getIncrementDates(null, Calendar.DAY_OF_MONTH, incr, times);
     }
@@ -511,13 +405,6 @@ public class Dates {
         return getIncrementDates(d, Calendar.DAY_OF_MONTH, incr, times);
     }
 
-    /**
-     * 获取自增时间
-     *
-     * @param incr  自增时间(+ -)
-     * @param times 自增次数
-     * @return 时间
-     */
     public static Date[] getIncrementHourDates(int incr, int times) {
         return getIncrementDates(null, Calendar.HOUR_OF_DAY, incr, times);
     }
@@ -534,14 +421,6 @@ public class Dates {
         return getIncrementDates(d, Calendar.HOUR_OF_DAY, incr, times);
     }
 
-    /**
-     * 获取自增时间
-     *
-     * @param field 时间字段
-     * @param incr  自增时间(+ -)
-     * @param times 自增次数
-     * @return 时间
-     */
     public static Date[] getIncrementDates(int field, int incr, int times) {
         return getIncrementDates(null, field, incr, times);
     }
@@ -569,11 +448,6 @@ public class Dates {
         return dates;
     }
 
-    /**
-     * 获取当前时间
-     *
-     * @return 当前时间
-     */
     public static String current() {
         return FastDateFormat.getInstance(YMDHMS).format(new Date());
     }
@@ -588,81 +462,30 @@ public class Dates {
         return FastDateFormat.getInstance(pattern).format(new Date());
     }
 
-    /**
-     * 格式化
-     *
-     * @param d 时间
-     * @return ignore
-     */
     public static String format(Date d) {
         return FastDateFormat.getInstance(YMDHMS).format(d);
     }
 
-    /**
-     * 格式化
-     *
-     * @param d       时间
-     * @param pattern 格式
-     * @return ignore
-     */
     public static String format(Date d, String pattern) {
         return d == null ? null : FastDateFormat.getInstance(pattern).format(d);
     }
 
-    /**
-     * 格式化
-     *
-     * @param d      时间
-     * @param locale 地区
-     * @return ignore
-     */
     public static String format(Date d, Locale locale) {
         return FastDateFormat.getInstance(YMDHMS, locale).format(d);
     }
 
-    /**
-     * 格式化
-     *
-     * @param d       时间
-     * @param pattern 格式
-     * @param locale  地区
-     * @return ignore
-     */
     public static String format(Date d, String pattern, Locale locale) {
         return d == null ? null : FastDateFormat.getInstance(pattern, locale).format(d);
     }
 
-    /**
-     * 格式化
-     *
-     * @param d        时间
-     * @param timeZone 时区
-     * @return ignore
-     */
     public static String format(Date d, TimeZone timeZone) {
         return FastDateFormat.getInstance(YMDHMS, timeZone).format(d);
     }
 
-    /**
-     * 格式化
-     *
-     * @param d        时间
-     * @param pattern  格式
-     * @param timeZone 时区
-     * @return ignore
-     */
     public static String format(Date d, String pattern, TimeZone timeZone) {
         return d == null ? null : FastDateFormat.getInstance(pattern, timeZone).format(d);
     }
 
-    /**
-     * 格式化
-     *
-     * @param d        时间
-     * @param timeZone 时区
-     * @param locale   地区
-     * @return ignore
-     */
     public static String format(Date d, TimeZone timeZone, Locale locale) {
         return FastDateFormat.getInstance(YMDHMS, timeZone, locale).format(d);
     }
@@ -680,12 +503,6 @@ public class Dates {
         return d == null ? null : FastDateFormat.getInstance(pattern, timeZone, locale).format(d);
     }
 
-    /**
-     * 日期转化
-     *
-     * @param d 日期
-     * @return 日期
-     */
     public static Date parse(String d) {
         if (Strings.isBlank(d)) {
             return null;
@@ -727,13 +544,6 @@ public class Dates {
         return null;
     }
 
-    /**
-     * 日期转化
-     *
-     * @param d       日期
-     * @param pattern 格式
-     * @return 日期
-     */
     public static Date parse(String d, String pattern) {
         try {
             return FastDateFormat.getInstance(pattern).parse(d);
@@ -742,13 +552,6 @@ public class Dates {
         }
     }
 
-    /**
-     * 日期转化
-     *
-     * @param d        日期
-     * @param patterns 格式
-     * @return 日期
-     */
     public static Date parse(String d, String... patterns) {
         for (String pattern : patterns) {
             Date parse = parse(d, pattern);
@@ -759,14 +562,6 @@ public class Dates {
         return null;
     }
 
-    /**
-     * 日期转化
-     *
-     * @param d       日期
-     * @param pattern 格式
-     * @param locale  地区
-     * @return 日期
-     */
     public static Date parse(String d, String pattern, Locale locale) {
         try {
             return FastDateFormat.getInstance(pattern, locale).parse(d);
@@ -775,14 +570,6 @@ public class Dates {
         }
     }
 
-    /**
-     * 日期转化
-     *
-     * @param d        日期
-     * @param locale   地区
-     * @param patterns 格式
-     * @return 日期
-     */
     public static Date parse(String d, Locale locale, String... patterns) {
         for (String pattern : patterns) {
             Date parse = parse(d, pattern, locale);
@@ -793,14 +580,6 @@ public class Dates {
         return null;
     }
 
-    /**
-     * 日期转化
-     *
-     * @param d        日期
-     * @param pattern  格式
-     * @param timeZone 时区
-     * @return 日期
-     */
     public static Date parse(String d, String pattern, TimeZone timeZone) {
         try {
             return FastDateFormat.getInstance(pattern, timeZone).parse(d);
@@ -809,14 +588,6 @@ public class Dates {
         }
     }
 
-    /**
-     * 日期转化
-     *
-     * @param d        日期
-     * @param timeZone 时区
-     * @param patterns 格式
-     * @return 日期
-     */
     public static Date parse(String d, TimeZone timeZone, String... patterns) {
         for (String pattern : patterns) {
             Date parse = parse(d, pattern, timeZone);
@@ -827,15 +598,6 @@ public class Dates {
         return null;
     }
 
-    /**
-     * 日期转化
-     *
-     * @param d        日期
-     * @param pattern  格式
-     * @param timeZone 时区
-     * @param locale   地区
-     * @return 日期
-     */
     public static Date parse(String d, String pattern, TimeZone timeZone, Locale locale) {
         try {
             return FastDateFormat.getInstance(pattern, timeZone, locale).parse(d);
@@ -1309,23 +1071,12 @@ public class Dates {
         return format(parse, n);
     }
 
-    /**
-     * 今年是否为闰年
-     *
-     * @return true闰年
-     */
     public static boolean isLeapYear() {
         Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
         return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
     }
 
-    /**
-     * 是否为闰年
-     *
-     * @param d 时间
-     * @return true闰年
-     */
     public static boolean isLeapYear(Date d) {
         Calendar c = Calendar.getInstance();
         c.setTime(d);
@@ -1343,22 +1094,11 @@ public class Dates {
         return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
     }
 
-    /**
-     * 获得本月的最后一天
-     *
-     * @return 最后一天
-     */
     public static int getMonthLastDay() {
         Calendar c = Calendar.getInstance();
         return getMonthLastDay(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1);
     }
 
-    /**
-     * 获得月份的最后一天
-     *
-     * @param date 时间
-     * @return 最后一天
-     */
     public static int getMonthLastDay(Date date) {
         Calendar c = Calendar.getInstance();
         c.setTime(date);
@@ -1386,46 +1126,14 @@ public class Dates {
         }
     }
 
-    /**
-     * 是否为上午
-     *
-     * @return ignore
-     */
     public boolean isAm() {
         return isAm(Calendar.getInstance());
     }
 
-    /**
-     * 是否为下午
-     *
-     * @return ignore
-     */
-    public boolean isPm() {
-        return isPm(Calendar.getInstance());
-    }
-
-    /**
-     * 是否为上午
-     *
-     * @param d d
-     * @return ignore
-     */
     public boolean isAm(Date d) {
         Calendar c = Calendar.getInstance();
         c.setTime(d);
         return isAm(c);
-    }
-
-    /**
-     * 是否为下午
-     *
-     * @param d d
-     * @return ignore
-     */
-    public boolean isPm(Date d) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(d);
-        return isPm(c);
     }
 
     /**
@@ -1436,6 +1144,16 @@ public class Dates {
      */
     public boolean isAm(Calendar c) {
         return Calendar.AM == c.get(Calendar.AM_PM);
+    }
+
+    public boolean isPm() {
+        return isPm(Calendar.getInstance());
+    }
+
+    public boolean isPm(Date d) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(d);
+        return isPm(c);
     }
 
     /**
@@ -1683,23 +1401,10 @@ public class Dates {
         return LocalDateTime.of(d.toLocalDate().withDayOfMonth(1), LocalTime.of(0, 0, 0, 0));
     }
 
-    /**
-     * 格式化
-     *
-     * @param d ignore
-     * @return ignore
-     */
     public static String format(TemporalAccessor d) {
         return format(d, YMDHMS);
     }
 
-    /**
-     * 格式化
-     *
-     * @param d       ignore
-     * @param pattern 格式
-     * @return ignore
-     */
     public static String format(TemporalAccessor d, String pattern) {
         try {
             DateTimeFormatter formatter = DATE_TIME_FORMAT_CONTAINER.get(pattern);
@@ -1771,81 +1476,37 @@ public class Dates {
 
     // ---------- Stream ----------
 
-    /**
-     * 日期流
-     *
-     * @return 流
-     */
     public static DateStream stream() {
         return new DateStream(new Date());
     }
 
-    /**
-     * 日期流
-     *
-     * @param timeZone 时区
-     * @return 流
-     */
     public static DateStream stream(TimeZone timeZone) {
         Valid.notNull(timeZone);
         return new DateStream(new Date(), timeZone);
     }
 
-    /**
-     * 日期流
-     *
-     * @param locale 地区
-     * @return 流
-     */
     public static DateStream stream(Locale locale) {
         Valid.notNull(locale);
         return new DateStream(new Date(), locale);
     }
 
-    /**
-     * 日期流
-     *
-     * @param timeZone 时区
-     * @param locale   地区
-     * @return 流
-     */
     public static DateStream stream(TimeZone timeZone, Locale locale) {
         Valid.notNull(timeZone);
         Valid.notNull(locale);
         return new DateStream(new Date(), timeZone, locale);
     }
 
-    /**
-     * 日期流
-     *
-     * @param date 时间
-     * @return 流
-     */
     public static DateStream stream(Date date) {
         Valid.notNull(date);
         return new DateStream(date);
     }
 
-    /**
-     * 日期流
-     *
-     * @param date     时间
-     * @param timeZone 时区
-     * @return 流
-     */
     public static DateStream stream(Date date, TimeZone timeZone) {
         Valid.notNull(date);
         Valid.notNull(timeZone);
         return new DateStream(date, timeZone);
     }
 
-    /**
-     * 日期流
-     *
-     * @param date   时间
-     * @param locale 地区
-     * @return 流
-     */
     public static DateStream stream(Date date, Locale locale) {
         Valid.notNull(date);
         Valid.notNull(locale);

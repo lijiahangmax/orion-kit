@@ -29,13 +29,6 @@ public class FileReaders {
     private FileReaders() {
     }
 
-    /**
-     * 读取文件
-     *
-     * @param file  文件
-     * @param bytes 读取的数组
-     * @return 读取的长度
-     */
     public static int read(String file, byte[] bytes) {
         return read(new File(file), bytes);
     }
@@ -55,14 +48,6 @@ public class FileReaders {
         }
     }
 
-    /**
-     * 读取文件
-     *
-     * @param file     文件
-     * @param bytes    读取的数组
-     * @param skipByte 文件起始偏移量
-     * @return 读取的长度
-     */
     public static int read(String file, byte[] bytes, long skipByte) {
         return read(new File(file), bytes, skipByte);
     }
@@ -86,13 +71,6 @@ public class FileReaders {
         }
     }
 
-    /**
-     * 读取一行
-     *
-     * @param file     文件
-     * @param skipByte 偏移量
-     * @return 行
-     */
     public static String readLine(String file, long skipByte) {
         return readLine(new File(file), skipByte, null);
     }
@@ -108,14 +86,6 @@ public class FileReaders {
         return readLine(file, skipByte, null);
     }
 
-    /**
-     * 读取一行
-     *
-     * @param file     文件
-     * @param skipByte 偏移量
-     * @param charset  编码格式
-     * @return 行
-     */
     public static String readLine(String file, long skipByte, String charset) {
         return readLine(new File(file), skipByte, charset);
     }
@@ -147,13 +117,6 @@ public class FileReaders {
         }
     }
 
-    /**
-     * 读取文件
-     *
-     * @param file     文件
-     * @param skipByte 文件偏移量
-     * @return 行
-     */
     public static List<String> readLines(File file, long skipByte) {
         return readLines(file, skipByte, -1, null);
     }
@@ -169,14 +132,6 @@ public class FileReaders {
         return readLines(new File(file), skipByte, -1, null);
     }
 
-    /**
-     * 读取文件
-     *
-     * @param file      文件
-     * @param skipByte  文件偏移量
-     * @param readLines 读取多少行 <= 0 所有行
-     * @return 行
-     */
     public static List<String> readLines(File file, long skipByte, int readLines) {
         return readLines(file, skipByte, readLines, null);
     }
@@ -193,15 +148,6 @@ public class FileReaders {
         return readLines(new File(file), skipByte, readLines, null);
     }
 
-    /**
-     * 读取文件
-     *
-     * @param file      文件
-     * @param skipByte  文件偏移量
-     * @param readLines 读取多少行  <= 0 所有行
-     * @param charset   编码格式
-     * @return 行
-     */
     public static List<String> readLines(String file, long skipByte, int readLines, String charset) {
         return readLines(new File(file), skipByte, readLines, charset);
     }
@@ -247,14 +193,6 @@ public class FileReaders {
         }
     }
 
-    /**
-     * 读取文件
-     *
-     * @param file      文件
-     * @param skipLine  文件偏移行
-     * @param readLines 读取多少行  <=0 所有行
-     * @return 行
-     */
     public static List<String> readLines(File file, int skipLine, int readLines) {
         return readLines(file, skipLine, readLines, null);
     }
@@ -271,15 +209,6 @@ public class FileReaders {
         return readLines(new File(file), skipLine, readLines, null);
     }
 
-    /**
-     * 读取文件
-     *
-     * @param file      文件
-     * @param skipLine  文件偏移行
-     * @param readLines 读取多少行  <=0 所有行
-     * @param charset   编码格式
-     * @return 行
-     */
     public static List<String> readLines(String file, int skipLine, int readLines, String charset) {
         return readLines(new File(file), skipLine, readLines, charset);
     }
@@ -329,12 +258,6 @@ public class FileReaders {
         }
     }
 
-    /**
-     * 行消费者
-     *
-     * @param file file
-     * @param c    consumer
-     */
     public static void lineConsumer(String file, Consumer<String> c) {
         lineConsumer(new File(file), null, c);
     }
@@ -349,13 +272,6 @@ public class FileReaders {
         lineConsumer(file, null, c);
     }
 
-    /**
-     * 行消费者
-     *
-     * @param file    file
-     * @param charset charset
-     * @param c       consumer
-     */
     public static void lineConsumer(String file, String charset, Consumer<String> c) {
         lineConsumer(new File(file), charset, c);
     }
@@ -379,12 +295,6 @@ public class FileReaders {
         }
     }
 
-    /**
-     * 行迭代器
-     *
-     * @param file file
-     * @return LineIterator
-     */
     public static LineIterator lineIterator(String file) {
         return lineIterator(new File(file), null);
     }
@@ -399,13 +309,6 @@ public class FileReaders {
         return lineIterator(file, null);
     }
 
-    /**
-     * 行迭代器
-     *
-     * @param file    file
-     * @param charset charset
-     * @return LineIterator
-     */
     public static LineIterator lineIterator(String file, String charset) {
         return lineIterator(new File(file), charset);
     }
@@ -431,22 +334,10 @@ public class FileReaders {
 
     // -------------------- fast --------------------
 
-    /**
-     * 读取文件所有字节
-     *
-     * @param file file
-     * @return bytes
-     */
     public static byte[] readFast(String file) {
         return readFast(Paths.get(file));
     }
 
-    /**
-     * 读取文件所有字节
-     *
-     * @param file file
-     * @return bytes
-     */
     public static byte[] readFast(File file) {
         return readFast(Paths.get(file.getAbsolutePath()));
     }
@@ -465,22 +356,10 @@ public class FileReaders {
         }
     }
 
-    /**
-     * 读取文件所有行
-     *
-     * @param file 文件
-     * @return 行
-     */
     public static List<String> readLinesFast(String file) {
         return readLinesFast(Paths.get(file), null);
     }
 
-    /**
-     * 读取文件所有行
-     *
-     * @param file 文件
-     * @return 行
-     */
     public static List<String> readLinesFast(File file) {
         return readLinesFast(Paths.get(file.getAbsolutePath()), null);
     }
@@ -495,24 +374,10 @@ public class FileReaders {
         return readLinesFast(file, null);
     }
 
-    /**
-     * 读取文件所有行
-     *
-     * @param file    文件
-     * @param charset 编码
-     * @return 行
-     */
     public static List<String> readLinesFast(String file, String charset) {
         return readLinesFast(Paths.get(file), Charset.forName(charset));
     }
 
-    /**
-     * 读取文件所有行
-     *
-     * @param file    文件
-     * @param charset 编码
-     * @return 行
-     */
     public static List<String> readLinesFast(File file, String charset) {
         return readLinesFast(Paths.get(file.getAbsolutePath()), Charset.forName(charset));
     }
@@ -536,22 +401,10 @@ public class FileReaders {
         }
     }
 
-    /**
-     * 行消费者
-     *
-     * @param file file
-     * @param c    consumer
-     */
     public static void lineConsumerFast(String file, Consumer<String> c) {
         lineConsumerFast(Paths.get(file), null, c);
     }
 
-    /**
-     * 行消费者
-     *
-     * @param file file
-     * @param c    consumer
-     */
     public static void lineConsumerFast(File file, Consumer<String> c) {
         lineConsumerFast(Paths.get(file.getAbsolutePath()), null, c);
     }
@@ -566,24 +419,10 @@ public class FileReaders {
         lineConsumerFast(file, null, c);
     }
 
-    /**
-     * 行消费者
-     *
-     * @param file    file
-     * @param charset charset
-     * @param c       consumer
-     */
     public static void lineConsumerFast(String file, String charset, Consumer<String> c) {
         lineConsumerFast(Paths.get(file), Charset.forName(charset), c);
     }
 
-    /**
-     * 行消费者
-     *
-     * @param file    file
-     * @param charset charset
-     * @param c       consumer
-     */
     public static void lineConsumerFast(File file, String charset, Consumer<String> c) {
         lineConsumerFast(Paths.get(file.getAbsolutePath()), Charset.forName(charset), c);
     }
@@ -611,22 +450,10 @@ public class FileReaders {
         }
     }
 
-    /**
-     * 行迭代器
-     *
-     * @param file file
-     * @return LineIterator
-     */
     public static LineIterator lineIteratorFast(String file) {
         return lineIteratorFast(Paths.get(file), null);
     }
 
-    /**
-     * 行迭代器
-     *
-     * @param file file
-     * @return LineIterator
-     */
     public static LineIterator lineIteratorFast(File file) {
         return lineIteratorFast(Paths.get(file.getAbsolutePath()), null);
     }
@@ -641,24 +468,10 @@ public class FileReaders {
         return lineIteratorFast(file, null);
     }
 
-    /**
-     * 行迭代器
-     *
-     * @param file    file
-     * @param charset charset
-     * @return LineIterator
-     */
     public static LineIterator lineIteratorFast(String file, String charset) {
         return lineIteratorFast(Paths.get(file), Charset.forName(charset));
     }
 
-    /**
-     * 行迭代器
-     *
-     * @param file    file
-     * @param charset charset
-     * @return LineIterator
-     */
     public static LineIterator lineIteratorFast(File file, String charset) {
         return lineIteratorFast(Paths.get(file.getAbsolutePath()), Charset.forName(charset));
     }
