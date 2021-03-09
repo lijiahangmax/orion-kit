@@ -57,7 +57,6 @@ public class ColumnSplitTests {
                 .close();
     }
 
-
     @Test
     public void multi1() {
         new ExcelColumnMultiSplit(w1, "bean")

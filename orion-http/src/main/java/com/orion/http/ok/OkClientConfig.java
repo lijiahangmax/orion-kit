@@ -1,5 +1,6 @@
 package com.orion.http.ok;
 
+import com.orion.constant.Const;
 import okhttp3.ConnectionSpec;
 import okhttp3.CookieJar;
 import okhttp3.Dispatcher;
@@ -100,10 +101,10 @@ public class OkClientConfig implements Serializable {
     private List<ConnectionSpec> connectionSpecs;
 
     public OkClientConfig() {
-        this.callTimeout = 15000;
-        this.connectTimeout = 3000;
-        this.readTimeout = 15000;
-        this.writeTimeout = 15000;
+        this.connectTimeout = Const.MS_S_3;
+        this.callTimeout = Const.MS_S_15;
+        this.readTimeout = Const.MS_S_15;
+        this.writeTimeout = Const.MS_S_15;
         this.maxRoute = 12;
         this.maxRequest = 64;
     }

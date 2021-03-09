@@ -75,7 +75,6 @@ public class BasicTypeStoreProvider implements Serializable {
     private final static Conversion TO_LOCAL_DATE_TIME = Dates::localDateTime;
     private final static Conversion TO_LOCAL_DATE = Dates::localDate;
 
-
     private void loadNumber() {
         store.register(Number.class, Byte.class, TO_BYTE);
         store.register(Number.class, Short.class, TO_SHORT);

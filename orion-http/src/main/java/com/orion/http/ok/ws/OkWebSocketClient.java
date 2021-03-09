@@ -1,5 +1,6 @@
 package com.orion.http.ok.ws;
 
+import com.orion.constant.Const;
 import com.orion.http.ok.OkClient;
 import com.orion.http.ok.ws.handler.*;
 import com.orion.id.Sequences;
@@ -77,7 +78,7 @@ public class OkWebSocketClient {
     /**
      * 异常断开连接重试间隔 ms
      */
-    private int errorReconnectionInterval = 30000;
+    private int errorReconnectionInterval;
 
     /**
      * 最后一次关闭码
@@ -138,8 +139,9 @@ public class OkWebSocketClient {
      * 启动Client
      */
     public void start() {
-        connectionState = 1;
-        initMockClient();
+        this.connectionState = 1;
+        this.errorReconnectionInterval = Const.MS_S_30;
+        this.initMockClient();
     }
 
     /**

@@ -109,6 +109,20 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, Js
         this.resetOffset();
     }
 
+    /**
+     * 判断本页是否还需要继续查询
+     *
+     * @param count count
+     * @param pager pager
+     * @return true 需要查询
+     */
+    public static boolean hasMoreData(int count, Pager<?> pager) {
+        if (pager == null) {
+            return count != 0;
+        }
+        return pager.offset < count;
+    }
+
     public List<T> getRows() {
         return rows;
     }
@@ -207,7 +221,6 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, Js
         this.sql = sql;
         return this;
     }
-
 
     /**
      * 转化为数据表格容器

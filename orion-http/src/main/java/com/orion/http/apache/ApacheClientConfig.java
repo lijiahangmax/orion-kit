@@ -1,5 +1,6 @@
 package com.orion.http.apache;
 
+import com.orion.constant.Const;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponseInterceptor;
@@ -106,9 +107,9 @@ public class ApacheClientConfig implements Serializable {
     private LayeredConnectionSocketFactory sslSocketFactory;
 
     public ApacheClientConfig() {
-        this.connectTimeout = 3000;
-        this.socketTimeout = 15000;
-        this.requestTimeout = 15000;
+        this.connectTimeout = Const.MS_S_3;
+        this.socketTimeout = Const.MS_S_15;
+        this.requestTimeout = Const.MS_S_15;
         this.maxRoute = 12;
         this.maxRequest = 64;
         this.connTimeToLive = -1;

@@ -23,7 +23,6 @@ public class Const {
             "O", "P", "Q", "R", "S", "T", "U",
             "V", "W", "X", "Y", "Z"};
 
-
     // --------------- project ---------------
 
     public static final String ORION = "orion";
@@ -105,6 +104,8 @@ public class Const {
     public static final int MS_S_5 = 1000 * 5;
 
     public static final int MS_S_10 = 1000 * 10;
+
+    public static final int MS_S_15 = 1000 * 15;
 
     public static final int MS_S_30 = 1000 * 30;
 

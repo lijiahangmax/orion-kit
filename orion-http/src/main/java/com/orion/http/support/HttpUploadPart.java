@@ -169,7 +169,6 @@ public class HttpUploadPart {
         return this;
     }
 
-
     public String getContentType() {
         return contentType;
     }

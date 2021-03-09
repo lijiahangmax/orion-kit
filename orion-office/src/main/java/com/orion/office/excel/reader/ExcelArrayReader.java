@@ -134,7 +134,6 @@ public class ExcelArrayReader extends BaseExcelReader<String[]> {
         return this;
     }
 
-
     @Override
     protected String[] parserRow(Row row) {
         if (row == null) {

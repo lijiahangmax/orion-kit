@@ -35,7 +35,7 @@ public class Sockets {
     }
 
     /**
-     * 获取一个可用端口的 ServerSocket
+     * 获取一个可用端口的 ServerSocket (5000 - 65535]
      *
      * @return ServerSocket 未找到返回null
      */
@@ -46,13 +46,13 @@ public class Sockets {
     /**
      * 获取一个指定端口范围中可用端口的 ServerSocket
      *
-     * @param start 端口开始 > 5000
+     * @param start 端口开始 > 1000
      * @param end   端口结束 <= 65535
      * @return ServerSocket 未找到返回null
      */
     public static ServerSocket create(int start, int end) {
-        Valid.gte(start, 1001, "start port must greater than 1000");
-        Valid.gte(end, 1001, "end port must greater than 1000");
+        Valid.gt(start, 1000, "start port must greater than 1000");
+        Valid.gt(end, 1000, "end port must greater than 1000");
         Valid.lte(end, 65535, "end port must less than 65536");
         for (int i = start; i <= end; i++) {
             try {

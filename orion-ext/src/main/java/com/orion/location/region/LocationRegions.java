@@ -37,7 +37,6 @@ public class LocationRegions {
             .with(".region.db")
             .build();
 
-
     /**
      * 搜索器
      */

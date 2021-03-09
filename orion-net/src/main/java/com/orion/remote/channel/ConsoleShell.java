@@ -3,6 +3,7 @@ package com.orion.remote.channel;
 import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
+import com.orion.constant.Const;
 
 /**
  * 控制台 Shell
@@ -64,11 +65,11 @@ public class ConsoleShell {
         this.session = c.getSession(username, host, port);
         session.setPassword(password);
         session.setConfig("StrictHostKeyChecking", "no");
-        session.connect(2000);
+        session.connect(Const.MS_S_3);
         this.channelShell = (ChannelShell) session.openChannel("shell");
         channelShell.setInputStream(System.in);
         channelShell.setOutputStream(System.out);
-        channelShell.connect(2000);
+        channelShell.connect(Const.MS_S_3);
     }
 
     /**

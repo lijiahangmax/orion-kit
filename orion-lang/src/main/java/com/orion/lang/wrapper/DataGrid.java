@@ -49,7 +49,7 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
     private int pages;
 
     /**
-     * 当前页的数量 <= pageSize
+     * 当前页的数量 应该 <= limit
      */
     private int size;
 
@@ -99,11 +99,8 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
             this.rows = new ArrayList<>();
         }
         this.rows.add(row);
-        total++;
-        size++;
-        if (pages == 0) {
-            pages++;
-        }
+        this.size++;
+        this.setTotal(total + 1);
         return this;
     }
 
@@ -113,10 +110,14 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
      * @param rows 结果列表
      */
     public DataGrid<T> addRows(List<T> rows) {
-        if (rows != null) {
-            for (T row : rows) {
-                addRow(row);
-            }
+        if (this.rows == null) {
+            this.rows = new ArrayList<>();
+        }
+        int size = Lists.size(rows);
+        if (size > 0) {
+            this.rows.addAll(rows);
+            this.size += size;
+            this.setTotal(total + size);
         }
         return this;
     }

@@ -325,6 +325,30 @@ public class Exceptions {
         return new IORuntimeException(s, t);
     }
 
+    public static InterruptedException interrupted() {
+        return new InterruptedException();
+    }
+
+    public static InterruptedException interrupted(String s) {
+        return new InterruptedException(s);
+    }
+
+    public static InterruptedRuntimeException interruptedRuntime() {
+        return new InterruptedRuntimeException();
+    }
+
+    public static InterruptedRuntimeException interruptedRuntime(Throwable t) {
+        return new InterruptedRuntimeException(t);
+    }
+
+    public static InterruptedRuntimeException interruptedRuntime(String s) {
+        return new InterruptedRuntimeException(s);
+    }
+
+    public static InterruptedRuntimeException interruptedRuntime(String s, Throwable t) {
+        return new InterruptedRuntimeException(s, t);
+    }
+
     public static UnsupportedEncodingRuntimeException unsupportedEncoding() {
         return new UnsupportedEncodingRuntimeException();
     }
