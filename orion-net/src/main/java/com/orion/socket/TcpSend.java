@@ -1,4 +1,4 @@
-package com.orion.net.socket;
+package com.orion.socket;
 
 import com.orion.constant.Const;
 import com.orion.utils.io.Streams;
@@ -16,10 +16,10 @@ import java.net.SocketException;
  * @version 1.0.0
  * @since 2020/6/5 15:41
  */
-public class TcpSend {
+public class TcpSend implements AutoCloseable {
 
     /**
-     * IP
+     * host
      */
     private String host;
 
@@ -40,7 +40,6 @@ public class TcpSend {
         this.socket = new Socket(host, port);
         this.socket.setSendBufferSize(Const.BUFFER_KB_4);
         this.socket.setTcpNoDelay(true);
-        this.socket.setSoTimeout(Const.MS_S_10);
         this.socket.setKeepAlive(true);
         this.in = socket.getInputStream();
         this.out = socket.getOutputStream();
@@ -56,8 +55,8 @@ public class TcpSend {
         return this;
     }
 
-    public TcpSend send(byte[] send, int off, int len) throws IOException {
-        out.write(send, off, len);
+    public TcpSend send(byte send) throws IOException {
+        out.write(send);
         return this;
     }
 
@@ -66,11 +65,26 @@ public class TcpSend {
         return this;
     }
 
-    public TcpSend send(byte send) throws IOException {
-        out.write(send);
+    /**
+     * 发送数据
+     *
+     * @param send bytes
+     * @param off  offset
+     * @param len  length
+     * @return this
+     * @throws IOException IOException
+     */
+    public TcpSend send(byte[] send, int off, int len) throws IOException {
+        out.write(send, off, len);
         return this;
     }
 
+    /**
+     * 发送 \n
+     *
+     * @return this
+     * @throws IOException IOException
+     */
     public TcpSend sendLF() throws IOException {
         out.write(13);
         return this;
@@ -81,17 +95,29 @@ public class TcpSend {
         return this;
     }
 
-    public byte[] readAvailable() throws IOException {
+    public int read(byte[] bs) throws IOException {
+        return read(bs, 0, bs.length);
+    }
+
+    /**
+     * 读取数据
+     *
+     * @param bs  bytes
+     * @param off offset
+     * @param len length
+     * @return read length
+     * @throws IOException IOException
+     */
+    public int read(byte[] bs, int off, int len) throws IOException {
         int available = this.in.available();
         if (available <= 0) {
-            return new byte[0];
+            return 0;
         } else {
-            byte[] bs = new byte[available];
-            in.read(bs);
-            return bs;
+            return in.read(bs, off, len);
         }
     }
 
+    @Override
     public void close() {
         Streams.close(socket);
     }

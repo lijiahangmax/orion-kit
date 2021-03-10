@@ -1,4 +1,4 @@
-package com.orion.net.socket;
+package com.orion.socket;
 
 import com.orion.constant.Const;
 import com.orion.utils.io.Streams;
@@ -15,7 +15,7 @@ import java.net.SocketException;
  * @version 1.0.0
  * @since 2020/6/5 16:35
  */
-public class UdpReceive {
+public class UdpReceive implements AutoCloseable {
 
     /**
      * 端口
@@ -77,6 +77,7 @@ public class UdpReceive {
         return packet;
     }
 
+    @Override
     public void close() {
         Streams.close(ds);
     }

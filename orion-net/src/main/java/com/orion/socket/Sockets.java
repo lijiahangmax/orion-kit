@@ -1,4 +1,4 @@
-package com.orion.net.socket;
+package com.orion.socket;
 
 import com.orion.utils.Valid;
 

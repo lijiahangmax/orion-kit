@@ -10,7 +10,6 @@ import com.orion.lang.StreamEntry;
 import com.orion.remote.connection.sftp.bigfile.SftpDownload;
 import com.orion.remote.connection.sftp.bigfile.SftpUpload;
 import com.orion.utils.Exceptions;
-import com.orion.utils.Matches;
 import com.orion.utils.Strings;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
@@ -55,7 +54,7 @@ public class SftpExecutor implements SafeCloseable {
     private int bufferSize = Const.BUFFER_KB_32;
 
     public SftpExecutor(SFTPv3Client client) {
-        this(client, null);
+        this(client, Const.UTF_8);
     }
 
     public SftpExecutor(SFTPv3Client client, String fileNameCharset) {
@@ -673,28 +672,31 @@ public class SftpExecutor implements SafeCloseable {
         } else {
             handle = client.openFileRW(path);
         }
-        if (in != null) {
-            byte[] bs = new byte[bufferSize];
-            int read;
-            while ((read = in.read(bs)) != -1) {
-                client.write(handle, fileOffset, bs, 0, read);
-                fileOffset += read;
-            }
-        } else if (entry != null) {
-            client.write(handle, fileOffset, entry.getBytes(), entry.getOff(), entry.getLen());
-        } else if (lines != null) {
-            for (String line : lines) {
-                byte[] bytes;
-                if (charset == null) {
-                    bytes = Strings.bytes(line + Const.LF);
-                } else {
-                    bytes = Strings.bytes((line + Const.LF), charset);
+        try {
+            if (in != null) {
+                byte[] bs = new byte[bufferSize];
+                int read;
+                while ((read = in.read(bs)) != -1) {
+                    client.write(handle, fileOffset, bs, 0, read);
+                    fileOffset += read;
                 }
-                client.write(handle, fileOffset, bytes, 0, bytes.length);
-                fileOffset += bytes.length;
+            } else if (entry != null) {
+                client.write(handle, fileOffset, entry.getBytes(), entry.getOff(), entry.getLen());
+            } else if (lines != null) {
+                for (String line : lines) {
+                    byte[] bytes;
+                    if (charset == null) {
+                        bytes = Strings.bytes(line + Const.LF);
+                    } else {
+                        bytes = Strings.bytes((line + Const.LF), charset);
+                    }
+                    client.write(handle, fileOffset, bytes, 0, bytes.length);
+                    fileOffset += bytes.length;
+                }
             }
+        } finally {
+            handle.getClient().closeFile(handle);
         }
-        handle.getClient().closeFile(handle);
     }
 
     /**
@@ -743,23 +745,10 @@ public class SftpExecutor implements SafeCloseable {
 
     // --------------- list ---------------
 
-    /**
-     * 文件列表 递归
-     *
-     * @param path 文件夹
-     * @return 文件列表
-     */
     public List<FileAttribute> listFiles(String path) {
         return this.listFiles(path, false, false);
     }
 
-    /**
-     * 文件列表
-     *
-     * @param path  文件夹
-     * @param child 是否递归子文件夹
-     * @return 文件列表
-     */
     public List<FileAttribute> listFiles(String path, boolean child) {
         return this.listFiles(path, child, false);
     }
@@ -795,12 +784,6 @@ public class SftpExecutor implements SafeCloseable {
         return list;
     }
 
-    /**
-     * 文件夹列表
-     *
-     * @param path 文件夹
-     * @return 文件列表
-     */
     public List<FileAttribute> listDirs(String path) {
         return this.listDirs(path, true);
     }
@@ -831,31 +814,16 @@ public class SftpExecutor implements SafeCloseable {
         return list;
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param path   文件夹
-     * @param suffix 后缀
-     * @return 文件
-     */
     public List<FileAttribute> listFilesSuffix(String path, String suffix) {
-        return this.listFilesSearch(path, suffix, null, null, 1, false, false);
+        return this.listFilesSearch(path, FileAttributeFilter.suffix(suffix), false, false);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param path   文件夹
-     * @param suffix 后缀
-     * @param child  是否递归子文件夹
-     * @return 文件
-     */
     public List<FileAttribute> listFilesSuffix(String path, String suffix, boolean child) {
-        return this.listFilesSearch(path, suffix, null, null, 1, child, false);
+        return this.listFilesSearch(path, FileAttributeFilter.suffix(suffix), child, false);
     }
 
     /**
-     * 搜索文件
+     * 搜索文件 后缀
      *
      * @param path   文件夹
      * @param suffix 后缀
@@ -864,34 +832,19 @@ public class SftpExecutor implements SafeCloseable {
      * @return 文件
      */
     public List<FileAttribute> listFilesSuffix(String path, String suffix, boolean child, boolean dir) {
-        return this.listFilesSearch(path, suffix, null, null, 1, child, dir);
+        return this.listFilesSearch(path, FileAttributeFilter.suffix(suffix), child, dir);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param path  文件夹
-     * @param match 匹配
-     * @return 文件
-     */
     public List<FileAttribute> listFilesMatch(String path, String match) {
-        return this.listFilesSearch(path, match, null, null, 2, false, false);
+        return this.listFilesSearch(path, FileAttributeFilter.match(match), false, false);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param path  文件夹
-     * @param match 匹配
-     * @param child 是否递归子文件夹
-     * @return 文件
-     */
     public List<FileAttribute> listFilesMatch(String path, String match, boolean child) {
-        return this.listFilesSearch(path, match, null, null, 2, child, false);
+        return this.listFilesSearch(path, FileAttributeFilter.match(match), child, false);
     }
 
     /**
-     * 搜索文件
+     * 搜索文件 文件名
      *
      * @param path  文件夹
      * @param match 匹配
@@ -900,34 +853,19 @@ public class SftpExecutor implements SafeCloseable {
      * @return 文件
      */
     public List<FileAttribute> listFilesMatch(String path, String match, boolean child, boolean dir) {
-        return this.listFilesSearch(path, match, null, null, 2, child, dir);
+        return this.listFilesSearch(path, FileAttributeFilter.match(match), child, dir);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param path    文件夹
-     * @param pattern 正则
-     * @return 文件
-     */
     public List<FileAttribute> listFilesPattern(String path, Pattern pattern) {
-        return this.listFilesSearch(path, null, pattern, null, 3, false, false);
+        return this.listFilesSearch(path, FileAttributeFilter.pattern(pattern), false, false);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param path    文件夹
-     * @param pattern 正则
-     * @param child   是否递归子文件夹
-     * @return 文件
-     */
     public List<FileAttribute> listFilesPattern(String path, Pattern pattern, boolean child) {
-        return this.listFilesSearch(path, null, pattern, null, 3, child, false);
+        return this.listFilesSearch(path, FileAttributeFilter.pattern(pattern), child, false);
     }
 
     /**
-     * 搜索文件
+     * 搜索文件 正则
      *
      * @param path    文件夹
      * @param pattern 正则
@@ -935,34 +873,19 @@ public class SftpExecutor implements SafeCloseable {
      * @return 文件
      */
     public List<FileAttribute> listFilesPattern(String path, Pattern pattern, boolean child, boolean dir) {
-        return this.listFilesSearch(path, null, pattern, null, 3, child, dir);
+        return this.listFilesSearch(path, FileAttributeFilter.pattern(pattern), child, dir);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param path   文件夹
-     * @param filter 过滤器
-     * @return 文件
-     */
     public List<FileAttribute> listFilesFilter(String path, FileAttributeFilter filter) {
-        return this.listFilesSearch(path, null, null, filter, 4, false, false);
+        return this.listFilesSearch(path, filter, false, false);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param path   文件夹
-     * @param filter 过滤器
-     * @param child  是否递归子文件夹子文件夹
-     * @return 文件
-     */
     public List<FileAttribute> listFilesFilter(String path, FileAttributeFilter filter, boolean child) {
-        return this.listFilesSearch(path, null, null, filter, 4, child, false);
+        return this.listFilesSearch(path, filter, child, false);
     }
 
     /**
-     * 搜索文件
+     * 搜索文件 过滤器
      *
      * @param path   文件夹
      * @param filter 过滤器
@@ -971,22 +894,19 @@ public class SftpExecutor implements SafeCloseable {
      * @return 文件
      */
     public List<FileAttribute> listFilesFilter(String path, FileAttributeFilter filter, boolean child, boolean dir) {
-        return this.listFilesSearch(path, null, null, filter, 4, child, dir);
+        return this.listFilesSearch(path, filter, child, dir);
     }
 
     /**
      * 搜索文件
      *
-     * @param path    文件夹
-     * @param search  搜索
-     * @param pattern 正则
-     * @param filter  过滤器
-     * @param type    类型 1后缀 2匹配 3正则 4过滤器
-     * @param child   是否递归子文件夹
-     * @param dir     是否添加文件夹
+     * @param path   文件夹
+     * @param filter 过滤器
+     * @param child  是否递归子文件夹
+     * @param dir    是否添加文件夹
      * @return 文件
      */
-    private List<FileAttribute> listFilesSearch(String path, String search, Pattern pattern, FileAttributeFilter filter, int type, boolean child, boolean dir) {
+    private List<FileAttribute> listFilesSearch(String path, FileAttributeFilter filter, boolean child, boolean dir) {
         List<FileAttribute> list = new ArrayList<>();
         try {
             List<FileAttribute> files = this.ll(path);
@@ -994,24 +914,12 @@ public class SftpExecutor implements SafeCloseable {
                 String fn = l.getFileName();
                 boolean isDir = l.isDirectory();
                 if (!isDir || dir) {
-                    boolean add = false;
-                    if (type == 1 && fn.toLowerCase().endsWith(search.toLowerCase())) {
-                        add = true;
-                    } else if (type == 2 && fn.toLowerCase().contains(search.toLowerCase())) {
-                        add = true;
-                    } else if (type == 3 && Matches.test(fn, pattern)) {
-                        add = true;
-                    } else if (type == 4) {
-                        if (filter.accept(l, path)) {
-                            list.add(l);
-                        }
-                    }
-                    if (add) {
+                    if (filter.accept(l)) {
                         list.add(l);
                     }
                 }
                 if (isDir && child) {
-                    list.addAll(this.listFilesSearch(Files1.getPath(path + SEPARATOR + fn), search, pattern, filter, type, true, dir));
+                    list.addAll(this.listFilesSearch(Files1.getPath(path + SEPARATOR + fn), filter, true, dir));
                 }
             }
         } catch (Exception e) {

@@ -1,4 +1,4 @@
-package com.orion.net.socket;
+package com.orion.socket;
 
 import com.orion.constant.Const;
 import com.orion.utils.Exceptions;
@@ -17,7 +17,7 @@ import java.net.SocketException;
  * @version 1.0.0
  * @since 2020/6/5 16:15
  */
-public class UdpSend {
+public class UdpSend implements AutoCloseable {
 
     /**
      * IP
@@ -68,12 +68,34 @@ public class UdpSend {
         return this;
     }
 
+    /**
+     * 发送数据
+     *
+     * @param bs  bytes
+     * @param off offset
+     * @param len length
+     * @return this
+     * @throws IOException IOException
+     */
     public UdpSend send(byte[] bs, int off, int len) throws IOException {
         DatagramPacket dp = new DatagramPacket(bs, off, len, this.inetAddress, this.port);
         this.ds.send(dp);
         return this;
     }
 
+    /**
+     * 发送 \n
+     *
+     * @return this
+     * @throws IOException IOException
+     */
+    public UdpSend sendLF() throws IOException {
+        DatagramPacket dp = new DatagramPacket(Const.LF.getBytes(), 1, this.inetAddress, this.port);
+        this.ds.send(dp);
+        return this;
+    }
+
+    @Override
     public void close() {
         Streams.close(ds);
     }

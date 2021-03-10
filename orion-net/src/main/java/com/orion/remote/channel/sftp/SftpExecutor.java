@@ -9,7 +9,6 @@ import com.orion.remote.channel.BaseExecutor;
 import com.orion.remote.channel.sftp.bigfile.SftpDownload;
 import com.orion.remote.channel.sftp.bigfile.SftpUpload;
 import com.orion.utils.Exceptions;
-import com.orion.utils.Matches;
 import com.orion.utils.Strings;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
@@ -53,7 +52,7 @@ public class SftpExecutor extends BaseExecutor {
     private String home;
 
     public SftpExecutor(ChannelSftp channel) {
-        this(channel, null);
+        this(channel, Const.UTF_8);
     }
 
     public SftpExecutor(ChannelSftp channel, String fileNameEncoding) {
@@ -789,34 +788,30 @@ public class SftpExecutor extends BaseExecutor {
         } catch (SftpException e) {
             throw Exceptions.sftp();
         }
-        if (in != null) {
-            byte[] bs = new byte[bufferSize];
-            int read;
-            while ((read = in.read(bs)) != -1) {
-                out.write(bs, 0, read);
-            }
-        } else if (entry != null) {
-            out.write(entry.getBytes(), entry.getOff(), entry.getLen());
-        } else if (lines != null) {
-            for (String line : lines) {
-                if (charset == null) {
-                    out.write(Strings.bytes(line + Const.LF));
-                } else {
-                    out.write(Strings.bytes(line + Const.LF, charset));
+        try {
+            if (in != null) {
+                byte[] bs = new byte[bufferSize];
+                int read;
+                while ((read = in.read(bs)) != -1) {
+                    out.write(bs, 0, read);
+                }
+            } else if (entry != null) {
+                out.write(entry.getBytes(), entry.getOff(), entry.getLen());
+            } else if (lines != null) {
+                for (String line : lines) {
+                    if (charset == null) {
+                        out.write(Strings.bytes(line + Const.LF));
+                    } else {
+                        out.write(Strings.bytes(line + Const.LF, charset));
+                    }
                 }
             }
+            out.flush();
+        } finally {
+            Streams.close(out);
         }
-        out.flush();
-        Streams.close(out);
     }
 
-    /**
-     * 获取文件上传器
-     *
-     * @param remote 远程文件绝对路径
-     * @param local  本地文件
-     * @return 文件上传器
-     */
     public SftpUpload upload(String remote, File local) {
         return new SftpUpload(channel, remote, local);
     }
@@ -832,13 +827,6 @@ public class SftpExecutor extends BaseExecutor {
         return new SftpUpload(channel, remote, local);
     }
 
-    /**
-     * 获取文件下载器
-     *
-     * @param remote 远程文件绝对路径
-     * @param local  本地文件
-     * @return 文件上传器
-     */
     public SftpDownload download(String remote, File local) {
         return new SftpDownload(channel, remote, local);
     }
@@ -856,23 +844,10 @@ public class SftpExecutor extends BaseExecutor {
 
     // --------------- list ---------------
 
-    /**
-     * 文件列表 递归
-     *
-     * @param path 文件夹
-     * @return 文件列表
-     */
     public List<FileAttribute> listFiles(String path) {
         return this.listFiles(path, false, false);
     }
 
-    /**
-     * 文件列表
-     *
-     * @param path  文件夹绝对路径
-     * @param child 是否递归子文件夹
-     * @return 文件列表
-     */
     public List<FileAttribute> listFiles(String path, boolean child) {
         return this.listFiles(path, child, false);
     }
@@ -907,12 +882,6 @@ public class SftpExecutor extends BaseExecutor {
         return list;
     }
 
-    /**
-     * 文件夹列表
-     *
-     * @param path 文件夹绝对路径
-     * @return 文件列表
-     */
     public List<FileAttribute> listDirs(String path) {
         return this.listDirs(path, true);
     }
@@ -942,31 +911,16 @@ public class SftpExecutor extends BaseExecutor {
         return list;
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param path   文件夹绝对路径
-     * @param suffix 后缀
-     * @return 文件
-     */
     public List<FileAttribute> listFilesSuffix(String path, String suffix) {
-        return this.listFilesSearch(path, suffix, null, null, 1, false, false);
+        return this.listFilesSearch(path, FileAttributeFilter.suffix(suffix), false, false);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param path   文件夹绝对路径
-     * @param suffix 后缀
-     * @param child  是否递归子文件夹
-     * @return 文件
-     */
     public List<FileAttribute> listFilesSuffix(String path, String suffix, boolean child) {
-        return this.listFilesSearch(path, suffix, null, null, 1, child, false);
+        return this.listFilesSearch(path, FileAttributeFilter.suffix(suffix), child, false);
     }
 
     /**
-     * 搜索文件
+     * 搜索文件 后缀
      *
      * @param path   文件夹绝对路径
      * @param suffix 后缀
@@ -975,34 +929,19 @@ public class SftpExecutor extends BaseExecutor {
      * @return 文件
      */
     public List<FileAttribute> listFilesSuffix(String path, String suffix, boolean child, boolean dir) {
-        return this.listFilesSearch(path, suffix, null, null, 1, child, dir);
+        return this.listFilesSearch(path, FileAttributeFilter.suffix(suffix), child, dir);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param path  文件夹绝对路径
-     * @param match 匹配
-     * @return 文件
-     */
     public List<FileAttribute> listFilesMatch(String path, String match) {
-        return this.listFilesSearch(path, match, null, null, 2, false, false);
+        return this.listFilesSearch(path, FileAttributeFilter.match(match), false, false);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param path  文件夹绝对路径
-     * @param match 匹配
-     * @param child 是否递归子文件夹
-     * @return 文件
-     */
     public List<FileAttribute> listFilesMatch(String path, String match, boolean child) {
-        return this.listFilesSearch(path, match, null, null, 2, child, false);
+        return this.listFilesSearch(path, FileAttributeFilter.match(match), child, false);
     }
 
     /**
-     * 搜索文件
+     * 搜索文件 文件名
      *
      * @param path  文件夹绝对路径
      * @param match 匹配
@@ -1011,34 +950,19 @@ public class SftpExecutor extends BaseExecutor {
      * @return 文件
      */
     public List<FileAttribute> listFilesMatch(String path, String match, boolean child, boolean dir) {
-        return this.listFilesSearch(path, match, null, null, 2, child, dir);
+        return this.listFilesSearch(path, FileAttributeFilter.match(match), child, dir);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param path    文件夹绝对路径
-     * @param pattern 正则
-     * @return 文件
-     */
     public List<FileAttribute> listFilesPattern(String path, Pattern pattern) {
-        return this.listFilesSearch(path, null, pattern, null, 3, false, false);
+        return this.listFilesSearch(path, FileAttributeFilter.pattern(pattern), false, false);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param path    文件夹绝对路径
-     * @param pattern 正则
-     * @param child   是否递归子文件夹
-     * @return 文件
-     */
     public List<FileAttribute> listFilesPattern(String path, Pattern pattern, boolean child) {
-        return this.listFilesSearch(path, null, pattern, null, 3, child, false);
+        return this.listFilesSearch(path, FileAttributeFilter.pattern(pattern), child, false);
     }
 
     /**
-     * 搜索文件
+     * 搜索文件 正则
      *
      * @param path    文件夹绝对路径
      * @param pattern 正则
@@ -1047,34 +971,19 @@ public class SftpExecutor extends BaseExecutor {
      * @return 文件
      */
     public List<FileAttribute> listFilesPattern(String path, Pattern pattern, boolean child, boolean dir) {
-        return this.listFilesSearch(path, null, pattern, null, 3, child, dir);
+        return this.listFilesSearch(path, FileAttributeFilter.pattern(pattern), child, dir);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param path   文件夹绝对路径
-     * @param filter 过滤器
-     * @return 文件
-     */
     public List<FileAttribute> listFilesFilter(String path, FileAttributeFilter filter) {
-        return this.listFilesSearch(path, null, null, filter, 4, false, false);
+        return this.listFilesSearch(path, filter, false, false);
     }
 
-    /**
-     * 搜索文件
-     *
-     * @param path   文件夹绝对路径
-     * @param filter 过滤器
-     * @param child  是否递归子文件夹
-     * @return 文件
-     */
     public List<FileAttribute> listFilesFilter(String path, FileAttributeFilter filter, boolean child) {
-        return this.listFilesSearch(path, null, null, filter, 4, child, false);
+        return this.listFilesSearch(path, filter, child, false);
     }
 
     /**
-     * 搜索文件
+     * 搜索文件 过滤器
      *
      * @param path   文件夹绝对路径
      * @param filter 过滤器
@@ -1083,22 +992,19 @@ public class SftpExecutor extends BaseExecutor {
      * @return 文件
      */
     public List<FileAttribute> listFilesFilter(String path, FileAttributeFilter filter, boolean child, boolean dir) {
-        return this.listFilesSearch(path, null, null, filter, 4, child, dir);
+        return this.listFilesSearch(path, filter, child, dir);
     }
 
     /**
      * 搜索文件
      *
-     * @param path    文件夹绝对路径
-     * @param search  搜索
-     * @param pattern 正则
-     * @param filter  过滤器
-     * @param type    类型 1后缀 2匹配 3正则 4过滤器
-     * @param child   是否递归
-     * @param dir     是否添加文件夹
+     * @param path   文件夹绝对路径
+     * @param filter 过滤器
+     * @param child  是否递归
+     * @param dir    是否添加文件夹
      * @return 文件
      */
-    private List<FileAttribute> listFilesSearch(String path, String search, Pattern pattern, FileAttributeFilter filter, int type, boolean child, boolean dir) {
+    private List<FileAttribute> listFilesSearch(String path, FileAttributeFilter filter, boolean child, boolean dir) {
         List<FileAttribute> list = new ArrayList<>();
         try {
             List<FileAttribute> ls = this.ll(path);
@@ -1106,24 +1012,12 @@ public class SftpExecutor extends BaseExecutor {
                 String fn = l.getFileName();
                 boolean isDir = l.isDirectory();
                 if (!isDir || dir) {
-                    boolean add = false;
-                    if (type == 1 && fn.toLowerCase().endsWith(search.toLowerCase())) {
-                        add = true;
-                    } else if (type == 2 && fn.toLowerCase().contains(search.toLowerCase())) {
-                        add = true;
-                    } else if (type == 3 && Matches.test(fn, pattern)) {
-                        add = true;
-                    } else if (type == 4) {
-                        if (filter.accept(l, path)) {
-                            list.add(l);
-                        }
-                    }
-                    if (add) {
+                    if (filter.accept(l)) {
                         list.add(l);
                     }
                 }
                 if (isDir && child) {
-                    list.addAll(this.listFilesSearch(Files1.getPath(path + SEPARATOR + fn), search, pattern, filter, type, true, dir));
+                    list.addAll(this.listFilesSearch(Files1.getPath(path + SEPARATOR + fn), filter, true, dir));
                 }
             }
         } catch (Exception e) {
