@@ -1,10 +1,15 @@
 package com.orion.ftp.client.pool;
 
-import com.orion.ftp.client.FtpConfig;
+import com.orion.ftp.client.FtpInstance;
+import com.orion.ftp.client.config.FtpConfig;
+import com.orion.ftp.client.config.FtpsConfig;
 import com.orion.utils.Exceptions;
+import com.orion.utils.Valid;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
+import org.apache.commons.net.ftp.FTPSClient;
 
+import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 
 /**
@@ -22,24 +27,38 @@ public class FtpClientFactory {
     private FtpConfig config;
 
     public FtpClientFactory(FtpConfig config) {
+        Valid.notNull(config, "config is null");
         this.config = config;
     }
 
     /**
-     * 获取一个连接
+     * 创建一个连接
      *
      * @return 连接
      */
-    public FTPClient getClient() {
-        FTPClient client = new FTPClient();
+    public FTPClient createClient() {
+        FTPClient client;
+        if (config instanceof FtpsConfig) {
+            client = new FTPSClient(((FtpsConfig) config).getProtocol(), ((FtpsConfig) config).isImplicit());
+        } else {
+            client = new FTPClient();
+        }
         int reply;
         try {
             client.setDataTimeout(config.getDateTimeout());
             client.setConnectTimeout(config.getConnTimeout());
-            client.setListHiddenFiles(config.getShowHidden());
+            client.setListHiddenFiles(config.isShowHidden());
             client.setControlEncoding(config.getRemoteContentCharset());
             client.setBufferSize(config.getBuffSize());
             client.connect(config.getHost(), config.getPort());
+            if (config instanceof FtpsConfig && client instanceof FTPSClient) {
+                ((FTPSClient) client).execPROT(((FtpsConfig) config).getProtect());
+                SSLSocketFactory socketFactory = ((FtpsConfig) config).getSocketFactory();
+                if (socketFactory != null) {
+                    client.setSocketFactory(socketFactory);
+                }
+            }
+
             client.login(config.getUsername(), config.getPassword());
             reply = client.getReplyCode();
             if (!FTPReply.isPositiveCompletion(reply)) {
@@ -47,11 +66,11 @@ public class FtpClientFactory {
                 throw Exceptions.ftp("connection FTP client error because not ready");
             } else {
                 client.setFileType(FTPClient.BINARY_FILE_TYPE);
-                if (config.getPassiveMode() != null && config.getPassiveMode()) {
+                if (config.isPassiveMode()) {
                     client.enterLocalPassiveMode();
                     client.enterRemotePassiveMode();
                 }
-                client.cwd(config.getRemoteBaseDir());
+                client.cwd(config.getRemoteRootDir());
             }
             return client;
         } catch (IOException e) {
@@ -60,43 +79,18 @@ public class FtpClientFactory {
     }
 
     /**
-     * 销毁
+     * 创建一个实例
+     *
+     * @return this
      */
-    public void destroy(FTPClient client) {
-        if (client != null && client.isConnected()) {
-            try {
-                client.logout();
-            } catch (Exception e) {
-                // ignore
-            } finally {
-                try {
-                    client.disconnect();
-                } catch (Exception e) {
-                    // ignore
-                }
-            }
-        }
-    }
-
-    /**
-     * 判断是否存活
-     */
-    boolean isActive(FTPClient client) {
-        if (client != null) {
-            try {
-                return client.sendNoOp();
-            } catch (Exception e) {
-                Exceptions.printStacks(e);
-                return false;
-            }
-        }
-        return false;
+    public FtpInstance createInstance() {
+        return new FtpInstance(this.createClient(), config);
     }
 
     /**
      * 获取配置项
      */
-    FtpConfig getConfig() {
+    public FtpConfig getConfig() {
         return config;
     }
 

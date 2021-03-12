@@ -3,6 +3,7 @@ package com.orion.socket;
 import com.orion.constant.Const;
 import com.orion.utils.io.Streams;
 
+import java.io.Flushable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -16,7 +17,7 @@ import java.net.SocketException;
  * @version 1.0.0
  * @since 2020/6/5 15:41
  */
-public class TcpSend implements AutoCloseable {
+public class TcpSend implements AutoCloseable, Flushable {
 
     /**
      * host
@@ -90,9 +91,9 @@ public class TcpSend implements AutoCloseable {
         return this;
     }
 
-    public TcpSend flush() throws IOException {
+    @Override
+    public void flush() throws IOException {
         out.flush();
-        return this;
     }
 
     public int read(byte[] bs) throws IOException {

@@ -1,5 +1,6 @@
 package com.orion.ftp.client.pool;
 
+import com.orion.able.SafeCloseable;
 import com.orion.utils.Threads;
 import org.apache.commons.net.ftp.FTPClient;
 
@@ -12,7 +13,7 @@ import java.util.concurrent.BlockingQueue;
  * @version 1.0.0
  * @since 2020/3/18 12:54
  */
-public class FtpClientKeepAlive {
+public class FtpClientKeepAlive implements SafeCloseable {
 
     /**
      * 线程池
@@ -22,43 +23,28 @@ public class FtpClientKeepAlive {
     /**
      * 心跳检测间隔
      */
-    private int heatTime;
-
-    /**
-     * 心跳检测线程
-     */
-    private Thread thread;
+    private int heartCheckTime;
 
     /**
      * 运行状态
      */
-    private boolean flag = true;
+    private volatile boolean flag;
 
-    FtpClientKeepAlive(FtpClientPool pool) {
+    protected FtpClientKeepAlive(FtpClientPool pool) {
         this.pool = pool;
-        this.thread = new Thread(new FtpClientKeepAliveListener());
-        this.thread.setDaemon(true);
     }
 
     /**
      * 监听心跳
      */
-    void listener(int heatTime) {
-        this.heatTime = heatTime;
-        flag = true;
-        if (thread.getState() == Thread.State.TERMINATED) {
-            thread = new Thread(new FtpClientKeepAliveListener());
-            thread.setDaemon(true);
-            thread.start();
-        } else if (thread.getState() == Thread.State.NEW) {
-            thread.start();
-        }
+    protected void listener(int heartCheckTime) {
+        this.heartCheckTime = heartCheckTime;
+        this.flag = true;
+        Threads.CACHE_EXECUTOR.execute(new FtpClientKeepAliveListener());
     }
 
-    /**
-     * 结束监听
-     */
-    void stop() {
+    @Override
+    public void close() {
         flag = false;
     }
 
@@ -74,16 +60,16 @@ public class FtpClientKeepAlive {
                         ftpClient = q;
                         try {
                             if (!ftpClient.sendNoOp()) {
-                                pool.invalidateClient(ftpClient);
+                                pool.invalidClient(ftpClient);
                                 pool.addClient();
                             }
                         } catch (Exception e) {
-                            pool.invalidateClient(ftpClient);
+                            pool.invalidClient(ftpClient);
                             pool.addClient();
                         }
                     }
                 }
-                Threads.sleep(heatTime);
+                Threads.sleep(heartCheckTime);
             }
         }
     }

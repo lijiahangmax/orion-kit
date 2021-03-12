@@ -1,29 +1,36 @@
 package com.orion.ftp.server;
 
+import com.orion.constant.Const;
 import com.orion.utils.Exceptions;
+import com.orion.utils.Valid;
 import com.orion.utils.collect.Lists;
+import org.apache.ftpserver.ConnectionConfig;
 import org.apache.ftpserver.FtpServer;
 import org.apache.ftpserver.FtpServerFactory;
 import org.apache.ftpserver.ftplet.Authority;
 import org.apache.ftpserver.ftplet.User;
 import org.apache.ftpserver.ftplet.UserManager;
+import org.apache.ftpserver.impl.DefaultConnectionConfig;
 import org.apache.ftpserver.listener.Listener;
 import org.apache.ftpserver.listener.ListenerFactory;
+import org.apache.ftpserver.ssl.SslConfiguration;
+import org.apache.ftpserver.ssl.SslConfigurationFactory;
 import org.apache.ftpserver.usermanager.impl.BaseUser;
 import org.apache.ftpserver.usermanager.impl.TransferRatePermission;
 import org.apache.ftpserver.usermanager.impl.WritePermission;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Ftp FtpServerInstant
+ * Ftp Server 实例
  *
  * @author ljh15
  * @version 1.0.0
  * @since 2020/8/14 10:08
  */
-public class FtpServerInstant {
+public class FtpServerInstance {
 
     /**
      * 服务器工厂
@@ -46,9 +53,24 @@ public class FtpServerInstant {
     private FtpServer ftpServer;
 
     /**
+     * 连接配置
+     */
+    private FtpServerConfig serverConfig;
+
+    /**
+     * ssl配置
+     */
+    private FtpServerSslConfig sslConfig;
+
+    /**
+     * 用户
+     */
+    private List<User> initUsers;
+
+    /**
      * 监听主机
      */
-    private String hostName;
+    private String host;
 
     /**
      * 监听端口
@@ -60,27 +82,35 @@ public class FtpServerInstant {
      */
     private int idleTimeout;
 
-    /**
-     * 用户
-     */
-    private List<User> initUsers = new ArrayList<>();
-
-    public FtpServerInstant() {
+    public FtpServerInstance() {
+        this(Const.LOCALHOST_IP_V4, 21);
     }
 
-    public FtpServerInstant(int port) {
+    public FtpServerInstance(String host) {
+        this(host, 21);
+    }
+
+    public FtpServerInstance(int port) {
+        this(Const.LOCALHOST_IP_V4, port);
+    }
+
+    public FtpServerInstance(String host, int port) {
+        this.host = host;
         this.port = port;
+        this.idleTimeout = 300;
+        this.serverConfig = new FtpServerConfig();
+        this.initUsers = new ArrayList<>();
     }
 
-    public static FtpServerInstant newInstant() {
-        return new FtpServerInstant();
+    public static FtpServerInstance newInstance() {
+        return new FtpServerInstance();
     }
 
-    public static FtpServerInstant newInstant(int port) {
-        return new FtpServerInstant(port);
+    public static FtpServerInstance newInstance(int port) {
+        return new FtpServerInstance(port);
     }
 
-    // ------------------------ listener ------------------------
+    // -------------------- listener --------------------
 
     /**
      * 设置监听主机
@@ -88,8 +118,8 @@ public class FtpServerInstant {
      * @param hostName hostName
      * @return this
      */
-    public FtpServerInstant host(String hostName) {
-        this.hostName = hostName;
+    public FtpServerInstance host(String hostName) {
+        this.host = hostName;
         return this;
     }
 
@@ -99,7 +129,7 @@ public class FtpServerInstant {
      * @param port port
      * @return this
      */
-    public FtpServerInstant port(int port) {
+    public FtpServerInstance port(int port) {
         this.port = port;
         return this;
     }
@@ -110,12 +140,70 @@ public class FtpServerInstant {
      * @param timeout timeout
      * @return this
      */
-    public FtpServerInstant idleTimeout(int timeout) {
+    public FtpServerInstance idleTimeout(int timeout) {
         this.idleTimeout = timeout;
         return this;
     }
 
-    // ------------------------ user ------------------------
+    /**
+     * 设置连接配置信息
+     *
+     * @param serverConfig serverConfig
+     * @return this
+     */
+    public FtpServerInstance serverConfig(FtpServerConfig serverConfig) {
+        this.serverConfig = serverConfig;
+        return this;
+    }
+
+    /**
+     * 设置ssl配置信息
+     *
+     * @param sslConfig sslConfig
+     * @return this
+     */
+    public FtpServerInstance sslConfig(FtpServerSslConfig sslConfig) {
+        this.sslConfig = sslConfig;
+        return this;
+    }
+
+    /**
+     * FtpServerConfig ->  ConnectionConfig
+     *
+     * @return ConnectionConfig
+     */
+    private ConnectionConfig convertConnectionConfig() {
+        return new DefaultConnectionConfig(serverConfig.isAnonymousLogin(), serverConfig.getLoginFailureDelay(), serverConfig.getMaxLogin(),
+                serverConfig.getMaxAnonymousLogin(), serverConfig.getMaxLoginFailures(), serverConfig.getMaxThreads());
+    }
+
+    /**
+     * FtpServerSslConfig  -> SslConfiguration
+     *
+     * @return SslConfiguration
+     */
+    private SslConfiguration convertSslConfig() {
+        SslConfigurationFactory ssl = new SslConfigurationFactory();
+        File keyStoreFile = Valid.notNull(sslConfig.getKeyStoreFile(), "key store file is null");
+        String keyStorePassword = Valid.notNull(sslConfig.getKeyStorePassword(), "key store password is null");
+        ssl.setKeystoreFile(keyStoreFile);
+        ssl.setKeystorePassword(keyStorePassword);
+        String sslProtocol = sslConfig.getSslProtocol();
+        if (sslProtocol != null) {
+            ssl.setSslProtocol(sslProtocol);
+        }
+        String keyStoreAlgorithm = sslConfig.getKeyStoreAlgorithm();
+        if (keyStoreAlgorithm != null) {
+            ssl.setKeystoreAlgorithm(keyStoreAlgorithm);
+        }
+        String keyAlias = sslConfig.getKeyAlias();
+        if (keyAlias != null) {
+            ssl.setKeyAlias(keyAlias);
+        }
+        return ssl.createSslConfiguration();
+    }
+
+    // -------------------- user --------------------
 
     /**
      * 添加用户
@@ -123,7 +211,7 @@ public class FtpServerInstant {
      * @param user user
      * @return this
      */
-    public FtpServerInstant addUser(FtpUser user) {
+    public FtpServerInstance addUser(FtpUser user) {
         User u = this.convertUser(user);
         if (serverFactory == null) {
             initUsers.add(u);
@@ -142,10 +230,21 @@ public class FtpServerInstant {
      *
      * @param username 用户名
      * @param password 密码
+     * @return this
+     */
+    public FtpServerInstance addUser(String username, String password) {
+        return addUser(username, password, "/home/" + username);
+    }
+
+    /**
+     * 添加用户
+     *
+     * @param username 用户名
+     * @param password 密码
      * @param homePath 根目录
      * @return this
      */
-    public FtpServerInstant addUser(String username, String password, String homePath) {
+    public FtpServerInstance addUser(String username, String password, String homePath) {
         User u = this.convertUser(new FtpUser(username, password, homePath));
         if (serverFactory == null) {
             initUsers.add(u);
@@ -165,7 +264,7 @@ public class FtpServerInstant {
      * @param users users
      * @return this
      */
-    public FtpServerInstant addUsers(List<FtpUser> users) {
+    public FtpServerInstance addUsers(List<FtpUser> users) {
         for (FtpUser user : users) {
             User u = this.convertUser(user);
             if (serverFactory == null) {
@@ -179,6 +278,66 @@ public class FtpServerInstant {
             }
         }
         return this;
+    }
+
+    /**
+     * 删除用户
+     *
+     * @param user user
+     * @return this
+     */
+    public FtpServerInstance deleteUser(String user) {
+        try {
+            userManager.delete(user);
+            return this;
+        } catch (Exception e) {
+            throw Exceptions.ftp(e);
+        }
+    }
+
+    /**
+     * 删除用户
+     *
+     * @param users users
+     * @return this
+     */
+    public FtpServerInstance deleteUsers(List<String> users) {
+        for (String user : users) {
+            try {
+                userManager.delete(user);
+            } catch (Exception e) {
+                throw Exceptions.ftp(e);
+            }
+        }
+        return this;
+    }
+
+    /**
+     * 判断用户是否存在
+     *
+     * @param user 用户名称
+     * @return true存在
+     */
+    public boolean userExists(String user) {
+        try {
+            return userManager.doesExist(user);
+        } catch (Exception e) {
+            throw Exceptions.ftp(e);
+        }
+    }
+
+    /**
+     * 获取所有的用户名
+     *
+     * @return 用户名
+     */
+    public List<String> getUserNames() {
+        try {
+            String[] userNames = userManager.getAllUserNames();
+            return Lists.of(userNames);
+        } catch (Exception e) {
+            throw Exceptions.ftp(e);
+        }
     }
 
     /**
@@ -204,88 +363,27 @@ public class FtpServerInstant {
         return user;
     }
 
-    /**
-     * 删除用户
-     *
-     * @param user user
-     * @return this
-     */
-    public FtpServerInstant deleteUser(String user) {
-        try {
-            userManager.delete(user);
-            return this;
-        } catch (Exception e) {
-            throw Exceptions.ftp(e);
-        }
-    }
-
-    /**
-     * 删除用户
-     *
-     * @param users users
-     * @return this
-     */
-    public FtpServerInstant deleteUsers(List<String> users) {
-        for (String user : users) {
-            try {
-                userManager.delete(user);
-            } catch (Exception e) {
-                throw Exceptions.ftp(e);
-            }
-        }
-        return this;
-    }
-
-    /**
-     * 判断用户是否存在
-     *
-     * @param user 用户名称
-     * @return true存在
-     */
-    public boolean exists(String user) {
-        try {
-            return userManager.doesExist(user);
-        } catch (Exception e) {
-            throw Exceptions.ftp(e);
-        }
-    }
-
-    /**
-     * 获取所有的用户名
-     *
-     * @return 用户名
-     */
-    public List<String> getUserNames() {
-        try {
-            String[] userNames = userManager.getAllUserNames();
-            return Lists.of(userNames);
-        } catch (Exception e) {
-            throw Exceptions.ftp(e);
-        }
-    }
-
-    // ------------------------ server ------------------------
+    // -------------------- server --------------------
 
     /**
      * 监听
      *
      * @return this
      */
-    public FtpServerInstant listener() {
+    public FtpServerInstance listener() {
         serverFactory = new FtpServerFactory();
+        serverFactory.setConnectionConfig(this.convertConnectionConfig());
         factory = new ListenerFactory();
-        if (hostName != null) {
-            factory.setServerAddress(hostName);
+        if (sslConfig != null) {
+            factory.setSslConfiguration(this.convertSslConfig());
         }
-        if (port != 0) {
-            factory.setPort(port);
+        factory.setPort(port);
+        if (host != null) {
+            factory.setServerAddress(host);
         }
-        if (idleTimeout != 0) {
-            factory.setIdleTimeout(idleTimeout);
-        }
-
+        factory.setIdleTimeout(idleTimeout);
         Listener listener = factory.createListener();
-        serverFactory.addListener("default", listener);
+        serverFactory.addListener(Const.DEFAULT, listener);
         userManager = serverFactory.getUserManager();
         for (User initUser : initUsers) {
             try {
@@ -303,7 +401,7 @@ public class FtpServerInstant {
      *
      * @return this
      */
-    public FtpServerInstant start() {
+    public FtpServerInstance start() {
         try {
             ftpServer.start();
             return this;
@@ -317,7 +415,7 @@ public class FtpServerInstant {
      *
      * @return this
      */
-    public FtpServerInstant stop() {
+    public FtpServerInstance stop() {
         ftpServer.stop();
         return this;
     }
@@ -327,7 +425,7 @@ public class FtpServerInstant {
      *
      * @return this
      */
-    public FtpServerInstant suspend() {
+    public FtpServerInstance suspend() {
         ftpServer.suspend();
         return this;
     }
@@ -337,7 +435,7 @@ public class FtpServerInstant {
      *
      * @return this
      */
-    public FtpServerInstant resume() {
+    public FtpServerInstance resume() {
         ftpServer.resume();
         return this;
     }
@@ -360,6 +458,8 @@ public class FtpServerInstant {
         return ftpServer.isSuspended();
     }
 
+    // -------------------- getter --------------------
+
     public FtpServerFactory getServerFactory() {
         return serverFactory;
     }
@@ -376,8 +476,12 @@ public class FtpServerInstant {
         return ftpServer;
     }
 
-    public String getHostName() {
-        return hostName;
+    public FtpServerConfig getServerConfig() {
+        return serverConfig;
+    }
+
+    public String getHost() {
+        return host;
     }
 
     public int getPort() {

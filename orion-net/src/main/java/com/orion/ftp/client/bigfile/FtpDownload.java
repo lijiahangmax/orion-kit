@@ -1,10 +1,10 @@
 package com.orion.ftp.client.bigfile;
 
-import com.orion.constant.Const;
-import com.orion.ftp.client.FtpFileAttr;
+import com.orion.ftp.client.FtpFile;
 import com.orion.ftp.client.FtpInstance;
+import com.orion.support.progress.ByteTransferProgress;
 import com.orion.utils.Exceptions;
-import com.orion.utils.Threads;
+import com.orion.utils.Valid;
 import com.orion.utils.io.FileLocks;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
@@ -12,39 +12,13 @@ import com.orion.utils.io.Streams;
 import java.io.*;
 
 /**
- * FTP 大文件下载
- * 支持断点续传, 实时速率, 平均速率
+ * FTP 大文件下载 支持断点续传, 实时速率
  *
  * @author ljh15
  * @version 1.0.0
- * @since 2020/3/22 14:32
+ * @since 2021/3/13 00:51
  */
 public class FtpDownload implements Runnable {
-
-    /**
-     * 开始时间
-     */
-    private long startTime;
-
-    /**
-     * 结束时间
-     */
-    private long endTime;
-
-    /**
-     * 下载时文件大小
-     */
-    private long startSize;
-
-    /**
-     * 文件总大小
-     */
-    private long size;
-
-    /**
-     * 当前传输大小
-     */
-    private long now;
 
     /**
      * 远程文件
@@ -67,173 +41,140 @@ public class FtpDownload implements Runnable {
     private FtpInstance instance;
 
     /**
-     * 实时速率
+     * 进度条
      */
-    private long nowRate;
+    private ByteTransferProgress progress;
 
     /**
-     * 开启实时速率
+     * 计算实时速率
      */
-    private boolean openNowRate = false;
-
-    /**
-     * 是否已完成
-     */
-    private volatile boolean done;
+    private boolean computeRate;
 
     public FtpDownload(FtpInstance instance, String remote, String local) {
         this(instance, remote, new File(local));
     }
 
     public FtpDownload(FtpInstance instance, String remote, File local) {
+        Valid.notNull(instance, "ftp instance is null");
+        Valid.notEmpty(remote, "download remote file is empty");
+        Valid.notNull(local, "local file is null");
         this.instance = instance;
         this.remote = remote;
         this.local = local;
-        this.lock = FileLocks.getSuffixFileLock("ftpdownload", local);
+        this.lock = FileLocks.getSuffixFileLock("orion.ftp.download", local);
+        this.progress = new ByteTransferProgress(0);
     }
 
-    @Override
-    public void run() {
-        this.startTime = System.currentTimeMillis();
-        InputStream in = null;
-        OutputStream out = null;
-        try {
-            if (openNowRate) {
-                Threads.start(() -> {
-                    while (!done) {
-                        long size = now;
-                        Threads.sleep(Const.MS_S_1);
-                        nowRate = now - size;
-                    }
-                });
-            }
-            FtpFileAttr fileAttr = instance.getFileAttr(remote);
-            size = fileAttr.getSize();
-            if (local.exists() && lock.checkLock()) {
-                now = local.length();
-                startSize = now;
-                if (startSize >= size) {
-                    lock.unLock();
-                    return;
-                }
-                instance.client().setRestartOffset(startSize);
-                out = new BufferedOutputStream(new FileOutputStream(local, true));
-                in = new BufferedInputStream(instance.client().retrieveFileStream(instance.serverCharset(instance.config().getRemoteBaseDir() + remote)));
-                int read;
-                byte[] bs = new byte[instance.config().getBuffSize()];
-                while (-1 != (read = in.read(bs))) {
-                    now += read;
-                    out.write(bs, 0, read);
-                }
-                lock.unLock();
-            } else {
-                if (local.exists() && size == local.length()) {
-                    return;
-                }
-                Files1.touch(local);
-                lock.tryLock();
-                in = new BufferedInputStream(instance.client().retrieveFileStream(instance.serverCharset(instance.config().getRemoteBaseDir() + remote)));
-                out = new BufferedOutputStream(new FileOutputStream(local));
-                int read;
-                byte[] bs = new byte[instance.config().getBuffSize()];
-                while (-1 != (read = in.read(bs))) {
-                    now += read;
-                    out.write(bs, 0, read);
-                }
-                lock.unLock();
-            }
-        } catch (IOException e) {
-            throw Exceptions.ioRuntime(e);
-        } finally {
-            this.done = true;
-            this.endTime = System.currentTimeMillis();
-            Streams.close(in);
-            Streams.close(out);
-            instance.client().setRestartOffset(0);
-            try {
-                if (in != null) {
-                    instance.client().completePendingCommand();
-                }
-            } catch (IOException e) {
-                throw Exceptions.ioRuntime(e);
-            }
-        }
-    }
 
     /**
      * 开启计算实时速率
      *
+     * @param computeRate rate
      * @return this
      */
-    public FtpDownload openNowRate() {
-        this.openNowRate = true;
+    public FtpDownload computeRate(boolean computeRate) {
+        this.computeRate = computeRate;
         return this;
     }
 
-    /**
-     * 获取平均速度
-     *
-     * @return 平均速度
-     */
-    public double getAvgRate() {
-        long useDate = endTime;
-        if (endTime == 0) {
-            useDate = System.currentTimeMillis();
+    @Override
+    public void run() {
+        if (computeRate) {
+            progress.computeRate();
         }
-        double used = useDate - startTime;
-        double uploadBytes = now - startSize;
-        return (uploadBytes / used) * Const.MS_S_1;
+        FtpFile remoteFile = instance.getFile(remote);
+        if (remoteFile == null) {
+            throw Exceptions.notFound("not found download remote file");
+        }
+        long remoteSize = remoteFile.getSize();
+        progress.end(remoteSize);
+        try {
+            if (local.exists() && local.isFile()) {
+                long localSize = local.length();
+                if (localSize == remoteFile.getSize()) {
+                    // 跳过
+                    lock.unLock();
+                    progress.startTime(System.currentTimeMillis());
+                    progress.finish();
+                    return;
+                }
+                if (lock.isLocked()) {
+                    // 被锁定 继续下载
+                    this.breakPointResume(localSize);
+                } else {
+                    // 没被锁定 重新下载
+                    this.download();
+                }
+            } else {
+                // 直接下载
+                Files1.touch(local);
+                this.download();
+            }
+        } catch (IOException e) {
+            throw Exceptions.ftp("ftp download exception remote file: " + remote + " -> local file: " + local.getAbsolutePath(), e);
+        }
     }
 
     /**
-     * 获取当前速度
-     *
-     * @return 当前速度
+     * 直接下载
      */
-    public long getNowRate() {
-        return nowRate;
+    private void download() throws IOException {
+        progress.start();
+        lock.tryLock();
+        InputStream in = null;
+        OutputStream out = null;
+        try {
+            out = new BufferedOutputStream(Files1.openOutputStreamFastSafe(local), instance.config().getBuffSize());
+            in = instance.getInputStream(remote);
+            int read;
+            byte[] bs = new byte[instance.config().getBuffSize()];
+            while (-1 != (read = in.read(bs))) {
+                progress.accept(read);
+                out.write(bs, 0, read);
+            }
+        } finally {
+            progress.finish();
+            lock.unLock();
+            Streams.close(in);
+            Streams.close(out);
+            if (in != null) {
+                instance.pending();
+            }
+        }
     }
 
     /**
-     * 获取当前进度
+     * 断点续传
      *
-     * @return 进度 0 ~ 1
+     * @param skip 跳过的长度
      */
-    public double getProgress() {
-        return size == 0 ? 0 : (double) now / (double) size;
+    private void breakPointResume(long skip) throws IOException {
+        progress.current(skip);
+        progress.start(skip);
+        InputStream in = null;
+        OutputStream out = null;
+        try {
+            out = new BufferedOutputStream(Files1.openOutputStreamFastSafe(local, true), instance.config().getBuffSize());
+            in = instance.getInputStream(remote, skip);
+            int read;
+            byte[] bs = new byte[instance.config().getBuffSize()];
+            while (-1 != (read = in.read(bs))) {
+                progress.accept(read);
+                out.write(bs, 0, read);
+            }
+        } finally {
+            progress.finish();
+            lock.unLock();
+            Streams.close(in);
+            Streams.close(out);
+            if (in != null) {
+                instance.pending();
+            }
+        }
     }
 
-    /**
-     * 是否传输完成
-     *
-     * @return true完成
-     */
-    public boolean isDone() {
-        return done;
-    }
-
-    public long getStartTime() {
-        return startTime;
-    }
-
-    public long getEndTime() {
-        return endTime;
-    }
-
-    public long getStartSize() {
-        return startSize;
-    }
-
-    public long getUseTime() {
-        return endTime - startTime;
-    }
-
-    public long getSize() {
-        return size;
-    }
-
-    public long getNow() {
-        return now;
+    public ByteTransferProgress getProgress() {
+        return progress;
     }
 
 }

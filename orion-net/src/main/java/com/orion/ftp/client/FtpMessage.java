@@ -4,21 +4,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * FTP常量
+ * FTP信息常量
  *
  * @author ljh15
  * @version 1.0.0
  * @since 2020/3/17 15:53
  */
-public class FtpConst {
+public class FtpMessage {
 
-    private FtpConst() {
+    private FtpMessage() {
     }
 
     /**
      * FTP状态码及其描述
      */
-    static final Map<Integer, String> REPLY_CODE = new HashMap<>();
+    public static final Map<Integer, String> REPLY_CODE = new HashMap<>();
 
     static {
         REPLY_CODE.put(120, "服务已就绪, 在 n 分钟后开始");

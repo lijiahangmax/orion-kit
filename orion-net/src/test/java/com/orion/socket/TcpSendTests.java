@@ -1,5 +1,6 @@
 package com.orion.socket;
 
+import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.Threads;
 
@@ -27,7 +28,7 @@ public class TcpSendTests {
                         System.out.println(send.getInput().available());
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Exceptions.printStacks(e);
                 }
             }).start();
         }

@@ -3,7 +3,6 @@ package com.orion.socket;
 import com.orion.constant.Const;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Threads;
-import com.orion.utils.Valid;
 import com.orion.utils.io.Streams;
 
 import java.io.IOException;
@@ -30,8 +29,14 @@ public class TcpReceive implements AutoCloseable {
 
     private ServerSocket serverSocket;
 
+    /**
+     * 接收的socket
+     */
     private List<Socket> receiveSocketList;
 
+    /**
+     * 接收线程池
+     */
     private ExecutorService acceptThreadPool;
 
     public TcpReceive(int port) throws IOException {
@@ -39,6 +44,7 @@ public class TcpReceive implements AutoCloseable {
         this.serverSocket = new ServerSocket(port);
         this.serverSocket.setReceiveBufferSize(Const.BUFFER_KB_4);
         this.receiveSocketList = new ArrayList<>();
+        this.acceptThreadPool = Threads.CACHE_EXECUTOR;
     }
 
     public TcpReceive bufferSize(int bufferSize) throws SocketException {
@@ -63,7 +69,6 @@ public class TcpReceive implements AutoCloseable {
      * @return this
      */
     public TcpReceive accept(int count) {
-        Valid.notNull(acceptThreadPool, "thread pool is null");
         acceptThreadPool.execute(() -> {
             for (int i = 0; i < count; i++) {
                 try {

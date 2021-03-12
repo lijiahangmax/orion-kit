@@ -34,7 +34,7 @@ public class FtpUser implements Serializable {
     /**
      * 是否有写权限
      */
-    private boolean writePermission = true;
+    private boolean writePermission;
 
     /**
      * 最大上传速度
@@ -47,6 +47,10 @@ public class FtpUser implements Serializable {
     private int maxDownloadRate;
 
     public FtpUser() {
+    }
+
+    public FtpUser(String username, String password) {
+        this(username, password, "/home/" + username);
     }
 
     public FtpUser(String username, String password, String homePath) {
@@ -72,6 +76,11 @@ public class FtpUser implements Serializable {
 
     public FtpUser maxIdleTime(int maxIdleTime) {
         this.maxIdleTime = maxIdleTime;
+        return this;
+    }
+
+    public FtpUser writePermission() {
+        this.writePermission = true;
         return this;
     }
 

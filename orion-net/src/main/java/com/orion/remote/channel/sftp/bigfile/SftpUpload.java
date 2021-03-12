@@ -150,7 +150,7 @@ public class SftpUpload implements Runnable, SafeCloseable {
                     throw Exceptions.ioRuntime("Cannot create remote file");
                 }
             }
-            if (local.exists() && lock.checkLock()) {
+            if (local.exists() && lock.isLocked()) {
                 if (fileAttr == null) {
                     now = 0;
                     startSize = 0;

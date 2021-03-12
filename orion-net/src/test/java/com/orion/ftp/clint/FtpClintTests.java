@@ -1,15 +1,20 @@
 package com.orion.ftp.clint;
 
 import com.orion.ftp.client.FtpInstance;
+import com.orion.ftp.client.bigfile.FtpDownload;
+import com.orion.ftp.client.bigfile.FtpUpload;
 import com.orion.ftp.client.config.FtpConfig;
 import com.orion.ftp.client.config.FtpsConfig;
 import com.orion.ftp.client.pool.FtpClientFactory;
+import com.orion.support.progress.ByteTransferProgress;
+import com.orion.utils.Threads;
 import com.orion.utils.collect.Lists;
 import com.orion.utils.io.Streams;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -135,13 +140,49 @@ public class FtpClintTests {
     }
 
     @Test
-    public void upload() {
-
+    public void upload() throws IOException {
+        i.uploadFile("/aka1.txt", new File("C:\\Users\\ljh15\\Desktop\\sql.txt"));
+        i.uploadFile("/aka2.txt", Streams.toInputStream("哈哈哈\n"));
+        i.uploadDir("/new/f1", "C:\\Users\\ljh15\\Desktop\\f1");
     }
 
     @Test
-    public void download() {
+    public void download() throws IOException {
+        i.downloadFile("/aka1.txt", "C:\\Users\\ljh15\\Desktop\\11.txt");
+        i.downloadDir("/new", "C:\\Users\\ljh15\\Desktop\\aa");
+    }
 
+    public static void main(String[] args) {
+        FtpClintTests t = new FtpClintTests();
+        t.init();
+        t.bigUpload();
+        t.destroy();
+    }
+
+    @Test
+    public void bigUpload() {
+        FtpUpload u = i.upload("/big/big.rar", "C:\\Users\\ljh15\\Desktop\\16.5.rar").computeRate(true);
+        new Thread(u).start();
+        ByteTransferProgress p = u.getProgress();
+        while (!p.isDone()) {
+            System.out.println(p.getProgress() + "% " + p.getNowRate() / 1024 + "kb/s");
+            Threads.sleep(500);
+        }
+        System.out.println(p.getProgress() + "% " + p.getNowRate() / 1024 + "kb/s");
+        System.out.println("done");
+    }
+
+    @Test
+    public void bigDownload() {
+        FtpDownload u = i.download("/big/big.rar", "C:\\Users\\ljh15\\Desktop\\16.7.rar").computeRate(true);
+        new Thread(u).start();
+        ByteTransferProgress p = u.getProgress();
+        while (!p.isDone()) {
+            System.out.println(p.getProgress() + "% " + p.getNowRate() / 1024 + "kb/s");
+            Threads.sleep(500);
+        }
+        System.out.println(p.getProgress() + "% " + p.getNowRate() / 1024 + "kb/s");
+        System.out.println("done");
     }
 
     @After

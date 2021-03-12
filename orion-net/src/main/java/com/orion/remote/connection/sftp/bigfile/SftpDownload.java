@@ -122,7 +122,7 @@ public class SftpDownload implements Runnable, SafeCloseable {
             }
             size = fileAttr.size;
             readHandler = client.openFileRO(remote);
-            if (local.exists() && lock.checkLock()) {
+            if (local.exists() && lock.isLocked()) {
                 now = local.length();
                 startSize = now;
                 if (startSize >= size) {

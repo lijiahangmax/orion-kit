@@ -1,5 +1,6 @@
 package com.orion.ftp.client;
 
+import com.orion.utils.Strings;
 import org.apache.commons.net.ftp.FTPFile;
 
 import java.io.Serializable;
@@ -15,29 +16,6 @@ import java.util.Date;
 public class FtpFile implements Serializable {
 
     private static final long serialVersionUID = -8231234702679455L;
-
-    public FtpFile(String path, FTPFile ftpFile) {
-        this.ftpFile = ftpFile;
-        this.path = path;
-        this.name = ftpFile.getName();
-        this.size = ftpFile.getSize();
-        this.type = ftpFile.getType();
-        this.user = ftpFile.getUser();
-        this.group = ftpFile.getGroup();
-        this.link = ftpFile.getLink();
-        this.hardLinkCount = ftpFile.getHardLinkCount();
-        this.modifyTime = ftpFile.getTimestamp().getTime();
-        this.rawListing = ftpFile.getRawListing();
-        this.permission[0] = ftpFile.hasPermission(0, 0);
-        this.permission[1] = ftpFile.hasPermission(0, 1);
-        this.permission[2] = ftpFile.hasPermission(0, 2);
-        this.permission[3] = ftpFile.hasPermission(1, 0);
-        this.permission[4] = ftpFile.hasPermission(1, 1);
-        this.permission[5] = ftpFile.hasPermission(1, 2);
-        this.permission[6] = ftpFile.hasPermission(2, 0);
-        this.permission[7] = ftpFile.hasPermission(2, 1);
-        this.permission[8] = ftpFile.hasPermission(2, 2);
-    }
 
     private FTPFile ftpFile;
 
@@ -101,6 +79,35 @@ public class FtpFile implements Serializable {
      * 678 world: rwx
      */
     private boolean[] permission = new boolean[9];
+
+    /**
+     * 权限信息
+     */
+    private String permissionString;
+
+    public FtpFile(String path, FTPFile ftpFile) {
+        this.ftpFile = ftpFile;
+        this.path = path;
+        this.name = ftpFile.getName();
+        this.size = ftpFile.getSize();
+        this.type = ftpFile.getType();
+        this.user = ftpFile.getUser();
+        this.group = ftpFile.getGroup();
+        this.link = ftpFile.getLink();
+        this.hardLinkCount = ftpFile.getHardLinkCount();
+        this.modifyTime = ftpFile.getTimestamp().getTime();
+        this.rawListing = ftpFile.getRawListing();
+        this.permissionString = rawListing.split(Strings.SPACE)[0];
+        this.permission[0] = ftpFile.hasPermission(0, 0);
+        this.permission[1] = ftpFile.hasPermission(0, 1);
+        this.permission[2] = ftpFile.hasPermission(0, 2);
+        this.permission[3] = ftpFile.hasPermission(1, 0);
+        this.permission[4] = ftpFile.hasPermission(1, 1);
+        this.permission[5] = ftpFile.hasPermission(1, 2);
+        this.permission[6] = ftpFile.hasPermission(2, 0);
+        this.permission[7] = ftpFile.hasPermission(2, 1);
+        this.permission[8] = ftpFile.hasPermission(2, 2);
+    }
 
     public int getType() {
         return type;
@@ -199,6 +206,15 @@ public class FtpFile implements Serializable {
     public FtpFile setPermission(boolean[] permission) {
         this.permission = permission;
         return this;
+    }
+
+    public FtpFile setPermissionString(String permissionString) {
+        this.permissionString = permissionString;
+        return this;
+    }
+
+    public String getPermissionString() {
+        return permissionString;
     }
 
     public FTPFile getFtpFile() {

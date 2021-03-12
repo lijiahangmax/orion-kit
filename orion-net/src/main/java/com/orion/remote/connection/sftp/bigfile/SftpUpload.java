@@ -126,7 +126,7 @@ public class SftpUpload implements Runnable, SafeCloseable {
                 // 文件不存在
                 writeHandler = client.createFile(remote);
             }
-            if (local.exists() && lock.checkLock()) {
+            if (local.exists() && lock.isLocked()) {
                 if (fileAttr == null) {
                     now = 0;
                     startSize = 0;

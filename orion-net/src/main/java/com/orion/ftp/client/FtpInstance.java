@@ -1,24 +1,24 @@
 package com.orion.ftp.client;
 
+import com.orion.able.SafeCloseable;
+import com.orion.constant.Const;
 import com.orion.constant.Letters;
 import com.orion.ftp.client.bigfile.FtpDownload;
 import com.orion.ftp.client.bigfile.FtpUpload;
+import com.orion.ftp.client.config.FtpConfig;
+import com.orion.ftp.client.pool.FtpClientPool;
 import com.orion.utils.Exceptions;
-import com.orion.utils.Matches;
 import com.orion.utils.Strings;
 import com.orion.utils.collect.Lists;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
-import org.apache.commons.net.ftp.FTPFileFilter;
 import org.apache.commons.net.ftp.FTPReply;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -29,9 +29,17 @@ import java.util.regex.Pattern;
  * @since 2020/3/17 16:10
  */
 @SuppressWarnings("ALL")
-public class FtpInstance {
+public class FtpInstance implements SafeCloseable {
 
-    private static final String SYMBOL = "/";
+    /**
+     * 分隔符
+     */
+    private static final String SEPARATOR = Const.SLASH;
+
+    /**
+     * FTP连接
+     */
+    private FTPClient client;
 
     /**
      * FTP配置
@@ -39,15 +47,21 @@ public class FtpInstance {
     private FtpConfig config;
 
     /**
-     * FTP连接
+     * FTP连接池
      */
-    private FTPClient client;
+    private FtpClientPool pool;
 
-    public FtpInstance(FtpConfig config, FTPClient client) {
-        this.config = config;
+    public FtpInstance(FtpClientPool pool) {
+        this.pool = pool;
+        this.client = pool.getClient();
+        this.config = pool.getConfig();
+    }
+
+    public FtpInstance(FTPClient client, FtpConfig config) {
         this.client = client;
+        this.config = config;
         try {
-            client.changeWorkingDirectory(serverCharset(config.getRemoteBaseDir()));
+            client.changeWorkingDirectory(this.serverCharset(config.getRemoteRootDir()));
         } catch (Exception e) {
             throw Exceptions.ftp(e);
         }
@@ -58,7 +72,7 @@ public class FtpInstance {
      */
     public void change() {
         try {
-            client.changeWorkingDirectory(serverCharset(config.getRemoteBaseDir()));
+            client.changeWorkingDirectory(this.serverCharset(config.getRemoteRootDir()));
         } catch (Exception e) {
             throw Exceptions.ftp(e);
         }
@@ -71,9 +85,9 @@ public class FtpInstance {
      */
     public void change(String dir) {
         try {
-            if (!client.changeWorkingDirectory(serverCharset(config.getRemoteBaseDir() + dir))) {
+            if (!client.changeWorkingDirectory(this.serverCharset(config.getRemoteRootDir() + dir))) {
                 mkdirs(dir);
-                client.changeWorkingDirectory(serverCharset(config.getRemoteBaseDir() + dir));
+                client.changeWorkingDirectory(this.serverCharset(config.getRemoteRootDir() + dir));
             }
         } catch (Exception e) {
             throw Exceptions.ftp(e);
@@ -95,7 +109,7 @@ public class FtpInstance {
      * @return 信息
      */
     public String replyMsg() {
-        return FtpConst.REPLY_CODE.get(client.getReplyCode());
+        return FtpMessage.REPLY_CODE.get(client.getReplyCode());
     }
 
     /**
@@ -107,72 +121,24 @@ public class FtpInstance {
         return FTPReply.isPositiveCompletion(client.getReplyCode());
     }
 
-    /**
-     * 文件是否存在
-     *
-     * @param file 文件
-     * @return true存在
-     */
-    public boolean exist(String file) {
-        String parentPath = Files1.getParentPath(file);
-        List<FtpFile> list = listFiles(parentPath, false);
-        for (FtpFile s : list) {
-            if (Files1.getFileName(s.getPath()).endsWith(Files1.getFileName(file.trim()))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 文件列表 遍历
-     *
-     * @return 文件列表
-     */
     public List<FtpFile> listFiles() {
-        return listFiles(Strings.EMPTY, false, false);
+        return this.listFiles(Strings.EMPTY, false, false);
     }
 
-    /**
-     * 文件列表
-     *
-     * @param child 是否遍历文件夹
-     * @return 文件列表
-     */
     public List<FtpFile> listFiles(boolean child) {
-        return listFiles(Strings.EMPTY, child, false);
+        return this.listFiles(Strings.EMPTY, child, false);
     }
 
-    /**
-     * 文件列表
-     *
-     * @param child 是否遍历文件夹
-     * @param dir   是否添加文件夹
-     * @return 文件列表
-     */
     public List<FtpFile> listFiles(boolean child, boolean dir) {
-        return listFiles(Strings.EMPTY, child, dir);
+        return this.listFiles(Strings.EMPTY, child, dir);
     }
 
-    /**
-     * 文件列表
-     *
-     * @param path 路径
-     * @return 文件列表
-     */
     public List<FtpFile> listFiles(String path) {
-        return listFiles(path, false, false);
+        return this.listFiles(path, false, false);
     }
 
-    /**
-     * 文件列表
-     *
-     * @param path  路径
-     * @param child 是否遍历文件夹
-     * @return 文件列表
-     */
     public List<FtpFile> listFiles(String path, boolean child) {
-        return listFiles(path, child, false);
+        return this.listFiles(path, child, false);
     }
 
     /**
@@ -184,12 +150,12 @@ public class FtpInstance {
      * @return 文件列表
      */
     private List<FtpFile> listFiles(String path, boolean child, boolean dir) {
-        String base = config.getRemoteBaseDir();
+        String base = config.getRemoteRootDir();
         List<FtpFile> list = new ArrayList<>();
         try {
-            FTPFile[] files = client.listFiles(serverCharset(base + path));
+            FTPFile[] files = client.listFiles(this.serverCharset(base + path));
             for (FTPFile file : files) {
-                String t = Files1.getPath(serverCharset(path + SYMBOL + file.getName()));
+                String t = Files1.getPath(this.serverCharset(path + SEPARATOR + file.getName()));
                 if (file.isFile()) {
                     list.add(new FtpFile(t, file));
                 } else if (file.isDirectory()) {
@@ -197,7 +163,7 @@ public class FtpInstance {
                         list.add(new FtpFile(t, file));
                     }
                     if (child) {
-                        list.addAll(listFiles(t + SYMBOL, true, dir));
+                        list.addAll(this.listFiles(t + SEPARATOR, true, dir));
                     }
                 }
             }
@@ -207,33 +173,16 @@ public class FtpInstance {
         return list;
     }
 
-    /**
-     * 列出文件夹
-     *
-     * @return 文件夹
-     */
     public List<FtpFile> listDirs() {
-        return listDirs(Strings.EMPTY, true);
+        return this.listDirs(Strings.EMPTY, false);
     }
 
-    /**
-     * 列出文件夹
-     *
-     * @param child 是否遍历子文件夹
-     * @return 文件夹
-     */
     public List<FtpFile> listDirs(boolean child) {
-        return listDirs(Strings.EMPTY, child);
+        return this.listDirs(Strings.EMPTY, child);
     }
 
-    /**
-     * 列出文件夹
-     *
-     * @param dir 文件夹
-     * @return 文件夹
-     */
     public List<FtpFile> listDirs(String dir) {
-        return listDirs(dir, true);
+        return this.listDirs(dir, false);
     }
 
     /**
@@ -244,16 +193,16 @@ public class FtpInstance {
      * @return 文件夹
      */
     public List<FtpFile> listDirs(String path, boolean child) {
-        String base = config.getRemoteBaseDir();
+        String base = config.getRemoteRootDir();
         List<FtpFile> list = new ArrayList<>();
         try {
-            FTPFile[] files = client.listFiles(serverCharset(base + path));
+            FTPFile[] files = client.listFiles(this.serverCharset(base + path));
             for (FTPFile file : files) {
-                String t = Files1.getPath(path + SYMBOL + file.getName());
+                String t = Files1.getPath(path + SEPARATOR + file.getName());
                 if (file.isDirectory()) {
                     list.add(new FtpFile(t, file));
                     if (child) {
-                        list.addAll(listDirs(Files1.getPath(t + SYMBOL), true));
+                        list.addAll(this.listDirs(Files1.getPath(t + SEPARATOR), true));
                     }
                 }
             }
@@ -263,60 +212,24 @@ public class FtpInstance {
         return list;
     }
 
-    /**
-     * 列出根目录下的文件
-     *
-     * @param suffix 后缀
-     * @return 文件
-     */
     public List<FtpFile> listFilesSuffix(String suffix) {
-        return this.listFilesSearch(Strings.EMPTY, suffix, null, null, 1, false, false);
+        return this.listFilesSuffix(Strings.EMPTY, suffix, false, false);
     }
 
-    /**
-     * 列出根目录下的文件
-     *
-     * @param suffix 后缀
-     * @param child  是否递归子文件夹
-     * @return 文件
-     */
     public List<FtpFile> listFilesSuffix(String suffix, boolean child) {
-        return this.listFilesSearch(Strings.EMPTY, suffix, null, null, 1, child, false);
+        return this.listFilesSuffix(Strings.EMPTY, suffix, child, false);
     }
 
-    /**
-     * 列出根目录下的文件
-     *
-     * @param suffix 后缀
-     * @param child  是否递归子文件夹
-     * @param dir    是否添加文件夹
-     * @return 文件
-     */
     public List<FtpFile> listFilesSuffix(String suffix, boolean child, boolean dir) {
-        return this.listFilesSearch(Strings.EMPTY, suffix, null, null, 1, child, dir);
+        return this.listFilesSuffix(Strings.EMPTY, suffix, child, dir);
     }
 
-    /**
-     * 列出目录下的文件
-     *
-     * @param path   目录
-     * @param suffix 后缀
-     * @return 文件
-     */
     public List<FtpFile> listFilesSuffix(String path, String suffix) {
-        return this.listFilesSearch(path, suffix, null, null, 1, false, false);
+        return this.listFilesSuffix(path, suffix, false, false);
     }
 
-    /**
-     * 列出目录下的文件
-     *
-     * @param path   目录
-     * @param suffix 后缀
-     * @param child  是否递归子文件夹
-     * @return 文件
-     */
     public List<FtpFile> listFilesSuffix(String path, String suffix, boolean child) {
-        return this.listFilesSearch(path, suffix, null, null, 1, child, false);
+        return this.listFilesSuffix(path, suffix, child, false);
     }
 
     /**
@@ -329,63 +242,27 @@ public class FtpInstance {
      * @return 文件
      */
     public List<FtpFile> listFilesSuffix(String path, String suffix, boolean child, boolean dir) {
-        return this.listFilesSearch(path, suffix, null, null, 1, child, dir);
+        return this.listFilesSearch(path, FtpFileFilter.suffix(suffix), child, dir);
     }
 
-    /**
-     * 列出根目录下的文件和文件夹
-     *
-     * @param match 名称
-     * @return 文件
-     */
     public List<FtpFile> listFilesMatch(String match) {
-        return this.listFilesSearch(Strings.EMPTY, match, null, null, 2, false, false);
+        return this.listFilesMatch(Strings.EMPTY, match, false, false);
     }
 
-    /**
-     * 列出根目录下的文件
-     *
-     * @param match 名称
-     * @param child 是否递归子文件夹
-     * @return 文件
-     */
     public List<FtpFile> listFilesMatch(String match, boolean child) {
-        return this.listFilesSearch(Strings.EMPTY, match, null, null, 2, child, false);
+        return this.listFilesMatch(Strings.EMPTY, match, child, false);
     }
 
-    /**
-     * 列出根目录下的文件
-     *
-     * @param match 名称
-     * @param child 是否递归子文件夹
-     * @param dir   是否添加文件夹
-     * @return 文件
-     */
     public List<FtpFile> listFilesMatch(String match, boolean child, boolean dir) {
-        return this.listFilesSearch(Strings.EMPTY, match, null, null, 2, child, dir);
+        return this.listFilesMatch(Strings.EMPTY, match, child, dir);
     }
 
-    /**
-     * 列出目录下的文件
-     *
-     * @param path  目录
-     * @param match 名称
-     * @return 文件
-     */
     public List<FtpFile> listFilesMatch(String path, String match) {
-        return this.listFilesSearch(path, match, null, null, 2, false, false);
+        return this.listFilesMatch(path, match, false, false);
     }
 
-    /**
-     * 列出目录下的文件
-     *
-     * @param path  目录
-     * @param match 名称
-     * @param child 是否递归子文件夹
-     * @return 文件
-     */
     public List<FtpFile> listFilesMatch(String path, String match, boolean child) {
-        return this.listFilesSearch(path, match, null, null, 2, child, false);
+        return this.listFilesMatch(path, match, child, false);
     }
 
     /**
@@ -398,63 +275,27 @@ public class FtpInstance {
      * @return 文件
      */
     public List<FtpFile> listFilesMatch(String path, String match, boolean child, boolean dir) {
-        return this.listFilesSearch(path, match, null, null, 2, child, dir);
+        return this.listFilesSearch(path, FtpFileFilter.match(match), child, dir);
     }
 
-    /**
-     * 列出根目录下的文件
-     *
-     * @param pattern 正则
-     * @return 文件
-     */
     public List<FtpFile> listFilesPattern(Pattern pattern) {
-        return this.listFilesSearch(Strings.EMPTY, null, pattern, null, 3, false, false);
+        return this.listFilesPattern(Strings.EMPTY, pattern, false, false);
     }
 
-    /**
-     * 列出根目录下的文件
-     *
-     * @param pattern 正则
-     * @param child   是否递归子文件夹
-     * @return 文件
-     */
     public List<FtpFile> listFilesPattern(Pattern pattern, boolean child) {
-        return this.listFilesSearch(Strings.EMPTY, null, pattern, null, 3, child, false);
+        return this.listFilesPattern(Strings.EMPTY, pattern, child, false);
     }
 
-    /**
-     * 列出根目录下的文件
-     *
-     * @param pattern 正则
-     * @param child   是否递归子文件夹
-     * @param dir     是否添加文件夹
-     * @return 文件
-     */
     public List<FtpFile> listFilesPattern(Pattern pattern, boolean child, boolean dir) {
-        return this.listFilesSearch(Strings.EMPTY, null, pattern, null, 3, child, dir);
+        return this.listFilesPattern(Strings.EMPTY, pattern, child, dir);
     }
 
-    /**
-     * 列出目录下的文件
-     *
-     * @param path    目录
-     * @param pattern 正则
-     * @return 文件
-     */
     public List<FtpFile> listFilesPattern(String path, Pattern pattern) {
-        return this.listFilesSearch(path, null, pattern, null, 3, false, false);
+        return this.listFilesPattern(path, pattern, false, false);
     }
 
-    /**
-     * 列出目录下的文件
-     *
-     * @param path    目录
-     * @param pattern 正则
-     * @param child   是否递归子文件夹
-     * @return 文件
-     */
     public List<FtpFile> listFilesPattern(String path, Pattern pattern, boolean child) {
-        return this.listFilesSearch(path, null, pattern, null, 3, child, false);
+        return this.listFilesPattern(path, pattern, child, false);
     }
 
     /**
@@ -467,63 +308,27 @@ public class FtpInstance {
      * @return 文件
      */
     public List<FtpFile> listFilesPattern(String path, Pattern pattern, boolean child, boolean dir) {
-        return this.listFilesSearch(path, null, pattern, null, 3, child, dir);
+        return this.listFilesSearch(path, FtpFileFilter.pattern(pattern), child, dir);
     }
 
-    /**
-     * 列出根目录下的文件
-     *
-     * @param filter 过滤器
-     * @return 文件
-     */
-    public List<FtpFile> listFilesFilter(FTPFileFilter filter) {
-        return this.listFilesSearch(Strings.EMPTY, null, null, filter, 4, false, false);
+    public List<FtpFile> listFilesFilter(FtpFileFilter filter) {
+        return this.listFilesFilter(Strings.EMPTY, filter, false, false);
     }
 
-    /**
-     * 列出根目录下的文件
-     *
-     * @param filter 过滤器
-     * @param child  是否递归子文件夹
-     * @return 文件
-     */
-    public List<FtpFile> listFilesFilter(FTPFileFilter filter, boolean child) {
-        return this.listFilesSearch(Strings.EMPTY, null, null, filter, 4, child, false);
+    public List<FtpFile> listFilesFilter(FtpFileFilter filter, boolean child) {
+        return this.listFilesFilter(Strings.EMPTY, filter, child, false);
     }
 
-    /**
-     * 列出根目录下的文件
-     *
-     * @param filter 过滤器
-     * @param child  是否递归子文件夹
-     * @param dir    是否添加文件夹
-     * @return 文件
-     */
-    public List<FtpFile> listFilesFilter(FTPFileFilter filter, boolean child, boolean dir) {
-        return this.listFilesSearch(Strings.EMPTY, null, null, filter, 4, child, dir);
+    public List<FtpFile> listFilesFilter(FtpFileFilter filter, boolean child, boolean dir) {
+        return this.listFilesFilter(Strings.EMPTY, filter, child, dir);
     }
 
-    /**
-     * 列出目录下的文件
-     *
-     * @param path   目录
-     * @param filter 过滤器
-     * @return 文件
-     */
-    public List<FtpFile> listFilesFilter(String path, FTPFileFilter filter) {
-        return this.listFilesSearch(path, null, null, filter, 4, false, false);
+    public List<FtpFile> listFilesFilter(String path, FtpFileFilter filter) {
+        return this.listFilesFilter(path, filter, false, false);
     }
 
-    /**
-     * 列出目录下的文件
-     *
-     * @param path   目录
-     * @param filter 过滤器
-     * @param child  是否递归子文件夹
-     * @return 文件
-     */
-    public List<FtpFile> listFilesFilter(String path, FTPFileFilter filter, boolean child) {
-        return this.listFilesSearch(path, null, null, filter, 4, child, false);
+    public List<FtpFile> listFilesFilter(String path, FtpFileFilter filter, boolean child) {
+        return this.listFilesFilter(path, filter, child, false);
     }
 
     /**
@@ -535,48 +340,36 @@ public class FtpInstance {
      * @param dir    是否添加文件夹
      * @return 文件
      */
-    public List<FtpFile> listFilesFilter(String path, FTPFileFilter filter, boolean child, boolean dir) {
-        return this.listFilesSearch(path, null, null, filter, 4, child, dir);
+    public List<FtpFile> listFilesFilter(String path, FtpFileFilter filter, boolean child, boolean dir) {
+        return this.listFilesSearch(path, filter, child, dir);
     }
 
     /**
      * 文件列表搜索
      *
-     * @param path    列表
-     * @param search  搜索
-     * @param pattern 正则
-     * @param filter  过滤器
-     * @param type    类型 1后缀 2匹配 3正则 4过滤器
-     * @param child   是否递归子文件夹
-     * @param dir     是否添加文件夹
+     * @param path   列表
+     * @param filter 过滤器
+     * @param child  是否递归子文件夹
+     * @param dir    是否添加文件夹
      * @return 匹配的列表
      */
-    private List<FtpFile> listFilesSearch(String path, String search, Pattern pattern, FTPFileFilter filter, int type, boolean child, boolean dir) {
-        String base = config.getRemoteBaseDir();
+    private List<FtpFile> listFilesSearch(String path, FtpFileFilter filter, boolean child, boolean dir) {
+        String base = config.getRemoteRootDir();
         List<FtpFile> list = new ArrayList<>();
         try {
-            FTPFile[] files = client.listFiles(serverCharset(Files1.getPath(base + path)));
+            FTPFile[] files = client.listFiles(this.serverCharset(Files1.getPath(base + path)));
             for (FTPFile file : files) {
                 String fn = file.getName();
-                String t = Files1.getPath(path + SYMBOL + fn);
+                String t = Files1.getPath(path + SEPARATOR + fn);
                 boolean isDir = file.isDirectory();
                 if (!isDir || dir) {
-                    boolean add = false;
-                    if (type == 1 && fn.toLowerCase().endsWith(search.toLowerCase())) {
-                        add = true;
-                    } else if (type == 2 && fn.toLowerCase().contains(search.toLowerCase())) {
-                        add = true;
-                    } else if (type == 3 && Matches.test(fn, pattern)) {
-                        add = true;
-                    } else if (type == 4 && filter.accept(file)) {
-                        add = true;
-                    }
-                    if (add) {
-                        list.add(new FtpFile(t, file));
+                    FtpFile f = new FtpFile(t, file);
+                    if (filter.accept(f)) {
+                        list.add(f);
                     }
                 }
                 if (isDir && child) {
-                    list.addAll(listFilesSearch(t + SYMBOL, search, pattern, filter, type, true, dir));
+                    list.addAll(this.listFilesSearch(t + SEPARATOR, filter, true, dir));
                 }
             }
         } catch (IOException e) {
@@ -586,436 +379,159 @@ public class FtpInstance {
     }
 
     /**
+     * 文件是否存在
+     *
+     * @param file 文件
+     * @return true存在
+     */
+    public boolean exist(String file) {
+        String parentPath = Files1.getParentPath(file);
+        List<FtpFile> list = this.listFiles(parentPath, false, true);
+        for (FtpFile s : list) {
+            if (Files1.getFileName(s.getPath()).equals(Files1.getFileName(file.trim()))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * 获取文件属性
      *
      * @param file 文件
      * @return 未找到返回null
      */
-    public FtpFileAttr getFileAttr(String file) {
+    public FtpFile getFile(String file) {
         String parentPath = Files1.getParentPath(file);
-        Map<String, FtpFileAttr> map = listFilesAttr(parentPath, false);
-        for (Map.Entry<String, FtpFileAttr> entry : map.entrySet()) {
-            FtpFileAttr value = entry.getValue();
-            if (Files1.getFileName(value.getPath()).endsWith(Files1.getFileName(file))) {
-                return value;
+        List<FtpFile> files = this.listFiles(parentPath, false, true);
+        for (FtpFile ftpFile : files) {
+            if (ftpFile.getName().equals(Files1.getFileName(file))) {
+                return ftpFile;
             }
         }
         return null;
     }
 
     /**
-     * 获取文件属性列表
+     * 递归删除文件和文件夹
      *
-     * @return 属性列表
+     * @param file file
      */
-    public Map<String, FtpFileAttr> listFilesAttr() {
-        return listFilesAttr(Strings.EMPTY, false);
-    }
-
-    /**
-     * 获取文件属性列表
-     *
-     * @param path 路径
-     * @return 属性列表
-     */
-    public Map<String, FtpFileAttr> listFilesAttr(String path) {
-        return listFilesAttr(path, false);
-    }
-
-    /**
-     * 获取文件属性列表
-     *
-     * @param path  路径
-     * @param child 是否递归子文件夹
-     * @return 属性列表
-     */
-    public Map<String, FtpFileAttr> listFilesAttr(String path, boolean child) {
-        String base = config.getRemoteBaseDir();
-        Map<String, FtpFileAttr> map = new HashMap<>();
-        try {
-            FTPFile[] files = client.listFiles(serverCharset(base + path));
-            for (FTPFile file : files) {
-                if (file.isFile()) {
-                    String fileName = Files1.getPath(path + SYMBOL + file.getName());
-                    FtpFileAttr attr = new FtpFileAttr();
-                    attr.setPath(fileName);
-                    attr.setModifyTime(file.getTimestamp().getTime());
-                    attr.setSize(file.getSize());
-                    attr.setPermission(file.getRawListing().split(Strings.SPACE)[0]);
-                    map.put(fileName, attr);
-                } else if (file.isDirectory() && child) {
-                    map.putAll(listFilesAttr(path + SYMBOL + file.getName(), true));
-                }
-            }
-        } catch (IOException e) {
-            Exceptions.printStacks(e);
+    public void rm(String file) {
+        FtpFile ftpFile = this.getFile(file);
+        if (ftpFile == null) {
+            return;
         }
-        return map;
-    }
-
-    /**
-     * 获取大文件下载器
-     *
-     * @param remote    远程文件
-     * @param localFile 本地文件
-     * @return FtpDownload
-     */
-    public FtpDownload download(String remote, String localFile) {
-        return new FtpDownload(this, remote, localFile);
-    }
-
-    /**
-     * 获取大文件下载器
-     *
-     * @param remote    远程文件
-     * @param localFile 本地文件
-     * @return FtpDownload
-     */
-    public FtpDownload download(String remote, File localFile) {
-        return new FtpDownload(this, remote, localFile);
-    }
-
-    /**
-     * 下载文件
-     *
-     * @param file      远程文件路径
-     * @param localFile 本地文件路径
-     */
-    public void downloadFile(String file, String localFile) {
-        downloadFile(file, new File(localFile));
-    }
-
-    /**
-     * 下载文件
-     *
-     * @param file      远程文件路径
-     * @param localFile 本地文件路径
-     */
-    public void downloadFile(String file, File localFile) {
-        OutputStream out = null;
-        try {
-            Files1.touch(localFile);
-            client.retrieveFile(serverCharset(config.getRemoteBaseDir() + file), out = new BufferedOutputStream(Files1.openOutputStream(localFile)));
-            out.flush();
-        } catch (IOException e) {
-            throw Exceptions.ftp(e);
-        } finally {
-            Streams.close(out);
-        }
-    }
-
-    /**
-     * 下载文件夹
-     *
-     * @param dir      远程文件夹
-     * @param localDir 本地文件夹
-     */
-    public void downloadDir(String dir, String localDir) {
-        downloadDir(dir, localDir, true);
-    }
-
-    /**
-     * 下载文件夹
-     *
-     * @param dir      远程文件夹
-     * @param localDir 本地文件夹
-     * @param child    是否递归子文件夹下载
-     */
-    public void downloadDir(String dir, String localDir, boolean child) {
-        if (!child) {
-            List<FtpFile> list = listFiles(dir, false);
-            for (FtpFile s : list) {
-                downloadFile(s.getPath(), Files1.getPath(localDir + "/" + Files1.getFileName(s.getPath())));
-            }
+        if (ftpFile.isDirectory()) {
+            this.deleteDir(file);
         } else {
-            List<FtpFile> list = listFiles(dir, true);
-            for (FtpFile s : list) {
-                downloadFile(s.getPath(), Files1.getPath(localDir + "/" + s.getPath()));
-            }
-            list = listDirs(dir, true);
-            for (FtpFile s : list) {
-                Files1.mkdirs(Files1.getPath(localDir + "/" + s.getPath()));
-            }
+            this.delete(file);
         }
     }
 
     /**
-     * 获取大文件上传器
+     * 删除文件
      *
-     * @param remote    远程文件
-     * @param localFile 本地文件
-     * @return FtpUpload
+     * @param file 文件
      */
-    public FtpUpload upload(String remote, String localFile) {
-        return new FtpUpload(this, remote, localFile);
-    }
-
-    /**
-     * 获取大文件上传器
-     *
-     * @param remote    远程文件
-     * @param localFile 本地文件
-     * @return FtpUpload
-     */
-    public FtpUpload upload(String remote, File localFile) {
-        return new FtpUpload(this, remote, localFile);
-    }
-
-    /**
-     * 上传文件
-     *
-     * @param localFile  本地文件
-     * @param remoteFile 远程文件
-     */
-    public void uploadFile(String localFile, String remoteFile) {
-        uploadFile(new File(localFile), remoteFile);
-    }
-
-    /**
-     * 上传文件
-     *
-     * @param localFile  本地文件
-     * @param remoteFile 远程文件
-     */
-    public void uploadFile(File localFile, String remoteFile) {
-        InputStream in = null;
+    public void delete(String file) {
         try {
-            String parentPath = Files1.getParentPath(remoteFile);
-            mkdirs(parentPath);
-            client.storeFile(serverCharset(config.getRemoteBaseDir() + remoteFile), new BufferedInputStream(in = Files1.openInputStream(localFile)));
+            client.deleteFile(this.serverCharset(config.getRemoteRootDir() + file));
         } catch (Exception e) {
             throw Exceptions.ftp(e);
-        } finally {
-            Streams.close(in);
         }
     }
 
     /**
-     * 上传文件夹
+     * 删除目录及文件
      *
-     * @param localDir  本地文件夹
-     * @param remoteDir 远程文件夹
+     * @param dir 目录
      */
-    public void uploadDir(String localDir, String remoteDir) {
-        uploadDir(localDir, remoteDir, true);
-    }
-
-    /**
-     * 上传文件夹
-     *
-     * @param localDir  本地文件夹
-     * @param remoteDir 远程文件夹
-     * @param child     是否遍历上传
-     */
-    public void uploadDir(String localDir, String remoteDir, boolean child) {
-        String localPrefix = localDir.substring(new File(localDir).getParent().length());
-        localDir = Files1.getPath(localDir);
-        List<File> dirs = Files1.listDirs(localDir, child);
-        List<File> files = Files1.listFiles(localDir, child);
-        for (File dir : dirs) {
-            mkdirs(Files1.getPath(remoteDir + localPrefix + (dir.getAbsolutePath().substring(localDir.length()))));
-        }
-        for (File file : files) {
-            String path = Files1.getPath(remoteDir + localPrefix + (file.getAbsolutePath().substring(localDir.length())));
-            change(Files1.getParentPath(path));
-            uploadFile(file, path);
-        }
-    }
-
-    /**
-     * 获取文件拼接流
-     * <p>
-     * 使用完毕需要调用 client.completePendingCommand();
-     * 这个操作在关闭io之后
-     *
-     * @param file 文件
-     * @return OutputStream
-     * @throws IOException IOException
-     */
-    public OutputStream getOutputStreamAppend(String file) throws IOException {
-        return client.appendFileStream(serverCharset(config.getRemoteBaseDir() + file));
-    }
-
-    /**
-     * 拼接流到文件
-     *
-     * @param file 文件
-     * @param in   输入流
-     */
-    public void appendStream(String file, InputStream in) throws IOException {
-        client.appendFile(serverCharset(config.getRemoteBaseDir() + file), in);
-    }
-
-    /**
-     * 拼接字节数组到文件
-     *
-     * @param file 文件
-     * @param bs   字节数组
-     * @throws IOException IOException
-     */
-    public void append(String file, byte[] bs) throws IOException {
-        append(file, bs, 0, bs.length);
-    }
-
-    /**
-     * 拼接字节数组到文件
-     *
-     * @param file 文件
-     * @param bs   字节数组
-     * @param off  偏移量
-     * @param len  长度
-     * @throws IOException IOException
-     */
-    public void append(String file, byte[] bs, int off, int len) throws IOException {
-        OutputStream out = null;
+    public void deleteDir(String dir) {
         try {
-            out = client.appendFileStream(serverCharset(config.getRemoteBaseDir() + file));
-            out.write(bs, off, len);
-        } finally {
-            Streams.close(out);
-            if (out != null) {
-                client.completePendingCommand();
+            String d = serverCharset(config.getRemoteRootDir() + dir);
+            List<FtpFile> list = this.listFiles(dir);
+            for (FtpFile s : list) {
+                client.deleteFile(this.serverCharset(Files1.getPath(config.getRemoteRootDir() + s.getPath())));
             }
+            list = this.listDirs(dir, true);
+            for (FtpFile s : list) {
+                this.deleteDir(s.getPath());
+            }
+            client.removeDirectory(d);
+        } catch (Exception e) {
+            throw Exceptions.ftp(e);
         }
     }
 
     /**
-     * 拼接一行
+     * 创建文件夹
      *
-     * @param file 文件
-     * @param line 行
-     * @throws IOException IOException
+     * @param dir 文件夹
      */
-    public void appendLine(String file, String line) throws IOException {
-        appendLines(file, Lists.singleton(line));
-    }
-
-    /**
-     * 拼接多行
-     *
-     * @param file  文件
-     * @param lines 行
-     * @throws IOException IOException
-     */
-    public void appendLines(String file, List<String> lines) throws IOException {
-        OutputStream out = null;
+    public void mkdirs(String dir) {
         try {
-            out = client.appendFileStream(serverCharset(config.getRemoteBaseDir() + file));
-            for (String line : lines) {
-                out.write(Strings.bytes(line));
-                out.write(Letters.LF);
+            String[] dirs = Files1.getPath(dir).split(SEPARATOR);
+            String base = config.getRemoteRootDir();
+            for (String d : dirs) {
+                if (null == d || Strings.EMPTY.equals(d)) {
+                    continue;
+                }
+                base = serverCharset(base + SEPARATOR + d);
+                if (!client.changeWorkingDirectory(base)) {
+                    client.makeDirectory(base);
+                    client.changeWorkingDirectory(base);
+                }
             }
-        } finally {
-            Streams.close(out);
-            if (out != null) {
-                client.completePendingCommand();
-            }
+        } catch (Exception e) {
+            throw Exceptions.ftp(e);
         }
     }
 
     /**
-     * 获取文写入接流
-     * <p>
-     * 使用完毕需要调用 client.completePendingCommand();
-     * 这个操作在关闭io之后
+     * 创建文件
      *
      * @param file 文件
-     * @return OutputStream
-     * @throws IOException IOException
      */
-    public OutputStream getOutputStreamWrite(String file) throws IOException {
-        return client.storeFileStream(serverCharset(config.getRemoteBaseDir() + file));
-    }
-
-    /**
-     * 写入流到文件
-     *
-     * @param file 文件
-     * @param in   输入流
-     */
-    public void writeStream(String file, InputStream in) throws IOException {
-        client.storeFile(serverCharset(config.getRemoteBaseDir() + file), in);
-    }
-
-    /**
-     * 写入字节数组到文件
-     *
-     * @param file 文件
-     * @param bs   字节数组
-     * @throws IOException IOException
-     */
-    public void write(String file, byte[] bs) throws IOException {
-        write(file, bs, 0, bs.length);
-    }
-
-    /**
-     * 写入字节数组到文件
-     *
-     * @param file 文件
-     * @param bs   字节数组
-     * @param off  偏移量
-     * @param len  长度
-     * @throws IOException IOException
-     */
-    public void write(String file, byte[] bs, int off, int len) throws IOException {
-        OutputStream out = null;
+    public void touch(String file) {
+        String filePath = serverCharset(config.getRemoteRootDir() + file);
+        String parentPath = Files1.getParentPath(Files1.getPath(file));
+        mkdirs(parentPath);
+        for (FtpFile s : listFiles(parentPath, false)) {
+            if (Files1.getFileName(s.getPath()).endsWith(file.trim())) {
+                return;
+            }
+        }
+        this.change(parentPath);
         try {
-            out = client.storeFileStream(serverCharset(config.getRemoteBaseDir() + file));
-            out.write(bs, off, len);
-        } finally {
-            Streams.close(out);
-            if (out != null) {
-                client.completePendingCommand();
-            }
+            client.storeFile(this.serverCharset(filePath), new ByteArrayInputStream(new byte[]{}));
+        } catch (IOException e) {
+            throw Exceptions.ftp(e);
         }
     }
 
     /**
-     * 写入一行
+     * 文件移动
      *
-     * @param file 文件
-     * @param line 行
-     * @throws IOException IOException
+     * @param file 原文件名称
+     * @param name 移动后的名称 如果不加目录为重命名
      */
-    public void writeLine(String file, String line) throws IOException {
-        writeLines(file, Lists.singleton(line));
-    }
-
-    /**
-     * 写入多行
-     *
-     * @param file  文件
-     * @param lines 行
-     * @throws IOException IOException
-     */
-    public void writeLines(String file, List<String> lines) throws IOException {
-        OutputStream out = null;
+    public void mv(String file, String name) {
         try {
-            out = client.storeFileStream(serverCharset(config.getRemoteBaseDir() + file));
-            for (String line : lines) {
-                out.write(Strings.bytes(line));
-                out.write(13);
-            }
-        } finally {
-            Streams.close(out);
-            if (out != null) {
-                client.completePendingCommand();
-            }
+            this.mkdirs(Files1.getParentPath(name));
+            this.change(Files1.getParentPath(Files1.getPath(file)));
+            String target = serverCharset(config.getRemoteRootDir() + name);
+            String source = serverCharset(Files1.getFileName(file));
+            client.rename(source, target);
+        } catch (Exception e) {
+            throw Exceptions.ftp(e);
         }
     }
 
-    /**
-     * 获取文件输入流
-     * <p>
-     * 使用完毕需要调用 client.completePendingCommand();
-     * 这个操作在关闭io之后
-     *
-     * @param file 文件
-     * @return InputStream
-     * @throws IOException IOException
-     */
-    public InputStream getInputStreamRead(String file) throws IOException {
-        return client.retrieveFileStream(serverCharset(config.getRemoteBaseDir() + file));
+    // -------------------- read --------------------
+
+    public InputStream getInputStream(String file) throws IOException {
+        return client.retrieveFileStream(this.serverCharset(config.getRemoteRootDir() + file));
     }
 
     /**
@@ -1029,49 +545,23 @@ public class FtpInstance {
      * @return InputStream
      * @throws IOException IOException
      */
-    public InputStream getInputStreamRead(String file, long skip) throws IOException {
+    public InputStream getInputStream(String file, long skip) throws IOException {
         try {
-            return client.retrieveFileStream(serverCharset(config.getRemoteBaseDir() + file));
+            client.setRestartOffset(skip);
+            return client.retrieveFileStream(this.serverCharset(config.getRemoteRootDir() + file));
         } finally {
             client.setRestartOffset(0);
         }
     }
 
-    /**
-     * 读取文件到数组
-     *
-     * @param file 文件
-     * @param bs   数组
-     * @return 读取的长度
-     * @throws IOException IOException
-     */
     public int read(String file, byte[] bs) throws IOException {
         return read(file, 0, bs, 0, bs.length);
     }
 
-    /**
-     * 读取文件到数组
-     *
-     * @param file 文件
-     * @param skip 跳过字节数
-     * @param bs   数组
-     * @return 读取的长度
-     * @throws IOException IOException
-     */
     public int read(String file, long skip, byte[] bs) throws IOException {
         return read(file, skip, bs, 0, bs.length);
     }
 
-    /**
-     * 读取文件到数组
-     *
-     * @param file 文件
-     * @param bs   数组
-     * @param off  偏移量
-     * @param len  长度
-     * @return 读取的长度
-     * @throws IOException IOException
-     */
     public int read(String file, byte[] bs, int off, int len) throws IOException {
         return read(file, 0, bs, off, len);
     }
@@ -1091,7 +581,7 @@ public class FtpInstance {
         InputStream in = null;
         try {
             client.setRestartOffset(skip);
-            in = client.retrieveFileStream(serverCharset(config.getRemoteBaseDir() + file));
+            in = client.retrieveFileStream(this.serverCharset(config.getRemoteRootDir() + file));
             return in.read(bs, off, len);
         } finally {
             Streams.close(in);
@@ -1102,13 +592,6 @@ public class FtpInstance {
         }
     }
 
-    /**
-     * 读取一行
-     *
-     * @param file 文件
-     * @return 行
-     * @throws IOException IOException
-     */
     public String readLine(String file) throws IOException {
         return readLine(file, 0);
     }
@@ -1125,7 +608,7 @@ public class FtpInstance {
         BufferedReader in = null;
         try {
             client.setRestartOffset(skip);
-            in = new BufferedReader(new InputStreamReader(client.retrieveFileStream(serverCharset(config.getRemoteBaseDir() + file))));
+            in = new BufferedReader(new InputStreamReader(client.retrieveFileStream(this.serverCharset(config.getRemoteRootDir() + file))));
             return in.readLine();
         } finally {
             Streams.close(in);
@@ -1136,26 +619,10 @@ public class FtpInstance {
         }
     }
 
-    /**
-     * 读取多行
-     *
-     * @param file 文件
-     * @param skip 跳过字节数
-     * @return 行
-     * @throws IOException IOException
-     */
     public List<String> readLines(String file, long skip) throws IOException {
         return readLines(file, skip, 0);
     }
 
-    /**
-     * 读取多行
-     *
-     * @param file  文件
-     * @param lines 读取行数
-     * @return 行
-     * @throws IOException IOException
-     */
     public List<String> readLines(String file, int lines) throws IOException {
         return readLines(file, 0, lines);
     }
@@ -1173,7 +640,7 @@ public class FtpInstance {
         BufferedReader in = null;
         try {
             client.setRestartOffset(skip);
-            in = new BufferedReader(new InputStreamReader(client.retrieveFileStream(serverCharset(config.getRemoteBaseDir() + file))));
+            in = new BufferedReader(new InputStreamReader(client.retrieveFileStream(this.serverCharset(config.getRemoteRootDir() + file))));
             List<String> list = new ArrayList<>();
             if (lines > 0) {
                 String line;
@@ -1196,156 +663,394 @@ public class FtpInstance {
         }
     }
 
-    /**
-     * 获取大文件下载线程
-     *
-     * @param remoteFile 远程文件
-     * @param localFile  本地文件
-     * @return 线程
-     */
-    public FtpDownload getDownloadBigFileRunnable(String remoteFile, File localFile) {
-        return new FtpDownload(this, remoteFile, localFile);
-    }
+    // -------------------- write --------------------
 
     /**
-     * 获取大文件下载线程
-     *
-     * @param remoteFile 远程文件
-     * @param localFile  本地文件
-     * @return 线程
-     */
-    public FtpDownload getDownloadBigFileRunnable(String remoteFile, String localFile) {
-        return new FtpDownload(this, remoteFile, new File(localFile));
-    }
-
-    /**
-     * 获取大文件上传线程
-     *
-     * @param remoteFile 远程文件
-     * @param localFile  本地文件
-     * @return 线程
-     */
-    public FtpUpload getUploadBigFileRunnable(String remoteFile, File localFile) {
-        return new FtpUpload(this, remoteFile, localFile);
-    }
-
-    /**
-     * 获取大文件上传线程
-     *
-     * @param remoteFile 远程文件
-     * @param localFile  本地文件
-     * @return 线程
-     */
-    public FtpUpload getUploadBigFileRunnable(String remoteFile, String localFile) {
-        return new FtpUpload(this, remoteFile, new File(localFile));
-    }
-
-    /**
-     * 删除文件
+     * 获取文件拼接流
+     * <p>
+     * 使用完毕需要调用 client.completePendingCommand();
+     * 这个操作在关闭io之后
      *
      * @param file 文件
-     */
-    public void delete(String file) {
-        try {
-            client.deleteFile(serverCharset(config.getRemoteBaseDir() + file));
-        } catch (Exception e) {
-            throw Exceptions.ftp(e);
-        }
-    }
-
-    /**
-     * 删除目录及文件
-     *
-     * @param dir 目录
-     */
-    public void deleteDir(String dir) {
-        try {
-            String d = serverCharset(config.getRemoteBaseDir() + dir);
-            List<FtpFile> list = listFiles(dir);
-            for (FtpFile s : list) {
-                client.deleteFile(serverCharset(Files1.getPath(config.getRemoteBaseDir() + s.getPath())));
-            }
-            list = listDirs(dir, true);
-            for (FtpFile s : list) {
-                deleteDir(s.getPath());
-            }
-            client.removeDirectory(d);
-        } catch (Exception e) {
-            throw Exceptions.ftp(e);
-        }
-    }
-
-    /**
-     * 创建文件夹
-     *
-     * @param dir 文件夹
-     */
-    public void mkdirs(String dir) {
-        try {
-            String[] dirs = Files1.getPath(dir).split(SYMBOL);
-            String base = config.getRemoteBaseDir();
-            for (String d : dirs) {
-                if (null == d || Strings.EMPTY.equals(d)) {
-                    continue;
-                }
-                base = serverCharset(base + SYMBOL + d);
-                if (!client.changeWorkingDirectory(base)) {
-                    client.makeDirectory(base);
-                    client.changeWorkingDirectory(base);
-                }
-            }
-        } catch (Exception e) {
-            throw Exceptions.ftp(e);
-        }
-    }
-
-    /**
-     * 创建文件
-     *
-     * @param file 文件
-     */
-    public void touch(String file) {
-        String filePath = serverCharset(config.getRemoteBaseDir() + file);
-        String parentPath = Files1.getParentPath(Files1.getPath(file));
-        mkdirs(parentPath);
-        for (FtpFile s : listFiles(parentPath, false)) {
-            if (Files1.getFileName(s.getPath()).endsWith(file.trim())) {
-                return;
-            }
-        }
-        change(parentPath);
-        try {
-            client.storeFile(serverCharset(filePath), new ByteArrayInputStream(new byte[]{}));
-        } catch (IOException e) {
-            throw Exceptions.ftp(e);
-        }
-    }
-
-    /**
-     * 文件移动
-     *
-     * @param file 原文件名称
-     * @param name 移动后的名称 如果不加目录为重命名
-     */
-    public void mv(String file, String name) {
-        try {
-            mkdirs(Files1.getParentPath(name));
-            change(Files1.getParentPath(Files1.getPath(file)));
-            String target = serverCharset(config.getRemoteBaseDir() + name);
-            String source = serverCharset(Files1.getFileName(file));
-            client.rename(source, target);
-        } catch (Exception e) {
-            throw Exceptions.ftp(e);
-        }
-    }
-
-    /**
-     * 等待io
-     *
+     * @return OutputStream
      * @throws IOException IOException
      */
-    public void pending() throws IOException {
-        client.completePendingCommand();
+    public OutputStream getOutputStreamAppend(String file) throws IOException {
+        this.mkdirs(Files1.getParentPath(file));
+        return client.appendFileStream(this.serverCharset(config.getRemoteRootDir() + file));
+    }
+
+    /**
+     * 获取文写入流
+     * <p>
+     * 使用完毕需要调用 client.completePendingCommand();
+     * 这个操作在关闭io之后
+     *
+     * @param file 文件
+     * @return OutputStream
+     * @throws IOException IOException
+     */
+    public OutputStream getOutputStreamWriter(String file) throws IOException {
+        this.mkdirs(Files1.getParentPath(file));
+        return client.storeFileStream(this.serverCharset(config.getRemoteRootDir() + file));
+    }
+
+    /**
+     * 拼接流到文件
+     *
+     * @param file 文件
+     * @param in   输入流
+     */
+    public void appendStream(String file, InputStream in) throws IOException {
+        this.mkdirs(Files1.getParentPath(file));
+        client.appendFile(this.serverCharset(config.getRemoteRootDir() + file), in);
+    }
+
+    /**
+     * 写入流到文件
+     *
+     * @param file 文件
+     * @param in   输入流
+     */
+    public void writeStream(String file, InputStream in) throws IOException {
+        this.mkdirs(Files1.getParentPath(file));
+        client.storeFile(this.serverCharset(config.getRemoteRootDir() + file), in);
+    }
+
+    /**
+     * 拼接字节数组到文件
+     *
+     * @param file 文件
+     * @param bs   字节数组
+     * @throws IOException IOException
+     */
+    public void append(String file, byte[] bs) throws IOException {
+        this.append(file, bs, 0, bs.length);
+    }
+
+    /**
+     * 拼接字节数组到文件
+     *
+     * @param file 文件
+     * @param bs   字节数组
+     * @param off  偏移量
+     * @param len  长度
+     * @throws IOException IOException
+     */
+    public void append(String file, byte[] bs, int off, int len) throws IOException {
+        OutputStream out = null;
+        try {
+            this.mkdirs(Files1.getParentPath(file));
+            out = client.appendFileStream(this.serverCharset(config.getRemoteRootDir() + file));
+            out.write(bs, off, len);
+        } finally {
+            Streams.close(out);
+            if (out != null) {
+                client.completePendingCommand();
+            }
+        }
+    }
+
+    /**
+     * 拼接一行
+     *
+     * @param file 文件
+     * @param line 行
+     * @throws IOException IOException
+     */
+    public void appendLine(String file, String line) throws IOException {
+        this.mkdirs(Files1.getParentPath(file));
+        this.appendLines(file, Lists.singleton(line));
+    }
+
+    /**
+     * 拼接多行
+     *
+     * @param file  文件
+     * @param lines 行
+     * @throws IOException IOException
+     */
+    public void appendLines(String file, List<String> lines) throws IOException {
+        OutputStream out = null;
+        try {
+            this.mkdirs(Files1.getParentPath(file));
+            out = client.appendFileStream(this.serverCharset(config.getRemoteRootDir() + file));
+            for (String line : lines) {
+                out.write(Strings.bytes(line));
+                out.write(Letters.LF);
+            }
+        } finally {
+            Streams.close(out);
+            if (out != null) {
+                client.completePendingCommand();
+            }
+        }
+    }
+
+    /**
+     * 写入字节数组到文件
+     *
+     * @param file 文件
+     * @param bs   字节数组
+     * @throws IOException IOException
+     */
+    public void write(String file, byte[] bs) throws IOException {
+        this.write(file, bs, 0, bs.length);
+    }
+
+    /**
+     * 写入字节数组到文件
+     *
+     * @param file 文件
+     * @param bs   字节数组
+     * @param off  偏移量
+     * @param len  长度
+     * @throws IOException IOException
+     */
+    public void write(String file, byte[] bs, int off, int len) throws IOException {
+        OutputStream out = null;
+        try {
+            this.mkdirs(Files1.getParentPath(file));
+            out = client.storeFileStream(this.serverCharset(config.getRemoteRootDir() + file));
+            out.write(bs, off, len);
+        } finally {
+            Streams.close(out);
+            if (out != null) {
+                client.completePendingCommand();
+            }
+        }
+    }
+
+    /**
+     * 写入一行
+     *
+     * @param file 文件
+     * @param line 行
+     * @throws IOException IOException
+     */
+    public void writeLine(String file, String line) throws IOException {
+        this.writeLines(file, Lists.singleton(line));
+    }
+
+    /**
+     * 写入多行
+     *
+     * @param file  文件
+     * @param lines 行
+     * @throws IOException IOException
+     */
+    public void writeLines(String file, List<String> lines) throws IOException {
+        OutputStream out = null;
+        try {
+            this.mkdirs(Files1.getParentPath(file));
+            out = client.storeFileStream(this.serverCharset(config.getRemoteRootDir() + file));
+            for (String line : lines) {
+                out.write(Strings.bytes(line));
+                out.write(13);
+            }
+        } finally {
+            Streams.close(out);
+            if (out != null) {
+                client.completePendingCommand();
+            }
+        }
+    }
+
+    // -------------------- upload --------------------
+
+    public void uploadFile(String remoteFile, String localFile) throws IOException {
+        this.uploadFile(remoteFile, Files1.openInputStreamSafe(localFile), true);
+    }
+
+    public void uploadFile(String remoteFile, File localFile) throws IOException {
+        this.uploadFile(remoteFile, Files1.openInputStreamSafe(localFile), true);
+    }
+
+    public void uploadFile(String remoteFile, InputStream in) throws IOException {
+        this.uploadFile(remoteFile, in, false);
+    }
+
+    /**
+     * 上传文件
+     *
+     * @param remoteFile 远程文件
+     * @param in         input
+     * @param close      close
+     * @throws IOException IOException
+     */
+    public void uploadFile(String remoteFile, InputStream in, boolean close) throws IOException {
+        BufferedInputStream buffer = null;
+        try {
+            String parentPath = Files1.getParentPath(remoteFile);
+            this.mkdirs(parentPath);
+            client.storeFile(this.serverCharset(config.getRemoteRootDir() + remoteFile), buffer = new BufferedInputStream(in));
+        } finally {
+            if (close) {
+                Streams.close(in);
+                Streams.close(buffer);
+            }
+        }
+    }
+
+    public void uploadDir(String remoteDir, File localDir) throws IOException {
+        this.uploadDir(remoteDir, localDir.getAbsolutePath(), true);
+    }
+
+    public void uploadDir(String remoteDir, String localDir) throws IOException {
+        this.uploadDir(remoteDir, localDir, true);
+    }
+
+    public void uploadDir(String remoteDir, File localDir, boolean child) throws IOException {
+        this.uploadDir(remoteDir, localDir.getAbsolutePath(), child);
+    }
+
+    /**
+     * 上传文件夹
+     *
+     * @param remoteDir 远程文件夹
+     * @param localDir  本地文件夹 上传时不包含此文件夹
+     * @param child     是否遍历上传
+     * @throws IOException IOException
+     */
+    public void uploadDir(String remoteDir, String localDir, boolean child) throws IOException {
+        localDir = Files1.getPath(localDir);
+        List<File> dirs = Files1.listDirs(localDir, child);
+        List<File> files = Files1.listFiles(localDir, child);
+        for (File dir : dirs) {
+            this.mkdirs(Files1.getPath(remoteDir + SEPARATOR + (dir.getAbsolutePath().substring(localDir.length()))));
+        }
+        for (File file : files) {
+            String path = Files1.getPath(remoteDir + SEPARATOR + (file.getAbsolutePath().substring(localDir.length())));
+            this.change(Files1.getParentPath(path));
+            this.uploadFile(path, file);
+        }
+    }
+
+    // -------------------- download --------------------
+
+    public void downloadFile(String remoteFile, String localFile) throws IOException {
+        Files1.touch(localFile);
+        this.downloadFile(remoteFile, Files1.openOutputStreamSafe(localFile), true);
+    }
+
+    public void downloadFile(String remoteFile, File localFile) throws IOException {
+        Files1.touch(localFile);
+        this.downloadFile(remoteFile, Files1.openOutputStreamSafe(localFile), true);
+    }
+
+    public void downloadFile(String remoteFile, OutputStream out) throws IOException {
+        this.downloadFile(remoteFile, out, false);
+    }
+
+    /**
+     * 下载文件
+     *
+     * @param remoteFile 远程文件路径
+     * @param out        output
+     * @param close      是否自动关闭
+     * @throws IOException pedding
+     */
+    public void downloadFile(String remoteFile, OutputStream out, boolean close) throws IOException {
+        BufferedOutputStream buffer = null;
+        InputStream in = null;
+        try {
+            client.setRestartOffset(0);
+            in = client.retrieveFileStream(this.serverCharset(config.getRemoteRootDir() + remoteFile));
+            if (in == null) {
+                throw Exceptions.ftp("not found file " + remoteFile);
+            }
+            Streams.transfer(in, out);
+        } finally {
+            if (close) {
+                Streams.close(out);
+                Streams.close(buffer);
+            }
+            Streams.close(in);
+            client.setRestartOffset(0);
+            if (in != null) {
+                client.completePendingCommand();
+            }
+        }
+    }
+
+    public void downloadDir(String remoteDir, File localDir) throws IOException {
+        this.downloadDir(remoteDir, localDir.getAbsolutePath(), true);
+    }
+
+    public void downloadDir(String remoteDir, String localDir) throws IOException {
+        this.downloadDir(remoteDir, localDir, true);
+    }
+
+    public void downloadDir(String remoteDir, File localDir, boolean child) throws IOException {
+        this.downloadDir(remoteDir, localDir.getAbsolutePath(), child);
+    }
+
+    /**
+     * 下载文件夹
+     *
+     * @param remoteDir 远程文件夹
+     * @param localDir  本地文件夹
+     * @param child     是否递归子文件夹下载
+     * @throws IOException pedding
+     */
+    public void downloadDir(String remoteDir, String localDir, boolean child) throws IOException {
+        if (!child) {
+            List<FtpFile> list = this.listFiles(remoteDir, false);
+            for (FtpFile s : list) {
+                this.downloadFile(s.getPath(), Files1.getPath(localDir + SEPARATOR + Files1.getFileName(s.getPath())));
+            }
+        } else {
+            List<FtpFile> list = this.listDirs(remoteDir, true);
+            for (FtpFile s : list) {
+                Files1.mkdirs(Files1.getPath(localDir + SEPARATOR + s.getPath()));
+            }
+            list = this.listFiles(remoteDir, true);
+            for (FtpFile s : list) {
+                this.downloadFile(s.getPath(), Files1.getPath(localDir + SEPARATOR + s.getPath()));
+            }
+        }
+    }
+
+    // -------------------- big file --------------------
+
+    public FtpUpload upload(String remote, String local) {
+        return new FtpUpload(this, remote, local);
+    }
+
+    /**
+     * 获取大文件上传器
+     *
+     * @param remote 远程文件
+     * @param local  本地文件
+     * @return FtpUpload
+     */
+    public FtpUpload upload(String remote, File local) {
+        return new FtpUpload(this, remote, local);
+    }
+
+    public FtpDownload download(String remote, String local) {
+        return new FtpDownload(this, remote, local);
+    }
+
+    /**
+     * 获取大文件下载器
+     *
+     * @param remote 远程文件
+     * @param local  本地文件
+     * @return FtpDownload
+     */
+    public FtpDownload download(String remote, File local) {
+        return new FtpDownload(this, remote, local);
+    }
+
+    /**
+     * 等待处理命令完毕 事务
+     *
+     * @return 是否完成
+     * @throws IOException IOException
+     */
+    public boolean pending() throws IOException {
+        return client.completePendingCommand();
     }
 
     /**
@@ -1389,7 +1094,7 @@ public class FtpInstance {
      */
     public String getStatus(String path) {
         try {
-            return client.getStatus(new String(Strings.bytes(Files1.getPath(config.getRemoteBaseDir() + path)), config.getRemoteFileNameCharset()));
+            return client.getStatus(new String(Strings.bytes(Files1.getPath(config.getRemoteRootDir() + path)), config.getRemoteFileNameCharset()));
         } catch (IOException e) {
             throw Exceptions.ftp(e);
         }
@@ -1411,6 +1116,15 @@ public class FtpInstance {
      */
     public FtpConfig config() {
         return config;
+    }
+
+    /**
+     * 获取连接池
+     *
+     * @return 连接池
+     */
+    public FtpClientPool getPool() {
+        return pool;
     }
 
     /**
@@ -1448,6 +1162,15 @@ public class FtpInstance {
             return new String(Strings.bytes(Files1.getPath(chars)), config.getLocalFileNameCharset());
         } catch (UnsupportedEncodingException e) {
             throw Exceptions.unsupportedEncoding(e);
+        }
+    }
+
+    @Override
+    public void close() {
+        if (pool != null) {
+            pool.returnClient(client);
+        } else {
+            Ftps.destroy(client);
         }
     }
 

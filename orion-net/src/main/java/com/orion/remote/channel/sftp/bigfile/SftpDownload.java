@@ -141,7 +141,7 @@ public class SftpDownload implements Runnable, SafeCloseable {
             }
             SftpATTRS fileAttribute = channel.stat(remote);
             size = fileAttribute.getSize();
-            if (local.exists() && lock.checkLock()) {
+            if (local.exists() && lock.isLocked()) {
                 now = local.length();
                 in = channel.get(remote, null, now);
                 startSize = now;
