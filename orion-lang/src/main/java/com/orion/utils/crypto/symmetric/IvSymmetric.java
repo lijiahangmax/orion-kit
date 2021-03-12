@@ -30,7 +30,7 @@ public class IvSymmetric extends BaseSymmetric {
         super(algorithm, workingMode, paddingMode);
     }
 
-    // ------------------ ENC ------------------
+    // -------------------- ENC --------------------
 
     public String encrypt(String bs, String key, String iv) {
         byte[] encrypt = encrypt(Strings.bytes(bs), null, Strings.bytes(key), Strings.bytes(iv));
@@ -84,7 +84,7 @@ public class IvSymmetric extends BaseSymmetric {
         }
     }
 
-    // ------------------ DEC ------------------
+    // -------------------- DEC --------------------
 
     public String decrypt(String bs, String key, String iv) {
         byte[] encrypt = decrypt(Strings.bytes(bs), null, Strings.bytes(key), Strings.bytes(iv));

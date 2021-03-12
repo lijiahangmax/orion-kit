@@ -26,7 +26,7 @@ public class Lists extends Collections {
     private Lists() {
     }
 
-    // --------------- new ---------------
+    // -------------------- new --------------------
 
     public static <E> List<E> newList() {
         return new ArrayList<>();
@@ -107,7 +107,7 @@ public class Lists extends Collections {
         return (List<E>) EmptyList.EMPTY;
     }
 
-    // --------------- function ---------------
+    // -------------------- function --------------------
 
     public static <E> List<E> def(List<E> list) {
         return isEmpty(list) ? new ArrayList<>() : list;
@@ -359,7 +359,7 @@ public class Lists extends Collections {
         }
     }
 
-    // --------------- getset ---------------
+    // -------------------- getset --------------------
 
     public static <E> E get(List<E> list, int i) {
         int size = size(list);
@@ -408,7 +408,7 @@ public class Lists extends Collections {
         }
     }
 
-    // --------------- toArray ---------------
+    // -------------------- toArray --------------------
 
     public static byte[] toBytes(List<Byte> list) {
         int size = size(list);

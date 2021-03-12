@@ -1166,7 +1166,7 @@ public class Dates {
         return Calendar.PM == c.get(Calendar.AM_PM);
     }
 
-    // ---------- JDK8 ----------
+    // -------------------- JDK8 --------------------
 
     public static Instant instant() {
         return Instant.now();
@@ -1474,7 +1474,7 @@ public class Dates {
         }
     }
 
-    // ---------- Stream ----------
+    // -------------------- Stream --------------------
 
     public static DateStream stream() {
         return new DateStream(new Date());

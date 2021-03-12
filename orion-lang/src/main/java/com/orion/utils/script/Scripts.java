@@ -27,7 +27,7 @@ public class Scripts {
     private Scripts() {
     }
 
-    // --------------- create ---------------
+    // -------------------- create --------------------
 
     public static ScriptEngine createJavaScript() {
         return createScript(ScriptType.JAVA_SCRIPT.getType());
@@ -72,7 +72,7 @@ public class Scripts {
         return engine;
     }
 
-    // --------------- get ---------------
+    // -------------------- get --------------------
 
     public static ScriptEngine getJavaScript() {
         return getScript(ScriptType.JAVA_SCRIPT.getType());
@@ -104,7 +104,7 @@ public class Scripts {
         return CACHE.computeIfAbsent(type, Scripts::createScript);
     }
 
-    // --------------- eval ---------------
+    // -------------------- eval --------------------
 
     public static Object eval(String script) {
         return eval(createJavaScript(), script);
@@ -263,7 +263,7 @@ public class Scripts {
         }
     }
 
-    // --------------- compile ---------------
+    // -------------------- compile --------------------
 
     public static CompiledScript compile(String script) {
         return compile(createJavaScript(), script);

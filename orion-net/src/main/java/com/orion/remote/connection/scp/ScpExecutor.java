@@ -32,7 +32,7 @@ public class ScpExecutor {
         this.client = client;
     }
 
-    // --------------- download ---------------
+    // -------------------- download --------------------
 
     /**
      * 下载文件到本地文件夹
@@ -149,7 +149,7 @@ public class ScpExecutor {
         return this.client.get(remoteFile);
     }
 
-    // --------------- upload ---------------
+    // -------------------- upload --------------------
 
     /**
      * 上传文件

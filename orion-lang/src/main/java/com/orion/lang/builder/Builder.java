@@ -26,12 +26,12 @@ public class Builder<T> implements Buildable<T> {
      */
     private List<Consumer<T>> modifiers = new ArrayList<>();
 
-    public Builder(Supplier<T> instant) {
-        this.initializer = instant;
+    public Builder(Supplier<T> instance) {
+        this.initializer = instance;
     }
 
-    public static <T> Builder<T> of(Supplier<T> instant) {
-        return new Builder<>(instant);
+    public static <T> Builder<T> of(Supplier<T> instance) {
+        return new Builder<>(instance);
     }
 
     public <P1> Builder<T> with(Consumer1<T, P1> consumer, P1 p1) {

@@ -56,10 +56,15 @@ import java.util.Optional;
  * @version 1.0.0
  * @since 2020/4/6 15:50
  */
+@SuppressWarnings("unused")
 public class Excels {
 
     private Excels() {
     }
+
+    private static final int BUFFER_LINE = Const.N_100;
+
+    private static final int BUFFER_SIZE = Const.BUFFER_KB_8;
 
     /**
      * 获取列对应的数值
@@ -687,7 +692,7 @@ public class Excels {
         }
     }
 
-    // --------------- option ---------------
+    // -------------------- option --------------------
 
     /**
      * 创建图片解析器
@@ -1401,7 +1406,7 @@ public class Excels {
         return drawing.createPicture(anchor, pictureIndex);
     }
 
-    // --------------- row cell ---------------
+    // -------------------- row cell --------------------
 
     /**
      * 冻结首行
@@ -1646,7 +1651,7 @@ public class Excels {
         sheet.addValidationData(v);
     }
 
-    // --------------- write ---------------
+    // -------------------- write --------------------
 
     public static void write(Workbook workbook, String file) {
         write(workbook, Files1.openOutputStreamSafe(file), true);
@@ -1772,7 +1777,7 @@ public class Excels {
         return new CopySheet(resourceWorkbook, targetWorkbook, resourceSheet, targetSheet);
     }
 
-    // --------------- open ---------------
+    // -------------------- open --------------------
 
     public static Workbook openWorkbook(InputStream in) {
         return openWorkbook(in, null);
@@ -1808,54 +1813,54 @@ public class Excels {
         }
     }
 
-    // --------------- open streaming ---------------
+    // -------------------- open streaming --------------------
 
     public static Workbook openStreamingWorkbook(String file) {
-        return openStreamingWorkbook(new File(file), null, Const.BUFFER_L_100, Const.BUFFER_KB_4);
+        return openStreamingWorkbook(new File(file), null, BUFFER_LINE, BUFFER_SIZE);
     }
 
     public static Workbook openStreamingWorkbook(File file) {
-        return openStreamingWorkbook(file, null, Const.BUFFER_L_100, Const.BUFFER_KB_4);
+        return openStreamingWorkbook(file, null, BUFFER_LINE, BUFFER_SIZE);
     }
 
     public static Workbook openStreamingWorkbook(InputStream in) {
-        return openStreamingWorkbook(in, null, Const.BUFFER_L_100, Const.BUFFER_KB_4);
+        return openStreamingWorkbook(in, null, BUFFER_LINE, BUFFER_SIZE);
     }
 
     public static Workbook openStreamingWorkbook(String file, String password) {
-        return openStreamingWorkbook(new File(file), password, Const.BUFFER_L_100, Const.BUFFER_KB_4);
+        return openStreamingWorkbook(new File(file), password, BUFFER_LINE, BUFFER_SIZE);
     }
 
     public static Workbook openStreamingWorkbook(File file, String password) {
-        return openStreamingWorkbook(file, password, Const.BUFFER_L_100, Const.BUFFER_KB_4);
+        return openStreamingWorkbook(file, password, BUFFER_LINE, BUFFER_SIZE);
     }
 
     public static Workbook openStreamingWorkbook(InputStream in, String password) {
-        return openStreamingWorkbook(in, password, Const.BUFFER_L_100, Const.BUFFER_KB_4);
+        return openStreamingWorkbook(in, password, BUFFER_LINE, BUFFER_SIZE);
     }
 
     public static Workbook openStreamingWorkbook(String file, int rowCache) {
-        return openStreamingWorkbook(new File(file), null, rowCache, Const.BUFFER_KB_4);
+        return openStreamingWorkbook(new File(file), null, rowCache, BUFFER_SIZE);
     }
 
     public static Workbook openStreamingWorkbook(File file, int rowCache) {
-        return openStreamingWorkbook(file, null, rowCache, Const.BUFFER_KB_4);
+        return openStreamingWorkbook(file, null, rowCache, BUFFER_SIZE);
     }
 
     public static Workbook openStreamingWorkbook(InputStream in, int rowCache) {
-        return openStreamingWorkbook(in, null, rowCache, Const.BUFFER_KB_4);
+        return openStreamingWorkbook(in, null, rowCache, BUFFER_SIZE);
     }
 
     public static Workbook openStreamingWorkbook(String file, String password, int rowCache) {
-        return openStreamingWorkbook(new File(file), password, rowCache, Const.BUFFER_KB_4);
+        return openStreamingWorkbook(new File(file), password, rowCache, BUFFER_SIZE);
     }
 
     public static Workbook openStreamingWorkbook(File file, String password, int rowCache) {
-        return openStreamingWorkbook(file, password, rowCache, Const.BUFFER_KB_4);
+        return openStreamingWorkbook(file, password, rowCache, BUFFER_SIZE);
     }
 
     public static Workbook openStreamingWorkbook(InputStream in, String password, int rowCache) {
-        return openStreamingWorkbook(in, password, rowCache, Const.BUFFER_KB_4);
+        return openStreamingWorkbook(in, password, rowCache, BUFFER_SIZE);
     }
 
     public static Workbook openStreamingWorkbook(String file, int rowCache, int bufferSize) {
@@ -1902,7 +1907,7 @@ public class Excels {
         }
     }
 
-    // --------------- check ---------------
+    // -------------------- check --------------------
 
     /**
      * 是否为流式读取的workbook

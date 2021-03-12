@@ -23,7 +23,7 @@ public class DES3 {
     private DES3() {
     }
 
-    // ------------------ ENC ------------------
+    // -------------------- ENC --------------------
 
     public static String encrypt(String s, String key) {
         return ECB.encrypt(s, key);
@@ -57,7 +57,7 @@ public class DES3 {
         return CBC.encrypt(bs, key, iv);
     }
 
-    // ------------------ DEC ------------------
+    // -------------------- DEC --------------------
 
     public static String decrypt(String s, String key) {
         return ECB.decrypt(s, key);

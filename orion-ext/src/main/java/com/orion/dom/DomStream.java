@@ -31,7 +31,7 @@ public class DomStream {
         this.element = element;
     }
 
-    // ---------------- child ----------------
+    // -------------------- child --------------------
 
     public DomStream childFirst() {
         List<Element> elements = this.element.elements();
@@ -138,7 +138,7 @@ public class DomStream {
         }
     }
 
-    // ---------------- parent ----------------
+    // -------------------- parent --------------------
 
     public DomStream parentFirst() {
         Element parent = this.element.getParent();
@@ -257,7 +257,7 @@ public class DomStream {
         }
     }
 
-    // ---------------- next ----------------
+    // -------------------- next --------------------
 
     public DomStream nextLast() {
         Element parent = this.element.getParent();
@@ -397,7 +397,7 @@ public class DomStream {
         throw Exceptions.argument(Strings.format("not found next element tag: {}, index: {}, key: {}, value: {}", tag, index, attrKey, attrValue));
     }
 
-    // ---------------- prev ----------------
+    // -------------------- prev --------------------
 
     public DomStream prevFirst() {
         Element parent = this.element.getParent();
@@ -538,7 +538,7 @@ public class DomStream {
         throw Exceptions.argument(Strings.format("not found previous element tag: {}, index: {}, key: {}, value: {}", tag, index, attrKey, attrValue));
     }
 
-    // ---------------- result ----------------
+    // -------------------- result --------------------
 
     public List<Element> childs() {
         List<Element> elements = this.element.elements();

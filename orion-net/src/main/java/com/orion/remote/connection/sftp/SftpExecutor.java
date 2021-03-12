@@ -459,7 +459,7 @@ public class SftpExecutor implements SafeCloseable {
         }
     }
 
-    // --------------- read ---------------
+    // -------------------- read --------------------
 
     public int read(String path, byte[] bs) throws IOException {
         return this.read(path, 0, bs, 0, bs.length);
@@ -491,7 +491,7 @@ public class SftpExecutor implements SafeCloseable {
         return read;
     }
 
-    // --------------- transfer ---------------
+    // -------------------- transfer --------------------
 
     public long transfer(String path, String file) throws IOException {
         Files1.touch(file);
@@ -567,7 +567,7 @@ public class SftpExecutor implements SafeCloseable {
         return r;
     }
 
-    // --------------- write ---------------
+    // -------------------- write --------------------
 
     public void write(String path, InputStream in) throws IOException {
         this.write(path, 0, in, null, null, null, false);
@@ -743,7 +743,7 @@ public class SftpExecutor implements SafeCloseable {
         return new SftpDownload(client, remote, local);
     }
 
-    // --------------- list ---------------
+    // -------------------- list --------------------
 
     public List<FileAttribute> listFiles(String path) {
         return this.listFiles(path, false, false);
@@ -766,7 +766,7 @@ public class SftpExecutor implements SafeCloseable {
         try {
             List<FileAttribute> ls = this.ll(path);
             for (FileAttribute l : ls) {
-                String fn = l.getFileName();
+                String fn = l.getName();
                 if (l.isDirectory()) {
                     if (dir) {
                         list.add(l);
@@ -785,7 +785,7 @@ public class SftpExecutor implements SafeCloseable {
     }
 
     public List<FileAttribute> listDirs(String path) {
-        return this.listDirs(path, true);
+        return this.listDirs(path, false);
     }
 
     /**
@@ -800,7 +800,7 @@ public class SftpExecutor implements SafeCloseable {
         try {
             List<FileAttribute> ls = this.ll(path);
             for (FileAttribute l : ls) {
-                String fn = l.getFileName();
+                String fn = l.getName();
                 if (l.isDirectory()) {
                     list.add(l);
                     if (child) {
@@ -815,11 +815,11 @@ public class SftpExecutor implements SafeCloseable {
     }
 
     public List<FileAttribute> listFilesSuffix(String path, String suffix) {
-        return this.listFilesSearch(path, FileAttributeFilter.suffix(suffix), false, false);
+        return this.listFilesSuffix(path, suffix, false, false);
     }
 
     public List<FileAttribute> listFilesSuffix(String path, String suffix, boolean child) {
-        return this.listFilesSearch(path, FileAttributeFilter.suffix(suffix), child, false);
+        return this.listFilesSuffix(path, suffix, child, false);
     }
 
     /**
@@ -836,11 +836,11 @@ public class SftpExecutor implements SafeCloseable {
     }
 
     public List<FileAttribute> listFilesMatch(String path, String match) {
-        return this.listFilesSearch(path, FileAttributeFilter.match(match), false, false);
+        return this.listFilesMatch(path, match, false, false);
     }
 
     public List<FileAttribute> listFilesMatch(String path, String match, boolean child) {
-        return this.listFilesSearch(path, FileAttributeFilter.match(match), child, false);
+        return this.listFilesMatch(path, match, child, false);
     }
 
     /**
@@ -857,11 +857,11 @@ public class SftpExecutor implements SafeCloseable {
     }
 
     public List<FileAttribute> listFilesPattern(String path, Pattern pattern) {
-        return this.listFilesSearch(path, FileAttributeFilter.pattern(pattern), false, false);
+        return this.listFilesPattern(path, pattern, false, false);
     }
 
     public List<FileAttribute> listFilesPattern(String path, Pattern pattern, boolean child) {
-        return this.listFilesSearch(path, FileAttributeFilter.pattern(pattern), child, false);
+        return this.listFilesPattern(path, pattern, child, false);
     }
 
     /**
@@ -877,11 +877,11 @@ public class SftpExecutor implements SafeCloseable {
     }
 
     public List<FileAttribute> listFilesFilter(String path, FileAttributeFilter filter) {
-        return this.listFilesSearch(path, filter, false, false);
+        return this.listFilesFilter(path, filter, false, false);
     }
 
     public List<FileAttribute> listFilesFilter(String path, FileAttributeFilter filter, boolean child) {
-        return this.listFilesSearch(path, filter, child, false);
+        return this.listFilesFilter(path, filter, child, false);
     }
 
     /**
@@ -911,7 +911,7 @@ public class SftpExecutor implements SafeCloseable {
         try {
             List<FileAttribute> files = this.ll(path);
             for (FileAttribute l : files) {
-                String fn = l.getFileName();
+                String fn = l.getName();
                 boolean isDir = l.isDirectory();
                 if (!isDir || dir) {
                     if (filter.accept(l)) {
@@ -928,7 +928,7 @@ public class SftpExecutor implements SafeCloseable {
         return list;
     }
 
-    // --------------- get ---------------
+    // -------------------- get --------------------
 
     /**
      * 关闭文件

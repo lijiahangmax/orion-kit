@@ -74,7 +74,7 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
         return new DateStream(Dates.date(o), timeZone, locale);
     }
 
-    // ---------- Year ----------
+    // -------------------- Year --------------------
 
     public DateStream addYear(int y) {
         c.add(Calendar.YEAR, y);
@@ -95,7 +95,7 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
         return c.get(Calendar.YEAR);
     }
 
-    // ---------- Month ----------
+    // -------------------- Month --------------------
 
     public DateStream addMonth(int m) {
         c.add(Calendar.MONTH, m);
@@ -116,7 +116,7 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
         return c.get(Calendar.MONTH) + 1;
     }
 
-    // ---------- Week ----------
+    // -------------------- Week --------------------
 
     public DateStream addWeek(int w) {
         c.add(Calendar.WEEK_OF_MONTH, w);
@@ -137,7 +137,7 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
         return c.get(Calendar.WEEK_OF_MONTH);
     }
 
-    // ---------- Day ----------
+    // -------------------- Day --------------------
 
     public DateStream addDay(int d) {
         c.add(Calendar.DAY_OF_MONTH, d);
@@ -158,7 +158,7 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
         return c.get(Calendar.DAY_OF_MONTH);
     }
 
-    // ---------- Hour ----------
+    // -------------------- Hour --------------------
 
     public DateStream addHour(int h) {
         c.add(Calendar.HOUR_OF_DAY, h);
@@ -179,7 +179,7 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
         return c.get(Calendar.HOUR_OF_DAY);
     }
 
-    // ---------- Minute ----------
+    // -------------------- Minute --------------------
 
     public DateStream addMinute(int m) {
         c.add(Calendar.MINUTE, m);
@@ -200,7 +200,7 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
         return c.get(Calendar.MINUTE);
     }
 
-    // ---------- Second ----------
+    // -------------------- Second --------------------
 
     public DateStream addSecond(int s) {
         c.add(Calendar.SECOND, s);
@@ -221,7 +221,7 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
         return c.get(Calendar.SECOND);
     }
 
-    // ---------- MilliSecond ----------
+    // -------------------- MilliSecond --------------------
 
     public DateStream addMilliSecond(int ms) {
         c.add(Calendar.MILLISECOND, ms);
@@ -257,7 +257,7 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
         return this;
     }
 
-    // ---------- Result ----------
+    // -------------------- Result --------------------
 
     public String format() {
         return Dates.format(this.c.getTime());

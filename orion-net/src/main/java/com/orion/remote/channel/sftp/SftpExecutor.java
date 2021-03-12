@@ -571,7 +571,7 @@ public class SftpExecutor extends BaseExecutor {
         }
     }
 
-    // --------------- read ---------------
+    // -------------------- read --------------------
 
     public int read(String path, byte[] bs) throws IOException {
         return this.read(path, 0, bs, 0, bs.length);
@@ -608,7 +608,7 @@ public class SftpExecutor extends BaseExecutor {
         }
     }
 
-    // --------------- transfer ---------------
+    // -------------------- transfer --------------------
 
     public long transfer(String path, OutputStream out) throws IOException {
         return this.transfer(path, out, 0, -1);
@@ -710,7 +710,7 @@ public class SftpExecutor extends BaseExecutor {
         return r;
     }
 
-    // --------------- write ---------------
+    // -------------------- write --------------------
 
     public void write(String path, InputStream in) throws IOException {
         this.write(path, in, null, null, null, 0);
@@ -842,7 +842,7 @@ public class SftpExecutor extends BaseExecutor {
         return new SftpDownload(channel, remote, local);
     }
 
-    // --------------- list ---------------
+    // -------------------- list --------------------
 
     public List<FileAttribute> listFiles(String path) {
         return this.listFiles(path, false, false);
@@ -870,7 +870,7 @@ public class SftpExecutor extends BaseExecutor {
                         list.add(l);
                     }
                     if (child) {
-                        list.addAll(this.listFiles(Files1.getPath(path + SEPARATOR + l.getFileName()), true, dir));
+                        list.addAll(this.listFiles(Files1.getPath(path + SEPARATOR + l.getName()), true, dir));
                     }
                 } else {
                     list.add(l);
@@ -883,7 +883,7 @@ public class SftpExecutor extends BaseExecutor {
     }
 
     public List<FileAttribute> listDirs(String path) {
-        return this.listDirs(path, true);
+        return this.listDirs(path, false);
     }
 
     /**
@@ -901,7 +901,7 @@ public class SftpExecutor extends BaseExecutor {
                 if (l.isDirectory()) {
                     list.add(l);
                     if (child) {
-                        list.addAll(this.listDirs(Files1.getPath(path + SEPARATOR + l.getFileName()), true));
+                        list.addAll(this.listDirs(Files1.getPath(path + SEPARATOR + l.getName()), true));
                     }
                 }
             }
@@ -912,11 +912,11 @@ public class SftpExecutor extends BaseExecutor {
     }
 
     public List<FileAttribute> listFilesSuffix(String path, String suffix) {
-        return this.listFilesSearch(path, FileAttributeFilter.suffix(suffix), false, false);
+        return this.listFilesSuffix(path, suffix, false, false);
     }
 
     public List<FileAttribute> listFilesSuffix(String path, String suffix, boolean child) {
-        return this.listFilesSearch(path, FileAttributeFilter.suffix(suffix), child, false);
+        return this.listFilesSuffix(path, suffix, child, false);
     }
 
     /**
@@ -933,11 +933,11 @@ public class SftpExecutor extends BaseExecutor {
     }
 
     public List<FileAttribute> listFilesMatch(String path, String match) {
-        return this.listFilesSearch(path, FileAttributeFilter.match(match), false, false);
+        return this.listFilesMatch(path, match, false, false);
     }
 
     public List<FileAttribute> listFilesMatch(String path, String match, boolean child) {
-        return this.listFilesSearch(path, FileAttributeFilter.match(match), child, false);
+        return this.listFilesMatch(path, match, child, false);
     }
 
     /**
@@ -954,11 +954,11 @@ public class SftpExecutor extends BaseExecutor {
     }
 
     public List<FileAttribute> listFilesPattern(String path, Pattern pattern) {
-        return this.listFilesSearch(path, FileAttributeFilter.pattern(pattern), false, false);
+        return this.listFilesPattern(path, pattern, false, false);
     }
 
     public List<FileAttribute> listFilesPattern(String path, Pattern pattern, boolean child) {
-        return this.listFilesSearch(path, FileAttributeFilter.pattern(pattern), child, false);
+        return this.listFilesPattern(path, pattern, child, false);
     }
 
     /**
@@ -975,11 +975,11 @@ public class SftpExecutor extends BaseExecutor {
     }
 
     public List<FileAttribute> listFilesFilter(String path, FileAttributeFilter filter) {
-        return this.listFilesSearch(path, filter, false, false);
+        return this.listFilesFilter(path, filter, false, false);
     }
 
     public List<FileAttribute> listFilesFilter(String path, FileAttributeFilter filter, boolean child) {
-        return this.listFilesSearch(path, filter, child, false);
+        return this.listFilesFilter(path, filter, child, false);
     }
 
     /**
@@ -1009,7 +1009,7 @@ public class SftpExecutor extends BaseExecutor {
         try {
             List<FileAttribute> ls = this.ll(path);
             for (FileAttribute l : ls) {
-                String fn = l.getFileName();
+                String fn = l.getName();
                 boolean isDir = l.isDirectory();
                 if (!isDir || dir) {
                     if (filter.accept(l)) {

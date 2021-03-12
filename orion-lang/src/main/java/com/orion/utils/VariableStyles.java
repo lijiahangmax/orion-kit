@@ -202,7 +202,7 @@ public enum VariableStyles {
         }
     }
 
-    // --------------- 转化格式私有方法 ---------------
+    // -------------------- 转化格式私有方法 --------------------
 
     private static String styleConvert(String variable, String before, String after) {
         return variable.toLowerCase().replaceAll(before, after);

@@ -175,7 +175,7 @@ public class ImageExecutorStream {
         return this;
     }
 
-    // --------------- 水印 ---------------
+    // -------------------- 水印 --------------------
 
     public ImageExecutorStream watermark(byte[] bs) throws IOException {
         builder.watermark(ImageIO.read(Streams.toInputStream(bs)));
@@ -305,7 +305,7 @@ public class ImageExecutorStream {
         return this;
     }
 
-    // --------------- 裁剪 ---------------
+    // -------------------- 裁剪 --------------------
 
     /**
      * 剪裁

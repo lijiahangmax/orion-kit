@@ -57,7 +57,7 @@ public class ExcelAdapter extends BaseExcelWriteable implements Adaptable<ExcelA
         super(new XSSFWorkbook());
         this.reader = reader;
         this.sheet = workbook.createSheet();
-        this.bufferLine = Const.BUFFER_L_100;
+        this.bufferLine = Const.N_100;
     }
 
     /**

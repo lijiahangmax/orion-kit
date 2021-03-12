@@ -23,7 +23,7 @@ public class Queues extends Collections {
     private Queues() {
     }
 
-    // --------------- new ---------------
+    // -------------------- new --------------------
 
     public static <E> Queue<E> newQueue() {
         return new ConcurrentLinkedQueue<>();
@@ -49,7 +49,7 @@ public class Queues extends Collections {
         return new LimitDeque<>(size);
     }
 
-    // --------------- function ---------------
+    // -------------------- function --------------------
 
     public static <E> Queue<E> def(Queue<E> q) {
         return isEmpty(q) ? new ConcurrentLinkedQueue<>() : q;

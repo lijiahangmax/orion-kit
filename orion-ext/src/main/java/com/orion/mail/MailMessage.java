@@ -324,7 +324,7 @@ public class MailMessage implements Serializable {
     }
 
     private String eof() {
-        return StandardContentType.TEXT_HTML.equals(mimeType) ? "<br/>" : Const.LF;
+        return StandardContentType.TEXT_HTML.equals(mimeType) ? Const.BR : Const.LF;
     }
 
     // -------------------- getter --------------------

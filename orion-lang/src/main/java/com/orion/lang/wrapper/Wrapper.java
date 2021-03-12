@@ -11,7 +11,7 @@ import java.io.Serializable;
  */
 public interface Wrapper<T> extends Serializable {
 
-    // --------------- HTTP ---------------
+    // -------------------- HTTP --------------------
 
     int HTTP_OK_CODE = 200;
 
@@ -21,7 +21,7 @@ public interface Wrapper<T> extends Serializable {
 
     String HTTP_ERROR_MESSAGE = "error";
 
-    // --------------- RPC ---------------
+    // -------------------- RPC --------------------
 
     int RPC_SUCCESS_CODE = 2000;
 
@@ -33,7 +33,7 @@ public interface Wrapper<T> extends Serializable {
 
     String PRC_TRACE_PREFIX = "PRC-TRACE-ID-";
 
-    // --------------- URL ---------------
+    // -------------------- URL --------------------
 
     int URL_NO_OPERATION = 1;
 

@@ -22,7 +22,7 @@ public class Gsons {
     /**
      * 单例gson对象
      */
-    private static class GsonInstant {
+    private static class GsonInstance {
         private static Gson gson = new Gson();
     }
 
@@ -30,21 +30,21 @@ public class Gsons {
      * 获得gson对象
      */
     public static Gson get() {
-        return GsonInstant.gson;
+        return GsonInstance.gson;
     }
 
     /**
      * 修改gson对象
      */
     public static Gson set(GsonBuilder builder) {
-        return (GsonInstant.gson = builder.create());
+        return (GsonInstance.gson = builder.create());
     }
 
     /**
      * 修改gson对象
      */
     public static Gson set(Gson gson) {
-        return (GsonInstant.gson = gson);
+        return (GsonInstance.gson = gson);
     }
 
     /**
@@ -57,7 +57,7 @@ public class Gsons {
         if (o == null) {
             return Strings.EMPTY;
         }
-        return GsonInstant.gson.toJson(o);
+        return GsonInstance.gson.toJson(o);
     }
 
     /**
@@ -72,7 +72,7 @@ public class Gsons {
         if (Strings.isBlank(json)) {
             return null;
         }
-        return GsonInstant.gson.fromJson(json, clazz);
+        return GsonInstance.gson.fromJson(json, clazz);
     }
 
     /**
@@ -87,7 +87,7 @@ public class Gsons {
         if (Strings.isBlank(json)) {
             return new ArrayList<>();
         }
-        return GsonInstant.gson.fromJson(json, TypeToken.getParameterized(List.class, clazz).getType());
+        return GsonInstance.gson.fromJson(json, TypeToken.getParameterized(List.class, clazz).getType());
     }
 
     /**
@@ -102,7 +102,7 @@ public class Gsons {
         if (Strings.isBlank(json)) {
             return new HashSet<>();
         }
-        return GsonInstant.gson.fromJson(json, TypeToken.getParameterized(Set.class, clazz).getType());
+        return GsonInstance.gson.fromJson(json, TypeToken.getParameterized(Set.class, clazz).getType());
     }
 
     /**
@@ -119,7 +119,7 @@ public class Gsons {
         if (Strings.isBlank(json)) {
             return new HashMap<>();
         }
-        return GsonInstant.gson.fromJson(json, TypeToken.getParameterized(Map.class, keyClass, valClass).getType());
+        return GsonInstance.gson.fromJson(json, TypeToken.getParameterized(Map.class, keyClass, valClass).getType());
     }
 
     /**
@@ -132,7 +132,7 @@ public class Gsons {
      * @return T
      */
     public static <T> T toObject(String json, Class<?> rawClass, Class<?>... genericClasses) {
-        return GsonInstant.gson.fromJson(json, TypeToken.getParameterized(rawClass, genericClasses).getType());
+        return GsonInstance.gson.fromJson(json, TypeToken.getParameterized(rawClass, genericClasses).getType());
     }
 
 }

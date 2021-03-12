@@ -63,7 +63,7 @@ public class DomExt {
         this.document = document;
     }
 
-    // --------------- new ---------------
+    // -------------------- new --------------------
 
     /**
      * 将xml文本转换为 DomExt
@@ -75,7 +75,7 @@ public class DomExt {
         return new DomExt(toDocument(xml));
     }
 
-    // --------------- stream ---------------
+    // -------------------- stream --------------------
 
     /**
      * 获取dom流
@@ -86,7 +86,7 @@ public class DomExt {
         return new DomStream(document.getRootElement());
     }
 
-    // --------------- parse ---------------
+    // -------------------- parse --------------------
 
     /**
      * 获取解析的element
@@ -134,7 +134,7 @@ public class DomExt {
         return new DomParser(element, formula).getElementValue();
     }
 
-    // --------------- format ---------------
+    // -------------------- format --------------------
 
     /**
      * 格式化xml
@@ -202,7 +202,7 @@ public class DomExt {
         }
     }
 
-    // --------------- document ---------------
+    // -------------------- document --------------------
 
     /**
      * 获取 document
@@ -213,7 +213,7 @@ public class DomExt {
         return document;
     }
 
-    // --------------- element ---------------
+    // -------------------- element --------------------
 
     /**
      * 获取根 element
@@ -250,7 +250,7 @@ public class DomExt {
         return map;
     }
 
-    // --------------- attribute ---------------
+    // -------------------- attribute --------------------
 
     /**
      * 获取属性集
@@ -284,7 +284,7 @@ public class DomExt {
         return null;
     }
 
-    // --------------- toDocument ---------------
+    // -------------------- toDocument --------------------
 
     /**
      * xml转document
@@ -335,7 +335,7 @@ public class DomExt {
         return d;
     }
 
-    // --------------- toElement ---------------
+    // -------------------- toElement --------------------
 
     /**
      * 将Map转为 Element
@@ -442,7 +442,7 @@ public class DomExt {
         }
     }
 
-    // --------------- toMap ---------------
+    // -------------------- toMap --------------------
 
     /**
      * XML 解析为 Map 只有标签值, 没有属性值, 不具有根标签
@@ -473,7 +473,7 @@ public class DomExt {
         return DomBeanWrapper.toMap(element);
     }
 
-    // --------------- toDomNode ---------------
+    // -------------------- toDomNode --------------------
 
     /**
      * XML 解析为 DomNode 有标签值, 有属性值, 不具有根标签
@@ -504,7 +504,7 @@ public class DomExt {
         return DomBeanWrapper.toDomNode(element);
     }
 
-    // --------------- toBean ---------------
+    // -------------------- toBean --------------------
 
     /**
      * XML 转 bean
@@ -579,7 +579,7 @@ public class DomExt {
         return DomBeanWrapper.toBean(element, convertMap, clazz);
     }
 
-    // --------------- write ---------------
+    // -------------------- write --------------------
 
     /**
      * 将xml保存到文件
@@ -632,7 +632,7 @@ public class DomExt {
         }
     }
 
-    // --------------- cleanComment ---------------
+    // -------------------- cleanComment --------------------
 
     /**
      * 去除注释
@@ -675,7 +675,7 @@ public class DomExt {
         }
     }
 
-    // --------------- result ---------------
+    // -------------------- result --------------------
 
     /**
      * 获取当前Document的XML

@@ -29,7 +29,7 @@ public class EcbSymmetric extends BaseSymmetric {
         super(algorithm, WorkingMode.ECB, paddingMode);
     }
 
-    // ------------------ ENC ------------------
+    // -------------------- ENC --------------------
 
     public String encrypt(String s, String key) {
         byte[] bs = encrypt(Strings.bytes(s), null, Strings.bytes(key));
@@ -81,7 +81,7 @@ public class EcbSymmetric extends BaseSymmetric {
         }
     }
 
-    // ------------------ DEC ------------------
+    // -------------------- DEC --------------------
 
     public String decrypt(String s, String key) {
         byte[] bs = decrypt(Strings.bytes(s), null, Strings.bytes(key));

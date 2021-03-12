@@ -23,7 +23,7 @@ public class JackSons {
     /**
      * 单例Mapper对象
      */
-    private static class MapperInstant {
+    private static class MapperInstance {
         private static ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
     }
 
@@ -31,14 +31,14 @@ public class JackSons {
      * 获得Mapper对象
      */
     public static ObjectMapper get() {
-        return MapperInstant.objectMapper;
+        return MapperInstance.objectMapper;
     }
 
     /**
      * 修改Mapper对象
      */
     public static ObjectMapper set(ObjectMapper objectMapper) {
-        return (MapperInstant.objectMapper = objectMapper);
+        return (MapperInstance.objectMapper = objectMapper);
     }
 
     /**
@@ -52,7 +52,7 @@ public class JackSons {
             return Strings.EMPTY;
         }
         try {
-            return MapperInstant.objectMapper.writeValueAsString(bean);
+            return MapperInstance.objectMapper.writeValueAsString(bean);
         } catch (JsonProcessingException e) {
             return null;
         }
@@ -71,7 +71,7 @@ public class JackSons {
             return null;
         }
         try {
-            return MapperInstant.objectMapper.readValue(json, targetClass);
+            return MapperInstance.objectMapper.readValue(json, targetClass);
         } catch (Exception e) {
             return null;
         }
@@ -90,7 +90,7 @@ public class JackSons {
             return new ArrayList<>();
         }
         try {
-            return MapperInstant.objectMapper.readValue(json, getJavaType(List.class, clazz));
+            return MapperInstance.objectMapper.readValue(json, getJavaType(List.class, clazz));
         } catch (Exception e) {
             return null;
         }
@@ -109,7 +109,7 @@ public class JackSons {
             return new HashSet<>();
         }
         try {
-            return MapperInstant.objectMapper.readValue(json, getJavaType(Set.class, clazz));
+            return MapperInstance.objectMapper.readValue(json, getJavaType(Set.class, clazz));
         } catch (Exception e) {
             return null;
         }
@@ -130,7 +130,7 @@ public class JackSons {
             return new HashMap<>(16);
         }
         try {
-            return MapperInstant.objectMapper.readValue(json, getJavaType(Map.class, ks, vs));
+            return MapperInstance.objectMapper.readValue(json, getJavaType(Map.class, ks, vs));
         } catch (Exception e) {
             return null;
         }
@@ -147,7 +147,7 @@ public class JackSons {
      */
     public static <T> T toObject(String json, Class<?> rawClass, Class<?>... genericClasses) {
         try {
-            return MapperInstant.objectMapper.readValue(json, getJavaType(rawClass, genericClasses));
+            return MapperInstance.objectMapper.readValue(json, getJavaType(rawClass, genericClasses));
         } catch (Exception e) {
             return null;
         }
@@ -161,7 +161,7 @@ public class JackSons {
      * @return JavaType
      */
     public static JavaType getJavaType(Class<?> rawClass, Class<?>... genericClasses) {
-        return MapperInstant.objectMapper.getTypeFactory().constructParametricType(rawClass, genericClasses);
+        return MapperInstance.objectMapper.getTypeFactory().constructParametricType(rawClass, genericClasses);
     }
 
 }

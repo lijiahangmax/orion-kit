@@ -52,7 +52,7 @@ public class CsvColumnSplit implements SafeCloseable {
         Valid.isFalse(Arrays1.isEmpty(columns), "split columns is null");
         this.reader = reader;
         this.columns = columns;
-        this.bufferLine = Const.BUFFER_L_100;
+        this.bufferLine = Const.N_100;
     }
 
     /**

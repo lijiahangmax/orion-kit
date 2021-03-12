@@ -54,7 +54,7 @@ public class FunctionConst {
         Console.trace(u);
     };
 
-    // --------------- getter ---------------
+    // -------------------- getter --------------------
 
     public static <T> Consumer<T> getEmptyConsumer() {
         return (Consumer<T>) EMPTY_CONSUMER;

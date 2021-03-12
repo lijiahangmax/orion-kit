@@ -31,7 +31,7 @@ public class Servlets {
     private Servlets() {
     }
 
-    // ------------------------- request -------------------------
+    // -------------------- request --------------------
 
     /**
      * 获取请求参数
@@ -383,7 +383,7 @@ public class Servlets {
         return Streams.toByteArray(request.getInputStream());
     }
 
-    // ------------------------- response -------------------------
+    // -------------------- response --------------------
 
     /**
      * 页面重定向

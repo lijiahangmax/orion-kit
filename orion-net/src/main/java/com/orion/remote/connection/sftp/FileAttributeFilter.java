@@ -29,7 +29,7 @@ public interface FileAttributeFilter {
      * @return FileAttributeFilter
      */
     static FileAttributeFilter suffix(String suffix) {
-        return a -> a.getFileName().toLowerCase().endsWith(suffix.toLowerCase());
+        return a -> a.getName().toLowerCase().endsWith(suffix.toLowerCase());
     }
 
     /**
@@ -39,7 +39,7 @@ public interface FileAttributeFilter {
      * @return FileAttributeFilter
      */
     static FileAttributeFilter match(String name) {
-        return a -> a.getFileName().toLowerCase().contains(name.toLowerCase());
+        return a -> a.getName().toLowerCase().contains(name.toLowerCase());
     }
 
     /**
@@ -49,7 +49,7 @@ public interface FileAttributeFilter {
      * @return FileAttributeFilter
      */
     static FileAttributeFilter pattern(Pattern pattern) {
-        return a -> Matches.test(a.getFileName(), pattern);
+        return a -> Matches.test(a.getName(), pattern);
     }
 
 }

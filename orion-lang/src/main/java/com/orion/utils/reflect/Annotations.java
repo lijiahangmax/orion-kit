@@ -26,7 +26,7 @@ public class Annotations {
     private Annotations() {
     }
 
-    // ------------------ class ------------------
+    // -------------------- class --------------------
 
     /**
      * 通过类型 获取class上的注解
@@ -97,7 +97,7 @@ public class Annotations {
         return ((A) list.get(index));
     }
 
-    // ------------------ constructor ------------------
+    // -------------------- constructor --------------------
 
     /**
      * 通过类型 获取constructor上的注解
@@ -137,7 +137,7 @@ public class Annotations {
         return ((A) list.get(index));
     }
 
-    // ------------------ field ------------------
+    // -------------------- field --------------------
 
     /**
      * 通过类型 获取field上的注解
@@ -177,7 +177,7 @@ public class Annotations {
         return ((A) list.get(index));
     }
 
-    // ------------------ method ------------------
+    // -------------------- method --------------------
 
     /**
      * 通过类型 获取method上的注解
@@ -217,7 +217,7 @@ public class Annotations {
         return ((A) list.get(index));
     }
 
-    // ------------------ constructor parameter ------------------
+    // -------------------- constructor parameter --------------------
 
     /**
      * 获取 constructor 参数上的注解
@@ -292,7 +292,7 @@ public class Annotations {
         return list;
     }
 
-    // ------------------ method parameter ------------------
+    // -------------------- method parameter --------------------
 
     /**
      * 获取 method 参数上的注解

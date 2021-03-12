@@ -26,7 +26,7 @@ public class AES {
     private AES() {
     }
 
-    // ------------------ ENC ------------------
+    // -------------------- ENC --------------------
 
     public static String encrypt(String s, String key) {
         return ECB.encrypt(s, key);
@@ -76,7 +76,7 @@ public class AES {
         return GCM.encrypt(bs, key, iv, aad);
     }
 
-    // ------------------ DEC ------------------
+    // -------------------- DEC --------------------
 
     public static String decrypt(String s, String key) {
         return ECB.decrypt(s, key);

@@ -12,7 +12,7 @@ public class Const {
     private Const() {
     }
 
-    // --------------- array ---------------
+    // -------------------- array --------------------
 
     /**
      * 英文字母 数组
@@ -23,7 +23,7 @@ public class Const {
             "O", "P", "Q", "R", "S", "T", "U",
             "V", "W", "X", "Y", "Z"};
 
-    // --------------- project ---------------
+    // -------------------- project --------------------
 
     public static final String ORION = "orion";
 
@@ -35,7 +35,7 @@ public class Const {
 
     public static final String ORION_EMAIL = "li1553488@aliyun.com";
 
-    // --------------- letter ---------------
+    // -------------------- letter --------------------
 
     public static final String CR = "\r";
 
@@ -57,7 +57,7 @@ public class Const {
 
     public static final String BACKSLASH = "\\";
 
-    // --------------- charset ---------------
+    // -------------------- charset --------------------
 
     public static final String ASCII = "US-ASCII";
 
@@ -73,7 +73,7 @@ public class Const {
 
     public static final String ISO_8859_1 = "ISO-8859-1";
 
-    // --------------- buffer size ---------------
+    // -------------------- buffer size --------------------
 
     public static final int BUFFER_KB_1 = 1024;
 
@@ -87,17 +87,7 @@ public class Const {
 
     public static final int BUFFER_KB_32 = 1024 * 32;
 
-    // --------------- buffer line ---------------
-
-    public static final int BUFFER_L_10 = 10;
-
-    public static final int BUFFER_L_50 = 50;
-
-    public static final int BUFFER_L_100 = 100;
-
-    public static final int BUFFER_L_1000 = 1000;
-
-    // --------------- ms ---------------
+    // -------------------- ms --------------------
 
     public static final int MS_S_1 = 1000;
 
@@ -113,17 +103,35 @@ public class Const {
 
     public static final int MS_S_60 = 1000 * 60;
 
-    // --------------- file path ---------------
+    // -------------------- file path --------------------
 
     public static final String ROOT = SLASH;
 
     public static final String SEPARATOR = SLASH;
 
-    // --------------- io ---------------
+    // -------------------- io --------------------
 
     public static final String STREAM_CLOSE = "Stream closed";
 
-    // --------------- suffix ---------------
+    // -------------------- num --------------------
+
+    public static final int N_1 = 1;
+
+    public static final int N_2 = 2;
+
+    public static final int N_3 = 3;
+
+    public static final int N_4 = 4;
+
+    public static final int N_5 = 5;
+
+    public static final int N_10 = 10;
+
+    public static final int N_100 = 100;
+
+    public static final int N_1000 = 1000;
+
+    // -------------------- suffix --------------------
 
     public static final String SUFFIX_CSV = "csv";
 
@@ -141,11 +149,15 @@ public class Const {
 
     public static final String SUFFIX_FILE = "file";
 
-    // --------------- others ---------------
+    // -------------------- others --------------------
+
+    public static final String BR = "<br/>";
 
     public static final String NULL = "null";
 
     public static final String UNKNOWN = "unknown";
+
+    public static final String DEFAULT = "default";
 
     public static final String LOCALHOST = "localhost";
 

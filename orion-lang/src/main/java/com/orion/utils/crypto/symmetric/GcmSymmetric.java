@@ -30,7 +30,7 @@ public class GcmSymmetric extends BaseSymmetric {
         super(CipherAlgorithm.AES, WorkingMode.GCM, paddingMode);
     }
 
-    // ------------------ ENC ------------------
+    // -------------------- ENC --------------------
 
     public String encrypt(String bs, String key, String iv, String aad) {
         byte[] encrypt = encrypt(Strings.bytes(bs), null, Strings.bytes(key), Strings.bytes(iv), Strings.bytes(aad));
@@ -86,7 +86,7 @@ public class GcmSymmetric extends BaseSymmetric {
         }
     }
 
-    // ------------------ DEC ------------------
+    // -------------------- DEC --------------------
 
     public String decrypt(String bs, String key, String iv, String aad) {
         byte[] encrypt = decrypt(Strings.bytes(bs), null, Strings.bytes(key), Strings.bytes(iv), Strings.bytes(aad));

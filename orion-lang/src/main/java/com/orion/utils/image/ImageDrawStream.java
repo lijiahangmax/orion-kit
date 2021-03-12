@@ -39,7 +39,7 @@ public class ImageDrawStream implements Executable {
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
     }
 
-    // --------------- 绘制图片 ---------------
+    // -------------------- 绘制图片 --------------------
 
     public ImageDrawStream insertImageBase64(String base64) {
         return insertImage(Images.getImageBase64(base64), 0, 0);
@@ -117,7 +117,7 @@ public class ImageDrawStream implements Executable {
         return this;
     }
 
-    // --------------- 颜色和字体 ---------------
+    // -------------------- 颜色和字体 --------------------
 
     /**
      * 设置颜色 RGB

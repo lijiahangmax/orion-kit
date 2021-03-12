@@ -95,7 +95,7 @@ public abstract class BaseHttpRequest {
      */
     protected boolean ssl;
 
-    // ------------------ line ------------------
+    // -------------------- line --------------------
 
     public BaseHttpRequest url(String url) {
         this.url = url;
@@ -156,7 +156,7 @@ public abstract class BaseHttpRequest {
         return this;
     }
 
-    // ------------------ header ------------------
+    // -------------------- header --------------------
 
     public BaseHttpRequest charset(String charset) {
         this.charset = charset;
@@ -246,7 +246,7 @@ public abstract class BaseHttpRequest {
         return this;
     }
 
-    // ------------------ body ------------------
+    // -------------------- body --------------------
 
     public BaseHttpRequest formPart(String key, String value) {
         if (this.formParts == null) {
@@ -325,7 +325,7 @@ public abstract class BaseHttpRequest {
      */
     protected abstract void execute();
 
-    // ------------------ getter ------------------
+    // -------------------- getter --------------------
 
     public String getUrl() {
         return url;

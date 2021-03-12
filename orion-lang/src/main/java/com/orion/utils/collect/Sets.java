@@ -137,7 +137,7 @@ public class Sets extends Collections {
         return (Set<E>) EmptySet.EMPTY;
     }
 
-    // --------------- function ---------------
+    // -------------------- function --------------------
 
     public static <E> Set<E> def(Set<E> set) {
         return isEmpty(set) ? new HashSet<>() : set;

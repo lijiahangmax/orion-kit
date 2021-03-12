@@ -12,6 +12,8 @@ public class StandardTlsVersion {
     private StandardTlsVersion() {
     }
 
+    public static final String TLS = "TLS";
+
     /**
      * since 1996
      */

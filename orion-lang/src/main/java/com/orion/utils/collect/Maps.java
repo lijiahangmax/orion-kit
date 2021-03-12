@@ -29,7 +29,7 @@ public class Maps {
     private Maps() {
     }
 
-    // --------------- new ---------------
+    // -------------------- new --------------------
 
     public static <K, V> Map<K, V> newMap() {
         return new HashMap<>(16);
@@ -179,7 +179,7 @@ public class Maps {
         return (Map<K, V>) EmptyMap.EMPTY;
     }
 
-    // --------------- function ---------------
+    // -------------------- function --------------------
 
     public static <K, V> Map<K, V> def(Map<K, V> map) {
         return isEmpty(map) ? new HashMap<>() : map;

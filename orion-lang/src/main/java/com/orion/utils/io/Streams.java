@@ -29,7 +29,7 @@ public class Streams {
     private Streams() {
     }
 
-    // -------------------------------- 随机读写 --------------------------------
+    // -------------------- 随机读写 --------------------
 
     /**
      * 从偏移量开始读取,读取到结尾
@@ -190,7 +190,7 @@ public class Streams {
         return new String(abs, charset);
     }
 
-    // -------------------------------- 关闭流 --------------------------------
+    // -------------------- 关闭流 --------------------
 
     public static void close(Reader input) {
         try {
@@ -242,7 +242,7 @@ public class Streams {
         }
     }
 
-    // -------------------------------- 复制流 --------------------------------
+    // -------------------- 复制流 --------------------
 
     public static int transfer(RandomAccessFile access, OutputStream output) throws IOException {
         long count = transferLarge(access, output);
@@ -331,7 +331,7 @@ public class Streams {
         }
     }
 
-    // -------------------------------- 读取所有行 --------------------------------
+    // -------------------- 读取所有行 --------------------
 
     public static List<String> readLines(InputStream input) throws IOException {
         return readLines(new InputStreamReader(input));
@@ -356,7 +356,7 @@ public class Streams {
         return list;
     }
 
-    // -------------------------------- 写入 --------------------------------
+    // -------------------- 写入 --------------------
 
     public static void write(byte[] data, OutputStream output) throws IOException {
         if (data != null) {
@@ -479,7 +479,7 @@ public class Streams {
         }
     }
 
-    // -------------------------------- 流转字符 --------------------------------
+    // -------------------- 流转字符 --------------------
 
     public static byte[] toByteArray(InputStream input) throws IOException {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -547,7 +547,7 @@ public class Streams {
         }
     }
 
-    // -------------------------------- 转流 --------------------------------
+    // -------------------- 转流 --------------------
 
     public static InputStream toInputStream(byte[] bs) {
         return new ByteArrayInputStream(bs);
@@ -606,7 +606,7 @@ public class Streams {
         return out;
     }
 
-    // -------------------------------- 签名 --------------------------------
+    // -------------------- 签名 --------------------
 
     /**
      * 流 MD5 签名
@@ -690,7 +690,7 @@ public class Streams {
         }
     }
 
-    // -------------------------------- 行迭代器 --------------------------------
+    // -------------------- 行迭代器 --------------------
 
     public static void lineConsumer(InputStream in, Consumer<String> c) throws IOException {
         try {

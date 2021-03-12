@@ -34,7 +34,7 @@ public class CsvMerge implements SafeCloseable {
 
     public CsvMerge(CsvArrayWriter writer) {
         this.writer = writer;
-        this.bufferLine = Const.BUFFER_L_100;
+        this.bufferLine = Const.N_100;
     }
 
     /**

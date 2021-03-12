@@ -205,7 +205,7 @@ public class Matches {
         return count;
     }
 
-    // --------------- test ---------------
+    // -------------------- test --------------------
 
     /**
      * 是否匹配
@@ -465,7 +465,7 @@ public class Matches {
         return PLATE_NUMBER.matcher(s).matches();
     }
 
-    // --------------- ext ---------------
+    // -------------------- ext --------------------
 
     /**
      * 组提取

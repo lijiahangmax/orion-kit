@@ -118,7 +118,7 @@ public class FileAttribute implements Serializable {
      *
      * @return 文件名称
      */
-    public String getFileName() {
+    public String getName() {
         return Files1.getFileName(path);
     }
 

@@ -1805,7 +1805,11 @@ public class Files1 {
      * @return 后缀
      */
     public static String getSuffix(String file) {
-        return file.substring(file.lastIndexOf(".") + 1);
+        int i = file.lastIndexOf(".");
+        if (i == -1) {
+            return Strings.EMPTY;
+        }
+        return file.substring(i + 1);
     }
 
     /**
@@ -1815,7 +1819,11 @@ public class Files1 {
      * @return 文件名称
      */
     public static String getFileName(String file) {
-        String[] paths = file.replaceAll("\\\\+", "/").replaceAll("//+", "/").split("/");
+        file = file.replaceAll("\\\\+", "/").replaceAll("//+", "/");
+        if (file.equals("/")) {
+            return "/";
+        }
+        String[] paths = file.split("/");
         return paths[paths.length - 1];
     }
 
@@ -2189,24 +2197,24 @@ public class Files1 {
         return list;
     }
 
-    public static List<File> listFilesSuffix(File dirPath, String suffix) {
-        return listFilesSearch(dirPath, FileFilter.suffix(suffix), false, false);
-    }
-
-    public static List<File> listFilesSuffix(File dirPath, String suffix, boolean child) {
-        return listFilesSearch(dirPath, FileFilter.suffix(suffix), child, false);
-    }
-
-    public static List<File> listFilesSuffix(File dirPath, String suffix, boolean child, boolean dir) {
-        return listFilesSearch(dirPath, FileFilter.suffix(suffix), child, dir);
-    }
-
     public static List<File> listFilesSuffix(String dirPath, String suffix) {
-        return listFilesSearch(new File(dirPath), FileFilter.suffix(suffix), false, false);
+        return listFilesSuffix(new File(dirPath), suffix, false, false);
     }
 
     public static List<File> listFilesSuffix(String dirPath, String suffix, boolean child) {
-        return listFilesSearch(new File(dirPath), FileFilter.suffix(suffix), child, false);
+        return listFilesSuffix(new File(dirPath), suffix, child, false);
+    }
+
+    public static List<File> listFilesSuffix(String dirPath, String suffix, boolean child, boolean dir) {
+        return listFilesSuffix(new File(dirPath), suffix, child, dir);
+    }
+
+    public static List<File> listFilesSuffix(File dirPath, String suffix) {
+        return listFilesSuffix(dirPath, suffix, false, false);
+    }
+
+    public static List<File> listFilesSuffix(File dirPath, String suffix, boolean child) {
+        return listFilesSuffix(dirPath, suffix, child, false);
     }
 
     /**
@@ -2218,28 +2226,28 @@ public class Files1 {
      * @param dir     是否包含文件夹
      * @return 文件
      */
-    public static List<File> listFilesSuffix(String dirPath, String suffix, boolean child, boolean dir) {
-        return listFilesSearch(new File(dirPath), FileFilter.suffix(suffix), child, dir);
-    }
-
-    public static List<File> listFilesMatch(File dirPath, String name) {
-        return listFilesSearch(dirPath, FileFilter.match(name), false, false);
-    }
-
-    public static List<File> listFilesMatch(File dirPath, String name, boolean child) {
-        return listFilesSearch(dirPath, FileFilter.match(name), child, false);
-    }
-
-    public static List<File> listFilesMatch(File dirPath, String name, boolean child, boolean dir) {
-        return listFilesSearch(dirPath, FileFilter.match(name), child, dir);
+    public static List<File> listFilesSuffix(File dirPath, String suffix, boolean child, boolean dir) {
+        return listFilesSearch(dirPath, FileFilter.suffix(suffix), child, dir);
     }
 
     public static List<File> listFilesMatch(String dirPath, String name) {
-        return listFilesSearch(new File(dirPath), FileFilter.match(name), false, false);
+        return listFilesMatch(new File(dirPath), name, false, false);
     }
 
     public static List<File> listFilesMatch(String dirPath, String name, boolean child) {
-        return listFilesSearch(new File(dirPath), FileFilter.match(name), child, false);
+        return listFilesMatch(new File(dirPath), name, child, false);
+    }
+
+    public static List<File> listFilesMatch(String dirPath, String name, boolean child, boolean dir) {
+        return listFilesMatch(new File(dirPath), name, child, dir);
+    }
+
+    public static List<File> listFilesMatch(File dirPath, String name) {
+        return listFilesMatch(dirPath, name, false, false);
+    }
+
+    public static List<File> listFilesMatch(File dirPath, String name, boolean child) {
+        return listFilesMatch(dirPath, name, child, false);
     }
 
     /**
@@ -2251,28 +2259,28 @@ public class Files1 {
      * @param dir     是否包含文件夹
      * @return 文件
      */
-    public static List<File> listFilesMatch(String dirPath, String name, boolean child, boolean dir) {
-        return listFilesSearch(new File(dirPath), FileFilter.match(name), child, dir);
-    }
-
-    public static List<File> listFilesPattern(File dirPath, Pattern pattern) {
-        return listFilesSearch(dirPath, FileFilter.pattern(pattern), false, false);
-    }
-
-    public static List<File> listFilesPattern(File dirPath, Pattern pattern, boolean child) {
-        return listFilesSearch(dirPath, FileFilter.pattern(pattern), child, false);
-    }
-
-    public static List<File> listFilesPattern(File dirPath, Pattern pattern, boolean child, boolean dir) {
-        return listFilesSearch(dirPath, FileFilter.pattern(pattern), child, dir);
+    public static List<File> listFilesMatch(File dirPath, String name, boolean child, boolean dir) {
+        return listFilesSearch(dirPath, FileFilter.match(name), child, dir);
     }
 
     public static List<File> listFilesPattern(String dirPath, Pattern pattern) {
-        return listFilesSearch(new File(dirPath), FileFilter.pattern(pattern), false, false);
+        return listFilesPattern(new File(dirPath), pattern, false, false);
     }
 
     public static List<File> listFilesPattern(String dirPath, Pattern pattern, boolean child) {
-        return listFilesSearch(new File(dirPath), FileFilter.pattern(pattern), child, false);
+        return listFilesPattern(new File(dirPath), pattern, child, false);
+    }
+
+    public static List<File> listFilesPattern(String dirPath, Pattern pattern, boolean child, boolean dir) {
+        return listFilesPattern(new File(dirPath), pattern, child, dir);
+    }
+
+    public static List<File> listFilesPattern(File dirPath, Pattern pattern) {
+        return listFilesPattern(dirPath, pattern, false, false);
+    }
+
+    public static List<File> listFilesPattern(File dirPath, Pattern pattern, boolean child) {
+        return listFilesPattern(dirPath, pattern, child, false);
     }
 
     /**
@@ -2284,28 +2292,28 @@ public class Files1 {
      * @param dir     是否包含文件夹
      * @return 文件
      */
-    public static List<File> listFilesPattern(String dirPath, Pattern pattern, boolean child, boolean dir) {
-        return listFilesSearch(new File(dirPath), FileFilter.pattern(pattern), child, dir);
-    }
-
-    public static List<File> listFilesFilter(File dirPath, FileFilter filter) {
-        return listFilesSearch(dirPath, filter, false, false);
-    }
-
-    public static List<File> listFilesFilter(File dirPath, FileFilter filter, boolean child) {
-        return listFilesSearch(dirPath, filter, child, false);
-    }
-
-    public static List<File> listFilesFilter(File dirPath, FileFilter filter, boolean child, boolean dir) {
-        return listFilesSearch(dirPath, filter, child, dir);
+    public static List<File> listFilesPattern(File dirPath, Pattern pattern, boolean child, boolean dir) {
+        return listFilesSearch(dirPath, FileFilter.pattern(pattern), child, dir);
     }
 
     public static List<File> listFilesFilter(String dirPath, FileFilter filter) {
-        return listFilesSearch(new File(dirPath), filter, false, false);
+        return listFilesFilter(new File(dirPath), filter, false, false);
     }
 
     public static List<File> listFilesFilter(String dirPath, FileFilter filter, boolean child) {
-        return listFilesSearch(new File(dirPath), filter, child, false);
+        return listFilesFilter(new File(dirPath), filter, child, false);
+    }
+
+    public static List<File> listFilesFilter(String dirPath, FileFilter filter, boolean child, boolean dir) {
+        return listFilesFilter(new File(dirPath), filter, child, dir);
+    }
+
+    public static List<File> listFilesFilter(File dirPath, FileFilter filter) {
+        return listFilesFilter(dirPath, filter, false, false);
+    }
+
+    public static List<File> listFilesFilter(File dirPath, FileFilter filter, boolean child) {
+        return listFilesFilter(dirPath, filter, child, false);
     }
 
     /**
@@ -2317,8 +2325,8 @@ public class Files1 {
      * @param dir     是否包含文件夹
      * @return 文件
      */
-    public static List<File> listFilesFilter(String dirPath, FileFilter filter, boolean child, boolean dir) {
-        return listFilesSearch(new File(dirPath), filter, child, dir);
+    public static List<File> listFilesFilter(File dirPath, FileFilter filter, boolean child, boolean dir) {
+        return listFilesSearch(dirPath, filter, child, dir);
     }
 
     /**

@@ -95,7 +95,7 @@ public class Exceptions {
         return false;
     }
 
-    // ------------------ new ------------------
+    // -------------------- new --------------------
 
     public static IOException io() {
         return new IOException();
@@ -665,7 +665,7 @@ public class Exceptions {
         return new Error(s, t);
     }
 
-    // ------------------------ invalidException ------------------------
+    // -------------------- invalidException --------------------
 
     public static InvalidArgumentException invalidArgument() {
         return new InvalidArgumentException();
