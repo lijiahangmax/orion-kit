@@ -20,7 +20,7 @@ import java.util.concurrent.*;
 public class Threads {
 
     /**
-     * 全局线程池
+     * Threads 线程池
      */
     private static final ExecutorService GLOBAL_EXECUTOR = ExecutorBuilder.create()
             .setNamedThreadFactory("orion-global-thread-")
@@ -31,11 +31,26 @@ public class Threads {
             .setAllowCoreThreadTimeOut(true)
             .build();
 
+    /**
+     * 全局线程池
+     */
+    public static final ExecutorService CACHE_EXECUTOR = ExecutorBuilder.create()
+            .setNamedThreadFactory("orion-cache-thread-")
+            .setCorePoolSize(2)
+            .setMaxPoolSize(Integer.MAX_VALUE)
+            .setKeepAliveTime(Const.MS_S_60)
+            .setWorkQueue(new SynchronousQueue<>())
+            .setAllowCoreThreadTimeOut(true)
+            .build();
+
     private Threads() {
     }
 
     static {
-        Systems.addShutdownHook(() -> shutdownPoolNow(GLOBAL_EXECUTOR, Const.MS_S_3));
+        Systems.addShutdownHook(() -> {
+            shutdownPoolNow(GLOBAL_EXECUTOR, Const.MS_S_3);
+            shutdownPoolNow(CACHE_EXECUTOR, Const.MS_S_3);
+        });
     }
 
     /**

@@ -26,6 +26,6 @@ public interface Lockable {
      *
      * @return true锁定
      */
-    boolean checkLock();
+    boolean isLocked();
 
 }

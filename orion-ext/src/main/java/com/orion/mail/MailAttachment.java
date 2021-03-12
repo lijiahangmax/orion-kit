@@ -48,13 +48,13 @@ public class MailAttachment implements Serializable {
 
     public MailAttachment(String file) {
         Valid.notBlank(file, "attachment file path is blank");
-        this.body = Files1.openInputStreamSafeFast(file);
+        this.body = Files1.openInputStreamFastSafe(file);
         this.name = Files1.getFileName(file);
     }
 
     public MailAttachment(File file) {
         Valid.notNull(file, "attachment file is null");
-        this.body = Files1.openInputStreamSafeFast(file);
+        this.body = Files1.openInputStreamFastSafe(file);
         this.name = file.getName();
     }
 

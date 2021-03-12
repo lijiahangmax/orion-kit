@@ -1,8 +1,10 @@
 package com.orion.lang;
 
+import com.orion.utils.Exceptions;
 import com.orion.utils.Objects1;
 import com.orion.utils.Stacks;
 import com.orion.utils.Strings;
+import com.orion.utils.io.Streams;
 
 import java.util.StringJoiner;
 
@@ -62,8 +64,8 @@ public class Console {
     public static void log(Throwable t, String tpl, Object... values) {
         out.println(Strings.format(tpl, values));
         if (null != t) {
-            t.printStackTrace();
-            out.flush();
+            Exceptions.printStacks(t);
+            Streams.flush(out);
         }
     }
 
@@ -108,8 +110,8 @@ public class Console {
     public static void error(Throwable t, String tpl, Object... values) {
         err.println(Strings.format(tpl, values));
         if (null != t) {
-            t.printStackTrace(err);
-            err.flush();
+            Exceptions.printStacks(t);
+            Streams.flush(err);
         }
     }
 

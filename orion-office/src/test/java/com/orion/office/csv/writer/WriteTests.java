@@ -52,8 +52,8 @@ public class WriteTests {
     public void arrayTests() {
         CsvWriter writer = new CsvWriter("C:\\Users\\ljh15\\Desktop\\csv\\array.csv");
         writer.getOption().setTrim(true);
-        new CsvArrayWriter(writer)
-                .capacity(8)
+        CsvArrayWriter cw = new CsvArrayWriter(writer);
+        cw.capacity(8)
                 .mapping(5, new Integer(0))
                 .mapping(6, new Integer(1))
                 .mapping(7, new Integer(10))
@@ -61,17 +61,17 @@ public class WriteTests {
                 .addComment("comment")
                 .skip()
                 .addRow(null)
-                .addRows(array)
-                .flush()
-                .close();
+                .addRows(array);
+        cw.flush();
+        cw.close();
     }
 
     @Test
     public void mapTests() {
         CsvWriter writer = new CsvWriter("C:\\Users\\ljh15\\Desktop\\csv\\map.csv");
         writer.getOption().setTrim(true);
-        new CsvMapWriter<String, Object>(writer)
-                .capacity(6)
+        CsvMapWriter<String, Object> cw = new CsvMapWriter<>(writer);
+        cw.capacity(6)
                 .mapping(0, "num")
                 .mapping(1, "id")
                 .mapping(2, "date")
@@ -82,9 +82,9 @@ public class WriteTests {
                 .skip()
                 .headers("a", "b", "c", "d", "e")
                 .skip()
-                .addRows(map)
-                .flush()
-                .close();
+                .addRows(map);
+        cw.flush();
+        cw.close();
     }
 
     @Test
@@ -95,9 +95,9 @@ public class WriteTests {
                 .skip()
                 .headers("a", "b", "c", "d", "e")
                 .skip()
-                .addRows(bean)
-                .flush()
-                .close();
+                .addRows(bean);
+        writer.flush();
+        writer.close();
     }
 
 }

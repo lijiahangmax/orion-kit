@@ -343,12 +343,23 @@ public abstract class Valid {
         return iterable;
     }
 
-    public static String notMatches(String input, String pattern) {
+    public static String isMatches(String input, String pattern) {
         return notMatches(input, pattern, "the string {} does not match the pattern {}", input, pattern);
     }
 
-    public static String notMatches(String input, String pattern, String message, Object... values) {
+    public static String isMatches(String input, String pattern, String message, Object... values) {
         if (!Pattern.matches(pattern, input)) {
+            throw Exceptions.invalidArgument(Strings.format(message, values));
+        }
+        return input;
+    }
+
+    public static String notMatches(String input, String pattern) {
+        return notMatches(input, pattern, "the string {} match the pattern {}", input, pattern);
+    }
+
+    public static String notMatches(String input, String pattern, String message, Object... values) {
+        if (Pattern.matches(pattern, input)) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
         return input;

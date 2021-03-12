@@ -192,50 +192,22 @@ public class Streams {
 
     // -------------------- 关闭流 --------------------
 
-    public static void close(Reader input) {
-        try {
-            if (input != null) {
-                input.close();
-            }
-        } catch (IOException ioe) {
-            // ignore
-        }
-    }
-
-    public static void close(Writer output) {
-        try {
-            if (output != null) {
-                output.close();
-            }
-        } catch (IOException ioe) {
-            // ignore
-        }
-    }
-
-    public static void close(InputStream input) {
-        try {
-            if (input != null) {
-                input.close();
-            }
-        } catch (IOException ioe) {
-            // ignore
-        }
-    }
-
-    public static void close(OutputStream output) {
-        try {
-            if (output != null) {
-                output.close();
-            }
-        } catch (IOException ioe) {
-            // ignore
-        }
-    }
-
     public static void close(AutoCloseable c) {
         try {
             if (c != null) {
                 c.close();
+            }
+        } catch (Exception ioe) {
+            // ignore
+        }
+    }
+
+    // -------------------- 刷新流 --------------------
+
+    public static void flush(Flushable f) {
+        try {
+            if (f != null) {
+                f.flush();
             }
         } catch (Exception ioe) {
             // ignore

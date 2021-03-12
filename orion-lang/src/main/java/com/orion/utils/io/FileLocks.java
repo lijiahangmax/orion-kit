@@ -242,7 +242,7 @@ public class FileLocks {
         }
 
         @Override
-        public boolean checkLock() {
+        public boolean isLocked() {
             if (lock == null) {
                 return false;
             } else {
@@ -299,7 +299,7 @@ public class FileLocks {
 
         @Override
         public boolean tryLock() {
-            init();
+            this.init();
             if (!file.exists()) {
                 throw Exceptions.ioRuntime("file not found error: " + file.getAbsolutePath());
             }
@@ -316,14 +316,14 @@ public class FileLocks {
 
         @Override
         public void unLock() {
-            init();
+            this.init();
             if (lockFile.exists() && lockFile.isFile()) {
                 Files1.deleteFile(lockFile);
             }
         }
 
         @Override
-        public boolean checkLock() {
+        public boolean isLocked() {
             init();
             return lockFile.exists();
         }

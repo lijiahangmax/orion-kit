@@ -1,6 +1,7 @@
 package com.orion.office.csv.core;
 
 import com.orion.able.SafeCloseable;
+import com.orion.able.SafeFlushable;
 import com.orion.constant.Letters;
 import com.orion.office.csv.option.CsvOption;
 import com.orion.office.csv.option.CsvWriterOption;
@@ -22,7 +23,7 @@ import java.nio.charset.StandardCharsets;
  * @version 1.0.0
  * @since 2020/4/1 23:23
  */
-public class CsvWriter implements SafeCloseable {
+public class CsvWriter implements SafeCloseable, SafeFlushable {
 
     private Writer writer;
 
@@ -264,11 +265,10 @@ public class CsvWriter implements SafeCloseable {
 
     /**
      * 缓冲区写入
-     *
-     * @throws IOException IOException
      */
-    public void flush() throws IOException {
-        writer.flush();
+    @Override
+    public void flush() {
+        Streams.flush(writer);
     }
 
     /**

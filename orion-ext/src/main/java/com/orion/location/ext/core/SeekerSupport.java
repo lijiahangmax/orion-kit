@@ -1,5 +1,6 @@
 package com.orion.location.ext.core;
 
+import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 
 import java.io.UnsupportedEncodingException;
@@ -29,7 +30,7 @@ public class SeekerSupport {
             ret[2] = (byte) (Integer.parseInt(st.nextToken()) & 0xFF);
             ret[3] = (byte) (Integer.parseInt(st.nextToken()) & 0xFF);
         } catch (Exception e) {
-            e.printStackTrace();
+            Exceptions.printStacks(e);
         }
         return ret;
     }

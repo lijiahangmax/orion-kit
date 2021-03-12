@@ -1391,7 +1391,7 @@ public class Files1 {
 
     // -------------------- path fast --------------------
 
-    public static InputStream openInputStreamSafeFast(String file) {
+    public static InputStream openInputStreamFastSafe(String file) {
         try {
             return openInputStreamFast(Paths.get(file));
         } catch (Exception e) {
@@ -1399,7 +1399,7 @@ public class Files1 {
         }
     }
 
-    public static InputStream openInputStreamSafeFast(File file) {
+    public static InputStream openInputStreamFastSafe(File file) {
         try {
             return openInputStreamFast(Paths.get(file.getAbsolutePath()));
         } catch (Exception e) {
@@ -1413,7 +1413,7 @@ public class Files1 {
      * @param file 文件
      * @return 输入流
      */
-    public static InputStream openInputStreamSafeFast(Path file) {
+    public static InputStream openInputStreamFastSafe(Path file) {
         try {
             return openInputStreamFast(file);
         } catch (Exception e) {

@@ -1,6 +1,7 @@
 package com.orion.office.csv.writer;
 
 import com.orion.able.SafeCloseable;
+import com.orion.able.SafeFlushable;
 import com.orion.office.csv.core.CsvWriter;
 import com.orion.office.csv.option.CsvWriterOption;
 import com.orion.utils.Exceptions;
@@ -19,7 +20,7 @@ import java.util.TreeMap;
  * @version 1.0.0
  * @since 2021/1/22 17:53
  */
-public abstract class BaseCsvWriter<K, V> implements SafeCloseable {
+public abstract class BaseCsvWriter<K, V> implements SafeCloseable, SafeFlushable {
 
     /**
      * writer
@@ -240,13 +241,9 @@ public abstract class BaseCsvWriter<K, V> implements SafeCloseable {
      */
     protected abstract String[] parseRow(V row);
 
-    public BaseCsvWriter<K, V> flush() {
-        try {
-            writer.flush();
-        } catch (IOException e) {
-            throw Exceptions.ioRuntime(e);
-        }
-        return this;
+    @Override
+    public void flush() {
+        writer.flush();
     }
 
     @Override

@@ -99,7 +99,8 @@ public class CsvAdapter implements Adaptable<CsvAdapter>, SafeCloseable {
             }
             writer.addRow(row.toArray(new String[0]));
         }
-        writer.flush().close();
+        writer.flush();
+        writer.close();
         return this;
     }
 
