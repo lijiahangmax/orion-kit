@@ -152,16 +152,10 @@ public class FtpClintTests {
         i.downloadDir("/new", "C:\\Users\\ljh15\\Desktop\\aa");
     }
 
-    public static void main(String[] args) {
-        FtpClintTests t = new FtpClintTests();
-        t.init();
-        t.bigUpload();
-        t.destroy();
-    }
-
     @Test
     public void bigUpload() {
-        FtpUpload u = i.upload("/big/big.rar", "C:\\Users\\ljh15\\Desktop\\16.5.rar").computeRate(true);
+        FtpUpload u = i.upload("/big/big.rar", "C:\\Users\\ljh15\\Desktop\\big.rar");
+        u.computeRate(true);
         new Thread(u).start();
         ByteTransferProgress p = u.getProgress();
         while (!p.isDone()) {

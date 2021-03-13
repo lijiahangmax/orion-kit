@@ -162,6 +162,9 @@ public class ByteTransferProgress implements Progress {
 
     @Override
     public double getProgress() {
+        if (done) {
+            return 1;
+        }
         if (end == 0) {
             return 0;
         }
