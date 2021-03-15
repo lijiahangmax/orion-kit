@@ -121,263 +121,6 @@ public class FtpInstance implements SafeCloseable {
         return FTPReply.isPositiveCompletion(client.getReplyCode());
     }
 
-    public List<FtpFile> listFiles() {
-        return this.listFiles(Strings.EMPTY, false, false);
-    }
-
-    public List<FtpFile> listFiles(boolean child) {
-        return this.listFiles(Strings.EMPTY, child, false);
-    }
-
-    public List<FtpFile> listFiles(boolean child, boolean dir) {
-        return this.listFiles(Strings.EMPTY, child, dir);
-    }
-
-    public List<FtpFile> listFiles(String path) {
-        return this.listFiles(path, false, false);
-    }
-
-    public List<FtpFile> listFiles(String path, boolean child) {
-        return this.listFiles(path, child, false);
-    }
-
-    /**
-     * 文件和文件夹列表
-     *
-     * @param path  路径
-     * @param child 是否遍历子目录
-     * @param dir   是否添加文件夹
-     * @return 文件列表
-     */
-    private List<FtpFile> listFiles(String path, boolean child, boolean dir) {
-        String base = config.getRemoteRootDir();
-        List<FtpFile> list = new ArrayList<>();
-        try {
-            FTPFile[] files = client.listFiles(this.serverCharset(base + path));
-            for (FTPFile file : files) {
-                String t = Files1.getPath(this.serverCharset(path + SEPARATOR + file.getName()));
-                if (file.isFile()) {
-                    list.add(new FtpFile(t, file));
-                } else if (file.isDirectory()) {
-                    if (dir) {
-                        list.add(new FtpFile(t, file));
-                    }
-                    if (child) {
-                        list.addAll(this.listFiles(t + SEPARATOR, true, dir));
-                    }
-                }
-            }
-        } catch (IOException e) {
-            Exceptions.printStacks(e);
-        }
-        return list;
-    }
-
-    public List<FtpFile> listDirs() {
-        return this.listDirs(Strings.EMPTY, false);
-    }
-
-    public List<FtpFile> listDirs(boolean child) {
-        return this.listDirs(Strings.EMPTY, child);
-    }
-
-    public List<FtpFile> listDirs(String dir) {
-        return this.listDirs(dir, false);
-    }
-
-    /**
-     * 列出文件夹
-     *
-     * @param path  路径
-     * @param child 是否遍历
-     * @return 文件夹
-     */
-    public List<FtpFile> listDirs(String path, boolean child) {
-        String base = config.getRemoteRootDir();
-        List<FtpFile> list = new ArrayList<>();
-        try {
-            FTPFile[] files = client.listFiles(this.serverCharset(base + path));
-            for (FTPFile file : files) {
-                String t = Files1.getPath(path + SEPARATOR + file.getName());
-                if (file.isDirectory()) {
-                    list.add(new FtpFile(t, file));
-                    if (child) {
-                        list.addAll(this.listDirs(Files1.getPath(t + SEPARATOR), true));
-                    }
-                }
-            }
-        } catch (IOException e) {
-            Exceptions.printStacks(e);
-        }
-        return list;
-    }
-
-    public List<FtpFile> listFilesSuffix(String suffix) {
-        return this.listFilesSuffix(Strings.EMPTY, suffix, false, false);
-    }
-
-    public List<FtpFile> listFilesSuffix(String suffix, boolean child) {
-        return this.listFilesSuffix(Strings.EMPTY, suffix, child, false);
-    }
-
-    public List<FtpFile> listFilesSuffix(String suffix, boolean child, boolean dir) {
-        return this.listFilesSuffix(Strings.EMPTY, suffix, child, dir);
-    }
-
-    public List<FtpFile> listFilesSuffix(String path, String suffix) {
-        return this.listFilesSuffix(path, suffix, false, false);
-    }
-
-    public List<FtpFile> listFilesSuffix(String path, String suffix, boolean child) {
-        return this.listFilesSuffix(path, suffix, child, false);
-    }
-
-    /**
-     * 列出目录下的文件
-     *
-     * @param path   目录
-     * @param suffix 后缀
-     * @param child  是否递归子文件夹
-     * @param dir    是否添加文件夹
-     * @return 文件
-     */
-    public List<FtpFile> listFilesSuffix(String path, String suffix, boolean child, boolean dir) {
-        return this.listFilesSearch(path, FtpFileFilter.suffix(suffix), child, dir);
-    }
-
-    public List<FtpFile> listFilesMatch(String match) {
-        return this.listFilesMatch(Strings.EMPTY, match, false, false);
-    }
-
-    public List<FtpFile> listFilesMatch(String match, boolean child) {
-        return this.listFilesMatch(Strings.EMPTY, match, child, false);
-    }
-
-    public List<FtpFile> listFilesMatch(String match, boolean child, boolean dir) {
-        return this.listFilesMatch(Strings.EMPTY, match, child, dir);
-    }
-
-    public List<FtpFile> listFilesMatch(String path, String match) {
-        return this.listFilesMatch(path, match, false, false);
-    }
-
-    public List<FtpFile> listFilesMatch(String path, String match, boolean child) {
-        return this.listFilesMatch(path, match, child, false);
-    }
-
-    /**
-     * 列出目录下的文件
-     *
-     * @param path  目录
-     * @param match 名称
-     * @param child 是否递归子文件夹
-     * @param dir   是否添加文件夹
-     * @return 文件
-     */
-    public List<FtpFile> listFilesMatch(String path, String match, boolean child, boolean dir) {
-        return this.listFilesSearch(path, FtpFileFilter.match(match), child, dir);
-    }
-
-    public List<FtpFile> listFilesPattern(Pattern pattern) {
-        return this.listFilesPattern(Strings.EMPTY, pattern, false, false);
-    }
-
-    public List<FtpFile> listFilesPattern(Pattern pattern, boolean child) {
-        return this.listFilesPattern(Strings.EMPTY, pattern, child, false);
-    }
-
-    public List<FtpFile> listFilesPattern(Pattern pattern, boolean child, boolean dir) {
-        return this.listFilesPattern(Strings.EMPTY, pattern, child, dir);
-    }
-
-    public List<FtpFile> listFilesPattern(String path, Pattern pattern) {
-        return this.listFilesPattern(path, pattern, false, false);
-    }
-
-    public List<FtpFile> listFilesPattern(String path, Pattern pattern, boolean child) {
-        return this.listFilesPattern(path, pattern, child, false);
-    }
-
-    /**
-     * 列出目录下的文件
-     *
-     * @param path    目录
-     * @param pattern 正则
-     * @param child   是否递归子文件夹
-     * @param dir     是否添加文件夹
-     * @return 文件
-     */
-    public List<FtpFile> listFilesPattern(String path, Pattern pattern, boolean child, boolean dir) {
-        return this.listFilesSearch(path, FtpFileFilter.pattern(pattern), child, dir);
-    }
-
-    public List<FtpFile> listFilesFilter(FtpFileFilter filter) {
-        return this.listFilesFilter(Strings.EMPTY, filter, false, false);
-    }
-
-    public List<FtpFile> listFilesFilter(FtpFileFilter filter, boolean child) {
-        return this.listFilesFilter(Strings.EMPTY, filter, child, false);
-    }
-
-    public List<FtpFile> listFilesFilter(FtpFileFilter filter, boolean child, boolean dir) {
-        return this.listFilesFilter(Strings.EMPTY, filter, child, dir);
-    }
-
-    public List<FtpFile> listFilesFilter(String path, FtpFileFilter filter) {
-        return this.listFilesFilter(path, filter, false, false);
-    }
-
-    public List<FtpFile> listFilesFilter(String path, FtpFileFilter filter, boolean child) {
-        return this.listFilesFilter(path, filter, child, false);
-    }
-
-    /**
-     * 列出目录下的文件
-     *
-     * @param path   目录
-     * @param filter 过滤器
-     * @param child  是否递归子文件夹
-     * @param dir    是否添加文件夹
-     * @return 文件
-     */
-    public List<FtpFile> listFilesFilter(String path, FtpFileFilter filter, boolean child, boolean dir) {
-        return this.listFilesSearch(path, filter, child, dir);
-    }
-
-    /**
-     * 文件列表搜索
-     *
-     * @param path   列表
-     * @param filter 过滤器
-     * @param child  是否递归子文件夹
-     * @param dir    是否添加文件夹
-     * @return 匹配的列表
-     */
-    private List<FtpFile> listFilesSearch(String path, FtpFileFilter filter, boolean child, boolean dir) {
-        String base = config.getRemoteRootDir();
-        List<FtpFile> list = new ArrayList<>();
-        try {
-            FTPFile[] files = client.listFiles(this.serverCharset(Files1.getPath(base + path)));
-            for (FTPFile file : files) {
-                String fn = file.getName();
-                String t = Files1.getPath(path + SEPARATOR + fn);
-                boolean isDir = file.isDirectory();
-                if (!isDir || dir) {
-                    FtpFile f = new FtpFile(t, file);
-                    if (filter.accept(f)) {
-                        list.add(f);
-                    }
-                }
-                if (isDir && child) {
-                    list.addAll(this.listFilesSearch(t + SEPARATOR, filter, true, dir));
-                }
-            }
-        } catch (IOException e) {
-            Exceptions.printStacks(e);
-        }
-        return list;
-    }
-
     /**
      * 文件是否存在
      *
@@ -948,10 +691,9 @@ public class FtpInstance implements SafeCloseable {
      * @param remoteFile 远程文件路径
      * @param out        output
      * @param close      是否自动关闭
-     * @throws IOException pedding
+     * @throws IOException pending
      */
     public void downloadFile(String remoteFile, OutputStream out, boolean close) throws IOException {
-        BufferedOutputStream buffer = null;
         InputStream in = null;
         try {
             client.setRestartOffset(0);
@@ -963,7 +705,6 @@ public class FtpInstance implements SafeCloseable {
         } finally {
             if (close) {
                 Streams.close(out);
-                Streams.close(buffer);
             }
             Streams.close(in);
             client.setRestartOffset(0);
@@ -991,9 +732,10 @@ public class FtpInstance implements SafeCloseable {
      * @param remoteDir 远程文件夹
      * @param localDir  本地文件夹
      * @param child     是否递归子文件夹下载
-     * @throws IOException pedding
+     * @throws IOException pending
      */
     public void downloadDir(String remoteDir, String localDir, boolean child) throws IOException {
+        remoteDir = Files1.getPath(remoteDir);
         if (!child) {
             List<FtpFile> list = this.listFiles(remoteDir, false);
             for (FtpFile s : list) {
@@ -1002,11 +744,11 @@ public class FtpInstance implements SafeCloseable {
         } else {
             List<FtpFile> list = this.listDirs(remoteDir, true);
             for (FtpFile s : list) {
-                Files1.mkdirs(Files1.getPath(localDir + SEPARATOR + s.getPath()));
+                Files1.mkdirs(Files1.getPath(localDir + SEPARATOR + s.getPath().substring(remoteDir.length())));
             }
             list = this.listFiles(remoteDir, true);
             for (FtpFile s : list) {
-                this.downloadFile(s.getPath(), Files1.getPath(localDir + SEPARATOR + s.getPath()));
+                this.downloadFile(s.getPath(), Files1.getPath(localDir + SEPARATOR + s.getPath().substring(remoteDir.length())));
             }
         }
     }
@@ -1042,6 +784,267 @@ public class FtpInstance implements SafeCloseable {
     public FtpDownload download(String remote, File local) {
         return new FtpDownload(this, remote, local);
     }
+
+    // -------------------- list --------------------
+
+    public List<FtpFile> listFiles() {
+        return this.listFiles(Strings.EMPTY, false, false);
+    }
+
+    public List<FtpFile> listFiles(boolean child) {
+        return this.listFiles(Strings.EMPTY, child, false);
+    }
+
+    public List<FtpFile> listFiles(boolean child, boolean dir) {
+        return this.listFiles(Strings.EMPTY, child, dir);
+    }
+
+    public List<FtpFile> listFiles(String path) {
+        return this.listFiles(path, false, false);
+    }
+
+    public List<FtpFile> listFiles(String path, boolean child) {
+        return this.listFiles(path, child, false);
+    }
+
+    /**
+     * 文件和文件夹列表
+     *
+     * @param path  路径
+     * @param child 是否遍历子目录
+     * @param dir   是否添加文件夹
+     * @return 文件列表
+     */
+    private List<FtpFile> listFiles(String path, boolean child, boolean dir) {
+        String base = config.getRemoteRootDir();
+        List<FtpFile> list = new ArrayList<>();
+        try {
+            FTPFile[] files = client.listFiles(this.serverCharset(base + path));
+            for (FTPFile file : files) {
+                String t = Files1.getPath(this.serverCharset(path + SEPARATOR + file.getName()));
+                if (file.isFile()) {
+                    list.add(new FtpFile(t, file));
+                } else if (file.isDirectory()) {
+                    if (dir) {
+                        list.add(new FtpFile(t, file));
+                    }
+                    if (child) {
+                        list.addAll(this.listFiles(t + SEPARATOR, true, dir));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            Exceptions.printStacks(e);
+        }
+        return list;
+    }
+
+    public List<FtpFile> listDirs() {
+        return this.listDirs(Strings.EMPTY, false);
+    }
+
+    public List<FtpFile> listDirs(boolean child) {
+        return this.listDirs(Strings.EMPTY, child);
+    }
+
+    public List<FtpFile> listDirs(String dir) {
+        return this.listDirs(dir, false);
+    }
+
+    /**
+     * 列出文件夹
+     *
+     * @param path  路径
+     * @param child 是否遍历
+     * @return 文件夹
+     */
+    public List<FtpFile> listDirs(String path, boolean child) {
+        String base = config.getRemoteRootDir();
+        List<FtpFile> list = new ArrayList<>();
+        try {
+            FTPFile[] files = client.listFiles(this.serverCharset(base + path));
+            for (FTPFile file : files) {
+                String t = Files1.getPath(path + SEPARATOR + file.getName());
+                if (file.isDirectory()) {
+                    list.add(new FtpFile(t, file));
+                    if (child) {
+                        list.addAll(this.listDirs(Files1.getPath(t + SEPARATOR), true));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            Exceptions.printStacks(e);
+        }
+        return list;
+    }
+
+    public List<FtpFile> listFilesSuffix(String suffix) {
+        return this.listFilesSuffix(Strings.EMPTY, suffix, false, false);
+    }
+
+    public List<FtpFile> listFilesSuffix(String suffix, boolean child) {
+        return this.listFilesSuffix(Strings.EMPTY, suffix, child, false);
+    }
+
+    public List<FtpFile> listFilesSuffix(String suffix, boolean child, boolean dir) {
+        return this.listFilesSuffix(Strings.EMPTY, suffix, child, dir);
+    }
+
+    public List<FtpFile> listFilesSuffix(String path, String suffix) {
+        return this.listFilesSuffix(path, suffix, false, false);
+    }
+
+    public List<FtpFile> listFilesSuffix(String path, String suffix, boolean child) {
+        return this.listFilesSuffix(path, suffix, child, false);
+    }
+
+    /**
+     * 列出目录下的文件
+     *
+     * @param path   目录
+     * @param suffix 后缀
+     * @param child  是否递归子文件夹
+     * @param dir    是否添加文件夹
+     * @return 文件
+     */
+    public List<FtpFile> listFilesSuffix(String path, String suffix, boolean child, boolean dir) {
+        return this.listFilesSearch(path, FtpFileFilter.suffix(suffix), child, dir);
+    }
+
+    public List<FtpFile> listFilesMatch(String match) {
+        return this.listFilesMatch(Strings.EMPTY, match, false, false);
+    }
+
+    public List<FtpFile> listFilesMatch(String match, boolean child) {
+        return this.listFilesMatch(Strings.EMPTY, match, child, false);
+    }
+
+    public List<FtpFile> listFilesMatch(String match, boolean child, boolean dir) {
+        return this.listFilesMatch(Strings.EMPTY, match, child, dir);
+    }
+
+    public List<FtpFile> listFilesMatch(String path, String match) {
+        return this.listFilesMatch(path, match, false, false);
+    }
+
+    public List<FtpFile> listFilesMatch(String path, String match, boolean child) {
+        return this.listFilesMatch(path, match, child, false);
+    }
+
+    /**
+     * 列出目录下的文件
+     *
+     * @param path  目录
+     * @param match 名称
+     * @param child 是否递归子文件夹
+     * @param dir   是否添加文件夹
+     * @return 文件
+     */
+    public List<FtpFile> listFilesMatch(String path, String match, boolean child, boolean dir) {
+        return this.listFilesSearch(path, FtpFileFilter.match(match), child, dir);
+    }
+
+    public List<FtpFile> listFilesPattern(Pattern pattern) {
+        return this.listFilesPattern(Strings.EMPTY, pattern, false, false);
+    }
+
+    public List<FtpFile> listFilesPattern(Pattern pattern, boolean child) {
+        return this.listFilesPattern(Strings.EMPTY, pattern, child, false);
+    }
+
+    public List<FtpFile> listFilesPattern(Pattern pattern, boolean child, boolean dir) {
+        return this.listFilesPattern(Strings.EMPTY, pattern, child, dir);
+    }
+
+    public List<FtpFile> listFilesPattern(String path, Pattern pattern) {
+        return this.listFilesPattern(path, pattern, false, false);
+    }
+
+    public List<FtpFile> listFilesPattern(String path, Pattern pattern, boolean child) {
+        return this.listFilesPattern(path, pattern, child, false);
+    }
+
+    /**
+     * 列出目录下的文件
+     *
+     * @param path    目录
+     * @param pattern 正则
+     * @param child   是否递归子文件夹
+     * @param dir     是否添加文件夹
+     * @return 文件
+     */
+    public List<FtpFile> listFilesPattern(String path, Pattern pattern, boolean child, boolean dir) {
+        return this.listFilesSearch(path, FtpFileFilter.pattern(pattern), child, dir);
+    }
+
+    public List<FtpFile> listFilesFilter(FtpFileFilter filter) {
+        return this.listFilesFilter(Strings.EMPTY, filter, false, false);
+    }
+
+    public List<FtpFile> listFilesFilter(FtpFileFilter filter, boolean child) {
+        return this.listFilesFilter(Strings.EMPTY, filter, child, false);
+    }
+
+    public List<FtpFile> listFilesFilter(FtpFileFilter filter, boolean child, boolean dir) {
+        return this.listFilesFilter(Strings.EMPTY, filter, child, dir);
+    }
+
+    public List<FtpFile> listFilesFilter(String path, FtpFileFilter filter) {
+        return this.listFilesFilter(path, filter, false, false);
+    }
+
+    public List<FtpFile> listFilesFilter(String path, FtpFileFilter filter, boolean child) {
+        return this.listFilesFilter(path, filter, child, false);
+    }
+
+    /**
+     * 列出目录下的文件
+     *
+     * @param path   目录
+     * @param filter 过滤器
+     * @param child  是否递归子文件夹
+     * @param dir    是否添加文件夹
+     * @return 文件
+     */
+    public List<FtpFile> listFilesFilter(String path, FtpFileFilter filter, boolean child, boolean dir) {
+        return this.listFilesSearch(path, filter, child, dir);
+    }
+
+    /**
+     * 文件列表搜索
+     *
+     * @param path   列表
+     * @param filter 过滤器
+     * @param child  是否递归子文件夹
+     * @param dir    是否添加文件夹
+     * @return 匹配的列表
+     */
+    private List<FtpFile> listFilesSearch(String path, FtpFileFilter filter, boolean child, boolean dir) {
+        String base = config.getRemoteRootDir();
+        List<FtpFile> list = new ArrayList<>();
+        try {
+            FTPFile[] files = client.listFiles(this.serverCharset(Files1.getPath(base + path)));
+            for (FTPFile file : files) {
+                String fn = file.getName();
+                String t = Files1.getPath(path + SEPARATOR + fn);
+                boolean isDir = file.isDirectory();
+                if (!isDir || dir) {
+                    FtpFile f = new FtpFile(t, file);
+                    if (filter.accept(f)) {
+                        list.add(f);
+                    }
+                }
+                if (isDir && child) {
+                    list.addAll(this.listFilesSearch(t + SEPARATOR, filter, true, dir));
+                }
+            }
+        } catch (IOException e) {
+            Exceptions.printStacks(e);
+        }
+        return list;
+    }
+
+    // -------------------- option --------------------
 
     /**
      * 等待处理命令完毕 事务

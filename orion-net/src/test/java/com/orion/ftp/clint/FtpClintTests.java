@@ -4,7 +4,6 @@ import com.orion.ftp.client.FtpInstance;
 import com.orion.ftp.client.bigfile.FtpDownload;
 import com.orion.ftp.client.bigfile.FtpUpload;
 import com.orion.ftp.client.config.FtpConfig;
-import com.orion.ftp.client.config.FtpsConfig;
 import com.orion.ftp.client.pool.FtpClientFactory;
 import com.orion.support.progress.ByteTransferProgress;
 import com.orion.utils.Threads;
@@ -31,7 +30,7 @@ public class FtpClintTests {
 
     @Before
     public void init() {
-        FtpConfig config = new FtpsConfig("127.0.0.1").auth("user", "123");
+        FtpConfig config = new FtpConfig("127.0.0.1").auth("user", "123");
         FtpClientFactory f = new FtpClientFactory(config);
         i = f.createInstance();
     }
@@ -149,7 +148,7 @@ public class FtpClintTests {
     @Test
     public void download() throws IOException {
         i.downloadFile("/aka1.txt", "C:\\Users\\ljh15\\Desktop\\11.txt");
-        i.downloadDir("/new", "C:\\Users\\ljh15\\Desktop\\aa");
+        i.downloadDir("/1/2/3/7000-实施", "C:\\Users\\ljh15\\Desktop\\aa");
     }
 
     @Test

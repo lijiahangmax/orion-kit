@@ -7,7 +7,6 @@ import com.orion.remote.connection.sftp.bigfile.SftpUpload;
 import com.orion.support.progress.ByteTransferProgress;
 import com.orion.utils.Threads;
 import com.orion.utils.collect.Lists;
-import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
 import org.junit.After;
 import org.junit.Before;
@@ -153,13 +152,15 @@ public class SftpTests {
     }
 
     @Test
-    public void upload() {
-        System.out.println(Files1.md5(new File("C:\\Users\\ljh15\\Desktop\\ffmpeg.flv")));
+    public void upload() throws IOException {
+        e.uploadFile("/root/1.jks", "C:\\Users\\ljh15\\Desktop\\1.jks");
+        e.uploadDir("/root/data/ftp/", "C:\\Users\\ljh15\\Desktop\\ftp");
     }
 
     @Test
-    public void download() {
-
+    public void download() throws IOException {
+        e.downloadFile("/root/1.jks", "C:\\Users\\ljh15\\Desktop\\2.jks");
+        e.downloadDir("/root/data/ftp/", "C:\\Users\\ljh15\\Desktop\\ms\\data");
     }
 
     @Test

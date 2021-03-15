@@ -15,10 +15,7 @@ import com.orion.utils.collect.Lists;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -841,6 +838,152 @@ public class SftpExecutor implements SafeCloseable {
         }
     }
 
+    // -------------------- upload --------------------
+
+    public void uploadFile(String remoteFile, String localFile) throws IOException {
+        this.uploadFile(remoteFile, Files1.openInputStreamSafe(localFile), true);
+    }
+
+    public void uploadFile(String remoteFile, File localFile) throws IOException {
+        this.uploadFile(remoteFile, Files1.openInputStreamSafe(localFile), true);
+    }
+
+    public void uploadFile(String remoteFile, InputStream in) throws IOException {
+        this.uploadFile(remoteFile, in, false);
+    }
+
+    /**
+     * 上传文件
+     *
+     * @param remoteFile 远程文件
+     * @param in         input
+     * @param close      close
+     * @throws IOException IOException
+     */
+    public void uploadFile(String remoteFile, InputStream in, boolean close) throws IOException {
+        BufferedInputStream buffer = null;
+        try {
+            this.write(remoteFile, buffer = new BufferedInputStream(in, bufferSize));
+        } finally {
+            if (close) {
+                Streams.close(in);
+                Streams.close(buffer);
+            }
+        }
+    }
+
+    public void uploadDir(String remoteDir, File localDir) throws IOException {
+        this.uploadDir(remoteDir, localDir.getAbsolutePath(), true);
+    }
+
+    public void uploadDir(String remoteDir, String localDir) throws IOException {
+        this.uploadDir(remoteDir, localDir, true);
+    }
+
+    public void uploadDir(String remoteDir, File localDir, boolean child) throws IOException {
+        this.uploadDir(remoteDir, localDir.getAbsolutePath(), child);
+    }
+
+    /**
+     * 上传文件夹
+     *
+     * @param remoteDir 远程文件夹
+     * @param localDir  本地文件夹 上传时不包含此文件夹
+     * @param child     是否遍历上传
+     * @throws IOException IOException
+     */
+    public void uploadDir(String remoteDir, String localDir, boolean child) throws IOException {
+        localDir = Files1.getPath(localDir);
+        List<File> dirs = Files1.listDirs(localDir, child);
+        List<File> files = Files1.listFiles(localDir, child);
+        for (File dir : dirs) {
+            this.mkdirs(Files1.getPath(remoteDir + SEPARATOR + (dir.getAbsolutePath().substring(localDir.length()))));
+        }
+        for (File file : files) {
+            String path = Files1.getPath(remoteDir + SEPARATOR + (file.getAbsolutePath().substring(localDir.length())));
+            this.uploadFile(path, file);
+        }
+    }
+
+    // -------------------- download --------------------
+
+    public void downloadFile(String remoteFile, String localFile) throws IOException {
+        Files1.touch(localFile);
+        this.downloadFile(remoteFile, Files1.openOutputStreamSafe(localFile), true);
+    }
+
+    public void downloadFile(String remoteFile, File localFile) throws IOException {
+        Files1.touch(localFile);
+        this.downloadFile(remoteFile, Files1.openOutputStreamSafe(localFile), true);
+    }
+
+    public void downloadFile(String remoteFile, OutputStream out) throws IOException {
+        this.downloadFile(remoteFile, out, false);
+    }
+
+    /**
+     * 下载文件
+     *
+     * @param remoteFile 远程文件路径
+     * @param out        output
+     * @param close      是否自动关闭
+     * @throws IOException IOException
+     */
+    public void downloadFile(String remoteFile, OutputStream out, boolean close) throws IOException {
+        try {
+            this.transfer(remoteFile, out);
+        } finally {
+            if (close) {
+                Streams.close(out);
+            }
+        }
+    }
+
+    public void downloadDir(String remoteDir, File localDir) throws IOException {
+        this.downloadDir(remoteDir, localDir.getAbsolutePath(), true);
+    }
+
+    public void downloadDir(String remoteDir, String localDir) throws IOException {
+        this.downloadDir(remoteDir, localDir, true);
+    }
+
+    public void downloadDir(String remoteDir, File localDir, boolean child) throws IOException {
+        this.downloadDir(remoteDir, localDir.getAbsolutePath(), child);
+    }
+
+    /**
+     * 下载文件夹
+     *
+     * @param remoteDir 远程文件夹
+     * @param localDir  本地文件夹
+     * @param child     是否递归子文件夹下载
+     * @throws IOException pending
+     */
+    public void downloadDir(String remoteDir, String localDir, boolean child) throws IOException {
+        remoteDir = Files1.getPath(remoteDir);
+        if (!child) {
+            List<SftpFile> list = this.listFiles(remoteDir, false);
+            for (SftpFile s : list) {
+                this.downloadFile(s.getPath(), Files1.getPath(localDir + SEPARATOR + Files1.getFileName(s.getPath())));
+            }
+        } else {
+            List<SftpFile> list = this.listDirs(remoteDir, true);
+            for (SftpFile s : list) {
+                Files1.mkdirs(Files1.getPath(localDir + SEPARATOR + s.getPath().substring(remoteDir.length())));
+            }
+            list = this.listFiles(remoteDir, true);
+            for (SftpFile s : list) {
+                this.downloadFile(s.getPath(), Files1.getPath(localDir + SEPARATOR + s.getPath().substring(remoteDir.length())));
+            }
+        }
+    }
+
+    // -------------------- big file --------------------
+
+    public SftpUpload upload(String remote, String local) {
+        return new SftpUpload(this, remote, local);
+    }
+
     /**
      * 获取文件上传器
      *
@@ -852,15 +995,8 @@ public class SftpExecutor implements SafeCloseable {
         return new SftpUpload(this, remote, local);
     }
 
-    /**
-     * 获取文件上传器
-     *
-     * @param remote 远程文件绝对路径
-     * @param local  本地文件
-     * @return 文件上传器
-     */
-    public SftpUpload upload(String remote, String local) {
-        return new SftpUpload(this, remote, local);
+    public SftpDownload download(String remote, String local) {
+        return new SftpDownload(this, remote, local);
     }
 
     /**
@@ -871,17 +1007,6 @@ public class SftpExecutor implements SafeCloseable {
      * @return 文件上传器
      */
     public SftpDownload download(String remote, File local) {
-        return new SftpDownload(this, remote, local);
-    }
-
-    /**
-     * 获取文件下载器
-     *
-     * @param remote 远程文件绝对路径
-     * @param local  本地文件
-     * @return 文件下载器
-     */
-    public SftpDownload download(String remote, String local) {
         return new SftpDownload(this, remote, local);
     }
 

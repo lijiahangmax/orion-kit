@@ -15,7 +15,7 @@ public class FtpServerTests {
                 .homePath("C:\\Users\\ljh15\\Desktop\\ftp")
                 .writePermission();
         instance.addUser(user)
-                .sslConfig(new FtpServerSslConfig("C:\\Users\\ljh15\\Desktop\\1.jks", "123456"))
+                // .sslConfig(new FtpServerSslConfig("C:\\Users\\ljh15\\Desktop\\1.jks", "123456"))
                 .listener()
                 .start();
     }
