@@ -7,8 +7,6 @@ import ch.ethz.ssh2.SFTPv3Client;
 import ch.ethz.ssh2.log.Logger;
 import com.orion.remote.connection.scp.ScpExecutor;
 import com.orion.remote.connection.sftp.SftpExecutor;
-import com.orion.remote.connection.sftp.bigfile.SftpDownload;
-import com.orion.remote.connection.sftp.bigfile.SftpUpload;
 import com.orion.remote.connection.ssh.CommandExecutor;
 import com.orion.remote.connection.ssh.ShellExecutor;
 import com.orion.utils.Exceptions;
@@ -232,70 +230,6 @@ public class ConnectionStore {
         Valid.isTrue(this.auth, "unauthorized");
         try {
             return new SftpExecutor(new SFTPv3Client(this.connection), charset);
-        } catch (IOException e) {
-            throw Exceptions.connection("could open sftp client", e);
-        }
-    }
-
-    /**
-     * 获取 SftpUpload
-     *
-     * @param remote 远程文件
-     * @param local  本地文件
-     * @return SftpUpload
-     */
-    public SftpUpload getSftpUpload(String remote, String local) {
-        Valid.isTrue(this.auth, "unauthorized");
-        try {
-            return new SftpUpload(new SFTPv3Client(this.connection), remote, local);
-        } catch (IOException e) {
-            throw Exceptions.connection("could open sftp client", e);
-        }
-    }
-
-    /**
-     * 获取 SftpUpload
-     *
-     * @param remote 远程文件
-     * @param local  本地文件
-     * @return SftpUpload
-     */
-    public SftpUpload getSftpUpload(String remote, File local) {
-        Valid.isTrue(this.auth, "unauthorized");
-        try {
-            return new SftpUpload(new SFTPv3Client(this.connection), remote, local);
-        } catch (IOException e) {
-            throw Exceptions.connection("could open sftp client", e);
-        }
-    }
-
-    /**
-     * 获取 SftpDownload
-     *
-     * @param remote 远程文件
-     * @param local  本地文件
-     * @return SftpDownload
-     */
-    public SftpDownload getSftpDownload(String remote, String local) {
-        Valid.isTrue(this.auth, "unauthorized");
-        try {
-            return new SftpDownload(new SFTPv3Client(this.connection), remote, local);
-        } catch (IOException e) {
-            throw Exceptions.connection("could open sftp client", e);
-        }
-    }
-
-    /**
-     * 获取 SftpDownload
-     *
-     * @param remote 远程文件
-     * @param local  本地文件
-     * @return SftpDownload
-     */
-    public SftpDownload getSftpDownload(String remote, File local) {
-        Valid.isTrue(this.auth, "unauthorized");
-        try {
-            return new SftpDownload(new SFTPv3Client(this.connection), remote, local);
         } catch (IOException e) {
             throw Exceptions.connection("could open sftp client", e);
         }

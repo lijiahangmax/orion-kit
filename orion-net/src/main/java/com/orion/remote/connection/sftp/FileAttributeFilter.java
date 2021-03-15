@@ -20,7 +20,7 @@ public interface FileAttributeFilter {
      * @param attr 文件属性
      * @return 是否可用
      */
-    boolean accept(FileAttribute attr);
+    boolean accept(SftpFile attr);
 
     /**
      * 后缀过滤器

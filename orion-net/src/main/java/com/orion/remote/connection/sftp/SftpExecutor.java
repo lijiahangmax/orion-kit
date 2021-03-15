@@ -11,6 +11,7 @@ import com.orion.remote.connection.sftp.bigfile.SftpDownload;
 import com.orion.remote.connection.sftp.bigfile.SftpUpload;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
+import com.orion.utils.collect.Lists;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
 
@@ -49,24 +50,29 @@ public class SftpExecutor implements SafeCloseable {
     private SFTPv3Client client;
 
     /**
+     * 编码格式
+     */
+    private String charset;
+
+    /**
      * 默认缓冲区大小 因为并行数为1 并且默认执行一次读写操作最大字节为32768
      */
-    private int bufferSize = Const.BUFFER_KB_32;
+    private int bufferSize;
 
     public SftpExecutor(SFTPv3Client client) {
         this(client, Const.UTF_8);
     }
 
-    public SftpExecutor(SFTPv3Client client, String fileNameCharset) {
+    public SftpExecutor(SFTPv3Client client, String charset) {
         this.client = client;
+        this.charset = charset;
+        this.bufferSize = Const.BUFFER_KB_32;
         // 默认并行数必须为1
         this.client.setRequestParallelism(1);
-        if (fileNameCharset != null) {
-            try {
-                this.client.setCharset(fileNameCharset);
-            } catch (IOException e) {
-                throw Exceptions.unsupportedEncoding(e);
-            }
+        try {
+            this.client.setCharset(charset);
+        } catch (IOException e) {
+            throw Exceptions.unsupportedEncoding(e);
         }
     }
 
@@ -76,7 +82,7 @@ public class SftpExecutor implements SafeCloseable {
      * @param bufferSize 缓冲区大小
      * @return this
      */
-    public SftpExecutor setBufferSize(int bufferSize) {
+    public SftpExecutor bufferSize(int bufferSize) {
         this.bufferSize = bufferSize;
         return this;
     }
@@ -86,7 +92,7 @@ public class SftpExecutor implements SafeCloseable {
      *
      * @param charset 编码格式
      */
-    public SftpExecutor setCharset(String charset) {
+    public SftpExecutor charset(String charset) {
         try {
             client.setCharset(charset);
         } catch (IOException e) {
@@ -100,7 +106,7 @@ public class SftpExecutor implements SafeCloseable {
      *
      * @param parallelism 请求并行数量
      */
-    public SftpExecutor setRequestParallelism(int parallelism) {
+    public SftpExecutor requestParallelism(int parallelism) {
         client.setRequestParallelism(parallelism);
         return this;
     }
@@ -115,7 +121,6 @@ public class SftpExecutor implements SafeCloseable {
         try {
             return client.canonicalPath(path) != null;
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -130,7 +135,6 @@ public class SftpExecutor implements SafeCloseable {
         try {
             return client.canonicalPath(path);
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -145,7 +149,6 @@ public class SftpExecutor implements SafeCloseable {
         try {
             return client.readLink(path);
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -157,12 +160,11 @@ public class SftpExecutor implements SafeCloseable {
      * @param attr 属性
      * @return ignore
      */
-    public boolean setFileAttribute(String path, FileAttribute attr) {
+    public boolean setFileAttribute(String path, SftpFile attr) {
         try {
             client.setstat(path, attr.getAttrs());
             return true;
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -173,28 +175,27 @@ public class SftpExecutor implements SafeCloseable {
      * @param path 文件绝对路径
      * @return 属性
      */
-    public FileAttribute getFileAttribute(String path) {
-        return this.getFileAttribute(path, false);
+    public SftpFile getFile(String path) {
+        return this.getFile(path, false);
     }
 
     /**
      * 获取文件属性
      *
      * @param path           文件绝对路径
-     * @param followSymbolic 如果是连接文件是否返回连接文件属性
+     * @param followSymbolic 如果是连接文件是否返回原文件属性
      * @return 属性
      */
-    public FileAttribute getFileAttribute(String path, boolean followSymbolic) {
+    public SftpFile getFile(String path, boolean followSymbolic) {
         try {
             SFTPv3FileAttributes attr;
             if (followSymbolic) {
-                attr = client.lstat(path);
-            } else {
                 attr = client.stat(path);
+            } else {
+                attr = client.lstat(path);
             }
-            return new FileAttribute(path, attr);
+            return new SftpFile(path, attr);
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -211,7 +212,6 @@ public class SftpExecutor implements SafeCloseable {
             clear.getClient().closeFile(clear);
             return true;
         } catch (IOException e) {
-            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -231,32 +231,7 @@ public class SftpExecutor implements SafeCloseable {
                 return -1;
             }
         } catch (IOException e) {
-            Exceptions.printStacks(e);
             return -1;
-        }
-    }
-
-    /**
-     * 获取目录文件属性
-     *
-     * @param path 文件夹绝对路径
-     * @return 属性
-     */
-    public List<FileAttribute> ll(String path) {
-        try {
-            List<FileAttribute> list = new ArrayList<>();
-            List<SFTPv3DirectoryEntry> files = client.ls(path);
-            for (SFTPv3DirectoryEntry l : files) {
-                String filename = l.filename;
-                if (".".equals(filename) || "..".equals(filename)) {
-                    continue;
-                }
-                list.add(new FileAttribute(Files1.getPath(path + SEPARATOR + filename), l.longEntry, l.attributes));
-            }
-            return list;
-        } catch (Exception e) {
-            Exceptions.printStacks(e);
-            return null;
         }
     }
 
@@ -278,22 +253,16 @@ public class SftpExecutor implements SafeCloseable {
      * @return ignore
      */
     public boolean mkdirs(String path, int permissions) {
-        FileAttribute p = this.getFileAttribute(path, false);
+        SftpFile p = this.getFile(path, false);
         if (p != null && p.isDirectory()) {
             return true;
         }
         List<String> parentPaths = Files1.getParentPaths(path);
         parentPaths.add(path);
-        boolean check = true;
         for (int i = 1, size = parentPaths.size(); i < size; i++) {
             String parentPath = parentPaths.get(i);
-            if (check) {
-                FileAttribute parentAttr = this.getFileAttribute(parentPath, false);
-                if (parentAttr == null || !parentAttr.isDirectory()) {
-                    check = false;
-                }
-            }
-            if (!check) {
+            SftpFile parentAttr = this.getFile(parentPath, false);
+            if (parentAttr == null || !parentAttr.isDirectory()) {
                 try {
                     client.mkdir(parentPath, permissions);
                 } catch (Exception e1) {
@@ -316,7 +285,6 @@ public class SftpExecutor implements SafeCloseable {
             client.rmdir(path);
             return true;
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -332,7 +300,6 @@ public class SftpExecutor implements SafeCloseable {
             client.rm(path);
             return true;
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -345,13 +312,13 @@ public class SftpExecutor implements SafeCloseable {
      */
     public boolean rm(String path) {
         try {
-            FileAttribute file = this.getFileAttribute(path);
+            SftpFile file = this.getFile(path);
             if (file == null) {
                 return true;
             }
             if (file.isDirectory()) {
-                List<FileAttribute> files = this.ll(path);
-                for (FileAttribute f : files) {
+                List<SftpFile> files = this.ll(path);
+                for (SftpFile f : files) {
                     if (f.isDirectory()) {
                         this.rm(f.getPath());
                     } else {
@@ -364,7 +331,6 @@ public class SftpExecutor implements SafeCloseable {
             }
             return true;
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -380,7 +346,7 @@ public class SftpExecutor implements SafeCloseable {
     }
 
     /**
-     * 创建文件
+     * 创建文件 如果存在则清空
      *
      * @param path 文件绝对路径
      * @return ignore
@@ -396,7 +362,7 @@ public class SftpExecutor implements SafeCloseable {
      * @param truncate 是否截断
      * @return ignore
      */
-    private boolean touch(String path, boolean truncate) {
+    public boolean touch(String path, boolean truncate) {
         try {
             if (this.mkdirs(Files1.getParentPath(path), DEFAULT_PERMISSIONS)) {
                 SFTPv3FileHandle handle;
@@ -411,7 +377,6 @@ public class SftpExecutor implements SafeCloseable {
                 return false;
             }
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -419,19 +384,18 @@ public class SftpExecutor implements SafeCloseable {
     /**
      * 创建连接文件
      *
-     * @param linkFile   连接文件绝对路径
-     * @param targetFile 被连接文件绝对路径
+     * @param sourceFile     被连接文件绝对路径
+     * @param targetLinkFile 连接文件绝对路径
      * @return true成功
      */
-    public boolean touchLink(String linkFile, String targetFile) {
+    public boolean touchLink(String sourceFile, String targetLinkFile) {
         try {
-            if (this.mkdirs(Files1.getParentPath(linkFile), DEFAULT_PERMISSIONS)) {
-                client.createSymlink(linkFile, targetFile);
+            if (this.mkdirs(Files1.getParentPath(targetLinkFile), DEFAULT_PERMISSIONS)) {
+                client.createSymlink(targetLinkFile, sourceFile);
                 return true;
             }
             return false;
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -448,13 +412,14 @@ public class SftpExecutor implements SafeCloseable {
             source = Files1.getPath(source);
             target = Files1.getPath(target);
             if (target.charAt(0) == '/') {
+                // 绝对路径
                 client.mv(source, Files1.normalize(target));
             } else {
+                // 相对路径
                 client.mv(source, Files1.normalize(Files1.getPath(source + "/../" + target)));
             }
             return true;
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -465,12 +430,24 @@ public class SftpExecutor implements SafeCloseable {
         return this.read(path, 0, bs, 0, bs.length);
     }
 
+    public int read(SFTPv3FileHandle handle, byte[] bs) throws IOException {
+        return this.read(handle, 0, bs, 0, bs.length);
+    }
+
     public int read(String path, long skip, byte[] bs) throws IOException {
         return this.read(path, skip, bs, 0, bs.length);
     }
 
+    public int read(SFTPv3FileHandle handle, long skip, byte[] bs) throws IOException {
+        return this.read(handle, skip, bs, 0, bs.length);
+    }
+
     public int read(String path, byte[] bs, int offset, int len) throws IOException {
         return this.read(path, 0, bs, offset, len);
+    }
+
+    public int read(SFTPv3FileHandle handle, byte[] bs, int offset, int len) throws IOException {
+        return this.read(handle, 0, bs, offset, len);
     }
 
     /**
@@ -485,217 +462,382 @@ public class SftpExecutor implements SafeCloseable {
      * @throws IOException IOException
      */
     public int read(String path, long skip, byte[] bs, int offset, int len) throws IOException {
-        SFTPv3FileHandle handle = client.openFileRO(path);
-        int read = client.read(handle, skip, bs, offset, len);
-        handle.getClient().closeFile(handle);
-        return read;
+        SFTPv3FileHandle handle = null;
+        try {
+            handle = client.openFileRO(path);
+            return this.read(handle, skip, bs, offset, len);
+        } finally {
+            if (handle != null) {
+                handle.getClient().closeFile(handle);
+            }
+        }
+    }
+
+    /**
+     * 读取字节
+     *
+     * @param handle handle
+     * @param skip   跳过字数
+     * @param bs     数组
+     * @param offset 偏移量
+     * @param len    读取长度
+     * @return 已读取长度
+     * @throws IOException IOException
+     */
+    public int read(SFTPv3FileHandle handle, long skip, byte[] bs, int offset, int len) throws IOException {
+        return client.read(handle, skip, bs, offset, len);
     }
 
     // -------------------- transfer --------------------
 
     public long transfer(String path, String file) throws IOException {
         Files1.touch(file);
-        OutputStream out = null;
-        try {
-            return this.transfer(path, out = Files1.openOutputStream(file), 0, -1);
-        } finally {
-            Streams.close(out);
-        }
+        return this.transfer(path, Files1.openOutputStream(file), 0, -1, true);
+    }
+
+    public long transfer(SFTPv3FileHandle handle, String file) throws IOException {
+        Files1.touch(file);
+        return this.transfer(handle, Files1.openOutputStream(file), 0, -1, true);
     }
 
     public long transfer(String path, File file) throws IOException {
         Files1.touch(file);
-        OutputStream out = null;
-        try {
-            return this.transfer(path, out = Files1.openOutputStream(file), 0, -1);
-        } finally {
-            Streams.close(out);
-        }
+        return this.transfer(path, Files1.openOutputStream(file), 0, -1, true);
+    }
+
+    public long transfer(SFTPv3FileHandle handle, File file) throws IOException {
+        Files1.touch(file);
+        return this.transfer(handle, Files1.openOutputStream(file), 0, -1, true);
     }
 
     public long transfer(String path, OutputStream out) throws IOException {
-        return this.transfer(path, out, 0, -1);
+        return this.transfer(path, out, 0, -1, false);
+    }
+
+    public long transfer(SFTPv3FileHandle handle, OutputStream out) throws IOException {
+        return this.transfer(handle, out, 0, -1, false);
     }
 
     public long transfer(String path, OutputStream out, long skip) throws IOException {
-        return this.transfer(path, out, skip, -1);
+        return this.transfer(path, out, skip, -1, false);
+    }
+
+    public long transfer(SFTPv3FileHandle handle, OutputStream out, long skip) throws IOException {
+        return this.transfer(handle, out, skip, -1, false);
+    }
+
+    public long transfer(String path, OutputStream out, long skip, int size) throws IOException {
+        return this.transfer(path, out, skip, size, false);
+    }
+
+    public long transfer(SFTPv3FileHandle handle, OutputStream out, long skip, int size) throws IOException {
+        return this.transfer(handle, out, skip, size, false);
     }
 
     /**
      * 读取字节到输出流
      *
-     * @param path 文件绝对路径
-     * @param out  输出流
-     * @param skip 跳过字数
-     * @param size 读取长度
+     * @param path  文件绝对路径
+     * @param out   输出流
+     * @param skip  跳过字数
+     * @param size  读取长度
+     * @param close 是否关闭
      * @return 已读取长度
      * @throws IOException IOException
      */
-    public long transfer(String path, OutputStream out, long skip, int size) throws IOException {
-        SFTPv3FileHandle handle = client.openFileRO(path);
-        long r = 0;
-        byte[] bs = new byte[this.bufferSize];
-        if (size != -1) {
-            boolean mod = size % this.bufferSize == 0;
-            long readTimes = size / this.bufferSize;
-            if (mod || readTimes == 0) {
-                readTimes++;
+    public long transfer(String path, OutputStream out, long skip, int size, boolean close) throws IOException {
+        if (size != -1 && size <= 0) {
+            throw Exceptions.runtime("read size must > 0 or -1");
+        }
+        SFTPv3FileHandle handle = null;
+        try {
+            handle = client.openFileRO(path);
+            return this.transfer(handle, out, skip, size, close);
+        } finally {
+            if (handle != null) {
+                handle.getClient().closeFile(handle);
             }
-            for (int i = 0; i < readTimes; i++) {
-                if (readTimes == 1) {
-                    int read = client.read(handle, skip, bs, 0, size);
-                    out.write(bs, 0, read);
-                    r += read;
-                } else {
-                    int read = client.read(handle, skip, bs, 0, this.bufferSize);
+        }
+    }
+
+    /**
+     * 读取字节到输出流
+     *
+     * @param handle handle
+     * @param out    输出流
+     * @param skip   跳过字数
+     * @param size   读取长度
+     * @param close  是否关闭
+     * @return 已读取长度
+     * @throws IOException IOException
+     */
+    public long transfer(SFTPv3FileHandle handle, OutputStream out, long skip, int size, boolean close) throws IOException {
+        if (size != -1 && size <= 0) {
+            throw Exceptions.runtime("read size must > 0 or -1");
+        }
+        try {
+            long total = 0, curr = skip;
+            byte[] bs = new byte[this.bufferSize];
+            if (size != -1) {
+                int last = size % this.bufferSize;
+                long readTimes = Long.max(size / this.bufferSize, 1);
+                if (last == 0) {
+                    readTimes++;
+                }
+                for (long i = 0; i < readTimes; i++) {
+                    int read;
+                    if (i == readTimes - 1) {
+                        read = client.read(handle, curr, bs, 0, last);
+                    } else {
+                        read = client.read(handle, curr, bs, 0, this.bufferSize);
+                    }
                     if (read != -1) {
                         out.write(bs, 0, read);
-                        r += read;
+                        total += read;
+                        curr += read;
                     } else {
                         break;
                     }
                 }
+            } else {
+                int read;
+                while ((read = client.read(handle, curr, bs, 0, this.bufferSize)) != -1) {
+                    out.write(bs, 0, read);
+                    total += read;
+                    curr += read;
+                }
             }
-        } else {
-            int read;
-            while ((read = client.read(handle, r, bs, 0, this.bufferSize)) != -1) {
-                out.write(bs, 0, read);
-                r += read;
+            return total;
+        } finally {
+            if (close) {
+                Streams.close(out);
             }
         }
-        handle.getClient().closeFile(handle);
-        return r;
     }
 
     // -------------------- write --------------------
 
     public void write(String path, InputStream in) throws IOException {
-        this.write(path, 0, in, null, null, null, false);
+        this.write(path, 0, in, null, null, 1);
     }
 
-    public void write(String path, InputStream in, long fileOffset) throws IOException {
-        this.write(path, fileOffset, in, null, null, null, false);
+    public void write(SFTPv3FileHandle handle, InputStream in) throws IOException {
+        this.write(handle, 0, in, null, null);
     }
 
     public void write(String path, byte[] bs) throws IOException {
-        this.write(path, 0, null, new StreamEntry(bs), null, null, false);
+        this.write(path, 0, null, new StreamEntry(bs), null, 1);
+    }
+
+    public void write(SFTPv3FileHandle handle, byte[] bs) throws IOException {
+        this.write(handle, 0, null, new StreamEntry(bs), null);
     }
 
     public void write(String path, byte[] bs, int off, int len) throws IOException {
-        this.write(path, 0, null, new StreamEntry(bs, off, len), null, null, false);
+        this.write(path, 0, null, new StreamEntry(bs, off, len), null, 1);
     }
 
-    public void write(String path, long fileOffset, byte[] bs) throws IOException {
-        this.write(path, fileOffset, null, new StreamEntry(bs), null, null, false);
-    }
-
-    public void write(String path, long fileOffset, byte[] bs, int off, int len) throws IOException {
-        this.write(path, fileOffset, null, new StreamEntry(bs, off, len), null, null, false);
+    public void write(SFTPv3FileHandle handle, byte[] bs, int off, int len) throws IOException {
+        this.write(handle, 0, null, new StreamEntry(bs, off, len), null);
     }
 
     public void writeLine(String path, String line) throws IOException {
-        this.write(path, 0, null, new StreamEntry(Strings.bytes(line + Const.LF)), null, null, false);
+        this.write(path, 0, null, null, Lists.singleton(line), 1);
     }
 
-    public void writeLine(String path, String line, String charset) throws IOException {
-        this.write(path, 0, null, new StreamEntry(Strings.bytes(line + Const.LF, charset)), null, null, false);
-    }
-
-    public void writeLine(String path, long fileOffset, String line) throws IOException {
-        this.write(path, fileOffset, null, new StreamEntry(Strings.bytes(line + Const.LF)), null, null, false);
-    }
-
-    public void writeLine(String path, long fileOffset, String line, String charset) throws IOException {
-        this.write(path, fileOffset, null, new StreamEntry(Strings.bytes(line + Const.LF, charset)), null, null, false);
+    public void writeLine(SFTPv3FileHandle handle, String line) throws IOException {
+        this.write(handle, 0, null, null, Lists.singleton(line));
     }
 
     public void writeLines(String path, List<String> lines) throws IOException {
-        this.write(path, 0, null, null, lines, null, false);
+        this.write(path, 0, null, null, lines, 1);
     }
 
-    public void writeLines(String path, List<String> lines, String charset) throws IOException {
-        this.write(path, 0, null, null, lines, charset, false);
+    public void writeLines(SFTPv3FileHandle handle, List<String> lines) throws IOException {
+        this.write(handle, 0, null, null, lines);
     }
 
-    public void writeLines(String path, long fileOffset, List<String> lines) throws IOException {
-        this.write(path, fileOffset, null, null, lines, null, false);
+    // -------------------- replace --------------------
+
+    public void replace(String path, InputStream in) throws IOException {
+        this.write(path, 0, in, null, null, 2);
     }
 
-    public void writeLines(String path, long fileOffset, List<String> lines, String charset) throws IOException {
-        this.write(path, fileOffset, null, null, lines, charset, false);
+    public void replace(SFTPv3FileHandle handle, InputStream in) throws IOException {
+        this.write(handle, 0, in, null, null);
     }
+
+    public void replace(String path, long fileOffset, InputStream in) throws IOException {
+        this.write(path, fileOffset, in, null, null, 2);
+    }
+
+    public void replace(SFTPv3FileHandle handle, long fileOffset, InputStream in) throws IOException {
+        this.write(handle, fileOffset, in, null, null);
+    }
+
+    public void replace(String path, byte[] bs) throws IOException {
+        this.write(path, 0, null, new StreamEntry(bs), null, 2);
+    }
+
+    public void replace(SFTPv3FileHandle handle, byte[] bs) throws IOException {
+        this.write(handle, 0, null, new StreamEntry(bs), null);
+    }
+
+    public void replace(String path, byte[] bs, int off, int len) throws IOException {
+        this.write(path, 0, null, new StreamEntry(bs, off, len), null, 2);
+    }
+
+    public void replace(SFTPv3FileHandle handle, byte[] bs, int off, int len) throws IOException {
+        this.write(handle, 0, null, new StreamEntry(bs, off, len), null);
+    }
+
+    public void replace(String path, long fileOffset, byte[] bs) throws IOException {
+        this.write(path, fileOffset, null, new StreamEntry(bs), null, 2);
+    }
+
+    public void replace(SFTPv3FileHandle handle, long fileOffset, byte[] bs) throws IOException {
+        this.write(handle, fileOffset, null, new StreamEntry(bs), null);
+    }
+
+    public void replace(String path, long fileOffset, byte[] bs, int off, int len) throws IOException {
+        this.write(path, fileOffset, null, new StreamEntry(bs, off, len), null, 2);
+    }
+
+    public void replace(SFTPv3FileHandle handle, long fileOffset, byte[] bs, int off, int len) throws IOException {
+        this.write(handle, fileOffset, null, new StreamEntry(bs, off, len), null);
+    }
+
+    public void replaceLine(String path, String line) throws IOException {
+        this.write(path, 0, null, null, Lists.singleton(line), 2);
+    }
+
+    public void replaceLine(SFTPv3FileHandle handle, String line) throws IOException {
+        this.write(handle, 0, null, null, Lists.singleton(line));
+    }
+
+    public void replaceLine(String path, long fileOffset, String line) throws IOException {
+        this.write(path, fileOffset, null, null, Lists.singleton(line), 2);
+    }
+
+    public void replaceLine(SFTPv3FileHandle handle, long fileOffset, String line) throws IOException {
+        this.write(handle, fileOffset, null, null, Lists.singleton(line));
+    }
+
+    public void replaceLines(String path, List<String> lines) throws IOException {
+        this.write(path, 0, null, null, lines, 2);
+    }
+
+    public void replaceLines(SFTPv3FileHandle handle, List<String> lines) throws IOException {
+        this.write(handle, 0, null, null, lines);
+    }
+
+    public void replaceLines(String path, long fileOffset, List<String> lines) throws IOException {
+        this.write(path, fileOffset, null, null, lines, 2);
+    }
+
+    public void replaceLines(SFTPv3FileHandle handle, long fileOffset, List<String> lines) throws IOException {
+        this.write(handle, fileOffset, null, null, lines);
+    }
+
+    // -------------------- append --------------------
 
     public void append(String path, InputStream in) throws IOException {
-        this.write(path, 0, in, null, null, null, true);
+        this.write(path, 0, in, null, null, 3);
+    }
+
+    public void append(SFTPv3FileHandle handle, InputStream in) throws IOException {
+        this.write(handle, 0, in, null, null);
     }
 
     public void append(String path, byte[] bs) throws IOException {
-        this.write(path, 0, null, new StreamEntry(bs), null, null, true);
+        this.write(path, 0, null, new StreamEntry(bs), null, 3);
+    }
+
+    public void append(SFTPv3FileHandle handle, byte[] bs) throws IOException {
+        this.write(handle, 0, null, new StreamEntry(bs), null);
     }
 
     public void append(String path, byte[] bs, int off, int len) throws IOException {
-        this.write(path, 0, null, new StreamEntry(bs, off, len), null, null, true);
+        this.write(path, 0, null, new StreamEntry(bs, off, len), null, 3);
+    }
+
+    public void append(SFTPv3FileHandle handle, byte[] bs, int off, int len) throws IOException {
+        this.write(handle, 0, null, new StreamEntry(bs, off, len), null);
     }
 
     public void appendLine(String path, String line) throws IOException {
-        this.write(path, 0, null, new StreamEntry(Strings.bytes(line + Const.LF)), null, null, true);
+        this.write(path, 0, null, null, Lists.singleton(line), 3);
     }
 
-    public void appendLine(String path, String line, String charset) throws IOException {
-        this.write(path, 0, null, new StreamEntry(Strings.bytes(line + Const.LF, charset)), null, null, true);
+    public void appendLine(SFTPv3FileHandle handle, String line) throws IOException {
+        this.write(handle, 0, null, null, Lists.singleton(line));
     }
 
     public void appendLines(String path, List<String> lines) throws IOException {
-        this.write(path, 0, null, null, lines, null, true);
+        this.write(path, 0, null, null, lines, 3);
     }
 
-    public void appendLines(String path, List<String> lines, String charset) throws IOException {
-        this.write(path, 0, null, null, lines, charset, true);
+    public void appendLines(SFTPv3FileHandle handle, List<String> lines) throws IOException {
+        this.write(handle, 0, null, null, lines);
     }
 
     /**
-     * 拼接/写入到文件 不会清除只会覆盖
+     * 拼接/替换/写入到文件
      *
      * @param path       文件绝对路径
      * @param in         输入流
      * @param fileOffset 文件偏移量
      * @param entry      写入信息
      * @param lines      行
-     * @param charset    行编码
-     * @param append     是否拼接
+     * @param type       1write  2replace 3append
      * @throws IOException IOException
      */
-    private void write(String path, long fileOffset, InputStream in, StreamEntry entry, List<String> lines, String charset, boolean append) throws IOException {
-        SFTPv3FileHandle handle;
-        if (append) {
-            handle = client.openFileRWAppend(path);
-        } else {
-            handle = client.openFileRW(path);
-        }
+    private void write(String path, long fileOffset, InputStream in, StreamEntry entry, List<String> lines, int type) throws IOException {
+        SFTPv3FileHandle handle = null;
         try {
-            if (in != null) {
-                byte[] bs = new byte[bufferSize];
-                int read;
-                while ((read = in.read(bs)) != -1) {
-                    client.write(handle, fileOffset, bs, 0, read);
-                    fileOffset += read;
-                }
-            } else if (entry != null) {
-                client.write(handle, fileOffset, entry.getBytes(), entry.getOff(), entry.getLen());
-            } else if (lines != null) {
-                for (String line : lines) {
-                    byte[] bytes;
-                    if (charset == null) {
-                        bytes = Strings.bytes(line + Const.LF);
-                    } else {
-                        bytes = Strings.bytes((line + Const.LF), charset);
-                    }
-                    client.write(handle, fileOffset, bytes, 0, bytes.length);
-                    fileOffset += bytes.length;
-                }
+            if (!this.touch(path, type == 1)) {
+                throw Exceptions.sftp("touch file error: " + path);
             }
+            if (type == 3) {
+                handle = client.openFileRWAppend(path);
+            } else {
+                handle = client.openFileRW(path);
+            }
+            this.write(handle, fileOffset, in, entry, lines);
         } finally {
-            handle.getClient().closeFile(handle);
+            if (handle != null) {
+                handle.getClient().closeFile(handle);
+            }
+        }
+    }
+
+    /**
+     * 拼接/替换/写入到文件
+     *
+     * @param handle     handle
+     * @param in         输入流
+     * @param fileOffset 文件偏移量
+     * @param entry      写入信息
+     * @param lines      行
+     * @throws IOException IOException
+     */
+    private void write(SFTPv3FileHandle handle, long fileOffset, InputStream in, StreamEntry entry, List<String> lines) throws IOException {
+        if (in != null) {
+            byte[] bs = new byte[bufferSize];
+            int read;
+            while ((read = in.read(bs)) != -1) {
+                client.write(handle, fileOffset, bs, 0, read);
+                fileOffset += read;
+            }
+        } else if (entry != null) {
+            client.write(handle, fileOffset, entry.getBytes(), entry.getOff(), entry.getLen());
+        } else if (lines != null) {
+            for (String line : lines) {
+                byte[] bytes;
+                bytes = Strings.bytes((line + Const.LF), charset);
+                client.write(handle, fileOffset, bytes, 0, bytes.length);
+                fileOffset += bytes.length;
+            }
         }
     }
 
@@ -707,7 +849,7 @@ public class SftpExecutor implements SafeCloseable {
      * @return 文件上传器
      */
     public SftpUpload upload(String remote, File local) {
-        return new SftpUpload(client, remote, local);
+        return new SftpUpload(this, remote, local);
     }
 
     /**
@@ -718,7 +860,7 @@ public class SftpExecutor implements SafeCloseable {
      * @return 文件上传器
      */
     public SftpUpload upload(String remote, String local) {
-        return new SftpUpload(client, remote, local);
+        return new SftpUpload(this, remote, local);
     }
 
     /**
@@ -729,7 +871,7 @@ public class SftpExecutor implements SafeCloseable {
      * @return 文件上传器
      */
     public SftpDownload download(String remote, File local) {
-        return new SftpDownload(client, remote, local);
+        return new SftpDownload(this, remote, local);
     }
 
     /**
@@ -740,16 +882,39 @@ public class SftpExecutor implements SafeCloseable {
      * @return 文件下载器
      */
     public SftpDownload download(String remote, String local) {
-        return new SftpDownload(client, remote, local);
+        return new SftpDownload(this, remote, local);
     }
 
     // -------------------- list --------------------
 
-    public List<FileAttribute> listFiles(String path) {
+    /**
+     * 获取目录文件属性
+     *
+     * @param path 文件夹绝对路径
+     * @return 属性
+     */
+    public List<SftpFile> ll(String path) {
+        try {
+            List<SftpFile> list = new ArrayList<>();
+            List<SFTPv3DirectoryEntry> files = client.ls(path);
+            for (SFTPv3DirectoryEntry l : files) {
+                String filename = l.filename;
+                if (".".equals(filename) || "..".equals(filename)) {
+                    continue;
+                }
+                list.add(new SftpFile(Files1.getPath(path + SEPARATOR + filename), l.longEntry, l.attributes));
+            }
+            return list;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public List<SftpFile> listFiles(String path) {
         return this.listFiles(path, false, false);
     }
 
-    public List<FileAttribute> listFiles(String path, boolean child) {
+    public List<SftpFile> listFiles(String path, boolean child) {
         return this.listFiles(path, child, false);
     }
 
@@ -761,11 +926,11 @@ public class SftpExecutor implements SafeCloseable {
      * @param dir   是否添加文件夹
      * @return 文件列表
      */
-    public List<FileAttribute> listFiles(String path, boolean child, boolean dir) {
-        List<FileAttribute> list = new ArrayList<>();
+    public List<SftpFile> listFiles(String path, boolean child, boolean dir) {
+        List<SftpFile> list = new ArrayList<>();
         try {
-            List<FileAttribute> ls = this.ll(path);
-            for (FileAttribute l : ls) {
+            List<SftpFile> ls = this.ll(path);
+            for (SftpFile l : ls) {
                 String fn = l.getName();
                 if (l.isDirectory()) {
                     if (dir) {
@@ -779,12 +944,12 @@ public class SftpExecutor implements SafeCloseable {
                 }
             }
         } catch (Exception e) {
-            Exceptions.printStacks(e);
+            // ignore
         }
         return list;
     }
 
-    public List<FileAttribute> listDirs(String path) {
+    public List<SftpFile> listDirs(String path) {
         return this.listDirs(path, false);
     }
 
@@ -795,11 +960,11 @@ public class SftpExecutor implements SafeCloseable {
      * @param child 是否递归子文件夹
      * @return 文件列表
      */
-    public List<FileAttribute> listDirs(String path, boolean child) {
-        List<FileAttribute> list = new ArrayList<>();
+    public List<SftpFile> listDirs(String path, boolean child) {
+        List<SftpFile> list = new ArrayList<>();
         try {
-            List<FileAttribute> ls = this.ll(path);
-            for (FileAttribute l : ls) {
+            List<SftpFile> ls = this.ll(path);
+            for (SftpFile l : ls) {
                 String fn = l.getName();
                 if (l.isDirectory()) {
                     list.add(l);
@@ -809,16 +974,16 @@ public class SftpExecutor implements SafeCloseable {
                 }
             }
         } catch (Exception e) {
-            Exceptions.printStacks(e);
+            // ignore
         }
         return list;
     }
 
-    public List<FileAttribute> listFilesSuffix(String path, String suffix) {
+    public List<SftpFile> listFilesSuffix(String path, String suffix) {
         return this.listFilesSuffix(path, suffix, false, false);
     }
 
-    public List<FileAttribute> listFilesSuffix(String path, String suffix, boolean child) {
+    public List<SftpFile> listFilesSuffix(String path, String suffix, boolean child) {
         return this.listFilesSuffix(path, suffix, child, false);
     }
 
@@ -831,15 +996,15 @@ public class SftpExecutor implements SafeCloseable {
      * @param dir    是否添加文件夹
      * @return 文件
      */
-    public List<FileAttribute> listFilesSuffix(String path, String suffix, boolean child, boolean dir) {
+    public List<SftpFile> listFilesSuffix(String path, String suffix, boolean child, boolean dir) {
         return this.listFilesSearch(path, FileAttributeFilter.suffix(suffix), child, dir);
     }
 
-    public List<FileAttribute> listFilesMatch(String path, String match) {
+    public List<SftpFile> listFilesMatch(String path, String match) {
         return this.listFilesMatch(path, match, false, false);
     }
 
-    public List<FileAttribute> listFilesMatch(String path, String match, boolean child) {
+    public List<SftpFile> listFilesMatch(String path, String match, boolean child) {
         return this.listFilesMatch(path, match, child, false);
     }
 
@@ -852,15 +1017,15 @@ public class SftpExecutor implements SafeCloseable {
      * @param dir   是否添加文件夹
      * @return 文件
      */
-    public List<FileAttribute> listFilesMatch(String path, String match, boolean child, boolean dir) {
+    public List<SftpFile> listFilesMatch(String path, String match, boolean child, boolean dir) {
         return this.listFilesSearch(path, FileAttributeFilter.match(match), child, dir);
     }
 
-    public List<FileAttribute> listFilesPattern(String path, Pattern pattern) {
+    public List<SftpFile> listFilesPattern(String path, Pattern pattern) {
         return this.listFilesPattern(path, pattern, false, false);
     }
 
-    public List<FileAttribute> listFilesPattern(String path, Pattern pattern, boolean child) {
+    public List<SftpFile> listFilesPattern(String path, Pattern pattern, boolean child) {
         return this.listFilesPattern(path, pattern, child, false);
     }
 
@@ -872,15 +1037,15 @@ public class SftpExecutor implements SafeCloseable {
      * @param child   是否递归子文件夹
      * @return 文件
      */
-    public List<FileAttribute> listFilesPattern(String path, Pattern pattern, boolean child, boolean dir) {
+    public List<SftpFile> listFilesPattern(String path, Pattern pattern, boolean child, boolean dir) {
         return this.listFilesSearch(path, FileAttributeFilter.pattern(pattern), child, dir);
     }
 
-    public List<FileAttribute> listFilesFilter(String path, FileAttributeFilter filter) {
+    public List<SftpFile> listFilesFilter(String path, FileAttributeFilter filter) {
         return this.listFilesFilter(path, filter, false, false);
     }
 
-    public List<FileAttribute> listFilesFilter(String path, FileAttributeFilter filter, boolean child) {
+    public List<SftpFile> listFilesFilter(String path, FileAttributeFilter filter, boolean child) {
         return this.listFilesFilter(path, filter, child, false);
     }
 
@@ -893,7 +1058,7 @@ public class SftpExecutor implements SafeCloseable {
      * @param dir    是否添加文件夹
      * @return 文件
      */
-    public List<FileAttribute> listFilesFilter(String path, FileAttributeFilter filter, boolean child, boolean dir) {
+    public List<SftpFile> listFilesFilter(String path, FileAttributeFilter filter, boolean child, boolean dir) {
         return this.listFilesSearch(path, filter, child, dir);
     }
 
@@ -906,11 +1071,11 @@ public class SftpExecutor implements SafeCloseable {
      * @param dir    是否添加文件夹
      * @return 文件
      */
-    private List<FileAttribute> listFilesSearch(String path, FileAttributeFilter filter, boolean child, boolean dir) {
-        List<FileAttribute> list = new ArrayList<>();
+    private List<SftpFile> listFilesSearch(String path, FileAttributeFilter filter, boolean child, boolean dir) {
+        List<SftpFile> list = new ArrayList<>();
         try {
-            List<FileAttribute> files = this.ll(path);
-            for (FileAttribute l : files) {
+            List<SftpFile> files = this.ll(path);
+            for (SftpFile l : files) {
                 String fn = l.getName();
                 boolean isDir = l.isDirectory();
                 if (!isDir || dir) {
@@ -923,12 +1088,38 @@ public class SftpExecutor implements SafeCloseable {
                 }
             }
         } catch (Exception e) {
-            Exceptions.printStacks(e);
+            return list;
         }
         return list;
     }
 
     // -------------------- get --------------------
+
+    /**
+     * 打开文件处理器
+     *
+     * @param path path
+     * @param type 1读 2写 3拼接 4读拼接
+     * @return SFTPv3FileHandle
+     */
+    public SFTPv3FileHandle openFileHandler(String path, int type) {
+        try {
+            switch (type) {
+                case 1:
+                    return client.openFileRO(path);
+                case 2:
+                    return client.openFileRW(path);
+                case 3:
+                    return client.openFileWAppend(path);
+                case 4:
+                    return client.openFileRWAppend(path);
+                default:
+                    throw Exceptions.argument("type " + type + " is unsupported");
+            }
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     /**
      * 关闭文件
@@ -941,7 +1132,6 @@ public class SftpExecutor implements SafeCloseable {
             client.closeFile(handle);
             return true;
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -973,9 +1163,6 @@ public class SftpExecutor implements SafeCloseable {
         return client.isConnected();
     }
 
-    /**
-     * 关闭连接
-     */
     @Override
     public void close() {
         client.close();

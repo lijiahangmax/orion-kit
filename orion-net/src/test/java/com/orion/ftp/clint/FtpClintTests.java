@@ -159,23 +159,24 @@ public class FtpClintTests {
         new Thread(u).start();
         ByteTransferProgress p = u.getProgress();
         while (!p.isDone()) {
-            System.out.println(p.getProgress() + "% " + p.getNowRate() / 1024 + "kb/s");
+            System.out.println(p.getProgress() * 100 + "% " + p.getNowRate() / 1024 + "kb/s");
             Threads.sleep(500);
         }
-        System.out.println(p.getProgress() + "% " + p.getNowRate() / 1024 + "kb/s");
+        System.out.println(p.getProgress() * 100 + "% " + p.getNowRate() / 1024 + "kb/s");
         System.out.println("done");
     }
 
     @Test
     public void bigDownload() {
-        FtpDownload u = i.download("/big/big.rar", "C:\\Users\\ljh15\\Desktop\\16.7.rar").computeRate(true);
+        FtpDownload u = i.download("/big/big.rar", "C:\\Users\\ljh15\\Desktop\\16.7.rar");
+        u.computeRate(true);
         new Thread(u).start();
         ByteTransferProgress p = u.getProgress();
         while (!p.isDone()) {
-            System.out.println(p.getProgress() + "% " + p.getNowRate() / 1024 + "kb/s");
+            System.out.println(p.getProgress() * 100 + "% " + p.getNowRate() / 1024 + "kb/s");
             Threads.sleep(500);
         }
-        System.out.println(p.getProgress() + "% " + p.getNowRate() / 1024 + "kb/s");
+        System.out.println(p.getProgress() * 100 + "% " + p.getNowRate() / 1024 + "kb/s");
         System.out.println("done");
     }
 

@@ -9,21 +9,21 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * SFTP文件属性
+ * SFTP文件
  *
  * @author ljh15
  * @version 1.0.0
  * @since 2020/4/30 10:06
  */
-public class FileAttribute implements Serializable {
+public class SftpFile implements Serializable {
 
     private static final long serialVersionUID = 2356232780252635L;
 
-    protected FileAttribute(String path, SFTPv3FileAttributes attrs) {
+    protected SftpFile(String path, SFTPv3FileAttributes attrs) {
         this(path, null, attrs);
     }
 
-    protected FileAttribute(String path, String longEntry, SFTPv3FileAttributes attrs) {
+    protected SftpFile(String path, String longEntry, SFTPv3FileAttributes attrs) {
         this.path = path;
         this.longEntry = longEntry;
         this.attrs = attrs;
@@ -149,37 +149,37 @@ public class FileAttribute implements Serializable {
         return attrs.isRegularFile();
     }
 
-    public FileAttribute setSize(long size) {
+    public SftpFile setSize(long size) {
         this.size = size;
         this.attrs.size = size;
         return this;
     }
 
-    public FileAttribute setUid(int uid) {
+    public SftpFile setUid(int uid) {
         this.uid = uid;
         this.attrs.uid = uid;
         return this;
     }
 
-    public FileAttribute setGid(int gid) {
+    public SftpFile setGid(int gid) {
         this.gid = gid;
         this.attrs.gid = gid;
         return this;
     }
 
-    public FileAttribute setModifyTime(Date modifyTime) {
+    public SftpFile setModifyTime(Date modifyTime) {
         this.modifyTime = modifyTime;
         this.attrs.mtime = ((int) (modifyTime.getTime() / Const.MS_S_1));
         return this;
     }
 
-    public FileAttribute setAccessTime(Date accessTime) {
+    public SftpFile setAccessTime(Date accessTime) {
         this.accessTime = accessTime;
         this.attrs.atime = ((int) (accessTime.getTime() / Const.MS_S_1));
         return this;
     }
 
-    public FileAttribute setPermission(int permission) {
+    public SftpFile setPermission(int permission) {
         this.permission = permission;
         this.attrs.permissions = permission;
         return this;
