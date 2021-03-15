@@ -53,6 +53,11 @@ public class ByteTransferProgress implements Progress {
     protected int interval;
 
     /**
+     * 是否失败
+     */
+    protected volatile boolean error;
+
+    /**
      * 是否完成
      */
     protected volatile boolean done;
@@ -156,13 +161,24 @@ public class ByteTransferProgress implements Progress {
      * 结束
      */
     public void finish() {
+        this.finish(false);
+    }
+
+    /**
+     * 结束
+     */
+    public void finish(boolean error) {
+        if (done) {
+            return;
+        }
         this.endTime = System.currentTimeMillis();
         this.done = true;
+        this.error = error;
     }
 
     @Override
     public double getProgress() {
-        if (done) {
+        if (done && !error) {
             return 1;
         }
         if (end == 0) {
@@ -206,6 +222,10 @@ public class ByteTransferProgress implements Progress {
 
     public boolean isDone() {
         return done;
+    }
+
+    public boolean isError() {
+        return error;
     }
 
 }

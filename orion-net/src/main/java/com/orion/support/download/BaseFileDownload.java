@@ -1,22 +1,24 @@
-package com.orion.support.upload;
+package com.orion.support.download;
 
 import com.orion.support.progress.ByteTransferProgress;
-import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
 import com.orion.utils.io.FileLocks;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
- * 大文件上传 基类 支持断点续传, 实时速率
+ * 大文件下载 基类 支持断点续传, 实时速率
  *
  * @author ljh15
  * @version 1.0.0
- * @since 2021/3/14 00:07
+ * @since 2021/3/14 13:30
  */
-public abstract class BaseFileUpload implements Runnable {
+public abstract class BaseFileDownload implements Runnable {
 
     /**
      * 远程文件
@@ -48,17 +50,14 @@ public abstract class BaseFileUpload implements Runnable {
      */
     protected boolean computeRate;
 
-    protected BaseFileUpload(String remote, File local, String lockSuffix, int bufferSize) {
-        Valid.notEmpty(remote, "remote file is empty");
-        Valid.notNull(local, "upload file is null");
-        if (!local.exists() || !local.isFile()) {
-            throw Exceptions.notFound("not found upload local file");
-        }
+    public BaseFileDownload(String remote, File local, String lockSuffix, int bufferSize) {
+        Valid.notEmpty(remote, "download remote file is empty");
+        Valid.notNull(local, "local file is null");
         this.remote = remote;
         this.local = local;
         this.bufferSize = bufferSize;
         this.lock = FileLocks.getSuffixFileLock(lockSuffix, local);
-        this.progress = new ByteTransferProgress(local.length());
+        this.progress = new ByteTransferProgress(0);
     }
 
     /**
@@ -71,33 +70,37 @@ public abstract class BaseFileUpload implements Runnable {
     }
 
     /**
-     * 开始上传
+     * 开始下载
      *
      * @throws IOException IOException
      */
-    protected void startUpload() throws IOException {
+    protected void startDownload() throws IOException {
         try {
             if (computeRate) {
                 progress.computeRate();
             }
             long remoteSize = this.getFileSize();
-            if (remoteSize == -1) {
-                // 远程文件为空 直接上传
-                this.upload();
-            } else {
-                if (remoteSize == local.length()) {
+            progress.end(remoteSize);
+            if (local.exists() && local.isFile()) {
+                long localSize = local.length();
+                if (localSize == remoteSize) {
+                    // 跳过
                     lock.unLock();
                     progress.startTime(System.currentTimeMillis());
                     this.transferFinish();
                     return;
                 }
                 if (lock.isLocked()) {
-                    // 被锁定 继续上传
-                    this.breakPointResume(remoteSize);
+                    // 被锁定 继续下载
+                    this.breakPointResume(localSize);
                 } else {
-                    // 没被锁定 重新上传
-                    this.upload();
+                    // 没被锁定 重新下载
+                    this.download();
                 }
+            } else {
+                // 直接下载
+                Files1.touch(local);
+                this.download();
             }
         } catch (Exception e) {
             progress.finish(true);
@@ -108,26 +111,26 @@ public abstract class BaseFileUpload implements Runnable {
     }
 
     /**
-     * 直接上传
+     * 直接下载
      *
      * @throws IOException IOException
      */
-    protected void upload() throws IOException {
-        this.initUpload(false, 0);
+    protected void download() throws IOException {
+        this.initDownload(false, 0);
         progress.start();
         lock.tryLock();
-        InputStream in = null;
+        OutputStream out = null;
         try {
-            in = new BufferedInputStream(Files1.openInputStreamFastSafe(local), bufferSize);
+            out = new BufferedOutputStream(Files1.openOutputStreamFastSafe(local), bufferSize);
             int read;
             byte[] bs = new byte[bufferSize];
-            while ((read = in.read(bs)) != -1) {
+            while ((read = this.read(bs)) != -1) {
                 progress.accept(read);
-                this.write(bs, read);
+                out.write(bs, 0, read);
             }
         } finally {
             lock.unLock();
-            Streams.close(in);
+            Streams.close(out);
             this.transferFinish();
         }
     }
@@ -139,49 +142,49 @@ public abstract class BaseFileUpload implements Runnable {
      * @throws IOException IOException
      */
     protected void breakPointResume(long skip) throws IOException {
-        this.initUpload(true, skip);
+        this.initDownload(true, skip);
         progress.current(skip);
         progress.start(skip);
-        RandomAccessFile access = null;
+        OutputStream out = null;
         try {
-            access = Files1.openRandomAccessSafe(local, "r");
-            access.seek(skip);
+            out = new BufferedOutputStream(Files1.openOutputStreamFastSafe(local, true), bufferSize);
             int read;
             byte[] bs = new byte[bufferSize];
-            while ((read = access.read(bs)) != -1) {
+            while ((read = this.read(bs)) != -1) {
                 progress.accept(read);
-                this.write(bs, read);
+                out.write(bs, 0, read);
             }
         } finally {
             lock.unLock();
-            Streams.close(access);
+            Streams.close(out);
             this.transferFinish();
         }
     }
 
     /**
-     * 获取远程文件大小
+     * 获取文件大小
      *
      * @return fileSize 文件不存在则返回-1
      */
     protected abstract long getFileSize();
 
     /**
-     * 准开始上传
+     * 准开始下载
      *
      * @param breakPoint 是否为断点续传
-     * @param skip       skip
-     */
-    protected abstract void initUpload(boolean breakPoint, long skip);
-
-    /**
-     * 写入
-     *
-     * @param bs  bs
-     * @param len 长度
+     * @param skip       跳过的长度
      * @throws IOException IOException
      */
-    protected abstract void write(byte[] bs, int len) throws IOException;
+    protected abstract void initDownload(boolean breakPoint, long skip) throws IOException;
+
+    /**
+     * 读取数据
+     *
+     * @param bs bs
+     * @return 长度
+     * @throws IOException IOException
+     */
+    protected abstract int read(byte[] bs) throws IOException;
 
     /**
      * 传输完成回调

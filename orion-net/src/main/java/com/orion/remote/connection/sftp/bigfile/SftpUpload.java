@@ -1,275 +1,85 @@
 package com.orion.remote.connection.sftp.bigfile;
 
-import ch.ethz.ssh2.SFTPv3Client;
-import ch.ethz.ssh2.SFTPv3FileAttributes;
 import ch.ethz.ssh2.SFTPv3FileHandle;
-import com.orion.able.SafeCloseable;
 import com.orion.constant.Const;
 import com.orion.remote.connection.sftp.SftpExecutor;
+import com.orion.remote.connection.sftp.SftpFile;
+import com.orion.support.upload.BaseFileUpload;
 import com.orion.utils.Exceptions;
-import com.orion.utils.Threads;
-import com.orion.utils.io.FileLocks;
-import com.orion.utils.io.Files1;
-import com.orion.utils.io.Streams;
+import com.orion.utils.Valid;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
 /**
- * SFTP 大文件上传
- * 支持断点续传, 实时速率, 平均速率
+ * SFTP 大文件上传 支持断点续传, 实时速率
  *
  * @author ljh15
  * @version 1.0.0
  * @since 2020/5/14 15:07
  */
-public class SftpUpload implements Runnable, SafeCloseable {
+public class SftpUpload extends BaseFileUpload {
 
-    /**
-     * 开始时间
-     */
-    private long startTime;
-
-    /**
-     * 结束时间
-     */
-    private long endTime;
-
-    /**
-     * 上传时文件大小
-     */
-    private long startSize;
-
-    /**
-     * 文件总大小
-     */
-    private long size;
-
-    /**
-     * 当前传输大小
-     */
-    private long now;
-
-    /**
-     * 远程文件
-     */
-    private String remote;
-
-    /**
-     * 本地文件
-     */
-    private File local;
-
-    /**
-     * 文件锁
-     */
-    private FileLocks.NamedFileLock lock;
+    private static final String LOCK_SUFFIX = "orion.sftp.upload";
 
     /**
      * 实例
      */
-    private SFTPv3Client client;
+    private SftpExecutor executor;
 
     /**
-     * 实时速率
+     * 文件处理器
      */
-    private long nowRate;
+    private SFTPv3FileHandle handle;
 
-    /**
-     * 开启实时速率
-     */
-    private boolean openNowRate = false;
-
-    /**
-     * 是否已完成
-     */
-    private volatile boolean done;
-
-    /**
-     * 是否已关闭
-     */
-    private boolean close;
-
-    public SftpUpload(SFTPv3Client client, String remote, String local) {
-        this(client, remote, new File(local));
+    public SftpUpload(SftpExecutor executor, String remote, String local) {
+        this(executor, remote, new File(local));
     }
 
-    public SftpUpload(SFTPv3Client client, String remote, File local) {
-        this.client = client;
-        this.remote = remote;
-        this.local = local;
-        this.lock = FileLocks.getSuffixFileLock("sftpupload", local);
+    public SftpUpload(SftpExecutor executor, String remote, File local) {
+        super(remote, local, LOCK_SUFFIX, Const.BUFFER_KB_32);
+        Valid.notNull(executor, "sftp executor is null");
+        this.executor = executor;
     }
 
     @Override
     public void run() {
-        this.startTime = System.currentTimeMillis();
-        InputStream in = null;
-        RandomAccessFile random = null;
-        SFTPv3FileHandle writeHandler = null;
-        size = local.length();
         try {
-            if (openNowRate) {
-                Threads.start(() -> {
-                    while (!done) {
-                        long size = now;
-                        Threads.sleep(Const.MS_S_1);
-                        nowRate = now - size;
-                    }
-                });
-            }
-            SFTPv3FileAttributes fileAttr = null;
-
-            try {
-                fileAttr = client.stat(remote);
-                writeHandler = client.openFileRW(remote);
-            } catch (Exception e) {
-                // 文件不存在
-                writeHandler = client.createFile(remote);
-            }
-            if (local.exists() && lock.isLocked()) {
-                if (fileAttr == null) {
-                    now = 0;
-                    startSize = 0;
-                } else {
-                    now = fileAttr.size;
-                    startSize = fileAttr.size;
-                }
-                if (now >= size) {
-                    lock.unLock();
-                    return;
-                }
-                random = new RandomAccessFile(local, "r");
-                random.seek(startSize);
-                int read;
-                byte[] bs = new byte[Const.BUFFER_KB_32];
-                while (-1 != (read = random.read(bs))) {
-                    client.write(writeHandler, now, bs, 0, read);
-                    now += read;
-                }
-                lock.unLock();
-                Streams.close(random);
-            } else {
-                if (fileAttr != null) {
-                    if (fileAttr.size == size) {
-                        return;
-                    }
-                }
-                lock.tryLock();
-                String parentPath = Files1.getParentPath(remote);
-                boolean mkdirs = new SftpExecutor(client).mkdirs(parentPath);
-                if (!mkdirs) {
-                    throw Exceptions.ioRuntime("Cannot create remote folder");
-                }
-                in = new BufferedInputStream(new FileInputStream(local));
-                int read;
-                byte[] bs = new byte[Const.BUFFER_KB_32];
-                while (-1 != (read = in.read(bs))) {
-                    client.write(writeHandler, now, bs, 0, read);
-                    now += read;
-                }
-                lock.unLock();
-            }
+            super.startUpload();
         } catch (IOException e) {
-            throw Exceptions.ioRuntime(e);
-        } finally {
-            this.endTime = System.currentTimeMillis();
-            this.done = true;
-            Streams.close(in);
-            Streams.close(random);
-            if (writeHandler != null) {
-                try {
-                    writeHandler.getClient().closeFile(writeHandler);
-                } catch (IOException e) {
-                    Exceptions.printStacks(e);
-                }
-            }
+            throw Exceptions.sftp("sftp upload exception local file: " + local.getAbsolutePath() + " -> remote file: " + remote, e);
         }
     }
 
     @Override
-    public void close() {
-        close = true;
-        client.close();
-    }
-
-    /**
-     * 开启计算实时速率
-     *
-     * @return this
-     */
-    public SftpUpload openNowRate() {
-        this.openNowRate = true;
-        return this;
-    }
-
-    /**
-     * 获取平均速度
-     *
-     * @return 平均速度
-     */
-    public double getAvgRate() {
-        long useDate = endTime;
-        if (endTime == 0) {
-            useDate = System.currentTimeMillis();
+    protected long getFileSize() {
+        SftpFile file = executor.getFile(remote);
+        if (file == null) {
+            return -1;
         }
-        double used = useDate - startTime;
-        double uploadBytes = now - startSize;
-        return (uploadBytes / used) * Const.MS_S_1;
+        return file.getSize();
     }
 
-    /**
-     * 获取当前速度
-     *
-     * @return 当前速度
-     */
-    public long getNowRate() {
-        return nowRate;
+    @Override
+    protected void initUpload(boolean breakPoint, long skip) {
+        if (breakPoint) {
+            handle = executor.openFileHandler(remote, 3);
+        } else {
+            executor.touchTruncate(remote);
+            handle = executor.openFileHandler(remote, 2);
+        }
     }
 
-    /**
-     * 获取当前进度
-     *
-     * @return 进度 0 ~ 1
-     */
-    public double getProgress() {
-        return size == 0 ? 0 : (double) now / (double) size;
+    @Override
+    protected void write(byte[] bs, int len) throws IOException {
+        executor.append(handle, bs, 0, len);
     }
 
-    /**
-     * 是否传输完成
-     *
-     * @return true完成
-     */
-    public boolean isDone() {
-        return done;
-    }
-
-    public boolean isClose() {
-        return close;
-    }
-
-    public long getStartTime() {
-        return startTime;
-    }
-
-    public long getEndTime() {
-        return endTime;
-    }
-
-    public long getUseTime() {
-        return endTime - startTime;
-    }
-
-    public long getStartSize() {
-        return startSize;
-    }
-
-    public long getSize() {
-        return size;
-    }
-
-    public long getNow() {
-        return now;
+    @Override
+    protected void transferFinish() {
+        if (handle != null) {
+            executor.closeFile(handle);
+        }
     }
 
 }

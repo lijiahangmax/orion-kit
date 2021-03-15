@@ -55,13 +55,13 @@ public class FtpUpload extends BaseFileUpload {
     protected long getFileSize() {
         FtpFile remoteFile = instance.getFile(remote);
         if (remoteFile == null) {
-            return -1;
+             return -1;
         }
         return remoteFile.getSize();
     }
 
     @Override
-    protected void initUpload(boolean breakPoint) {
+    protected void initUpload(boolean breakPoint, long skip) {
         try {
             if (breakPoint) {
                 out = instance.getOutputStreamAppend(remote);
@@ -75,11 +75,6 @@ public class FtpUpload extends BaseFileUpload {
 
     @Override
     protected void write(byte[] bs, int len) throws IOException {
-        out.write(bs, 0, len);
-    }
-
-    @Override
-    protected void append(byte[] bs, int len) throws IOException {
         out.write(bs, 0, len);
     }
 
