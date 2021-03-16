@@ -271,10 +271,14 @@ public class FtpInstance implements SafeCloseable {
         }
     }
 
-    // -------------------- read --------------------
+    // -------------------- stream --------------------
 
     public InputStream getInputStream(String file) throws IOException {
-        return client.retrieveFileStream(this.serverCharset(config.getRemoteRootDir() + file));
+        try {
+            return client.retrieveFileStream(this.serverCharset(config.getRemoteRootDir() + file));
+        } catch (Exception e) {
+            throw Exceptions.io("cannot get file input stream " + file, e);
+        }
     }
 
     /**
@@ -291,11 +295,96 @@ public class FtpInstance implements SafeCloseable {
     public InputStream getInputStream(String file, long skip) throws IOException {
         try {
             client.setRestartOffset(skip);
-            return client.retrieveFileStream(this.serverCharset(config.getRemoteRootDir() + file));
+            return this.getInputStream(file);
         } finally {
             client.setRestartOffset(0);
         }
     }
+
+    /**
+     * 获取文件拼接流
+     * <p>
+     * 使用完毕需要调用 client.completePendingCommand();
+     * 这个操作在关闭io之后
+     *
+     * @param file 文件
+     * @return OutputStream
+     * @throws IOException IOException
+     */
+    public OutputStream getOutputStreamAppend(String file) throws IOException {
+        this.mkdirs(Files1.getParentPath(file));
+        try {
+            return client.appendFileStream(this.serverCharset(config.getRemoteRootDir() + file));
+        } catch (Exception e) {
+            throw Exceptions.io("cannot get file out stream " + file, e);
+        }
+    }
+
+    /**
+     * 获取文写入流
+     * <p>
+     * 使用完毕需要调用 client.completePendingCommand();
+     * 这个操作在关闭io之后
+     *
+     * @param file 文件
+     * @return OutputStream
+     * @throws IOException IOException
+     */
+    public OutputStream getOutputStreamWriter(String file) throws IOException {
+        this.mkdirs(Files1.getParentPath(file));
+        try {
+            return client.storeFileStream(this.serverCharset(config.getRemoteRootDir() + file));
+        } catch (Exception e) {
+            throw Exceptions.io("cannot get file out stream " + file, e);
+        }
+    }
+
+    /**
+     * 读取文件到流
+     *
+     * @param file 文件
+     * @param out  输出流
+     */
+    public void readStream(String file, OutputStream out) throws IOException {
+        this.mkdirs(Files1.getParentPath(file));
+        try {
+            client.retrieveFile(this.serverCharset(config.getRemoteRootDir() + file), out);
+        } catch (Exception e) {
+            throw Exceptions.io("cannot write to stream " + file, e);
+        }
+    }
+
+    /**
+     * 拼接流到文件
+     *
+     * @param file 文件
+     * @param in   输入流
+     */
+    public void appendStream(String file, InputStream in) throws IOException {
+        this.mkdirs(Files1.getParentPath(file));
+        try {
+            client.appendFile(this.serverCharset(config.getRemoteRootDir() + file), in);
+        } catch (Exception e) {
+            throw Exceptions.io("cannot write to stream " + file, e);
+        }
+    }
+
+    /**
+     * 写入流到文件
+     *
+     * @param file 文件
+     * @param in   输入流
+     */
+    public void writeStream(String file, InputStream in) throws IOException {
+        this.mkdirs(Files1.getParentPath(file));
+        try {
+            client.storeFile(this.serverCharset(config.getRemoteRootDir() + file), in);
+        } catch (Exception e) {
+            throw Exceptions.io("cannot write to stream " + file, e);
+        }
+    }
+
+    // -------------------- read --------------------
 
     public int read(String file, byte[] bs) throws IOException {
         return read(file, 0, bs, 0, bs.length);
@@ -324,7 +413,7 @@ public class FtpInstance implements SafeCloseable {
         InputStream in = null;
         try {
             client.setRestartOffset(skip);
-            in = client.retrieveFileStream(this.serverCharset(config.getRemoteRootDir() + file));
+            in = this.getInputStream(file);
             return in.read(bs, off, len);
         } finally {
             Streams.close(in);
@@ -351,7 +440,7 @@ public class FtpInstance implements SafeCloseable {
         BufferedReader in = null;
         try {
             client.setRestartOffset(skip);
-            in = new BufferedReader(new InputStreamReader(client.retrieveFileStream(this.serverCharset(config.getRemoteRootDir() + file))));
+            in = new BufferedReader(new InputStreamReader(this.getInputStream(file)));
             return in.readLine();
         } finally {
             Streams.close(in);
@@ -383,7 +472,7 @@ public class FtpInstance implements SafeCloseable {
         BufferedReader in = null;
         try {
             client.setRestartOffset(skip);
-            in = new BufferedReader(new InputStreamReader(client.retrieveFileStream(this.serverCharset(config.getRemoteRootDir() + file))));
+            in = new BufferedReader(new InputStreamReader(this.getInputStream(file)));
             List<String> list = new ArrayList<>();
             if (lines > 0) {
                 String line;
@@ -409,58 +498,6 @@ public class FtpInstance implements SafeCloseable {
     // -------------------- write --------------------
 
     /**
-     * 获取文件拼接流
-     * <p>
-     * 使用完毕需要调用 client.completePendingCommand();
-     * 这个操作在关闭io之后
-     *
-     * @param file 文件
-     * @return OutputStream
-     * @throws IOException IOException
-     */
-    public OutputStream getOutputStreamAppend(String file) throws IOException {
-        this.mkdirs(Files1.getParentPath(file));
-        return client.appendFileStream(this.serverCharset(config.getRemoteRootDir() + file));
-    }
-
-    /**
-     * 获取文写入流
-     * <p>
-     * 使用完毕需要调用 client.completePendingCommand();
-     * 这个操作在关闭io之后
-     *
-     * @param file 文件
-     * @return OutputStream
-     * @throws IOException IOException
-     */
-    public OutputStream getOutputStreamWriter(String file) throws IOException {
-        this.mkdirs(Files1.getParentPath(file));
-        return client.storeFileStream(this.serverCharset(config.getRemoteRootDir() + file));
-    }
-
-    /**
-     * 拼接流到文件
-     *
-     * @param file 文件
-     * @param in   输入流
-     */
-    public void appendStream(String file, InputStream in) throws IOException {
-        this.mkdirs(Files1.getParentPath(file));
-        client.appendFile(this.serverCharset(config.getRemoteRootDir() + file), in);
-    }
-
-    /**
-     * 写入流到文件
-     *
-     * @param file 文件
-     * @param in   输入流
-     */
-    public void writeStream(String file, InputStream in) throws IOException {
-        this.mkdirs(Files1.getParentPath(file));
-        client.storeFile(this.serverCharset(config.getRemoteRootDir() + file), in);
-    }
-
-    /**
      * 拼接字节数组到文件
      *
      * @param file 文件
@@ -484,7 +521,7 @@ public class FtpInstance implements SafeCloseable {
         OutputStream out = null;
         try {
             this.mkdirs(Files1.getParentPath(file));
-            out = client.appendFileStream(this.serverCharset(config.getRemoteRootDir() + file));
+            out = this.getOutputStreamAppend(file);
             out.write(bs, off, len);
         } finally {
             Streams.close(out);
@@ -517,11 +554,13 @@ public class FtpInstance implements SafeCloseable {
         OutputStream out = null;
         try {
             this.mkdirs(Files1.getParentPath(file));
-            out = client.appendFileStream(this.serverCharset(config.getRemoteRootDir() + file));
+            out = this.getOutputStreamAppend(file);
             for (String line : lines) {
                 out.write(Strings.bytes(line));
                 out.write(Letters.LF);
             }
+        } catch (Exception e) {
+            throw Exceptions.io("cannot write file " + file, e);
         } finally {
             Streams.close(out);
             if (out != null) {
@@ -554,8 +593,10 @@ public class FtpInstance implements SafeCloseable {
         OutputStream out = null;
         try {
             this.mkdirs(Files1.getParentPath(file));
-            out = client.storeFileStream(this.serverCharset(config.getRemoteRootDir() + file));
+            out = this.getOutputStreamWriter(file);
             out.write(bs, off, len);
+        } catch (Exception e) {
+            throw Exceptions.io("cannot write file " + file, e);
         } finally {
             Streams.close(out);
             if (out != null) {
@@ -586,7 +627,7 @@ public class FtpInstance implements SafeCloseable {
         OutputStream out = null;
         try {
             this.mkdirs(Files1.getParentPath(file));
-            out = client.storeFileStream(this.serverCharset(config.getRemoteRootDir() + file));
+            out = this.getOutputStreamWriter(file);
             for (String line : lines) {
                 out.write(Strings.bytes(line));
                 out.write(13);
@@ -697,7 +738,7 @@ public class FtpInstance implements SafeCloseable {
         InputStream in = null;
         try {
             client.setRestartOffset(0);
-            in = client.retrieveFileStream(this.serverCharset(config.getRemoteRootDir() + remoteFile));
+            in = this.getInputStream(remoteFile);
             if (in == null) {
                 throw Exceptions.ftp("not found file " + remoteFile);
             }
@@ -1054,6 +1095,15 @@ public class FtpInstance implements SafeCloseable {
      */
     public boolean pending() throws IOException {
         return client.completePendingCommand();
+    }
+
+    /**
+     * 设置偏移量
+     *
+     * @param offset offset
+     */
+    public void restartOffset(long offset) {
+        client.setRestartOffset(offset);
     }
 
     /**
