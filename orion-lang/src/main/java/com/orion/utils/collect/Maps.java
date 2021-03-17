@@ -9,6 +9,7 @@ import com.orion.lang.wrapper.Pair;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Strings;
 import com.orion.utils.Valid;
+import com.orion.utils.math.Numbers;
 import com.orion.utils.random.Randoms;
 
 import java.util.Collections;
@@ -179,6 +180,19 @@ public class Maps {
         return (Map<K, V>) EmptyMap.EMPTY;
     }
 
+    /**
+     * 获取不扩容的map size
+     *
+     * @param size 长度
+     * @return 不扩容的长度
+     */
+    public static int getNoCapacitySize(int size) {
+        if (size == 0) {
+            return 16;
+        }
+        return Numbers.getMin2Power(size * 4 / 3);
+    }
+
     // -------------------- function --------------------
 
     public static <K, V> Map<K, V> def(Map<K, V> map) {
@@ -195,7 +209,7 @@ public class Maps {
         if (len == 0) {
             return new HashMap<>(16);
         }
-        Map<K, V> map = new HashMap<>(len * 4 / 3);
+        Map<K, V> map = new HashMap<>(getNoCapacitySize(len));
         for (int i = 0; i < len; i++) {
             map.put(entries[i].getKey(), entries[i].getValue());
         }
@@ -208,7 +222,7 @@ public class Maps {
         if (klen == 0) {
             return new HashMap<>(16);
         }
-        Map<K, V> map = new HashMap<>(klen * 4 / 3);
+        Map<K, V> map = new HashMap<>(getNoCapacitySize(klen));
         for (int i = 0; i < klen; i++) {
             if (vlen > i) {
                 map.put(keys[i], values[i]);
@@ -225,7 +239,7 @@ public class Maps {
         if (len == 0) {
             return new HashMap<>(16);
         }
-        Map<K, V> map = new HashMap<>(len * 4 / 3);
+        Map<K, V> map = new HashMap<>(getNoCapacitySize(len));
         for (int i = 0; i < len; i++) {
             map.put(entries[i].getKey(), entries[i].getValue());
         }
@@ -238,7 +252,7 @@ public class Maps {
         }
         int c = kv.length / 2;
         int hn = kv.length % 2;
-        Map<K, V> res = new HashMap<>(c * 4 / 3);
+        Map<K, V> res = new HashMap<>(getNoCapacitySize(hn == 0 ? c : c + 1));
         for (int i = 0; i < c; i++) {
             res.put(((K) kv[i * 2]), ((V) kv[i * 2 + 1]));
         }
@@ -255,7 +269,7 @@ public class Maps {
         if (size == 0) {
             return new HashMap<>(16);
         }
-        Map<K2, V2> res = new HashMap<>(size * 4 / 3);
+        Map<K2, V2> res = new HashMap<>(getNoCapacitySize(size));
         map.forEach((k, v) -> {
             res.put(kf.apply(k), vf.apply(v));
         });
