@@ -239,7 +239,7 @@ public class SftpExecutor implements SafeCloseable {
      * @return ignore
      */
     public boolean mkdirs(String path) {
-        return mkdirs(path, DEFAULT_PERMISSIONS);
+        return this.mkdirs(path, DEFAULT_PERMISSIONS);
     }
 
     /**
@@ -463,6 +463,8 @@ public class SftpExecutor implements SafeCloseable {
         try {
             handle = client.openFileRO(path);
             return this.read(handle, skip, bs, offset, len);
+        } catch (Exception e) {
+            throw Exceptions.io("cannot read file " + path, e);
         } finally {
             if (handle != null) {
                 handle.getClient().closeFile(handle);
@@ -550,6 +552,8 @@ public class SftpExecutor implements SafeCloseable {
         try {
             handle = client.openFileRO(path);
             return this.transfer(handle, out, skip, size, close);
+        } catch (Exception e) {
+            throw Exceptions.io("cannot read file " + path, e);
         } finally {
             if (handle != null) {
                 handle.getClient().closeFile(handle);
@@ -618,40 +622,20 @@ public class SftpExecutor implements SafeCloseable {
         this.write(path, 0, in, null, null, 1);
     }
 
-    public void write(SFTPv3FileHandle handle, InputStream in) throws IOException {
-        this.write(handle, 0, in, null, null);
-    }
-
     public void write(String path, byte[] bs) throws IOException {
         this.write(path, 0, null, new StreamEntry(bs), null, 1);
-    }
-
-    public void write(SFTPv3FileHandle handle, byte[] bs) throws IOException {
-        this.write(handle, 0, null, new StreamEntry(bs), null);
     }
 
     public void write(String path, byte[] bs, int off, int len) throws IOException {
         this.write(path, 0, null, new StreamEntry(bs, off, len), null, 1);
     }
 
-    public void write(SFTPv3FileHandle handle, byte[] bs, int off, int len) throws IOException {
-        this.write(handle, 0, null, new StreamEntry(bs, off, len), null);
-    }
-
     public void writeLine(String path, String line) throws IOException {
         this.write(path, 0, null, null, Lists.singleton(line), 1);
     }
 
-    public void writeLine(SFTPv3FileHandle handle, String line) throws IOException {
-        this.write(handle, 0, null, null, Lists.singleton(line));
-    }
-
     public void writeLines(String path, List<String> lines) throws IOException {
         this.write(path, 0, null, null, lines, 1);
-    }
-
-    public void writeLines(SFTPv3FileHandle handle, List<String> lines) throws IOException {
-        this.write(handle, 0, null, null, lines);
     }
 
     // -------------------- replace --------------------
@@ -660,80 +644,40 @@ public class SftpExecutor implements SafeCloseable {
         this.write(path, 0, in, null, null, 2);
     }
 
-    public void replace(SFTPv3FileHandle handle, InputStream in) throws IOException {
-        this.write(handle, 0, in, null, null);
-    }
-
     public void replace(String path, long fileOffset, InputStream in) throws IOException {
         this.write(path, fileOffset, in, null, null, 2);
-    }
-
-    public void replace(SFTPv3FileHandle handle, long fileOffset, InputStream in) throws IOException {
-        this.write(handle, fileOffset, in, null, null);
     }
 
     public void replace(String path, byte[] bs) throws IOException {
         this.write(path, 0, null, new StreamEntry(bs), null, 2);
     }
 
-    public void replace(SFTPv3FileHandle handle, byte[] bs) throws IOException {
-        this.write(handle, 0, null, new StreamEntry(bs), null);
-    }
-
     public void replace(String path, byte[] bs, int off, int len) throws IOException {
         this.write(path, 0, null, new StreamEntry(bs, off, len), null, 2);
-    }
-
-    public void replace(SFTPv3FileHandle handle, byte[] bs, int off, int len) throws IOException {
-        this.write(handle, 0, null, new StreamEntry(bs, off, len), null);
     }
 
     public void replace(String path, long fileOffset, byte[] bs) throws IOException {
         this.write(path, fileOffset, null, new StreamEntry(bs), null, 2);
     }
 
-    public void replace(SFTPv3FileHandle handle, long fileOffset, byte[] bs) throws IOException {
-        this.write(handle, fileOffset, null, new StreamEntry(bs), null);
-    }
-
     public void replace(String path, long fileOffset, byte[] bs, int off, int len) throws IOException {
         this.write(path, fileOffset, null, new StreamEntry(bs, off, len), null, 2);
-    }
-
-    public void replace(SFTPv3FileHandle handle, long fileOffset, byte[] bs, int off, int len) throws IOException {
-        this.write(handle, fileOffset, null, new StreamEntry(bs, off, len), null);
     }
 
     public void replaceLine(String path, String line) throws IOException {
         this.write(path, 0, null, null, Lists.singleton(line), 2);
     }
 
-    public void replaceLine(SFTPv3FileHandle handle, String line) throws IOException {
-        this.write(handle, 0, null, null, Lists.singleton(line));
-    }
-
     public void replaceLine(String path, long fileOffset, String line) throws IOException {
         this.write(path, fileOffset, null, null, Lists.singleton(line), 2);
-    }
-
-    public void replaceLine(SFTPv3FileHandle handle, long fileOffset, String line) throws IOException {
-        this.write(handle, fileOffset, null, null, Lists.singleton(line));
     }
 
     public void replaceLines(String path, List<String> lines) throws IOException {
         this.write(path, 0, null, null, lines, 2);
     }
 
-    public void replaceLines(SFTPv3FileHandle handle, List<String> lines) throws IOException {
-        this.write(handle, 0, null, null, lines);
-    }
-
     public void replaceLines(String path, long fileOffset, List<String> lines) throws IOException {
         this.write(path, fileOffset, null, null, lines, 2);
-    }
-
-    public void replaceLines(SFTPv3FileHandle handle, long fileOffset, List<String> lines) throws IOException {
-        this.write(handle, fileOffset, null, null, lines);
     }
 
     // -------------------- append --------------------
@@ -742,40 +686,20 @@ public class SftpExecutor implements SafeCloseable {
         this.write(path, 0, in, null, null, 3);
     }
 
-    public void append(SFTPv3FileHandle handle, InputStream in) throws IOException {
-        this.write(handle, 0, in, null, null);
-    }
-
     public void append(String path, byte[] bs) throws IOException {
         this.write(path, 0, null, new StreamEntry(bs), null, 3);
-    }
-
-    public void append(SFTPv3FileHandle handle, byte[] bs) throws IOException {
-        this.write(handle, 0, null, new StreamEntry(bs), null);
     }
 
     public void append(String path, byte[] bs, int off, int len) throws IOException {
         this.write(path, 0, null, new StreamEntry(bs, off, len), null, 3);
     }
 
-    public void append(SFTPv3FileHandle handle, byte[] bs, int off, int len) throws IOException {
-        this.write(handle, 0, null, new StreamEntry(bs, off, len), null);
-    }
-
     public void appendLine(String path, String line) throws IOException {
         this.write(path, 0, null, null, Lists.singleton(line), 3);
     }
 
-    public void appendLine(SFTPv3FileHandle handle, String line) throws IOException {
-        this.write(handle, 0, null, null, Lists.singleton(line));
-    }
-
     public void appendLines(String path, List<String> lines) throws IOException {
         this.write(path, 0, null, null, lines, 3);
-    }
-
-    public void appendLines(SFTPv3FileHandle handle, List<String> lines) throws IOException {
-        this.write(handle, 0, null, null, lines);
     }
 
     /**
@@ -786,7 +710,7 @@ public class SftpExecutor implements SafeCloseable {
      * @param fileOffset 文件偏移量
      * @param entry      写入信息
      * @param lines      行
-     * @param type       1write  2replace 3append
+     * @param type       1write  2replace  3append
      * @throws IOException IOException
      */
     private void write(String path, long fileOffset, InputStream in, StreamEntry entry, List<String> lines, int type) throws IOException {
@@ -801,11 +725,55 @@ public class SftpExecutor implements SafeCloseable {
                 handle = client.openFileRW(path);
             }
             this.write(handle, fileOffset, in, entry, lines);
+        } catch (Exception e) {
+            throw Exceptions.io("cannot write file " + path, e);
         } finally {
             if (handle != null) {
                 handle.getClient().closeFile(handle);
             }
         }
+    }
+
+    // -------------------- write handler --------------------
+
+    public void write(SFTPv3FileHandle handle, InputStream in) throws IOException {
+        this.write(handle, 0, in, null, null);
+    }
+
+    public void write(SFTPv3FileHandle handle, long fileOffset, InputStream in) throws IOException {
+        this.write(handle, fileOffset, in, null, null);
+    }
+
+    public void write(SFTPv3FileHandle handle, byte[] bs) throws IOException {
+        this.write(handle, 0, null, new StreamEntry(bs), null);
+    }
+
+    public void write(SFTPv3FileHandle handle, byte[] bs, int off, int len) throws IOException {
+        this.write(handle, 0, null, new StreamEntry(bs, off, len), null);
+    }
+
+    public void write(SFTPv3FileHandle handle, long fileOffset, byte[] bs) throws IOException {
+        this.write(handle, fileOffset, null, new StreamEntry(bs), null);
+    }
+
+    public void write(SFTPv3FileHandle handle, long fileOffset, byte[] bs, int off, int len) throws IOException {
+        this.write(handle, fileOffset, null, new StreamEntry(bs, off, len), null);
+    }
+
+    public void writeLine(SFTPv3FileHandle handle, String line) throws IOException {
+        this.write(handle, 0, null, null, Lists.singleton(line));
+    }
+
+    public void writeLine(SFTPv3FileHandle handle, long fileOffset, String line) throws IOException {
+        this.write(handle, fileOffset, null, null, Lists.singleton(line));
+    }
+
+    public void writeLines(SFTPv3FileHandle handle, List<String> lines) throws IOException {
+        this.write(handle, 0, null, null, lines);
+    }
+
+    public void writeLines(SFTPv3FileHandle handle, long fileOffset, List<String> lines) throws IOException {
+        this.write(handle, fileOffset, null, null, lines);
     }
 
     /**
@@ -1220,6 +1188,22 @@ public class SftpExecutor implements SafeCloseable {
 
     // -------------------- get --------------------
 
+    public SFTPv3FileHandle openReadFileHandler(String path) {
+        return this.openFileHandler(path, 1);
+    }
+
+    public SFTPv3FileHandle openWriteFileHandler(String path) {
+        return this.openFileHandler(path, 2);
+    }
+
+    public SFTPv3FileHandle openWriteAppendFileHandler(String path) {
+        return this.openFileHandler(path, 3);
+    }
+
+    public SFTPv3FileHandle openReadWriteAppendFileHandler(String path) {
+        return this.openFileHandler(path, 4);
+    }
+
     /**
      * 打开文件处理器
      *
@@ -1229,6 +1213,7 @@ public class SftpExecutor implements SafeCloseable {
      */
     public SFTPv3FileHandle openFileHandler(String path, int type) {
         try {
+            this.mkdirs(Files1.getParentPath(path));
             switch (type) {
                 case 1:
                     return client.openFileRO(path);

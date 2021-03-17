@@ -387,15 +387,15 @@ public class FtpInstance implements SafeCloseable {
     // -------------------- read --------------------
 
     public int read(String file, byte[] bs) throws IOException {
-        return read(file, 0, bs, 0, bs.length);
+        return this.read(file, 0, bs, 0, bs.length);
     }
 
     public int read(String file, long skip, byte[] bs) throws IOException {
-        return read(file, skip, bs, 0, bs.length);
+        return this.read(file, skip, bs, 0, bs.length);
     }
 
     public int read(String file, byte[] bs, int off, int len) throws IOException {
-        return read(file, 0, bs, off, len);
+        return this.read(file, 0, bs, off, len);
     }
 
     /**
@@ -440,7 +440,7 @@ public class FtpInstance implements SafeCloseable {
         BufferedReader in = null;
         try {
             client.setRestartOffset(skip);
-            in = new BufferedReader(new InputStreamReader(this.getInputStream(file)));
+            in = new BufferedReader(new InputStreamReader(this.getInputStream(file), config.getRemoteFileNameCharset()));
             return in.readLine();
         } finally {
             Streams.close(in);
@@ -452,11 +452,11 @@ public class FtpInstance implements SafeCloseable {
     }
 
     public List<String> readLines(String file, long skip) throws IOException {
-        return readLines(file, skip, 0);
+        return this.readLines(file, skip, 0);
     }
 
     public List<String> readLines(String file, int lines) throws IOException {
-        return readLines(file, 0, lines);
+        return this.readLines(file, 0, lines);
     }
 
     /**
@@ -472,7 +472,7 @@ public class FtpInstance implements SafeCloseable {
         BufferedReader in = null;
         try {
             client.setRestartOffset(skip);
-            in = new BufferedReader(new InputStreamReader(this.getInputStream(file)));
+            in = new BufferedReader(new InputStreamReader(this.getInputStream(file), config.getRemoteFileNameCharset()));
             List<String> list = new ArrayList<>();
             if (lines > 0) {
                 String line;

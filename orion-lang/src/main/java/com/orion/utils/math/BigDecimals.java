@@ -191,7 +191,7 @@ public class BigDecimals {
         if (b == null) {
             return defaultV;
         }
-        return b.longValueExact();
+        return b.longValue();
     }
 
     /**
@@ -215,7 +215,7 @@ public class BigDecimals {
         if (b == null) {
             return defaultV;
         }
-        return b.intValueExact();
+        return b.intValue();
     }
 
     /**
@@ -816,7 +816,7 @@ public class BigDecimals {
      * @return true有
      */
     public static boolean isDecimal(BigDecimal d) {
-        return Double.compare(d.doubleValue(), ((double) d.longValueExact())) != 0;
+        return Double.compare(d.doubleValue(), ((double) d.longValue())) != 0;
     }
 
     /**

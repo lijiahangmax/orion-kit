@@ -32,6 +32,11 @@ public class SftpUpload extends BaseFileUpload {
      */
     private SFTPv3FileHandle handle;
 
+    /**
+     * 当前位置
+     */
+    private long current;
+
     public SftpUpload(SftpExecutor executor, String remote, String local) {
         this(executor, remote, new File(local));
     }
@@ -55,6 +60,7 @@ public class SftpUpload extends BaseFileUpload {
     protected long getFileSize() {
         SftpFile file = executor.getFile(remote);
         if (file == null) {
+            executor.touchTruncate(remote);
             return -1;
         }
         return file.getSize();
@@ -63,16 +69,17 @@ public class SftpUpload extends BaseFileUpload {
     @Override
     protected void initUpload(boolean breakPoint, long skip) {
         if (breakPoint) {
+            current += skip;
             handle = executor.openFileHandler(remote, 3);
         } else {
-            executor.touchTruncate(remote);
             handle = executor.openFileHandler(remote, 2);
         }
     }
 
     @Override
     protected void write(byte[] bs, int len) throws IOException {
-        executor.append(handle, bs, 0, len);
+        executor.write(handle, current, bs, 0, len);
+        current += len;
     }
 
     @Override
@@ -80,6 +87,10 @@ public class SftpUpload extends BaseFileUpload {
         if (handle != null) {
             executor.closeFile(handle);
         }
+    }
+
+    public SftpExecutor getExecutor() {
+        return executor;
     }
 
 }

@@ -90,4 +90,8 @@ public class SftpDownload extends BaseFileDownload {
         }
     }
 
+    public SftpExecutor getExecutor() {
+        return executor;
+    }
+
 }

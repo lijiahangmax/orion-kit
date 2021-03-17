@@ -20,6 +20,8 @@ import java.io.InputStream;
  */
 public class FtpDownload extends BaseFileDownload {
 
+    private static final String LOCK_SUFFIX = "orion.ftp.download";
+
     /**
      * 实例
      */
@@ -35,7 +37,7 @@ public class FtpDownload extends BaseFileDownload {
     }
 
     public FtpDownload(FtpInstance instance, String remote, File local) {
-        super(remote, local, "orion.ftp.download", instance.config().getBuffSize());
+        super(remote, local, LOCK_SUFFIX, instance.config().getBuffSize());
         Valid.notNull(instance, "ftp instance is null");
         this.instance = instance;
     }
@@ -78,6 +80,10 @@ public class FtpDownload extends BaseFileDownload {
         if (in != null) {
             instance.pending();
         }
+    }
+
+    public FtpInstance getInstance() {
+        return instance;
     }
 
 }

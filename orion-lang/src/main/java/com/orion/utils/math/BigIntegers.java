@@ -70,7 +70,7 @@ public class BigIntegers {
         if (o instanceof BigInteger) {
             return (BigInteger) o;
         } else if (o instanceof BigDecimal) {
-            return BigInteger.valueOf(((BigDecimal) o).longValueExact());
+            return BigInteger.valueOf(((BigDecimal) o).longValue());
         } else if (o instanceof String) {
             return new BigInteger((String) o);
         } else if (o instanceof Boolean) {
@@ -142,7 +142,7 @@ public class BigIntegers {
         if (b == null) {
             return defaultV;
         }
-        return b.longValueExact();
+        return b.longValue();
     }
 
     /**
@@ -166,7 +166,7 @@ public class BigIntegers {
         if (b == null) {
             return defaultV;
         }
-        return b.intValueExact();
+        return b.intValue();
     }
 
     /**

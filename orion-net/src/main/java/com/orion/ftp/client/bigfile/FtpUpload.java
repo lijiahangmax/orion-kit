@@ -55,21 +55,17 @@ public class FtpUpload extends BaseFileUpload {
     protected long getFileSize() {
         FtpFile remoteFile = instance.getFile(remote);
         if (remoteFile == null) {
-             return -1;
+            return -1;
         }
         return remoteFile.getSize();
     }
 
     @Override
-    protected void initUpload(boolean breakPoint, long skip) {
-        try {
-            if (breakPoint) {
-                out = instance.getOutputStreamAppend(remote);
-            } else {
-                out = instance.getOutputStreamWriter(remote);
-            }
-        } catch (IOException e) {
-            throw Exceptions.ioRuntime("ftp upload get remote stream error", e);
+    protected void initUpload(boolean breakPoint, long skip) throws IOException {
+        if (breakPoint) {
+            out = instance.getOutputStreamAppend(remote);
+        } else {
+            out = instance.getOutputStreamWriter(remote);
         }
     }
 
@@ -84,6 +80,10 @@ public class FtpUpload extends BaseFileUpload {
         if (out != null) {
             instance.pending();
         }
+    }
+
+    public FtpInstance getInstance() {
+        return instance;
     }
 
 }

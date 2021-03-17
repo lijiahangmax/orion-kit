@@ -58,6 +58,7 @@ public class SftpTests {
     @Test
     public void get() {
         System.out.println(e.getPath("/root/文本.txt"));
+        System.out.println(e.getPath("/etc/yum.conf"));
         System.out.println(e.isExist("/root/文本.txt"));
         System.out.println(e.getFile("/root/文本.txt"));
         System.out.println(JSON.toJSONString(e.getFile("/root/a/b/d.txt", false)));
@@ -104,6 +105,9 @@ public class SftpTests {
         System.out.println("-----");
         read = e.read("/root/1.txt", 2, bs);
         System.out.println(new String(bs, 0, read));
+        System.out.println("-----");
+        read = e.read("/root/1.txt", 2, bs);
+        System.out.println(new String(bs, 0, read));
     }
 
     @Test
@@ -119,11 +123,11 @@ public class SftpTests {
     public void write() throws IOException {
         e.write("/root/2.txt", "123全文\n".getBytes());
         Threads.sleep(1500);
-        e.write("/root/2.txt", Streams.toInputStream("123让他受到\n"));
+        e.write("/root/s/s/2.txt", Streams.toInputStream("123让他受到\n"));
         Threads.sleep(1500);
-        e.writeLines("/root/2.txt", Lists.of("123", "456"));
+        e.writeLines("/root/s/s/2.txt", Lists.of("123", "456"));
         Threads.sleep(1500);
-        e.writeLine("/root/2.txt", "1234567890");
+        e.writeLine("/root/s/s/2.txt", "1234567890");
         Threads.sleep(1500);
     }
 
@@ -165,7 +169,7 @@ public class SftpTests {
 
     @Test
     public void bigUpload() {
-        SftpUpload u = e.upload("/root/big.rar", new File("C:\\Users\\ljh15\\Desktop\\big.rar"));
+        SftpUpload u = e.upload("/root/a/b/c/a.rar", new File("C:\\Users\\ljh15\\Desktop\\a.rar"));
         u.computeRate(true);
         new Thread(u).start();
         ByteTransferProgress p = u.getProgress();

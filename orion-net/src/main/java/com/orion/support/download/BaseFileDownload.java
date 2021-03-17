@@ -165,8 +165,9 @@ public abstract class BaseFileDownload implements Runnable {
      * 获取文件大小
      *
      * @return fileSize 文件不存在则返回-1
+     * @throws IOException IOException
      */
-    protected abstract long getFileSize();
+    protected abstract long getFileSize() throws IOException;
 
     /**
      * 准开始下载

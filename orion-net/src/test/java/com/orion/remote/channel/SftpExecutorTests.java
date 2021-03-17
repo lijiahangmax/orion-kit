@@ -1,14 +1,22 @@
 package com.orion.remote.channel;
 
-import com.orion.remote.channel.sftp.FileAttribute;
+import com.alibaba.fastjson.JSON;
+import com.orion.constant.Const;
 import com.orion.remote.channel.sftp.SftpExecutor;
+import com.orion.remote.channel.sftp.bigfile.SftpDownload;
+import com.orion.remote.channel.sftp.bigfile.SftpUpload;
+import com.orion.support.progress.ByteTransferProgress;
 import com.orion.utils.Strings;
+import com.orion.utils.Threads;
 import com.orion.utils.collect.Lists;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Date;
+import java.util.regex.Pattern;
 
 /**
  * @author ljh15
@@ -21,33 +29,78 @@ public class SftpExecutorTests {
 
     @Before
     public void before() {
-        SessionHolder.setLogger(SessionLogger.INFO);
+        SessionHolder.setLogger(SessionLogger.ERROR);
         e = SessionHolder.getSession("root", "192.168.146.230")
                 .setPassword("admin123")
                 .setTimeout(20000)
                 .connect(20000)
                 .getSftpExecutor();
-        e.connect(20000);
+        e.connect(20000)
+                .filenameEncoding(Const.UTF_8);
     }
 
-    @After
-    public void after() {
-        e.disconnect();
+    @Test
+    public void create() {
+        System.out.println(e.mkdirs("/root/1/2/3/4/5"));
+        System.out.println(e.touch("/root/a/b/c.txt"));
+        System.out.println(e.touchLink("/root/a/b/c.txt", "/root/a/b/d.txt"));
+        System.out.println(e.touch("/root/a/b/e.txt", true));
+        System.out.println(e.touch("/root/a/b/f.txt", true));
+        System.out.println(e.touch("/root/a/b/1/2/g1.txt", true));
+        System.out.println(e.touch("/root/a/b/1/2/g2.txt", true));
+        System.out.println(e.touch("/root/a/b/1/2/g3.txt", true));
+        System.out.println(e.mv("/root/a/b/1/2/g1.txt", "g11.txt"));
+        System.out.println(e.mv("/root/a/b/1/2/g2.txt", "../../g22.txt"));
+        System.out.println(e.mv("/root/a/b/1/2/g3.txt", "/root/g33.txt"));
+    }
+
+    @Test
+    public void rm() {
+        System.out.println(e.rmFile("/root/a/b/1/2/g1.txt"));
+        System.out.println(e.rmdir("/root/a/b/1/2"));
+        System.out.println(e.rm("/root/a/b/1"));
+    }
+
+    @Test
+    public void update() {
+        System.out.println(e.setModifyTime("/root/文本.txt", new Date()));
+        System.out.println(e.chmod("/root/文本.txt", 7));
+        System.out.println(e.chown("/root/文本.txt", 1));
+        System.out.println(e.chgrp("/root/文本.txt", 1));
+    }
+
+    @Test
+    public void get() {
+        System.out.println(e.getHome());
+        System.out.println(e.getPath("/root/文本.txt"));
+        System.out.println(e.getPath("/etc/yum.conf"));
+        System.out.println(e.isExist("/root/文本.txt"));
+        System.out.println(e.getFile("/root/文本.txt"));
+        System.out.println(JSON.toJSONString(e.getFile("/root/a/b/d.txt", false)));
+        System.out.println(JSON.toJSONString(e.getFile("/root/a/b/d.txt", true)));
+        System.out.println(e.getLinkPath("/root/a/b/d.txt"));
+        System.out.println(e.getLinkPath("/root/文本1.txt"));
+        System.out.println(e.getSize("/root/文本.txt"));
+        System.out.println(e.getSize("/root/文本1.txt"));
+        System.out.println(e.getSize("/root/文本2.txt"));
+        System.out.println(e.getSize("/root/文本3.txt"));
+        System.out.println(e.clear("/root/文本.txt"));
+        System.out.println(e.clear("/root/文本2.txt"));
     }
 
     @Test
     public void list() {
-        for (FileAttribute a : e.listFiles("/root", true)) {
-            System.out.println(a);
-        }
+        System.out.println(e.listFiles("/root", true));
         System.out.println("---------");
-        for (FileAttribute a : e.listFilesSuffix("/root", "g", true, true)) {
-            System.out.println(a);
-        }
+        System.out.println(e.listFilesSuffix("/root", ".sql", true));
         System.out.println("---------");
-        for (FileAttribute a : e.listDirs("/root", true)) {
-            System.out.println(a);
-        }
+        System.out.println(e.listFilesMatch("/root", "f", true));
+        System.out.println("---------");
+        System.out.println(e.listFilesPattern("/root", Pattern.compile(".*\\.sql"), true));
+        System.out.println("---------");
+        System.out.println(e.listFilesFilter("/root", s -> s.getSize() > 100000, true));
+        System.out.println("---------");
+        System.out.println(e.listDirs("/root", true));
         System.out.println("---------");
     }
 
@@ -58,6 +111,14 @@ public class SftpExecutorTests {
         System.out.println(new String(bs, 0, read));
         read = e.read("/root/file1", 2, bs);
         System.out.println(new String(bs, 0, read));
+        read = e.read("/root/file1", 2, bs);
+        System.out.println(new String(bs, 0, read));
+        System.out.println(e.readLine("/root/x/x/file4"));
+        System.out.println(e.readLine("/root/x/x/file4", 2));
+        System.out.println(e.readLines("/root/x/x/file4"));
+        System.out.println(e.readLines("/root/x/x/file4", 2L));
+        System.out.println(e.readLines("/root/x/x/file4", 2));
+        System.out.println(e.readLines("/root/x/x/file4", 2L, 2));
     }
 
     @Test
@@ -72,16 +133,59 @@ public class SftpExecutorTests {
 
     @Test
     public void write() throws IOException {
-        e.write("/root/file2", Strings.bytes("a"));
-        e.writeLine("/root/file3", "123");
-        e.writeLines("/root/file4", Lists.of("123", "345"));
+        e.write("/root/x/x/file2", Strings.bytes("爱是觉得\n"));
+        e.writeLine("/root/x/x/file3", "撒是的的去");
+        e.writeLines("/root/x/x/file4", Lists.of("123试试", "345", "kkkk", "集合的四海"));
     }
 
     @Test
     public void append() throws IOException {
-        e.append("/root/file2", Strings.bytes("a"));
-        e.appendLine("/root/file3", "123");
-        e.appendLines("/root/file4", Lists.of("123", "345"));
+        e.append("/root/x/x/file2", Strings.bytes("爱是觉得\n"));
+        e.appendLine("/root/x/x/file3", "撒是的的去");
+        e.appendLines("/root/x/x/file4", Lists.of("123试试", "345"));
+    }
+
+    @Test
+    public void upload() {
+
+    }
+
+    @Test
+    public void download() {
+
+    }
+
+    @Test
+    public void bigUpload() {
+        SftpUpload u = e.upload("/root/a/b/c/a.rar", new File("C:\\Users\\ljh15\\Desktop\\a.rar"));
+        u.computeRate(true);
+        new Thread(u).start();
+        ByteTransferProgress p = u.getProgress();
+        while (!p.isDone()) {
+            System.out.println(p.getProgress() * 100 + "% " + p.getNowRate() / 1024 + "kb/s");
+            Threads.sleep(500);
+        }
+        System.out.println(p.getProgress() * 100 + "% " + p.getNowRate() / 1024 + "kb/s");
+        System.out.println("done");
+    }
+
+    @Test
+    public void bigDownload() {
+        SftpDownload u = e.download("/root/a/b/c/a.rar", new File("C:\\Users\\ljh15\\Desktop\\a\\b\\c\\a1.rar"));
+        u.computeRate(true);
+        new Thread(u).start();
+        ByteTransferProgress p = u.getProgress();
+        while (!p.isDone()) {
+            System.out.println(p.getProgress() * 100 + "% " + p.getNowRate() / 1024 + "kb/s");
+            Threads.sleep(500);
+        }
+        System.out.println(p.getProgress() * 100 + "% " + p.getNowRate() / 1024 + "kb/s");
+        System.out.println("done");
+    }
+
+    @After
+    public void after() {
+        e.disconnect();
     }
 
 }

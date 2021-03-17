@@ -162,17 +162,19 @@ public abstract class BaseFileUpload implements Runnable {
     /**
      * 获取远程文件大小
      *
-     * @return fileSize 文件不存在则返回-1
+     * @return fileSize 文件不存在则返回 -1
+     * @throws IOException IOException
      */
-    protected abstract long getFileSize();
+    protected abstract long getFileSize() throws IOException;
 
     /**
      * 准开始上传
      *
      * @param breakPoint 是否为断点续传
      * @param skip       skip
+     * @throws IOException IOException
      */
-    protected abstract void initUpload(boolean breakPoint, long skip);
+    protected abstract void initUpload(boolean breakPoint, long skip) throws IOException;
 
     /**
      * 写入
