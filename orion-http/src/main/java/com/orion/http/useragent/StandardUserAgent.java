@@ -32,9 +32,10 @@ public class StandardUserAgent {
 
     // -------------------- mobile --------------------
 
-    public static final String IPHONE_1 = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 10_3_3 like Mac OS X; en-us) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8J2 Safari/6533.18.5";
-    public static final String IPAD_1 = "Mozilla/5.0 (iPad; U; CPU OS 13_1_1 like Mac OS X; zh-cn) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8C148 Safari/6533.18.5";
-    public static final String IPAD_2 = "Mozilla/5.0 (iPad; U; CPU OS 9_3_6 like Mac OS X; en-us) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8J2 Safari/6533.18.5";
+    public static final String IPHONE_1 = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 10_3_3 like Mac OS X; en-us) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/10.0.2 Mobile/8J2 Safari/6533.18.5";
+    public static final String IPHONE_2 = "(iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1";
+    public static final String IPAD_1 = "Mozilla/5.0 (iPad; U; CPU OS 13_1_1 like Mac OS X; zh-cn) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/13.0.1 Mobile/15A5341f Safari/6533.18.5";
+    public static final String IPAD_2 = "Mozilla/5.0 (iPad; U; CPU OS 9_3_6 like Mac OS X; en-us) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/9.3.4 Mobile/8J2 Safari/6533.18.5";
     public static final String ANDROID_1 = "Mozilla/5.0 (Linux; U; Android 9.0.1; zh-cn; HTC_Wildfire_A3333 Build/FRG83D) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1";
     public static final String ANDROID_2 = "Mozilla/5.0 (Linux; U; Android 10.3.7; en-us; Nexus One Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1";
     public static final String ANDROID_3 = "Opera/9.80 (Android 2.3.4; Linux; Opera Mobi/build-1107180945; U; en-GB) Presto/2.8.149 Version/11.10";
@@ -51,20 +52,20 @@ public class StandardUserAgent {
             FIREFOX_1, FIREFOX_2, SAFARI_1, SAFARI_2,
             CHROME_1, CHROME_2, CHROME_3};
 
-    public static final String[] MOBILE = {IPHONE_1, IPAD_1, IPAD_2,
+    public static final String[] MOBILE = {IPHONE_1, IPHONE_2, IPAD_1, IPAD_2,
             ANDROID_1, ANDROID_2, ANDROID_3, ANDROID_4};
 
     public static final String[] ALL = {OPERA_1, OPERA_2, OPERA_3,
             FIREFOX_1, FIREFOX_2, SAFARI_1, SAFARI_2,
             CHROME_1, CHROME_2, CHROME_3,
             IE_6, IE_7, IE_8, IE_9, IE_10,
-            IPHONE_1, IPAD_1, IPAD_2,
+            IPHONE_1, IPHONE_2, IPAD_1, IPAD_2,
             ANDROID_1, ANDROID_2, ANDROID_3, ANDROID_4};
 
     public static final String[] ALL_NO_IE = {OPERA_1, OPERA_2, OPERA_3,
             FIREFOX_1, FIREFOX_2, SAFARI_1, SAFARI_2,
             CHROME_1, CHROME_2, CHROME_3,
-            IPHONE_1, IPAD_1, IPAD_2,
+            IPHONE_1, IPHONE_2, IPAD_1, IPAD_2,
             ANDROID_1, ANDROID_2, ANDROID_3, ANDROID_4};
 
 }
