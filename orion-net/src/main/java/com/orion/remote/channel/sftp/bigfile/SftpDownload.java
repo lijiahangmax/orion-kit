@@ -1,272 +1,87 @@
 package com.orion.remote.channel.sftp.bigfile;
 
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.SftpATTRS;
-import com.jcraft.jsch.SftpException;
-import com.orion.able.SafeCloseable;
 import com.orion.constant.Const;
-import com.orion.remote.channel.sftp.SftpErrorMessage;
+import com.orion.remote.channel.sftp.SftpExecutor;
+import com.orion.remote.channel.sftp.SftpFile;
+import com.orion.support.download.BaseFileDownload;
 import com.orion.utils.Exceptions;
-import com.orion.utils.Threads;
-import com.orion.utils.io.FileLocks;
-import com.orion.utils.io.Files1;
+import com.orion.utils.Valid;
 import com.orion.utils.io.Streams;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
- * SFTP 大文件下载
- * 支持断点续传, 实时速率, 平均速率
+ * SFTP 大文件下载 支持断点续传, 实时速率
  *
  * @author ljh15
  * @version 1.0.0
  * @since 2020/10/13 18:26
  */
-public class SftpDownload implements Runnable, SafeCloseable {
+public class SftpDownload extends BaseFileDownload {
+
+    private static final String LOCK_SUFFIX = "orion.sftp.download";
 
     /**
-     * channel
+     * sftp执行器
      */
-    private ChannelSftp channel;
+    private SftpExecutor executor;
 
     /**
-     * 开始时间
+     * 输入流
      */
-    private long startTime;
+    private InputStream in;
 
-    /**
-     * 结束时间
-     */
-    private long endTime;
-
-    /**
-     * 下载时文件大小
-     */
-    private long startSize;
-
-    /**
-     * 文件总大小
-     */
-    private long size;
-
-    /**
-     * 当前传输大小
-     */
-    private long now;
-
-    /**
-     * 远程文件
-     */
-    private String remote;
-
-    /**
-     * 本地文件
-     */
-    private File local;
-
-    /**
-     * 文件锁
-     */
-    private FileLocks.NamedFileLock lock;
-
-    /**
-     * 实时速率
-     */
-    private volatile long nowRate;
-
-    /**
-     * 开启实时速率
-     */
-    private boolean openNowRate = false;
-
-    /**
-     * 是否已完成
-     */
-    private volatile boolean done;
-
-    public SftpDownload(ChannelSftp channel, String remote, String local) {
-        this(channel, remote, new File(local));
+    public SftpDownload(SftpExecutor executor, String remote, String local) {
+        this(executor, remote, new File(local));
     }
 
-    public SftpDownload(ChannelSftp channel, String remote, File local) {
-        this.channel = channel;
-        this.remote = remote;
-        this.local = local;
-        this.lock = FileLocks.getSuffixFileLock("sftpdownload", local);
-    }
-
-    /**
-     * 打开连接
-     *
-     * @return this
-     */
-    public SftpDownload connect() {
-        try {
-            channel.connect();
-            return this;
-        } catch (Exception e) {
-            throw Exceptions.connection(e);
-        }
-    }
-
-    /**
-     * 打开连接
-     *
-     * @param timeout 超时时间 ms
-     * @return this
-     */
-    public SftpDownload connect(int timeout) {
-        try {
-            channel.connect(timeout);
-            return this;
-        } catch (Exception e) {
-            throw Exceptions.connection(e);
-        }
+    public SftpDownload(SftpExecutor executor, String remote, File local) {
+        super(remote, local, LOCK_SUFFIX, Const.BUFFER_KB_8);
+        Valid.notNull(executor, "sftp executor is null");
+        this.executor = executor;
     }
 
     @Override
     public void run() {
-        this.startTime = System.currentTimeMillis();
-        InputStream in = null;
-        OutputStream out = null;
         try {
-            if (openNowRate) {
-                Threads.start(() -> {
-                    while (!done) {
-                        long size = now;
-                        Threads.sleep(Const.MS_S_1);
-                        nowRate = now - size;
-                    }
-                });
-            }
-            SftpATTRS fileAttribute = channel.stat(remote);
-            size = fileAttribute.getSize();
-            if (local.exists() && lock.isLocked()) {
-                now = local.length();
-                in = channel.get(remote, null, now);
-                startSize = now;
-                if (startSize >= size) {
-                    lock.unLock();
-                    return;
-                }
-                out = new BufferedOutputStream(new FileOutputStream(local, true));
-                int read;
-                byte[] bs = new byte[Const.BUFFER_KB_8];
-                while (-1 != (read = in.read(bs, 0, Const.BUFFER_KB_8))) {
-                    now += read;
-                    out.write(bs, 0, read);
-                }
-                lock.unLock();
-            } else {
-                if (local.exists() && size == local.length()) {
-                    return;
-                }
-                in = channel.get(remote);
-                Files1.touch(local);
-                lock.tryLock();
-                out = new BufferedOutputStream(new FileOutputStream(local));
-                int read;
-                byte[] bs = new byte[Const.BUFFER_KB_8];
-                while (-1 != (read = in.read(bs, 0, Const.BUFFER_KB_8))) {
-                    now += read;
-                    out.write(bs, 0, read);
-                }
-                lock.unLock();
-            }
+            super.startDownload();
         } catch (IOException e) {
-            throw Exceptions.ioRuntime(e);
-        } catch (SftpException e) {
-            if (SftpErrorMessage.NO_SUCH_FILE.getMessage().equals(e.getMessage())) {
-                throw Exceptions.notFound("Not found remote file: " + remote);
-            }
-            throw Exceptions.sftp(e);
-        } finally {
-            this.endTime = System.currentTimeMillis();
-            this.done = true;
-            Streams.close(in);
-            Streams.close(out);
+            throw Exceptions.sftp("sftp download exception remote file: " + remote + " -> local file: " + local.getAbsolutePath(), e);
         }
     }
 
     @Override
-    public void close() {
-        channel.disconnect();
-    }
-
-    /**
-     * 开启计算实时速率
-     *
-     * @return this
-     */
-    public SftpDownload openNowRate() {
-        this.openNowRate = true;
-        return this;
-    }
-
-    /**
-     * 获取平均速度
-     *
-     * @return 平均速度
-     */
-    public double getAvgRate() {
-        long useDate = endTime;
-        if (endTime == 0) {
-            useDate = System.currentTimeMillis();
+    protected long getFileSize() {
+        SftpFile remoteFile = executor.getFile(remote);
+        if (remoteFile == null) {
+            throw Exceptions.notFound("not found download remote file");
         }
-        double used = useDate - startTime;
-        double uploadBytes = now - startSize;
-        return (uploadBytes / used) * Const.MS_S_1;
+        return remoteFile.getSize();
     }
 
-    /**
-     * 获取当前速度
-     *
-     * @return 当前速度
-     */
-    public long getNowRate() {
-        return nowRate;
+    @Override
+    protected void initDownload(boolean breakPoint, long skip) throws IOException {
+        if (breakPoint) {
+            in = executor.getInputStream(remote, skip);
+        } else {
+            in = executor.getInputStream(remote);
+        }
     }
 
-    /**
-     * 获取当前进度
-     *
-     * @return 进度 0 ~ 1
-     */
-    public double getProgress() {
-        return size == 0 ? 0 : (double) now / (double) size;
+    @Override
+    protected int read(byte[] bs) throws IOException {
+        return in.read(bs);
     }
 
-    /**
-     * 是否传输完成
-     *
-     * @return true完成
-     */
-    public boolean isDone() {
-        return done;
+    @Override
+    protected void transferFinish() {
+        Streams.close(in);
     }
 
-    public long getStartTime() {
-        return startTime;
-    }
-
-    public long getEndTime() {
-        return endTime;
-    }
-
-    public long getUseTime() {
-        return endTime - startTime;
-    }
-
-    public long getStartSize() {
-        return startSize;
-    }
-
-    public long getSize() {
-        return size;
-    }
-
-    public long getNow() {
-        return now;
+    public SftpExecutor getExecutor() {
+        return executor;
     }
 
 }

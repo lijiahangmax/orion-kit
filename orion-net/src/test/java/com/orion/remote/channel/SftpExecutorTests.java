@@ -146,13 +146,15 @@ public class SftpExecutorTests {
     }
 
     @Test
-    public void upload() {
-
+    public void upload() throws IOException {
+        e.uploadFile("/root/data/sql.txt", "C:\\Users\\ljh15\\Desktop\\sql.txt");
+        e.uploadDir("/root/data/ftp/", "C:\\Users\\ljh15\\Desktop\\ftp");
     }
 
     @Test
-    public void download() {
-
+    public void download() throws IOException {
+        e.downloadFile("/root/data/sql.txt", "C:\\Users\\ljh15\\Desktop\\download\\sql.txt");
+        e.downloadDir("/root/data/ftp/", "C:\\Users\\ljh15\\Desktop\\download\\ftp");
     }
 
     @Test

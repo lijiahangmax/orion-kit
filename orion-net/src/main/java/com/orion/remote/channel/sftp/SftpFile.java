@@ -15,15 +15,15 @@ import java.util.Date;
  * @version 1.0.0
  * @since 2020/10/10 17:07
  */
-public class FileAttribute implements Serializable {
+public class SftpFile implements Serializable {
 
     private static final long serialVersionUID = -154572740257792L;
 
-    protected FileAttribute(String path, SftpATTRS attrs) {
+    protected SftpFile(String path, SftpATTRS attrs) {
         this(path, null, attrs);
     }
 
-    protected FileAttribute(String path, String longEntry, SftpATTRS attrs) {
+    protected SftpFile(String path, String longEntry, SftpATTRS attrs) {
         this.path = path;
         this.longEntry = longEntry;
         this.attrs = attrs;
@@ -162,37 +162,37 @@ public class FileAttribute implements Serializable {
         return attrs;
     }
 
-    public FileAttribute setSize(long size) {
+    public SftpFile setSize(long size) {
         this.size = size;
         this.attrs.setSIZE(size);
         return this;
     }
 
-    public FileAttribute setUid(int uid) {
+    public SftpFile setUid(int uid) {
         this.uid = uid;
         this.attrs.setUIDGID(uid, gid);
         return this;
     }
 
-    public FileAttribute setGid(int gid) {
+    public SftpFile setGid(int gid) {
         this.gid = gid;
         this.attrs.setUIDGID(uid, gid);
         return this;
     }
 
-    public FileAttribute setModifyTime(Date modifyTime) {
+    public SftpFile setModifyTime(Date modifyTime) {
         this.modifyTime = modifyTime;
         this.attrs.setACMODTIME((int) (accessTime.getTime() / Const.MS_S_1), (int) (modifyTime.getTime() / Const.MS_S_1));
         return this;
     }
 
-    public FileAttribute setAccessTime(Date accessTime) {
+    public SftpFile setAccessTime(Date accessTime) {
         this.accessTime = accessTime;
         this.attrs.setACMODTIME((int) (accessTime.getTime() / Const.MS_S_1), (int) (modifyTime.getTime() / Const.MS_S_1));
         return this;
     }
 
-    public FileAttribute setPermission(int permission) {
+    public SftpFile setPermission(int permission) {
         this.permission = permission;
         this.attrs.setPERMISSIONS(permission);
         return this;

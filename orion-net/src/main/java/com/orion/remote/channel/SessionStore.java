@@ -2,14 +2,10 @@ package com.orion.remote.channel;
 
 import com.jcraft.jsch.*;
 import com.orion.remote.channel.sftp.SftpExecutor;
-import com.orion.remote.channel.sftp.bigfile.SftpDownload;
-import com.orion.remote.channel.sftp.bigfile.SftpUpload;
 import com.orion.remote.channel.ssh.CommandExecutor;
 import com.orion.remote.channel.ssh.ShellExecutor;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
-
-import java.io.File;
 
 /**
  * Session Store
@@ -300,80 +296,6 @@ public class SessionStore {
     public SftpExecutor getSftpExecutor() {
         try {
             return new SftpExecutor((ChannelSftp) session.openChannel("sftp"));
-        } catch (JSchException e) {
-            throw Exceptions.state("could not open channel", e);
-        }
-    }
-
-    /**
-     * 获取 SftpExecutor
-     *
-     * @param fileNameEncoding 文件名称编码
-     * @return SftpExecutor
-     */
-    public SftpExecutor getSftpExecutor(String fileNameEncoding) {
-        try {
-            return new SftpExecutor((ChannelSftp) session.openChannel("sftp"), fileNameEncoding);
-        } catch (JSchException e) {
-            throw Exceptions.state("could not open channel", e);
-        }
-    }
-
-    /**
-     * 获取文件上传器
-     *
-     * @param remote 远程文件绝对路径
-     * @param local  本地文件
-     * @return 文件上传器
-     */
-    public SftpUpload getSftpUpload(String remote, File local) {
-        try {
-            return new SftpUpload((ChannelSftp) session.openChannel("sftp"), remote, local);
-        } catch (JSchException e) {
-            throw Exceptions.state("could not open channel", e);
-        }
-    }
-
-    /**
-     * 获取文件上传器
-     *
-     * @param remote 远程文件绝对路径
-     * @param local  本地文件
-     * @return 文件上传器
-     */
-    public SftpUpload getSftpUpload(String remote, String local) {
-        try {
-            return new SftpUpload((ChannelSftp) session.openChannel("sftp"), remote, local);
-        } catch (JSchException e) {
-            throw Exceptions.state("could not open channel", e);
-        }
-    }
-
-    /**
-     * 获取文件下载器
-     *
-     * @param remote 远程文件绝对路径
-     * @param local  本地文件
-     * @return 文件上传器
-     */
-    public SftpDownload getSftpDownload(String remote, File local) {
-        try {
-            return new SftpDownload((ChannelSftp) session.openChannel("sftp"), remote, local);
-        } catch (JSchException e) {
-            throw Exceptions.state("could not open channel", e);
-        }
-    }
-
-    /**
-     * 获取文件下载器
-     *
-     * @param remote 远程文件绝对路径
-     * @param local  本地文件
-     * @return 文件下载器
-     */
-    public SftpDownload getSftpDownload(String remote, String local) {
-        try {
-            return new SftpDownload((ChannelSftp) session.openChannel("sftp"), remote, local);
         } catch (JSchException e) {
             throw Exceptions.state("could not open channel", e);
         }

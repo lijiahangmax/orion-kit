@@ -10,13 +10,12 @@ import com.orion.remote.channel.sftp.bigfile.SftpDownload;
 import com.orion.remote.channel.sftp.bigfile.SftpUpload;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
+import com.orion.utils.Valid;
+import com.orion.utils.collect.Lists;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -51,21 +50,21 @@ public class SftpExecutor extends BaseExecutor {
      */
     private String home;
 
+    /**
+     * 编码格式
+     */
+    private String charset;
+
     public SftpExecutor(ChannelSftp channel) {
         this(channel, Const.UTF_8);
     }
 
-    public SftpExecutor(ChannelSftp channel, String fileNameEncoding) {
+    public SftpExecutor(ChannelSftp channel, String charset) {
         super(channel);
+        Valid.notNull(charset, "charset is empty");
         this.channel = channel;
         this.bufferSize = Const.BUFFER_KB_8;
-        if (fileNameEncoding != null) {
-            try {
-                channel.setFilenameEncoding(fileNameEncoding);
-            } catch (SftpException e) {
-                throw Exceptions.sftp("could not set fileNameEncoding", e);
-            }
-        }
+        this.charset = charset;
     }
 
     @Override
@@ -73,6 +72,7 @@ public class SftpExecutor extends BaseExecutor {
         super.connect();
         try {
             this.home = channel.getHome();
+            this.filenameEncoding(charset);
         } catch (SftpException e) {
             throw Exceptions.sftp("could not read home path", e);
         }
@@ -84,6 +84,7 @@ public class SftpExecutor extends BaseExecutor {
         super.connect(timeout);
         try {
             this.home = channel.getHome();
+            this.filenameEncoding(charset);
         } catch (SftpException e) {
             throw Exceptions.sftp("could not read home path", e);
         }
@@ -101,7 +102,7 @@ public class SftpExecutor extends BaseExecutor {
      * @param bufferSize 缓冲区大小
      * @return this
      */
-    public SftpExecutor setBufferSize(int bufferSize) {
+    public SftpExecutor bufferSize(int bufferSize) {
         this.bufferSize = bufferSize;
         return this;
     }
@@ -112,12 +113,11 @@ public class SftpExecutor extends BaseExecutor {
      * @param charset 编码格式
      * @return ignore
      */
-    public boolean setFilenameEncoding(String charset) {
+    public boolean filenameEncoding(String charset) {
         try {
             channel.setFilenameEncoding(charset);
             return true;
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -133,7 +133,6 @@ public class SftpExecutor extends BaseExecutor {
             channel.realpath(path);
             return true;
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -182,26 +181,26 @@ public class SftpExecutor extends BaseExecutor {
      * @param path 文件绝对路径
      * @return 属性
      */
-    public FileAttribute getFileAttribute(String path) {
-        return this.getFileAttribute(path, false);
+    public SftpFile getFile(String path) {
+        return this.getFile(path, false);
     }
 
     /**
      * 获取文件属性
      *
      * @param path           文件绝对路径
-     * @param followSymbolic 如果是连接文件是否返回连接文件属性
+     * @param followSymbolic 如果是连接文件是否返回原文件属性
      * @return 属性
      */
-    public FileAttribute getFileAttribute(String path, boolean followSymbolic) {
+    public SftpFile getFile(String path, boolean followSymbolic) {
         try {
             SftpATTRS attr;
             if (followSymbolic) {
-                attr = channel.lstat(path);
-            } else {
                 attr = channel.stat(path);
+            } else {
+                attr = channel.lstat(path);
             }
-            return new FileAttribute(path, attr);
+            return new SftpFile(path, attr);
         } catch (Exception e) {
             if (SftpErrorMessage.NO_SUCH_FILE.getMessage().equals(e.getMessage())) {
                 return null;
@@ -217,12 +216,11 @@ public class SftpExecutor extends BaseExecutor {
      * @param attribute 文件属性
      * @return ignore
      */
-    public boolean setFileAttribute(FileAttribute attribute) {
+    public boolean setFileAttribute(SftpFile attribute) {
         try {
             channel.setStat(attribute.getPath(), attribute.getAttrs());
             return true;
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -239,7 +237,6 @@ public class SftpExecutor extends BaseExecutor {
             channel.setMtime(path, (int) (date.getTime() / Const.MS_S_1));
             return true;
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -256,7 +253,6 @@ public class SftpExecutor extends BaseExecutor {
             channel.chmod(permission, file);
             return true;
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -265,15 +261,14 @@ public class SftpExecutor extends BaseExecutor {
      * 修改文件所有人
      *
      * @param file 文件绝对路径
-     * @param gid  用户id
+     * @param uid  用户id
      * @return ignore
      */
-    public boolean chown(String file, int gid) {
+    public boolean chown(String file, int uid) {
         try {
-            channel.chown(gid, file);
+            channel.chown(uid, file);
             return true;
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -290,7 +285,6 @@ public class SftpExecutor extends BaseExecutor {
             channel.chgrp(gid, file);
             return true;
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -305,7 +299,6 @@ public class SftpExecutor extends BaseExecutor {
         try {
             return this.touchTruncate(path);
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return false;
         }
     }
@@ -318,39 +311,14 @@ public class SftpExecutor extends BaseExecutor {
      */
     public long getSize(String path) {
         try {
-            FileAttribute attr = getFileAttribute(path, false);
+            SftpFile attr = getFile(path, false);
             if (attr == null || attr.isDirectory()) {
                 return -1;
             }
             return attr.getSize();
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return -1;
         }
-    }
-
-    /**
-     * 获取目录文件属性
-     *
-     * @param path 文件绝对路径
-     * @return 属性
-     */
-    public List<FileAttribute> ll(String path) {
-        List<FileAttribute> list = new ArrayList<>();
-        try {
-            Vector<?> files = channel.ls(path);
-            for (Object l : files) {
-                ChannelSftp.LsEntry ls = (ChannelSftp.LsEntry) l;
-                String filename = ls.getFilename();
-                if (".".equals(filename) || "..".equals(filename)) {
-                    continue;
-                }
-                list.add(new FileAttribute(Files1.getPath(path + SEPARATOR + filename), ls.getLongname(), ls.getAttrs()));
-            }
-        } catch (Exception e) {
-            Exceptions.printStacks(e);
-        }
-        return list;
     }
 
     /**
@@ -360,7 +328,7 @@ public class SftpExecutor extends BaseExecutor {
      * @return ignore
      */
     public boolean mkdirs(String path) {
-        FileAttribute p = this.getFileAttribute(path, false);
+        SftpFile p = this.getFile(path, false);
         if (p != null && p.isDirectory()) {
             return true;
         }
@@ -370,7 +338,7 @@ public class SftpExecutor extends BaseExecutor {
         for (int i = 1, size = parentPaths.size(); i < size; i++) {
             String parentPath = parentPaths.get(i);
             if (check) {
-                FileAttribute parentAttr = this.getFileAttribute(parentPath, false);
+                SftpFile parentAttr = this.getFile(parentPath, false);
                 if (parentAttr == null || !parentAttr.isDirectory()) {
                     check = false;
                 }
@@ -379,12 +347,72 @@ public class SftpExecutor extends BaseExecutor {
                 try {
                     channel.mkdir(parentPath);
                 } catch (Exception e1) {
-                    Exceptions.printStacks(e1);
                     return false;
                 }
             }
         }
         return true;
+    }
+
+    /**
+     * 删除一个空的文件夹
+     *
+     * @param path 绝对路径
+     * @return ignore
+     */
+    public boolean rmdir(String path) {
+        try {
+            channel.rmdir(path);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * 删除一个普通文件
+     *
+     * @param path 绝对路径
+     * @return ignore
+     */
+    public boolean rmFile(String path) {
+        try {
+            channel.rm(path);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * 递归删除文件或文件夹
+     *
+     * @param path 路径
+     * @return ignore
+     */
+    public boolean rm(String path) {
+        try {
+            SftpFile file = this.getFile(path);
+            if (file == null) {
+                return true;
+            }
+            if (file.isDirectory()) {
+                List<SftpFile> files = this.ll(path);
+                for (SftpFile f : files) {
+                    if (f.isDirectory()) {
+                        this.rm(f.getPath());
+                    } else {
+                        channel.rm(f.getPath());
+                    }
+                }
+                channel.rmdir(path);
+            } else {
+                channel.rm(path);
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     /**
@@ -419,15 +447,14 @@ public class SftpExecutor extends BaseExecutor {
             try {
                 OutputStream t;
                 if (truncate) {
-                    t = channel.put(path, 0);
+                    t = this.getOutputStream(path, 0);
                 } else {
-                    t = channel.put(path, 1);
+                    t = this.getOutputStream(path, 1);
                 }
                 t.flush();
                 Streams.close(t);
                 return true;
             } catch (Exception e) {
-                Exceptions.printStacks(e);
                 return false;
             }
         } else {
@@ -461,7 +488,18 @@ public class SftpExecutor extends BaseExecutor {
      * 创建连接文件
      *
      * @param source 原文件绝对路径
-     * @param target 新文件绝对路径
+     * @param target 连接文件绝对路径
+     * @return ignore
+     */
+    public boolean touchLink(String source, String target) {
+        return this.touchLink(source, target, false);
+    }
+
+    /**
+     * 创建连接文件
+     *
+     * @param source 原文件绝对路径
+     * @param target 连接文件绝对路径
      * @param hard   true硬链接 false软连接
      * @return ignore
      */
@@ -477,69 +515,6 @@ public class SftpExecutor extends BaseExecutor {
             } else {
                 return false;
             }
-        } catch (Exception e) {
-            Exceptions.printStacks(e);
-            return false;
-        }
-    }
-
-    /**
-     * 删除一个空的文件夹
-     *
-     * @param path 绝对路径
-     * @return ignore
-     */
-    public boolean rmdir(String path) {
-        try {
-            channel.rmdir(path);
-            return true;
-        } catch (Exception e) {
-            Exceptions.printStacks(e);
-            return false;
-        }
-    }
-
-    /**
-     * 删除一个普通文件
-     *
-     * @param path 绝对路径
-     * @return ignore
-     */
-    public boolean rmFile(String path) {
-        try {
-            channel.rm(path);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    /**
-     * 递归删除文件或文件夹
-     *
-     * @param path 路径
-     * @return ignore
-     */
-    public boolean rm(String path) {
-        try {
-            FileAttribute file = this.getFileAttribute(path);
-            if (file == null) {
-                return true;
-            }
-            if (file.isDirectory()) {
-                List<FileAttribute> files = this.ll(path);
-                for (FileAttribute f : files) {
-                    if (f.isDirectory()) {
-                        this.rm(f.getPath());
-                    } else {
-                        channel.rm(f.getPath());
-                    }
-                }
-                channel.rmdir(path);
-            } else {
-                channel.rm(path);
-            }
-            return true;
         } catch (Exception e) {
             return false;
         }
@@ -571,6 +546,55 @@ public class SftpExecutor extends BaseExecutor {
         }
     }
 
+    // -------------------- stream --------------------
+
+    public InputStream getInputStream(String path) throws IOException {
+        return this.getInputStream(path, 0L);
+    }
+
+    /**
+     * 打开存在文件的输入流
+     *
+     * @param path 文件路径
+     * @param skip 跳过的字节
+     * @return InputStream
+     * @throws IOException IOException
+     */
+    public InputStream getInputStream(String path, long skip) throws IOException {
+        try {
+            return channel.get(path, null, skip);
+        } catch (Exception e) {
+            throw Exceptions.io("could open file input stream " + path, e);
+        }
+    }
+
+    public OutputStream getOutputStreamWriter(String path) throws IOException {
+        return this.getOutputStream(path, 0);
+    }
+
+    public OutputStream getOutputStreamAppend(String path) throws IOException {
+        return this.getOutputStream(path, 2);
+    }
+
+    /**
+     * 打开存在文件的输出流
+     *
+     * @param path 文件路径
+     * @param mode 0 完全覆盖模式
+     *             1 恢复模式
+     *             2 追加模式
+     * @return OutputStream
+     * @throws IOException IOException
+     */
+    public OutputStream getOutputStream(String path, int mode) throws IOException {
+        try {
+            this.mkdirs(Files1.getParentPath(path));
+            return channel.put(path, mode);
+        } catch (Exception e) {
+            throw Exceptions.io("could open file output stream " + path, e);
+        }
+    }
+
     // -------------------- read --------------------
 
     public int read(String path, byte[] bs) throws IOException {
@@ -599,12 +623,80 @@ public class SftpExecutor extends BaseExecutor {
     public int read(String path, long skip, byte[] bs, int offset, int len) throws IOException {
         InputStream in = null;
         try {
-            in = channel.get(path, null, skip);
+            in = this.getInputStream(path, skip);
             return in.read(bs, offset, len);
-        } catch (SftpException e) {
-            throw Exceptions.sftp(e);
         } finally {
             Streams.close(in);
+        }
+    }
+
+    public String readLine(String path) throws IOException {
+        return this.readLine(path, 0L);
+    }
+
+    /**
+     * 读取一行
+     *
+     * @param path path
+     * @param skip skip
+     * @return line
+     * @throws IOException IOException
+     */
+    public String readLine(String path, long skip) throws IOException {
+        InputStream in = null;
+        BufferedReader reader = null;
+        try {
+            in = this.getInputStream(path, skip);
+            reader = new BufferedReader(new InputStreamReader(in, charset));
+            return reader.readLine();
+        } finally {
+            Streams.close(in);
+            Streams.close(reader);
+        }
+    }
+
+    public List<String> readLines(String path) throws IOException {
+        return this.readLines(path, 0L, 0);
+    }
+
+    public List<String> readLines(String path, long skip) throws IOException {
+        return this.readLines(path, skip, 0);
+    }
+
+    public List<String> readLines(String path, int lines) throws IOException {
+        return this.readLines(path, 0L, lines);
+    }
+
+    /**
+     * 读取多行
+     *
+     * @param path  path
+     * @param skip  skip
+     * @param lines 行数
+     * @return lines
+     * @throws IOException IOException
+     */
+    public List<String> readLines(String path, long skip, int lines) throws IOException {
+        InputStream in = null;
+        BufferedReader reader = null;
+        try {
+            in = this.getInputStream(path, skip);
+            reader = new BufferedReader(new InputStreamReader(in, charset));
+            List<String> list = new ArrayList<>();
+            String line;
+            if (lines > 0) {
+                for (int i = 0; i < lines && null != (line = reader.readLine()); i++) {
+                    list.add(line);
+                }
+            } else {
+                while (null != (line = reader.readLine())) {
+                    list.add(line);
+                }
+            }
+            return list;
+        } finally {
+            Streams.close(in);
+            Streams.close(reader);
         }
     }
 
@@ -673,7 +765,7 @@ public class SftpExecutor extends BaseExecutor {
         byte[] bs = new byte[this.bufferSize];
         InputStream in = null;
         try {
-            in = channel.get(path, null, skip);
+            in = this.getInputStream(path, skip);
             if (size != -1) {
                 boolean mod = size % this.bufferSize == 0;
                 long readTimes = size / this.bufferSize;
@@ -702,8 +794,6 @@ public class SftpExecutor extends BaseExecutor {
                     r += read;
                 }
             }
-        } catch (SftpException e) {
-            throw Exceptions.sftp(e);
         } finally {
             Streams.close(in);
         }
@@ -713,81 +803,62 @@ public class SftpExecutor extends BaseExecutor {
     // -------------------- write --------------------
 
     public void write(String path, InputStream in) throws IOException {
-        this.write(path, in, null, null, null, 0);
+        this.write(path, in, null, null, 0);
     }
 
     public void write(String path, byte[] bs) throws IOException {
-        this.write(path, null, new StreamEntry(bs), null, null, 0);
+        this.write(path, null, new StreamEntry(bs), null, 0);
     }
 
     public void write(String path, byte[] bs, int off, int len) throws IOException {
-        this.write(path, null, new StreamEntry(bs, off, len), null, null, 0);
+        this.write(path, null, new StreamEntry(bs, off, len), null, 0);
     }
 
     public void writeLine(String path, String line) throws IOException {
-        this.write(path, null, new StreamEntry(Strings.bytes(line + Const.LF)), null, null, 0);
-    }
-
-    public void writeLine(String path, String line, String charset) throws IOException {
-        this.write(path, null, new StreamEntry(Strings.bytes(line + Const.LF, charset)), null, null, 0);
+        this.write(path, null, null, Lists.singleton(line), 0);
     }
 
     public void writeLines(String path, List<String> lines) throws IOException {
-        this.write(path, null, null, lines, null, 0);
+        this.write(path, null, null, lines, 0);
     }
 
-    public void writeLines(String path, List<String> lines, String charset) throws IOException {
-        this.write(path, null, null, lines, charset, 0);
-    }
+    // -------------------- append --------------------
 
     public void append(String path, InputStream in) throws IOException {
-        this.write(path, in, null, null, null, 2);
+        this.write(path, in, null, null, 2);
     }
 
     public void append(String path, byte[] bs) throws IOException {
-        this.write(path, null, new StreamEntry(bs), null, null, 2);
+        this.write(path, null, new StreamEntry(bs), null, 2);
     }
 
     public void append(String path, byte[] bs, int off, int len) throws IOException {
-        this.write(path, null, new StreamEntry(bs, off, len), null, null, 2);
+        this.write(path, null, new StreamEntry(bs, off, len), null, 2);
     }
 
     public void appendLine(String path, String line) throws IOException {
-        this.write(path, null, new StreamEntry(Strings.bytes(line + Const.LF)), null, null, 2);
-    }
-
-    public void appendLine(String path, String line, String charset) throws IOException {
-        this.write(path, null, new StreamEntry(Strings.bytes(line + Const.LF, charset)), null, null, 2);
+        this.write(path, null, null, Lists.singleton(line), 2);
     }
 
     public void appendLines(String path, List<String> lines) throws IOException {
-        this.write(path, null, null, lines, null, 2);
-    }
-
-    public void appendLines(String path, List<String> lines, String charset) throws IOException {
-        this.write(path, null, null, lines, charset, 2);
+        this.write(path, null, null, lines, 2);
     }
 
     /**
      * 拼接/写入到文件
      *
-     * @param path    文件绝对路径
-     * @param in      输入流
-     * @param entry   写入信息
-     * @param lines   行
-     * @param charset 行编码
-     * @param mode    0 完全覆盖模式
-     *                1 恢复模式 如果文件正在传输时, 由于网络等原因导致传输中断, 则下一次传输相同的文件, 会从上一次中断的地方续传
-     *                2 追加模式
+     * @param path  文件绝对路径
+     * @param in    输入流
+     * @param entry 写入信息
+     * @param lines 行
+     * @param mode  0 完全覆盖模式
+     *              1 恢复模式 如果文件正在传输时, 由于网络等原因导致传输中断, 则下一次传输相同的文件, 会从上一次中断的地方续传
+     *              2 追加模式
      * @throws IOException IOException
      */
-    private void write(String path, InputStream in, StreamEntry entry, List<String> lines, String charset, int mode) throws IOException {
-        OutputStream out;
-        try {
-            out = channel.put(path, mode);
-        } catch (SftpException e) {
-            throw Exceptions.sftp();
-        }
+    private void write(String path, InputStream in, StreamEntry entry, List<String> lines, int mode) throws IOException {
+        this.touch(path, mode == 0);
+        OutputStream out = this.getOutputStream(path, mode);
         try {
             if (in != null) {
                 byte[] bs = new byte[bufferSize];
@@ -799,11 +870,7 @@ public class SftpExecutor extends BaseExecutor {
                 out.write(entry.getBytes(), entry.getOff(), entry.getLen());
             } else if (lines != null) {
                 for (String line : lines) {
-                    if (charset == null) {
-                        out.write(Strings.bytes(line + Const.LF));
-                    } else {
-                        out.write(Strings.bytes(line + Const.LF, charset));
-                    }
+                    out.write(Strings.bytes(line + Const.LF, charset));
                 }
             }
             out.flush();
@@ -812,8 +879,150 @@ public class SftpExecutor extends BaseExecutor {
         }
     }
 
+    // -------------------- upload --------------------
+
+    public void uploadFile(String remoteFile, String localFile) throws IOException {
+        this.uploadFile(remoteFile, Files1.openInputStreamSafe(localFile), true);
+    }
+
+    public void uploadFile(String remoteFile, File localFile) throws IOException {
+        this.uploadFile(remoteFile, Files1.openInputStreamSafe(localFile), true);
+    }
+
+    public void uploadFile(String remoteFile, InputStream in) throws IOException {
+        this.uploadFile(remoteFile, in, false);
+    }
+
+    /**
+     * 上传文件
+     *
+     * @param remoteFile 远程文件
+     * @param in         input
+     * @param close      close
+     * @throws IOException IOException
+     */
+    public void uploadFile(String remoteFile, InputStream in, boolean close) throws IOException {
+        BufferedInputStream buffer = null;
+        try {
+            this.write(remoteFile, buffer = new BufferedInputStream(in, bufferSize));
+        } finally {
+            if (close) {
+                Streams.close(in);
+                Streams.close(buffer);
+            }
+        }
+    }
+
+    public void uploadDir(String remoteDir, File localDir) throws IOException {
+        this.uploadDir(remoteDir, localDir.getAbsolutePath(), true);
+    }
+
+    public void uploadDir(String remoteDir, String localDir) throws IOException {
+        this.uploadDir(remoteDir, localDir, true);
+    }
+
+    public void uploadDir(String remoteDir, File localDir, boolean child) throws IOException {
+        this.uploadDir(remoteDir, localDir.getAbsolutePath(), child);
+    }
+
+    /**
+     * 上传文件夹
+     *
+     * @param remoteDir 远程文件夹
+     * @param localDir  本地文件夹 上传时不包含此文件夹
+     * @param child     是否遍历上传
+     * @throws IOException IOException
+     */
+    public void uploadDir(String remoteDir, String localDir, boolean child) throws IOException {
+        localDir = Files1.getPath(localDir);
+        List<File> dirs = Files1.listDirs(localDir, child);
+        List<File> files = Files1.listFiles(localDir, child);
+        for (File dir : dirs) {
+            this.mkdirs(Files1.getPath(remoteDir + SEPARATOR + (dir.getAbsolutePath().substring(localDir.length()))));
+        }
+        for (File file : files) {
+            String path = Files1.getPath(remoteDir + SEPARATOR + (file.getAbsolutePath().substring(localDir.length())));
+            this.uploadFile(path, file);
+        }
+    }
+
+    // -------------------- download --------------------
+
+    public void downloadFile(String remoteFile, String localFile) throws IOException {
+        Files1.touch(localFile);
+        this.downloadFile(remoteFile, Files1.openOutputStreamSafe(localFile), true);
+    }
+
+    public void downloadFile(String remoteFile, File localFile) throws IOException {
+        Files1.touch(localFile);
+        this.downloadFile(remoteFile, Files1.openOutputStreamSafe(localFile), true);
+    }
+
+    public void downloadFile(String remoteFile, OutputStream out) throws IOException {
+        this.downloadFile(remoteFile, out, false);
+    }
+
+    /**
+     * 下载文件
+     *
+     * @param remoteFile 远程文件路径
+     * @param out        output
+     * @param close      是否自动关闭
+     * @throws IOException IOException
+     */
+    public void downloadFile(String remoteFile, OutputStream out, boolean close) throws IOException {
+        try {
+            this.transfer(remoteFile, out);
+        } finally {
+            if (close) {
+                Streams.close(out);
+            }
+        }
+    }
+
+    public void downloadDir(String remoteDir, File localDir) throws IOException {
+        this.downloadDir(remoteDir, localDir.getAbsolutePath(), true);
+    }
+
+    public void downloadDir(String remoteDir, String localDir) throws IOException {
+        this.downloadDir(remoteDir, localDir, true);
+    }
+
+    public void downloadDir(String remoteDir, File localDir, boolean child) throws IOException {
+        this.downloadDir(remoteDir, localDir.getAbsolutePath(), child);
+    }
+
+    /**
+     * 下载文件夹
+     *
+     * @param remoteDir 远程文件夹
+     * @param localDir  本地文件夹
+     * @param child     是否递归子文件夹下载
+     * @throws IOException pending
+     */
+    public void downloadDir(String remoteDir, String localDir, boolean child) throws IOException {
+        remoteDir = Files1.getPath(remoteDir);
+        if (!child) {
+            List<SftpFile> list = this.listFiles(remoteDir, false);
+            for (SftpFile s : list) {
+                this.downloadFile(s.getPath(), Files1.getPath(localDir + SEPARATOR + Files1.getFileName(s.getPath())));
+            }
+        } else {
+            List<SftpFile> list = this.listDirs(remoteDir, true);
+            for (SftpFile s : list) {
+                Files1.mkdirs(Files1.getPath(localDir + SEPARATOR + s.getPath().substring(remoteDir.length())));
+            }
+            list = this.listFiles(remoteDir, true);
+            for (SftpFile s : list) {
+                this.downloadFile(s.getPath(), Files1.getPath(localDir + SEPARATOR + s.getPath().substring(remoteDir.length())));
+            }
+        }
+    }
+
+    // -------------------- big file --------------------
+
     public SftpUpload upload(String remote, File local) {
-        return new SftpUpload(channel, remote, local);
+        return new SftpUpload(this, remote, local);
     }
 
     /**
@@ -824,11 +1033,11 @@ public class SftpExecutor extends BaseExecutor {
      * @return 文件上传器
      */
     public SftpUpload upload(String remote, String local) {
-        return new SftpUpload(channel, remote, local);
+        return new SftpUpload(this, remote, local);
     }
 
     public SftpDownload download(String remote, File local) {
-        return new SftpDownload(channel, remote, local);
+        return new SftpDownload(this, remote, local);
     }
 
     /**
@@ -839,16 +1048,40 @@ public class SftpExecutor extends BaseExecutor {
      * @return 文件下载器
      */
     public SftpDownload download(String remote, String local) {
-        return new SftpDownload(channel, remote, local);
+        return new SftpDownload(this, remote, local);
     }
 
     // -------------------- list --------------------
 
-    public List<FileAttribute> listFiles(String path) {
+    /**
+     * 获取目录文件属性
+     *
+     * @param path 文件绝对路径
+     * @return 属性
+     */
+    public List<SftpFile> ll(String path) {
+        List<SftpFile> list = new ArrayList<>();
+        try {
+            Vector<?> files = channel.ls(path);
+            for (Object l : files) {
+                ChannelSftp.LsEntry ls = (ChannelSftp.LsEntry) l;
+                String filename = ls.getFilename();
+                if (".".equals(filename) || "..".equals(filename)) {
+                    continue;
+                }
+                list.add(new SftpFile(Files1.getPath(path + SEPARATOR + filename), ls.getLongname(), ls.getAttrs()));
+            }
+        } catch (Exception e) {
+            // ignore
+        }
+        return list;
+    }
+
+    public List<SftpFile> listFiles(String path) {
         return this.listFiles(path, false, false);
     }
 
-    public List<FileAttribute> listFiles(String path, boolean child) {
+    public List<SftpFile> listFiles(String path, boolean child) {
         return this.listFiles(path, child, false);
     }
 
@@ -860,11 +1093,11 @@ public class SftpExecutor extends BaseExecutor {
      * @param dir   是否添加文件夹
      * @return 文件列表
      */
-    public List<FileAttribute> listFiles(String path, boolean child, boolean dir) {
-        List<FileAttribute> list = new ArrayList<>();
+    public List<SftpFile> listFiles(String path, boolean child, boolean dir) {
+        List<SftpFile> list = new ArrayList<>();
         try {
-            List<FileAttribute> ls = this.ll(path);
-            for (FileAttribute l : ls) {
+            List<SftpFile> ls = this.ll(path);
+            for (SftpFile l : ls) {
                 if (l.isDirectory()) {
                     if (dir) {
                         list.add(l);
@@ -877,12 +1110,12 @@ public class SftpExecutor extends BaseExecutor {
                 }
             }
         } catch (Exception e) {
-            Exceptions.printStacks(e);
+            // ignore
         }
         return list;
     }
 
-    public List<FileAttribute> listDirs(String path) {
+    public List<SftpFile> listDirs(String path) {
         return this.listDirs(path, false);
     }
 
@@ -893,11 +1126,11 @@ public class SftpExecutor extends BaseExecutor {
      * @param child 是否递归
      * @return 文件列表
      */
-    public List<FileAttribute> listDirs(String path, boolean child) {
-        List<FileAttribute> list = new ArrayList<>();
+    public List<SftpFile> listDirs(String path, boolean child) {
+        List<SftpFile> list = new ArrayList<>();
         try {
-            List<FileAttribute> ls = this.ll(path);
-            for (FileAttribute l : ls) {
+            List<SftpFile> ls = this.ll(path);
+            for (SftpFile l : ls) {
                 if (l.isDirectory()) {
                     list.add(l);
                     if (child) {
@@ -906,16 +1139,16 @@ public class SftpExecutor extends BaseExecutor {
                 }
             }
         } catch (Exception e) {
-            Exceptions.printStacks(e);
+            // ingore
         }
         return list;
     }
 
-    public List<FileAttribute> listFilesSuffix(String path, String suffix) {
+    public List<SftpFile> listFilesSuffix(String path, String suffix) {
         return this.listFilesSuffix(path, suffix, false, false);
     }
 
-    public List<FileAttribute> listFilesSuffix(String path, String suffix, boolean child) {
+    public List<SftpFile> listFilesSuffix(String path, String suffix, boolean child) {
         return this.listFilesSuffix(path, suffix, child, false);
     }
 
@@ -928,15 +1161,15 @@ public class SftpExecutor extends BaseExecutor {
      * @param dir    是否添加文件夹
      * @return 文件
      */
-    public List<FileAttribute> listFilesSuffix(String path, String suffix, boolean child, boolean dir) {
+    public List<SftpFile> listFilesSuffix(String path, String suffix, boolean child, boolean dir) {
         return this.listFilesSearch(path, FileAttributeFilter.suffix(suffix), child, dir);
     }
 
-    public List<FileAttribute> listFilesMatch(String path, String match) {
+    public List<SftpFile> listFilesMatch(String path, String match) {
         return this.listFilesMatch(path, match, false, false);
     }
 
-    public List<FileAttribute> listFilesMatch(String path, String match, boolean child) {
+    public List<SftpFile> listFilesMatch(String path, String match, boolean child) {
         return this.listFilesMatch(path, match, child, false);
     }
 
@@ -949,15 +1182,15 @@ public class SftpExecutor extends BaseExecutor {
      * @param dir   是否添加文件夹
      * @return 文件
      */
-    public List<FileAttribute> listFilesMatch(String path, String match, boolean child, boolean dir) {
+    public List<SftpFile> listFilesMatch(String path, String match, boolean child, boolean dir) {
         return this.listFilesSearch(path, FileAttributeFilter.match(match), child, dir);
     }
 
-    public List<FileAttribute> listFilesPattern(String path, Pattern pattern) {
+    public List<SftpFile> listFilesPattern(String path, Pattern pattern) {
         return this.listFilesPattern(path, pattern, false, false);
     }
 
-    public List<FileAttribute> listFilesPattern(String path, Pattern pattern, boolean child) {
+    public List<SftpFile> listFilesPattern(String path, Pattern pattern, boolean child) {
         return this.listFilesPattern(path, pattern, child, false);
     }
 
@@ -970,15 +1203,15 @@ public class SftpExecutor extends BaseExecutor {
      * @param dir     是否添加文件夹
      * @return 文件
      */
-    public List<FileAttribute> listFilesPattern(String path, Pattern pattern, boolean child, boolean dir) {
+    public List<SftpFile> listFilesPattern(String path, Pattern pattern, boolean child, boolean dir) {
         return this.listFilesSearch(path, FileAttributeFilter.pattern(pattern), child, dir);
     }
 
-    public List<FileAttribute> listFilesFilter(String path, FileAttributeFilter filter) {
+    public List<SftpFile> listFilesFilter(String path, FileAttributeFilter filter) {
         return this.listFilesFilter(path, filter, false, false);
     }
 
-    public List<FileAttribute> listFilesFilter(String path, FileAttributeFilter filter, boolean child) {
+    public List<SftpFile> listFilesFilter(String path, FileAttributeFilter filter, boolean child) {
         return this.listFilesFilter(path, filter, child, false);
     }
 
@@ -991,7 +1224,7 @@ public class SftpExecutor extends BaseExecutor {
      * @param dir    是否添加文件夹
      * @return 文件
      */
-    public List<FileAttribute> listFilesFilter(String path, FileAttributeFilter filter, boolean child, boolean dir) {
+    public List<SftpFile> listFilesFilter(String path, FileAttributeFilter filter, boolean child, boolean dir) {
         return this.listFilesSearch(path, filter, child, dir);
     }
 
@@ -1004,11 +1237,11 @@ public class SftpExecutor extends BaseExecutor {
      * @param dir    是否添加文件夹
      * @return 文件
      */
-    private List<FileAttribute> listFilesSearch(String path, FileAttributeFilter filter, boolean child, boolean dir) {
-        List<FileAttribute> list = new ArrayList<>();
+    private List<SftpFile> listFilesSearch(String path, FileAttributeFilter filter, boolean child, boolean dir) {
+        List<SftpFile> list = new ArrayList<>();
         try {
-            List<FileAttribute> ls = this.ll(path);
-            for (FileAttribute l : ls) {
+            List<SftpFile> ls = this.ll(path);
+            for (SftpFile l : ls) {
                 String fn = l.getName();
                 boolean isDir = l.isDirectory();
                 if (!isDir || dir) {
@@ -1021,10 +1254,12 @@ public class SftpExecutor extends BaseExecutor {
                 }
             }
         } catch (Exception e) {
-            Exceptions.printStacks(e);
+            // ignore
         }
         return list;
     }
+
+    // -------------------- option --------------------
 
     /**
      * 获取客户端版本
@@ -1064,6 +1299,10 @@ public class SftpExecutor extends BaseExecutor {
 
     public int getBufferSize() {
         return bufferSize;
+    }
+
+    public String getCharset() {
+        return charset;
     }
 
 }
