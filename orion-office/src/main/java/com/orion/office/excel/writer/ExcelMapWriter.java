@@ -12,7 +12,7 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2021/1/13 14:12
  */
-public class ExcelMapWriter<K, V> extends BaseExcelSheetWriter<K, Map<K, V>> {
+public class ExcelMapWriter<K, V> extends BaseExcelWriter<K, Map<K, V>> {
 
     public ExcelMapWriter(Workbook workbook, Sheet sheet) {
         super(workbook, sheet);

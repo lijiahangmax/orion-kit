@@ -1627,7 +1627,7 @@ public class Excels {
      * @param sheet    sheet
      * @param startRow 开始行索引
      * @param endRow   结束行索引
-     * @param column   结束列索引
+     * @param column   列索引
      * @param options  选项
      */
     public static void addSelectOptions(Sheet sheet, int startRow, int endRow, int column, String[] options) {
@@ -1709,6 +1709,10 @@ public class Excels {
     public static void write(Workbook workbook, OutputStream out, String password, boolean close) {
         Valid.notNull(workbook, "workbook is null");
         Valid.notNull(out, "outputStream is null");
+        if (password == null) {
+            write(workbook, out, close);
+            return;
+        }
         try (POIFSFileSystem fs = new POIFSFileSystem()) {
             EncryptionInfo info = new EncryptionInfo(EncryptionMode.agile);
             Encryptor enc = info.getEncryptor();

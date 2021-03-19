@@ -10,6 +10,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -462,6 +463,12 @@ public class ExcelExport<T> extends BaseExcelWriteable {
             processor.rowIndex++;
         }
         return this;
+    }
+
+    @Override
+    protected BaseExcelWriteable write(OutputStream out, String password, boolean close) {
+        processor.ultimate();
+        return super.write(out, password, close);
     }
 
     /**

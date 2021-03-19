@@ -127,14 +127,9 @@ public class ExportSheetOption implements Serializable {
     private PrintOption printOption;
 
     /**
-     * 是否添加了默认表头
+     * 标题和表头所占用的行数
      */
-    private boolean addDefaultHeader;
-
-    /**
-     * 是否已经添加了标题
-     */
-    private boolean addTitle;
+    private int titleAndHeaderRows;
 
     /**
      * 最大列索引
@@ -334,12 +329,12 @@ public class ExportSheetOption implements Serializable {
         this.printOption = printOption;
     }
 
-    public boolean isAddDefaultHeader() {
-        return addDefaultHeader;
+    public int getTitleAndHeaderRows() {
+        return titleAndHeaderRows;
     }
 
-    public void setAddDefaultHeader(boolean addDefaultHeader) {
-        this.addDefaultHeader = addDefaultHeader;
+    public void setTitleAndHeaderRows(int titleAndHeaderRows) {
+        this.titleAndHeaderRows = titleAndHeaderRows;
     }
 
     public int getColumnMaxIndex() {
@@ -368,14 +363,6 @@ public class ExportSheetOption implements Serializable {
 
     public void setSkipNullRows(boolean skipNullRows) {
         this.skipNullRows = skipNullRows;
-    }
-
-    public boolean isAddTitle() {
-        return addTitle;
-    }
-
-    public void setAddTitle(boolean addTitle) {
-        this.addTitle = addTitle;
     }
 
     public String getTitle() {

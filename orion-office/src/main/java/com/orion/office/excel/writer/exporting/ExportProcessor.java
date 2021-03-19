@@ -78,10 +78,16 @@ public class ExportProcessor<T> {
         this.addTitle();
         // 注解表头
         this.addDefaultHeader();
-        // 注解下拉框
-        this.addRowSelectOptions();
         // 打印
         this.addPrintSetup();
+    }
+
+    /**
+     * 最终
+     */
+    protected void ultimate() {
+        // 注解下拉框
+        this.addRowSelectOptions();
     }
 
     /**
@@ -205,7 +211,8 @@ public class ExportProcessor<T> {
         this.colorIndex = fontOption.getPaletteColorIndex();
         Row titleRow = sheet.createRow(rowIndex);
         // 防止多个row高度不一致
-        for (int i = 1; i < titleOption.getUseRow(); i++) {
+        int useRow = titleOption.getUseRow();
+        for (int i = 1; i < useRow; i++) {
             Row temp = sheet.createRow(rowIndex + i);
             if (sheetOption.getTitleHeight() != null) {
                 temp.setHeightInPoints(sheetOption.getTitleHeight());
@@ -220,11 +227,11 @@ public class ExportProcessor<T> {
         Cell titleCell = titleRow.createCell(0);
         titleCell.setCellStyle(titleStyle);
         titleCell.setCellValue(titleOption.getTitle());
-        CellRangeAddress region = new CellRangeAddress(rowIndex, rowIndex + titleOption.getUseRow() - 1, 0, titleOption.getUseColumn());
+        CellRangeAddress region = new CellRangeAddress(rowIndex, rowIndex + useRow - 1, 0, titleOption.getUseColumn());
         Excels.mergeCell(sheet, region);
         Excels.mergeCellBorder(sheet, titleStyle.getBorderTop().getCode(), titleStyle.getTopBorderColor(), region);
-        rowIndex += titleOption.getUseRow();
-        sheetOption.setAddTitle(true);
+        rowIndex += useRow;
+        sheetOption.setTitleAndHeaderRows(sheetOption.getTitleAndHeaderRows() + useRow);
     }
 
     /**
@@ -247,7 +254,7 @@ public class ExportProcessor<T> {
         if (Strings.isAllEmpty(h)) {
             return;
         }
-        this.sheetOption.setAddDefaultHeader(true);
+        sheetOption.setTitleAndHeaderRows(sheetOption.getTitleAndHeaderRows() + 1);
         this.headers(true, h);
         // 冻结首行
         if (sheetOption.isFreezeHeader()) {
@@ -261,8 +268,6 @@ public class ExportProcessor<T> {
 
     /**
      * 添加列下拉框
-     * <p>
-     * 设置下拉框行数为65535
      */
     private void addRowSelectOptions() {
         if (this.sheetOption.isSkipSelectOption()) {
@@ -273,7 +278,7 @@ public class ExportProcessor<T> {
             if (Arrays1.isEmpty(options)) {
                 return;
             }
-            Excels.addSelectOptions(sheet, this.sheetOption.isAddDefaultHeader() ? 1 : 0, k, options);
+            Excels.addSelectOptions(sheet, this.sheetOption.getTitleAndHeaderRows(), rowIndex - 1, k, options);
         });
     }
 
