@@ -21,7 +21,7 @@ public class ShellExecutor extends BaseRemoteExecutor {
     private String shellType;
 
     public ShellExecutor(Session session) {
-        this(session, "bash");
+        this(session, "xterm");
     }
 
     public ShellExecutor(Session session, String shellType) {
