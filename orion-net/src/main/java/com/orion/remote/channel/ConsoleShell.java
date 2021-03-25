@@ -22,7 +22,7 @@ public class ConsoleShell {
     /**
      * 端口
      */
-    private int port = 22;
+    private int port;
 
     /**
      * 用户名
@@ -46,6 +46,7 @@ public class ConsoleShell {
 
     public ConsoleShell(String host, String username, String password) {
         this.host = host;
+        this.port = 22;
         this.username = username;
         this.password = password;
     }
@@ -67,9 +68,10 @@ public class ConsoleShell {
         session.setConfig("StrictHostKeyChecking", "no");
         session.connect(Const.MS_S_3);
         this.channelShell = (ChannelShell) session.openChannel("shell");
+        channelShell.setPtyType("xterm");
         channelShell.setInputStream(System.in);
         channelShell.setOutputStream(System.out);
-        channelShell.connect(Const.MS_S_3);
+        channelShell.connect();
     }
 
     /**

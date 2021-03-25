@@ -1497,7 +1497,7 @@ public class Strings {
      * @return byte[]
      */
     public static byte[] bytes(String s) {
-        return s.getBytes();
+        return bytes(s, (Charset) null);
     }
 
     /**
@@ -1511,7 +1511,11 @@ public class Strings {
         if (charset != null) {
             return s.getBytes(charset);
         }
-        return s.getBytes();
+        try {
+            return s.getBytes(Systems.FILE_ENCODING);
+        } catch (UnsupportedEncodingException e) {
+            throw Exceptions.unsupportedEncoding(e);
+        }
     }
 
     /**
@@ -1526,7 +1530,7 @@ public class Strings {
             if (charset != null) {
                 return s.getBytes(charset);
             } else {
-                return s.getBytes();
+                return s.getBytes(Systems.FILE_ENCODING);
             }
         } catch (UnsupportedEncodingException e) {
             throw Exceptions.unsupportedEncoding(e);
