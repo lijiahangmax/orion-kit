@@ -81,6 +81,7 @@ public class ExcelBeanReader<T> extends BaseExcelReader<T> {
         if (constructor == null) {
             throw Exceptions.argument("target class not found default constructor");
         }
+        this.init = false;
         this.constructor = constructor;
         this.analysis = new ReaderColumnAnalysis(targetClass, streaming, options);
         this.analysis.analysis();
@@ -145,6 +146,7 @@ public class ExcelBeanReader<T> extends BaseExcelReader<T> {
 
     @Override
     public ExcelBeanReader<T> init() {
+        this.init = true;
         boolean havePicture = options.values().stream()
                 .map(ImportFieldOption::getType)
                 .anyMatch(ExcelReadType.PICTURE::equals);

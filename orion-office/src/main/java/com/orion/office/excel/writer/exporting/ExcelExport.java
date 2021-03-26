@@ -4,6 +4,7 @@ import com.orion.office.excel.Excels;
 import com.orion.office.excel.option.ExportFieldOption;
 import com.orion.office.excel.option.ExportSheetOption;
 import com.orion.office.excel.writer.BaseExcelWriteable;
+import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
 import com.orion.utils.collect.Lists;
 import org.apache.poi.ss.usermodel.*;
@@ -54,6 +55,11 @@ public class ExcelExport<T> extends BaseExcelWriteable {
      */
     private int rows;
 
+    /**
+     * 是否初始化
+     */
+    protected boolean init;
+
     public ExcelExport(Class<T> targetClass) {
         this(targetClass, new SXSSFWorkbook(), null);
     }
@@ -94,6 +100,7 @@ public class ExcelExport<T> extends BaseExcelWriteable {
      * @return this
      */
     public ExcelExport<T> init() {
+        this.init = true;
         this.processor.init();
         this.sheet = processor.getSheet();
         return this;
@@ -186,6 +193,7 @@ public class ExcelExport<T> extends BaseExcelWriteable {
      * @return this
      */
     public ExcelExport<T> cleanStyle(int column) {
+        this.checkInit();
         processor.columnStyles.remove(column);
         processor.headerStyles.remove(column);
         Integer rowWidth = sheetOption.getColumnWidth();
@@ -202,6 +210,7 @@ public class ExcelExport<T> extends BaseExcelWriteable {
      * @return this
      */
     public ExcelExport<T> cleanHeaderStyle(int column) {
+        this.checkInit();
         processor.headerStyles.remove(column);
         return this;
     }
@@ -213,6 +222,7 @@ public class ExcelExport<T> extends BaseExcelWriteable {
      * @return this
      */
     public ExcelExport<T> cleanColumnStyle(int column) {
+        this.checkInit();
         processor.columnStyles.remove(column);
         return this;
     }
@@ -223,6 +233,7 @@ public class ExcelExport<T> extends BaseExcelWriteable {
      * @return this
      */
     public ExcelExport<T> headUseColumnStyle() {
+        this.checkInit();
         fieldOptions.forEach((k, v) -> {
             processor.headerStyles.put(k, processor.parseStyle(k, false, v));
         });
@@ -236,6 +247,7 @@ public class ExcelExport<T> extends BaseExcelWriteable {
      * @return this
      */
     public ExcelExport<T> headUseColumnStyle(int column) {
+        this.checkInit();
         processor.headerStyles.put(column, processor.parseStyle(column, false, fieldOptions.get(column)));
         return this;
     }
@@ -246,6 +258,7 @@ public class ExcelExport<T> extends BaseExcelWriteable {
      * @return this
      */
     public ExcelExport<T> columnUseHeadStyle() {
+        this.checkInit();
         fieldOptions.forEach((k, v) -> {
             processor.columnStyles.put(k, processor.parseStyle(k, true, v));
         });
@@ -259,6 +272,7 @@ public class ExcelExport<T> extends BaseExcelWriteable {
      * @return this
      */
     public ExcelExport<T> columnUseHeadStyle(int column) {
+        this.checkInit();
         processor.columnStyles.put(column, processor.parseStyle(column, true, fieldOptions.get(column)));
         return this;
     }
@@ -271,6 +285,7 @@ public class ExcelExport<T> extends BaseExcelWriteable {
      * @return this
      */
     public ExcelExport<T> setStyle(int column, CellStyle style) {
+        this.checkInit();
         processor.headerStyles.put(column, style);
         processor.columnStyles.put(column, style);
         return this;
@@ -284,6 +299,7 @@ public class ExcelExport<T> extends BaseExcelWriteable {
      * @return this
      */
     public ExcelExport<T> setHeaderStyle(int column, CellStyle style) {
+        this.checkInit();
         processor.headerStyles.put(column, style);
         return this;
     }
@@ -296,6 +312,7 @@ public class ExcelExport<T> extends BaseExcelWriteable {
      * @return this
      */
     public ExcelExport<T> setColumnStyle(int column, CellStyle style) {
+        this.checkInit();
         processor.columnStyles.put(column, style);
         return this;
     }
@@ -308,6 +325,7 @@ public class ExcelExport<T> extends BaseExcelWriteable {
      * @return this
      */
     public ExcelExport<T> setStyle(int column, ExportFieldOption option) {
+        this.checkInit();
         if (option == null) {
             return this;
         }
@@ -324,6 +342,7 @@ public class ExcelExport<T> extends BaseExcelWriteable {
      * @return this
      */
     public ExcelExport<T> setHeaderStyle(int column, ExportFieldOption option) {
+        this.checkInit();
         if (option == null) {
             return this;
         }
@@ -339,6 +358,7 @@ public class ExcelExport<T> extends BaseExcelWriteable {
      * @return this
      */
     public ExcelExport<T> setColumnStyle(int column, ExportFieldOption option) {
+        this.checkInit();
         if (option == null) {
             return this;
         }
@@ -406,6 +426,7 @@ public class ExcelExport<T> extends BaseExcelWriteable {
      * @return this
      */
     public ExcelExport<T> merge(CellRangeAddress region, boolean mergeBorder) {
+        this.checkInit();
         Excels.mergeCell(sheet, region);
         if (mergeBorder) {
             Optional.ofNullable(Excels.getCell(sheet, region.getFirstRow(), 0))
@@ -424,6 +445,7 @@ public class ExcelExport<T> extends BaseExcelWriteable {
      * @return this
      */
     public ExcelExport<T> headers(String... headers) {
+        this.checkInit();
         processor.headers(false, headers);
         return this;
     }
@@ -445,6 +467,7 @@ public class ExcelExport<T> extends BaseExcelWriteable {
      * @return this
      */
     public ExcelExport<T> addRows(List<T> rows) {
+        this.checkInit();
         Integer rowHeight = sheetOption.getRowHeight();
         for (T data : rows) {
             this.rows++;
@@ -467,8 +490,18 @@ public class ExcelExport<T> extends BaseExcelWriteable {
 
     @Override
     protected BaseExcelWriteable write(OutputStream out, String password, boolean close) {
+        this.checkInit();
         processor.ultimate();
         return super.write(out, password, close);
+    }
+
+    /**
+     * 检查是否初始化
+     */
+    protected void checkInit() {
+        if (!init) {
+            throw Exceptions.init("excel export uninitialized");
+        }
     }
 
     /**

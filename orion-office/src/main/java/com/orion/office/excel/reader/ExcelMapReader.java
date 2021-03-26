@@ -55,15 +55,20 @@ public class ExcelMapReader<K, V> extends BaseExcelReader<MutableMap<K, V>> {
     private boolean linked;
 
     public ExcelMapReader(Workbook workbook, Sheet sheet) {
-        super(workbook, sheet, new ArrayList<>(), null);
+        this(workbook, sheet, new ArrayList<>(), null);
     }
 
     public ExcelMapReader(Workbook workbook, Sheet sheet, List<MutableMap<K, V>> rows) {
-        super(workbook, sheet, rows, null);
+        this(workbook, sheet, rows, null);
     }
 
     public ExcelMapReader(Workbook workbook, Sheet sheet, Consumer<MutableMap<K, V>> consumer) {
-        super(workbook, sheet, null, consumer);
+        this(workbook, sheet, null, consumer);
+    }
+
+    private ExcelMapReader(Workbook workbook, Sheet sheet, List<MutableMap<K, V>> rows, Consumer<MutableMap<K, V>> consumer) {
+        super(workbook, sheet, rows, consumer);
+        this.init = false;
     }
 
     /**
@@ -151,6 +156,7 @@ public class ExcelMapReader<K, V> extends BaseExcelReader<MutableMap<K, V>> {
 
     @Override
     public ExcelMapReader<K, V> init() {
+        this.init = true;
         boolean havePicture = options.values().stream()
                 .map(ImportFieldOption::getType)
                 .anyMatch(ExcelReadType.PICTURE::equals);

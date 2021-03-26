@@ -43,15 +43,19 @@ public class ExcelArrayReader extends BaseExcelReader<String[]> {
     private String[] emptyArray;
 
     public ExcelArrayReader(Workbook workbook, Sheet sheet) {
-        super(workbook, sheet, new ArrayList<>(), null);
+        this(workbook, sheet, new ArrayList<>(), null);
     }
 
     public ExcelArrayReader(Workbook workbook, Sheet sheet, List<String[]> rows) {
-        super(workbook, sheet, rows, null);
+        this(workbook, sheet, rows, null);
     }
 
     public ExcelArrayReader(Workbook workbook, Sheet sheet, Consumer<String[]> consumer) {
-        super(workbook, sheet, null, consumer);
+        this(workbook, sheet, null, consumer);
+    }
+
+    private ExcelArrayReader(Workbook workbook, Sheet sheet, List<String[]> rows, Consumer<String[]> consumer) {
+        super(workbook, sheet, rows, consumer);
     }
 
     /**

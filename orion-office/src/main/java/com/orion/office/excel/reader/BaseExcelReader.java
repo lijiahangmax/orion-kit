@@ -88,6 +88,11 @@ public abstract class BaseExcelReader<T> implements SafeCloseable {
      */
     protected boolean store;
 
+    /**
+     * 是否已经初始化
+     */
+    protected boolean init;
+
     protected BaseExcelReader(Workbook workbook, Sheet sheet, List<T> rows, Consumer<T> consumer) {
         Valid.notNull(workbook, "workbook is null");
         Valid.notNull(sheet, "sheet is null");
@@ -102,6 +107,7 @@ public abstract class BaseExcelReader<T> implements SafeCloseable {
         this.streaming = sheet instanceof StreamingSheet;
         this.lines = sheet.getLastRowNum() + 1;
         this.iterator = sheet.rowIterator();
+        this.init = true;
     }
 
     /**
@@ -119,6 +125,7 @@ public abstract class BaseExcelReader<T> implements SafeCloseable {
      * @return this
      */
     public BaseExcelReader<T> init() {
+        this.init = true;
         return this;
     }
 
@@ -180,6 +187,7 @@ public abstract class BaseExcelReader<T> implements SafeCloseable {
      * @return this
      */
     public BaseExcelReader<T> read() {
+        this.checkInit();
         while (!end) {
             this.readRow();
         }
@@ -193,6 +201,7 @@ public abstract class BaseExcelReader<T> implements SafeCloseable {
      * @return this
      */
     public BaseExcelReader<T> read(int i) {
+        this.checkInit();
         for (int j = 0; j < i && !end; j++) {
             this.readRow();
         }
@@ -203,6 +212,7 @@ public abstract class BaseExcelReader<T> implements SafeCloseable {
      * 读取一行
      */
     protected void readRow() {
+        this.checkInit();
         T row = nextRow();
         if (end || (row == null && skipNullRows)) {
             return;
@@ -221,6 +231,7 @@ public abstract class BaseExcelReader<T> implements SafeCloseable {
      * @return row
      */
     protected T nextRow() {
+        this.checkInit();
         if (end) {
             return null;
         }
@@ -254,6 +265,15 @@ public abstract class BaseExcelReader<T> implements SafeCloseable {
             this.rows.clear();
         }
         return this;
+    }
+
+    /**
+     * 检查是否初始化
+     */
+    protected void checkInit() {
+        if (!init) {
+            throw Exceptions.init("excel reader uninitialized");
+        }
     }
 
     @Override

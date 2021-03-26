@@ -59,7 +59,7 @@ public class ExcelReaderIterator<T> implements SafeCloseable, Iterator<T>, Itera
     @Override
     public T next() {
         if (first) {
-            boolean next = getNext();
+            boolean next = this.getNext();
             if (!next) {
                 throwNoSuch();
             }
