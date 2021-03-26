@@ -2,6 +2,7 @@ package com.orion.lang.iterator;
 
 import com.orion.able.SafeCloseable;
 import com.orion.utils.Exceptions;
+import com.orion.utils.Valid;
 import com.orion.utils.io.Streams;
 
 import java.io.BufferedReader;
@@ -23,40 +24,49 @@ public class LineIterator implements Iterator<String>, Iterable<String>, SafeClo
 
     private final BufferedReader bufferedReader;
 
-    private String line;
+    private String current;
 
-    private boolean finished = false;
+    private boolean finished;
+
+    private boolean autoClose;
 
     public LineIterator(Reader reader) {
-        if (reader == null) {
-            throw Exceptions.argument("Reader must not be null");
-        }
+        Valid.notNull(reader, "reader is null");
         if (reader instanceof BufferedReader) {
-            bufferedReader = (BufferedReader) reader;
+            this.bufferedReader = (BufferedReader) reader;
         } else {
-            bufferedReader = new BufferedReader(reader);
+            this.bufferedReader = new BufferedReader(reader);
         }
+    }
+
+    /**
+     * 设置流自动关闭
+     *
+     * @param autoClose 是否自动关闭
+     * @return this
+     */
+    public LineIterator autoClose(boolean autoClose) {
+        this.autoClose = autoClose;
+        return this;
     }
 
     @Override
     public boolean hasNext() {
-        if (line != null) {
-            return true;
-        } else if (finished) {
+        if (finished) {
             return false;
-        } else {
-            try {
-                String line = bufferedReader.readLine();
-                if (line == null) {
-                    finished = true;
-                    return false;
-                } else {
-                    this.line = line;
-                    return true;
-                }
-            } catch (IOException e) {
-                throw Exceptions.ioRuntime(e);
+        } else if (current != null) {
+            return true;
+        }
+        try {
+            this.current = bufferedReader.readLine();
+            if (current == null) {
+                this.finished = true;
+                return false;
+            } else {
+                return true;
             }
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
         }
     }
 
@@ -65,21 +75,18 @@ public class LineIterator implements Iterator<String>, Iterable<String>, SafeClo
         if (!hasNext()) {
             throw Exceptions.noSuchElement("no more lines");
         }
-        String currentLine = line;
-        line = null;
-        return currentLine;
-    }
-
-    @Override
-    public void remove() {
-        throw Exceptions.unsupported("remove unsupported on lineIterator");
+        String t = current;
+        this.current = null;
+        return t;
     }
 
     @Override
     public void close() {
-        finished = true;
-        Streams.close(bufferedReader);
-        line = null;
+        this.finished = true;
+        this.current = null;
+        if (autoClose) {
+            Streams.close(bufferedReader);
+        }
     }
 
     @Override

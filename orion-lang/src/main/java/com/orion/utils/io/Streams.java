@@ -1,11 +1,9 @@
 package com.orion.utils.io;
 
 import com.orion.constant.Const;
+import com.orion.lang.iterator.ByteArrayIterator;
 import com.orion.lang.iterator.LineIterator;
-import com.orion.utils.Arrays1;
-import com.orion.utils.Exceptions;
-import com.orion.utils.Strings;
-import com.orion.utils.Systems;
+import com.orion.utils.*;
 import com.orion.utils.crypto.enums.HashMessageDigest;
 
 import java.io.*;
@@ -15,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 
 /**
  * io 操作
@@ -29,7 +28,7 @@ public class Streams {
     private Streams() {
     }
 
-    // -------------------- 随机读写 --------------------
+    // -------------------- random read/write --------------------
 
     /**
      * 从偏移量开始读取,读取到结尾
@@ -190,7 +189,7 @@ public class Streams {
         return new String(abs, charset);
     }
 
-    // -------------------- 关闭流 --------------------
+    // -------------------- close --------------------
 
     public static void close(AutoCloseable c) {
         try {
@@ -202,7 +201,7 @@ public class Streams {
         }
     }
 
-    // -------------------- 刷新流 --------------------
+    // -------------------- flush --------------------
 
     public static void flush(Flushable f) {
         try {
@@ -214,7 +213,7 @@ public class Streams {
         }
     }
 
-    // -------------------- 复制流 --------------------
+    // -------------------- transfer --------------------
 
     public static int transfer(RandomAccessFile access, OutputStream output) throws IOException {
         long count = transferLarge(access, output);
@@ -303,7 +302,7 @@ public class Streams {
         }
     }
 
-    // -------------------- 读取所有行 --------------------
+    // -------------------- read lines --------------------
 
     public static List<String> readLines(InputStream input) throws IOException {
         return readLines(new InputStreamReader(input));
@@ -328,7 +327,7 @@ public class Streams {
         return list;
     }
 
-    // -------------------- 写入 --------------------
+    // -------------------- write --------------------
 
     public static void write(byte[] data, OutputStream output) throws IOException {
         if (data != null) {
@@ -451,7 +450,7 @@ public class Streams {
         }
     }
 
-    // -------------------- 流转字符 --------------------
+    // -------------------- convert byte array --------------------
 
     public static byte[] toByteArray(InputStream input) throws IOException {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -519,7 +518,7 @@ public class Streams {
         }
     }
 
-    // -------------------- 转流 --------------------
+    // -------------------- convert stream --------------------
 
     public static InputStream toInputStream(byte[] bs) {
         return new ByteArrayInputStream(bs);
@@ -578,7 +577,7 @@ public class Streams {
         return out;
     }
 
-    // -------------------- 签名 --------------------
+    // -------------------- sign --------------------
 
     /**
      * 流 MD5 签名
@@ -662,11 +661,11 @@ public class Streams {
         }
     }
 
-    // -------------------- 行迭代器 --------------------
+    // -------------------- line consumer --------------------
 
     public static void lineConsumer(InputStream in, Consumer<String> c) throws IOException {
         try {
-            lineConsumer(new InputStreamReader(in), c);
+            lineConsumer(new InputStreamReader(in), Const.BUFFER_KB_4, c);
         } catch (UnsupportedEncodingException e) {
             throw Exceptions.unsupportedEncoding(e);
         }
@@ -678,27 +677,31 @@ public class Streams {
             return;
         }
         try {
-            lineConsumer(new InputStreamReader(in, charset), c);
+            lineConsumer(new InputStreamReader(in, charset), Const.BUFFER_KB_4, c);
         } catch (UnsupportedEncodingException e) {
             throw Exceptions.unsupportedEncoding(e);
         }
     }
 
     public static void lineConsumer(Reader reader, Consumer<String> c) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(reader);
+        lineConsumer(reader, Const.BUFFER_KB_4, c);
+    }
+
+    public static void lineConsumer(Reader reader, int bufferSize, Consumer<String> c) throws IOException {
+        Valid.notNull(reader, "reader is null");
+        BufferedReader bufferedReader;
+        if (reader instanceof BufferedReader) {
+            bufferedReader = (BufferedReader) reader;
+        } else {
+            bufferedReader = new BufferedReader(reader, bufferSize);
+        }
         String line;
         while ((line = bufferedReader.readLine()) != null) {
             c.accept(line);
         }
     }
 
-    public static void lineConsumer(Reader reader, int bufferSize, Consumer<String> c) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(reader, bufferSize);
-        String line;
-        while ((line = bufferedReader.readLine()) != null) {
-            c.accept(line);
-        }
-    }
+    // -------------------- line iterator --------------------
 
     public static LineIterator lineIterator(Reader reader) {
         return new LineIterator(reader);
@@ -710,6 +713,21 @@ public class Streams {
 
     public static LineIterator lineIterator(InputStream input, String charset) throws IOException {
         return new LineIterator(new InputStreamReader(input, charset));
+    }
+
+    // -------------------- byte array consumer --------------------
+
+    public static void byteArrayConsumer(InputStream input, byte[] buffer, IntConsumer consumer) throws IOException {
+        int read;
+        while ((read = input.read(buffer)) != -1) {
+            consumer.accept(read);
+        }
+    }
+
+    // -------------------- byte array iterator --------------------
+
+    public static ByteArrayIterator byteArrayIterator(InputStream input, byte[] buffer) throws IOException {
+        return new ByteArrayIterator(input, buffer);
     }
 
 }
