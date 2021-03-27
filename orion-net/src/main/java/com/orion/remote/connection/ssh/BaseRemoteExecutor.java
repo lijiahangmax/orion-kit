@@ -110,7 +110,17 @@ public abstract class BaseRemoteExecutor implements Executable, SafeCloseable {
      * @return this
      */
     public BaseRemoteExecutor write(String command) {
-        return this.write(Strings.bytes(command));
+        return this.write(Strings.bytes(command), false);
+    }
+
+    /**
+     * 写入命令
+     *
+     * @param command command
+     * @return this
+     */
+    public BaseRemoteExecutor writeLine(String command) {
+        return this.write(Strings.bytes(command), true);
     }
 
     /**
@@ -121,11 +131,18 @@ public abstract class BaseRemoteExecutor implements Executable, SafeCloseable {
      * @return this
      */
     public BaseRemoteExecutor write(String command, String charset) {
-        if (charset == null) {
-            return this.write(Strings.bytes(command));
-        } else {
-            return this.write(Strings.bytes(command, charset));
-        }
+        return this.write(Strings.bytes(command, charset), false);
+    }
+
+    /**
+     * 写入命令
+     *
+     * @param command command
+     * @param charset 编码格式
+     * @return this
+     */
+    public BaseRemoteExecutor writeLine(String command, String charset) {
+        return this.write(Strings.bytes(command, charset), true);
     }
 
     /**
@@ -135,9 +152,22 @@ public abstract class BaseRemoteExecutor implements Executable, SafeCloseable {
      * @return this
      */
     public BaseRemoteExecutor write(byte[] command) {
+        return this.write(command, false);
+    }
+
+    /**
+     * 写入命令
+     *
+     * @param command command
+     * @param lf      是否键入 \n
+     * @return this
+     */
+    public BaseRemoteExecutor write(byte[] command, boolean lf) {
         try {
             outputStream.write(command);
-            outputStream.write(Letters.LF);
+            if (lf) {
+                outputStream.write(Letters.LF);
+            }
             outputStream.flush();
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
@@ -146,13 +176,32 @@ public abstract class BaseRemoteExecutor implements Executable, SafeCloseable {
     }
 
     /**
-     * 退出
+     * 中断 键入 ctrl+c
+     *
+     * @return this
+     */
+    public BaseRemoteExecutor interrupt() {
+        return this.write(new byte[]{3}, true);
+    }
+
+    /**
+     * 挂起 键入 ctrl+x
+     *
+     * @return this
+     */
+    public BaseRemoteExecutor hangUp() {
+        return this.write(new byte[]{24}, true);
+    }
+
+    /**
+     * 退出 键入 exit 0
      *
      * @return this
      */
     public BaseRemoteExecutor exit() {
-        return this.write(Strings.bytes("exit 0"));
+        return this.write(Strings.bytes("exit 0"), true);
     }
+
 
     @Override
     public void exec() {

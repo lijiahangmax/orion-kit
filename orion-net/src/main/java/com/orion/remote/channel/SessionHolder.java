@@ -136,8 +136,8 @@ public class SessionHolder {
      * @param host     主机
      * @return SessionStore
      */
-    public static SessionStore getSession(String username, String host) {
-        return new SessionStore(username, host);
+    public static SessionStore getSession(String host, String username) {
+        return new SessionStore(host, username);
     }
 
     /**
@@ -148,8 +148,8 @@ public class SessionHolder {
      * @param port     端口
      * @return SessionStore
      */
-    public static SessionStore getSession(String username, String host, int port) {
-        return new SessionStore(username, host, port);
+    public static SessionStore getSession(String host, int port, String username) {
+        return new SessionStore(host, port, username);
     }
 
 }

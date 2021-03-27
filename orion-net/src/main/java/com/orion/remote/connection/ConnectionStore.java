@@ -178,21 +178,6 @@ public class ConnectionStore {
     }
 
     /**
-     * 获取 ShellExecutor
-     *
-     * @param shellType shell类型
-     * @return ShellExecutor
-     */
-    public ShellExecutor getShellExecutor(String shellType) {
-        Valid.isTrue(this.auth, "unauthorized");
-        try {
-            return new ShellExecutor(connection.openSession(), shellType);
-        } catch (IOException e) {
-            throw Exceptions.connection("could open session", e);
-        }
-    }
-
-    /**
      * 获取 ScpExecutor
      *
      * @return ScpExecutor

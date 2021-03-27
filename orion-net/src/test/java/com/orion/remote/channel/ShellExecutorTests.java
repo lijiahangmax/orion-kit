@@ -13,7 +13,7 @@ public class ShellExecutorTests {
 
     public static void main(String[] args) {
         SessionHolder.setLogger(SessionLogger.INFO);
-        ShellExecutor e = SessionHolder.getSession("root", "192.168.146.230")
+        ShellExecutor e = SessionHolder.getSession("192.168.146.230", "root")
                 .setPassword("admin123")
                 .setTimeout(20000)
                 .connect(20000)
@@ -21,16 +21,17 @@ public class ShellExecutorTests {
         e.streamHandler(ReaderLineBiConsumer.getDefaultPrint2());
         e.callback(exe -> System.out.println("end...."));
         e.connect(20000).exec();
-        e.write("ps -ef | grep java")
-                .write("ps -ef | grep ssh")
-                .write("ping www.baidu.com")
+        e.write("ps -ef | grep java\n")
+                .write("ps -ef | grep ssh\n")
+                .write("ping www.baidu.com\n")
                 // block
-                .write("ping www.jd.com");
-        Threads.sleep(4000);
+                .write("ping www.jd.com\n");
+        Threads.sleep(2000);
         System.out.println("--------------------------");
         System.out.println(e.isClosed());
         System.out.println(e.isConnected());
         System.out.println("--------------------------");
+        e.interrupt();
         e.close();
         System.out.println(e.isClosed());
         System.out.println(e.isConnected());

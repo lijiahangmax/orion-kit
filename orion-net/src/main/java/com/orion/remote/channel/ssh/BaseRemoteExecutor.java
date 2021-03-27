@@ -227,12 +227,27 @@ public abstract class BaseRemoteExecutor extends BaseExecutor {
     }
 
     /**
-     * 退出
+     * 退出 键入 exit 0
      *
      * @return this
      */
     public BaseRemoteExecutor exit() {
         return this.write(Strings.bytes("exit 0"), true);
+    }
+
+    /**
+     * 发送信号量
+     *
+     * @param signal 信号
+     * @return this
+     */
+    public BaseRemoteExecutor sendSignal(String signal) {
+        try {
+            channel.sendSignal(signal);
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime(e);
+        }
+        return this;
     }
 
     @Override
@@ -280,7 +295,7 @@ public abstract class BaseRemoteExecutor extends BaseExecutor {
      *
      * @return 是否结束
      */
-    public boolean isEOF() {
+    public boolean isEof() {
         return channel.isEOF();
     }
 

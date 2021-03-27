@@ -189,7 +189,17 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
      * @return this
      */
     public ProcessAwaitExecutor write(String command) {
-        return this.write(Strings.bytes(command));
+        return this.write(Strings.bytes(command), false);
+    }
+
+    /**
+     * 写入命令
+     *
+     * @param command command
+     * @return this
+     */
+    public ProcessAwaitExecutor writeLine(String command) {
+        return this.write(Strings.bytes(command), true);
     }
 
     /**
@@ -200,11 +210,18 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
      * @return this
      */
     public ProcessAwaitExecutor write(String command, String charset) {
-        if (charset == null) {
-            return this.write(Strings.bytes(command));
-        } else {
-            return this.write(Strings.bytes(command, charset));
-        }
+        return this.write(Strings.bytes(command, charset), false);
+    }
+
+    /**
+     * 写入命令
+     *
+     * @param command command
+     * @param charset 编码格式
+     * @return this
+     */
+    public ProcessAwaitExecutor writeLine(String command, String charset) {
+        return this.write(Strings.bytes(command, charset), true);
     }
 
     /**
@@ -214,14 +231,54 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
      * @return this
      */
     public ProcessAwaitExecutor write(byte[] command) {
+        return this.write(command, false);
+    }
+
+    /**
+     * 写入命令
+     *
+     * @param command command
+     * @param lf      是否键入 \n
+     * @return this
+     */
+    public ProcessAwaitExecutor write(byte[] command, boolean lf) {
         try {
-            this.outputStream.write(command);
-            this.outputStream.write(Letters.LF);
-            this.outputStream.flush();
+            outputStream.write(command);
+            if (lf) {
+                outputStream.write(Letters.LF);
+            }
+            outputStream.flush();
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         }
         return this;
+    }
+
+    /**
+     * 中断 键入 ctrl+c
+     *
+     * @return this
+     */
+    public ProcessAwaitExecutor interrupt() {
+        return this.write(new byte[]{3}, true);
+    }
+
+    /**
+     * 挂起 键入 ctrl+x
+     *
+     * @return this
+     */
+    public ProcessAwaitExecutor hangUp() {
+        return this.write(new byte[]{24}, true);
+    }
+
+    /**
+     * 退出
+     *
+     * @return this
+     */
+    public ProcessAwaitExecutor exit() {
+        return this.write(Strings.bytes("exit 0"), true);
     }
 
     @Override
@@ -303,15 +360,6 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
     @Override
     public boolean isAlive() {
         return this.process.isAlive();
-    }
-
-    /**
-     * 退出
-     *
-     * @return this
-     */
-    public ProcessAwaitExecutor exit() {
-        return this.write(Strings.bytes("exit 0"));
     }
 
     /**

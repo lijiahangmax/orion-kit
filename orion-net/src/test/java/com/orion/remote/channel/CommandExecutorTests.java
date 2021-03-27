@@ -18,7 +18,7 @@ public class CommandExecutorTests {
 
     private static void ls() {
         SessionHolder.setLogger(SessionLogger.ERROR);
-        CommandExecutor e = SessionHolder.getSession("root", "192.168.146.230")
+        CommandExecutor e = SessionHolder.getSession("192.168.146.230", "root")
                 .setPassword("admin123")
                 .setTimeout(20000)
                 .connect(20000)
@@ -35,7 +35,7 @@ public class CommandExecutorTests {
 
     private static void echo() {
         SessionHolder.setLogger(SessionLogger.INFO);
-        CommandExecutor e = SessionHolder.getSession("root", "192.168.146.230")
+        CommandExecutor e = SessionHolder.getSession("192.168.146.230", "root")
                 .setPassword("admin123")
                 .setTimeout(20000)
                 .connect(20000)

@@ -1,6 +1,7 @@
 package com.orion.remote.channel.ssh;
 
 import com.jcraft.jsch.ChannelShell;
+import com.orion.remote.TerminalType;
 import com.orion.utils.Exceptions;
 
 import java.io.IOException;
@@ -47,7 +48,7 @@ public class ShellExecutor extends BaseRemoteExecutor {
     public ShellExecutor(ChannelShell channel) {
         super(channel);
         this.channel = channel;
-        this.terminalType = "xterm";
+        this.terminalType = TerminalType.XTERM.getType();
         this.cols = 180;
         this.rows = 36;
         this.width = 1366;
@@ -63,11 +64,33 @@ public class ShellExecutor extends BaseRemoteExecutor {
     /**
      * 设置终端类型
      *
-     * @param terminalType bash vt100 xterm
+     * @param terminalType terminalType
+     * @return this
+     */
+    public ShellExecutor terminalType(TerminalType terminalType) {
+        this.terminalType = terminalType.getType();
+        return this;
+    }
+
+    /**
+     * 设置终端类型
+     *
+     * @param terminalType terminalType
      * @return this
      */
     public ShellExecutor terminalType(String terminalType) {
         this.terminalType = terminalType;
+        return this;
+    }
+
+    /**
+     * 是否启用 x11forwarding
+     *
+     * @param enable 是否启用
+     * @return this
+     */
+    public ShellExecutor x11Forward(boolean enable) {
+        channel.setXForwarding(enable);
         return this;
     }
 
@@ -111,6 +134,20 @@ public class ShellExecutor extends BaseRemoteExecutor {
         this.rows = rows;
         this.width = width;
         this.height = height;
+        return this;
+    }
+
+    /**
+     * 告知服务器重新设置终端大小
+     *
+     * @return this
+     */
+    public ShellExecutor resize() {
+        try {
+            channel.setPtySize(cols, rows, width, height);
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime(e);
+        }
         return this;
     }
 

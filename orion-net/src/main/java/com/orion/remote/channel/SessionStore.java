@@ -18,11 +18,11 @@ public class SessionStore {
 
     private Session session;
 
-    public SessionStore(String username, String host) {
-        this(username, host, 22);
+    public SessionStore(String host, String username) {
+        this(host, 22, username);
     }
 
-    public SessionStore(String username, String host, int port) {
+    public SessionStore(String host, int port, String username) {
         try {
             this.session = SessionHolder.CH.getSession(username, host, port);
         } catch (Exception e) {

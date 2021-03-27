@@ -33,15 +33,16 @@ public class ShellTests {
         e.streamHandler(ReaderLineBiConsumer.getDefaultPrint2());
         e.scheduler(EXECUTOR);
         e.exec();
-        e.write("ps -ef | grep java")
-                .write("ps -ef | grep ssh")
-                .write("ping www.baidu.com")
+        e.write("ps -ef | grep java\n")
+                .write("ps -ef | grep ssh\n")
+                .write("ping www.baidu.com\n")
                 // block
-                .write("ping www.jd.com");
-        Threads.sleep(5000);
+                .write("ping www.jd.com\n");
+        Threads.sleep(2000);
         System.out.println("--------------------------");
         System.out.println(e.isDone());
         System.out.println(e.isClose());
+        e.interrupt();
         e.close();
         System.out.println("--------------------------");
         System.out.println(e.isDone());

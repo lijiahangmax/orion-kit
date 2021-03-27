@@ -14,7 +14,7 @@ import com.orion.utils.Threads;
 public class ProcessAwaitTests {
 
     public static void main(String[] args) {
-        ping();
+        sql();
     }
 
     public static void echo() {
@@ -38,10 +38,10 @@ public class ProcessAwaitTests {
         exec.terminal()
                 .redirectError()
                 .exec();
-        exec.write("use test;");
-        exec.write("show tables;");
-        exec.write("select * from user limit 2;");
-        exec.write("quit;");
+        exec.write("use test;\n");
+        exec.write("show tables;\n");
+        exec.write("select * from user limit 2;\n");
+        exec.write("quit;\n");
     }
 
     public static void bat() {
