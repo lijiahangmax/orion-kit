@@ -7,10 +7,7 @@ package com.orion.constant;
  * @version 1.0.0
  * @since 2021/2/8 11:05
  */
-public class Const {
-
-    private Const() {
-    }
+public abstract class Const {
 
     // -------------------- array --------------------
 
