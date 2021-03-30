@@ -81,6 +81,11 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
     protected ExecutorService scheduler;
 
     /**
+     * 是否执行命令同步获取结果
+     */
+    private boolean sync;
+
+    /**
      * 是否已完成
      */
     private volatile boolean done;
@@ -135,6 +140,17 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
      */
     public ProcessAwaitExecutor waitFor(long timeout) {
         this.waitFor = timeout;
+        return this;
+    }
+
+    /**
+     * 执行命令同步获取结果
+     *
+     * @return this
+     */
+    public ProcessAwaitExecutor sync() {
+        this.sync = true;
+        this.waitFor = 0L;
         return this;
     }
 
@@ -288,33 +304,33 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
         }
         try {
             this.pb = new ProcessBuilder(command);
-            this.env = this.pb.environment();
-            if (this.addEnv != null) {
-                this.env.putAll(this.addEnv);
-            }
-            if (this.removeEnv != null) {
+            this.env = pb.environment();
+            if (removeEnv != null) {
                 for (String key : this.removeEnv) {
-                    this.env.remove(key);
+                    env.remove(key);
                 }
             }
-            this.pb.directory(this.dir == null ? null : new File(this.dir));
-            if (this.inherit) {
-                this.pb.inheritIO();
+            if (addEnv != null) {
+                env.putAll(this.addEnv);
+            }
+            pb.directory(this.dir == null ? null : new File(this.dir));
+            if (inherit) {
+                pb.inheritIO();
             }
             // 是否将错误流合并到输出流
-            this.process = this.pb.redirectErrorStream(this.redirectError).start();
-            this.outputStream = this.process.getOutputStream();
-            this.inputStream = this.process.getInputStream();
-            this.errorStream = this.process.getErrorStream();
+            this.process = pb.redirectErrorStream(redirectError).start();
+            this.outputStream = process.getOutputStream();
+            this.inputStream = process.getInputStream();
+            this.errorStream = process.getErrorStream();
 
             // 如果流不处理可能会阻塞
             this.listenerInputAndError();
 
-            if (this.waitFor != -1) {
-                if (this.waitFor != 0) {
-                    this.process.waitFor(this.waitFor, TimeUnit.MILLISECONDS);
+            if (waitFor != -1) {
+                if (waitFor != 0) {
+                    process.waitFor(waitFor, TimeUnit.MILLISECONDS);
                 } else {
-                    this.process.waitFor();
+                    process.waitFor();
                 }
             }
         } catch (Exception e) {
@@ -337,19 +353,19 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
      */
     public void close(boolean exit) {
         this.close = true;
-        if (exit && this.outputStream != null) {
+        if (exit && outputStream != null) {
             try {
                 this.write(Strings.bytes("exit 0"));
             } catch (Exception e1) {
                 Exceptions.printStacks(e1);
             }
         }
-        if (this.process != null) {
-            this.process.destroy();
+        if (process != null) {
+            process.destroy();
         }
-        Streams.close(this.inputStream);
-        Streams.close(this.outputStream);
-        Streams.close(this.errorStream);
+        Streams.close(inputStream);
+        Streams.close(outputStream);
+        Streams.close(errorStream);
     }
 
     /**
@@ -359,7 +375,7 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
      */
     @Override
     public boolean isAlive() {
-        return this.process.isAlive();
+        return process.isAlive();
     }
 
     /**
@@ -369,8 +385,8 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
      */
     @Override
     public int getExitCode() {
-        if (!this.process.isAlive()) {
-            return this.process.exitValue();
+        if (!process.isAlive()) {
+            return process.exitValue();
         }
         return -1;
     }
@@ -389,18 +405,31 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
      * 监听标准输出流和错误流
      */
     private void listenerInputAndError() {
-        Runnable runnable = new HookRunnable(() -> {
-            streamHandler.accept(this, inputStream);
-            if (errorStreamHandler != null && !redirectError) {
-                errorStreamHandler.accept(this, errorStream);
+        if (!sync) {
+            Runnable runnable = new HookRunnable(() -> {
+                streamHandler.accept(this, inputStream);
+                if (errorStreamHandler != null && !redirectError) {
+                    errorStreamHandler.accept(this, errorStream);
+                }
+            }, () -> {
+                this.done = true;
+                if (callback != null) {
+                    callback.accept(this);
+                }
+            }, true);
+            Threads.start(runnable, scheduler);
+        } else {
+            try {
+                streamHandler.accept(this, inputStream);
+            } catch (RuntimeException e) {
+                throw e;
+            } finally {
+                this.done = true;
+                if (callback != null) {
+                    callback.accept(this);
+                }
             }
-        }, () -> {
-            done = true;
-            if (this.callback != null) {
-                this.callback.accept(this);
-            }
-        }, true);
-        Threads.start(runnable, scheduler);
+        }
     }
 
     public InputStream getInputStream() {

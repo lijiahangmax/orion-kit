@@ -188,13 +188,13 @@ public class ProcessAsyncExecutor extends BaseProcessExecutor {
         try {
             this.pb = new ProcessBuilder(command);
             this.env = this.pb.environment();
-            if (this.addEnv != null) {
-                this.env.putAll(this.addEnv);
-            }
             if (this.removeEnv != null) {
                 for (String key : this.removeEnv) {
                     this.env.remove(key);
                 }
+            }
+            if (this.addEnv != null) {
+                this.env.putAll(this.addEnv);
             }
             this.pb.directory(dir == null ? null : new File(dir));
             // 是否将错误流合并到输出流

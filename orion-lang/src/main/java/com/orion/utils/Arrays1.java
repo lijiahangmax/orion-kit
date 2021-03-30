@@ -2856,6 +2856,14 @@ public class Arrays1 {
         return array[length - 1];
     }
 
+    public static <T> T last(T[] array) {
+        int length = length(array);
+        if (length == 0) {
+            return null;
+        }
+        return array[length - 1];
+    }
+
     public static byte last(byte[] array, byte def) {
         int length = length(array);
         if (length == 0) {

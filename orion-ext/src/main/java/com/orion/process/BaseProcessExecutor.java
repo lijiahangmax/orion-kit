@@ -10,6 +10,8 @@ import com.orion.utils.collect.Lists;
 import java.util.*;
 
 /**
+ * 命令处理器基类
+ *
  * @author ljh15
  * @version 1.0.0
  * @since 2020/10/12 15:59
@@ -22,11 +24,11 @@ public abstract class BaseProcessExecutor implements Executable, SafeCloseable {
     private static final ArrayList<String> COMMAND = new ArrayList<>();
 
     static {
-        if (Systems.OS_NAME.toLowerCase().contains("windows")) {
+        if (Systems.BE_WINDOWS) {
             COMMAND.add("cmd");
             COMMAND.add("/c");
         } else {
-            COMMAND.add("/bin/sh");
+            COMMAND.add("/bin/bash");
             COMMAND.add("-c");
         }
     }
