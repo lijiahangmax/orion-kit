@@ -9,6 +9,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Queue 工具类
@@ -52,19 +53,27 @@ public class Queues extends Collections {
     // -------------------- function --------------------
 
     public static <E> Queue<E> def(Queue<E> q) {
-        return isEmpty(q) ? new ConcurrentLinkedQueue<>() : q;
+        return q == null ? new ConcurrentLinkedQueue<>() : q;
     }
 
     public static <E> Deque<E> def(Deque<E> d) {
-        return isEmpty(d) ? new ConcurrentLinkedDeque<>() : d;
+        return d == null ? new ConcurrentLinkedDeque<>() : d;
     }
 
     public static <E> Queue<E> def(Queue<E> q, Queue<E> def) {
-        return isEmpty(q) ? def : q;
+        return q == null ? def : q;
     }
 
     public static <E> Deque<E> def(Deque<E> d, Deque<E> def) {
-        return isEmpty(d) ? def : d;
+        return d == null ? def : d;
+    }
+
+    public static <E> Queue<E> def(Queue<E> q, Supplier<Queue<E>> def) {
+        return q == null ? def.get() : q;
+    }
+
+    public static <E> Deque<E> def(Deque<E> d, Supplier<Deque<E>> def) {
+        return d == null ? def.get() : d;
     }
 
     @SafeVarargs

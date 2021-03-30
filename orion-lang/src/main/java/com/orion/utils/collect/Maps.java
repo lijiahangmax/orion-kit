@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Map工具类
@@ -196,11 +197,15 @@ public class Maps {
     // -------------------- function --------------------
 
     public static <K, V> Map<K, V> def(Map<K, V> map) {
-        return isEmpty(map) ? new HashMap<>() : map;
+        return map == null ? new HashMap<>() : map;
     }
 
     public static <K, V> Map<K, V> def(Map<K, V> map, Map<K, V> def) {
-        return isEmpty(map) ? def : map;
+        return map == null ? def : map;
+    }
+
+    public static <K, V> Map<K, V> def(Map<K, V> map, Supplier<Map<K, V>> def) {
+        return map == null ? def.get() : map;
     }
 
     @SafeVarargs

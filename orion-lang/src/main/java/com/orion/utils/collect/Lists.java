@@ -12,6 +12,7 @@ import com.orion.utils.random.Randoms;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * List 工具类
@@ -110,11 +111,15 @@ public class Lists extends Collections {
     // -------------------- function --------------------
 
     public static <E> List<E> def(List<E> list) {
-        return isEmpty(list) ? new ArrayList<>() : list;
+        return list == null ? new ArrayList<>() : list;
     }
 
     public static <E> List<E> def(List<E> list, List<E> def) {
-        return isEmpty(list) ? def : list;
+        return list == null ? def : list;
+    }
+
+    public static <E> List<E> def(List<E> list, Supplier<List<E>> def) {
+        return list == null ? def.get() : list;
     }
 
     @SafeVarargs

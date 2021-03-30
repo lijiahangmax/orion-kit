@@ -10,6 +10,7 @@ import com.orion.utils.random.Randoms;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Set 工具类
@@ -140,11 +141,15 @@ public class Sets extends Collections {
     // -------------------- function --------------------
 
     public static <E> Set<E> def(Set<E> set) {
-        return isEmpty(set) ? new HashSet<>() : set;
+        return set == null ? new HashSet<>() : set;
     }
 
     public static <E> Set<E> def(Set<E> set, Set<E> def) {
-        return isEmpty(set) ? def : set;
+        return set == null ? def : set;
+    }
+
+    public static <E> Set<E> def(Set<E> set, Supplier<Set<E>> def) {
+        return set == null ? def.get() : set;
     }
 
     @SafeVarargs

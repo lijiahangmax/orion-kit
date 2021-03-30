@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.StringJoiner;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * String 工具类
@@ -102,6 +103,34 @@ public class Strings {
     public static String ifBlank(String s, String def) {
         if (isBlank(s)) {
             return def;
+        }
+        return s;
+    }
+
+    /**
+     * 如果为空串返回默认值
+     *
+     * @param s   s
+     * @param def def
+     * @return s or def
+     */
+    public static String ifBlank(String s, Supplier<String> def) {
+        if (isBlank(s)) {
+            return def.get();
+        }
+        return s;
+    }
+
+    /**
+     * 如果为空返回默认值
+     *
+     * @param s   s
+     * @param def def
+     * @return s or def
+     */
+    public static String ifEmpty(String s, Supplier<String> def) {
+        if (isEmpty(s)) {
+            return def.get();
         }
         return s;
     }
@@ -1157,6 +1186,20 @@ public class Strings {
      * 默认值
      *
      * @param str 字符串
+     * @param def 默认值
+     * @return 如果字符串为空返回默认值
+     */
+    public static String def(String str, Supplier<String> def) {
+        if (isBlank(str)) {
+            return def.get();
+        }
+        return str;
+    }
+
+    /**
+     * 默认值
+     *
+     * @param str 字符串
      * @return 如果字符串为空返回默认值
      */
     public static String defIfEmpty(String str) {
@@ -1176,6 +1219,20 @@ public class Strings {
     public static String defIfEmpty(String str, String def) {
         if (isEmpty(str)) {
             return def;
+        }
+        return str;
+    }
+
+    /**
+     * 默认值
+     *
+     * @param str 字符串
+     * @param def 默认值
+     * @return 如果字符串为空返回默认值
+     */
+    public static String defIfEmpty(String str, Supplier<String> def) {
+        if (isEmpty(str)) {
+            return def.get();
         }
         return str;
     }

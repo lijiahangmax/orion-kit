@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.function.Consumer;
 import java.util.function.IntFunction;
+import java.util.function.Supplier;
 
 /**
  * 数组工具类
@@ -1166,39 +1167,75 @@ public class Arrays1 {
      * @return array
      */
     public static <T> T[] def(T[] o, T[] def) {
-        return (o == null || length(o) == 0) ? def : o;
+        return o == null ? def : o;
     }
 
     public static byte[] def(byte[] o, byte[] def) {
-        return (o == null || length(o) == 0) ? def : o;
+        return o == null ? def : o;
     }
 
     public static short[] def(short[] o, short[] def) {
-        return (o == null || length(o) == 0) ? def : o;
+        return o == null ? def : o;
     }
 
     public static int[] def(int[] o, int[] def) {
-        return (o == null || length(o) == 0) ? def : o;
+        return o == null ? def : o;
     }
 
     public static long[] def(long[] o, long[] def) {
-        return (o == null || length(o) == 0) ? def : o;
+        return o == null ? def : o;
     }
 
     public static float[] def(float[] o, float[] def) {
-        return (o == null || length(o) == 0) ? def : o;
+        return o == null ? def : o;
     }
 
     public static double[] def(double[] o, double[] def) {
-        return (o == null || length(o) == 0) ? def : o;
+        return o == null ? def : o;
     }
 
     public static boolean[] def(boolean[] o, boolean[] def) {
-        return (o == null || length(o) == 0) ? def : o;
+        return o == null ? def : o;
     }
 
     public static char[] def(char[] o, char[] def) {
-        return (o == null || length(o) == 0) ? def : o;
+        return o == null ? def : o;
+    }
+
+    public static <T> T[] def(T[] o, Supplier<T[]> def) {
+        return o == null ? def.get() : o;
+    }
+
+    public static byte[] def(byte[] o, Supplier<byte[]> def) {
+        return o == null ? def.get() : o;
+    }
+
+    public static short[] def(short[] o, Supplier<short[]> def) {
+        return o == null ? def.get() : o;
+    }
+
+    public static int[] def(int[] o, Supplier<int[]> def) {
+        return o == null ? def.get() : o;
+    }
+
+    public static long[] def(long[] o, Supplier<long[]> def) {
+        return o == null ? def.get() : o;
+    }
+
+    public static float[] def(float[] o, Supplier<float[]> def) {
+        return o == null ? def.get() : o;
+    }
+
+    public static double[] def(double[] o, Supplier<double[]> def) {
+        return o == null ? def.get() : o;
+    }
+
+    public static boolean[] def(boolean[] o, Supplier<boolean[]> def) {
+        return o == null ? def.get() : o;
+    }
+
+    public static char[] def(char[] o, Supplier<char[]> def) {
+        return o == null ? def.get() : o;
     }
 
     // -------------------- length --------------------
