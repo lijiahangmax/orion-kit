@@ -261,7 +261,7 @@ public abstract class BaseRemoteExecutor extends BaseExecutor {
         if (run) {
             throw Exceptions.runtime("this executor can only be executed once");
         }
-        run = true;
+        this.run = true;
     }
 
     /**

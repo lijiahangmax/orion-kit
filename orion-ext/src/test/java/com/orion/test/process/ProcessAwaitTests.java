@@ -18,7 +18,7 @@ import java.io.UnsupportedEncodingException;
 public class ProcessAwaitTests {
 
     public static void main(String[] args) {
-        ping();
+        gcRight();
     }
 
     public static void echo() {
@@ -66,6 +66,33 @@ public class ProcessAwaitTests {
         e.close();
     }
 
+    public static void gcWrong() {
+        // 关闭的是cmd.exe 而不是 jstat, 则jstat子进程还是在运行中
+        ProcessAwaitExecutor e = new ProcessAwaitExecutor("jstat -gc 12600 500")
+                .streamHandler(new ReaderLineBiConsumer().charset(Const.GBK).lineConsumer(FunctionConst.PRINT_2_BI_CONSUMER));
+        e.callback(ex -> {
+            System.out.println("end");
+        });
+        e.terminal();
+        e.exec();
+        Threads.sleep(5000);
+        e.close();
+    }
+
+    public static void gcRight() {
+        // 在文件夹运行 关闭的是jstat
+        ProcessAwaitExecutor e = new ProcessAwaitExecutor(new String[]{"jstat", "-gc", "12600", "500"})
+                .streamHandler(new ReaderLineBiConsumer().charset(Const.GBK).lineConsumer(FunctionConst.PRINT_2_BI_CONSUMER));
+        e.callback(ex -> {
+            System.out.println("end");
+        });
+        e.dir("A:\\Work\\jdk1.8\\bin");
+        e.redirectError();
+        e.exec();
+        Threads.sleep(5000);
+        e.close();
+    }
+
     @Test
     public void testResult1() {
         System.out.println(Processes.getOutputResult("echo %JAVA_HOME%"));
@@ -78,11 +105,16 @@ public class ProcessAwaitTests {
 
     @Test
     public void testResult3() throws UnsupportedEncodingException {
-        System.out.println(new String(Processes.getOutputResultWithDir(true, "A:\\Work\\jdk1.8\\bin\\", "jps", "-lv"), Const.GBK));
+        System.out.println(new String(Processes.getOutputResultWithDir(true, "A:\\Work\\jdk1.8\\bin", "jps", "-lv"), Const.GBK));
     }
 
     @Test
     public void testResult4() throws UnsupportedEncodingException {
+        System.out.println(new String(Processes.getOutputResult(true, "jps", "-lv"), Const.GBK));
+    }
+
+    @Test
+    public void testResult5() throws UnsupportedEncodingException {
         System.out.println(new String(Processes.getOutputResultWithDir(true, "A:\\Work\\jdk1.8\\bin1111\\", "jps", "-lv"), Const.GBK));
     }
 

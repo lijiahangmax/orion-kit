@@ -223,9 +223,9 @@ public abstract class BaseRemoteExecutor implements Executable, SafeCloseable {
         Runnable runnable = new HookRunnable(() -> {
             streamHandler.accept(this, inputStream);
         }, () -> {
-            done = true;
-            if (this.callback != null) {
-                this.callback.accept(this);
+            this.done = true;
+            if (callback != null) {
+                callback.accept(this);
             }
         }, true);
         Threads.start(runnable, scheduler);
@@ -233,7 +233,7 @@ public abstract class BaseRemoteExecutor implements Executable, SafeCloseable {
 
     @Override
     public void close() {
-        close = true;
+        this.close = true;
         Streams.close(outputStream);
         Streams.close(inputStream);
         session.close();

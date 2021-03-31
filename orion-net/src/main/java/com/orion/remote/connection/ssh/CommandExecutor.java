@@ -68,6 +68,11 @@ public class CommandExecutor extends BaseRemoteExecutor {
     private BiConsumer<? super BaseRemoteExecutor, InputStream> errorStreamHandler;
 
     /**
+     * 是否同步获取输出
+     */
+    private boolean sync;
+
+    /**
      * 执行状态 0未开始 1执行中 2执行完毕 3执行失败
      */
     private volatile int runStatus;
@@ -89,6 +94,16 @@ public class CommandExecutor extends BaseRemoteExecutor {
      */
     public CommandExecutor inherit() {
         this.inherit = true;
+        return this;
+    }
+
+    /**
+     * 是否同步获取输出
+     *
+     * @return this
+     */
+    public CommandExecutor sync() {
+        this.sync = true;
         return this;
     }
 
@@ -140,16 +155,16 @@ public class CommandExecutor extends BaseRemoteExecutor {
                 session.execCommand(this.command);
             }
         } catch (Exception e) {
-            runStatus = 3;
+            this.runStatus = 3;
             throw Exceptions.runtime("execute command error", e);
         }
-        inputStream = new StreamGobbler(session.getStdout());
-        errorStream = new StreamGobbler(session.getStderr());
-        outputStream = session.getStdin();
+        this.inputStream = new StreamGobbler(session.getStdout());
+        this.errorStream = new StreamGobbler(session.getStderr());
+        this.outputStream = session.getStdin();
         if (inherit) {
-            inheritStream = new SequenceInputStream(inputStream, errorStream);
+            this.inheritStream = new SequenceInputStream(inputStream, errorStream);
         }
-        runStatus = 1;
+        this.runStatus = 1;
         // read standard input & error stream
         this.listenerInputAndError();
         // wait
@@ -159,10 +174,10 @@ public class CommandExecutor extends BaseRemoteExecutor {
             } else if (this.waitFor != 0) {
                 session.waitForCondition(waitFor, waitTime);
             }
-            done = true;
-            runStatus = 2;
+            this.done = true;
+            this.runStatus = 2;
         } catch (IOException e) {
-            runStatus = 3;
+            this.runStatus = 3;
             throw Exceptions.timeout(e);
         }
     }
@@ -171,22 +186,40 @@ public class CommandExecutor extends BaseRemoteExecutor {
      * 监听标准输出流和错误流
      */
     private void listenerInputAndError() {
-        Runnable runnable = new HookRunnable(() -> {
-            if (inherit) {
-                streamHandler.accept(this, inheritStream);
-            } else {
-                streamHandler.accept(this, inputStream);
+        if (sync) {
+            try {
+                if (inherit) {
+                    streamHandler.accept(this, inheritStream);
+                } else {
+                    streamHandler.accept(this, inputStream);
+                }
+                if (errorStreamHandler != null && !inherit) {
+                    errorStreamHandler.accept(this, errorStream);
+                }
+            } finally {
+                this.done = true;
+                if (callback != null) {
+                    callback.accept(this);
+                }
             }
-            if (errorStreamHandler != null && !inherit) {
-                errorStreamHandler.accept(this, errorStream);
-            }
-        }, () -> {
-            done = true;
-            if (this.callback != null) {
-                this.callback.accept(this);
-            }
-        }, true);
-        Threads.start(runnable, scheduler);
+        } else {
+            Runnable runnable = new HookRunnable(() -> {
+                if (inherit) {
+                    streamHandler.accept(this, inheritStream);
+                } else {
+                    streamHandler.accept(this, inputStream);
+                }
+                if (errorStreamHandler != null && !inherit) {
+                    errorStreamHandler.accept(this, errorStream);
+                }
+            }, () -> {
+                this.done = true;
+                if (callback != null) {
+                    callback.accept(this);
+                }
+            }, true);
+            Threads.start(runnable, scheduler);
+        }
     }
 
     /**

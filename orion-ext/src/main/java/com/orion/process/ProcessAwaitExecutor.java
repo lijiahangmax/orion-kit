@@ -421,8 +421,6 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
         } else {
             try {
                 streamHandler.accept(this, inputStream);
-            } catch (RuntimeException e) {
-                throw e;
             } finally {
                 this.done = true;
                 if (callback != null) {
