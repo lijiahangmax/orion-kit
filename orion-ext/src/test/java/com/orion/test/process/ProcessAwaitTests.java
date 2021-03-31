@@ -4,7 +4,11 @@ import com.orion.constant.Const;
 import com.orion.function.FunctionConst;
 import com.orion.function.impl.ReaderLineBiConsumer;
 import com.orion.process.ProcessAwaitExecutor;
+import com.orion.process.Processes;
 import com.orion.utils.Threads;
+import org.junit.Test;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * @author ljh15
@@ -14,7 +18,7 @@ import com.orion.utils.Threads;
 public class ProcessAwaitTests {
 
     public static void main(String[] args) {
-        sql();
+        ping();
     }
 
     public static void echo() {
@@ -55,12 +59,31 @@ public class ProcessAwaitTests {
                 .streamHandler(new ReaderLineBiConsumer().charset(Const.GBK).lineConsumer(FunctionConst.PRINT_2_BI_CONSUMER));
         e.callback(ex -> {
             System.out.println("end");
-            ex.close();
         });
         e.terminal();
         e.exec();
         Threads.sleep(2000);
         e.close();
+    }
+
+    @Test
+    public void testResult1() {
+        System.out.println(Processes.getOutputResult("echo %JAVA_HOME%"));
+    }
+
+    @Test
+    public void testResult2() throws UnsupportedEncodingException {
+        System.out.println(new String(Processes.getOutputResult(true, "echo111 %JAVA_HOME%"), Const.GBK));
+    }
+
+    @Test
+    public void testResult3() throws UnsupportedEncodingException {
+        System.out.println(new String(Processes.getOutputResultWithDir(true, "A:\\Work\\jdk1.8\\bin\\", "jps", "-lv"), Const.GBK));
+    }
+
+    @Test
+    public void testResult4() throws UnsupportedEncodingException {
+        System.out.println(new String(Processes.getOutputResultWithDir(true, "A:\\Work\\jdk1.8\\bin1111\\", "jps", "-lv"), Const.GBK));
     }
 
 }

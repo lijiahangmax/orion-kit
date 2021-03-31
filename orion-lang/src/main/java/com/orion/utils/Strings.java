@@ -22,9 +22,9 @@ import java.util.function.Supplier;
 @SuppressWarnings("ALL")
 public class Strings {
 
-    public static final String EMPTY = "";
+    public static final String EMPTY = Const.EMPTY;
 
-    public static final String SPACE = " ";
+    public static final String SPACE = Const.SPACE;
 
     private Strings() {
     }

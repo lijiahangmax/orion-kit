@@ -54,6 +54,10 @@ public abstract class Const {
 
     public static final String BACKSLASH = "\\";
 
+    public static final String EMPTY = "";
+
+    public static final String SPACE = " ";
+
     // -------------------- charset --------------------
 
     public static final String ASCII = "US-ASCII";

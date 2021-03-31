@@ -343,7 +343,7 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
      */
     @Override
     public void close() {
-        close(false);
+        this.close(false);
     }
 
     /**
