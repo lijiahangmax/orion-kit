@@ -5,13 +5,17 @@ import ch.ethz.ssh2.ConnectionInfo;
 import ch.ethz.ssh2.HTTPProxyData;
 import ch.ethz.ssh2.SFTPv3Client;
 import ch.ethz.ssh2.log.Logger;
+import com.orion.constant.Const;
 import com.orion.remote.connection.scp.ScpExecutor;
 import com.orion.remote.connection.sftp.SftpExecutor;
 import com.orion.remote.connection.ssh.CommandExecutor;
 import com.orion.remote.connection.ssh.ShellExecutor;
+import com.orion.support.Attempt;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
+import com.orion.utils.io.Streams;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -22,7 +26,7 @@ import java.io.IOException;
  * @version 1.0.0
  * @since 2020/4/15 21:23
  */
-public class ConnectionStore {
+public class ConnectionStore implements AutoCloseable {
 
     /**
      * 连接对象
@@ -113,11 +117,11 @@ public class ConnectionStore {
         try {
             boolean authenticate;
             if (password == null) {
-                authenticate = this.connection.authenticateWithNone(username);
+                authenticate = connection.authenticateWithNone(username);
             } else if (pemKeyFile != null) {
-                authenticate = this.connection.authenticateWithPublicKey(username, pemKeyFile, password);
+                authenticate = connection.authenticateWithPublicKey(username, pemKeyFile, password);
             } else if (pemKey != null) {
-                authenticate = this.connection.authenticateWithPublicKey(username, pemKey, password);
+                authenticate = connection.authenticateWithPublicKey(username, pemKey, password);
             } else {
                 authenticate = this.connection.authenticateWithPassword(username, password);
             }
@@ -132,19 +136,8 @@ public class ConnectionStore {
         return this;
     }
 
-    /**
-     * 获取 CommandExecutor
-     *
-     * @param command 命令
-     * @return CommandExecutor
-     */
     public CommandExecutor getCommandExecutor(String command) {
-        Valid.isTrue(this.auth, "unauthorized");
-        try {
-            return new CommandExecutor(connection.openSession(), command);
-        } catch (IOException e) {
-            throw Exceptions.connection("could open session", e);
-        }
+        return this.getCommandExecutor(command, Const.UTF_8);
     }
 
     /**
@@ -159,7 +152,7 @@ public class ConnectionStore {
         try {
             return new CommandExecutor(connection.openSession(), command, commandCharset);
         } catch (IOException e) {
-            throw Exceptions.connection("could open session", e);
+            throw Exceptions.connection("could not be open session", e);
         }
     }
 
@@ -173,36 +166,12 @@ public class ConnectionStore {
         try {
             return new ShellExecutor(connection.openSession());
         } catch (IOException e) {
-            throw Exceptions.connection("could open session", e);
+            throw Exceptions.connection("could not be open session", e);
         }
     }
 
-    /**
-     * 获取 ScpExecutor
-     *
-     * @return ScpExecutor
-     */
-    public ScpExecutor getScpExecutor() {
-        Valid.isTrue(this.auth, "unauthorized");
-        try {
-            return new ScpExecutor(this.connection.createSCPClient());
-        } catch (IOException e) {
-            throw Exceptions.connection("could open scp client", e);
-        }
-    }
-
-    /**
-     * 获取 SftpExecutor
-     *
-     * @return SftpExecutor
-     */
     public SftpExecutor getSftpExecutor() {
-        Valid.isTrue(this.auth, "unauthorized");
-        try {
-            return new SftpExecutor(new SFTPv3Client(this.connection));
-        } catch (IOException e) {
-            throw Exceptions.connection("could open sftp client", e);
-        }
+        return this.getSftpExecutor(Const.UTF_8);
     }
 
     /**
@@ -216,13 +185,48 @@ public class ConnectionStore {
         try {
             return new SftpExecutor(new SFTPv3Client(this.connection), charset);
         } catch (IOException e) {
-            throw Exceptions.connection("could open sftp client", e);
+            throw Exceptions.connection("could not be open sftp client", e);
         }
     }
 
     /**
-     * 关闭连接
+     * 获取 ScpExecutor
+     *
+     * @return ScpExecutor
      */
+    public ScpExecutor getScpExecutor() {
+        Valid.isTrue(this.auth, "unauthorized");
+        try {
+            return new ScpExecutor(this.connection.createSCPClient());
+        } catch (IOException e) {
+            throw Exceptions.connection("could not be open scp client", e);
+        }
+    }
+
+    public static String getCommandOutputResultString(CommandExecutor executor) {
+        return new String(getCommandOutputResult(executor));
+    }
+
+    /**
+     * 同步获取数据
+     *
+     * @param executor executor
+     * @return result
+     */
+    public static byte[] getCommandOutputResult(CommandExecutor executor) {
+        Valid.notNull(executor, "command executor is null");
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            executor.sync()
+                    .streamHandler((p, i) -> Attempt.uncheck(Streams::transfer, i, out))
+                    .exec();
+            return out.toByteArray();
+        } finally {
+            Streams.close(out);
+        }
+    }
+
+    @Override
     public void close() {
         this.connection.close();
     }

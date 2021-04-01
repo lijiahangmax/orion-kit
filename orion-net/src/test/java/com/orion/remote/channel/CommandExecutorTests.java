@@ -2,6 +2,7 @@ package com.orion.remote.channel;
 
 import com.orion.function.impl.ReaderLineBiConsumer;
 import com.orion.remote.channel.ssh.CommandExecutor;
+import org.junit.Test;
 
 /**
  * @author ljh15
@@ -47,6 +48,54 @@ public class CommandExecutorTests {
             e.close();
         });
         e.connect().exec();
+    }
+
+    @Test
+    public void test1() {
+        SessionStore store = SessionHolder.getSession("192.168.146.230", "root")
+                .setPassword("admin123")
+                .connect();
+
+        CommandExecutor executor = store.getCommandExecutor("echo $JAVA_HOME");
+
+        executor.inherit().connect();
+
+        System.out.println(SessionStore.getCommandOutputResultString(executor));
+
+        executor.close();
+        store.close();
+    }
+
+    @Test
+    public void test2() {
+        SessionStore store = SessionHolder.getSession("192.168.146.230", "root")
+                .setPassword("admin123")
+                .connect();
+
+        CommandExecutor executor = store.getCommandExecutor("/bin/bash -c 'echo $JAVA_HOME'");
+
+        executor.inherit().connect();
+
+        System.out.println(SessionStore.getCommandOutputResultString(executor));
+
+        executor.close();
+        store.close();
+    }
+
+    @Test
+    public void test3() {
+        SessionStore store = SessionHolder.getSession("192.168.146.230", "root")
+                .setPassword("admin123")
+                .connect();
+
+        CommandExecutor executor = store.getCommandExecutor("ec111ho 1");
+
+        executor.inherit().connect();
+
+        System.out.println(SessionStore.getCommandOutputResultString(executor));
+
+        executor.close();
+        store.close();
     }
 
 }

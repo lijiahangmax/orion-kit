@@ -2,6 +2,7 @@ package com.orion.remote.connection;
 
 import com.orion.function.impl.ReaderLineBiConsumer;
 import com.orion.remote.connection.ssh.CommandExecutor;
+import org.junit.Test;
 
 /**
  * @author ljh15
@@ -42,6 +43,48 @@ public class CommandTests {
             c.close();
         });
         executor.exec();
+    }
+
+    @Test
+    public void test1() {
+        ConnectionStore c = new ConnectionStore("192.168.146.230")
+                .auth("root", "admin123");
+
+        CommandExecutor executor = c.getCommandExecutor("echo $JAVA_HOME")
+                .inherit();
+
+        System.out.println(ConnectionStore.getCommandOutputResultString(executor));
+
+        executor.close();
+        c.close();
+    }
+
+    @Test
+    public void test2() {
+        ConnectionStore c = new ConnectionStore("192.168.146.230")
+                .auth("root", "admin123");
+
+        CommandExecutor executor = c.getCommandExecutor("/bin/bash -c 'echo $JAVA_HOME'")
+                .inherit();
+
+        System.out.println(ConnectionStore.getCommandOutputResultString(executor));
+
+        executor.close();
+        c.close();
+    }
+
+    @Test
+    public void test3() {
+        ConnectionStore c = new ConnectionStore("192.168.146.230")
+                .auth("root", "admin123");
+
+        CommandExecutor executor = c.getCommandExecutor("ec111ho 1")
+                .inherit();
+
+        System.out.println(ConnectionStore.getCommandOutputResultString(executor));
+
+        executor.close();
+        c.close();
     }
 
 }

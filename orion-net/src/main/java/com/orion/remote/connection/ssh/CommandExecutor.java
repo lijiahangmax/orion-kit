@@ -3,6 +3,7 @@ package com.orion.remote.connection.ssh;
 import ch.ethz.ssh2.ChannelCondition;
 import ch.ethz.ssh2.Session;
 import ch.ethz.ssh2.StreamGobbler;
+import com.orion.constant.Const;
 import com.orion.lang.thread.HookRunnable;
 import com.orion.remote.ExitCode;
 import com.orion.utils.Exceptions;
@@ -78,7 +79,7 @@ public class CommandExecutor extends BaseRemoteExecutor {
     private volatile int runStatus;
 
     public CommandExecutor(Session session, String command) {
-        this(session, command, null);
+        this(session, command, Const.UTF_8);
     }
 
     public CommandExecutor(Session session, String command, String commandCharset) {
@@ -107,6 +108,16 @@ public class CommandExecutor extends BaseRemoteExecutor {
         return this;
     }
 
+    public CommandExecutor waitFor() {
+        this.waitFor = ChannelCondition.CLOSED | ChannelCondition.EOF | ChannelCondition.EXIT_STATUS;
+        return this;
+    }
+
+    public CommandExecutor waitFor(int type) {
+        this.waitFor = type;
+        return this;
+    }
+
     /**
      * 等待命令执行完毕
      *
@@ -127,6 +138,7 @@ public class CommandExecutor extends BaseRemoteExecutor {
      * @return this
      */
     public CommandExecutor timeout(long timeout) {
+        this.waitFor = ChannelCondition.CLOSED | ChannelCondition.EOF | ChannelCondition.EXIT_STATUS;
         this.waitTime = timeout;
         return this;
     }
@@ -149,10 +161,10 @@ public class CommandExecutor extends BaseRemoteExecutor {
     public void exec() {
         super.exec();
         try {
-            if (this.commandCharset != null) {
-                session.execCommand(this.command, this.commandCharset);
+            if (commandCharset != null) {
+                session.execCommand(command, commandCharset);
             } else {
-                session.execCommand(this.command);
+                session.execCommand(command);
             }
         } catch (Exception e) {
             this.runStatus = 3;
@@ -169,9 +181,7 @@ public class CommandExecutor extends BaseRemoteExecutor {
         this.listenerInputAndError();
         // wait
         try {
-            if (waitFor == 0 && waitTime != 0) {
-                session.waitForCondition(ChannelCondition.CLOSED | ChannelCondition.EOF | ChannelCondition.EXIT_STATUS, this.waitTime);
-            } else if (this.waitFor != 0) {
+            if (waitFor != 0) {
                 session.waitForCondition(waitFor, waitTime);
             }
             this.done = true;

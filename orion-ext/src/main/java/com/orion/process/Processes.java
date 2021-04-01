@@ -40,16 +40,21 @@ public class Processes {
      * @return result
      */
     public static byte[] getOutputResult(boolean redirectError, String... command) {
-        try (ProcessAwaitExecutor executor = new ProcessAwaitExecutor(command)) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ProcessAwaitExecutor executor = new ProcessAwaitExecutor(command);
+        try {
             if (redirectError) {
                 executor.redirectError();
             }
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
             executor.streamHandler((p, i) -> Attempt.uncheck(Streams::transfer, i, out))
+                    .waitFor()
                     .sync()
                     .terminal()
                     .exec();
             return out.toByteArray();
+        } finally {
+            Streams.close(out);
+            Streams.close(executor);
         }
     }
 
@@ -76,16 +81,21 @@ public class Processes {
      * @return result
      */
     public static byte[] getOutputResultWithDir(boolean redirectError, String dir, String... command) {
-        try (ProcessAwaitExecutor executor = new ProcessAwaitExecutor(command)) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ProcessAwaitExecutor executor = new ProcessAwaitExecutor(command);
+        try {
             if (redirectError) {
                 executor.redirectError();
             }
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
             executor.streamHandler((p, i) -> Attempt.uncheck(Streams::transfer, i, out))
+                    .waitFor()
                     .sync()
                     .dir(dir)
                     .exec();
             return out.toByteArray();
+        } finally {
+            Streams.close(out);
+            Streams.close(executor);
         }
     }
 

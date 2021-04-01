@@ -1,11 +1,18 @@
 package com.orion.remote.channel;
 
 import com.jcraft.jsch.*;
+import com.orion.able.SafeCloseable;
+import com.orion.constant.Const;
 import com.orion.remote.channel.sftp.SftpExecutor;
 import com.orion.remote.channel.ssh.CommandExecutor;
 import com.orion.remote.channel.ssh.ShellExecutor;
+import com.orion.support.Attempt;
 import com.orion.utils.Exceptions;
+import com.orion.utils.Strings;
 import com.orion.utils.Valid;
+import com.orion.utils.io.Streams;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * Session Store
@@ -14,7 +21,7 @@ import com.orion.utils.Valid;
  * @version 1.0.0
  * @since 2020/10/5 23:08
  */
-public class SessionStore {
+public class SessionStore implements SafeCloseable {
 
     private Session session;
 
@@ -83,13 +90,6 @@ public class SessionStore {
         return this;
     }
 
-    /**
-     * 设置http代理
-     *
-     * @param host 主机
-     * @param port 端口
-     * @return this
-     */
     public SessionStore setHttpProxy(String host, int port) {
         session.setProxy(new ProxyHTTP(host, port));
         return this;
@@ -111,13 +111,6 @@ public class SessionStore {
         return this;
     }
 
-    /**
-     * 设置socket4代理
-     *
-     * @param host 主机
-     * @param port 端口
-     * @return this
-     */
     public SessionStore setSocket4Proxy(String host, int port) {
         session.setProxy(new ProxySOCKS4(host, port));
         return this;
@@ -139,13 +132,6 @@ public class SessionStore {
         return this;
     }
 
-    /**
-     * 设置socket5代理
-     *
-     * @param host 主机
-     * @param port 端口
-     * @return this
-     */
     public SessionStore setSocket5Proxy(String host, int port) {
         session.setProxy(new ProxySOCKS5(host, port));
         return this;
@@ -232,33 +218,12 @@ public class SessionStore {
         return session.isConnected();
     }
 
-    /**
-     * 获取 CommandExecutor
-     *
-     * @param command 命令
-     * @return CommandExecutor
-     */
     public CommandExecutor getCommandExecutor(String command) {
-        try {
-            return new CommandExecutor((ChannelExec) session.openChannel("exec"), command);
-        } catch (JSchException e) {
-            throw Exceptions.state("could not open channel", e);
-        }
+        return this.getCommandExecutor(Strings.bytes(command, Const.UTF_8));
     }
 
-    /**
-     * 获取 CommandExecutor
-     *
-     * @param command 命令
-     * @param charset 命令编码格式
-     * @return CommandExecutor
-     */
     public CommandExecutor getCommandExecutor(String command, String charset) {
-        try {
-            return new CommandExecutor((ChannelExec) session.openChannel("exec"), command, charset);
-        } catch (JSchException e) {
-            throw Exceptions.state("could not open channel", e);
-        }
+        return this.getCommandExecutor(Strings.bytes(command, charset));
     }
 
     /**
@@ -288,16 +253,44 @@ public class SessionStore {
         }
     }
 
+    public SftpExecutor getSftpExecutor() {
+        return this.getSftpExecutor(Const.UTF_8);
+    }
+
     /**
      * 获取 SftpExecutor
      *
+     * @param fileNameCharset 文件名称编码
      * @return SftpExecutor
      */
-    public SftpExecutor getSftpExecutor() {
+    public SftpExecutor getSftpExecutor(String fileNameCharset) {
         try {
-            return new SftpExecutor((ChannelSftp) session.openChannel("sftp"));
+            return new SftpExecutor((ChannelSftp) session.openChannel("sftp"), fileNameCharset);
         } catch (JSchException e) {
             throw Exceptions.state("could not open channel", e);
+        }
+    }
+
+    public static String getCommandOutputResultString(CommandExecutor executor) {
+        return new String(getCommandOutputResult(executor));
+    }
+
+    /**
+     * 同步获取数据
+     *
+     * @param executor executor
+     * @return result
+     */
+    public static byte[] getCommandOutputResult(CommandExecutor executor) {
+        Valid.notNull(executor, "command executor is null");
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            executor.sync()
+                    .streamHandler((p, i) -> Attempt.uncheck(Streams::transfer, i, out))
+                    .exec();
+            return out.toByteArray();
+        } finally {
+            Streams.close(out);
         }
     }
 
@@ -308,6 +301,13 @@ public class SessionStore {
      */
     public Session getSession() {
         return session;
+    }
+
+    @Override
+    public void close() {
+        if (this.isConnected()) {
+            this.disconnect();
+        }
     }
 
 }

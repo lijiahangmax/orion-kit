@@ -95,7 +95,7 @@ public class ProcessAwaitTests {
 
     @Test
     public void testResult1() {
-        System.out.println(Processes.getOutputResult("echo %JAVA_HOME%"));
+        System.out.println(Processes.getOutputResultString("echo %JAVA_HOME%"));
     }
 
     @Test
