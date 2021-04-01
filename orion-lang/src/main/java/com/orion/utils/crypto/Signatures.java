@@ -7,7 +7,6 @@ import com.orion.utils.crypto.enums.SecretKeySpecMode;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.math.BigInteger;
 import java.security.MessageDigest;
 
 /**
@@ -93,7 +92,7 @@ public class Signatures {
             for (int i = 0; i < times; i++) {
                 digest.update(salt);
             }
-            return new BigInteger(1, digest.digest()).toString(16);
+            return toHex(digest.digest(bs));
         } catch (Exception e) {
             Exceptions.printStacks(e);
             return null;
@@ -231,7 +230,7 @@ public class Signatures {
      */
     private static String hashSign(byte[] bs, MessageDigest digest) {
         try {
-            return new BigInteger(1, digest.digest(bs)).toString(16);
+            return toHex(digest.digest(bs));
         } catch (Exception e) {
             Exceptions.printStacks(e);
             return null;
@@ -409,10 +408,18 @@ public class Signatures {
             SecretKeySpec secretKey = mode.getSecretKeySpec(key);
             Mac mac = Mac.getInstance(mode.getMode());
             mac.init(secretKey);
-            return new BigInteger(1, mac.doFinal(bs)).toString(16);
+            return toHex(mac.doFinal(bs));
         } catch (Exception e) {
             return null;
         }
+    }
+
+    private static String toHex(byte[] bs) {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : bs) {
+            sb.append(Integer.toHexString((0x000000FF & b) | 0xFFFFFF00).substring(6));
+        }
+        return sb.toString();
     }
 
 }
