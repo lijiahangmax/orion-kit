@@ -214,8 +214,8 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
      *
      * @return 是否成功
      */
-    public boolean isOk() {
-        return this.code == HTTP_OK_CODE;
+    public static boolean isOk(HttpWrapper<?> wrapper) {
+        return wrapper.code == HTTP_OK_CODE;
     }
 
     @Override

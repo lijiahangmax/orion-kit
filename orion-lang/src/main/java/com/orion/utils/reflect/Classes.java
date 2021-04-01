@@ -241,7 +241,7 @@ public class Classes {
     /**
      * 判断argClass是否为requireClass的实现类
      *
-     * @param requireClass paramClass 父
+     * @param requireClass requireClass 父
      * @param argClass     argClass 子
      * @return true 是实现类或本类
      */

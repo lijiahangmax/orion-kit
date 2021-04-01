@@ -29,7 +29,7 @@ public class ExecutorBuilder implements Buildable<ThreadPoolExecutor> {
     /**
      * 最大池大小（允许同时执行的最大线程数） 默认: 核心数 * 2
      */
-    private int maxPoolSize = Systems.VM_PROCESS_NUM * 2;
+    private int maxPoolSize = Systems.PROCESS_NUM * 2;
 
     /**
      * 线程存活时间, 即当池中线程多于初始大小时, 多出的线程保留的时长

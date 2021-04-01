@@ -65,7 +65,7 @@ public class Systems {
     /**
      * 当前文件目录
      */
-    public static final String THIS_DIR;
+    public static final String USER_DIR;
 
     /**
      * IO 临时目录
@@ -73,9 +73,14 @@ public class Systems {
     public static final String TEMP_DIR;
 
     /**
-     * 系统版本
+     * 系统名称
      */
     public static final String OS_NAME;
+
+    /**
+     * 系统版本
+     */
+    public static final String OS_VERSION;
 
     /**
      * 主机名称
@@ -98,26 +103,27 @@ public class Systems {
     public static final String JAVA_HOME;
 
     /**
-     * 虚拟机处理器数量
+     * 处理器数量
      */
-    public static final int VM_PROCESS_NUM;
+    public static final int PROCESS_NUM;
 
     static {
-        LINE_SEPARATOR = System.getProperty("line.separator", Const.LF);
+        LINE_SEPARATOR = getProperty("line.separator", Const.LF);
         FILE_SEPARATOR = File.separator;
         BE_UNIX = Const.SLASH.equals(File.separator);
         BE_WINDOWS = Const.BACKSLASH.equals(File.separator);
-        USER_NAME = System.getProperty("user.name", Const.UNKNOWN);
-        FILE_ENCODING = System.getProperty("file.encoding", Const.UTF_8);
-        HOME_DIR = System.getProperty("user.home", Const.ROOT);
-        THIS_DIR = System.getProperty("user.dir", Const.ROOT);
-        TEMP_DIR = System.getProperty("java.io.tmpdir", Const.ROOT);
-        OS_NAME = System.getProperty("os.name", Const.UNKNOWN);
-        JAVA_HOME = System.getProperty("java.home", Const.ROOT);
+        USER_NAME = getProperty("user.name", Const.UNKNOWN);
+        FILE_ENCODING = getProperty("file.encoding", Const.UTF_8);
+        HOME_DIR = getProperty("user.home", Const.ROOT);
+        USER_DIR = getProperty("user.dir", Const.ROOT);
+        TEMP_DIR = getProperty("java.io.tmpdir", Const.ROOT);
+        OS_NAME = getProperty("os.name", Const.UNKNOWN);
+        OS_VERSION = getProperty("os.version", Const.UNKNOWN);
+        JAVA_HOME = getProperty("java.home", Const.ROOT);
         if (BE_WINDOWS) {
-            HOST_NAME = System.getenv("COMPUTERNAME");
+            HOST_NAME = getEnv("COMPUTERNAME");
         } else {
-            HOST_NAME = System.getenv("HOSTNAME");
+            HOST_NAME = getEnv("HOSTNAME");
         }
         boolean beAndroid = true;
         try {
@@ -135,7 +141,7 @@ public class Systems {
         PID = Integer.parseInt(processName);
         JAVA_SPEC_VERSION = runtimeBean.getSpecVersion();
         Runtime runtime = Runtime.getRuntime();
-        VM_PROCESS_NUM = runtime.availableProcessors();
+        PROCESS_NUM = runtime.availableProcessors();
     }
 
     /**
@@ -243,6 +249,17 @@ public class Systems {
      */
     public static String getEnv(String key) {
         return System.getenv(key);
+    }
+
+    /**
+     * 获取环境变量
+     *
+     * @param key key
+     * @param def def
+     * @return ignore
+     */
+    public static String getEnv(String key, String def) {
+        return Objects1.def(System.getenv(key), def);
     }
 
     /**
