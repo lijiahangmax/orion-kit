@@ -1,6 +1,5 @@
 package com.orion.lang.wrapper;
 
-import com.orion.able.JsonAble;
 import com.orion.able.Logable;
 import com.orion.able.Mapable;
 import com.orion.constant.Letters;
@@ -25,7 +24,7 @@ import java.util.function.Supplier;
  * @version 1.0.0
  * @since 2019/5/29 11:27
  */
-public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrapper<T>, JsonAble, Logable, Mapable<String, Object> {
+public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrapper<T>, Logable, Mapable<String, Object> {
 
     private static final long serialVersionUID = 7940497300629314L;
 
@@ -321,11 +320,6 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
     @Override
     public String toString() {
         return toLogString();
-    }
-
-    @Override
-    public String toJsonString() {
-        return Jsons.toJsonWriteNull(this);
     }
 
     @Override

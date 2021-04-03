@@ -1,12 +1,10 @@
 package com.orion.lang.wrapper;
 
-import com.orion.able.JsonAble;
 import com.orion.able.Logable;
 import com.orion.able.Mapable;
 import com.orion.lang.support.CloneSupport;
 import com.orion.utils.Objects1;
 import com.orion.utils.Strings;
-import com.orion.utils.json.Jsons;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +16,7 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2019/5/29 11:06
  */
-public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrapper<T>, JsonAble, Logable, Mapable<String, Object> {
+public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrapper<T>, Logable, Mapable<String, Object> {
 
     private static final long serialVersionUID = 7048691672612601L;
 
@@ -221,11 +219,6 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
     @Override
     public String toString() {
         return toLogString();
-    }
-
-    @Override
-    public String toJsonString() {
-        return Jsons.toJsonWriteNull(this);
     }
 
     @Override
