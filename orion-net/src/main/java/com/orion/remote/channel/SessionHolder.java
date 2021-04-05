@@ -1,10 +1,16 @@
 package com.orion.remote.channel;
 
+import com.jcraft.jsch.Identity;
 import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Logger;
 import com.orion.utils.Exceptions;
+import com.orion.utils.io.Files1;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 
 /**
  * Session Holder
@@ -18,7 +24,7 @@ public class SessionHolder {
     private SessionHolder() {
     }
 
-    protected static final JSch CH = new JSch();
+    public static final JSch CH = new JSch();
 
     static {
         JSch.setConfig("StrictHostKeyChecking", "no");
@@ -77,6 +83,56 @@ public class SessionHolder {
     }
 
     /**
+     * 删除加载的key
+     *
+     * @param keyPath keyPath
+     */
+    public static void removeIdentity(String keyPath) {
+        Vector<?> identities = CH.getIdentityRepository().getIdentities();
+        for (Object identity : identities) {
+            if (identity instanceof Identity) {
+                String key = ((Identity) identity).getName();
+                if (Files1.getPath(key).equals(Files1.getPath(keyPath))) {
+                    try {
+                        CH.removeIdentity((Identity) identity);
+                    } catch (Exception e) {
+                        Exceptions.printStacks(e);
+                        throw Exceptions.runtime("remove identity error " + e.getMessage());
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 删除所有加载的key
+     */
+    public static void removeAllIdentity() {
+        try {
+            CH.removeAllIdentity();
+        } catch (JSchException e) {
+            Exceptions.printStacks(e);
+            throw Exceptions.runtime("remove all identity error " + e.getMessage());
+        }
+    }
+
+    /**
+     * 获取加载的key
+     *
+     * @return keys
+     */
+    public static List<String> getLoadKeys() {
+        List<String> keys = new ArrayList<>();
+        Vector<?> identities = CH.getIdentityRepository().getIdentities();
+        for (Object identity : identities) {
+            if (identity instanceof Identity) {
+                keys.add(Files1.getPath(((Identity) identity).getName()));
+            }
+        }
+        return keys;
+    }
+
+    /**
      * 添加秘钥登陆文件
      *
      * @param keyPath  文件路径
@@ -87,6 +143,7 @@ public class SessionHolder {
             CH.addIdentity(keyPath, password);
         } catch (Exception e) {
             Exceptions.printStacks(e);
+            throw Exceptions.runtime("add identity error " + e.getMessage());
         }
     }
 
@@ -100,6 +157,7 @@ public class SessionHolder {
             CH.addIdentity(keyPath);
         } catch (Exception e) {
             Exceptions.printStacks(e);
+            throw Exceptions.runtime("add identity error " + e.getMessage());
         }
     }
 
@@ -113,6 +171,7 @@ public class SessionHolder {
             CH.setKnownHosts(filePath);
         } catch (Exception e) {
             Exceptions.printStacks(e);
+            throw Exceptions.runtime("set unknown hosts error " + e.getMessage());
         }
     }
 
@@ -126,6 +185,7 @@ public class SessionHolder {
             CH.setKnownHosts(inputStream);
         } catch (Exception e) {
             Exceptions.printStacks(e);
+            throw Exceptions.runtime("set unknown hosts error " + e.getMessage());
         }
     }
 

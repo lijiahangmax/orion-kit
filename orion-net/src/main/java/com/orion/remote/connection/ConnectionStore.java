@@ -123,7 +123,7 @@ public class ConnectionStore implements AutoCloseable {
             } else if (pemKey != null) {
                 authenticate = connection.authenticateWithPublicKey(username, pemKey, password);
             } else {
-                authenticate = this.connection.authenticateWithPassword(username, password);
+                authenticate = connection.authenticateWithPassword(username, password);
             }
             if (!authenticate) {
                 throw Exceptions.authentication("authentication failure username: " + username);

@@ -81,18 +81,10 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, Js
      */
     private String sql;
 
-    /**
-     * 默认当前页为1, 每页显示数为10
-     */
     public Pager() {
         this(1, 10);
     }
 
-    /**
-     * 构造函数
-     *
-     * @param page 当前页
-     */
     public Pager(int page) {
         this(page, 10);
     }
@@ -109,6 +101,28 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, Js
         this.resetOffset();
     }
 
+    public Pager(PageRequest request) {
+        this.page = request.getPage();
+        this.limit = request.getLimit();
+        this.resetOffset();
+    }
+
+    public static <T> Pager<T> of() {
+        return new Pager<>(1, 10);
+    }
+
+    public static <T> Pager<T> of(int page) {
+        return new Pager<>(page, 10);
+    }
+
+    public static <T> Pager<T> of(int page, int limit) {
+        return new Pager<>(page, limit);
+    }
+
+    public static <T> Pager<T> of(PageRequest request) {
+        return new Pager<>(request);
+    }
+
     /**
      * 判断本页是否还需要继续查询
      *
@@ -121,6 +135,14 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, Js
             return count != 0;
         }
         return pager.offset < count;
+    }
+
+    public boolean hasMoreData() {
+        return hasMoreData(this.total, this);
+    }
+
+    public boolean hasMoreData(int count) {
+        return hasMoreData(count, this);
     }
 
     public List<T> getRows() {

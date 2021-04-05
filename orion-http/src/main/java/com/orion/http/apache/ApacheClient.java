@@ -30,6 +30,7 @@ public class ApacheClient {
                     .logInterceptor());
         } catch (Exception e) {
             Exceptions.printStacks(e);
+            throw Exceptions.init("init apache client error " + e.getMessage());
         }
     }
 

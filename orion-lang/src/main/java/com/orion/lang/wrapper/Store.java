@@ -25,6 +25,10 @@ public class Store<T> extends CloneSupport<Store<T>> implements Serializable {
         this.t = t;
     }
 
+    public static <T> Store<T> of(T t) {
+        return new Store<>(t);
+    }
+
     public T get() {
         return t;
     }

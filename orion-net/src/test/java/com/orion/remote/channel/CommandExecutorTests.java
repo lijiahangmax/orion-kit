@@ -52,8 +52,9 @@ public class CommandExecutorTests {
 
     @Test
     public void test1() {
+        SessionHolder.addIdentity("C:\\Users\\ljh15\\Desktop\\env", "admin123");
+
         SessionStore store = SessionHolder.getSession("192.168.146.230", "root")
-                .setPassword("admin123")
                 .connect();
 
         CommandExecutor executor = store.getCommandExecutor("echo $JAVA_HOME");

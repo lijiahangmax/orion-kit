@@ -17,6 +17,7 @@ public class Pair<K, V> extends CloneSupport<Pair<K, V>> implements Map.Entry<K,
     private static final long serialVersionUID = 3797556461612462L;
 
     private K key;
+
     private V value;
 
     public Pair() {
@@ -27,16 +28,17 @@ public class Pair<K, V> extends CloneSupport<Pair<K, V>> implements Map.Entry<K,
         this.value = value;
     }
 
-    /**
-     * 将map的实体转化为MapEntry
-     *
-     * @param entry Map.Entry
-     * @param <K>   key
-     * @param <V>   value
-     * @return MapEntry
-     */
-    public static <K, V> Pair<K, V> toMapEntry(Map.Entry<K, V> entry) {
-        return new Pair<>(entry.getKey(), entry.getValue());
+    public Pair(Map.Entry<K, V> entry) {
+        this.key = entry.getKey();
+        this.value = entry.getValue();
+    }
+
+    public static <K, V> Pair<K, V> of(K key, V value) {
+        return new Pair<>(key, value);
+    }
+
+    public static <K, V> Pair<K, V> of(Map.Entry<K, V> entry) {
+        return new Pair<>(entry);
     }
 
     @Override

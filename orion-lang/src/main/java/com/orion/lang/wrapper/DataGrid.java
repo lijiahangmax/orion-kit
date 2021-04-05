@@ -65,15 +65,8 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
         this.rows = rows;
         this.total = total;
         if (total != 0) {
-            pages = total % limit == 0 ? total / limit : (total / limit + 1);
+            this.pages = total % limit == 0 ? total / limit : (total / limit + 1);
         }
-        this.size = Lists.size(this.rows);
-    }
-
-    public DataGrid(List<T> rows, int total, int pages) {
-        this.rows = rows;
-        this.total = total;
-        this.pages = pages;
         this.size = Lists.size(this.rows);
     }
 
@@ -84,6 +77,22 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
         this.page = pager.getPage();
         this.limit = pager.getLimit();
         this.size = Lists.size(this.rows);
+    }
+
+    public static <T> DataGrid<T> of() {
+        return new DataGrid<>();
+    }
+
+    public static <T> DataGrid<T> of(List<T> rows) {
+        return new DataGrid<>(rows);
+    }
+
+    public static <T> DataGrid<T> of(List<T> rows, int total) {
+        return new DataGrid<>(rows, total);
+    }
+
+    public static <T> DataGrid<T> of(Pager<T> pager) {
+        return new DataGrid<>(pager);
     }
 
     /**
@@ -146,7 +155,7 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
     public DataGrid<T> setTotal(int total) {
         this.total = total;
         if (total != 0) {
-            pages = total % limit == 0 ? total / limit : (total / limit + 1);
+            this.pages = total % limit == 0 ? total / limit : (total / limit + 1);
         }
         return this;
     }
