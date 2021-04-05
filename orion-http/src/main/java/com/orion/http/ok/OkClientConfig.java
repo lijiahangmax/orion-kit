@@ -283,6 +283,7 @@ public class OkClientConfig implements Serializable {
         if (this.logInterceptor) {
             builder.addInterceptor(new OkLoggerInterceptor());
         }
+        // builder.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 8888)));
         if (this.proxyHost != null && this.proxyPort != 0) {
             builder.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(this.proxyHost, this.proxyPort)));
         }

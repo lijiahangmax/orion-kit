@@ -42,13 +42,13 @@ public class OkAsyncUpload extends BaseOkRequest implements Asyncable<Consumer<O
     private Consumer<OkResponse> callback;
 
     public OkAsyncUpload(String url) {
-        this.url = url;
-        this.client = OkClient.getClient();
+        this(url, OkClient.getClient());
     }
 
     public OkAsyncUpload(String url, OkHttpClient client) {
         this.url = url;
         this.client = client;
+        this.method = HttpMethod.POST.method();
     }
 
     public OkAsyncUpload asyncFailThrows(boolean asyncFailThrows) {
@@ -137,9 +137,9 @@ public class OkAsyncUpload extends BaseOkRequest implements Asyncable<Consumer<O
     @Override
     protected void execute() {
         super.buildRequest();
-        call = client.newCall(request);
-        response = new OkResponse(request);
-        call.enqueue(new Callback() {
+        this.call = client.newCall(request);
+        this.response = new OkResponse(request);
+        this.call.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response res) {
                 response.response(res);

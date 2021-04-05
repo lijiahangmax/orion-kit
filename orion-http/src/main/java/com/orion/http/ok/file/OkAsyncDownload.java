@@ -58,8 +58,7 @@ public class OkAsyncDownload extends BaseOkRequest implements Asyncable<Consumer
     private long endTime;
 
     public OkAsyncDownload(String url) {
-        this.url = url;
-        this.client = OkClient.getClient();
+        this(url, OkClient.getClient());
     }
 
     public OkAsyncDownload(String url, OkHttpClient client) {
@@ -138,9 +137,9 @@ public class OkAsyncDownload extends BaseOkRequest implements Asyncable<Consumer
     @Override
     protected void execute() {
         super.buildRequest();
-        call = client.newCall(request);
-        response = new OkResponse(request);
-        call.enqueue(new Callback() {
+        this.call = client.newCall(request);
+        this.response = new OkResponse(request);
+        this.call.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response res) throws IOException {
                 response.responseDownload(res);

@@ -664,11 +664,7 @@ public class Streams {
     // -------------------- line consumer --------------------
 
     public static void lineConsumer(InputStream in, Consumer<String> c) throws IOException {
-        try {
-            lineConsumer(new InputStreamReader(in), Const.BUFFER_KB_4, c);
-        } catch (UnsupportedEncodingException e) {
-            throw Exceptions.unsupportedEncoding(e);
-        }
+        lineConsumer(new InputStreamReader(in), Const.BUFFER_KB_4, c);
     }
 
     public static void lineConsumer(InputStream in, String charset, Consumer<String> c) throws IOException {
@@ -676,11 +672,7 @@ public class Streams {
             lineConsumer(in, c);
             return;
         }
-        try {
-            lineConsumer(new InputStreamReader(in, charset), Const.BUFFER_KB_4, c);
-        } catch (UnsupportedEncodingException e) {
-            throw Exceptions.unsupportedEncoding(e);
-        }
+        lineConsumer(new InputStreamReader(in, charset), Const.BUFFER_KB_4, c);
     }
 
     public static void lineConsumer(Reader reader, Consumer<String> c) throws IOException {

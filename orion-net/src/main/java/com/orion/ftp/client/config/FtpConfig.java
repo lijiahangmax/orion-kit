@@ -2,8 +2,10 @@ package com.orion.ftp.client.config;
 
 import com.orion.able.JsonAble;
 import com.orion.constant.Const;
+import com.orion.utils.Charsets;
 
 import java.io.Serializable;
+import java.nio.charset.Charset;
 
 /**
  * FTP连接配置类
@@ -52,12 +54,12 @@ public class FtpConfig implements Serializable, JsonAble {
     /**
      * 远程文件名称编码
      */
-    private String remoteFileNameCharset;
+    private Charset remoteFileNameCharset;
 
     /**
      * 本地文件名称编码
      */
-    private String localFileNameCharset;
+    private Charset localFileNameCharset;
 
     /**
      * 是否显示隐藏文件
@@ -94,8 +96,8 @@ public class FtpConfig implements Serializable, JsonAble {
         this.remoteRootDir = Const.SLASH;
         this.remoteContentCharset = Const.UTF_8;
         this.localContentCharset = Const.UTF_8;
-        this.remoteFileNameCharset = Const.UTF_8;
-        this.localFileNameCharset = Const.UTF_8;
+        this.remoteFileNameCharset = Charsets.UTF_8;
+        this.localFileNameCharset = Charsets.UTF_8;
         this.showHidden = false;
         this.buffSize = Const.BUFFER_KB_8;
         this.passiveMode = false;
@@ -153,11 +155,21 @@ public class FtpConfig implements Serializable, JsonAble {
     }
 
     public FtpConfig setRemoteFileNameCharset(String remoteFileNameCharset) {
-        this.remoteFileNameCharset = remoteFileNameCharset;
+        this.remoteFileNameCharset = Charsets.of(remoteFileNameCharset);
         return this;
     }
 
     public FtpConfig setLocalFileNameCharset(String localFileNameCharset) {
+        this.localFileNameCharset = Charsets.of(localFileNameCharset);
+        return this;
+    }
+
+    public FtpConfig setRemoteFileNameCharset(Charset remoteFileNameCharset) {
+        this.remoteFileNameCharset = remoteFileNameCharset;
+        return this;
+    }
+
+    public FtpConfig setLocalFileNameCharset(Charset localFileNameCharset) {
         this.localFileNameCharset = localFileNameCharset;
         return this;
     }
@@ -215,11 +227,11 @@ public class FtpConfig implements Serializable, JsonAble {
         return localContentCharset;
     }
 
-    public String getRemoteFileNameCharset() {
+    public Charset getRemoteFileNameCharset() {
         return remoteFileNameCharset;
     }
 
-    public String getLocalFileNameCharset() {
+    public Charset getLocalFileNameCharset() {
         return localFileNameCharset;
     }
 

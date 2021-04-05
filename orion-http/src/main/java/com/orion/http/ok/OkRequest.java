@@ -2,6 +2,7 @@ package com.orion.http.ok;
 
 import com.orion.able.Asyncable;
 import com.orion.able.Awaitable;
+import com.orion.http.useragent.StandardUserAgent;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
 import okhttp3.Call;
@@ -37,21 +38,21 @@ public class OkRequest extends BaseOkRequest implements Awaitable<OkResponse>, A
     private Consumer<OkResponse> asyncCallback;
 
     public OkRequest() {
-        this.client = OkClient.getClient();
+        this(null, OkClient.getClient());
     }
 
     public OkRequest(OkHttpClient client) {
-        this.client = client;
+        this(null, client);
     }
 
     public OkRequest(String url) {
-        this.url = url;
-        this.client = OkClient.getClient();
+        this(url, OkClient.getClient());
     }
 
     public OkRequest(String url, OkHttpClient client) {
         this.url = url;
         this.client = client;
+        this.userAgent(StandardUserAgent.CHROME_3);
     }
 
     public OkRequest asyncFailThrows(boolean asyncFailThrows) {
@@ -81,7 +82,7 @@ public class OkRequest extends BaseOkRequest implements Awaitable<OkResponse>, A
     @Override
     protected void execute() {
         super.buildRequest();
-        call = client.newCall(request);
+        this.call = client.newCall(request);
         if (!async) {
             // sync
             try (Response resp = call.execute()) {
@@ -92,7 +93,7 @@ public class OkRequest extends BaseOkRequest implements Awaitable<OkResponse>, A
             }
         }
         // async
-        response = new OkResponse(request);
+        this.response = new OkResponse(request);
         call.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response res) {

@@ -135,7 +135,7 @@ public class OkWebSocketServer {
             MOCK_WEB_SERVER.start(port);
         }
         LOGGER.info("WebSocketServer 初始化完成 host: [{}], port: [{}]", MOCK_WEB_SERVER.getHostName(), MOCK_WEB_SERVER.getPort());
-        initMockServer();
+        this.initMockServer();
     }
 
     /**
@@ -193,7 +193,7 @@ public class OkWebSocketServer {
                 sendMessageHandler.send(webSocket, text);
             }
             webSocket.send(text);
-            sendCount++;
+            this.sendCount++;
         }
     }
 
@@ -211,7 +211,7 @@ public class OkWebSocketServer {
                 sendMessageByteHandler.send(webSocket, bs);
             }
             webSocket.send(bs);
-            sendCount++;
+            this.sendCount++;
         }
     }
 
@@ -227,7 +227,7 @@ public class OkWebSocketServer {
                         sendMessageHandler.send(webSocket, text);
                     }
                     webSocket.send(text);
-                    sendCount++;
+                    this.sendCount++;
                 }
             }
         }
@@ -253,7 +253,7 @@ public class OkWebSocketServer {
                         sendMessageByteHandler.send(webSocket, bs);
                     }
                     webSocket.send(bs);
-                    sendCount++;
+                    this.sendCount++;
                 }
             }
         }
@@ -270,7 +270,7 @@ public class OkWebSocketServer {
             sendMessageHandler.send(webSocket, text);
         }
         webSocket.send(text);
-        sendCount++;
+        this.sendCount++;
     }
 
     public void spread(WebSocket webSocket, byte[] bs) {
@@ -289,7 +289,7 @@ public class OkWebSocketServer {
             sendMessageByteHandler.send(webSocket, bs);
         }
         webSocket.send(bs);
-        sendCount++;
+        this.sendCount++;
     }
 
     public void spread(String sessionId, String text) {
@@ -303,7 +303,7 @@ public class OkWebSocketServer {
                     sendMessageHandler.send(webSocket, text);
                 }
                 webSocket.send(text);
-                sendCount++;
+                this.sendCount++;
             }
         }
     }
@@ -327,7 +327,7 @@ public class OkWebSocketServer {
                     sendMessageByteHandler.send(webSocket, bs);
                 }
                 webSocket.send(bs);
-                sendCount++;
+                this.sendCount++;
             }
         }
     }

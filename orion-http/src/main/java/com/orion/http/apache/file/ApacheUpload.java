@@ -1,5 +1,6 @@
 package com.orion.http.apache.file;
 
+import com.orion.constant.StandardContentType;
 import com.orion.http.BaseHttpRequest;
 import com.orion.http.apache.ApacheClient;
 import com.orion.http.apache.ApacheResponse;
@@ -7,6 +8,7 @@ import com.orion.http.apache.BaseApacheRequest;
 import com.orion.http.support.HttpContentType;
 import com.orion.http.support.HttpMethod;
 import com.orion.http.support.HttpUploadPart;
+import com.orion.utils.Charsets;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
 import com.orion.utils.collect.Lists;
@@ -51,9 +53,7 @@ public class ApacheUpload extends BaseApacheRequest {
     private volatile boolean done;
 
     public ApacheUpload(String url) {
-        this.url = url;
-        this.client = ApacheClient.getClient();
-        this.method = HttpMethod.POST.method();
+        this(url, ApacheClient.getClient());
     }
 
     public ApacheUpload(String url, CloseableHttpClient client) {
@@ -125,8 +125,10 @@ public class ApacheUpload extends BaseApacheRequest {
     protected HttpEntity getEntry() {
         Valid.notEmpty(parts, "upload part is empty");
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-        if (queryParams != null) {
-            formParts.forEach(builder::addTextBody);
+        if (formParts != null) {
+            formParts.forEach((k, v) -> {
+                builder.addTextBody(k, v, ContentType.create(StandardContentType.TEXT_PLAIN, Charsets.of(charset)));
+            });
         }
         for (HttpUploadPart part : parts) {
             String key = part.getParam();

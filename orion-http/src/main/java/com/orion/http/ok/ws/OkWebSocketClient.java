@@ -155,7 +155,7 @@ public class OkWebSocketClient {
                 sendMessageHandler.send(this.webSocket, text);
             }
             webSocket.send(text);
-            sendCount++;
+            this.sendCount++;
         }
     }
 
@@ -170,7 +170,7 @@ public class OkWebSocketClient {
                 sendMessageByteHandler.send(this.webSocket, byteString);
             }
             webSocket.send(byteString);
-            sendCount++;
+            this.sendCount++;
         }
     }
 

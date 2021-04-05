@@ -2,7 +2,6 @@ package com.orion.utils;
 
 import com.orion.constant.Const;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -733,20 +732,16 @@ public class Strings {
      */
     public static String randomChars(int count) {
         StringBuilder build = new StringBuilder();
-        try {
-            for (int i = 0; i < count; i++) {
-                int highCode;
-                int lowCode;
-                Random random = new Random();
-                highCode = (176 + Math.abs(random.nextInt(39)));
-                lowCode = (161 + Math.abs(random.nextInt(93)));
-                byte[] b = new byte[2];
-                b[0] = (Integer.valueOf(highCode)).byteValue();
-                b[1] = (Integer.valueOf(lowCode)).byteValue();
-                build.append(new String(b, Const.GBK));
-            }
-        } catch (UnsupportedEncodingException e) {
-            // ignore
+        for (int i = 0; i < count; i++) {
+            int highCode;
+            int lowCode;
+            Random random = new Random();
+            highCode = (176 + Math.abs(random.nextInt(39)));
+            lowCode = (161 + Math.abs(random.nextInt(93)));
+            byte[] b = new byte[2];
+            b[0] = (Integer.valueOf(highCode)).byteValue();
+            b[1] = (Integer.valueOf(lowCode)).byteValue();
+            build.append(new String(b, Charsets.GBK));
         }
         return build.toString();
     }
@@ -1568,11 +1563,7 @@ public class Strings {
         if (charset != null) {
             return s.getBytes(charset);
         }
-        try {
-            return s.getBytes(Systems.FILE_ENCODING);
-        } catch (UnsupportedEncodingException e) {
-            throw Exceptions.unsupportedEncoding(e);
-        }
+        return s.getBytes(Charsets.of(Systems.FILE_ENCODING));
     }
 
     /**
@@ -1583,15 +1574,10 @@ public class Strings {
      * @return byte[]
      */
     public static byte[] bytes(String s, String charset) {
-        try {
-            if (charset != null) {
-                return s.getBytes(charset);
-            } else {
-                return s.getBytes(Systems.FILE_ENCODING);
-            }
-        } catch (UnsupportedEncodingException e) {
-            throw Exceptions.unsupportedEncoding(e);
+        if (charset != null) {
+            return s.getBytes(Charsets.of(charset));
         }
+        return s.getBytes(Charsets.of(Systems.FILE_ENCODING));
     }
 
 }

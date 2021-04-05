@@ -24,21 +24,22 @@ public class ApacheDownload {
     private ApacheResponse response;
 
     public ApacheDownload(String url) {
-        this.request = new ApacheRequest(url);
+        this(new ApacheRequest(url), null);
     }
 
     public ApacheDownload(String url, CloseableHttpClient client) {
-        this.request = new ApacheRequest(url);
-        this.request.client(client);
+        this(new ApacheRequest(url), client);
     }
 
     public ApacheDownload(ApacheRequest request) {
-        this.request = request;
+        this(request, null);
     }
 
     public ApacheDownload(ApacheRequest request, CloseableHttpClient client) {
         this.request = request;
-        this.request.client(client);
+        if (client != null) {
+            this.request.client(client);
+        }
     }
 
     public ApacheDownload client(CloseableHttpClient client) {
@@ -64,8 +65,8 @@ public class ApacheDownload {
     }
 
     public ApacheDownload download(OutputStream out, boolean autoClose) throws IOException {
-        this.response = this.request.await();
-        out.write(this.response.getBody());
+        this.response = request.await();
+        out.write(response.getBody());
         if (autoClose) {
             Streams.close(out);
         }

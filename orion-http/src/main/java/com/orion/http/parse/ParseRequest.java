@@ -4,12 +4,13 @@ import com.orion.able.Awaitable;
 import com.orion.constant.StandardContentType;
 import com.orion.http.BaseHttpRequest;
 import com.orion.http.support.HttpCookie;
+import com.orion.http.useragent.StandardUserAgent;
+import com.orion.utils.Charsets;
 import com.orion.utils.Exceptions;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 /**
  * parse request
@@ -43,9 +44,11 @@ public class ParseRequest extends BaseHttpRequest implements Awaitable<ParseResp
     private ParseRequestConfig config;
 
     public ParseRequest() {
+        this.userAgent(StandardUserAgent.CHROME_3);
     }
 
     public ParseRequest(String url) {
+        this();
         this.url = url;
     }
 
@@ -63,10 +66,10 @@ public class ParseRequest extends BaseHttpRequest implements Awaitable<ParseResp
     @Override
     protected void buildRequest() {
         super.buildRequest();
-        connection = Jsoup.connect(url)
+        this.connection = Jsoup.connect(url)
                 .method(Connection.Method.valueOf(method));
-        request = connection.request();
-        response = connection.response();
+        this.request = connection.request();
+        this.response = connection.response();
         if (headers != null) {
             headers.forEach(connection::header);
         }
@@ -84,11 +87,7 @@ public class ParseRequest extends BaseHttpRequest implements Awaitable<ParseResp
             return;
         }
         if (body != null) {
-            try {
-                connection.requestBody(new String(body, bodyOffset, bodyLen, charset));
-            } catch (UnsupportedEncodingException e) {
-                throw Exceptions.unsupportedEncoding(e);
-            }
+            connection.requestBody(new String(body, bodyOffset, bodyLen, Charsets.of(charset)));
         } else if (formParts != null) {
             connection.data(formParts);
         }
@@ -99,7 +98,7 @@ public class ParseRequest extends BaseHttpRequest implements Awaitable<ParseResp
      */
     protected void configuration() {
         if (config == null) {
-            config = new ParseRequestConfig();
+            this.config = new ParseRequestConfig();
         }
         if (config.getProxyHost() != null && config.getProxyPort() != 0) {
             request.proxy(config.getProxyHost(), config.getProxyPort());
@@ -118,7 +117,7 @@ public class ParseRequest extends BaseHttpRequest implements Awaitable<ParseResp
     protected void execute() {
         this.buildRequest();
         try {
-            response = connection.execute();
+            this.response = connection.execute();
         } catch (IOException e) {
             throw Exceptions.httpRequest(e);
         }

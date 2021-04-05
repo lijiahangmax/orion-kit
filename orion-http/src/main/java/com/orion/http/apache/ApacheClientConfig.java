@@ -1,6 +1,7 @@
 package com.orion.http.apache;
 
 import com.orion.constant.Const;
+import com.orion.http.useragent.StandardUserAgent;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponseInterceptor;
@@ -110,6 +111,7 @@ public class ApacheClientConfig implements Serializable {
         this.connectTimeout = Const.MS_S_3;
         this.socketTimeout = Const.MS_S_15;
         this.requestTimeout = Const.MS_S_15;
+        this.userAgent = StandardUserAgent.CHROME_3;
         this.maxRoute = 12;
         this.maxRequest = 64;
         this.connTimeToLive = -1;
@@ -296,6 +298,7 @@ public class ApacheClientConfig implements Serializable {
             builder.addInterceptorFirst((HttpRequestInterceptor) loggerInterceptor)
                     .addInterceptorLast((HttpResponseInterceptor) loggerInterceptor);
         }
+        // builder.setProxy(new HttpHost("127.0.0.1", 8888));
         if (this.proxyHost != null && this.proxyPort != 0) {
             builder.setProxy(new HttpHost(this.proxyHost, this.proxyPort));
         }

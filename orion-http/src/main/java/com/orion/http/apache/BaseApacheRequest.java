@@ -5,7 +5,7 @@ import com.orion.constant.StandardContentType;
 import com.orion.http.BaseHttpRequest;
 import com.orion.http.support.HttpContentType;
 import com.orion.http.support.HttpMethod;
-import com.orion.utils.Exceptions;
+import com.orion.utils.Charsets;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -15,7 +15,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -114,21 +113,21 @@ public abstract class BaseApacheRequest extends BaseHttpRequest implements Await
     protected void getRequestByMethod() {
         HttpMethod.valid(method);
         if (HttpMethod.POST.method().equals(method)) {
-            request = new HttpPost(url);
+            this.request = new HttpPost(url);
         } else if (HttpMethod.PATCH.method().equals(method)) {
-            request = new HttpPatch(url);
+            this.request = new HttpPatch(url);
         } else if (HttpMethod.PUT.method().equals(method)) {
-            request = new HttpPut(url);
+            this.request = new HttpPut(url);
         } else if (HttpMethod.GET.method().equals(method)) {
-            request = new HttpGet(url);
+            this.request = new HttpGet(url);
         } else if (HttpMethod.DELETE.method().equals(method)) {
-            request = new HttpDelete(url);
+            this.request = new HttpDelete(url);
         } else if (HttpMethod.HEAD.method().equals(method)) {
-            request = new HttpHead(url);
+            this.request = new HttpHead(url);
         } else if (HttpMethod.TRACE.method().equals(method)) {
-            request = new HttpTrace(url);
+            this.request = new HttpTrace(url);
         } else if (HttpMethod.OPTIONS.method().equals(method)) {
-            request = new HttpOptions(url);
+            this.request = new HttpOptions(url);
         }
         if (request instanceof HttpEntityEnclosingRequestBase) {
             ((HttpEntityEnclosingRequestBase) request).setEntity(this.getEntry());
@@ -146,12 +145,8 @@ public abstract class BaseApacheRequest extends BaseHttpRequest implements Await
         } else if (formParts != null) {
             List<NameValuePair> pairs = new ArrayList<>();
             formParts.forEach((k, v) -> pairs.add(new BasicNameValuePair(k, v)));
-            try {
-                contentType = HttpContentType.APPLICATION_FORM.getType();
-                return new UrlEncodedFormEntity(pairs, Charset.forName(charset));
-            } catch (Exception e) {
-                throw Exceptions.unsupportedEncoding(e);
-            }
+            this.contentType = HttpContentType.APPLICATION_FORM.getType();
+            return new UrlEncodedFormEntity(pairs, Charsets.of(charset));
         }
         return null;
     }

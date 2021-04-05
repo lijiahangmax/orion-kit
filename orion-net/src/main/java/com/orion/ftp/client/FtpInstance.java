@@ -1197,11 +1197,7 @@ public class FtpInstance implements SafeCloseable {
      * @return 编码
      */
     public String serverCharset(String chars) {
-        try {
-            return new String(Strings.bytes(Files1.getPath(chars)), config.getRemoteFileNameCharset());
-        } catch (UnsupportedEncodingException e) {
-            throw Exceptions.unsupportedEncoding(e);
-        }
+        return new String(Strings.bytes(Files1.getPath(chars)), config.getRemoteFileNameCharset());
     }
 
     /**
@@ -1211,11 +1207,7 @@ public class FtpInstance implements SafeCloseable {
      * @return 编码
      */
     public String localCharset(String chars) {
-        try {
-            return new String(Strings.bytes(Files1.getPath(chars)), config.getLocalFileNameCharset());
-        } catch (UnsupportedEncodingException e) {
-            throw Exceptions.unsupportedEncoding(e);
-        }
+        return new String(Strings.bytes(Files1.getPath(chars)), config.getLocalFileNameCharset());
     }
 
     @Override

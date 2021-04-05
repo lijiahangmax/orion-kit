@@ -24,21 +24,22 @@ public class OkDownload {
     private OkResponse response;
 
     public OkDownload(String url) {
-        this.request = new OkRequest(url);
+        this(new OkRequest(url), null);
     }
 
     public OkDownload(String url, OkHttpClient client) {
-        this.request = new OkRequest(url);
-        this.request.client(client);
+        this(new OkRequest(url), client);
     }
 
     public OkDownload(OkRequest request) {
-        this.request = request;
+        this(request, null);
     }
 
     public OkDownload(OkRequest request, OkHttpClient client) {
         this.request = request;
-        this.request.client(client);
+        if (client != null) {
+            this.request.client(client);
+        }
     }
 
     public OkDownload client(OkHttpClient client) {

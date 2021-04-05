@@ -63,6 +63,7 @@ public class ParseRequestConfig implements Serializable {
         this.followRedirects = true;
         this.ignoreContentType = true;
         this.ignoreError = true;
+        // this.proxy("127.0.0.1", 8888);
     }
 
     public ParseRequestConfig proxy(String host, int port) {

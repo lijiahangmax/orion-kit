@@ -47,14 +47,13 @@ public class OkUpload extends BaseOkRequest implements Awaitable<OkResponse> {
     private long endDate;
 
     public OkUpload(String url) {
-        this.url = url;
-        this.client = OkClient.getClient();
+        this(url, OkClient.getClient());
     }
 
     public OkUpload(String url, OkHttpClient client) {
         this.url = url;
         this.client = client;
-        this.client = OkClient.getClient();
+        this.method = HttpMethod.POST.method();
     }
 
     @Override
@@ -126,15 +125,15 @@ public class OkUpload extends BaseOkRequest implements Awaitable<OkResponse> {
     @Override
     protected void execute() {
         super.buildRequest();
-        startDate = System.currentTimeMillis();
-        call = client.newCall(request);
+        this.startDate = System.currentTimeMillis();
+        this.call = client.newCall(request);
         try (Response resp = call.execute()) {
-            response = new OkResponse(request, resp);
+            this.response = new OkResponse(request, resp);
         } catch (IOException e) {
             throw Exceptions.httpRequest("ok request upload file on failure: " + super.getRequestMessage(), e);
         } finally {
-            done = true;
-            endDate = System.currentTimeMillis();
+            this.done = true;
+            this.endDate = System.currentTimeMillis();
         }
     }
 
