@@ -407,7 +407,7 @@ public class Maps {
         if (size == 0) {
             return null;
         } else if (size == 1) {
-            return Pair.toMapEntry(map.entrySet().iterator().next());
+            return Pair.of(map.entrySet().iterator().next());
         } else {
             K randomKey = ((K) map.keySet().toArray()[Randoms.RANDOM.nextInt(size)]);
             return new Pair<K, V>(randomKey, map.get(randomKey));
