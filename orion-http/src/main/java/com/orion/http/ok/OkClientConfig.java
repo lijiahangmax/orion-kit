@@ -120,6 +120,11 @@ public class OkClientConfig implements Serializable {
         return this;
     }
 
+    public OkClientConfig logInterceptor(boolean open) {
+        this.logInterceptor = open;
+        return this;
+    }
+
     public OkClientConfig logInterceptor() {
         this.logInterceptor = true;
         return this;

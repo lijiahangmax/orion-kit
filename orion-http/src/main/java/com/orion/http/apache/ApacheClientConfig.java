@@ -124,6 +124,11 @@ public class ApacheClientConfig implements Serializable {
         return this;
     }
 
+    public ApacheClientConfig logInterceptor(boolean open) {
+        this.logInterceptor = open;
+        return this;
+    }
+
     public ApacheClientConfig logInterceptor() {
         this.logInterceptor = true;
         return this;
