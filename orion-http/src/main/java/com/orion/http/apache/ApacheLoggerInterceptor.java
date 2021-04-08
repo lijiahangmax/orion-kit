@@ -21,25 +21,25 @@ public class ApacheLoggerInterceptor implements HttpRequestInterceptor, HttpResp
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(ApacheLoggerInterceptor.class);
 
-    private static final ThreadLocal<Args.Four<String, String, Long, String>> REQUEST_STORE = new ThreadLocal<>();
+    private static final ThreadLocal<Args.Four<String, String, Long, String>> HOLDER = new ThreadLocal<>();
 
     @Override
     public void process(HttpRequest httpRequest, HttpContext httpContext) {
+        long start = System.currentTimeMillis();
         RequestLine request = httpRequest.getRequestLine();
         String method = request.getMethod();
         String uri = request.getUri();
         String traceId = UUIds.random32();
-        long start = System.currentTimeMillis();
-        REQUEST_STORE.set(Args.of(method, uri, start, traceId));
+        HOLDER.set(Args.of(method, uri, start, traceId));
         LOGGER.info("Apache-HTTP-Request START method: [{}], url: [{}], start: [{}], traceId: [{}]", method, uri, start, traceId);
     }
 
     @Override
     public void process(HttpResponse httpResponse, HttpContext httpContext) {
-        Args.Four<String, String, Long, String> p = REQUEST_STORE.get();
-        REQUEST_STORE.remove();
-        StatusLine response = httpResponse.getStatusLine();
         long end = System.currentTimeMillis();
+        Args.Four<String, String, Long, String> p = HOLDER.get();
+        HOLDER.remove();
+        StatusLine response = httpResponse.getStatusLine();
         int code = response.getStatusCode();
         LOGGER.info("Apache-HTTP-Request END [use: {}ms], code: {}, success: {}, method: [{}], url: [{}], traceId: [{}]", end - p.getArg3(), code, code >= 200 && code < 300, p.getArg1(), p.getArg2(), p.getArg4());
     }
