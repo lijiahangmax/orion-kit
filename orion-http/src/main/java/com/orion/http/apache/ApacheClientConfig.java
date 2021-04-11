@@ -2,6 +2,7 @@ package com.orion.http.apache;
 
 import com.orion.constant.Const;
 import com.orion.http.useragent.StandardUserAgent;
+import com.orion.utils.collect.Lists;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponseInterceptor;
@@ -16,6 +17,8 @@ import org.apache.http.impl.client.HttpClients;
 
 import javax.net.ssl.SSLContext;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -86,6 +89,16 @@ public class ApacheClientConfig implements Serializable {
      * cookie
      */
     private CookieStore cookies;
+
+    /**
+     * 请求拦截器
+     */
+    private List<HttpRequestInterceptor> requestInterceptors;
+
+    /**
+     * 响应拦截器
+     */
+    private List<HttpResponseInterceptor> responseInterceptors;
 
     /**
      * connection manager
@@ -177,6 +190,22 @@ public class ApacheClientConfig implements Serializable {
 
     public ApacheClientConfig cookies(CookieStore cookies) {
         this.cookies = cookies;
+        return this;
+    }
+
+    public ApacheClientConfig requestInterceptor(HttpRequestInterceptor interceptor) {
+        if (requestInterceptors == null) {
+            this.requestInterceptors = new ArrayList<>();
+        }
+        requestInterceptors.add(interceptor);
+        return this;
+    }
+
+    public ApacheClientConfig responseInterceptor(HttpResponseInterceptor interceptor) {
+        if (responseInterceptors == null) {
+            this.responseInterceptors = new ArrayList<>();
+        }
+        responseInterceptors.add(interceptor);
         return this;
     }
 
@@ -302,6 +331,12 @@ public class ApacheClientConfig implements Serializable {
             ApacheLoggerInterceptor loggerInterceptor = new ApacheLoggerInterceptor();
             builder.addInterceptorFirst((HttpRequestInterceptor) loggerInterceptor)
                     .addInterceptorLast((HttpResponseInterceptor) loggerInterceptor);
+        }
+        if (!Lists.isEmpty(requestInterceptors)) {
+            requestInterceptors.forEach(builder::addInterceptorFirst);
+        }
+        if (!Lists.isEmpty(responseInterceptors)) {
+            requestInterceptors.forEach(builder::addInterceptorLast);
         }
         // builder.setProxy(new HttpHost("127.0.0.1", 8888));
         if (this.proxyHost != null && this.proxyPort != 0) {

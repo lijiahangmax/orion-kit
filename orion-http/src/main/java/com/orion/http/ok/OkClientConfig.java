@@ -1,10 +1,8 @@
 package com.orion.http.ok;
 
 import com.orion.constant.Const;
-import okhttp3.ConnectionSpec;
-import okhttp3.CookieJar;
-import okhttp3.Dispatcher;
-import okhttp3.OkHttpClient;
+import com.orion.utils.collect.Lists;
+import okhttp3.*;
 
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.X509TrustManager;
@@ -76,6 +74,16 @@ public class OkClientConfig implements Serializable {
     private int maxRequest;
 
     /**
+     * 请求响应拦截器
+     */
+    private List<Interceptor> interceptors;
+
+    /**
+     * 网络请求拦截器
+     */
+    private List<Interceptor> networkInterceptors;
+
+    /**
      * 调度器线程池
      */
     private ExecutorService dispatcherPool;
@@ -130,6 +138,22 @@ public class OkClientConfig implements Serializable {
         return this;
     }
 
+    public OkClientConfig interceptor(Interceptor interceptor) {
+        if (interceptors == null) {
+            this.interceptors = new ArrayList<>();
+        }
+        interceptors.add(interceptor);
+        return this;
+    }
+
+    public OkClientConfig networkInterceptor(Interceptor interceptor) {
+        if (networkInterceptors == null) {
+            this.networkInterceptors = new ArrayList<>();
+        }
+        networkInterceptors.add(interceptor);
+        return this;
+    }
+
     public OkClientConfig callTimeout(long callTimeout) {
         this.callTimeout = callTimeout;
         return this;
@@ -150,16 +174,6 @@ public class OkClientConfig implements Serializable {
         return this;
     }
 
-    public OkClientConfig sslSocketFactory(SSLSocketFactory sslSocketFactory) {
-        this.sslSocketFactory = sslSocketFactory;
-        return this;
-    }
-
-    public OkClientConfig trustManager(X509TrustManager trustManager) {
-        this.trustManager = trustManager;
-        return this;
-    }
-
     public OkClientConfig maxRoute(int maxRoute) {
         this.maxRoute = maxRoute;
         return this;
@@ -177,6 +191,16 @@ public class OkClientConfig implements Serializable {
 
     public OkClientConfig dispatcher(Dispatcher dispatcher) {
         this.dispatcher = dispatcher;
+        return this;
+    }
+
+    public OkClientConfig sslSocketFactory(SSLSocketFactory sslSocketFactory) {
+        this.sslSocketFactory = sslSocketFactory;
+        return this;
+    }
+
+    public OkClientConfig trustManager(X509TrustManager trustManager) {
+        this.trustManager = trustManager;
         return this;
     }
 
@@ -287,6 +311,12 @@ public class OkClientConfig implements Serializable {
         }
         if (this.logInterceptor) {
             builder.addInterceptor(new OkLoggerInterceptor());
+        }
+        if (!Lists.isEmpty(this.interceptors)) {
+            interceptors.forEach(builder::addInterceptor);
+        }
+        if (!Lists.isEmpty(this.networkInterceptors)) {
+            interceptors.forEach(builder::addNetworkInterceptor);
         }
         // builder.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 8888)));
         if (this.proxyHost != null && this.proxyPort != 0) {
