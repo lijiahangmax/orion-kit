@@ -1,10 +1,7 @@
 package com.orion.utils;
 
 import com.orion.exception.*;
-import com.orion.exception.argument.IndexArgumentException;
-import com.orion.exception.argument.InvalidArgumentException;
-import com.orion.exception.argument.NullArgumentException;
-import com.orion.exception.argument.UnMatchArgumentException;
+import com.orion.exception.argument.*;
 
 import javax.script.ScriptException;
 import java.io.IOException;
@@ -715,20 +712,68 @@ public class Exceptions {
         return new IndexArgumentException(s, t);
     }
 
-    public static UnMatchArgumentException unMatch() {
+    public static IndexArgumentException indexArgument(int index) {
+        return new IndexArgumentException(index);
+    }
+
+    public static IndexArgumentException indexArgument(int index, Throwable t) {
+        return new IndexArgumentException(index, t);
+    }
+
+    public static IndexArgumentException indexArgument(int index, String s) {
+        return new IndexArgumentException(index, s);
+    }
+
+    public static IndexArgumentException indexArgument(int index, String s, Throwable t) {
+        return new IndexArgumentException(index, s, t);
+    }
+
+    public static UnMatchArgumentException unMatchArgument() {
         return new UnMatchArgumentException();
     }
 
-    public static UnMatchArgumentException unMatch(Throwable t) {
+    public static UnMatchArgumentException unMatchArgument(Throwable t) {
         return new UnMatchArgumentException(t);
     }
 
-    public static UnMatchArgumentException unMatch(String s) {
+    public static UnMatchArgumentException unMatchArgument(String s) {
         return new UnMatchArgumentException(s);
     }
 
-    public static UnMatchArgumentException unMatch(String s, Throwable t) {
+    public static UnMatchArgumentException unMatchArgument(String s, Throwable t) {
         return new UnMatchArgumentException(s, t);
+    }
+
+    public static CodeArgumentException codeArgument() {
+        return new CodeArgumentException();
+    }
+
+    public static CodeArgumentException codeArgument(Throwable t) {
+        return new CodeArgumentException(t);
+    }
+
+    public static CodeArgumentException codeArgument(String s) {
+        return new CodeArgumentException(s);
+    }
+
+    public static CodeArgumentException codeArgument(String s, Throwable t) {
+        return new CodeArgumentException(s, t);
+    }
+
+    public static CodeArgumentException codeArgument(int code) {
+        return new CodeArgumentException(code);
+    }
+
+    public static CodeArgumentException codeArgument(int code, Throwable t) {
+        return new CodeArgumentException(code, t);
+    }
+
+    public static CodeArgumentException codeArgument(int code, String s) {
+        return new CodeArgumentException(code, s);
+    }
+
+    public static CodeArgumentException codeArgument(int code, String s, Throwable t) {
+        return new CodeArgumentException(code, s, t);
     }
 
 }
