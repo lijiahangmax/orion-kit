@@ -20,6 +20,11 @@ public enum ExcelReadType {
     DECIMAL,
 
     /**
+     * 整数
+     */
+    INTEGER,
+
+    /**
      * 手机号
      */
     PHONE,

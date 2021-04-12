@@ -140,6 +140,7 @@ public class Excels {
      * @param <T>    T
      * @return value
      * @see ExcelReadType#DECIMAL       可能为null
+     * @see ExcelReadType#INTEGER       可能为null
      * @see ExcelReadType#DATE          可能为null
      * @see ExcelReadType#LINK_ADDRESS  可能为null
      * @see ExcelReadType#COMMENT       可能为null
@@ -153,6 +154,9 @@ public class Excels {
         switch (type) {
             case DECIMAL:
                 value = Excels.getCellDecimal(cell, null, option);
+                break;
+            case INTEGER:
+                value = Excels.getCellInteger(cell, null, option);
                 break;
             case DATE:
                 value = Excels.getCellDate(cell, null, option);
@@ -243,7 +247,7 @@ public class Excels {
      * 获取数字
      *
      * @param cell cell
-     * @return 数字
+     * @return BigDecimal
      */
     public static BigDecimal getCellDecimal(Cell cell) {
         return getCellDecimal(cell, null, null);
@@ -290,6 +294,40 @@ public class Excels {
             default:
                 return null;
         }
+    }
+
+    /**
+     * 获取数字
+     *
+     * @param cell cell
+     * @return Integer
+     */
+    public static Integer getCellInteger(Cell cell) {
+        return getCellInteger(cell, null, null);
+    }
+
+    /**
+     * 获取数字
+     *
+     * @param cell   cell
+     * @param option option
+     * @return Integer
+     */
+    public static Integer getCellInteger(Cell cell, CellOption option) {
+        return getCellInteger(cell, null, option);
+    }
+
+    /**
+     * 获取数字
+     *
+     * @param cell   cell
+     * @param type   type
+     * @param option option
+     * @return BigDecimal
+     */
+    public static Integer getCellInteger(Cell cell, CellType type, CellOption option) {
+        BigDecimal val = getCellDecimal(cell, type, option);
+        return val == null ? null : val.intValue();
     }
 
     /**
