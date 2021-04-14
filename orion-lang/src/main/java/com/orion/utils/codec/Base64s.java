@@ -57,7 +57,7 @@ public class Base64s {
      * @param s base64
      * @return 图片类型
      */
-    public static String image64Type(String s) {
+    public static String img64Type(String s) {
         String[] b = s.split(",");
         if (b.length == 0) {
             return Strings.EMPTY;

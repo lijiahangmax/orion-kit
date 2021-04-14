@@ -46,7 +46,7 @@ public class Exceptions {
      * @param t Throwable
      */
     public static void printStacks(Throwable t) {
-        t.printStackTrace(System.err);
+        t.printStackTrace();
     }
 
     /**

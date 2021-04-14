@@ -6,27 +6,25 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.orion.constant.Const;
-import com.orion.id.Sequences;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
-import com.orion.utils.Systems;
-import com.orion.utils.io.Files1;
+import com.orion.utils.codec.Base64s;
+import com.orion.utils.image.Images;
 import com.orion.utils.io.Streams;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * 二维码工具类
+ * <p>
  * 如果logo图大于二维码的大小那么logo会覆盖二维码, 这时必须压缩logo
+ * 绘制logo的话 纠错等级需要提高 否则无法解析
  *
  * @author ljh15
  * @version 1.0.0
@@ -34,30 +32,35 @@ import java.util.Map;
  */
 public class QRCodes {
 
-    public QRCodes() {
-    }
-
-    private static final String DEFAULT_DIR = Systems.HOME_DIR;
-
     /**
      * 格式
      */
-    private String suffix = "png";
+    private BarcodeFormat format;
 
     /**
-     * 存放文件夹
+     * 后缀
      */
-    private String dir = DEFAULT_DIR;
+    private String suffix;
 
     /**
      * 编码
      */
-    private String charset = Const.UTF_8;
+    private String charset;
+
+    /**
+     * 解析x坐标
+     */
+    private int parserX;
+
+    /**
+     * 解析y坐标
+     */
+    private int parserY;
 
     /**
      * 二维码尺寸
      */
-    private int size = 300;
+    private int size;
 
     /**
      * 纠错等级
@@ -66,17 +69,17 @@ public class QRCodes {
      * 3 ~25%
      * 4 ~30%
      */
-    private int errorCorrectionLevel = 1;
+    private int errorCorrectionLevel;
 
     /**
-     * LOGO宽度
+     * logo宽度
      */
-    private int logoWidth = 60;
+    private int logoWidth;
 
     /**
-     * LOGO高度
+     * logo高度
      */
-    private int logoHeight = 60;
+    private int logoHeight;
 
     /**
      * logo
@@ -84,39 +87,82 @@ public class QRCodes {
     private Image logo;
 
     /**
-     * 是否压缩LOGO
+     * 是否压缩logo
      */
     private boolean logoCompress;
 
     /**
      * 二维码文字宽
      */
-    private int wordWidth = size;
+    private int wordsWidth;
 
     /**
      * 二维码文字高
      */
-    private int wordHeight = 10;
+    private int wordsHeight;
 
     /**
      * 字体名称
      */
-    private String wordsFontName = "微软雅黑";
+    private String wordsFontName;
 
     /**
      * 字体大小
      */
-    private int wordsFontSize = 18;
+    private int wordsFontSize;
 
     /**
      * 上边距
      */
-    private int wordsTopMargin = 10;
+    private int wordsTopMargin;
 
     /**
      * 下边距
      */
-    private int wordsButtonMargin = 20;
+    private int wordsButtonMargin;
+
+    public QRCodes() {
+        this.format = BarcodeFormat.QR_CODE;
+        this.suffix = Const.SUFFIX_PNG;
+        this.charset = Const.UTF_8;
+        this.size = 300;
+        this.errorCorrectionLevel = 1;
+        this.logoWidth = 60;
+        this.logoHeight = 60;
+        this.wordsWidth = size;
+        this.wordsHeight = 10;
+        this.wordsFontName = Const.FONT_MICROSOFT_ELEGANT_BLACK;
+        this.wordsFontSize = 18;
+        this.wordsTopMargin = 10;
+        this.wordsButtonMargin = 20;
+    }
+
+    /**
+     * 压缩logo
+     *
+     * @return this
+     */
+    public QRCodes logoCompress() {
+        this.logoCompress = true;
+        if (logo != null) {
+            int width = logo.getWidth(null);
+            int height = logo.getHeight(null);
+            if (width > this.logoWidth) {
+                width = this.logoWidth;
+            }
+            if (height > this.logoHeight) {
+                height = this.logoHeight;
+            }
+            Image image = logo.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+            BufferedImage tag = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+            Graphics g = tag.getGraphics();
+            // 绘制缩小后的图
+            g.drawImage(image, 0, 0, null);
+            g.dispose();
+            logo = image;
+        }
+        return this;
+    }
 
     /**
      * 创建 BufferedImage
@@ -126,11 +172,11 @@ public class QRCodes {
      */
     public BufferedImage getBufferedImage(String content) {
         try {
-            HashMap<EncodeHintType, Object> hint = new HashMap<>(8);
+            Map<EncodeHintType, Object> hint = new HashMap<>(8);
             hint.put(EncodeHintType.ERROR_CORRECTION, this.getErrorCorrectionLevel());
             hint.put(EncodeHintType.CHARACTER_SET, charset);
             hint.put(EncodeHintType.MARGIN, 1);
-            BitMatrix bitMatrix = new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, size, size, hint);
+            BitMatrix bitMatrix = new MultiFormatWriter().encode(content, format, size, size, hint);
             BufferedImage image = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
             for (int x = 0; x < size; x++) {
                 for (int y = 0; y < size; y++) {
@@ -152,7 +198,7 @@ public class QRCodes {
     private void insertLogo(BufferedImage source) {
         int width = logo.getWidth(null);
         int height = logo.getHeight(null);
-        // 插入LOGO
+        // 插入logo
         Graphics2D graph = source.createGraphics();
         int x = (size - width) / 2;
         int y = (size - height) / 2;
@@ -172,7 +218,7 @@ public class QRCodes {
      * @return BufferedImage
      */
     private BufferedImage insertWords(BufferedImage image, String words) {
-        int newHeight = size + wordHeight + wordsTopMargin + wordsButtonMargin;
+        int newHeight = size + wordsHeight + wordsTopMargin + wordsButtonMargin;
         BufferedImage outImage = new BufferedImage(size, newHeight, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = outImage.createGraphics();
         // 抗锯齿
@@ -189,8 +235,8 @@ public class QRCodes {
         g2d.setColor(Color.BLACK);
         g2d.setFont(new Font(wordsFontName, Font.PLAIN, wordsFontSize));
         int strWidth = g2d.getFontMetrics().stringWidth(words);
-        int wordStartX = (wordWidth - strWidth) / 2;
-        int wordStartY = size + wordHeight + wordsTopMargin;
+        int wordStartX = (wordsWidth - strWidth) / 2;
+        int wordStartY = size + wordsHeight + wordsTopMargin;
         // 画文字
         g2d.drawString(words, wordStartX, wordStartY);
         g2d.dispose();
@@ -214,108 +260,69 @@ public class QRCodes {
         return ErrorCorrectionLevel.H;
     }
 
-    /**
-     * 生成二维码
-     *
-     * @param content 内容
-     * @return 二维码文件
-     */
-    public File encodeToFile(String content) {
-        return encodeAndWordsToFile(content, null, Sequences.next() + Strings.EMPTY);
+    // -------------------- encord --------------------
+
+    public void encode(String content, OutputStream out) {
+        this.encode(content, null, out);
     }
 
     /**
-     * 生成二维码
-     *
-     * @param content  内容
-     * @param fileName 文件名
-     * @return 二维码文件
-     */
-    public File encodeToFile(String content, String fileName) {
-        return encodeAndWordsToFile(content, null, fileName);
-    }
-
-    /**
-     * 生成二维码
-     *
-     * @param content 内容
-     * @param words   文字
-     * @return 二维码文件
-     */
-    public File encodeAndWordsToFile(String content, String words) {
-        return encodeAndWordsToFile(content, words, Sequences.next() + Strings.EMPTY);
-    }
-
-    /**
-     * 生成二维码
-     *
-     * @param content  内容
-     * @param words    文字
-     * @param fileName 文件名
-     * @return 二维码文件
-     */
-    public File encodeAndWordsToFile(String content, String words, String fileName) {
-        OutputStream out = null;
-        File file = new File(Files1.getPath(dir + "/" + fileName + "." + suffix));
-        try {
-            Files1.touch(file);
-            out = Files1.openOutputStream(file);
-            BufferedImage image = getBufferedImage(content);
-            if (this.logo != null) {
-                insertLogo(image);
-            }
-            if (!Strings.isBlank(words)) {
-                image = insertWords(image, words);
-            }
-            ImageIO.write(image, suffix, out);
-            return file;
-        } catch (Exception e) {
-            Exceptions.printStacks(e);
-            return null;
-        } finally {
-            Streams.close(out);
-        }
-    }
-
-    /**
-     * 生成二维码
-     *
-     * @param content 内容
-     * @param out     outputStream
-     */
-    public QRCodes encodeToStream(String content, OutputStream out) {
-        return encodeAndWordsToStream(content, null, out);
-    }
-
-    /**
-     * 生成二维码
+     * 生成二维码到流
      *
      * @param content 内容
      * @param words   文字
      * @param out     outputStream
      */
-    public QRCodes encodeAndWordsToStream(String content, String words, OutputStream out) {
+    public void encode(String content, String words, OutputStream out) {
         try {
-            BufferedImage image = getBufferedImage(content);
+            BufferedImage image = this.getBufferedImage(content);
             if (this.logo != null) {
                 insertLogo(image);
             }
             if (!Strings.isBlank(words)) {
-                image = insertWords(image, words);
+                image = this.insertWords(image, words);
             }
             ImageIO.write(image, suffix, out);
-        } catch (Exception e) {
-            Exceptions.printStacks(e);
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
         }
-        return this;
+    }
+
+    public byte[] encode(String content) {
+        return this.encode(content, (String) null);
     }
 
     /**
-     * 解析二维码数据
+     * 获取二维码byte[]
      *
-     * @param file 二维码文件路径
+     * @param content 内容
+     * @param words   文字
+     * @return byte[]
      */
-    public static String decode(String file) {
+    public byte[] encode(String content, String words) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        this.encode(content, words, out);
+        return out.toByteArray();
+    }
+
+    public String encodeBase64(String content) {
+        return Base64s.img64Encode(this.encode(content, (String) null), suffix);
+    }
+
+    /**
+     * 获取二维码base64
+     *
+     * @param content 内容
+     * @param words   文字
+     * @return base64
+     */
+    public String encodeBase64(String content, String words) {
+        return Base64s.img64Encode(this.encode(content, words), suffix);
+    }
+
+    // -------------------- decord --------------------
+
+    public String decode(String file) {
         try {
             return decode(ImageIO.read(new File(file)));
         } catch (Exception e) {
@@ -324,12 +331,7 @@ public class QRCodes {
         }
     }
 
-    /**
-     * 解析二维码数据
-     *
-     * @param file 二维码文件路径
-     */
-    public static String decode(File file) {
+    public String decode(File file) {
         try {
             return decode(ImageIO.read(file));
         } catch (Exception e) {
@@ -338,12 +340,16 @@ public class QRCodes {
         }
     }
 
-    /**
-     * 解析二维码数据
-     *
-     * @param in 二维码流
-     */
-    public static String decode(InputStream in) {
+    public String decode(byte[] bs) {
+        try {
+            return decode(ImageIO.read(Streams.toInputStream(bs)));
+        } catch (Exception e) {
+            Exceptions.printStacks(e);
+            return null;
+        }
+    }
+
+    public String decode(InputStream in) {
         try {
             return decode(ImageIO.read(in));
         } catch (Exception e) {
@@ -352,17 +358,25 @@ public class QRCodes {
         }
     }
 
+    public String decodeBase64(String base64) {
+        return decode(Images.base64Decode(base64));
+    }
+
     /**
      * 解析二维码数据
      *
      * @param image 二维码
      */
-    private static String decode(BufferedImage image) {
+    public String decode(BufferedImage image) {
         try {
+            // 设置二维码的大小 如果不设置可能会导致解析失败
+            image = image.getSubimage(parserX, parserY, size, size);
             BufferedImageLuminanceSource source = new BufferedImageLuminanceSource(image);
             BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
             Map<DecodeHintType, Object> hint = new HashMap<>(4);
-            hint.put(DecodeHintType.CHARACTER_SET, Const.UTF_8);
+            hint.put(DecodeHintType.CHARACTER_SET, charset);
+            hint.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
+            hint.put(DecodeHintType.PURE_BARCODE, Boolean.TRUE);
             return new MultiFormatReader().decode(bitmap, hint).getText();
         } catch (Exception e) {
             Exceptions.printStacks(e);
@@ -370,134 +384,56 @@ public class QRCodes {
         }
     }
 
-    public QRCodes setSuffix(String suffix) {
+    // -------------------- setter --------------------
+
+    public QRCodes format(BarcodeFormat format) {
+        this.format = format;
+        return this;
+    }
+
+    public QRCodes suffix(String suffix) {
         this.suffix = suffix;
         return this;
     }
 
-    public QRCodes setDir(String dir) {
-        this.dir = dir;
-        return this;
-    }
-
-    public QRCodes setCharset(String charset) {
+    public QRCodes charset(String charset) {
         this.charset = charset;
         return this;
     }
 
-    public QRCodes setSize(int size) {
+    public QRCodes parserX(int x) {
+        this.parserX = x;
+        return this;
+    }
+
+    public QRCodes parserY(int y) {
+        this.parserY = y;
+        return this;
+    }
+
+    public QRCodes parser(int x, int y) {
+        this.parserX = x;
+        this.parserY = y;
+        return this;
+    }
+
+    public QRCodes size(int size) {
         this.size = size;
         return this;
     }
 
-    public QRCodes setErrorCorrectionLevel(int errorCorrectionLevel) {
+    public QRCodes errorCorrectionLevel(int errorCorrectionLevel) {
         this.errorCorrectionLevel = errorCorrectionLevel;
         return this;
     }
 
-    public QRCodes setLogoWidth(int logoWidth) {
+    public QRCodes logoWidth(int logoWidth) {
         this.logoWidth = logoWidth;
         return this;
     }
 
-    public QRCodes setLogoHeight(int logoHeight) {
+    public QRCodes logoHeight(int logoHeight) {
         this.logoHeight = logoHeight;
-        return this;
-    }
-
-    public QRCodes setLogo(String file) {
-        try {
-            return this.setLogo(ImageIO.read(new File(file)));
-        } catch (IOException e) {
-            Exceptions.printStacks(e);
-            return this;
-        }
-    }
-
-    public QRCodes setLogo(File file) {
-        try {
-            return this.setLogo(ImageIO.read(file));
-        } catch (IOException e) {
-            Exceptions.printStacks(e);
-            return this;
-        }
-    }
-
-    public QRCodes setLogo(InputStream in) {
-        try {
-            return this.setLogo(ImageIO.read(in));
-        } catch (IOException e) {
-            Exceptions.printStacks(e);
-            return this;
-        }
-    }
-
-    public QRCodes setLogo(byte[] bs) {
-        try {
-            return this.setLogo(ImageIO.read(Streams.toInputStream(bs)));
-        } catch (IOException e) {
-            Exceptions.printStacks(e);
-            return this;
-        }
-    }
-
-    public QRCodes setLogo(Image logo) {
-        this.logo = logo;
-        if (logoCompress) {
-            this.logoCompress();
-        }
-        return this;
-    }
-
-    public QRCodes setWordWidth(int wordWidth) {
-        this.wordWidth = wordWidth;
-        return this;
-    }
-
-    public QRCodes setWordHeight(int wordHeight) {
-        this.wordHeight = wordHeight;
-        return this;
-    }
-
-    public QRCodes setWordsFontName(String wordsFontName) {
-        this.wordsFontName = wordsFontName;
-        return this;
-    }
-
-    public QRCodes setWordsFontSize(int wordsFontSize) {
-        this.wordsFontSize = wordsFontSize;
-        return this;
-    }
-
-    public QRCodes setWordsTopMargin(int wordsTopMargin) {
-        this.wordsTopMargin = wordsTopMargin;
-        return this;
-    }
-
-    public QRCodes setWordsButtonMargin(int wordsButtonMargin) {
-        this.wordsButtonMargin = wordsButtonMargin;
-        return this;
-    }
-
-    public QRCodes logoCompress() {
-        this.logoCompress = true;
-        if (logo != null) {
-            int width = logo.getWidth(null);
-            int height = logo.getHeight(null);
-            if (width > this.logoWidth) {
-                width = this.logoWidth;
-            }
-            if (height > this.logoHeight) {
-                height = this.logoHeight;
-            }
-            Image image = logo.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-            BufferedImage tag = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-            Graphics g = tag.getGraphics();
-            // 绘制缩小后的图
-            g.drawImage(image, 0, 0, null);
-            g.dispose();
-            logo = image;
-        }
         return this;
     }
 
@@ -505,6 +441,135 @@ public class QRCodes {
         this.logoWidth = size;
         this.logoHeight = size;
         return this;
+    }
+
+    public QRCodes logo(String file) {
+        try {
+            return this.logo(ImageIO.read(new File(file)));
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
+        }
+    }
+
+    public QRCodes logo(File file) {
+        try {
+            return this.logo(ImageIO.read(file));
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
+        }
+    }
+
+    public QRCodes logo(InputStream in) {
+        try {
+            return this.logo(ImageIO.read(in));
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
+        }
+    }
+
+    public QRCodes logo(byte[] bs) {
+        try {
+            return this.logo(ImageIO.read(Streams.toInputStream(bs)));
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
+        }
+    }
+
+    public QRCodes logo(Image logo) {
+        this.logo = logo;
+        if (logoCompress) {
+            this.logoCompress();
+        }
+        this.errorCorrectionLevel = 4;
+        return this;
+    }
+
+    public QRCodes wordsWidth(int wordsWidth) {
+        this.wordsWidth = wordsWidth;
+        return this;
+    }
+
+    public QRCodes wordsHeight(int wordsHeight) {
+        this.wordsHeight = wordsHeight;
+        return this;
+    }
+
+    public QRCodes wordsFontName(String wordsFontName) {
+        this.wordsFontName = wordsFontName;
+        return this;
+    }
+
+    public QRCodes wordsFontSize(int wordsFontSize) {
+        this.wordsFontSize = wordsFontSize;
+        return this;
+    }
+
+    public QRCodes wordsTopMargin(int wordsTopMargin) {
+        this.wordsTopMargin = wordsTopMargin;
+        return this;
+    }
+
+    public QRCodes wordsButtonMargin(int wordsButtonMargin) {
+        this.wordsButtonMargin = wordsButtonMargin;
+        return this;
+    }
+
+    // -------------------- getter --------------------
+
+    public BarcodeFormat getFormat() {
+        return format;
+    }
+
+    public String getSuffix() {
+        return suffix;
+    }
+
+    public String getCharset() {
+        return charset;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public int getLogoWidth() {
+        return logoWidth;
+    }
+
+    public int getLogoHeight() {
+        return logoHeight;
+    }
+
+    public Image getLogo() {
+        return logo;
+    }
+
+    public boolean isLogoCompress() {
+        return logoCompress;
+    }
+
+    public int getWordsWidth() {
+        return wordsWidth;
+    }
+
+    public int getWordsHeight() {
+        return wordsHeight;
+    }
+
+    public String getWordsFontName() {
+        return wordsFontName;
+    }
+
+    public int getWordsFontSize() {
+        return wordsFontSize;
+    }
+
+    public int getWordsTopMargin() {
+        return wordsTopMargin;
+    }
+
+    public int getWordsButtonMargin() {
+        return wordsButtonMargin;
     }
 
 }

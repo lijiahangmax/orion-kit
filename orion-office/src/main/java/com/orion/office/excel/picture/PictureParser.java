@@ -63,7 +63,6 @@ public class PictureParser implements Analysable {
                             CTMarker ctMarker = anchor.getFrom();
                             picturePosition.put(ctMarker.getRow(), ctMarker.getCol(), ((XSSFPicture) shape).getPictureData());
                         }
-
                     }
                 }
             }

@@ -150,6 +150,10 @@ public abstract class Const {
 
     public static final String SUFFIX_FILE = "file";
 
+    // -------------------- font --------------------
+
+    public static final String FONT_MICROSOFT_ELEGANT_BLACK = "微软雅黑";
+
     // -------------------- others --------------------
 
     public static final String BR = "<br/>";
