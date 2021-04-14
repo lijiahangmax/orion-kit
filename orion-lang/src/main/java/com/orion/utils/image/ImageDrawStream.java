@@ -1,6 +1,7 @@
 package com.orion.utils.image;
 
 import com.orion.able.Executable;
+import com.orion.constant.Const;
 import com.orion.utils.Colors;
 
 import java.awt.*;
@@ -16,16 +17,6 @@ import java.io.InputStream;
  * @since 2020/7/15 11:11
  */
 public class ImageDrawStream implements Executable {
-
-    /**
-     * 设置字体时默认字体名称
-     */
-    private static final String FONT_NAME = "微软雅黑";
-
-    /**
-     * 设置字体时默认字体大小
-     */
-    private static final int FONT_SIZE = 18;
 
     private Graphics2D g2d;
 
@@ -157,6 +148,17 @@ public class ImageDrawStream implements Executable {
     /**
      * 设置字体
      *
+     * @param font font
+     * @return this
+     */
+    public ImageDrawStream font(Font font) {
+        g2d.setFont(font);
+        return this;
+    }
+
+    /**
+     * 设置字体
+     *
      * @param name 字体名称
      * @param size 字体大小
      * @return this
@@ -173,7 +175,7 @@ public class ImageDrawStream implements Executable {
      * @return this
      */
     public ImageDrawStream font(String name) {
-        g2d.setFont(new Font(name, Font.PLAIN, FONT_SIZE));
+        g2d.setFont(new Font(name, Font.PLAIN, 18));
         return this;
     }
 
@@ -184,7 +186,7 @@ public class ImageDrawStream implements Executable {
      * @return this
      */
     public ImageDrawStream font(int size) {
-        g2d.setFont(new Font(FONT_NAME, Font.PLAIN, size));
+        g2d.setFont(new Font(Const.FONT_MICROSOFT_ELEGANT_BLACK, Font.PLAIN, size));
         return this;
     }
 
