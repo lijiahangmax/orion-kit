@@ -78,6 +78,22 @@ public abstract class BaseSymmetric {
         return algorithm.getCipher(workingMode, paddingMode);
     }
 
+    protected byte[] clearDecryptZero(byte[] bytes) {
+        if (bytes == null) {
+            return null;
+        }
+        int f = bytes.length;
+        for (int i = 0; i < f; i++) {
+            if (bytes[i] == 0) {
+                f = i;
+                break;
+            }
+        }
+        byte[] res = new byte[f];
+        System.arraycopy(bytes, 0, res, 0, f);
+        return res;
+    }
+
     /**
      * 0填充数据
      *

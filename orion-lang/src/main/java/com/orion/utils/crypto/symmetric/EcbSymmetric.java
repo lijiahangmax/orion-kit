@@ -32,7 +32,7 @@ public class EcbSymmetric extends BaseSymmetric {
     // -------------------- ENC --------------------
 
     public String encrypt(String s, String key) {
-        byte[] bs = encrypt(Strings.bytes(s), null, Strings.bytes(key));
+        byte[] bs = this.encrypt(Strings.bytes(s), null, Strings.bytes(key));
         if (bs != null) {
             return new String(bs);
         }
@@ -44,7 +44,7 @@ public class EcbSymmetric extends BaseSymmetric {
     }
 
     public String encrypt(String s, SecretKey key) {
-        byte[] bs = encrypt(Strings.bytes(s), key, null);
+        byte[] bs = this.encrypt(Strings.bytes(s), key, null);
         if (bs != null) {
             return new String(bs);
         }
@@ -52,7 +52,7 @@ public class EcbSymmetric extends BaseSymmetric {
     }
 
     public byte[] encrypt(byte[] bs, SecretKey key) {
-        return encrypt(bs, key, null);
+        return this.encrypt(bs, key, null);
     }
 
     /**
@@ -66,7 +66,7 @@ public class EcbSymmetric extends BaseSymmetric {
     private byte[] encrypt(byte[] bs, SecretKey key, byte[] k) {
         try {
             if (key == null) {
-                key = generatorKey(k);
+                key = this.generatorKey(k);
             }
             Cipher cipher = super.getCipher();
             cipher.init(Cipher.ENCRYPT_MODE, key);
@@ -84,7 +84,7 @@ public class EcbSymmetric extends BaseSymmetric {
     // -------------------- DEC --------------------
 
     public String decrypt(String s, String key) {
-        byte[] bs = decrypt(Strings.bytes(s), null, Strings.bytes(key));
+        byte[] bs = this.decrypt(Strings.bytes(s), null, Strings.bytes(key));
         if (bs != null) {
             return new String(bs);
         }
@@ -92,11 +92,11 @@ public class EcbSymmetric extends BaseSymmetric {
     }
 
     public byte[] decrypt(byte[] bs, byte[] key) {
-        return decrypt(bs, null, key);
+        return this.decrypt(bs, null, key);
     }
 
     public String decrypt(String s, SecretKey key) {
-        byte[] bs = decrypt(Strings.bytes(s), key, null);
+        byte[] bs = this.decrypt(Strings.bytes(s), key, null);
         if (bs != null) {
             return new String(bs);
         }
@@ -104,7 +104,7 @@ public class EcbSymmetric extends BaseSymmetric {
     }
 
     public byte[] decrypt(byte[] bs, SecretKey key) {
-        return decrypt(bs, key, null);
+        return this.decrypt(bs, key, null);
     }
 
     /**
@@ -118,11 +118,11 @@ public class EcbSymmetric extends BaseSymmetric {
     private byte[] decrypt(byte[] bs, SecretKey key, byte[] k) {
         try {
             if (key == null) {
-                key = generatorKey(k);
+                key = this.generatorKey(k);
             }
             Cipher cipher = super.getCipher();
             cipher.init(Cipher.DECRYPT_MODE, key);
-            return cipher.doFinal(decode(bs));
+            return this.clearDecryptZero(cipher.doFinal(decode(bs)));
         } catch (Exception e) {
             Exceptions.printStacks(e);
             return null;

@@ -33,7 +33,7 @@ public class IvSymmetric extends BaseSymmetric {
     // -------------------- ENC --------------------
 
     public String encrypt(String bs, String key, String iv) {
-        byte[] encrypt = encrypt(Strings.bytes(bs), null, Strings.bytes(key), Strings.bytes(iv));
+        byte[] encrypt = this.encrypt(Strings.bytes(bs), null, Strings.bytes(key), Strings.bytes(iv));
         if (encrypt != null) {
             return new String(encrypt);
         }
@@ -41,7 +41,7 @@ public class IvSymmetric extends BaseSymmetric {
     }
 
     public String encrypt(String bs, SecretKey key, String iv) {
-        byte[] encrypt = encrypt(Strings.bytes(bs), key, null, Strings.bytes(iv));
+        byte[] encrypt = this.encrypt(Strings.bytes(bs), key, null, Strings.bytes(iv));
         if (encrypt != null) {
             return new String(encrypt);
         }
@@ -49,11 +49,11 @@ public class IvSymmetric extends BaseSymmetric {
     }
 
     public byte[] encrypt(byte[] bs, byte[] k, byte[] iv) {
-        return encrypt(bs, null, k, iv);
+        return this.encrypt(bs, null, k, iv);
     }
 
     public byte[] encrypt(byte[] bs, SecretKey key, byte[] iv) {
-        return encrypt(bs, key, null, iv);
+        return this.encrypt(bs, key, null, iv);
     }
 
     /**
@@ -68,7 +68,7 @@ public class IvSymmetric extends BaseSymmetric {
     private byte[] encrypt(byte[] bs, SecretKey key, byte[] k, byte[] iv) {
         try {
             if (key == null) {
-                key = generatorKey(k);
+                key = this.generatorKey(k);
             }
             Cipher cipher = super.getCipher();
             IvParameterSpec ivSpec = super.getIvSpec(iv);
@@ -87,7 +87,7 @@ public class IvSymmetric extends BaseSymmetric {
     // -------------------- DEC --------------------
 
     public String decrypt(String bs, String key, String iv) {
-        byte[] encrypt = decrypt(Strings.bytes(bs), null, Strings.bytes(key), Strings.bytes(iv));
+        byte[] encrypt = this.decrypt(Strings.bytes(bs), null, Strings.bytes(key), Strings.bytes(iv));
         if (encrypt != null) {
             return new String(encrypt);
         }
@@ -95,7 +95,7 @@ public class IvSymmetric extends BaseSymmetric {
     }
 
     public String decrypt(String bs, SecretKey key, String iv) {
-        byte[] encrypt = decrypt(Strings.bytes(bs), key, null, Strings.bytes(iv));
+        byte[] encrypt = this.decrypt(Strings.bytes(bs), key, null, Strings.bytes(iv));
         if (encrypt != null) {
             return new String(encrypt);
         }
@@ -103,11 +103,11 @@ public class IvSymmetric extends BaseSymmetric {
     }
 
     public byte[] decrypt(byte[] bs, byte[] k, byte[] iv) {
-        return decrypt(bs, null, k, iv);
+        return this.decrypt(bs, null, k, iv);
     }
 
     public byte[] decrypt(byte[] bs, SecretKey key, byte[] iv) {
-        return decrypt(bs, key, null, iv);
+        return this.decrypt(bs, key, null, iv);
     }
 
     /**
@@ -122,12 +122,12 @@ public class IvSymmetric extends BaseSymmetric {
     private byte[] decrypt(byte[] bs, SecretKey key, byte[] k, byte[] iv) {
         try {
             if (key == null) {
-                key = generatorKey(k);
+                key = this.generatorKey(k);
             }
             Cipher cipher = super.getCipher();
             IvParameterSpec ivSpec = super.getIvSpec(iv);
             cipher.init(Cipher.DECRYPT_MODE, key, ivSpec);
-            return cipher.doFinal(decode(bs));
+            return this.clearDecryptZero(cipher.doFinal(decode(bs)));
         } catch (Exception e) {
             Exceptions.printStacks(e);
             return null;

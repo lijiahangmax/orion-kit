@@ -79,6 +79,36 @@ public class SessionHolder {
             CH.addIdentity(keyPath, password);
         } catch (Exception e) {
             Exceptions.printStacks(e);
+            throw Exceptions.runtime("add identity error " + e.getMessage());
+        }
+    }
+
+    /**
+     * 添加秘钥登陆文件
+     *
+     * @param keyPath  文件路径
+     * @param password 文件密码
+     */
+    public static void addIdentity(String keyPath, byte[] password) {
+        try {
+            CH.addIdentity(keyPath, password);
+        } catch (Exception e) {
+            Exceptions.printStacks(e);
+            throw Exceptions.runtime("add identity error " + e.getMessage());
+        }
+    }
+
+    /**
+     * 添加秘钥登陆文件
+     *
+     * @param keyPath 文件路径
+     */
+    public static void addIdentity(String keyPath) {
+        try {
+            CH.addIdentity(keyPath);
+        } catch (Exception e) {
+            Exceptions.printStacks(e);
+            throw Exceptions.runtime("add identity error " + e.getMessage());
         }
     }
 
@@ -130,35 +160,6 @@ public class SessionHolder {
             }
         }
         return keys;
-    }
-
-    /**
-     * 添加秘钥登陆文件
-     *
-     * @param keyPath  文件路径
-     * @param password 文件密码
-     */
-    public static void addIdentity(String keyPath, byte[] password) {
-        try {
-            CH.addIdentity(keyPath, password);
-        } catch (Exception e) {
-            Exceptions.printStacks(e);
-            throw Exceptions.runtime("add identity error " + e.getMessage());
-        }
-    }
-
-    /**
-     * 添加秘钥登陆文件
-     *
-     * @param keyPath 文件路径
-     */
-    public static void addIdentity(String keyPath) {
-        try {
-            CH.addIdentity(keyPath);
-        } catch (Exception e) {
-            Exceptions.printStacks(e);
-            throw Exceptions.runtime("add identity error " + e.getMessage());
-        }
     }
 
     /**

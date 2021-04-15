@@ -33,7 +33,7 @@ public class GcmSymmetric extends BaseSymmetric {
     // -------------------- ENC --------------------
 
     public String encrypt(String bs, String key, String iv, String aad) {
-        byte[] encrypt = encrypt(Strings.bytes(bs), null, Strings.bytes(key), Strings.bytes(iv), Strings.bytes(aad));
+        byte[] encrypt = this.encrypt(Strings.bytes(bs), null, Strings.bytes(key), Strings.bytes(iv), Strings.bytes(aad));
         if (encrypt != null) {
             return new String(encrypt);
         }
@@ -41,7 +41,7 @@ public class GcmSymmetric extends BaseSymmetric {
     }
 
     public String encrypt(String bs, SecretKey key, String iv, String aad) {
-        byte[] encrypt = encrypt(Strings.bytes(bs), key, null, Strings.bytes(iv), Strings.bytes(aad));
+        byte[] encrypt = this.encrypt(Strings.bytes(bs), key, null, Strings.bytes(iv), Strings.bytes(aad));
         if (encrypt != null) {
             return new String(encrypt);
         }
@@ -49,11 +49,11 @@ public class GcmSymmetric extends BaseSymmetric {
     }
 
     public byte[] encrypt(byte[] bs, byte[] k, byte[] iv, byte[] aad) {
-        return encrypt(bs, null, k, iv, aad);
+        return this.encrypt(bs, null, k, iv, aad);
     }
 
     public byte[] encrypt(byte[] bs, SecretKey key, byte[] iv, byte[] aad) {
-        return encrypt(bs, key, null, iv, aad);
+        return this.encrypt(bs, key, null, iv, aad);
     }
 
     /**
@@ -69,7 +69,7 @@ public class GcmSymmetric extends BaseSymmetric {
     private byte[] encrypt(byte[] bs, SecretKey key, byte[] k, byte[] iv, byte[] aad) {
         try {
             if (key == null) {
-                key = generatorKey(k);
+                key = this.generatorKey(k);
             }
             Cipher cipher = super.getCipher();
             GCMParameterSpec gcmSpec = super.getGcmSpec(iv);
@@ -89,7 +89,7 @@ public class GcmSymmetric extends BaseSymmetric {
     // -------------------- DEC --------------------
 
     public String decrypt(String bs, String key, String iv, String aad) {
-        byte[] encrypt = decrypt(Strings.bytes(bs), null, Strings.bytes(key), Strings.bytes(iv), Strings.bytes(aad));
+        byte[] encrypt = this.decrypt(Strings.bytes(bs), null, Strings.bytes(key), Strings.bytes(iv), Strings.bytes(aad));
         if (encrypt != null) {
             return new String(encrypt);
         }
@@ -97,7 +97,7 @@ public class GcmSymmetric extends BaseSymmetric {
     }
 
     public String decrypt(String bs, SecretKey key, String iv, String aad) {
-        byte[] encrypt = decrypt(Strings.bytes(bs), key, null, Strings.bytes(iv), Strings.bytes(aad));
+        byte[] encrypt = this.decrypt(Strings.bytes(bs), key, null, Strings.bytes(iv), Strings.bytes(aad));
         if (encrypt != null) {
             return new String(encrypt);
         }
@@ -105,11 +105,11 @@ public class GcmSymmetric extends BaseSymmetric {
     }
 
     public byte[] decrypt(byte[] bs, byte[] k, byte[] iv, byte[] aad) {
-        return decrypt(bs, null, k, iv, aad);
+        return this.decrypt(bs, null, k, iv, aad);
     }
 
     public byte[] decrypt(byte[] bs, SecretKey key, byte[] iv, byte[] aad) {
-        return decrypt(bs, key, null, iv, aad);
+        return this.decrypt(bs, key, null, iv, aad);
     }
 
     /**
@@ -125,13 +125,13 @@ public class GcmSymmetric extends BaseSymmetric {
     private byte[] decrypt(byte[] bs, SecretKey key, byte[] k, byte[] iv, byte[] aad) {
         try {
             if (key == null) {
-                key = generatorKey(k);
+                key = this.generatorKey(k);
             }
             Cipher cipher = super.getCipher();
             GCMParameterSpec gcmSpec = super.getGcmSpec(iv);
             cipher.init(Cipher.DECRYPT_MODE, key, gcmSpec);
             cipher.updateAAD(aad);
-            return cipher.doFinal(decode(bs));
+            return this.clearDecryptZero(cipher.doFinal(decode(bs)));
         } catch (Exception e) {
             Exceptions.printStacks(e);
             return null;
