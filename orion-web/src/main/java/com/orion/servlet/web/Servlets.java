@@ -569,7 +569,6 @@ public class Servlets {
      * @throws IOException IOException
      */
     public static void transfer(HttpServletResponse response, byte[] bs) throws IOException {
-        response.setContentType("application/octet-stream");
         Streams.transfer(Streams.toInputStream(bs), response.getOutputStream());
     }
 
@@ -609,7 +608,6 @@ public class Servlets {
      * @throws IOException IOException
      */
     public static void transfer(HttpServletResponse response, InputStream in) throws IOException {
-        response.setContentType("application/octet-stream");
         Streams.transfer(in, response.getOutputStream());
     }
 
@@ -649,7 +647,6 @@ public class Servlets {
      * @throws IOException IOException
      */
     public static void transfer(HttpServletResponse response, Reader reader) throws IOException {
-        response.setContentType("application/octet-stream");
         Streams.transfer(reader, response.getWriter());
     }
 

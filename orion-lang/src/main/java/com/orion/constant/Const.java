@@ -170,4 +170,8 @@ public abstract class Const {
 
     public static final String LOCALHOST_IP_V6 = "0:0:0:0:0:0:0:1";
 
+    public static final Integer ENABLE = 1;
+
+    public static final Integer DISABLE = 2;
+
 }
