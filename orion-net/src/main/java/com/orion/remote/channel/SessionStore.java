@@ -199,7 +199,12 @@ public class SessionStore implements SafeCloseable {
         try {
             session.connect(timeout);
         } catch (Exception e) {
-            throw Exceptions.connection(e);
+            boolean authFail = Strings.def(e.getMessage()).contains("Auth fail");
+            if (authFail) {
+                throw Exceptions.authentication(e);
+            } else {
+                throw Exceptions.connection(e);
+            }
         }
         return this;
     }

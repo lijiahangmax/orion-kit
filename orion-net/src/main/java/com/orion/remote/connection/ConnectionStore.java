@@ -70,7 +70,7 @@ public class ConnectionStore implements AutoCloseable {
         try {
             this.info = this.connection.connect();
         } catch (IOException e) {
-            throw Exceptions.ioRuntime(e);
+            throw Exceptions.connection(e);
         }
     }
 
@@ -89,19 +89,19 @@ public class ConnectionStore implements AutoCloseable {
     }
 
     public ConnectionStore auth(String username) {
-        return auth(username, null, null, null);
+        return this.auth(username, null, null, null);
     }
 
     public ConnectionStore auth(String username, String password) {
-        return auth(username, password, null, null);
+        return this.auth(username, password, null, null);
     }
 
     public ConnectionStore auth(String username, File pemKeyFile, String password) {
-        return auth(username, password, pemKeyFile, null);
+        return this.auth(username, password, pemKeyFile, null);
     }
 
     public ConnectionStore auth(String username, char[] pemKey, String password) {
-        return auth(username, password, null, pemKey);
+        return this.auth(username, password, null, pemKey);
     }
 
     /**
