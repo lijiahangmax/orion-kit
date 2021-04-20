@@ -23,13 +23,34 @@ import java.io.ByteArrayOutputStream;
  */
 public class SessionStore implements SafeCloseable {
 
+    /**
+     * session
+     */
     private Session session;
+
+    /**
+     * host
+     */
+    private String host;
+
+    /**
+     * port
+     */
+    private int port;
+
+    /**
+     * username
+     */
+    private String username;
 
     public SessionStore(String host, String username) {
         this(host, 22, username);
     }
 
     public SessionStore(String host, int port, String username) {
+        this.host = host;
+        this.port = port;
+        this.username = username;
         try {
             this.session = SessionHolder.CH.getSession(username, host, port);
         } catch (Exception e) {
@@ -306,6 +327,18 @@ public class SessionStore implements SafeCloseable {
      */
     public Session getSession() {
         return session;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     @Override

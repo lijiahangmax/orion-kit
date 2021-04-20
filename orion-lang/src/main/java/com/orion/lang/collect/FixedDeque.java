@@ -10,13 +10,13 @@ import java.util.concurrent.ConcurrentLinkedDeque;
  * @version 1.0.0
  * @since 2020/11/6 11:30
  */
-public class LimitDeque<E> extends ConcurrentLinkedDeque<E> implements Serializable {
+public class FixedDeque<E> extends ConcurrentLinkedDeque<E> implements Serializable {
 
     private static final long serialVersionUID = 923412312354068942L;
 
     private int limit;
 
-    public LimitDeque(int limit) {
+    public FixedDeque(int limit) {
         if (limit == 0) {
             this.limit = 10;
         } else {

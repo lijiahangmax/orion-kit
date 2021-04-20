@@ -1,7 +1,7 @@
 package com.orion.utils.collect;
 
-import com.orion.lang.collect.LimitDeque;
-import com.orion.lang.collect.LimitQueue;
+import com.orion.lang.collect.FixedDeque;
+import com.orion.lang.collect.FixedQueue;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Valid;
 
@@ -43,11 +43,11 @@ public class Queues extends Collections {
     }
 
     public static <E> Queue<E> newLimitQueue(int size) {
-        return new LimitQueue<>(size);
+        return new FixedQueue<>(size);
     }
 
     public static <E> Deque<E> newLimitDeque(int size) {
-        return new LimitDeque<>(size);
+        return new FixedDeque<>(size);
     }
 
     // -------------------- function --------------------

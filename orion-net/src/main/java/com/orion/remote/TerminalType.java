@@ -76,7 +76,7 @@ public enum TerminalType {
         return type;
     }
 
-    public TerminalType of(String type) {
+    public static TerminalType of(String type) {
         Valid.notBlank(type, "terminal type is blank");
         for (TerminalType value : values()) {
             if (value.type.equals(type)) {

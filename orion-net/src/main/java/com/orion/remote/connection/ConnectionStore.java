@@ -39,6 +39,11 @@ public class ConnectionStore implements AutoCloseable {
     private String host;
 
     /**
+     * port
+     */
+    private int port;
+
+    /**
      * 是否认证
      */
     private boolean auth;
@@ -66,6 +71,7 @@ public class ConnectionStore implements AutoCloseable {
 
     private ConnectionStore(String host, int port, HTTPProxyData proxy) {
         this.host = host;
+        this.port = port;
         this.connection = new Connection(host, port, proxy);
         try {
             this.info = this.connection.connect();
@@ -233,6 +239,10 @@ public class ConnectionStore implements AutoCloseable {
 
     public String getHost() {
         return host;
+    }
+
+    public int getPort() {
+        return port;
     }
 
     public boolean isAuth() {

@@ -10,13 +10,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * @version 1.0.0
  * @since 2020/11/6 11:30
  */
-public class LimitQueue<E> extends ConcurrentLinkedQueue<E> implements Serializable {
+public class FixedQueue<E> extends ConcurrentLinkedQueue<E> implements Serializable {
 
     private static final long serialVersionUID = -12908043940801293L;
 
     private int limit;
 
-    public LimitQueue(int limit) {
+    public FixedQueue(int limit) {
         if (limit == 0) {
             this.limit = 10;
         } else {
