@@ -67,10 +67,6 @@ public class ImageIcons implements Processable<Character, BufferedImage> {
         return Images.base64Encode(this.execute(s), format);
     }
 
-    public static void main(String[] args) {
-        System.out.println(new ImageIcons().executeBase64('李'));
-    }
-
     @Override
     public BufferedImage execute(Character c) {
         BufferedImage img = Images.getTransparentImage(size, size);
@@ -86,17 +82,14 @@ public class ImageIcons implements Processable<Character, BufferedImage> {
         Rectangle bounds = gv.getPixelBounds(null, 0, 0);
         int width = bounds.width;
         int height = bounds.height;
-        boolean ascii = Chars.isAscii(c);
         int x, y;
-        if (ascii) {
-            x = (size - width) / 2;
+        x = (size - width) / 2;
+        if (Chars.isAscii(c)) {
             y = (size - height) / 2 + height;
         } else {
-            int fs = font.getSize();
-            x = ((size - width) / 2) - (fs - width);
-            y = (((this.size - height) / 2) + height) - (fs - height);
+            y = (((size - height) / 2) + height) - (font.getSize() - height);
         }
-        g2d.drawString(c.toString(), x, y);
+        g2d.drawString(c.toString(), x - 2F, y - 2);
         g2d.dispose();
         return img;
     }
