@@ -32,6 +32,10 @@ public abstract class Const {
 
     public static final String ORION_EMAIL = "li1553488@aliyun.com";
 
+    public static final String ORION_GITHUB = "https://github.com/lijiahangmax";
+
+    public static final String ORION_BLOG = "https://blog.csdn.net/qq_41011894";
+
     // -------------------- letter --------------------
 
     public static final String CR = "\r";

@@ -1,9 +1,12 @@
 package com.orion.utils.image;
 
 import com.orion.able.Processable;
+import com.orion.utils.Chars;
 import com.orion.utils.Colors;
 
 import java.awt.*;
+import java.awt.font.FontRenderContext;
+import java.awt.font.GlyphVector;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 
@@ -19,57 +22,53 @@ public class ImageIcons implements Processable<Character, BufferedImage> {
     /**
      * 图标大小
      */
-    private int size = 60;
+    private int size;
 
     /**
      * 背景颜色
      */
-    private Color color = Colors.toColor("#3A76BE");
+    private Color color;
 
     /**
      * 字体颜色
      */
-    private Color fontColor = Color.WHITE;
+    private Color fontColor;
 
     /**
      * 字体名称
      */
-    private String fontName = "宋体";
+    private Font font;
 
-    /**
-     * 字体大小
-     */
-    private int fontSize;
-
-    /**
-     * 字体绘制的X坐标
-     */
-    private float fontPointX;
-
-    /**
-     * 字体绘制的Y坐标
-     */
-    private float fontPointY;
-
-    /**
-     * base64编码图标
-     *
-     * @param c 字符
-     * @return base64
-     */
-    public String executeBase64(Character c) {
-        return Images.base64Encode(this.execute(c));
+    public ImageIcons() {
+        this.size = 60;
+        this.color = Colors.toColor("#3A76BE");
+        this.fontColor = Color.WHITE;
+        this.font = new Font("宋体", Font.PLAIN | Font.BOLD, 45);
     }
 
     /**
      * base64编码图标
      *
-     * @param c      字符
+     * @param s 字符
+     * @return base64
+     */
+    public String executeBase64(Character s) {
+        return Images.base64Encode(this.execute(s));
+    }
+
+    /**
+     * base64编码图标
+     *
+     * @param s      字符
      * @param format 格式
      * @return base64
      */
-    public String executeBase64(Character c, String format) {
-        return Images.base64Encode(this.execute(c), format);
+    public String executeBase64(Character s, String format) {
+        return Images.base64Encode(this.execute(s), format);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new ImageIcons().executeBase64('李'));
     }
 
     @Override
@@ -81,23 +80,23 @@ public class ImageIcons implements Processable<Character, BufferedImage> {
         g2d.setColor(color);
         g2d.fill(new RoundRectangle2D.Float(0, 0, size, size, size, size));
         g2d.setColor(fontColor);
-        if (fontSize != 0) {
-            int i = (size - fontSize) / 2;
-            g2d.setFont(new Font(fontName, Font.PLAIN, fontSize));
-            if (fontPointX != 0 && fontPointY != 0) {
-                g2d.drawString(c.toString(), fontPointX, fontPointY);
-            } else {
-                g2d.drawString(c.toString(), i, (float) (size - i * 1.5));
-            }
+        g2d.setFont(font);
+        FontRenderContext context = g2d.getFontRenderContext();
+        GlyphVector gv = font.createGlyphVector(context, c.toString());
+        Rectangle bounds = gv.getPixelBounds(null, 0, 0);
+        int width = bounds.width;
+        int height = bounds.height;
+        boolean ascii = Chars.isAscii(c);
+        int x, y;
+        if (ascii) {
+            x = (size - width) / 2;
+            y = (size - height) / 2 + height;
         } else {
-            int i = size / 6;
-            g2d.setFont(new Font(fontName, Font.PLAIN, i * 4));
-            if (fontPointX != 0 && fontPointY != 0) {
-                g2d.drawString(c.toString(), fontPointX, fontPointY);
-            } else {
-                g2d.drawString(c.toString(), i, (float) (size - i * 1.5));
-            }
+            int fs = font.getSize();
+            x = ((size - width) / 2) - (fs - width);
+            y = (((this.size - height) / 2) + height) - (fs - height);
         }
+        g2d.drawString(c.toString(), x, y);
         g2d.dispose();
         return img;
     }
@@ -112,37 +111,18 @@ public class ImageIcons implements Processable<Character, BufferedImage> {
         return this;
     }
 
-    public ImageIcons font(String fontName, int fontSize, Color fontColor) {
-        this.fontName = fontName;
-        this.fontSize = fontSize;
-        this.fontColor = fontColor;
+    public ImageIcons font(String fontName, int fontSize) {
+        this.font = new Font(fontName, Font.PLAIN, fontSize);
+        return this;
+    }
+
+    public ImageIcons font(Font font) {
+        this.font = font;
         return this;
     }
 
     public ImageIcons fontColor(Color fontColor) {
         this.fontColor = fontColor;
-        return this;
-    }
-
-    public ImageIcons fontName(String fontName) {
-        this.fontName = fontName;
-        return this;
-    }
-
-    public ImageIcons fontSize(int fontSize) {
-        this.fontSize = fontSize;
-        return this;
-    }
-
-    public ImageIcons fontPoint(int x, int y) {
-        this.fontPointX = x;
-        this.fontPointY = y;
-        return this;
-    }
-
-    public ImageIcons fontPoint(float x, float y) {
-        this.fontPointX = x;
-        this.fontPointY = y;
         return this;
     }
 
@@ -158,20 +138,8 @@ public class ImageIcons implements Processable<Character, BufferedImage> {
         return fontColor;
     }
 
-    public String getFontName() {
-        return fontName;
-    }
-
-    public int getFontSize() {
-        return fontSize;
-    }
-
-    public float getFontPointX() {
-        return fontPointX;
-    }
-
-    public float getFontPointY() {
-        return fontPointY;
+    public Font getFont() {
+        return font;
     }
 
 }
