@@ -2,7 +2,6 @@ package com.orion.ftp.client;
 
 import com.orion.ftp.client.config.FtpConfig;
 import com.orion.ftp.client.pool.FtpClientFactory;
-import com.orion.utils.Exceptions;
 import org.apache.commons.net.ftp.FTPClient;
 
 /**
@@ -49,7 +48,7 @@ public class Ftps {
             try {
                 return client.sendNoOp();
             } catch (Exception e) {
-                Exceptions.printStacks(e);
+                return false;
             }
         }
         return false;

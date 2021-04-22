@@ -1,6 +1,5 @@
 package com.orion.utils.crypto;
 
-import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.crypto.enums.HashMessageDigest;
 import com.orion.utils.crypto.enums.SecretKeySpecMode;
@@ -94,7 +93,6 @@ public class Signatures {
             }
             return toHex(digest.digest(bs));
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -232,7 +230,6 @@ public class Signatures {
         try {
             return toHex(digest.digest(bs));
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -414,7 +411,7 @@ public class Signatures {
         }
     }
 
-    private static String toHex(byte[] bs) {
+    public static String toHex(byte[] bs) {
         StringBuilder sb = new StringBuilder();
         for (byte b : bs) {
             sb.append(Integer.toHexString((0x000000FF & b) | 0xFFFFFF00).substring(6));

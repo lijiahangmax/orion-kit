@@ -3,11 +3,14 @@ package com.orion.utils.io;
 import com.orion.constant.Const;
 import com.orion.lang.iterator.ByteArrayIterator;
 import com.orion.lang.iterator.LineIterator;
-import com.orion.utils.*;
+import com.orion.utils.Arrays1;
+import com.orion.utils.Strings;
+import com.orion.utils.Systems;
+import com.orion.utils.Valid;
+import com.orion.utils.crypto.Signatures;
 import com.orion.utils.crypto.enums.HashMessageDigest;
 
 import java.io.*;
-import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -654,9 +657,8 @@ public class Streams {
             while ((length = in.read(buffer)) != -1) {
                 m.update(buffer, 0, length);
             }
-            return new BigInteger(1, m.digest()).toString(16);
+            return Signatures.toHex(m.digest());
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }

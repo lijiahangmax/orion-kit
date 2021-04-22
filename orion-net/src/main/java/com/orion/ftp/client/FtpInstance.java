@@ -875,7 +875,7 @@ public class FtpInstance implements SafeCloseable {
                 }
             }
         } catch (IOException e) {
-            Exceptions.printStacks(e);
+            // ignore
         }
         return list;
     }
@@ -914,7 +914,7 @@ public class FtpInstance implements SafeCloseable {
                 }
             }
         } catch (IOException e) {
-            Exceptions.printStacks(e);
+            // ignore
         }
         return list;
     }
@@ -1080,7 +1080,7 @@ public class FtpInstance implements SafeCloseable {
                 }
             }
         } catch (IOException e) {
-            Exceptions.printStacks(e);
+            // ingore
         }
         return list;
     }

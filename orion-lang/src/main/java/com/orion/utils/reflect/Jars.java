@@ -1,7 +1,6 @@
 package com.orion.utils.reflect;
 
 import com.orion.constant.Const;
-import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.Valid;
 import com.orion.utils.io.Files1;
@@ -52,7 +51,7 @@ public class Jars {
             try {
                 return ((JarURLConnection) targetUrl.openConnection()).getJarFile();
             } catch (Exception e) {
-                Exceptions.printStacks(e);
+                return null;
             }
         }
         return null;
@@ -68,7 +67,6 @@ public class Jars {
         try {
             return new JarFile(file);
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -91,7 +89,6 @@ public class Jars {
                     return null;
             }
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -104,13 +101,11 @@ public class Jars {
      */
     public static List<String> getClassByJar(String jarPath) {
         Valid.notBlank(jarPath, "jar path is null");
-        List<String> classes = new ArrayList<>();
         try (JarFile jarFile = new JarFile(jarPath)) {
             return getClassByJar(jarFile);
         } catch (IOException e) {
-            Exceptions.printStacks(e);
+            return new ArrayList<>();
         }
-        return classes;
     }
 
     /**
@@ -149,10 +144,10 @@ public class Jars {
                     sources.add(Files1.getPath(jarPath + "!/" + fileName));
                 }
             }
+            return sources;
         } catch (IOException e) {
-            Exceptions.printStacks(e);
+            return sources;
         }
-        return sources;
     }
 
     /**
@@ -192,10 +187,10 @@ public class Jars {
                     sources.add(Files1.getPath(jarPath + "!/" + fileName));
                 }
             }
+            return sources;
         } catch (IOException e) {
-            Exceptions.printStacks(e);
+            return sources;
         }
-        return sources;
     }
 
     /**

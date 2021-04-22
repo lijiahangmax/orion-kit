@@ -73,7 +73,6 @@ public class FileCompress {
             generateFile(zos, file, Strings.EMPTY);
             return dest;
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         } finally {
             Streams.close(zos);
@@ -157,7 +156,6 @@ public class FileCompress {
             }
             return destPath;
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         } finally {
             Streams.close(zipFile);

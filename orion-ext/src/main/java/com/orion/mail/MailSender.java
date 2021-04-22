@@ -1,7 +1,6 @@
 package com.orion.mail;
 
 import com.orion.able.Sendable;
-import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.Valid;
 
@@ -154,7 +153,6 @@ public class MailSender implements Sendable<MailMessage> {
             Transport.send(mimeMessage);
             return true;
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return false;
         }
     }

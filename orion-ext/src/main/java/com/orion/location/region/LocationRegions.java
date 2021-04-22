@@ -121,7 +121,6 @@ public class LocationRegions {
                 return UNKNOWN;
             }
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }

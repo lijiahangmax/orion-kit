@@ -86,7 +86,6 @@ public class Keys {
             X509Certificate cert = (X509Certificate) cf.generateCertificate(in);
             return cert.getPublicKey();
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         } finally {
             if (close) {
@@ -151,7 +150,6 @@ public class Keys {
             Certificate cert = ks.getCertificate(keyAlias);
             return Args.of(cert.getPublicKey(), (PrivateKey) ks.getKey(keyAlias, ps));
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         } finally {
             if (close) {

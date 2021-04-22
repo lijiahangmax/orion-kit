@@ -1,6 +1,5 @@
 package com.orion.utils.crypto.symmetric;
 
-import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.crypto.enums.CipherAlgorithm;
 import com.orion.utils.crypto.enums.PaddingMode;
@@ -76,7 +75,6 @@ public class EcbSymmetric extends BaseSymmetric {
                 return encode(cipher.doFinal(bs));
             }
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -124,7 +122,6 @@ public class EcbSymmetric extends BaseSymmetric {
             cipher.init(Cipher.DECRYPT_MODE, key);
             return this.clearDecryptZero(cipher.doFinal(decode(bs)));
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }

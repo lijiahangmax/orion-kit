@@ -2,6 +2,7 @@ package com.orion.utils.io;
 
 import com.orion.constant.Const;
 import com.orion.utils.Exceptions;
+import com.orion.utils.Strings;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -88,8 +89,11 @@ public class FileSplit implements Callable<String[]> {
             bufferSize = Const.BUFFER_KB_2;
         }
         this.bufferSize = bufferSize;
-        if (file == null || !file.exists() || file.length() == 0) {
-            throw Exceptions.runtime("file is illegal");
+        if (file == null || !file.exists()) {
+            throw Exceptions.runtime(Strings.format("file not found {}", file));
+        }
+        if (file.length() == 0) {
+            throw Exceptions.runtime(Strings.format("file is empty {}", file));
         }
         this.file = file;
         double size = (double) file.length() / (double) blockCount;

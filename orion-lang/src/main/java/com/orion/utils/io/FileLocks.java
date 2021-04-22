@@ -218,7 +218,6 @@ public class FileLocks {
                     return true;
                 }
             } catch (Exception e) {
-                Exceptions.printStacks(e);
                 return false;
             } finally {
                 if (!success) {

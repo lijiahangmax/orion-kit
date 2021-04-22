@@ -65,7 +65,6 @@ public class Colors {
             int blue = Integer.parseInt(str3, 16);
             return new byte[]{(byte) red, (byte) green, (byte) blue};
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -106,7 +105,6 @@ public class Colors {
             int blue = Integer.parseInt(str3, 16);
             return new Color(red, green, blue);
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }

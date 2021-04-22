@@ -263,7 +263,6 @@ public class SftpExecutor implements SafeCloseable {
                 try {
                     client.mkdir(parentPath, permissions);
                 } catch (Exception e1) {
-                    Exceptions.printStacks(e1);
                     return false;
                 }
             }

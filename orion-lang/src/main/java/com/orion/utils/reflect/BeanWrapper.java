@@ -215,7 +215,7 @@ public class BeanWrapper {
                     }
                 }
             } catch (Exception e) {
-                Exceptions.printStacks(e);
+                // ignore
             }
         }
         return t;

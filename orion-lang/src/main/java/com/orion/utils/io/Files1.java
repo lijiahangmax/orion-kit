@@ -74,7 +74,6 @@ public class Files1 {
             BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
             return new FileAttribute(file, attr);
         } catch (IOException e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -212,12 +211,12 @@ public class Files1 {
         }
     }
 
-    public static boolean isRegularFile(String file) {
-        return new File(file).isFile();
+    public static boolean isFile(String file) {
+        return isFile(new File(file));
     }
 
-    public static boolean isRegularFile(File file) {
-        return file.isFile();
+    public static boolean isFile(File file) {
+        return file.exists() && file.isFile();
     }
 
     /**
@@ -226,16 +225,16 @@ public class Files1 {
      * @param file 文件
      * @return 普通文件true
      */
-    public static boolean isRegularFile(Path file) {
+    public static boolean isFile(Path file) {
         return Files.isRegularFile(file);
     }
 
     public static boolean isDirectory(String file) {
-        return new File(file).isDirectory();
+        return isDirectory(new File(file));
     }
 
     public static boolean isDirectory(File file) {
-        return file.isDirectory();
+        return file.exists() && file.isDirectory();
     }
 
     /**

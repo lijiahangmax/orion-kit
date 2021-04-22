@@ -97,7 +97,6 @@ public class QRCodes extends CodeGenerator {
             }
             return image;
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }

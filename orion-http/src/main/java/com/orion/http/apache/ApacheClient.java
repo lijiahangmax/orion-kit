@@ -29,7 +29,6 @@ public class ApacheClient {
                     .sslSocketFactory(new SSLConnectionSocketFactory(sc))
                     .logInterceptor());
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             throw Exceptions.init("init apache client error " + e.getMessage());
         }
     }

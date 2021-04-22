@@ -56,7 +56,6 @@ public class LocalDataStore {
             in = new ObjectInputStream(new FileInputStream(localDataStoreFile));
             localStore = (Map<Object, Object>) in.readObject();
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             localStore = new HashMap<>(4);
         } finally {
             Streams.close(in);

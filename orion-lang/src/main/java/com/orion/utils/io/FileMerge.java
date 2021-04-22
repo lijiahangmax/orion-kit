@@ -68,12 +68,11 @@ public class FileMerge implements Callable<String> {
 
     @Override
     public String call() {
-        Args.Two<String, List<String>> fl = shuffleFile(blockFile);
+        Args.Two<String, List<String>> fl = this.shuffleFile(blockFile);
         try {
-            return mergeFile(file.getAbsolutePath(), fl.getArg1(), fl.getArg2());
+            return this.mergeFile(file.getAbsolutePath(), fl.getArg1(), fl.getArg2());
         } catch (Exception e) {
-            Exceptions.printStacks(e);
-            return "error: " + e.getMessage();
+            return e.getMessage();
         }
     }
 
@@ -102,7 +101,7 @@ public class FileMerge implements Callable<String> {
                 filePath = ff.substring(0, ff.lastIndexOf("."));
             }
             if (last++ != is.getKey()) {
-                throw Exceptions.runtime("not found " + (last - 1) + " block file");
+                throw Exceptions.runtime("not found index: " + (last - 1) + " block file");
             }
             fileList.add(is.getValue());
         }
@@ -118,29 +117,25 @@ public class FileMerge implements Callable<String> {
      * @return 合并问价路径
      */
     private String mergeFile(String dir, String fileName, List<String> blocks) {
-        FileOutputStream fo = null;
+        FileOutputStream dist = null;
         try {
-            File wf = new File(dir + "\\" + fileName);
-            if (!wf.exists()) {
-                wf.createNewFile();
-            }
-            fo = new FileOutputStream(wf);
+            String path = Files1.getPath(dir + "/" + fileName);
+            dist = Files1.openOutputStream(path);
             for (String block : blocks) {
-                FileInputStream in = new FileInputStream(new File(dir + "\\" + block));
-                int read = 0;
-                int c = 0;
+                FileInputStream in = Files1.openInputStream(Files1.getPath(dir + "/" + block));
                 byte[] buffer = new byte[bufferSize];
+                int read;
                 while ((read = in.read(buffer)) != -1) {
-                    fo.write(buffer, 0, read);
+                    dist.write(buffer, 0, read);
                 }
                 Streams.close(in);
             }
-            fo.flush();
-            return wf.getAbsolutePath();
+            dist.flush();
+            return path;
         } catch (Exception e) {
             throw Exceptions.runtime("merge error: " + e.getMessage());
         } finally {
-            Streams.close(fo);
+            Streams.close(dist);
         }
     }
 

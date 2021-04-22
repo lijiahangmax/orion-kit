@@ -78,7 +78,6 @@ public class SessionHolder {
         try {
             CH.addIdentity(keyPath, password);
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             throw Exceptions.runtime("add identity error " + e.getMessage());
         }
     }
@@ -93,7 +92,6 @@ public class SessionHolder {
         try {
             CH.addIdentity(keyPath, password);
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             throw Exceptions.runtime("add identity error " + e.getMessage());
         }
     }
@@ -107,7 +105,6 @@ public class SessionHolder {
         try {
             CH.addIdentity(keyPath);
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             throw Exceptions.runtime("add identity error " + e.getMessage());
         }
     }
@@ -126,7 +123,6 @@ public class SessionHolder {
                     try {
                         CH.removeIdentity((Identity) identity);
                     } catch (Exception e) {
-                        Exceptions.printStacks(e);
                         throw Exceptions.runtime("remove identity error " + e.getMessage());
                     }
                 }
@@ -141,7 +137,6 @@ public class SessionHolder {
         try {
             CH.removeAllIdentity();
         } catch (JSchException e) {
-            Exceptions.printStacks(e);
             throw Exceptions.runtime("remove all identity error " + e.getMessage());
         }
     }
@@ -171,7 +166,6 @@ public class SessionHolder {
         try {
             CH.setKnownHosts(filePath);
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             throw Exceptions.runtime("set unknown hosts error " + e.getMessage());
         }
     }
@@ -185,7 +179,6 @@ public class SessionHolder {
         try {
             CH.setKnownHosts(inputStream);
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             throw Exceptions.runtime("set unknown hosts error " + e.getMessage());
         }
     }

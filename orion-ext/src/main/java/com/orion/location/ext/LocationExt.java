@@ -74,7 +74,6 @@ public class LocationExt {
         try {
             return seeker.getCountry(ip);
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -92,7 +91,6 @@ public class LocationExt {
         try {
             return seeker.getAddress(ip);
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -110,7 +108,6 @@ public class LocationExt {
         try {
             return seeker.getArea(ip);
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -128,7 +125,6 @@ public class LocationExt {
         try {
             return seeker.getIpLocation(ip);
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -146,7 +142,6 @@ public class LocationExt {
         try {
             return seeker.getRegion(ip);
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }

@@ -6,7 +6,6 @@ import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.orion.constant.Const;
 import com.orion.utils.Colors;
-import com.orion.utils.Exceptions;
 import com.orion.utils.codec.Base64s;
 import com.orion.utils.image.Images;
 import com.orion.utils.io.Streams;
@@ -242,7 +241,6 @@ public abstract class CodeGenerator {
         try {
             return this.decode(ImageIO.read(new File(file)));
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -251,7 +249,6 @@ public abstract class CodeGenerator {
         try {
             return this.decode(ImageIO.read(file));
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -260,7 +257,6 @@ public abstract class CodeGenerator {
         try {
             return this.decode(ImageIO.read(Streams.toInputStream(bs)));
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -269,7 +265,6 @@ public abstract class CodeGenerator {
         try {
             return this.decode(ImageIO.read(in));
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }
@@ -292,7 +287,6 @@ public abstract class CodeGenerator {
             BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
             return new MultiFormatReader().decode(bitmap, this.getDecodeHint()).getText();
         } catch (Exception e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }

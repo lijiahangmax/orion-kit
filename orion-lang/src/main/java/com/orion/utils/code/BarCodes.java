@@ -36,7 +36,6 @@ public class BarCodes extends CodeGenerator {
             BitMatrix bitMatrix = WRITER.encode(content, format, width, height, this.getEncodeHint());
             return MatrixToImageWriter.toBufferedImage(bitMatrix);
         } catch (WriterException e) {
-            Exceptions.printStacks(e);
             return null;
         }
     }
