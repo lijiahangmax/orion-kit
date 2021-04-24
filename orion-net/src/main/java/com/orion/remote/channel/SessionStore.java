@@ -127,7 +127,9 @@ public class SessionStore implements SafeCloseable {
      */
     public SessionStore setHttpProxy(String host, int port, String username, String password) {
         ProxyHTTP proxy = new ProxyHTTP(host, port);
-        proxy.setUserPasswd(username, password);
+        if (!Strings.isBlank(username)) {
+            proxy.setUserPasswd(username, password);
+        }
         session.setProxy(proxy);
         return this;
     }
@@ -148,7 +150,9 @@ public class SessionStore implements SafeCloseable {
      */
     public SessionStore setSocket4Proxy(String host, int port, String username, String password) {
         ProxySOCKS4 proxy = new ProxySOCKS4(host, port);
-        proxy.setUserPasswd(username, password);
+        if (!Strings.isBlank(username)) {
+            proxy.setUserPasswd(username, password);
+        }
         session.setProxy(proxy);
         return this;
     }
@@ -169,7 +173,9 @@ public class SessionStore implements SafeCloseable {
      */
     public SessionStore setSocket5Proxy(String host, int port, String username, String password) {
         ProxySOCKS5 proxy = new ProxySOCKS5(host, port);
-        proxy.setUserPasswd(username, password);
+        if (!Strings.isBlank(username)) {
+            proxy.setUserPasswd(username, password);
+        }
         session.setProxy(proxy);
         return this;
     }
