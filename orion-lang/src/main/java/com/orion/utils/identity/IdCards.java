@@ -1,8 +1,9 @@
 package com.orion.utils.identity;
 
 import com.orion.utils.Exceptions;
-import com.orion.utils.Matches;
 import com.orion.utils.Valid;
+import com.orion.utils.regexp.Matches;
+import com.orion.utils.regexp.Patterns;
 import com.orion.utils.time.DateStream;
 import com.orion.utils.time.Dates;
 
@@ -88,7 +89,7 @@ public class IdCards {
         if (idCard.length() != CHINA_ID_MIN_LENGTH) {
             return null;
         }
-        if (Matches.test(idCard, Matches.INTEGER)) {
+        if (Matches.test(idCard, Patterns.INTEGER)) {
             // 获取出生年月日
             Date birthDate = Dates.parse("19" + idCard.substring(6, 12), "yyyyMMdd");
             int year = Dates.stream(birthDate).getYear();
@@ -163,7 +164,7 @@ public class IdCards {
         String code17 = idCard.substring(0, 17);
         // 第18位
         char code18 = Character.toLowerCase(idCard.charAt(17));
-        if (Matches.test(code17, Matches.INTEGER)) {
+        if (Matches.test(code17, Patterns.INTEGER)) {
             // 校验位
             return getCheckCode18(code17) == code18;
         }
@@ -180,7 +181,7 @@ public class IdCards {
         if (CHINA_ID_MIN_LENGTH != idCard.length()) {
             return false;
         }
-        if (Matches.test(idCard, Matches.INTEGER)) {
+        if (Matches.test(idCard, Patterns.INTEGER)) {
             // 省份
             String proCode = idCard.substring(0, 2);
             if (null == CITY_CODES.get(proCode)) {

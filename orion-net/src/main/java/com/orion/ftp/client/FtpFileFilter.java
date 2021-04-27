@@ -1,6 +1,6 @@
 package com.orion.ftp.client;
 
-import com.orion.utils.Matches;
+import com.orion.utils.regexp.Matches;
 
 import java.util.regex.Pattern;
 
