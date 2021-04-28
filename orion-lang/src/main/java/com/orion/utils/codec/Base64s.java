@@ -17,6 +17,90 @@ public class Base64s {
     private Base64s() {
     }
 
+    // -------------------- data --------------------
+
+    /**
+     * base64编码
+     *
+     * @param s ignore
+     * @return ignore
+     */
+    public static String encode(String s) {
+        return new String(Base64.getEncoder().encode(Strings.bytes(s)));
+    }
+
+    /**
+     * base64编码
+     *
+     * @param s ignore
+     * @return ignore
+     */
+    public static byte[] encodeToBytes(String s) {
+        return Base64.getEncoder().encode(Strings.bytes(s));
+    }
+
+    /**
+     * base64编码
+     *
+     * @param b ignore
+     * @return ignore
+     */
+    public static byte[] encode(byte[] b) {
+        return Base64.getEncoder().encode(b);
+    }
+
+    /**
+     * base64编码
+     *
+     * @param b ignore
+     * @return ignore
+     */
+    public static String encodeToString(byte[] b) {
+        return new String(Base64.getEncoder().encode(b));
+    }
+
+    /**
+     * base64解码
+     *
+     * @param s ignore
+     * @return ignore
+     */
+    public static String decode(String s) {
+        return new String(Base64.getDecoder().decode(s));
+    }
+
+    /**
+     * base64解码
+     *
+     * @param s ignore
+     * @return ignore
+     */
+    public static byte[] decodeToBytes(String s) {
+        return Base64.getDecoder().decode(s);
+    }
+
+    /**
+     * base64解码
+     *
+     * @param b ignore
+     * @return ignore
+     */
+    public static byte[] decode(byte[] b) {
+        return Base64.getDecoder().decode(b);
+    }
+
+    /**
+     * base64解码
+     *
+     * @param b ignore
+     * @return ignore
+     */
+    public static String decodeToString(byte[] b) {
+        return new String(Base64.getDecoder().decode(b));
+    }
+
+    // -------------------- image --------------------
+
     /**
      * 图片base64编码
      *
@@ -70,45 +154,7 @@ public class Base64s {
         return dataType[1];
     }
 
-    /**
-     * base64编码
-     *
-     * @param s ignore
-     * @return ignore
-     */
-    public static String encode(String s) {
-        return new String(Base64.getEncoder().encode(Strings.bytes(s)));
-    }
-
-    /**
-     * base64编码
-     *
-     * @param b ignore
-     * @return ignore
-     */
-    public static byte[] encode(byte[] b) {
-        return Base64.getEncoder().encode(b);
-    }
-
-    /**
-     * base64解码
-     *
-     * @param s ignore
-     * @return ignore
-     */
-    public static String decode(String s) {
-        return new String(Base64.getDecoder().decode(s));
-    }
-
-    /**
-     * base64解码
-     *
-     * @param b ignore
-     * @return ignore
-     */
-    public static byte[] decode(byte[] b) {
-        return Base64.getDecoder().decode(b);
-    }
+    // -------------------- url --------------------
 
     /**
      * base64url编码
@@ -123,11 +169,31 @@ public class Base64s {
     /**
      * base64url编码
      *
+     * @param s ignore
+     * @return ignore
+     */
+    public static byte[] url64EncodeToBytes(String s) {
+        return Base64.getUrlEncoder().encode(Strings.bytes(s));
+    }
+
+    /**
+     * base64url编码
+     *
      * @param b ignore
      * @return ignore
      */
     public static byte[] url64Encode(byte[] b) {
         return Base64.getUrlEncoder().encode(b);
+    }
+
+    /**
+     * base64url编码
+     *
+     * @param b ignore
+     * @return ignore
+     */
+    public static String url64EncodeToString(byte[] b) {
+        return new String(Base64.getUrlEncoder().encode(b));
     }
 
     /**
@@ -143,11 +209,31 @@ public class Base64s {
     /**
      * base64url解码
      *
+     * @param s ignore
+     * @return ignore
+     */
+    public static byte[] url64DecodeToBytes(String s) {
+        return Base64.getUrlDecoder().decode(s);
+    }
+
+    /**
+     * base64url解码
+     *
      * @param b ignore
      * @return ignore
      */
     public static byte[] url64Decode(byte[] b) {
         return Base64.getUrlDecoder().decode(b);
+    }
+
+    /**
+     * base64url解码
+     *
+     * @param b ignore
+     * @return ignore
+     */
+    public static String url64DecodeToString(byte[] b) {
+        return new String(Base64.getUrlDecoder().decode(b));
     }
 
 }

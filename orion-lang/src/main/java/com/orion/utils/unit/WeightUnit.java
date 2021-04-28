@@ -8,7 +8,7 @@ import java.math.RoundingMode;
 /**
  * 重量单位
  * <p>
- * 舍入模式: {@link RoundingMode#HALF_DOWN}
+ * 舍入模式: {@link RoundingMode#FLOOR}
  * 舍入精度: 8
  *
  * @author ljh15
@@ -142,7 +142,7 @@ public enum WeightUnit {
     /**
      * 舍入模式
      */
-    private static RoundingMode roundModel = RoundingMode.HALF_DOWN;
+    private static RoundingMode roundModel = RoundingMode.FLOOR;
 
     /**
      * 舍入精度
