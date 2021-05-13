@@ -2764,6 +2764,84 @@ public class Arrays1 {
      * 获取数组第一个元素
      *
      * @param array array
+     * @return 第一个元素 长度为0则抛出异常
+     */
+    public static <T> T first(T[] array) {
+        int length = length(array);
+        if (length == 0) {
+            throw Exceptions.arrayIndex("array is empty");
+        }
+        return array[0];
+    }
+
+    public static byte first(byte[] array) {
+        int length = length(array);
+        if (length == 0) {
+            throw Exceptions.arrayIndex("array is empty");
+        }
+        return array[0];
+    }
+
+    public static short first(short[] array) {
+        int length = length(array);
+        if (length == 0) {
+            throw Exceptions.arrayIndex("array is empty");
+        }
+        return array[0];
+    }
+
+    public static int first(int[] array) {
+        int length = length(array);
+        if (length == 0) {
+            throw Exceptions.arrayIndex("array is empty");
+        }
+        return array[0];
+    }
+
+    public static long first(long[] array) {
+        int length = length(array);
+        if (length == 0) {
+            throw Exceptions.arrayIndex("array is empty");
+        }
+        return array[0];
+    }
+
+    public static float first(float[] array) {
+        int length = length(array);
+        if (length == 0) {
+            throw Exceptions.arrayIndex("array is empty");
+        }
+        return array[0];
+    }
+
+    public static double first(double[] array) {
+        int length = length(array);
+        if (length == 0) {
+            throw Exceptions.arrayIndex("array is empty");
+        }
+        return array[0];
+    }
+
+    public static boolean first(boolean[] array) {
+        int length = length(array);
+        if (length == 0) {
+            throw Exceptions.arrayIndex("array is empty");
+        }
+        return array[0];
+    }
+
+    public static char first(char[] array) {
+        int length = length(array);
+        if (length == 0) {
+            throw Exceptions.arrayIndex("array is empty");
+        }
+        return array[0];
+    }
+
+    /**
+     * 获取数组第一个元素
+     *
+     * @param array array
      * @param def   默认值
      * @return 第一个元素
      */
@@ -2845,6 +2923,84 @@ public class Arrays1 {
      * 获取数组最后一个元素
      *
      * @param array array
+     * @return 第一个元素  长度为0则抛出异常
+     */
+    public static <T> T last(T[] array) {
+        int length = length(array);
+        if (length == 0) {
+            throw Exceptions.arrayIndex("array is empty");
+        }
+        return array[length - 1];
+    }
+
+    public static byte last(byte[] array) {
+        int length = length(array);
+        if (length == 0) {
+            throw Exceptions.arrayIndex("array is empty");
+        }
+        return array[length - 1];
+    }
+
+    public static short last(short[] array) {
+        int length = length(array);
+        if (length == 0) {
+            throw Exceptions.arrayIndex("array is empty");
+        }
+        return array[length - 1];
+    }
+
+    public static int last(int[] array) {
+        int length = length(array);
+        if (length == 0) {
+            throw Exceptions.arrayIndex("array is empty");
+        }
+        return array[length - 1];
+    }
+
+    public static long last(long[] array) {
+        int length = length(array);
+        if (length == 0) {
+            throw Exceptions.arrayIndex("array is empty");
+        }
+        return array[length - 1];
+    }
+
+    public static float last(float[] array) {
+        int length = length(array);
+        if (length == 0) {
+            throw Exceptions.arrayIndex("array is empty");
+        }
+        return array[length - 1];
+    }
+
+    public static double last(double[] array) {
+        int length = length(array);
+        if (length == 0) {
+            throw Exceptions.arrayIndex("array is empty");
+        }
+        return array[length - 1];
+    }
+
+    public static boolean last(boolean[] array) {
+        int length = length(array);
+        if (length == 0) {
+            throw Exceptions.arrayIndex("array is empty");
+        }
+        return array[length - 1];
+    }
+
+    public static char last(char[] array) {
+        int length = length(array);
+        if (length == 0) {
+            throw Exceptions.arrayIndex("array is empty");
+        }
+        return array[length - 1];
+    }
+
+    /**
+     * 获取数组最后一个元素
+     *
+     * @param array array
      * @param def   默认值
      * @return 第一个元素
      */
@@ -2852,14 +3008,6 @@ public class Arrays1 {
         int length = length(array);
         if (length == 0) {
             return def;
-        }
-        return array[length - 1];
-    }
-
-    public static <T> T last(T[] array) {
-        int length = length(array);
-        if (length == 0) {
-            return null;
         }
         return array[length - 1];
     }
@@ -2937,7 +3085,7 @@ public class Arrays1 {
      * @param i 换位的元素1
      * @param j 换位的元素2
      */
-    public static void onChangeSwap(byte[] a, int i, int j) {
+    public static void unChangeSwap(byte[] a, int i, int j) {
         a[i] ^= a[j];
         a[j] ^= a[i];
         a[i] ^= a[j];

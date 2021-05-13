@@ -8,6 +8,7 @@ import com.orion.utils.hash.Hashes;
 import com.orion.utils.reflect.Methods;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -90,6 +91,37 @@ public class Objects1 {
             return Arrays1.arrayEquals(o1, o2);
         }
         return false;
+    }
+
+    /**
+     * 比较接口判断相等
+     *
+     * @param o1  对象1
+     * @param o2  对象2
+     * @param <T> ignore
+     * @return ignore
+     */
+    public static <T extends Comparable<T>> boolean compared(T o1, T o2) {
+        if (o1 == null || o2 == null) {
+            return false;
+        }
+        return o1.compareTo(o2) == 0;
+    }
+
+    /**
+     * 比较接口判断相等
+     *
+     * @param o1  对象1
+     * @param o2  对象2
+     * @param c   比较接口
+     * @param <T> ignore
+     * @return ignore
+     */
+    public static <T> boolean compared(T o1, T o2, Comparator<T> c) {
+        if (o1 == null || o2 == null) {
+            return false;
+        }
+        return c.compare(o1, o2) == 0;
     }
 
     /**
@@ -178,12 +210,12 @@ public class Objects1 {
         if (o == null) {
             return true;
         }
-        if (o instanceof Object[]) {
-            return Arrays1.isEmpty((Object[]) o);
+        if (o.getClass().isArray()) {
+            return Array.getLength(o) == 0;
         } else if (o instanceof Collection) {
-            return Lists.isEmpty((Collection) o);
+            return Lists.isEmpty((Collection<?>) o);
         } else if (o instanceof Map) {
-            return Maps.isEmpty((Map) o);
+            return Maps.isEmpty((Map<?, ?>) o);
         } else if (o instanceof String) {
             return Strings.isBlank((String) o);
         }
