@@ -1,6 +1,7 @@
 package com.orion.utils.io;
 
 import com.orion.constant.Const;
+import com.orion.constant.Letters;
 import com.orion.lang.iterator.ByteArrayIterator;
 import com.orion.lang.iterator.LineIterator;
 import com.orion.utils.Arrays1;
@@ -96,10 +97,10 @@ public class Streams {
             int bi = -1;
             for (int i = 0; i < read; i++) {
                 byte b = bytes[i];
-                if (b == 13) {
+                if (b == Letters.CR) {
                     // \r
                     if (i + 1 < read) {
-                        if (bytes[i + 1] == 10) {
+                        if (bytes[i + 1] == Letters.LF) {
                             seek++;
                         }
                         bi = i;
@@ -107,13 +108,13 @@ public class Streams {
                     } else {
                         byte[] bs1 = new byte[1];
                         int tmpRead = reader.read(bs1);
-                        if (tmpRead != -1 && bs1[0] == 10) {
+                        if (tmpRead != -1 && bs1[0] == Letters.LF) {
                             seek++;
                         }
                         bi = i;
                         break;
                     }
-                } else if (b == 10) {
+                } else if (b == Letters.LF) {
                     // \n
                     bi = i;
                     break;
@@ -177,7 +178,7 @@ public class Streams {
             if (i == len - 1) {
                 int p = ul < 2 ? 0 : ul - 2;
                 for (int j = p; j < bytes.length; j++) {
-                    if (bytes[j] == 10 || bytes[j] == 13) {
+                    if (bytes[j] == Letters.LF || bytes[j] == Letters.CR) {
                         ul--;
                     }
                 }

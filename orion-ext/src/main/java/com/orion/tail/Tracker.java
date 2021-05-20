@@ -18,7 +18,7 @@ public abstract class Tracker implements Runnable, Stoppable {
 
     @Override
     public void run() {
-        tail();
+        this.tail();
     }
 
 }

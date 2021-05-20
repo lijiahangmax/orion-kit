@@ -1,6 +1,7 @@
 package com.orion.utils.io;
 
 import com.orion.constant.Const;
+import com.orion.constant.Letters;
 import com.orion.function.FileFilter;
 import com.orion.id.UUIds;
 import com.orion.utils.Exceptions;
@@ -1102,14 +1103,14 @@ public class Files1 {
                 r.seek(length - 2);
                 byte[] bs = new byte[2];
                 r.read(bs);
-                if (bs[0] == 13 && bs[1] == 10) {
+                if (bs[0] == Letters.CR && bs[1] == Letters.LF) {
                     return Const.CR_LF;
-                } else if (bs[1] == 13) {
+                } else if (bs[1] == Letters.CR) {
                     return Const.CR;
                 }
             } else if (length == 1) {
                 r.seek(length - 1);
-                if (r.read() == 13) {
+                if (r.read() == Letters.CR) {
                     return Const.CR;
                 }
             }
@@ -1140,19 +1141,19 @@ public class Files1 {
                 r.seek(length - 2);
                 byte[] bs = new byte[2];
                 r.read(bs);
-                if (bs[0] == 13 && bs[1] == 10) {
+                if (bs[0] == Letters.CR && bs[1] == Letters.LF) {
                     return Const.CR_LF;
-                } else if (bs[1] == 13) {
+                } else if (bs[1] == Letters.CR) {
                     return Const.CR;
-                } else if (bs[1] == 10) {
+                } else if (bs[1] == Letters.LF) {
                     return Const.LF;
                 }
             } else if (length == 1) {
                 r.seek(length - 1);
                 int read = r.read();
-                if (read == 13) {
+                if (read == Letters.CR) {
                     return Const.CR;
-                } else if (read == 10) {
+                } else if (read == Letters.LF) {
                     return Const.LF;
                 }
             }
@@ -1180,7 +1181,7 @@ public class Files1 {
             } else if (length >= 1) {
                 r.seek(length - 1);
                 int s = r.read();
-                if (s == 13 || s == 10) {
+                if (s == Letters.CR || s == Letters.LF) {
                     return true;
                 }
             }

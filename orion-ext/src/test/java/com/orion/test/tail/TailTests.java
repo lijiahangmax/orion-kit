@@ -20,12 +20,12 @@ import java.io.IOException;
 public class TailTests {
 
     public static void main(String[] args) throws IOException {
-        DelayTracker d = new DelayTracker("C:\\Users\\ljh15\\Desktop\\tail.txt", (s, l, t) -> {
+        new DelayTracker("C:\\Users\\ljh15\\Desktop\\tail.txt", (s, l, t) -> {
             System.out.println(l + ": " + s);
-        }).offset(20)
+        }).offset(5)
                 .notFoundMode(FileNotFoundMode.WAIT)
-                .minusMode(FileMinusMode.CLOSE);
-        new Thread(d).start();
+                .minusMode(FileMinusMode.CLOSE)
+                .tail();
     }
 
     @Test

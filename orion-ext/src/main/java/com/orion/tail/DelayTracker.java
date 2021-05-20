@@ -4,10 +4,7 @@ import com.orion.constant.Const;
 import com.orion.tail.handler.LineHandler;
 import com.orion.tail.mode.FileMinusMode;
 import com.orion.tail.mode.FileNotFoundMode;
-import com.orion.utils.Exceptions;
-import com.orion.utils.Strings;
-import com.orion.utils.Threads;
-import com.orion.utils.Valid;
+import com.orion.utils.*;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
 
@@ -50,7 +47,11 @@ public class DelayTracker extends Tracker {
     private int accessCount;
 
     /**
-     * 开始监听的文件起始位置
+     * 开始监听的文件偏移量
+     * <p>
+     * =-1 从文件当前大小开始
+     * =0 从0开始
+     * >0 从length-offset 开始
      */
     private long offset;
 
@@ -65,39 +66,41 @@ public class DelayTracker extends Tracker {
     private LineHandler handler;
 
     /**
-     * 启动时 文件未找到文件 处理模式
+     * 启动时未找到文件 处理模式
      */
-    private FileNotFoundMode notFoundMode = FileNotFoundMode.CLOSE;
+    private FileNotFoundMode notFoundMode;
 
     /**
-     * 未找到文件 处理次数
+     * 启动时未找到文件 处理次数
      */
     private int notFountTimes;
 
     /**
-     * 运行时 文件减少 处理模式
+     * 运行时文件大小减少 处理模式
      */
-    private FileMinusMode minusMode = FileMinusMode.CLOSE;
+    private FileMinusMode minusMode;
 
     public DelayTracker(String tailFile, LineHandler handler) {
         this(new File(tailFile), handler);
     }
 
     public DelayTracker(File tailFile, LineHandler handler) {
-        Valid.notNull(handler, "LineHandler is null");
+        Valid.notNull(handler, "line handler is null");
         this.tailFile = tailFile;
         this.handler = handler;
         this.delayMillis = Const.MS_S_1;
         this.charset = Const.UTF_8;
+        this.notFoundMode = FileNotFoundMode.CLOSE;
+        this.minusMode = FileMinusMode.CLOSE;
     }
 
     @Override
     public void tail() {
         try {
-            if (!init()) {
+            if (!this.init()) {
                 return;
             }
-            run = true;
+            this.run = true;
             this.setSeek();
             // 上次检查文件更改的时间
             long lastMod = 0;
@@ -108,22 +111,20 @@ public class DelayTracker extends Tracker {
                     long length = tailFile.length();
                     if (lastLen > length && reader.getFilePointer() >= length) {
                         // 文件减少 重新设置
-                        resetSeek();
+                        this.resetSeek();
                     }
-                    String s = Streams.readLines(reader, charset);
-                    if (s != null) {
-                        if (handler != null) {
-                            s = s.replaceAll(Const.CR_LF, Const.LF).replaceAll(Const.CR, Const.LF);
-                            String[] ls = s.split(Const.LF);
-                            for (String l : ls) {
-                                if (accessCount == 0) {
-                                    // skip
-                                    handler.readLine(l.substring(1), accessCount++, this);
-                                } else {
-                                    handler.readLine(l, accessCount++, this);
-                                }
-                            }
+                    String read = Streams.readLines(reader, charset);
+                    if (read == null || read.isEmpty()) {
+                        continue;
+                    }
+                    String[] lines = read.replaceAll(Const.CR_LF, Const.LF)
+                            .replaceAll(Const.CR, Const.LF)
+                            .split(Const.LF);
+                    for (String line : lines) {
+                        if (accessCount == 0) {
+                            line = cleanMissCode(line);
                         }
+                        handler.readLine(line, accessCount++, this);
                     }
                 }
                 lastMod = tailFile.lastModified();
@@ -133,9 +134,9 @@ public class DelayTracker extends Tracker {
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         } finally {
-            accessCount = 0;
+            this.accessCount = 0;
             Streams.close(reader);
-            reader = null;
+            this.reader = null;
         }
     }
 
@@ -149,11 +150,11 @@ public class DelayTracker extends Tracker {
         if (!tailFile.exists() || tailFile.isDirectory()) {
             switch (notFoundMode) {
                 case WAIT:
-                    run = true;
+                    this.run = true;
                     while (run) {
                         Threads.sleep(delayMillis);
                         if (tailFile.exists() && tailFile.isFile()) {
-                            reader = Files1.openRandomAccess(tailFile, "r");
+                            this.reader = Files1.openRandomAccess(tailFile, "r");
                             return true;
                         }
                     }
@@ -179,7 +180,7 @@ public class DelayTracker extends Tracker {
                             Threads.sleep(fd);
                         }
                         if (run && tailFile.exists() && tailFile.isFile()) {
-                            reader = Files1.openRandomAccess(tailFile, "r");
+                            this.reader = Files1.openRandomAccess(tailFile, "r");
                             return true;
                         }
                     }
@@ -188,7 +189,7 @@ public class DelayTracker extends Tracker {
                     for (int i = 0; i < notFountTimes; i++) {
                         Threads.sleep(delayMillis);
                         if (run && tailFile.exists() && tailFile.isFile()) {
-                            reader = Files1.openRandomAccess(tailFile, "r");
+                            this.reader = Files1.openRandomAccess(tailFile, "r");
                             return true;
                         }
                     }
@@ -200,7 +201,7 @@ public class DelayTracker extends Tracker {
                     return false;
             }
         } else {
-            reader = Files1.openRandomAccess(tailFile, "r");
+            this.reader = Files1.openRandomAccess(tailFile, "r");
             return true;
         }
     }
@@ -226,7 +227,7 @@ public class DelayTracker extends Tracker {
     private void resetSeek() throws IOException {
         switch (minusMode) {
             case CLOSE:
-                run = false;
+                this.run = false;
                 return;
             case CURRENT:
                 reader.seek(tailFile.length());
@@ -249,23 +250,11 @@ public class DelayTracker extends Tracker {
         }
     }
 
-    /**
-     * 关闭监听
-     */
     @Override
     public void stop() {
-        run = false;
+        this.run = false;
     }
 
-    /**
-     * 设置初始读取偏移量
-     *
-     * @param offset 偏移量
-     *               -1文件当前位置
-     *               0起始位置
-     *               其他为 文件长度 - offset 可能第一个字符为
-     * @return this
-     */
     public DelayTracker offset(long offset) {
         this.offset = offset;
         return this;
@@ -301,6 +290,23 @@ public class DelayTracker extends Tracker {
 
     public boolean isRun() {
         return run;
+    }
+
+    /**
+     * 去除乱码
+     *
+     * @param str str
+     * @return str
+     */
+    private static String cleanMissCode(String str) {
+        int testCount = Math.min(str.length(), 2);
+        for (int i = testCount; i > 0; i--) {
+            if (Spells.isMessyCode(String.valueOf(str.charAt(i - 1)))) {
+                str = str.substring(i);
+                break;
+            }
+        }
+        return str;
     }
 
     @Override
