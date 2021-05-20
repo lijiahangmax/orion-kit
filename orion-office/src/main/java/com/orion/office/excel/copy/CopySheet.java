@@ -14,7 +14,7 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
  * Streaming不适用
  * 只能拷贝基本元素
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/6/4 12:03
  */

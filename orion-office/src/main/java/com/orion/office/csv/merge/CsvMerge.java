@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * CSV行合并器
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/9/15 17:10
  */

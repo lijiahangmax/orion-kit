@@ -11,7 +11,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 /**
  * Excel 打印设置
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/6/7 20:01
  */

@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 /**
  * FTP操作实例
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/3/17 16:10
  */

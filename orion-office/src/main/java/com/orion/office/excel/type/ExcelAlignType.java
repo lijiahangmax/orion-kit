@@ -5,7 +5,7 @@ import org.apache.poi.ss.usermodel.HorizontalAlignment;
 /**
  * Excel 水平对齐方式
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/12/21 14:13
  */

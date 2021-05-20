@@ -13,7 +13,7 @@ import org.springframework.context.ConfigurableApplicationContext;
  * spring工具类
  * 需要配置 <bean id="springHolder" class="com.orion.spring.SpringHolder$ApplicationContextAwareStore"/>
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/2/3 14:36
  */

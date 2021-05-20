@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Session logger
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/10/7 0:13
  */

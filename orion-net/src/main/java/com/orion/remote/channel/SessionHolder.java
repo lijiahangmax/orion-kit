@@ -15,7 +15,7 @@ import java.util.Vector;
 /**
  * Session Holder
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/9/23 17:48
  */

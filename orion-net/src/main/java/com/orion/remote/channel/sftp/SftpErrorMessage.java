@@ -3,7 +3,7 @@ package com.orion.remote.channel.sftp;
 /**
  * SFTP 错误信息
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/10/10 16:45
  */

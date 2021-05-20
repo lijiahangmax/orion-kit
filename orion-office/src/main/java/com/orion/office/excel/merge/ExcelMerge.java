@@ -9,7 +9,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 /**
  * Excel 行合并器 不支持复杂操作
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/9/9 1:07
  */

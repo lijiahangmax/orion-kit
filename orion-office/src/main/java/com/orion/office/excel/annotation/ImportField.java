@@ -9,7 +9,7 @@ import java.lang.annotation.*;
  * Excel 导入注解
  * 可以加到 set方法 或者 字段上, 但是必须有set方法
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/5/27 12:12
  */

@@ -6,7 +6,7 @@ import java.util.Date;
 /**
  * Excel 属性参数
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/12/22 18:59
  */

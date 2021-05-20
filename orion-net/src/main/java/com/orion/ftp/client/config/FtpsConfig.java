@@ -7,7 +7,7 @@ import javax.net.ssl.SSLSocketFactory;
 /**
  * FTP ssl 连接配置类
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/3/11 17:09
  */

@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * FTP user
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/8/14 12:03
  */

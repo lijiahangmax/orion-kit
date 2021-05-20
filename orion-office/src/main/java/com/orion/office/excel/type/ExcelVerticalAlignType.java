@@ -5,7 +5,7 @@ import org.apache.poi.ss.usermodel.VerticalAlignment;
 /**
  * Excel 垂直对齐类型
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/12/21 14:16
  */

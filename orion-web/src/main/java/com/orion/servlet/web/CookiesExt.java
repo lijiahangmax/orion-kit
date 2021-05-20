@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * cookie工具类
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/3/13 11:12
  */

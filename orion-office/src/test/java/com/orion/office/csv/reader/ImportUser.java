@@ -5,7 +5,7 @@ import com.orion.office.csv.annotation.ImportIgnore;
 import com.orion.office.csv.annotation.ImportSetting;
 
 /**
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/2/7 15:55
  */

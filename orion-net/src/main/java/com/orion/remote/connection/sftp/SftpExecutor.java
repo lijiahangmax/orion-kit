@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
  * <p>
  * 文件路必须是绝对路径 可以包含 ../ ./
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/4/29 18:02
  */

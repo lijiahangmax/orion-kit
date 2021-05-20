@@ -6,7 +6,7 @@ import java.io.Serializable;
 /**
  * FTP ssl 配置信息
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/3/11 17:51
  */

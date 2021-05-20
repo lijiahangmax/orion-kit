@@ -9,7 +9,7 @@ import java.lang.annotation.*;
  * <p>
  * 可以加到 field 或 getter 上, 但是必须有getter方法
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/1/25 11:33
  */

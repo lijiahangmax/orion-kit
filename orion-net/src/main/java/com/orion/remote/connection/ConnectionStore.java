@@ -22,7 +22,7 @@ import java.io.IOException;
 /**
  * 远程会话连接
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/4/15 21:23
  */

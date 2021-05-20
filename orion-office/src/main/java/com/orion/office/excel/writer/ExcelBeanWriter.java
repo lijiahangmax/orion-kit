@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * <p>
  * 如果要使用注解需要用 {@link com.orion.office.excel.writer.exporting.ExcelExport} 导出
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/1/13 14:22
  */

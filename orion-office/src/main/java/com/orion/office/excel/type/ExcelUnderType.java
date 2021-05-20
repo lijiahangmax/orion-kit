@@ -5,7 +5,7 @@ import org.apache.poi.ss.usermodel.Font;
 /**
  * Excel 下滑线类型
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/12/26 1:11
  */

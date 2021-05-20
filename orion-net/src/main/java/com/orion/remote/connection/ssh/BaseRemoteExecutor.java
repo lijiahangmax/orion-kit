@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 /**
  * 远程执行器 基类
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/2/18 15:09
  */

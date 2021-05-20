@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * FTP信息常量
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/3/17 15:53
  */

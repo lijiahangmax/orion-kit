@@ -8,7 +8,7 @@ import java.net.ServerSocket;
 /**
  * Socket 工具
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/9/16 11:23
  */

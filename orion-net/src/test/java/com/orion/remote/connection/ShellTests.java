@@ -10,7 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/10/20 13:38
  */

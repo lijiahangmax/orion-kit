@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
 /**
  * Excel 图片类型
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/12/27 23:13
  */

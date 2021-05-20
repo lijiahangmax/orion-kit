@@ -6,7 +6,7 @@ import org.apache.poi.ss.usermodel.Sheet;
  * Excel 边距类型
  * 1英寸 = 2.54cm
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/1/14 17:16
  */

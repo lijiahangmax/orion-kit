@@ -12,7 +12,7 @@ import java.io.*;
 /**
  * 大文件上传 基类 支持断点续传, 实时速率
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/3/14 00:07
  */

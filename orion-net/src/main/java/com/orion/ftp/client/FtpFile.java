@@ -9,7 +9,7 @@ import java.util.Date;
 /**
  * FTP文件
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/5/9 21:22
  */

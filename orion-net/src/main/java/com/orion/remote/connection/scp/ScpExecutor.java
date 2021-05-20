@@ -14,7 +14,7 @@ import java.util.Map;
  * SCP 执行器
  * 上传文件时, 远程文件夹必须存在, 否则会异常
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/4/28 18:25
  */

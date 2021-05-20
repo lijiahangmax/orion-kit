@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * FTP连接池
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/3/18 11:19
  */

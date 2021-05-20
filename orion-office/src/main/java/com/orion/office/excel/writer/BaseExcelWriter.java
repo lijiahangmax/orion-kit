@@ -19,7 +19,7 @@ import java.util.*;
  * <p>
  * 不支持复杂类型 (图片 超链接 注释)
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/4/6 23:33
  */

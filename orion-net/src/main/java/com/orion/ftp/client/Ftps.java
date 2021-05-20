@@ -7,7 +7,7 @@ import org.apache.commons.net.ftp.FTPClient;
 /**
  * FTP工具类
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/3/17 16:10
  */

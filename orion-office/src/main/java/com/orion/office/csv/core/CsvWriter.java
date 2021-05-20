@@ -19,7 +19,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * CSV 写入器 core
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/4/1 23:23
  */

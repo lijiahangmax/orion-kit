@@ -13,7 +13,7 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
 /**
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/9/22 17:06
  */

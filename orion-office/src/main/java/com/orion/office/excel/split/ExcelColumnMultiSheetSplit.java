@@ -14,7 +14,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
  * 不支持流式读取 (流式只能读取一次)
  * 流式请用 {@link ExcelColumnSingleSplit}
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/9/8 18:36
  */

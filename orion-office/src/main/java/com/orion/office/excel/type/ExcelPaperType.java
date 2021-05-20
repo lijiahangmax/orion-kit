@@ -5,7 +5,7 @@ import org.apache.poi.ss.usermodel.PrintSetup;
 /**
  * Excel 纸张类型
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/12/30 17:38
  */

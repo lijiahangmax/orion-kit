@@ -1,7 +1,7 @@
 package com.orion.ftp.server;
 
 /**
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/3/10 18:26
  */

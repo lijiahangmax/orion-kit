@@ -9,7 +9,7 @@ import java.lang.annotation.*;
  * Excel 导出字段超链接注解
  * 可以和图片一起使用
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @see ExportPicture
  * @since 2020/5/27 12:11

@@ -13,7 +13,7 @@ import java.net.SocketException;
 /**
  * TCP Client 发送
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/6/5 15:41
  */

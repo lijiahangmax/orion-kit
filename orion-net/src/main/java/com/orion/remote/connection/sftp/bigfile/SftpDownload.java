@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  * SFTP 大文件下载 支持断点续传, 实时速率
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/5/14 14:34
  */

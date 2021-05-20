@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 /**
  * SFTP 文件属性过滤器
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/10/11 22:35
  */

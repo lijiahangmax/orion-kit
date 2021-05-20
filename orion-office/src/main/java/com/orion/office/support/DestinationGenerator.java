@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * 目标输出流生成器
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/2/22 17:24
  */

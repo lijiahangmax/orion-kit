@@ -14,7 +14,7 @@ import java.io.InputStream;
 /**
  * FTP 大文件下载 支持断点续传, 实时速率
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/3/13 00:51
  */

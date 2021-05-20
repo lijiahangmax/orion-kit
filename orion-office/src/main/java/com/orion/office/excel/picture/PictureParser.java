@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * 图片解析器
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/1/3 13:45
  */
