@@ -15,10 +15,10 @@ public interface LineHandler {
     /**
      * 读取到行
      *
-     * @param line    行
-     * @param index   当前行
+     * @param read    行
+     * @param line    当前行
      * @param tracker 追踪器
      */
-    void readLine(String line, int index, Tracker tracker);
+    void readLine(String read, int line, Tracker tracker);
 
 }
