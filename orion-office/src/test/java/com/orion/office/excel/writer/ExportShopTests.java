@@ -28,7 +28,7 @@ public class ExportShopTests {
             shop.setShopName("          " + Strings.randomChars(5) + "的店铺        ");
             shop.setCreateDate(Dates.date(System.currentTimeMillis() + Randoms.randomLong(10000000)));
             shop.setBusinessCode(CreditCodes.random());
-            File picFile = new File("C:\\Users\\ljh15\\Desktop\\export\\pic\\" + i + ".jpg");
+            File picFile = new File("C:\\Users\\ljh15\\Desktop\\data\\pic\\" + i + ".jpg");
             if (picFile.exists()) {
                 shop.setBusinessPicture(Base64s.img64Encode(FileReaders.readFast(picFile)));
             }
@@ -40,7 +40,7 @@ public class ExportShopTests {
         new ExcelExport<>(ExportShop.class)
                 .init()
                 .addRows(shopList)
-                .write("C:\\Users\\ljh15\\Desktop\\export\\shop.xlsx")
+                .write("C:\\Users\\ljh15\\Desktop\\data\\shop.xlsx")
                 .close();
     }
 

@@ -29,7 +29,7 @@ public class ExportSheetAnalysis implements Analysable {
     public void analysis() {
         ExportSheet sheet = Annotations.getAnnotation(targetClass, ExportSheet.class);
         if (sheet == null) {
-            throw Exceptions.parse("The exported class cannot be parsed because an @ExportSheet was not found");
+            throw Exceptions.parse("the exported class cannot be parsed because an @ExportSheet was not found");
         }
 
         String sheetName = sheet.name();

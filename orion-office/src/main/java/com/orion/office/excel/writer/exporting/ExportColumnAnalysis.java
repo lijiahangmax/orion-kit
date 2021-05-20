@@ -90,13 +90,12 @@ public class ExportColumnAnalysis implements Analysable {
             throw Exceptions.parse("not found " + fieldName + "getter method");
         }
         int index = field.index();
-        sheetOption.setColumnMaxIndex(columnMaxIndex = Math.max(columnMaxIndex, index));
+        sheetOption.setColumnMaxIndex(this.columnMaxIndex = Math.max(columnMaxIndex, index));
         // 解析 field
         ExportFieldOption exportFieldOption = this.analysisField(field, method);
+        // 解析 font
         if (font != null) {
-            // 解析 font
-            FontOption fontOption = this.analysisFont(font);
-            exportFieldOption.setFontOption(fontOption);
+            exportFieldOption.setFontOption(this.analysisFont(font));
         }
         // 解析 comment
         if (comment != null && !sheetOption.isSkipComment()) {
@@ -218,9 +217,9 @@ public class ExportColumnAnalysis implements Analysable {
         } else if (linkOption.getAddress().startsWith(LinkOption.FIELD_PREFIX)) {
             // 字段
             String fieldName = linkOption.getAddress().substring(1);
-            this.setLinkOptionType(linkOption, true, fieldName);
+            setLinkOptionType(targetClass, linkOption, true, fieldName);
         } else {
-            throw Exceptions.parse("Failed to parse the hyperlink address formula, reason: unknown formula " + linkOption.getAddress());
+            throw Exceptions.parse("failed to parse the hyperlink address formula, reason: unknown formula " + linkOption.getAddress());
         }
         // 解析文本
         if (LinkOption.ORIGIN.equals(linkOption.getText())) {
@@ -235,9 +234,9 @@ public class ExportColumnAnalysis implements Analysable {
         } else if (linkOption.getText().startsWith(LinkOption.FIELD_PREFIX)) {
             // 字段
             String fieldName = linkOption.getText().substring(1);
-            this.setLinkOptionType(linkOption, false, fieldName);
+            setLinkOptionType(targetClass, linkOption, false, fieldName);
         } else {
-            throw Exceptions.parse("Failed to parse the hyperlink text formula, reason: unknown formula " + linkOption.getTextGetterMethod());
+            throw Exceptions.parse("failed to parse the hyperlink text formula, reason: unknown formula " + linkOption.getTextGetterMethod());
         }
         return linkOption;
     }
@@ -271,13 +270,13 @@ public class ExportColumnAnalysis implements Analysable {
             pictureGetterMethod = method;
             option.setImageGetter(pictureGetterMethod);
         } else {
-            throw Exceptions.parse("Failed to parse the hyperlink address formula, reason: unknown formula " + option.getImage());
+            throw Exceptions.parse("failed to parse the hyperlink address formula, reason: unknown formula " + option.getImage());
         }
         Class<?> pictureReturnType = pictureGetterMethod.getReturnType();
         if (!Classes.isImplClass(InputStream.class, pictureReturnType) &&
                 !pictureReturnType.equals(byte[].class) &&
                 !(option.isBase64() && pictureReturnType.equals(String.class))) {
-            throw Exceptions.parse("The image field type must not be InputStream, byte[], or Base64 String");
+            throw Exceptions.parse("the image field type must not be InputStream, byte[], or Base64 String");
         }
 
         // 解析文本
@@ -296,21 +295,24 @@ public class ExportColumnAnalysis implements Analysable {
         } else if (option.getText().startsWith(PictureOption.FIELD_PREFIX)) {
             // 字段
             String fieldName = option.getText().substring(1);
-            this.setPictureTextOption(option, fieldName);
+            setPictureTextOption(targetClass, option, fieldName);
         } else {
-            throw Exceptions.parse("Failed to parse the picture text formula, reason: unknown formula " + option.getText());
+            throw Exceptions.parse("failed to parse the picture text formula, reason: unknown formula " + option.getText());
         }
         return option;
     }
 
+    // -------------------- parser static --------------------
+
     /**
      * 设置图片文本 method
      *
-     * @param option    option
-     * @param fieldName 字段名称
+     * @param targetClass targetClass
+     * @param option      option
+     * @param fieldName   字段名称
      */
-    private void setPictureTextOption(PictureOption option, String fieldName) {
-        Tuple tuple = this.getFieldOptionByFieldName(fieldName);
+    public static void setPictureTextOption(Class<?> targetClass, PictureOption option, String fieldName) {
+        Tuple tuple = getFieldOptionByFieldName(targetClass, fieldName);
         option.setTextGetter(tuple.get(0));
         option.setTextType(tuple.get(1));
         option.setCellOption(tuple.get(2));
@@ -319,30 +321,32 @@ public class ExportColumnAnalysis implements Analysable {
     /**
      * 设置超链接 method
      *
-     * @param option    option
-     * @param isLink    isLink || isValue
-     * @param fieldName 字段名称
+     * @param targetClass targetClass
+     * @param option      option
+     * @param isLink      isLink || isValue
+     * @param fieldName   字段名称
      */
-    private void setLinkOptionType(LinkOption option, boolean isLink, String fieldName) {
-        Tuple tuple = this.getFieldOptionByFieldName(fieldName);
+    public static void setLinkOptionType(Class<?> targetClass, LinkOption option, boolean isLink, String fieldName) {
+        Tuple tuple = getFieldOptionByFieldName(targetClass, fieldName);
         Method getterMethod = tuple.get(0);
         if (isLink) {
+            // 超链接不用设置类型
             option.setLinkGetterMethod(getterMethod);
-            return;
         } else {
             option.setTextGetterMethod(getterMethod);
+            option.setTextType(tuple.get(1));
+            option.setCellOption(tuple.get(2));
         }
-        option.setTextType(tuple.get(1));
-        option.setCellOption(tuple.get(2));
     }
 
     /**
      * 通过字段名称获取 getter ExcelFieldType CellOption
      *
-     * @param fieldName fieldName
+     * @param targetClass targetClass
+     * @param fieldName   fieldName
      * @return field getter ExcelFieldType CellOption
      */
-    private Tuple getFieldOptionByFieldName(String fieldName) {
+    public static Tuple getFieldOptionByFieldName(Class<?> targetClass, String fieldName) {
         // 解析method
         Field field = Fields.getFieldByCache(targetClass, fieldName);
         Method getterMethod;
@@ -354,6 +358,7 @@ public class ExportColumnAnalysis implements Analysable {
         if (getterMethod == null) {
             throw Exceptions.parse("did not find " + fieldName + " getter method at " + targetClass);
         }
+        // 获取注解
         ExportField exportField = null;
         if (field != null) {
             exportField = Annotations.getAnnotation(field, ExportField.class);
@@ -375,15 +380,13 @@ public class ExportColumnAnalysis implements Analysable {
         return Tuple.of(getterMethod, type, cellOption);
     }
 
-    // -------------------- static --------------------
-
     /**
      * 解析字体
      *
      * @param font annotation
      * @return FontOption
      */
-    protected static FontOption parseFont(ExportFont font) {
+    public static FontOption parseFont(ExportFont font) {
         FontOption fontOption = new FontOption();
         String name = font.fontName();
         if (!Strings.isEmpty(name)) {

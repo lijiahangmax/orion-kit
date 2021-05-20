@@ -17,7 +17,7 @@ import org.junit.Test;
  */
 public class ImportShopTest {
 
-    private Workbook workbook = Excels.openWorkbook("C:\\Users\\ljh15\\Desktop\\export\\shop.xlsx");
+    private Workbook workbook = Excels.openWorkbook("C:\\Users\\ljh15\\Desktop\\data\\shop.xlsx");
 
     private Sheet sheet = workbook.getSheetAt(0);
 
