@@ -18,7 +18,7 @@ import java.net.SocketException;
 /**
  * OkHttp WebSocket客户端
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/4/9 15:58
  */

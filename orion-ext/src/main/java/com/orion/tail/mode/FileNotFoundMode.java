@@ -3,7 +3,7 @@ package com.orion.tail.mode;
 /**
  * 启动时 文件未找到文件 处理模式
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/10/23 18:09
  */

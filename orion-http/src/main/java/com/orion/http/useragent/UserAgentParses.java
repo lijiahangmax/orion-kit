@@ -5,7 +5,7 @@ import eu.bitwalker.useragentutils.UserAgent;
 /**
  * UA 解析器
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/3/5 18:01
  */

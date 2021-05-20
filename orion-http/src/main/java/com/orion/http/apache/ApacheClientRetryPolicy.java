@@ -14,7 +14,7 @@ import java.net.UnknownHostException;
 /**
  * Apache 重试策略
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/11/5 11:27
  */

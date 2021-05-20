@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  * 纯真ip地理位置提取器
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/3/3 19:22
  */

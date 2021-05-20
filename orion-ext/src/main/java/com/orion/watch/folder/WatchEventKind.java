@@ -5,7 +5,7 @@ import java.nio.file.StandardWatchEventKinds;
 /**
  * 文件监听类型
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/10/27 12:11
  */

@@ -16,7 +16,7 @@ import java.io.IOException;
 /**
  * ip查询地址提取器 ip2region
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/3/2 16:18
  */

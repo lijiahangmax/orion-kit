@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * ApacheHttp请求 基类
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/3/7 17:20
  */

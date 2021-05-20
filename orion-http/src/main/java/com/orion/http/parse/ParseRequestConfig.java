@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * 请求配置类
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/3/6 12:23
  */

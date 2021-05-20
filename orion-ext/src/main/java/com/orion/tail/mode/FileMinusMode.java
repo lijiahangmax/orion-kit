@@ -3,7 +3,7 @@ package com.orion.tail.mode;
 /**
  * 运行时 文件减少 处理模式
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/10/23 18:15
  */

@@ -3,7 +3,7 @@ package com.orion.mail;
 /**
  * SMTP 邮件服务器类型
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/3/16 16:06
  */

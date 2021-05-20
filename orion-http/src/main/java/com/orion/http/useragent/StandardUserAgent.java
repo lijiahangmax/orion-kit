@@ -3,7 +3,7 @@ package com.orion.http.useragent;
 /**
  * 标准 UserAgent
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/3/5 23:30
  */

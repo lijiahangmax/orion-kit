@@ -10,7 +10,7 @@ import java.io.InputStream;
 /**
  * Http 上传文件实体
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/4/14 11:47
  */

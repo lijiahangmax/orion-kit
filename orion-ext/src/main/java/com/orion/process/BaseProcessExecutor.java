@@ -12,7 +12,7 @@ import java.util.*;
 /**
  * 命令处理器基类
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/10/12 15:59
  */

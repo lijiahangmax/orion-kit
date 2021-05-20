@@ -14,7 +14,7 @@ import java.util.*;
 /**
  * 公共Http请求 基类
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/3/5 16:50
  */

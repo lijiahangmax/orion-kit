@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * OkHttp 配置类
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/4/8 10:33
  */

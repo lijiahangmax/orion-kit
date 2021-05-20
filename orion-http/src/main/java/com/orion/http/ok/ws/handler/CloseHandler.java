@@ -5,7 +5,7 @@ import okhttp3.WebSocket;
 /**
  * 关闭连接调用
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/4/9 21:57
  */

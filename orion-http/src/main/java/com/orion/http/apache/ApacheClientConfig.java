@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Apache HttpClient 配置
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/6/12 15:07
  */

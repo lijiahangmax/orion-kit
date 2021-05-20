@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Apache HttpClient 日志拦截器
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/6/12 15:07
  */

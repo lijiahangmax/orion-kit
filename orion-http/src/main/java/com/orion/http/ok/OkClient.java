@@ -9,7 +9,7 @@ import javax.net.ssl.SSLSocketFactory;
 /**
  * OkHttp Client
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/4/8 10:33
  */

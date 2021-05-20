@@ -3,7 +3,7 @@ package com.orion.http.ok.ws;
 /**
  * OkHttp WebSocket常量
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/4/10 11:25
  */
