@@ -22,7 +22,7 @@ import java.io.OutputStream;
  * 如果logo图大于二维码的大小那么logo会覆盖二维码, 这时必须压缩logo
  * 绘制logo的话 纠错等级需要提高 否则无法解析
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/7/8 21:19
  */

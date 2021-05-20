@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 /**
  * 反射 类型推断
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/5/22 10:41
  */

@@ -3,7 +3,7 @@ package com.orion.exception;
 /**
  * 中断运行时异常
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/3/9 17:34
  */

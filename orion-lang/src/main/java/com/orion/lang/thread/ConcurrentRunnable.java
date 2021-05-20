@@ -8,7 +8,7 @@ import java.util.concurrent.CyclicBarrier;
 /**
  * 可以并发执行的runnable
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/3/7 11:29
  */

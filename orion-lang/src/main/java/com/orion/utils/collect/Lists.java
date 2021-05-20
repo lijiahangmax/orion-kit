@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 /**
  * List 工具类
  *
- * @author ljh15
+ * @author Jiahang Liljh15
  * @version 1.0.0
  * @since 2020/4/29 16:58
  */

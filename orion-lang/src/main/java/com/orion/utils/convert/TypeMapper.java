@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * 对象类型转换映射的自定义实现
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/11/9 14:20
  */

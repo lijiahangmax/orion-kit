@@ -5,7 +5,7 @@ import java.util.function.Function;
 /**
  * 转化接口
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/5/23 10:35
  */

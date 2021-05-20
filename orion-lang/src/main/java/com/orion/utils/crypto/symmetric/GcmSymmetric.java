@@ -15,7 +15,7 @@ import static com.orion.utils.codec.Base64s.encode;
 /**
  * GCM 非对称加密模式 AES
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/11/3 14:45
  */

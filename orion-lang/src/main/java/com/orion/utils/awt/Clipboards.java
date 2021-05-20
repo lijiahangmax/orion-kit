@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  * 剪切板工具类
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/10/23 22:24
  */

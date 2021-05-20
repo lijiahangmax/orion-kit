@@ -19,7 +19,7 @@ import java.util.jar.JarFile;
 /**
  * 资源扫描器
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/12/2 11:47
  */

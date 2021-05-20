@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 /**
  * 伪随机数发生器
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/11/23 18:38
  */

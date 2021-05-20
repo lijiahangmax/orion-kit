@@ -10,7 +10,7 @@ import static com.orion.utils.regexp.Patterns.*;
 /**
  * 正则相关工具类
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/1/5 16:13
  */

@@ -8,7 +8,7 @@ import java.io.ByteArrayOutputStream;
 /**
  * Base62工具类
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/10/24 21:25
  */

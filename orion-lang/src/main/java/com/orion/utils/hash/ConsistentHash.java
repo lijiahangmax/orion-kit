@@ -8,7 +8,7 @@ import java.util.function.ToIntFunction;
 /**
  * 一致性Hash算法
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/10/31 17:30
  */

@@ -3,7 +3,7 @@ package com.orion.lang.thread;
 /**
  * 带有Name的ThreadLocal
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/10/15 17:10
  */

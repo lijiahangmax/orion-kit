@@ -5,7 +5,7 @@ import com.orion.utils.Strings;
 /**
  * 进制转换
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/9/16 10:26
  */

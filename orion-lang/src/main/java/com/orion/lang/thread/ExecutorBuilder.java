@@ -10,7 +10,7 @@ import java.util.concurrent.*;
 /**
  * 线程池构造器
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/10/17 13:58
  */

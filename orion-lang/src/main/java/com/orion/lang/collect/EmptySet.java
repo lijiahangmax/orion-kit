@@ -12,7 +12,7 @@ import java.util.function.Predicate;
 /**
  * 空元素集合
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/10/22 17:20
  */

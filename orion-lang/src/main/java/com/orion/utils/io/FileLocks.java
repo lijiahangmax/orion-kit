@@ -16,7 +16,7 @@ import java.nio.file.StandardOpenOption;
 /**
  * 文件锁工具
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/3/20 22:15
  */

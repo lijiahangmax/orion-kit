@@ -7,7 +7,7 @@ import java.util.Collection;
 /**
  * 可转换的ArrayList
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/2/29 16:29
  */

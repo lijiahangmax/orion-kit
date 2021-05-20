@@ -7,7 +7,7 @@ import java.util.Vector;
 /**
  * 可转换的Vector
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/1/5 17:45
  */

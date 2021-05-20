@@ -11,7 +11,7 @@ import java.math.RoundingMode;
  * 舍入模式: {@link RoundingMode#FLOOR}
  * 舍入精度: 8
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/2/25 18:27
  */

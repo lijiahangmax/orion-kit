@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * 反射 泛型工具类
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/8/31 11:58
  */

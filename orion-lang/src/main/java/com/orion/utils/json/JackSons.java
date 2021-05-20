@@ -11,7 +11,7 @@ import java.util.*;
 /**
  * jackson 工具类
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/6/2 10:23
  */

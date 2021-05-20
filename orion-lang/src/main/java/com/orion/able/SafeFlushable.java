@@ -5,7 +5,7 @@ import java.io.Flushable;
 /**
  * 安全刷新接口
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/3/12 13:58
  */

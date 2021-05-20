@@ -13,7 +13,7 @@ import java.util.concurrent.*;
 /**
  * 线程工具类
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/2/24 18:13
  */

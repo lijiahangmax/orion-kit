@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 自动转换基本类型为包装类型
  * 支持子父类转换 但是不支持接口转换
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/11/9 14:29
  */

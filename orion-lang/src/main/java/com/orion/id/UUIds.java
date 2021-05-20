@@ -12,7 +12,7 @@ import java.util.UUID;
 /**
  * uuid工具类
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/1/3 11:26
  */

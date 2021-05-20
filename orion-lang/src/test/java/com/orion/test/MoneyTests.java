@@ -8,7 +8,7 @@ import java.math.RoundingMode;
 import java.util.stream.IntStream;
 
 /**
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/7/13 18:39
  */

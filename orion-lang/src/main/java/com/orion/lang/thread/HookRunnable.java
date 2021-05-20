@@ -3,7 +3,7 @@ package com.orion.lang.thread;
 /**
  * 具有钩子的Runnable
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/10/17 13:40
  */

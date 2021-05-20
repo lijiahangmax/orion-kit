@@ -18,7 +18,7 @@ import java.util.jar.JarFile;
 /**
  * 包扫描器
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/4/23 17:38
  */

@@ -9,7 +9,7 @@ import java.util.function.Supplier;
  * unchecked function
  * 将对象抛出的异常转交至函数
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/3/30 18:47
  */

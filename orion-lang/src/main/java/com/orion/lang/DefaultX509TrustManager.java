@@ -6,7 +6,7 @@ import java.security.cert.X509Certificate;
 /**
  * 默认X509凭证管理器
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/6/11 9:56
  */

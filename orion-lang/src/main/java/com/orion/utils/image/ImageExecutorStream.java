@@ -15,7 +15,7 @@ import java.io.OutputStream;
 /**
  * 图片处理流
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/7/14 17:20
  */

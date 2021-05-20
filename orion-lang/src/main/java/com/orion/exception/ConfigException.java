@@ -3,7 +3,7 @@ package com.orion.exception;
 /**
  * 配置异常
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/3/2 17:20
  */

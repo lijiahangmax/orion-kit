@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
  * Murmur3 64bit
  * Murmur3 128bit
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/10/31 16:05
  */

@@ -11,7 +11,7 @@ import java.util.function.UnaryOperator;
 /**
  * 空元素集合
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/10/22 14:09
  */

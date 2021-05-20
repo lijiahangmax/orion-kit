@@ -11,7 +11,7 @@ import java.util.concurrent.Future;
 /**
  * callable 结果收集器
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/2/22 15:18
  */

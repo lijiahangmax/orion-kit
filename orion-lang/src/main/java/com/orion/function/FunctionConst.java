@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 /**
  * 函数常量
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/2/20 18:50
  */

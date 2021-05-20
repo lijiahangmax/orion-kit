@@ -14,7 +14,7 @@ import static com.orion.utils.io.Files1.openOutputStream;
 /**
  * 文件编码工具类
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/10/27 15:06
  */

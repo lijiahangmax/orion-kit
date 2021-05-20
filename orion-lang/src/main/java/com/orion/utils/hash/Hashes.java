@@ -6,7 +6,7 @@ import com.orion.utils.Arrays1;
 /**
  * hash工具类
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/10/31 16:53
  */

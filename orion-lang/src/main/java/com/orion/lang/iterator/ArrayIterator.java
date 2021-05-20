@@ -9,7 +9,7 @@ import java.util.Iterator;
 /**
  * 数组迭代器
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/10/17 12:54
  */

@@ -5,7 +5,7 @@ import com.orion.utils.reflect.BeanWrapper;
 /**
  * Bean 转化接口
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/4/30 17:11
  */

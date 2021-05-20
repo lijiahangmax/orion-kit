@@ -10,7 +10,7 @@ import javax.crypto.SecretKey;
 /**
  * 3DES 工具类
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/9/27 18:54
  */

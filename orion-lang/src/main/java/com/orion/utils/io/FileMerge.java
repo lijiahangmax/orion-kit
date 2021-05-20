@@ -17,7 +17,7 @@ import java.util.concurrent.Callable;
 /**
  * 文件合并器
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/2/14 16:11
  */

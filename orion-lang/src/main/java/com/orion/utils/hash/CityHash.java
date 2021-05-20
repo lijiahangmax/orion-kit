@@ -8,7 +8,7 @@ import java.util.Arrays;
  * Google CityHash64
  * Google CityHash128
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/10/31 16:02
  */

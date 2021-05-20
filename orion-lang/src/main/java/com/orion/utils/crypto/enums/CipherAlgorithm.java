@@ -8,7 +8,7 @@ import javax.crypto.Cipher;
 /**
  * 对称加密算法
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/9/28 15:05
  */

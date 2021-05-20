@@ -3,7 +3,7 @@ package com.orion.constant;
 /**
  * 常量 符号 char
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/1/21 16:06
  */

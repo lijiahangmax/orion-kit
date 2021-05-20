@@ -13,7 +13,7 @@ import java.awt.image.BufferedImage;
 /**
  * 图标生成器
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/7/23 16:03
  */

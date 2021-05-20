@@ -9,7 +9,7 @@ import java.util.Iterator;
 /**
  * 父类迭代器
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/1/7 18:52
  */

@@ -5,7 +5,7 @@ import javax.crypto.spec.SecretKeySpec;
 /**
  * 秘钥标准
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/9/29 17:01
  */

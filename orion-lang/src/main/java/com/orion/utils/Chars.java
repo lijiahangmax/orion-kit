@@ -5,7 +5,7 @@ import com.orion.constant.Letters;
 /**
  * Char 工具类
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/10/15 10:28
  */

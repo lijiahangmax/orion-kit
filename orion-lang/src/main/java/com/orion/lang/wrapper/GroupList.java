@@ -13,7 +13,7 @@ import java.util.function.Predicate;
  * 分组集合
  * 根据getter方法
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/1/3 15:59
  */

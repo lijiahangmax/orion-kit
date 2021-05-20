@@ -5,7 +5,7 @@ import java.io.Closeable;
 /**
  * 安全关闭接口
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/10/22 13:46
  */

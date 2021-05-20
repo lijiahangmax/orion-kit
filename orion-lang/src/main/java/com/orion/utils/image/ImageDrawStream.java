@@ -12,7 +12,7 @@ import java.io.InputStream;
 /**
  * 图片绘制流
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/7/15 11:11
  */

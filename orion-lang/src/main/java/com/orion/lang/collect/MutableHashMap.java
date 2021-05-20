@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * 可转换的HashMap
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/2/27 1:03
  */

@@ -14,7 +14,7 @@ import java.util.function.BiConsumer;
 /**
  * 流 BiConsumer -> 行 BiConsumer
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/2/20 18:32
  */

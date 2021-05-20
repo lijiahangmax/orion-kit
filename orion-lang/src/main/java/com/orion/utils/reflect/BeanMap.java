@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * bean map 根据getter方法获取
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/9/9 1:57
  */

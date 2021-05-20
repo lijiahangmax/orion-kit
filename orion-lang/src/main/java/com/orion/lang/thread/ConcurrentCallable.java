@@ -9,7 +9,7 @@ import java.util.concurrent.CyclicBarrier;
 /**
  * 具有并发特性的Callable
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/3/7 14:39
  */

@@ -17,7 +17,7 @@ import static com.orion.utils.reflect.Classes.isImplClass;
  * Bean 工具类
  * 根据getter方法获取值和setter方法设置值
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/4/2 15:37
  */

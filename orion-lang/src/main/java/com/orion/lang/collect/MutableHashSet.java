@@ -7,7 +7,7 @@ import java.util.HashSet;
 /**
  * 可转换的HashSet
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/2/29 20:50
  */

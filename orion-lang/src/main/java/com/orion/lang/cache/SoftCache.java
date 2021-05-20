@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 /**
  * 软引用缓存
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/10/18 20:34
  */

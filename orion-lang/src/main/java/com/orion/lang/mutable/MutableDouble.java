@@ -5,7 +5,7 @@ import com.orion.able.Mutable;
 /**
  * 可变 double
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/1/8 18:19
  */

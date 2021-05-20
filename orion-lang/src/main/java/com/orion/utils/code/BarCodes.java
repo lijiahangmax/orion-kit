@@ -15,7 +15,7 @@ import java.io.OutputStream;
 /**
  * 条形码工具类
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/7/8 17:15
  */

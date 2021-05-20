@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 /**
  * 固长队列
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/11/6 11:30
  */

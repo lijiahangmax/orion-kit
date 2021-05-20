@@ -11,7 +11,7 @@ import java.util.function.Function;
 /**
  * 空元素map
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/10/22 17:24
  */

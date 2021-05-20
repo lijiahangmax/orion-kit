@@ -13,7 +13,7 @@ import java.util.Iterator;
 /**
  * 流迭代器
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/3/26 13:24
  */

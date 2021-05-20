@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * 当前栈内信息
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2019/12/24 18:33
  */

@@ -8,7 +8,7 @@ import java.util.function.BiConsumer;
 /**
  * MultiConcurrentHashMap
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/10/19 16:39
  */

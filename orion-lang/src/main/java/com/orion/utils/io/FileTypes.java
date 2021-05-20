@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * 文件类型推断工具 不精确
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/10/27 14:40
  */

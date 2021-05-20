@@ -6,7 +6,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 /**
  * 线程池拒绝策略枚举
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/3/19 13:04
  */

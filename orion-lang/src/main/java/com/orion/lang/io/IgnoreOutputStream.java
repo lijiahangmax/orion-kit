@@ -5,7 +5,7 @@ import java.io.OutputStream;
 /**
  * 输出流到 /dev/null
  *
- * @author ljh15
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/10/31 15:48
  */
