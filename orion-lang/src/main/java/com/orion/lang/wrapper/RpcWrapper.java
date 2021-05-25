@@ -7,7 +7,6 @@ import com.orion.constant.Letters;
 import com.orion.id.UUIds;
 import com.orion.lang.support.CloneSupport;
 import com.orion.utils.Exceptions;
-import com.orion.utils.Objects1;
 import com.orion.utils.Strings;
 import com.orion.utils.collect.Lists;
 import com.orion.utils.json.Jsons;
@@ -197,34 +196,19 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
      * 失败抛出异常
      */
     public void errorThrows() {
-        errorThrows(null, true);
+        this.errorThrows(null, (Object[]) null);
     }
 
     public void errorThrows(String msg) {
-        errorThrows(msg, false);
+        this.errorThrows(msg, (Object[]) null);
     }
 
     public void errorThrows(String msg, Object... args) {
-        errorThrows(Strings.format(msg, args), false);
-    }
-
-    public void errorThrowsAppend(String msg, Object... args) {
-        errorThrows(Strings.format(msg, args), true);
-    }
-
-    public void errorThrows(String msg, boolean appendErrMsg) {
         if (!isSuccess()) {
-            if (appendErrMsg) {
-                if (msg == null) {
-                    throw Exceptions.runtime(Objects1.toString(errorMessages));
-                } else {
-                    throw Exceptions.runtime(msg + Strings.SPACE + Objects1.toString(errorMessages));
-                }
-            }
             if (msg == null) {
-                throw Exceptions.runtime();
+                throw Exceptions.rpcWrapper(this);
             } else {
-                throw Exceptions.runtime(msg);
+                throw Exceptions.rpcWrapper(this, Strings.format(msg, args));
             }
         }
     }
