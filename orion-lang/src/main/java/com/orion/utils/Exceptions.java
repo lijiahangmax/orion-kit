@@ -2,6 +2,8 @@ package com.orion.utils;
 
 import com.orion.exception.*;
 import com.orion.exception.argument.*;
+import com.orion.lang.wrapper.HttpWrapper;
+import com.orion.lang.wrapper.RpcWrapper;
 
 import javax.script.ScriptException;
 import java.io.IOException;
@@ -774,6 +776,38 @@ public class Exceptions {
 
     public static CodeArgumentException codeArgument(int code, String s, Throwable t) {
         return new CodeArgumentException(code, s, t);
+    }
+
+    public static HttpWrapperException httpWrapper(HttpWrapper<?> wrapper) {
+        return new HttpWrapperException(wrapper);
+    }
+
+    public static HttpWrapperException httpWrapper(HttpWrapper<?> wrapper, Throwable t) {
+        return new HttpWrapperException(wrapper, t);
+    }
+
+    public static HttpWrapperException httpWrapper(HttpWrapper<?> wrapper, String s) {
+        return new HttpWrapperException(wrapper, s);
+    }
+
+    public static HttpWrapperException httpWrapper(HttpWrapper<?> wrapper, String s, Throwable t) {
+        return new HttpWrapperException(wrapper, s, t);
+    }
+
+    public static RpcWrapperException rpcWrapper(RpcWrapper<?> wrapper) {
+        return new RpcWrapperException(wrapper);
+    }
+
+    public static RpcWrapperException rpcWrapper(RpcWrapper<?> wrapper, Throwable t) {
+        return new RpcWrapperException(wrapper, t);
+    }
+
+    public static RpcWrapperException rpcWrapper(RpcWrapper<?> wrapper, String s) {
+        return new RpcWrapperException(wrapper, s);
+    }
+
+    public static RpcWrapperException rpcWrapper(RpcWrapper<?> wrapper, String s, Throwable t) {
+        return new RpcWrapperException(wrapper, s, t);
     }
 
 }

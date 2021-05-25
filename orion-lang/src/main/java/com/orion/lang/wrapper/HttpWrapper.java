@@ -1,5 +1,6 @@
 package com.orion.lang.wrapper;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.orion.able.Logable;
 import com.orion.able.Mapable;
 import com.orion.lang.support.CloneSupport;
@@ -8,6 +9,7 @@ import com.orion.utils.Strings;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * restful结果封装
@@ -212,8 +214,9 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
      *
      * @return 是否成功
      */
-    public static boolean isOk(HttpWrapper<?> wrapper) {
-        return wrapper.code == HTTP_OK_CODE;
+    @JSONField(serialize = false)
+    public boolean isOk() {
+        return code == HTTP_OK_CODE;
     }
 
     @Override
@@ -235,6 +238,22 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
         map.put("msg", msg);
         map.put("data", data);
         return map;
+    }
+
+    /**
+     * @return {@link RpcWrapper}
+     */
+    public RpcWrapper<T> toRpcWrapper() {
+        return new RpcWrapper<>(code, msg, data);
+    }
+
+    /**
+     * @return result 的 Optional
+     */
+    public Optional<T> optional() {
+        return Optional.of(this)
+                .filter(HttpWrapper::isOk)
+                .map(HttpWrapper::getData);
     }
 
 }

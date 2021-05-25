@@ -1,5 +1,6 @@
 package com.orion.lang.wrapper;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.orion.able.Logable;
 import com.orion.able.Mapable;
 import com.orion.constant.Letters;
@@ -11,10 +12,7 @@ import com.orion.utils.Strings;
 import com.orion.utils.collect.Lists;
 import com.orion.utils.json.Jsons;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
@@ -190,6 +188,7 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
     /**
      * 检查是否成功
      */
+    @JSONField(serialize = false)
     public boolean isSuccess() {
         return RPC_ERROR_CODE != code && Lists.isEmpty(errorMessages);
     }
@@ -293,10 +292,10 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
     }
 
     public RpcWrapper<T> addErrorMessage(String errorMsg) {
-        if (errorMsg == null) {
+        if (errorMessages == null) {
             this.errorMessages = new ArrayList<>();
         }
-        this.errorMessages.add(errorMsg);
+        errorMessages.add(errorMsg);
         return this;
     }
 
@@ -309,8 +308,9 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
         return this;
     }
 
+    @JSONField(serialize = false)
     public String getErrorMessageString() {
-        return errorMessages == null ? Strings.EMPTY : errorMessages.toString();
+        return errorMessages == null ? Strings.EMPTY : Lists.join(errorMessages, ",");
     }
 
     private String createTrace() {
@@ -346,6 +346,22 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
         map.put("traceId", traceId);
         map.put("errorMsg", errorMessages);
         return map;
+    }
+
+    /**
+     * @return {@link HttpWrapper}
+     */
+    public HttpWrapper<T> toHttpWrapper() {
+        return HttpWrapper.of(code, msg, data);
+    }
+
+    /**
+     * @return result 的 Optional
+     */
+    public Optional<T> optional() {
+        return Optional.of(this)
+                .filter(RpcWrapper::isSuccess)
+                .map(RpcWrapper::getData);
     }
 
 }
