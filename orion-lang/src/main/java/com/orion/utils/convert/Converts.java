@@ -27,6 +27,10 @@ public class Converts {
         return TypeStore.STORE.to(t, targetClass);
     }
 
+    public static <T, R> Conversion<T, R> to(Class<R> targetClass) {
+        return t -> to(t, targetClass);
+    }
+
     /**
      * 转化
      *

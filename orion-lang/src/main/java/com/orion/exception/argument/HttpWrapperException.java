@@ -1,6 +1,7 @@
 package com.orion.exception.argument;
 
 import com.orion.lang.wrapper.HttpWrapper;
+import com.orion.utils.Valid;
 
 /**
  * HttpWrapper的exception
@@ -15,21 +16,25 @@ public class HttpWrapperException extends InvalidArgumentException {
     private HttpWrapper<?> wrapper;
 
     public HttpWrapperException(HttpWrapper<?> wrapper) {
+        Valid.notNull(wrapper, "http wrapper is null");
         this.wrapper = wrapper;
     }
 
     public HttpWrapperException(HttpWrapper<?> wrapper, String message) {
         super(message);
+        Valid.notNull(wrapper, "http wrapper is null");
         this.wrapper = wrapper;
     }
 
     public HttpWrapperException(HttpWrapper<?> wrapper, String message, Throwable cause) {
         super(message, cause);
+        Valid.notNull(wrapper, "http wrapper is null");
         this.wrapper = wrapper;
     }
 
     public HttpWrapperException(HttpWrapper<?> wrapper, Throwable cause) {
         super(cause);
+        Valid.notNull(wrapper, "http wrapper is null");
         this.wrapper = wrapper;
     }
 

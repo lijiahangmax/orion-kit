@@ -10,7 +10,7 @@ import java.util.function.Function;
  * @since 2020/5/23 10:35
  */
 @FunctionalInterface
-public interface Conversion<T, R> {
+public interface Conversion<T, R> extends Function<T, R> {
 
     /**
      * 转化
