@@ -1,5 +1,6 @@
 package com.orion.utils.reflect;
 
+import com.orion.constant.Const;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
@@ -109,9 +110,9 @@ public class ResourceScanner {
         this.addResource();
         for (URL resource : resourcesUrl) {
             String protocol = resource.getProtocol();
-            if ("file".equals(protocol)) {
+            if (Const.PROTOCOL_FILE.equals(protocol)) {
                 this.scanFile(resource);
-            } else if ("jar".equals(protocol)) {
+            } else if (Const.PROTOCOL_JAR.equals(protocol)) {
                 this.scanJar(resource);
             }
         }

@@ -1,5 +1,6 @@
 package com.orion.utils.reflect;
 
+import com.orion.constant.Const;
 import com.orion.utils.*;
 import com.orion.utils.io.Files1;
 
@@ -46,11 +47,17 @@ public class PackageScanner {
     private URL resource;
 
     /**
+     * 加载类
+     */
+    private Class<?> loadClass;
+
+    /**
      * 扫描指定包 如果不填扫描当前项目所有的包
      *
      * @param packages 包名 可以用.*结尾 扫描子包
      */
     public PackageScanner(String... packages) {
+        this.loadClass = PackageScanner.class;
         if (Arrays1.isEmpty(packages)) {
             this.scanAll = true;
         } else {
@@ -80,6 +87,30 @@ public class PackageScanner {
     }
 
     /**
+     * 手动设置扫描的资源
+     *
+     * @param resource resource
+     * @return this
+     */
+    public PackageScanner resource(URL resource) {
+        Valid.notNull(resource, "resource is null");
+        this.resource = resource;
+        return this;
+    }
+
+    /**
+     * 设置加载类
+     *
+     * @param loadClass loadClass
+     * @return this
+     */
+    public PackageScanner with(Class<?> loadClass) {
+        Valid.notNull(loadClass, "loadClass is null");
+        this.loadClass = loadClass;
+        return this;
+    }
+
+    /**
      * 扫描所有包
      *
      * @return this
@@ -95,37 +126,65 @@ public class PackageScanner {
      * @return this
      */
     public PackageScanner scan() {
-        if (this.resource != null) {
-            return this;
-        }
-        URL r = PackageScanner.class.getClassLoader().getResource(Strings.EMPTY);
-        if (r == null) {
-            r = PackageScanner.class.getResource(Strings.EMPTY);
-        }
-        if (r != null) {
-            this.resource = r;
-        } else {
-            throw Exceptions.init("cannot find the resource");
+        if (this.resource == null) {
+            this.setResouce();
         }
         String protocol = resource.getProtocol();
         Set<String> classNameSet = new LinkedHashSet<>();
         if (scanAll) {
-            if ("file".equals(protocol)) {
+            if (Const.PROTOCOL_FILE.equals(protocol)) {
                 this.scanFile(Strings.EMPTY, classNameSet);
-            } else if ("jar".equals(protocol)) {
+            } else if (Const.PROTOCOL_JAR.equals(protocol)) {
                 this.scanJar(Strings.EMPTY, classNameSet);
             }
         } else {
             for (String p : packages) {
-                if ("file".equals(protocol)) {
+                if (Const.PROTOCOL_FILE.equals(protocol)) {
                     this.scanFile(p, classNameSet);
-                } else if ("jar".equals(protocol)) {
+                } else if (Const.PROTOCOL_JAR.equals(protocol)) {
                     this.scanJar(p, classNameSet);
                 }
             }
         }
         this.loadClasses(classNameSet);
         return this;
+    }
+
+    // -------------------- SCAN --------------------
+
+    /**
+     * 自动设置资源
+     */
+    private void setResouce() {
+        URL r1 = loadClass.getClassLoader().getResource(Strings.EMPTY);
+        URL r2 = loadClass.getResource(Strings.EMPTY);
+        if (r1 == null && r2 == null) {
+            throw Exceptions.init("cannot find the resource");
+        }
+        if (r1 == null || r2 == null) {
+            this.resource = Objects1.def(r1, r2);
+            return;
+        }
+        // jar check
+        boolean protocol1IsJar = Const.PROTOCOL_JAR.equals(r1.getProtocol());
+        boolean protocol2IsJar = Const.PROTOCOL_JAR.equals(r2.getProtocol());
+        boolean allJar = protocol1IsJar && protocol2IsJar;
+        boolean allFile = !protocol1IsJar && !protocol2IsJar;
+        if (allJar || allFile) {
+            // short resoruce
+            if (Integer.compare(r1.toString().length(), r2.toString().length()) < 0) {
+                this.resource = r1;
+            } else {
+                this.resource = r2;
+            }
+        } else {
+            // jar / file
+            if (protocol1IsJar) {
+                this.resource = r1;
+            } else {
+                this.resource = r2;
+            }
+        }
     }
 
     // -------------------- SCAN --------------------
@@ -142,7 +201,7 @@ public class PackageScanner {
             packageName = packageName.substring(0, packageName.length() - 2);
         }
         String packagePath = resource.getPath() + "/" + packageName.replaceAll("\\.", "/");
-        addFileClass(Files1.getPath(Urls.decode(packagePath)), packageName, all || scanAll, classNameSet);
+        this.addFileClass(Files1.getPath(Urls.decode(packagePath)), packageName, all || scanAll, classNameSet);
     }
 
     /**
@@ -207,7 +266,7 @@ public class PackageScanner {
                 if (Strings.isNotEmpty(basePackage)) {
                     subPackageName = basePackage + "." + subPackageName;
                 }
-                addFileClass(subPackagePath, subPackageName, all, set);
+                this.addFileClass(subPackagePath, subPackageName, all, set);
             }
         }
     }

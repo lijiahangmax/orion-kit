@@ -481,13 +481,13 @@ public class Urls {
             if (this.port != 0) {
                 return;
             }
-            if ("http".equals(this.protocol)) {
+            if (Const.PROTOCOL_HTTP.equals(this.protocol)) {
                 this.port = 80;
-            } else if ("https".equals(this.protocol)) {
+            } else if (Const.PROTOCOL_HTTPS.equals(this.protocol)) {
                 this.port = 443;
-            } else if ("ftp".equals(this.protocol)) {
+            } else if (Const.PROTOCOL_FTP.equals(this.protocol)) {
                 this.port = 21;
-            } else if ("ssh".equals(this.protocol)) {
+            } else if (Const.PROTOCOL_SSH.equals(this.protocol)) {
                 this.port = 22;
             }
         }

@@ -154,6 +154,20 @@ public abstract class Const {
 
     public static final String SUFFIX_FILE = "file";
 
+    // -------------------- protocol --------------------
+
+    public static final String PROTOCOL_HTTP = "http";
+
+    public static final String PROTOCOL_HTTPS = "https";
+
+    public static final String PROTOCOL_FTP = "ftp";
+
+    public static final String PROTOCOL_FILE = "file";
+
+    public static final String PROTOCOL_JAR = "jar";
+
+    public static final String PROTOCOL_SSH = "ssh";
+
     // -------------------- font --------------------
 
     public static final String FONT_MICROSOFT_ELEGANT_BLACK = "微软雅黑";
