@@ -13,8 +13,13 @@ import java.util.function.Predicate;
  * @version 1.0.0
  * @since 2021/5/11 13:43
  */
-@FunctionalInterface
-public interface Branches<P, R> {
+public class Branches<P> {
+
+    private Predicate<P> tester;
+
+    public Branches(Predicate<P> tester) {
+        this.tester = tester;
+    }
 
     /**
      * 构建分支
@@ -22,16 +27,18 @@ public interface Branches<P, R> {
      * @param factory factory
      * @return {@link Branch}
      */
-    Branch<P, R> then(Function<P, R> factory);
+    public <R> Branch<P, R> then(Function<P, R> factory) {
+        return Branch.of(tester, factory);
+    }
 
     /**
      * 构建分支
      *
-     * @param value 值
+     * @param r result
      * @return {@link Branch}
      */
-    default Branch<P, R> then(R value) {
-        return this.then(p -> value);
+    public <R> Branch<P, R> then(R r) {
+        return Branch.of(tester, (p) -> r);
     }
 
     /**
@@ -39,11 +46,10 @@ public interface Branches<P, R> {
      *
      * @param tester 测试器
      * @param <P>    P
-     * @param <R>    R
      * @return {@link Branches}
      */
-    static <P, R> Branches<P, R> when(Predicate<P> tester) {
-        return factory -> Branch.of(tester, factory);
+    public static <P> Branches<P> when(Predicate<P> tester) {
+        return new Branches<>(tester);
     }
 
     /**
@@ -51,11 +57,10 @@ public interface Branches<P, R> {
      *
      * @param v   value
      * @param <P> P
-     * @param <R> R
      * @return {@link Branches}
      */
-    static <P, R> Branches<P, R> eq(P v) {
-        return factory -> Branch.of(p -> Objects1.eq(p, v), factory);
+    public static <P> Branches<P> eq(P v) {
+        return new Branches<>(p -> Objects1.eq(p, v));
     }
 
     /**
@@ -63,11 +68,10 @@ public interface Branches<P, R> {
      *
      * @param v   value
      * @param <P> P
-     * @param <R> R
      * @return {@link Branches}
      */
-    static <P extends Comparable<P>, R> Branches<P, R> compared(P v) {
-        return factory -> Branch.of(p -> Objects1.compared(p, v), factory);
+    public static <P extends Comparable<P>> Branches<P> compared(P v) {
+        return new Branches<>(p -> Objects1.compared(p, v));
     }
 
     /**
@@ -75,12 +79,11 @@ public interface Branches<P, R> {
      *
      * @param arr in
      * @param <P> P
-     * @param <R> R
      * @return {@link Branches}
      */
     @SafeVarargs
-    static <P, R> Branches<P, R> in(P... arr) {
-        return factory -> Branch.of(p -> Arrays1.some(p, arr), factory);
+    public static <P> Branches<P> in(P... arr) {
+        return new Branches<>(p -> Arrays1.some(p, arr));
     }
 
 }

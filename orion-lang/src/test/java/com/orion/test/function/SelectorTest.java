@@ -14,9 +14,9 @@ public class SelectorTest {
     @Test
     public void test1() {
         String va = Selector.<Integer, String>of(4)
-                .test(Branches.<Integer, String>eq(1).then("一"))
-                .test(Branches.<Integer, String>eq(2).then("二"))
-                .test(Branches.<Integer, String>eq(3).then("三"))
+                .test(Branches.eq(1).then("一"))
+                .test(Branches.eq(2).then("二"))
+                .test(Branches.eq(3).then("三"))
                 .or("def");
         System.out.println(va);
     }
@@ -24,9 +24,9 @@ public class SelectorTest {
     @Test
     public void test2() {
         String va = Selector.<Integer, String>of(2)
-                .test(Branches.<Integer, String>in(1, 4).then("一 or 四"))
-                .test(Branches.<Integer, String>compared(2).then(s -> (s + 10) + ""))
-                .test(Branches.<Integer, String>eq(3).then("三"))
+                .test(Branches.in(1, 4).then("一 or 四"))
+                .test(Branches.compared(2).then(s -> (s + 10) + ""))
+                .test(Branches.eq(3).then("三"))
                 .or("def");
         System.out.println(va);
     }
