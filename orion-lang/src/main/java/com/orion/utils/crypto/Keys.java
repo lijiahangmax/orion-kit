@@ -38,6 +38,10 @@ import static com.orion.utils.codec.Base64s.encode;
  */
 public class Keys {
 
+    private static final String AES_ALGORITHM = "SHA1PRNG";
+
+    private static final String AES_PROVIDER = "SUN";
+
     private Keys() {
     }
 
@@ -366,7 +370,8 @@ public class Keys {
             switch (mode) {
                 case AES:
                     KeyGenerator keyGenerator = KeyGenerator.getInstance(mode.getMode());
-                    SecureRandom random = new SecureRandom(key);
+                    SecureRandom random = SecureRandom.getInstance(AES_ALGORITHM, AES_PROVIDER);
+                    random.setSeed(key);
                     keyGenerator.init(keySize, random);
                     return SecretKeySpecMode.AES.getSecretKeySpec(keyGenerator.generateKey().getEncoded());
                 case DES:

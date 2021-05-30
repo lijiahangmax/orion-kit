@@ -510,14 +510,7 @@ public class RSA {
      * @return PublicKey PrivateKey
      */
     public static Args.Two<RSAPublicKey, RSAPrivateKey> generatorKeys() {
-        try {
-            KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");
-            keyPairGen.initialize(1024, new SecureRandom());
-            KeyPair keyPair = keyPairGen.generateKeyPair();
-            return Args.of(((RSAPublicKey) keyPair.getPublic()), ((RSAPrivateKey) keyPair.getPrivate()));
-        } catch (Exception e) {
-            throw Exceptions.runtime(e);
-        }
+        return generatorKeys(1024);
     }
 
     /**
