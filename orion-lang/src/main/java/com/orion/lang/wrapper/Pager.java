@@ -1,5 +1,6 @@
 package com.orion.lang.wrapper;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.orion.able.JsonAble;
 import com.orion.lang.support.CloneSupport;
 import com.orion.utils.collect.Lists;
@@ -285,6 +286,7 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, Js
         return total % limit == 0 ? total / limit : (total / limit) + 1;
     }
 
+    @JSONField(serialize = false)
     public boolean isEmpty() {
         return Lists.isEmpty(rows);
     }

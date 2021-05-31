@@ -1,5 +1,6 @@
 package com.orion.lang.wrapper;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.orion.able.JsonAble;
 import com.orion.lang.support.CloneSupport;
 import com.orion.utils.collect.Lists;
@@ -203,6 +204,7 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
         return this;
     }
 
+    @JSONField(serialize = false)
     public boolean isEmpty() {
         return Lists.isEmpty(rows);
     }
