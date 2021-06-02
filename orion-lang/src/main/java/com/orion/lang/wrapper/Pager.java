@@ -291,6 +291,11 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, Js
         return Lists.isEmpty(rows);
     }
 
+    @JSONField(serialize = false)
+    public boolean isNotEmpty() {
+        return Lists.isNotEmpty(rows);
+    }
+
     @Override
     public String toJsonString() {
         return Jsons.toJsonWriteNull(this);

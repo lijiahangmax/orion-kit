@@ -37,12 +37,12 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
     /**
      * 第几页
      */
-    private int page = 1;
+    private int page;
 
     /**
      * 每页记录数
      */
-    private int limit = 10;
+    private int limit;
 
     /**
      * 总页数
@@ -58,17 +58,18 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
     }
 
     public DataGrid(List<T> rows) {
-        this.rows = rows;
-        this.size = Lists.size(this.rows);
+        this(rows, 0);
     }
 
     public DataGrid(List<T> rows, int total) {
+        this.page = 1;
+        this.limit = 10;
         this.rows = rows;
+        this.size = Lists.size(this.rows);
         this.total = total;
         if (total != 0) {
             this.pages = total % limit == 0 ? total / limit : (total / limit + 1);
         }
-        this.size = Lists.size(this.rows);
     }
 
     public DataGrid(Pager<T> pager) {
@@ -207,6 +208,11 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
     @JSONField(serialize = false)
     public boolean isEmpty() {
         return Lists.isEmpty(rows);
+    }
+
+    @JSONField(serialize = false)
+    public boolean isNotEmpty() {
+        return Lists.isNotEmpty(rows);
     }
 
     @Override
