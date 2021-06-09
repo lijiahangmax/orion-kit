@@ -273,7 +273,7 @@ public class Args implements Serializable {
 
         @Override
         public String toString() {
-            return "arg1=" + arg1;
+            return "arg1 = " + arg1;
         }
 
     }
@@ -310,8 +310,8 @@ public class Args implements Serializable {
 
         @Override
         public String toString() {
-            return "arg1=" + arg1 + Const.LF +
-                    "arg2=" + arg2;
+            return "arg1 = " + arg1 + Const.LF +
+                    "arg2 = " + arg2;
         }
 
     }
@@ -348,9 +348,9 @@ public class Args implements Serializable {
 
         @Override
         public String toString() {
-            return "arg1=" + arg1 + Const.LF +
-                    "arg2=" + arg2 + Const.LF +
-                    "arg3=" + arg3;
+            return "arg1 = " + arg1 + Const.LF +
+                    "arg2 = " + arg2 + Const.LF +
+                    "arg3 = " + arg3;
         }
 
     }
@@ -387,10 +387,10 @@ public class Args implements Serializable {
 
         @Override
         public String toString() {
-            return "arg1=" + arg1 + Const.LF +
-                    "arg2=" + arg2 + Const.LF +
-                    "arg3=" + arg3 + Const.LF +
-                    "arg4=" + arg4;
+            return "arg1 = " + arg1 + Const.LF +
+                    "arg2 = " + arg2 + Const.LF +
+                    "arg3 = " + arg3 + Const.LF +
+                    "arg4 = " + arg4;
         }
 
     }
@@ -427,11 +427,11 @@ public class Args implements Serializable {
 
         @Override
         public String toString() {
-            return "arg1=" + arg1 + Const.LF +
-                    "arg2=" + arg2 + Const.LF +
-                    "arg3=" + arg3 + Const.LF +
-                    "arg4=" + arg4 + Const.LF +
-                    "arg5=" + arg5;
+            return "arg1 = " + arg1 + Const.LF +
+                    "arg2 = " + arg2 + Const.LF +
+                    "arg3 = " + arg3 + Const.LF +
+                    "arg4 = " + arg4 + Const.LF +
+                    "arg5 = " + arg5;
         }
 
     }
