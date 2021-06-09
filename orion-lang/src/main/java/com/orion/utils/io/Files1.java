@@ -814,9 +814,9 @@ public class Files1 {
     }
 
     public static File touchTempFile() {
-        String path = getTempFilePath();
-        touch(path);
-        return new File(path);
+        File file = new File(getTempFilePath());
+        touch(file);
+        return file;
     }
 
     /**
@@ -826,13 +826,28 @@ public class Files1 {
      * @return io临时文件路径
      */
     public static File touchTempFile(boolean exitDelete) {
-        String path = getTempFilePath();
-        touch(path);
-        File file = new File(path);
+        File file = new File(getTempFilePath());
+        touch(file);
         if (exitDelete) {
             file.deleteOnExit();
         }
         return file;
+    }
+
+    public static File touchOnDelete(String path) {
+        File file = new File(path);
+        touchOnDelete(file);
+        return file;
+    }
+
+    /**
+     * 创建一个在退出时删除的文件
+     *
+     * @param file file
+     */
+    public static void touchOnDelete(File file) {
+        touch(file);
+        file.deleteOnExit();
     }
 
     public static boolean mv(String file, File target) {
@@ -1454,7 +1469,7 @@ public class Files1 {
         try {
             return openOutputStreamFast(Paths.get(file), false);
         } catch (Exception e) {
-            throw Exceptions.ioRuntime();
+            throw Exceptions.ioRuntime(e);
         }
     }
 
@@ -1462,7 +1477,7 @@ public class Files1 {
         try {
             return openOutputStreamFast(Paths.get(file.getAbsolutePath()), false);
         } catch (Exception e) {
-            throw Exceptions.ioRuntime();
+            throw Exceptions.ioRuntime(e);
         }
     }
 
@@ -1476,7 +1491,7 @@ public class Files1 {
         try {
             return openOutputStreamFast(file, false);
         } catch (Exception e) {
-            throw Exceptions.ioRuntime();
+            throw Exceptions.ioRuntime(e);
         }
     }
 
@@ -1484,7 +1499,7 @@ public class Files1 {
         try {
             return openOutputStreamFast(Paths.get(file), append);
         } catch (Exception e) {
-            throw Exceptions.ioRuntime();
+            throw Exceptions.ioRuntime(e);
         }
     }
 
@@ -1492,7 +1507,7 @@ public class Files1 {
         try {
             return openOutputStreamFast(Paths.get(file.getAbsolutePath()), append);
         } catch (Exception e) {
-            throw Exceptions.ioRuntime();
+            throw Exceptions.ioRuntime(e);
         }
     }
 
@@ -1507,7 +1522,7 @@ public class Files1 {
         try {
             return openOutputStreamFast(file, append);
         } catch (Exception e) {
-            throw Exceptions.ioRuntime();
+            throw Exceptions.ioRuntime(e);
         }
     }
 

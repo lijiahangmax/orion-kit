@@ -309,7 +309,7 @@ public class FileLocks {
                 Files1.mkdirs(lockFile.getParentFile());
                 return lockFile.createNewFile();
             } catch (Exception e) {
-                throw Exceptions.ioRuntime("create lock file error: " + file.getAbsolutePath());
+                throw Exceptions.ioRuntime("create lock file error: " + file.getAbsolutePath(), e);
             }
         }
 

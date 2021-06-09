@@ -1,5 +1,6 @@
 package com.orion.http.support;
 
+import com.orion.constant.StandardHttpHeader;
 import com.orion.lang.collect.MutableHashMap;
 import com.orion.utils.Valid;
 import com.orion.utils.convert.Converts;
@@ -26,9 +27,9 @@ public class HttpCookie implements Serializable {
             "EEE, d-MMM-yyyy HH:mm:ss 'GMT'",
     };
 
-    public static final String COOKIE = "Cookie";
+    public static final String COOKIE = StandardHttpHeader.COOKIE;
 
-    public static final String SET_COOKIE = "Set-Cookie";
+    public static final String SET_COOKIE = StandardHttpHeader.SET_COOKIE;
 
     /**
      * 键值对
@@ -208,7 +209,7 @@ public class HttpCookie implements Serializable {
 
     @Override
     public String toString() {
-        Valid.notNull(values, "Cookies value is null");
+        Valid.notNull(values, "cookies value is null");
         StringBuilder cookie = new StringBuilder();
         int i = 0;
         for (Map.Entry<String, String> entry : values.entrySet()) {

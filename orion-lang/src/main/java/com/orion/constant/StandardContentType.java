@@ -12,7 +12,7 @@ public class StandardContentType {
     private StandardContentType() {
     }
 
-    public static final String CONTENT_TYPE = "Content-Type";
+    public static final String CONTENT_TYPE = StandardHttpHeader.CONTENT_TYPE;
 
     // -------------------- text --------------------
 

@@ -152,6 +152,8 @@ public abstract class Const {
 
     public static final String SUFFIX_ZIP = "zip";
 
+    public static final String SUFFIX_LOG = "log";
+
     public static final String SUFFIX_FILE = "file";
 
     // -------------------- protocol --------------------

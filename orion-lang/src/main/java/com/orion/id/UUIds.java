@@ -111,10 +111,10 @@ public class UUIds {
     private static long toNumber(String s, int radix) {
         Valid.notNull(s, "number is null");
         if (radix < MIN_RADIX) {
-            throw Exceptions.numberFormat("radix " + radix + " less than Numbers.MIN_RADIX");
+            throw Exceptions.numberFormat("radix " + radix + " less than MIN_RADIX");
         }
         if (radix > MAX_RADIX) {
-            throw Exceptions.numberFormat("radix " + radix + " greater than Numbers.MAX_RADIX");
+            throw Exceptions.numberFormat("radix " + radix + " greater than MAX_RADIX");
         }
         boolean negative = false;
         Integer digit;

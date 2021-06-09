@@ -1,5 +1,7 @@
 package com.orion.servlet.filter;
 
+import com.orion.constant.StandardHttpHeader;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -20,11 +22,11 @@ public class CrossFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-        httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
-        httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
-        httpServletResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
-        httpServletResponse.setHeader("Access-Control-Allow-Headers", "Content-Type,X-Requested-With,login_token,X-PINGOTHER,Content-Type, Accept, Origin, Last-Modified");
-        httpServletResponse.setHeader("Access-Control-Max-Age", "86400");
+        httpServletResponse.setHeader(StandardHttpHeader.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+        httpServletResponse.setHeader(StandardHttpHeader.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+        httpServletResponse.setHeader(StandardHttpHeader.ACCESS_CONTROL_ALLOW_METHODS, "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+        httpServletResponse.setHeader(StandardHttpHeader.ACCESS_CONTROL_ALLOW_HEADERS, "Content-Type, X-Requested-With, X-PINGOTHER, Accept, Origin, Last-Modified");
+        httpServletResponse.setHeader(StandardHttpHeader.ACCESS_CONTROL_MAX_AGE, "86400");
         chain.doFilter(request, httpServletResponse);
     }
 

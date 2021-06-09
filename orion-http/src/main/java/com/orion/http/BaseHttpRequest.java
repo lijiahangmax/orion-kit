@@ -1,6 +1,7 @@
 package com.orion.http;
 
 import com.orion.constant.Const;
+import com.orion.constant.StandardHttpHeader;
 import com.orion.http.support.HttpContentType;
 import com.orion.http.support.HttpCookie;
 import com.orion.http.support.HttpMethod;
@@ -181,11 +182,11 @@ public abstract class BaseHttpRequest {
     }
 
     public BaseHttpRequest userAgent(String value) {
-        return header(StandardUserAgent.USER_AGENT, value);
+        return this.header(StandardUserAgent.USER_AGENT, value);
     }
 
-    public BaseHttpRequest referrer(String value) {
-        return header("Referrer", value);
+    public BaseHttpRequest referer(String value) {
+        return this.header(StandardHttpHeader.REFERER, value);
     }
 
     public BaseHttpRequest contentType(String contentType) {

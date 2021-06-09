@@ -1,6 +1,7 @@
 package com.orion.servlet.web;
 
 import com.orion.constant.StandardContentType;
+import com.orion.constant.StandardHttpHeader;
 import com.orion.lang.collect.MutableHashMap;
 import com.orion.lang.mutable.MutableString;
 import com.orion.utils.Urls;
@@ -26,7 +27,7 @@ import java.util.Map;
  */
 public class Servlets {
 
-    private static final String USER_AGENT = "User-Agent";
+    private static final String USER_AGENT = StandardHttpHeader.USER_AGENT;
 
     private Servlets() {
     }
@@ -137,23 +138,19 @@ public class Servlets {
             return null;
         }
         String ip;
-        ip = IPs.checkIp(request.getHeader("x-forwarded-for"));
+        ip = IPs.checkIp(request.getHeader(StandardHttpHeader.X_FORWARDED_FOR));
         if (ip != null) {
             return ip;
         }
-        ip = IPs.checkIp(request.getHeader("Proxy-Client-IP"));
+        ip = IPs.checkIp(request.getHeader(StandardHttpHeader.PROXY_CLIENT_IP));
         if (ip != null) {
             return ip;
         }
-        ip = IPs.checkIp(request.getHeader("X-Forwarded-For"));
+        ip = IPs.checkIp(request.getHeader(StandardHttpHeader.WL_PROXY_CLIENT_IP));
         if (ip != null) {
             return ip;
         }
-        ip = IPs.checkIp(request.getHeader("WL-Proxy-Client-IP"));
-        if (ip != null) {
-            return ip;
-        }
-        ip = IPs.checkIp(request.getHeader("X-Real-IP"));
+        ip = IPs.checkIp(request.getHeader(StandardHttpHeader.X_REAL_IP));
         if (ip != null) {
             return ip;
         }
@@ -581,8 +578,8 @@ public class Servlets {
      * @throws IOException IOException
      */
     public static void transfer(HttpServletResponse response, byte[] bs, String fileName) throws IOException {
-        response.setContentType("application/octet-stream");
-        response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+        response.setContentType(StandardContentType.APPLICATION_STREAM);
+        response.setHeader(StandardHttpHeader.CONTENT_DISPOSITION, "attachment;filename=" + fileName);
         Streams.transfer(Streams.toInputStream(bs), response.getOutputStream());
     }
 
@@ -595,8 +592,8 @@ public class Servlets {
      * @throws IOException IOException
      */
     public static void transfer(HttpServletResponse response, byte[] bs, byte[] fileName) throws IOException {
-        response.setContentType("application/octet-stream");
-        response.setHeader("Content-Disposition", "attachment;filename=" + new String(fileName, StandardCharsets.ISO_8859_1));
+        response.setContentType(StandardContentType.APPLICATION_STREAM);
+        response.setHeader(StandardHttpHeader.CONTENT_DISPOSITION, "attachment;filename=" + new String(fileName, StandardCharsets.ISO_8859_1));
         Streams.transfer(Streams.toInputStream(bs), response.getOutputStream());
     }
 
@@ -620,8 +617,8 @@ public class Servlets {
      * @throws IOException IOException
      */
     public static void transfer(HttpServletResponse response, InputStream in, String fileName) throws IOException {
-        response.setContentType("application/octet-stream");
-        response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+        response.setContentType(StandardContentType.APPLICATION_STREAM);
+        response.setHeader(StandardHttpHeader.CONTENT_DISPOSITION, "attachment;filename=" + fileName);
         Streams.transfer(in, response.getOutputStream());
     }
 
@@ -634,8 +631,8 @@ public class Servlets {
      * @throws IOException IOException
      */
     public static void transfer(HttpServletResponse response, InputStream in, byte[] fileName) throws IOException {
-        response.setContentType("application/octet-stream");
-        response.setHeader("Content-Disposition", "attachment;filename=" + new String(fileName, StandardCharsets.ISO_8859_1));
+        response.setContentType(StandardContentType.APPLICATION_STREAM);
+        response.setHeader(StandardHttpHeader.CONTENT_DISPOSITION, "attachment;filename=" + new String(fileName, StandardCharsets.ISO_8859_1));
         Streams.transfer(in, response.getOutputStream());
     }
 
@@ -659,8 +656,8 @@ public class Servlets {
      * @throws IOException IOException
      */
     public static void transfer(HttpServletResponse response, Reader reader, String fileName) throws IOException {
-        response.setContentType("application/octet-stream");
-        response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+        response.setContentType(StandardContentType.APPLICATION_STREAM);
+        response.setHeader(StandardHttpHeader.CONTENT_DISPOSITION, "attachment;filename=" + fileName);
         Streams.transfer(reader, response.getWriter());
     }
 
@@ -673,8 +670,8 @@ public class Servlets {
      * @throws IOException IOException
      */
     public static void transfer(HttpServletResponse response, Reader reader, byte[] fileName) throws IOException {
-        response.setContentType("application/octet-stream");
-        response.setHeader("Content-Disposition", "attachment;filename=" + new String(fileName, StandardCharsets.ISO_8859_1));
+        response.setContentType(StandardContentType.APPLICATION_STREAM);
+        response.setHeader(StandardHttpHeader.CONTENT_DISPOSITION, "attachment;filename=" + new String(fileName, StandardCharsets.ISO_8859_1));
         Streams.transfer(reader, response.getWriter());
     }
 
@@ -684,11 +681,11 @@ public class Servlets {
      * @param response response
      */
     public static void cross(HttpServletResponse response) {
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
-        response.setHeader("Access-Control-Allow-Headers", "Content-Type,X-Requested-With,login_token,X-PINGOTHER,Content-Type, Accept, Origin, Last-Modified");
-        response.setHeader("Access-Control-Max-Age", "86400");
+        response.setHeader(StandardHttpHeader.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+        response.setHeader(StandardHttpHeader.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+        response.setHeader(StandardHttpHeader.ACCESS_CONTROL_ALLOW_METHODS, "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+        response.setHeader(StandardHttpHeader.ACCESS_CONTROL_ALLOW_HEADERS, "Content-Type, X-Requested-With, X-PINGOTHER, Accept, Origin, Last-Modified");
+        response.setHeader(StandardHttpHeader.ACCESS_CONTROL_MAX_AGE, "86400");
     }
 
 }

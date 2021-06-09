@@ -1,5 +1,6 @@
 package com.orion.http.ok;
 
+import com.orion.constant.StandardHttpHeader;
 import com.orion.http.BaseHttpRequest;
 import com.orion.http.support.HttpMethod;
 import com.orion.http.support.HttpUploadPart;
@@ -100,7 +101,7 @@ public abstract class BaseOkRequest extends BaseHttpRequest {
             headers.forEach(requestBuilder::addHeader);
         }
         if (cookies != null) {
-            cookies.forEach(c -> requestBuilder.addHeader("Cookie", c.toString()));
+            cookies.forEach(c -> requestBuilder.addHeader(StandardHttpHeader.COOKIE, c.toString()));
         }
         if (ignoreHeaders != null) {
             ignoreHeaders.forEach(requestBuilder::removeHeader);

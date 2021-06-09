@@ -2,6 +2,7 @@ package com.orion.http.apache;
 
 import com.orion.able.Awaitable;
 import com.orion.constant.StandardContentType;
+import com.orion.constant.StandardHttpHeader;
 import com.orion.http.BaseHttpRequest;
 import com.orion.http.support.HttpContentType;
 import com.orion.http.support.HttpMethod;
@@ -96,7 +97,7 @@ public abstract class BaseApacheRequest extends BaseHttpRequest implements Await
             headers.forEach((k, v) -> request.addHeader(new BasicHeader(k, v)));
         }
         if (cookies != null) {
-            cookies.forEach(c -> request.addHeader(new BasicHeader("Cookie", c.toString())));
+            cookies.forEach(c -> request.addHeader(new BasicHeader(StandardHttpHeader.COOKIE, c.toString())));
         }
         if (ignoreHeaders != null) {
             ignoreHeaders.forEach(ignoreHeader -> request.removeHeader(new BasicHeader(ignoreHeader, null)));
