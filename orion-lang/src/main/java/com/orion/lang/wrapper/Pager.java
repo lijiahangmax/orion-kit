@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Spliterator;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * 分页信息
@@ -294,6 +295,17 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, Js
     @JSONField(serialize = false)
     public boolean isNotEmpty() {
         return Lists.isNotEmpty(rows);
+    }
+
+    /**
+     * @return stream
+     */
+    public Stream<T> stream() {
+        if (this.isEmpty()) {
+            return Stream.empty();
+        } else {
+            return rows.stream();
+        }
     }
 
     @Override

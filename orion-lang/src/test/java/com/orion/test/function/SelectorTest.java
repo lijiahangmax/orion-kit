@@ -23,11 +23,12 @@ public class SelectorTest {
 
     @Test
     public void test2() {
-        String va = Selector.<Integer, String>of(2)
+        String va = Selector.<Integer, String>of(6)
                 .test(Branches.in(1, 4).then("一 or 四"))
                 .test(Branches.compared(2).then(s -> (s + 10) + ""))
                 .test(Branches.eq(3).then("三"))
-                .or("def");
+                .test(Branches.eq(5).then(() -> "555"))
+                .or(Object::toString);
         System.out.println(va);
     }
 

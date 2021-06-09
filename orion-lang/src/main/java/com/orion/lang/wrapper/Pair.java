@@ -4,6 +4,7 @@ import com.orion.lang.support.CloneSupport;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Map的Entry实现
@@ -41,14 +42,20 @@ public class Pair<K, V> extends CloneSupport<Pair<K, V>> implements Map.Entry<K,
         return new Pair<>(entry);
     }
 
-    @Override
-    public K getKey() {
-        return key;
-    }
-
     public Pair<K, V> setKey(K key) {
         this.key = key;
         return this;
+    }
+
+    @Override
+    public V setValue(V value) {
+        this.value = value;
+        return value;
+    }
+
+    @Override
+    public K getKey() {
+        return key;
     }
 
     @Override
@@ -56,10 +63,18 @@ public class Pair<K, V> extends CloneSupport<Pair<K, V>> implements Map.Entry<K,
         return value;
     }
 
-    @Override
-    public V setValue(V value) {
-        this.value = value;
-        return value;
+    /**
+     * @return key Optional
+     */
+    public Optional<K> keyOptional() {
+        return Optional.ofNullable(key);
+    }
+
+    /**
+     * @return value Optional
+     */
+    public Optional<V> valueOptional() {
+        return Optional.ofNullable(value);
     }
 
     @Override

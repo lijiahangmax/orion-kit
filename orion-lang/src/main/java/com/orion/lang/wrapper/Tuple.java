@@ -1,14 +1,20 @@
 package com.orion.lang.wrapper;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.orion.able.JsonAble;
 import com.orion.lang.iterator.ArrayIterator;
 import com.orion.lang.support.CloneSupport;
+import com.orion.utils.Arrays1;
 import com.orion.utils.Valid;
+import com.orion.utils.json.Jsons;
 
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.Spliterator;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * 元组
@@ -17,7 +23,7 @@ import java.util.function.Consumer;
  * @version 1.0.0
  * @since 2020/10/15 17:14
  */
-public class Tuple extends CloneSupport<Tuple> implements Serializable, Iterable<Object> {
+public class Tuple extends CloneSupport<Tuple> implements Serializable, JsonAble, Iterable<Object> {
 
     private static final long serialVersionUID = 228374192841290087L;
 
@@ -88,9 +94,52 @@ public class Tuple extends CloneSupport<Tuple> implements Serializable, Iterable
         return Arrays.deepEquals(members, other.members);
     }
 
+    @JSONField(serialize = false)
+    public boolean isEmpty() {
+        return Arrays1.isEmpty(members);
+    }
+
+    @JSONField(serialize = false)
+    public boolean isNotEmpty() {
+        return Arrays1.isNotEmpty(members);
+    }
+
+    /**
+     * @return stream
+     */
+    public Stream<?> stream() {
+        if (this.isEmpty()) {
+            return Stream.empty();
+        } else {
+            return Stream.of(members);
+        }
+    }
+
+    /**
+     * 获取 Optional
+     *
+     * @param index 索引
+     * @param <T>   T
+     * @return Optional
+     */
+    @SuppressWarnings("unchecked")
+    public <T> Optional<T> optional(int index) {
+        int size = this.size();
+        if (size > index) {
+            return Optional.ofNullable((T) members[index]);
+        } else {
+            return Optional.empty();
+        }
+    }
+
     @Override
     public String toString() {
         return Arrays.toString(members);
+    }
+
+    @Override
+    public String toJsonString() {
+        return Jsons.toJsonWriteNull(members);
     }
 
     @Override

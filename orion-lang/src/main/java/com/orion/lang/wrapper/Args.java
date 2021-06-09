@@ -8,8 +8,10 @@ import com.orion.utils.Strings;
 
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.Spliterator;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * 多参数工具
@@ -211,6 +213,13 @@ public class Args implements Serializable {
         public Zero() {
         }
 
+        /**
+         * @return stream
+         */
+        public Stream<?> stream() {
+            return Stream.of(toArray(this));
+        }
+
         @Override
         public Iterator<Object> iterator() {
             return new ArrayIterator<>(toArray(this)).iterator();
@@ -255,6 +264,13 @@ public class Args implements Serializable {
             return this;
         }
 
+        /**
+         * @return arg1 Optional
+         */
+        public Optional<A1> arg1Optional() {
+            return Optional.ofNullable(arg1);
+        }
+
         @Override
         public String toString() {
             return "arg1=" + arg1;
@@ -283,6 +299,13 @@ public class Args implements Serializable {
         public Two<A1, A2> setArg2(A2 arg2) {
             this.arg2 = arg2;
             return this;
+        }
+
+        /**
+         * @return arg2 Optional
+         */
+        public Optional<A2> arg2Optional() {
+            return Optional.ofNullable(arg2);
         }
 
         @Override
@@ -314,6 +337,13 @@ public class Args implements Serializable {
         public Three<A1, A2, A3> setArg3(A3 arg3) {
             this.arg3 = arg3;
             return this;
+        }
+
+        /**
+         * @return arg3 Optional
+         */
+        public Optional<A3> arg3Optional() {
+            return Optional.ofNullable(arg3);
         }
 
         @Override
@@ -348,6 +378,13 @@ public class Args implements Serializable {
             return this;
         }
 
+        /**
+         * @return arg4 Optional
+         */
+        public Optional<A4> arg4Optional() {
+            return Optional.ofNullable(arg4);
+        }
+
         @Override
         public String toString() {
             return "arg1=" + arg1 + Const.LF +
@@ -379,6 +416,13 @@ public class Args implements Serializable {
         public Five<A1, A2, A3, A4, A5> setArg5(A5 arg5) {
             this.arg5 = arg5;
             return this;
+        }
+
+        /**
+         * @return arg5 Optional
+         */
+        public Optional<A5> arg5Optional() {
+            return Optional.ofNullable(arg5);
         }
 
         @Override

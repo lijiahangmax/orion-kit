@@ -5,6 +5,7 @@ import com.orion.utils.Objects1;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * 分支构建器
@@ -29,6 +30,16 @@ public class Branches<P> {
      */
     public <R> Branch<P, R> then(Function<P, R> factory) {
         return Branch.of(tester, factory);
+    }
+
+    /**
+     * 构建分支
+     *
+     * @param supplier supplier
+     * @return {@link Branch}
+     */
+    public <R> Branch<P, R> then(Supplier<R> supplier) {
+        return Branch.of(tester, r -> supplier.get());
     }
 
     /**

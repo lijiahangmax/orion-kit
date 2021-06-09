@@ -93,6 +93,16 @@ public class Selector<P, R> {
     /**
      * 获取结果 未命中则返回默认值
      *
+     * @param function def function
+     * @return value
+     */
+    public R or(Function<P, R> function) {
+        return selected ? factory.apply(param) : function.apply(param);
+    }
+
+    /**
+     * 获取结果 未命中则返回默认值
+     *
      * @param supplier def supplier
      * @return value
      */
