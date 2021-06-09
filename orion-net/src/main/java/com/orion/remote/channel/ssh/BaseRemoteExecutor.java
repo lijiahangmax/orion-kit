@@ -284,7 +284,7 @@ public abstract class BaseRemoteExecutor extends BaseExecutor {
      */
     @Override
     public void close() {
-        close = true;
+        this.close = true;
         Streams.close(inputStream);
         Streams.close(outputStream);
         super.disconnect();

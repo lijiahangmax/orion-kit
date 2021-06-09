@@ -5,7 +5,6 @@ import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.collect.Lists;
 import com.orion.utils.io.Files1;
-import com.orion.utils.io.Streams;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +28,7 @@ public class NginxExt {
         try {
             this.config = NgxConfig.read(file.getAbsolutePath());
         } catch (Exception e) {
-            throw Exceptions.parse("Parse Nginx config file error path: '" + file.getAbsolutePath() + "'");
+            throw Exceptions.parse("parse nginx config file error path: '" + file.getAbsolutePath() + "'", e);
         }
     }
 
@@ -37,7 +36,7 @@ public class NginxExt {
         try {
             this.config = NgxConfig.read(NginxExt.class.getClassLoader().getResourceAsStream(resourcePath));
         } catch (Exception e) {
-            throw Exceptions.parse("Parse Nginx config file error resource path: '" + resourcePath + "'");
+            throw Exceptions.parse("parse nginx config file error resource path: '" + resourcePath + "'", e);
         }
     }
 
@@ -45,7 +44,7 @@ public class NginxExt {
         try {
             this.config = NgxConfig.read(in);
         } catch (Exception e) {
-            throw Exceptions.parse("Parse Nginx config file error: " + e.getMessage(), e);
+            throw Exceptions.parse("parse nginx config file error: " + e.getMessage(), e);
         }
     }
 
@@ -196,14 +195,10 @@ public class NginxExt {
      */
     public void dump(File file) {
         Files1.touch(file);
-        OutputStream out = null;
-        try {
-            out = Files1.openOutputStream(file);
+        try (OutputStream out = Files1.openOutputStream(file)) {
             new NgxDumper(this.config).dump(out);
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
-        } finally {
-            Streams.close(out);
         }
     }
 

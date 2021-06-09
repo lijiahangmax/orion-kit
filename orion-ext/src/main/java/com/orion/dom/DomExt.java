@@ -296,7 +296,7 @@ public class DomExt {
         try {
             return reader.read(new ByteArrayInputStream(Strings.bytes(xml)));
         } catch (Exception e) {
-            throw Exceptions.argument("XML Parse To Document Error " + e.getMessage());
+            throw Exceptions.argument("xml parse to document error " + e.getMessage(), e);
         }
     }
 

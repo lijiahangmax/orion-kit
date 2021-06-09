@@ -226,7 +226,7 @@ public class SessionStore implements SafeCloseable {
         try {
             session.connect(timeout);
         } catch (Exception e) {
-            boolean authFail = Strings.def(e.getMessage()).contains("Auth fail");
+            boolean authFail = Strings.def(e.getMessage()).contains("auth fail");
             if (authFail) {
                 throw Exceptions.authentication(e);
             } else {
