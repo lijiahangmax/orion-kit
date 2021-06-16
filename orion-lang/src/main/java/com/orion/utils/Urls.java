@@ -23,6 +23,17 @@ public class Urls {
     }
 
     /**
+     * 获取url资源
+     *
+     * @param url url
+     * @return url source
+     */
+    public static String getUrlSource(String url) {
+        String[] uri = url.split("/");
+        return uri[uri.length - 1].split("\\?")[0];
+    }
+
+    /**
      * 将map参数拼接为url
      *
      * @param request 请求参数
@@ -194,7 +205,7 @@ public class Urls {
      * @param keys keys
      * @return values
      */
-    public static MutableHashMap<String, String> querys(String url, String... keys) {
+    public static MutableHashMap<String, String> queries(String url, String... keys) {
         Map<String, String> queryString = getQueryString(url);
         MutableHashMap<String, String> res = new MutableHashMap<>();
         if (keys != null) {
@@ -411,7 +422,7 @@ public class Urls {
         }
 
         public String getUrl(boolean showPort) {
-            setProtocolPort();
+            this.setProtocolPort();
             StringBuilder sb = new StringBuilder();
             sb.append(protocol).append("://").append(host);
             if (showPort) {

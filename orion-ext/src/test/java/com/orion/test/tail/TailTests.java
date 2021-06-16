@@ -1,6 +1,7 @@
 package com.orion.test.tail;
 
-import com.orion.tail.DelayTracker;
+import com.orion.tail.delay.DelayTracker;
+import com.orion.tail.delay.DelayTrackerListener;
 import com.orion.tail.mode.FileMinusMode;
 import com.orion.tail.mode.FileNotFoundMode;
 import com.orion.utils.Strings;
@@ -11,6 +12,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * @author Jiahang Li
@@ -19,11 +21,29 @@ import java.io.IOException;
  */
 public class TailTests {
 
-    public static void main(String[] args) throws IOException {
-        new DelayTracker("C:\\Users\\ljh15\\Desktop\\tail.txt", (s, l, t) -> {
+    @Test
+    public void read1() {
+        DelayTracker tracker = new DelayTracker("C:\\Users\\ljh15\\Desktop\\tail.txt", (s, l, t) -> {
             System.out.println(l + ": " + s);
-        }).offset(5)
-                .notFoundMode(FileNotFoundMode.WAIT)
+        });
+        tracker.offset(5).notFoundMode(FileNotFoundMode.WAIT)
+                .minusMode(FileMinusMode.CLOSE)
+                .tail();
+    }
+
+    @Test
+    public void read2() {
+        OutputStream out = Files1.openOutputStreamSafe("C:\\Users\\ljh15\\Desktop\\merge.txt");
+        DelayTrackerListener tracker = new DelayTrackerListener("C:\\Users\\ljh15\\Desktop\\tail.txt", (s, l, t) -> {
+            try {
+                if (l != -1) {
+                    out.write(s, 0, l);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        tracker.offset(5).notFoundMode(FileNotFoundMode.WAIT)
                 .minusMode(FileMinusMode.CLOSE)
                 .tail();
     }
