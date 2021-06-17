@@ -1,5 +1,6 @@
 package com.orion.utils.io;
 
+import com.orion.constant.StandardContentType;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.math.Hex;
@@ -192,7 +193,7 @@ public class FileTypes {
      */
     public static String getContentType(Path file) {
         try {
-            return Strings.def(Files.probeContentType(file), "text/plain");
+            return Strings.def(Files.probeContentType(file), StandardContentType.TEXT_PLAIN);
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         }

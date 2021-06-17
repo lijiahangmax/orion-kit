@@ -74,7 +74,7 @@ public class FileReaders {
      * @throws IOException IO
      */
     public static String readLine(RandomAccessFile reader, String charset) throws IOException {
-        long def = reader.getFilePointer();
+        long pos = reader.getFilePointer();
         byte[] bytes = new byte[Const.BUFFER_KB_8];
         byte[] line = new byte[Const.BUFFER_KB_8];
         int linePos = 0;
@@ -118,7 +118,7 @@ public class FileReaders {
                 linePos += read;
             }
         }
-        reader.seek(def + seek);
+        reader.seek(pos + seek);
         if (seek == 0 || linePos == 0) {
             return Strings.EMPTY;
         }
@@ -132,7 +132,8 @@ public class FileReaders {
     /**
      * 从当前偏移量读取到最后一行
      *
-     * @param reader 输入流
+     * @param reader  输入流
+     * @param charset charset
      * @return lines
      * @throws IOException I/O异常
      */
@@ -146,6 +147,64 @@ public class FileReaders {
         byte[] buffer = new byte[more];
         int read = reader.read(buffer);
         return new String(buffer, 0, read, charset);
+    }
+
+    /**
+     * 读取文件尾部行的seek
+     *
+     * @param reader reader
+     * @param line   最后几行
+     * @return seek
+     */
+    public static long readTailLinesSeek(RandomAccessFile reader, int line) throws IOException {
+        long beforePos = reader.getFilePointer();
+        long len = reader.length();
+        if (len == 0L) {
+            return -1;
+        }
+        boolean lastLf = false;
+        long pos = len;
+        while (pos > 0) {
+            pos--;
+            reader.seek(pos);
+            int read = reader.read();
+            boolean isLf = read == Letters.LF;
+            if (isLf || (!lastLf && read == Letters.CR)) {
+                if (isLf) {
+                    lastLf = true;
+                }
+                if (pos != len - 1) {
+                    line--;
+                }
+                if (line <= 0) {
+                    break;
+                }
+            }
+        }
+        reader.seek(beforePos);
+        if (pos == 0) {
+            return 0;
+        }
+        return pos + 1;
+    }
+
+    public static String readTailLines(RandomAccessFile reader, int line) throws IOException {
+        return readTailLines(reader, Const.UTF_8, line);
+    }
+
+    /**
+     * 读取文件最后几行
+     *
+     * @param reader  输入流
+     * @param charset charset
+     * @param line    line
+     * @return lines
+     * @throws IOException I/O异常
+     */
+    public static String readTailLines(RandomAccessFile reader, String charset, int line) throws IOException {
+        long seek = readTailLinesSeek(reader, line);
+        byte[] read = read(reader, seek);
+        return new String(read, charset);
     }
 
     // -------------------- read --------------------

@@ -451,7 +451,7 @@ public class Files1 {
      * 将资源文件保存到本地
      *
      * @param source  资源
-     * @param file    file
+     * @param path    path
      * @param charset 编码
      * @return 是否保存成功
      * @throws IOException exception
