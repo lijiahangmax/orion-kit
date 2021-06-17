@@ -1,5 +1,6 @@
 package com.orion.location.region.core;
 
+import com.orion.constant.Const;
 import com.orion.location.region.block.DataBlock;
 import com.orion.location.region.block.IndexBlock;
 import com.orion.location.region.config.DbConfig;
@@ -62,12 +63,12 @@ public class DbSearcher {
 
     public DbSearcher(DbConfig dbConfig, String dbFile) {
         this.dbConfig = dbConfig;
-        raf = Files1.openRandomAccessSafe(dbFile, "r");
+        raf = Files1.openRandomAccessSafe(dbFile, Const.ACCESS_R);
     }
 
     public DbSearcher(DbConfig dbConfig, File dbFile) {
         this.dbConfig = dbConfig;
-        raf = Files1.openRandomAccessSafe(dbFile, "r");
+        raf = Files1.openRandomAccessSafe(dbFile, Const.ACCESS_R);
     }
 
     public DbSearcher(DbConfig dbConfig, RandomAccessFile raf) {

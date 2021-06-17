@@ -132,13 +132,13 @@ public class FileWriters {
             if (fileLen - offset <= Const.BUFFER_KB_8) {
                 byte[] bs = new byte[((int) (fileLen - offset + len))];
                 System.arraycopy(bytes, 0, bs, 0, len);
-                r = new RandomAccessFile(file, "rw");
+                r = new RandomAccessFile(file, Const.ACCESS_RW);
                 r.seek(offset);
                 r.read(bs, len, bs.length - len);
                 r.seek(offset);
                 r.write(bs);
             } else {
-                r = new RandomAccessFile(file, "rw");
+                r = new RandomAccessFile(file, Const.ACCESS_RW);
                 File endFile = touchTempFile(true);
                 writeToFile(file, offset, endFile);
                 r.seek(offset);
@@ -283,7 +283,7 @@ public class FileWriters {
         FileInputStream in = null;
         RandomAccessFile r = null;
         try {
-            r = new RandomAccessFile(file, "rw");
+            r = new RandomAccessFile(file, Const.ACCESS_RW);
             boolean useBuffer = true;
             byte[] bs = null;
             int read = 0;
@@ -601,10 +601,10 @@ public class FileWriters {
         List<Closeable> close = new ArrayList<>();
         try {
             if (startBuffer && endBuffer) {
-                RandomAccessFile r = new RandomAccessFile(file, "r");
+                RandomAccessFile r = new RandomAccessFile(file, Const.ACCESS_R);
                 close.add(r);
-                byte[] s = Streams.read(r, 0, rangeStart);
-                byte[] e = Streams.read(r, rangeEnd, fileLen);
+                byte[] s = FileReaders.read(r, 0, rangeStart);
+                byte[] e = FileReaders.read(r, rangeEnd, fileLen);
                 byte[] re = Arrays1.newBytes(s.length + e.length + len);
                 int i = 0;
                 System.arraycopy(s, 0, re, 0, s.length);
@@ -615,9 +615,9 @@ public class FileWriters {
                 write(file, re);
             } else {
                 if (startBuffer) {
-                    RandomAccessFile r = new RandomAccessFile(file, "r");
+                    RandomAccessFile r = new RandomAccessFile(file, Const.ACCESS_R);
                     close.add(r);
-                    byte[] s = Streams.read(r, 0, rangeStart);
+                    byte[] s = FileReaders.read(r, 0, rangeStart);
                     byte[] n = new byte[s.length + len];
                     int i = 0;
                     File endFile = touchTempFile(true);
@@ -627,20 +627,20 @@ public class FileWriters {
                     write(file, n);
                     mergeFile(endFile, file);
                 } else if (endBuffer) {
-                    RandomAccessFile r = new RandomAccessFile(file, "r");
+                    RandomAccessFile r = new RandomAccessFile(file, Const.ACCESS_R);
                     close.add(r);
-                    byte[] e = Streams.read(r, rangeEnd, fileLen);
+                    byte[] e = FileReaders.read(r, rangeEnd, fileLen);
                     byte[] n = new byte[e.length + len];
                     System.arraycopy(bytes, off, n, 0, len);
                     System.arraycopy(e, 0, n, len, e.length);
-                    RandomAccessFile rw = new RandomAccessFile(file, "rw");
+                    RandomAccessFile rw = new RandomAccessFile(file, Const.ACCESS_RW);
                     close.add(rw);
                     rw.seek(rangeStart);
                     rw.write(n);
                 } else {
                     File endFile = touchTempFile(true);
                     writeToFile(file, Long.valueOf(rangeEnd), endFile);
-                    RandomAccessFile rw = new RandomAccessFile(file, "rw");
+                    RandomAccessFile rw = new RandomAccessFile(file, Const.ACCESS_RW);
                     close.add(rw);
                     rw.seek(rangeStart);
                     rw.write(bytes, off, len);

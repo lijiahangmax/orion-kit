@@ -1,8 +1,12 @@
 package com.orion.utils.io;
 
+import com.orion.constant.Const;
+import com.orion.constant.Letters;
 import com.orion.lang.iterator.ByteArrayIterator;
 import com.orion.lang.iterator.LineIterator;
+import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
+import com.orion.utils.Strings;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -29,6 +33,119 @@ import static com.orion.utils.io.Streams.close;
 public class FileReaders {
 
     private FileReaders() {
+    }
+
+    // -------------------- random read --------------------
+
+    public static byte[] read(RandomAccessFile reader, long offset) throws IOException {
+        return read(reader, offset, reader.length());
+    }
+
+    /**
+     * 从偏移量开始读取,读取到指定位置
+     *
+     * @param reader 流
+     * @param offset 偏移量
+     * @param end    结束位置
+     * @return bytes
+     * @throws IOException IO
+     */
+    public static byte[] read(RandomAccessFile reader, long offset, long end) throws IOException {
+        reader.seek(offset);
+        long e = end, len = reader.length();
+        if (end > len) {
+            e = len;
+        }
+        byte[] bs = new byte[((int) (end - offset))];
+        reader.read(bs, 0, ((int) (e - offset)));
+        return bs;
+    }
+
+    public static String readLine(RandomAccessFile reader) throws IOException {
+        return readLine(reader, Const.UTF_8);
+    }
+
+    /**
+     * 从当前偏移量读取一行
+     *
+     * @param reader  reader
+     * @param charset 编码
+     * @return 行
+     * @throws IOException IO
+     */
+    public static String readLine(RandomAccessFile reader, String charset) throws IOException {
+        long def = reader.getFilePointer();
+        byte[] bytes = new byte[Const.BUFFER_KB_8];
+        byte[] line = new byte[Const.BUFFER_KB_8];
+        int linePos = 0;
+        int seek = 0;
+        int read;
+        while (-1 != (read = reader.read(bytes))) {
+            seek += read;
+            int bi = -1;
+            for (int i = 0; i < read; i++) {
+                byte b = bytes[i];
+                if (b == Letters.CR) {
+                    // \r
+                    if (i + 1 < read) {
+                        if (bytes[i + 1] == Letters.LF) {
+                            seek++;
+                        }
+                        bi = i;
+                        break;
+                    } else {
+                        byte[] bs1 = new byte[1];
+                        int tmpRead = reader.read(bs1);
+                        if (tmpRead != -1 && bs1[0] == Letters.LF) {
+                            seek++;
+                        }
+                        bi = i;
+                        break;
+                    }
+                } else if (b == Letters.LF) {
+                    // \n
+                    bi = i;
+                    break;
+                }
+            }
+            if (bi != -1) {
+                line = Arrays1.arraycopy(bytes, 0, line, linePos, bi);
+                linePos += bi;
+                seek -= read - bi - 1;
+                break;
+            } else {
+                line = Arrays1.arraycopy(bytes, 0, line, linePos, read);
+                linePos += read;
+            }
+        }
+        reader.seek(def + seek);
+        if (seek == 0 || linePos == 0) {
+            return Strings.EMPTY;
+        }
+        return new String(line, 0, linePos, charset);
+    }
+
+    public static String readLines(RandomAccessFile reader) throws IOException {
+        return readLines(reader, Const.UTF_8);
+    }
+
+    /**
+     * 从当前偏移量读取到最后一行
+     *
+     * @param reader 输入流
+     * @return lines
+     * @throws IOException I/O异常
+     */
+    public static String readLines(RandomAccessFile reader, String charset) throws IOException {
+        long pos = reader.getFilePointer();
+        long length = reader.length();
+        int more = (int) (length - pos);
+        if (more <= 0) {
+            return Strings.EMPTY;
+        }
+        byte[] buffer = new byte[more];
+        int read = reader.read(buffer);
+        return new String(buffer, 0, read, charset);
     }
 
     // -------------------- read --------------------

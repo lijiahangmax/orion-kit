@@ -118,6 +118,14 @@ public abstract class Const {
 
     public static final String STREAM_CLOSE = "Stream closed";
 
+    public static final String ACCESS_R = "r";
+
+    public static final String ACCESS_RW = "rw";
+
+    public static final String ACCESS_RWS = "rws";
+
+    public static final String ACCESS_RWD = "rwd";
+
     // -------------------- num --------------------
 
     public static final int N_1 = 1;

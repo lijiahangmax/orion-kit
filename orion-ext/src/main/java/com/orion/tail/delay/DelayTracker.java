@@ -4,7 +4,7 @@ import com.orion.constant.Const;
 import com.orion.tail.handler.LineHandler;
 import com.orion.utils.Spells;
 import com.orion.utils.Valid;
-import com.orion.utils.io.Streams;
+import com.orion.utils.io.FileReaders;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +39,7 @@ public class DelayTracker extends AbstractDelayTracker {
 
     @Override
     public void read() throws IOException {
-        String read = Streams.readLines(reader, charset);
+        String read = FileReaders.readLines(reader, charset);
         if (read == null || read.isEmpty()) {
             return;
         }

@@ -56,11 +56,11 @@ public class LocationSeeker {
     private byte[] b3;
 
     public LocationSeeker(String file) {
-        this(Files1.openRandomAccessSafe(file, "r"));
+        this(Files1.openRandomAccessSafe(file, Const.ACCESS_R));
     }
 
     public LocationSeeker(File file) {
-        this(Files1.openRandomAccessSafe(file, "r"));
+        this(Files1.openRandomAccessSafe(file, Const.ACCESS_R));
     }
 
     public LocationSeeker(RandomAccessFile accessFile) {

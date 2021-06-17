@@ -7,10 +7,7 @@ package com.orion.constant;
  * @version 1.0.0
  * @since 2021/3/8 10:36
  */
-public class StandardTlsVersion {
-
-    private StandardTlsVersion() {
-    }
+public abstract class StandardTlsVersion {
 
     public static final String TLS = "TLS";
 

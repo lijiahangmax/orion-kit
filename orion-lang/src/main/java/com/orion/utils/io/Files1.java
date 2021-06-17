@@ -1110,7 +1110,7 @@ public class Files1 {
     public static String getFileLineSeparator(File file) {
         RandomAccessFile r = null;
         try {
-            r = new RandomAccessFile(file, "r");
+            r = new RandomAccessFile(file, Const.ACCESS_R);
             long length = r.length();
             if (length == 0) {
                 return Const.LF;
@@ -1148,7 +1148,7 @@ public class Files1 {
      * @return \n \r \r\n null
      */
     public static String getFileEndLineSeparator(File file) {
-        try (RandomAccessFile r = new RandomAccessFile(file, "r")) {
+        try (RandomAccessFile r = new RandomAccessFile(file, Const.ACCESS_R)) {
             long length = r.length();
             if (length == 0) {
                 return Const.LF;
@@ -1189,7 +1189,7 @@ public class Files1 {
      * @return true 是 \n \r \r\n结尾
      */
     public static boolean hasEndLineSeparator(File file) {
-        try (RandomAccessFile r = new RandomAccessFile(file, "r")) {
+        try (RandomAccessFile r = new RandomAccessFile(file, Const.ACCESS_R)) {
             long length = r.length();
             if (length == 0) {
                 return true;

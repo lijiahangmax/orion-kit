@@ -1,5 +1,6 @@
 package com.orion.support.upload;
 
+import com.orion.constant.Const;
 import com.orion.support.progress.ByteTransferProgress;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
@@ -144,7 +145,7 @@ public abstract class BaseFileUpload implements Runnable {
         progress.start(skip);
         RandomAccessFile access = null;
         try {
-            access = Files1.openRandomAccessSafe(local, "r");
+            access = Files1.openRandomAccessSafe(local, Const.ACCESS_R);
             access.seek(skip);
             int read;
             byte[] bs = new byte[bufferSize];

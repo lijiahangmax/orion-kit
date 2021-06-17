@@ -148,7 +148,7 @@ public class FileSplit implements Callable<String[]> {
         RandomAccessFile accessFile = null;
         FileOutputStream outputStream = null;
         try {
-            accessFile = new RandomAccessFile(file, "r");
+            accessFile = new RandomAccessFile(file, Const.ACCESS_R);
             accessFile.seek(offset);
             if (accessFile.length() - offset < blockSize) {
                 blockSize = accessFile.length() - offset;

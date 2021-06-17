@@ -1,5 +1,6 @@
 package com.orion.tail.delay;
 
+import com.orion.able.SafeCloseable;
 import com.orion.constant.Const;
 import com.orion.tail.Tracker;
 import com.orion.tail.mode.FileMinusMode;
@@ -22,7 +23,7 @@ import java.io.RandomAccessFile;
  * @version 1.0.0
  * @since 2020/5/14 16:13
  */
-public abstract class AbstractDelayTracker extends Tracker {
+public abstract class AbstractDelayTracker extends Tracker implements SafeCloseable {
 
     /**
      * 追踪的文件
@@ -118,7 +119,7 @@ public abstract class AbstractDelayTracker extends Tracker {
     protected boolean init() throws IOException {
         if (Files1.isFile(tailFile)) {
             // 是文件则直接初始化
-            this.reader = Files1.openRandomAccess(tailFile, "r");
+            this.reader = Files1.openRandomAccess(tailFile, Const.ACCESS_R);
             return true;
         }
         // 文件未找到则需要根据规则等待
@@ -129,7 +130,7 @@ public abstract class AbstractDelayTracker extends Tracker {
                 while (run) {
                     Threads.sleep(delayMillis);
                     if (Files1.isFile(tailFile)) {
-                        this.reader = Files1.openRandomAccess(tailFile, "r");
+                        this.reader = Files1.openRandomAccess(tailFile, Const.ACCESS_R);
                         return true;
                     }
                 }
@@ -156,7 +157,7 @@ public abstract class AbstractDelayTracker extends Tracker {
                         Threads.sleep(fd);
                     }
                     if (run && Files1.isFile(tailFile)) {
-                        this.reader = Files1.openRandomAccess(tailFile, "r");
+                        this.reader = Files1.openRandomAccess(tailFile, Const.ACCESS_R);
                         return true;
                     }
                 }
@@ -166,7 +167,7 @@ public abstract class AbstractDelayTracker extends Tracker {
                 for (int i = 0; i < notFountTimes; i++) {
                     Threads.sleep(delayMillis);
                     if (run && Files1.isFile(tailFile)) {
-                        this.reader = Files1.openRandomAccess(tailFile, "r");
+                        this.reader = Files1.openRandomAccess(tailFile, Const.ACCESS_R);
                         return true;
                     }
                 }
@@ -263,6 +264,11 @@ public abstract class AbstractDelayTracker extends Tracker {
     public AbstractDelayTracker minusMode(FileMinusMode minusMode) {
         this.minusMode = minusMode;
         return this;
+    }
+
+    @Override
+    public void close() {
+        Streams.close(reader);
     }
 
     @Override

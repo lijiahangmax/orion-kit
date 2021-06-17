@@ -7,10 +7,7 @@ package com.orion.constant;
  * @version 1.0.0
  * @since 2021/6/9 9:57
  */
-public class StandardHttpHeader {
-
-    private StandardHttpHeader() {
-    }
+public abstract class StandardHttpHeader {
 
     public static final String HOST = "Host";
 

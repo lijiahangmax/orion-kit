@@ -7,10 +7,7 @@ package com.orion.constant;
  * @version 1.0.0
  * @since 2021/1/21 16:06
  */
-public class Letters {
-
-    private Letters() {
-    }
+public abstract class Letters {
 
     public static final char LF = '\n';
 

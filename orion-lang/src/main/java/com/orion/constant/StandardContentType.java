@@ -7,10 +7,7 @@ package com.orion.constant;
  * @version 1.0.0
  * @since 2021/2/8 11:05
  */
-public class StandardContentType {
-
-    private StandardContentType() {
-    }
+public abstract class StandardContentType {
 
     public static final String CONTENT_TYPE = StandardHttpHeader.CONTENT_TYPE;
 
