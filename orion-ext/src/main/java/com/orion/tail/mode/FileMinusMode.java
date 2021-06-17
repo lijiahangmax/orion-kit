@@ -1,7 +1,7 @@
 package com.orion.tail.mode;
 
 /**
- * 运行时 文件减少 处理模式
+ * 运行时文件减少 处理模式
  *
  * @author Jiahang Li
  * @version 1.0.0

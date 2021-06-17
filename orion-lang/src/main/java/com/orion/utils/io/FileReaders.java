@@ -160,7 +160,7 @@ public class FileReaders {
         long beforePos = reader.getFilePointer();
         long len = reader.length();
         if (len == 0L) {
-            return -1;
+            return 0L;
         }
         boolean lastLf = false;
         long pos = len;

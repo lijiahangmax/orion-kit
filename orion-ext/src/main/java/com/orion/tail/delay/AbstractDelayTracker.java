@@ -5,10 +5,12 @@ import com.orion.constant.Const;
 import com.orion.tail.Tracker;
 import com.orion.tail.mode.FileMinusMode;
 import com.orion.tail.mode.FileNotFoundMode;
+import com.orion.tail.mode.FileOffsetMode;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.Threads;
 import com.orion.utils.Valid;
+import com.orion.utils.io.FileReaders;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
 
@@ -41,11 +43,17 @@ public abstract class AbstractDelayTracker extends Tracker implements SafeClosea
     protected int delayMillis;
 
     /**
+     * 启动时文件偏移 处理模式
+     */
+    protected FileOffsetMode fileOffsetMode;
+
+    /**
      * 开始监听的文件偏移量
      * <p>
      * = -1 从文件当前大小开始
      * = 0 从0开始
-     * > 0 从length - offset 开始
+     * > 0 BYTE 从length - offset 开始
+     * > 0 LINE 倒数第几行开始
      */
     protected long offset;
 
@@ -71,7 +79,9 @@ public abstract class AbstractDelayTracker extends Tracker implements SafeClosea
     public AbstractDelayTracker(File tailFile) {
         Valid.notNull(tailFile, "tail file is null");
         this.tailFile = tailFile;
+        this.offset = -1L;
         this.delayMillis = Const.MS_S_1;
+        this.fileOffsetMode = FileOffsetMode.BYTE;
         this.notFoundMode = FileNotFoundMode.CLOSE;
         this.minusMode = FileMinusMode.CLOSE;
     }
@@ -189,10 +199,17 @@ public abstract class AbstractDelayTracker extends Tracker implements SafeClosea
         long length = tailFile.length();
         if (offset == -1) {
             reader.seek(length);
+        } else if (offset == 0) {
+            reader.seek(0);
         } else if (offset > 0) {
-            long s = length - offset;
-            if (s >= 0) {
-                reader.seek(s);
+            long pos = 0;
+            if (fileOffsetMode == FileOffsetMode.BYTE) {
+                pos = length - offset;
+            } else if (fileOffsetMode == FileOffsetMode.LINE) {
+                pos = FileReaders.readTailLinesSeek(reader, (int) offset);
+            }
+            if (pos >= 0) {
+                reader.seek(pos);
             }
         }
     }
@@ -207,18 +224,12 @@ public abstract class AbstractDelayTracker extends Tracker implements SafeClosea
                 this.run = false;
                 return;
             case CURRENT:
-                // 恢复到当前内置
+                // 恢复到当前位置
                 reader.seek(tailFile.length());
                 return;
             case OFFSET:
                 // 恢复到偏移量
-                long length = tailFile.length();
-                long s = length - offset;
-                if (s > 0) {
-                    reader.seek(s);
-                } else {
-                    reader.seek(0);
-                }
+                this.setSeek();
                 return;
             case RESUME:
                 // 恢复到0
@@ -239,6 +250,12 @@ public abstract class AbstractDelayTracker extends Tracker implements SafeClosea
     protected abstract void read() throws IOException;
 
     public AbstractDelayTracker offset(long offset) {
+        this.offset = offset;
+        return this;
+    }
+
+    public AbstractDelayTracker offset(FileOffsetMode fileOffsetMode, long offset) {
+        this.fileOffsetMode = fileOffsetMode;
         this.offset = offset;
         return this;
     }

@@ -1,7 +1,7 @@
 package com.orion.tail.mode;
 
 /**
- * 启动时 文件未找到文件 处理模式
+ * 启动时文件未找到 处理模式
  *
  * @author Jiahang Li
  * @version 1.0.0

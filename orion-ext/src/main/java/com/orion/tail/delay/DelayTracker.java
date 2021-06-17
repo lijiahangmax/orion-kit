@@ -47,9 +47,9 @@ public class DelayTracker extends AbstractDelayTracker {
                 .replaceAll(Const.CR, Const.LF)
                 .split(Const.LF);
         for (String line : lines) {
-            if (accessCount == 0) {
-                line = cleanMissCode(line);
-            }
+            // if (accessCount == 0 && fileOffsetMode.equals(FileOffsetMode.BYTE) && offset > 0) {
+            //     line = cleanMissCode(line);
+            // }
             handler.readLine(line, accessCount++, this);
         }
     }

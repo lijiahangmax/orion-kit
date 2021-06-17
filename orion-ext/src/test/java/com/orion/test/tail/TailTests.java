@@ -4,6 +4,7 @@ import com.orion.tail.delay.DelayTracker;
 import com.orion.tail.delay.DelayTrackerListener;
 import com.orion.tail.mode.FileMinusMode;
 import com.orion.tail.mode.FileNotFoundMode;
+import com.orion.tail.mode.FileOffsetMode;
 import com.orion.utils.Strings;
 import com.orion.utils.Threads;
 import com.orion.utils.io.Files1;
@@ -26,7 +27,8 @@ public class TailTests {
         DelayTracker tracker = new DelayTracker("C:\\Users\\ljh15\\Desktop\\tail.txt", (s, l, t) -> {
             System.out.println(l + ": " + s);
         });
-        tracker.offset(5).notFoundMode(FileNotFoundMode.WAIT)
+        tracker.offset(FileOffsetMode.LINE, 5)
+                .notFoundMode(FileNotFoundMode.WAIT)
                 .minusMode(FileMinusMode.CLOSE)
                 .tail();
     }
