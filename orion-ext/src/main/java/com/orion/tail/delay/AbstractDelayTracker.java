@@ -1,6 +1,5 @@
 package com.orion.tail.delay;
 
-import com.orion.able.SafeCloseable;
 import com.orion.constant.Const;
 import com.orion.tail.Tracker;
 import com.orion.tail.mode.FileMinusMode;
@@ -25,7 +24,7 @@ import java.io.RandomAccessFile;
  * @version 1.0.0
  * @since 2020/5/14 16:13
  */
-public abstract class AbstractDelayTracker extends Tracker implements SafeCloseable {
+public abstract class AbstractDelayTracker extends Tracker {
 
     /**
      * 追踪的文件
@@ -36,6 +35,11 @@ public abstract class AbstractDelayTracker extends Tracker implements SafeClosea
      * RandomAccessFile
      */
     protected RandomAccessFile reader;
+
+    /**
+     * 编码集
+     */
+    protected String charset;
 
     /**
      * 延迟时间
@@ -79,11 +83,12 @@ public abstract class AbstractDelayTracker extends Tracker implements SafeClosea
     public AbstractDelayTracker(File tailFile) {
         Valid.notNull(tailFile, "tail file is null");
         this.tailFile = tailFile;
+        this.charset = Const.UTF_8;
         this.offset = -1L;
         this.delayMillis = Const.MS_S_1;
         this.fileOffsetMode = FileOffsetMode.BYTE;
         this.notFoundMode = FileNotFoundMode.CLOSE;
-        this.minusMode = FileMinusMode.CLOSE;
+        this.minusMode = FileMinusMode.CURRENT;
     }
 
     @Override
@@ -248,6 +253,11 @@ public abstract class AbstractDelayTracker extends Tracker implements SafeClosea
      * @throws IOException IOException
      */
     protected abstract void read() throws IOException;
+
+    public AbstractDelayTracker charset(String charset) {
+        this.charset = charset;
+        return this;
+    }
 
     public AbstractDelayTracker offset(long offset) {
         this.offset = offset;

@@ -159,7 +159,7 @@ public class FileReaders {
     public static long readTailLinesSeek(RandomAccessFile reader, int line) throws IOException {
         long beforePos = reader.getFilePointer();
         long len = reader.length();
-        if (len == 0L) {
+        if (len == 0L || line == 0) {
             return 0L;
         }
         boolean lastLf = false;
@@ -177,15 +177,13 @@ public class FileReaders {
                     line--;
                 }
                 if (line <= 0) {
+                    pos++;
                     break;
                 }
             }
         }
         reader.seek(beforePos);
-        if (pos == 0) {
-            return 0;
-        }
-        return pos + 1;
+        return pos;
     }
 
     public static String readTailLines(RandomAccessFile reader, int line) throws IOException {
