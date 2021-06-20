@@ -28,4 +28,21 @@ public class Charsets {
         return Charset.forName(charset);
     }
 
+    /**
+     * 是否是支持的编码集
+     *
+     * @param charset charset
+     * @return support
+     */
+    public static boolean isSupported(String charset) {
+        if (Strings.isBlank(charset)) {
+            return false;
+        }
+        try {
+            return Charset.isSupported(charset);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 }

@@ -37,7 +37,7 @@ public class DelayTrackerListener extends AbstractDelayTracker {
     }
 
     @Override
-    public void read() throws IOException {
+    protected void read() throws IOException {
         int len = reader.read(buffer);
         handler.read(buffer, len, this);
     }
