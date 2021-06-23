@@ -108,6 +108,25 @@ public class CommandExecutor extends BaseRemoteExecutor {
         return this;
     }
 
+    /**
+     * 使用伪终端
+     * <p>
+     * 如果使用 当程序关闭时 命令进程一起关闭
+     * 如果不使用 当程序关闭时 命令进程可能不会一起关闭
+     * <p>
+     * 必须在 {@link #exec} 之前调用
+     *
+     * @return this
+     */
+    public CommandExecutor usePty() {
+        try {
+            session.requestDumbPTY();
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime("set pty type error", e);
+        }
+        return this;
+    }
+
     public CommandExecutor waitFor() {
         this.waitFor = ChannelCondition.CLOSED | ChannelCondition.EOF | ChannelCondition.EXIT_STATUS;
         return this;

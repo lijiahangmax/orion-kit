@@ -78,6 +78,8 @@ public class CommandExecutor extends BaseRemoteExecutor {
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         }
+        // 分配伪终端 当程序关闭时 命令进程一起关闭
+        channel.setPty(true);
     }
 
     /**
@@ -97,6 +99,22 @@ public class CommandExecutor extends BaseRemoteExecutor {
      */
     public CommandExecutor sync() {
         this.sync = true;
+        return this;
+    }
+
+    /**
+     * 是否使用伪终端
+     * <p>
+     * 如果使用 当程序关闭时 命令进程一起关闭
+     * 如果不使用 当程序关闭时 命令进程可能不会一起关闭
+     * <p>
+     * 必须在 {@link #connect} 之前调用
+     *
+     * @param use 是否使用
+     * @return this
+     */
+    public CommandExecutor pty(boolean use) {
+        channel.setPty(use);
         return this;
     }
 

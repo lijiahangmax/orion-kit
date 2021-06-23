@@ -62,6 +62,11 @@ public enum TerminalType {
     ANSI("ansi"),
 
     /**
+     * dumb
+     */
+    DUMB("dumb"),
+
+    /**
      * scoansi
      */
     SCO_ANSI("scoansi");
