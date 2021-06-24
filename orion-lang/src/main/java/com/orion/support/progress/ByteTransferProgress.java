@@ -3,6 +3,8 @@ package com.orion.support.progress;
 import com.orion.constant.Const;
 import com.orion.utils.Threads;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
  * 数据传输进度条
  *
@@ -20,7 +22,7 @@ public class ByteTransferProgress implements Progress {
     /**
      * 当前 current
      */
-    protected long current;
+    protected volatile AtomicLong current;
 
     /**
      * 总长 end
@@ -43,14 +45,14 @@ public class ByteTransferProgress implements Progress {
     protected boolean computeRate;
 
     /**
-     * 当前速度 byte
-     */
-    protected long nowRate;
-
-    /**
      * 计算间隔
      */
     protected int interval;
+
+    /**
+     * 当前速度 byte
+     */
+    protected volatile long nowRate;
 
     /**
      * 是否失败
@@ -67,7 +69,7 @@ public class ByteTransferProgress implements Progress {
     }
 
     public ByteTransferProgress(long start, long end) {
-        this.current = 0;
+        this.current = new AtomicLong();
         this.start = start;
         this.end = end;
     }
@@ -104,9 +106,9 @@ public class ByteTransferProgress implements Progress {
         if (computeRate) {
             Threads.CACHE_EXECUTOR.execute(() -> {
                 while (!done) {
-                    long size = current;
+                    long size = current.get();
                     Threads.sleep(interval);
-                    nowRate = current - size;
+                    nowRate = current.get() - size;
                 }
             });
         }
@@ -118,7 +120,7 @@ public class ByteTransferProgress implements Progress {
      * @param read byte
      */
     public void accept(long read) {
-        this.current += read;
+        current.addAndGet(read);
     }
 
     /**
@@ -127,7 +129,7 @@ public class ByteTransferProgress implements Progress {
      * @param current current
      */
     public void current(long current) {
-        this.current = current;
+        this.current = new AtomicLong(current);
     }
 
     /**
@@ -184,7 +186,7 @@ public class ByteTransferProgress implements Progress {
         if (end == 0) {
             return 0;
         }
-        return (double) current / (double) end;
+        return (double) current.get() / (double) end;
     }
 
     /**
@@ -205,7 +207,7 @@ public class ByteTransferProgress implements Progress {
     }
 
     public long getCurrent() {
-        return current;
+        return current.get();
     }
 
     public long getEnd() {

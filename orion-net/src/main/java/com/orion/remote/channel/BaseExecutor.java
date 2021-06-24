@@ -38,7 +38,7 @@ public abstract class BaseExecutor implements Executable, SafeCloseable {
     /**
      * 打开连接
      * 使用此方法可能会导致连接不上 但是还不会抛出异常! 即 isConnected() 返回false
-     * 因为设置了超时时间 会将 Channel#sendChannelOpen 的 retry 设置为1
+     * 因为设置了超时时间 会将 {@link Channel#sendChannelOpen} 的 retry 设置为1
      *
      * @param timeout 超时时间 ms
      * @return this
