@@ -3,6 +3,7 @@ package com.orion.remote.channel;
 import com.alibaba.fastjson.JSON;
 import com.orion.constant.Const;
 import com.orion.remote.channel.sftp.SftpExecutor;
+import com.orion.remote.channel.sftp.SftpFile;
 import com.orion.remote.channel.sftp.bigfile.SftpDownload;
 import com.orion.remote.channel.sftp.bigfile.SftpUpload;
 import com.orion.support.progress.ByteTransferProgress;
@@ -63,10 +64,14 @@ public class SftpExecutorTests {
 
     @Test
     public void update() {
-        System.out.println(e.setModifyTime("/root/文本.txt", new Date()));
-        System.out.println(e.chmod("/root/文本.txt", 7));
-        System.out.println(e.chown("/root/文本.txt", 1));
-        System.out.println(e.chgrp("/root/文本.txt", 1));
+        String path = "/root/1";
+        SftpFile file = e.getFile(path);
+        System.out.println(e.setModifyTime(path, new Date()));
+        System.out.println(e.chmod(path, 777));
+        System.out.println(e.chown(path, 1));
+        System.out.println(e.chgrp(path, 1));
+        file.setPermission(444);
+        System.out.println(e.setFileAttribute(file));
     }
 
     @Test

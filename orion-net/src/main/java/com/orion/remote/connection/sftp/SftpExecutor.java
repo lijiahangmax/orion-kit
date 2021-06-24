@@ -17,6 +17,7 @@ import com.orion.utils.io.Streams;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -34,7 +35,7 @@ public class SftpExecutor implements SafeCloseable {
     /**
      * 默认8进制权限
      */
-    private static final Integer DEFAULT_PERMISSIONS = 0700;
+    private static final Integer DEFAULT_PERMISSIONS = Files1.permission10to8(644);
 
     /**
      * 分隔符
@@ -147,6 +148,62 @@ public class SftpExecutor implements SafeCloseable {
             return client.readLink(path);
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    /**
+     * 修改文件修改时间
+     *
+     * @param path 文件绝对路径
+     * @param date 更新时间
+     * @return ignore
+     */
+    public boolean setModifyTime(String path, Date date) {
+        try {
+            SFTPv3FileAttributes attr = new SFTPv3FileAttributes();
+            attr.mtime = (int) (date.getTime() / Const.MS_S_1);
+            client.setstat(path, attr);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * 设置文件权限
+     *
+     * @param path       文件绝对路径
+     * @param permission 10进制表示的 8进制权限 如: 777
+     * @return ignore
+     */
+    public boolean chmod(String path, int permission) {
+        try {
+            SFTPv3FileAttributes attr = new SFTPv3FileAttributes();
+            attr.permissions = Files1.permission10to8(permission);
+            client.setstat(path, attr);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * 设置文件uid gid
+     *
+     * @param path 文件绝对路径
+     * @param uid  uid
+     * @param gid  gid
+     * @return ignore
+     */
+    public boolean chown(String path, int uid, int gid) {
+        try {
+            SFTPv3FileAttributes attr = new SFTPv3FileAttributes();
+            attr.uid = uid;
+            attr.gid = gid;
+            client.setstat(path, attr);
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 

@@ -245,7 +245,7 @@ public class SftpExecutor extends BaseExecutor {
      * 修改文件权限
      *
      * @param file       文件绝对路径
-     * @param permission 10进制的 8进制权限 如: 777
+     * @param permission 10进制表示的 8进制权限 如: 777
      * @return ignore
      */
     public boolean chmod(String file, int permission) {

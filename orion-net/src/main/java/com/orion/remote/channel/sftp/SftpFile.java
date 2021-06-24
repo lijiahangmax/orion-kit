@@ -67,7 +67,7 @@ public class SftpFile implements Serializable {
     private int gid;
 
     /**
-     * 10进制的 8进制权限
+     * 10进制表示的 8进制权限
      */
     private int permission;
 

@@ -8,6 +8,7 @@ import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.Systems;
 import com.orion.utils.crypto.enums.HashMessageDigest;
+import com.orion.utils.math.Numbers;
 import com.orion.utils.regexp.Matches;
 
 import java.io.*;
@@ -404,17 +405,21 @@ public class Files1 {
      * @return ignore
      */
     public static String getSize(long size) {
-        String s;
+        String unit;
+        double s;
         if (size / (SIZE_UNIT_EFFECT[1] * SIZE_UNIT_EFFECT[1] * SIZE_UNIT_EFFECT[1]) > 0) {
-            s = size / (SIZE_UNIT_EFFECT[1] * SIZE_UNIT_EFFECT[1] * SIZE_UNIT_EFFECT[1]) + " GB";
+            s = (double) size / (double) (SIZE_UNIT_EFFECT[1] * SIZE_UNIT_EFFECT[1] * SIZE_UNIT_EFFECT[1]);
+            unit = " GB";
         } else if (size / (SIZE_UNIT_EFFECT[1] * SIZE_UNIT_EFFECT[1]) > 0) {
-            s = size / (SIZE_UNIT_EFFECT[1] * SIZE_UNIT_EFFECT[1]) + " MB";
+            s = (double) size / (double) (SIZE_UNIT_EFFECT[1] * SIZE_UNIT_EFFECT[1]);
+            unit = " MB";
         } else if (size / SIZE_UNIT_EFFECT[1] > 0) {
-            s = size / SIZE_UNIT_EFFECT[1] + " KB";
+            s = (double) size / (double) SIZE_UNIT_EFFECT[1];
+            unit = " KB";
         } else {
-            s = size + " B";
+            return size + " B";
         }
-        return s;
+        return Numbers.setScale(s, 1) + unit;
     }
 
     /**
@@ -2018,11 +2023,6 @@ public class Files1 {
      */
     public static int permission8to10(int permission) {
         return Integer.parseInt(new BigInteger(permission + Strings.EMPTY, 10).toString(8));
-    }
-
-    public static void main(String[] args) {
-        System.out.println(permission10to8(777));
-        System.out.println(permission8to10(511));
     }
 
     // -------------------- sign --------------------

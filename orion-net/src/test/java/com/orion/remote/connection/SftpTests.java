@@ -2,6 +2,7 @@ package com.orion.remote.connection;
 
 import com.alibaba.fastjson.JSON;
 import com.orion.remote.connection.sftp.SftpExecutor;
+import com.orion.remote.connection.sftp.SftpFile;
 import com.orion.remote.connection.sftp.bigfile.SftpDownload;
 import com.orion.remote.connection.sftp.bigfile.SftpUpload;
 import com.orion.support.progress.ByteTransferProgress;
@@ -71,7 +72,20 @@ public class SftpTests {
         System.out.println(e.getSize("/root/文本3.txt"));
         System.out.println(e.truncate("/root/文本.txt"));
         System.out.println(e.truncate("/root/文本2.txt"));
+    }
 
+    @Test
+    public void modify() {
+        String path = "/root/1";
+        SftpFile file = e.getFile(path);
+        System.out.println(JSON.toJSONString(file));
+        file.setPermission(777);
+        e.setFileAttribute(path, file);
+        System.out.println(JSON.toJSONString(e.getFile(path)));
+        e.chmod(path, 644);
+        System.out.println(JSON.toJSONString(e.getFile(path)));
+        e.chown(path, 10, 10);
+        System.out.println(JSON.toJSONString(e.getFile(path)));
     }
 
     @Test
