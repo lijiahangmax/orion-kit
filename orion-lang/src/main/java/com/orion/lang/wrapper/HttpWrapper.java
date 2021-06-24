@@ -25,16 +25,19 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
     /**
      * 状态码
      */
+    @JSONField(ordinal = 0)
     private int code;
 
     /**
      * 信息对象
      */
+    @JSONField(ordinal = 1)
     private String msg;
 
     /**
      * 结果对象
      */
+    @JSONField(ordinal = 2)
     private T data;
 
     public HttpWrapper() {

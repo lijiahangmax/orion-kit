@@ -1,5 +1,6 @@
 package com.orion.lang.wrapper;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.orion.constant.Const;
 import com.orion.lang.iterator.ArrayIterator;
 import com.orion.lang.support.CloneSupport;
@@ -246,6 +247,7 @@ public class Args implements Serializable {
 
         private static final long serialVersionUID = -8485735532097524L;
 
+        @JSONField(ordinal = 0)
         protected A1 arg1;
 
         private One() {
@@ -282,6 +284,7 @@ public class Args implements Serializable {
 
         private static final long serialVersionUID = -4818468600715154L;
 
+        @JSONField(ordinal = 1)
         protected A2 arg2;
 
         private Two() {
@@ -320,6 +323,7 @@ public class Args implements Serializable {
 
         private static final long serialVersionUID = -9254528388442463L;
 
+        @JSONField(ordinal = 2)
         protected A3 arg3;
 
         private Three() {
@@ -359,6 +363,7 @@ public class Args implements Serializable {
 
         private static final long serialVersionUID = -6218493405659150L;
 
+        @JSONField(ordinal = 3)
         protected A4 arg4;
 
         private Four() {
@@ -399,6 +404,7 @@ public class Args implements Serializable {
 
         private static final long serialVersionUID = -1861791979844559L;
 
+        @JSONField(ordinal = 4)
         protected A5 arg5;
 
         private Five() {

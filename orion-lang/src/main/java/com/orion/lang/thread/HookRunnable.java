@@ -22,11 +22,10 @@ public class HookRunnable implements Runnable {
     /**
      * task 异常是否执行hook
      */
-    private boolean taskErrorRunHook = true;
+    private boolean taskErrorRunHook;
 
     public HookRunnable(Runnable task, Runnable hook) {
-        this.task = task;
-        this.hook = hook;
+        this(task, hook, true);
     }
 
     public HookRunnable(Runnable task, Runnable hook, boolean taskErrorRunHook) {

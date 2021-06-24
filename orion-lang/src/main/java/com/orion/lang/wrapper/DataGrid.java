@@ -26,34 +26,40 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
     private static final long serialVersionUID = 3787662930250625L;
 
     /**
-     * 总记录数
+     * 页码
      */
-    private int total;
-
-    /**
-     * 结果列表
-     */
-    private List<T> rows;
-
-    /**
-     * 第几页
-     */
+    @JSONField(ordinal = 0)
     private int page;
 
     /**
      * 每页记录数
      */
+    @JSONField(ordinal = 1)
     private int limit;
-
-    /**
-     * 总页数
-     */
-    private int pages;
 
     /**
      * 当前页的数量 应该 <= limit
      */
+    @JSONField(ordinal = 2)
     private int size;
+
+    /**
+     * 总页数
+     */
+    @JSONField(ordinal = 3)
+    private int pages;
+
+    /**
+     * 总记录数
+     */
+    @JSONField(ordinal = 4)
+    private int total;
+
+    /**
+     * 结果列表
+     */
+    @JSONField(ordinal = 5)
+    private List<T> rows;
 
     public DataGrid() {
     }

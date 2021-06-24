@@ -11,10 +11,10 @@ import java.util.Map;
 
 /**
  * 需要对url操作的结果集
- * HttpWrapper<UrlWrapper>
  *
  * @author Li
  * @version 1.0.0
+ * @see HttpWrapper<UrlWrapper>
  * @since 2019/5/30 22:52
  */
 public class UrlWrapper<T> extends CloneSupport<UrlWrapper<T>> implements Wrapper<T>, Logable, Mapable<String, Object> {

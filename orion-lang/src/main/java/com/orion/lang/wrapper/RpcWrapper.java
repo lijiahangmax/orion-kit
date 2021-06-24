@@ -28,26 +28,31 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
     /**
      * 状态码
      */
+    @JSONField(ordinal = 0)
     private int code;
 
     /**
      * 信息对象
      */
+    @JSONField(ordinal = 1)
     private String msg;
 
     /**
      * 结果对象
      */
+    @JSONField(ordinal = 4)
     private T data;
 
     /**
      * 错误信息
      */
+    @JSONField(ordinal = 3)
     private List<String> errorMessages;
 
     /**
      * 会话追踪标识
      */
+    @JSONField(ordinal = 2)
     private String traceId = this.createTrace();
 
     public RpcWrapper() {

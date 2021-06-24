@@ -71,12 +71,12 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, Js
     /**
      * 上一页
      */
-    private int prePage = 1;
+    private int prePage;
 
     /**
      * 下一页
      */
-    private int nextPage = 1;
+    private int nextPage;
 
     /**
      * sql
@@ -91,6 +91,10 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, Js
         this(page, 10);
     }
 
+    public Pager(PageRequest request) {
+        this(request.getPage(), request.getLimit());
+    }
+
     /**
      * 构造函数
      *
@@ -100,12 +104,8 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, Js
     public Pager(int page, int limit) {
         this.page = page;
         this.limit = limit;
-        this.resetOffset();
-    }
-
-    public Pager(PageRequest request) {
-        this.page = request.getPage();
-        this.limit = request.getLimit();
+        this.prePage = 1;
+        this.nextPage = 1;
         this.resetOffset();
     }
 
