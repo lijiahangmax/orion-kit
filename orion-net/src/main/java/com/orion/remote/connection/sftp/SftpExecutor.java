@@ -203,7 +203,7 @@ public class SftpExecutor implements SafeCloseable {
      * @param path 文件绝对路径
      * @return ignore
      */
-    public boolean clear(String path) {
+    public boolean truncate(String path) {
         try {
             SFTPv3FileHandle clear = client.createFileTruncate(path);
             clear.getClient().closeFile(clear);

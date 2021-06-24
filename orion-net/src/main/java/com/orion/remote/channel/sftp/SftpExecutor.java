@@ -245,12 +245,12 @@ public class SftpExecutor extends BaseExecutor {
      * 修改文件权限
      *
      * @param file       文件绝对路径
-     * @param permission 8进制权限
+     * @param permission 10进制的 8进制权限 如: 777
      * @return ignore
      */
     public boolean chmod(String file, int permission) {
         try {
-            channel.chmod(permission, file);
+            channel.chmod(Files1.permission10to8(permission), file);
             return true;
         } catch (Exception e) {
             return false;
@@ -295,7 +295,7 @@ public class SftpExecutor extends BaseExecutor {
      * @param path 文件绝对路径
      * @return ignore
      */
-    public boolean clear(String path) {
+    public boolean truncate(String path) {
         try {
             return this.touchTruncate(path);
         } catch (Exception e) {

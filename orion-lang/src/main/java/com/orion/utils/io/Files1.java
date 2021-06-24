@@ -11,6 +11,7 @@ import com.orion.utils.crypto.enums.HashMessageDigest;
 import com.orion.utils.regexp.Matches;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.net.URI;
 import java.net.URL;
 import java.nio.ByteBuffer;
@@ -411,7 +412,7 @@ public class Files1 {
         } else if (size / SIZE_UNIT_EFFECT[1] > 0) {
             s = size / SIZE_UNIT_EFFECT[1] + " KB";
         } else {
-            s = size + " bytes";
+            s = size + " B";
         }
         return s;
     }
@@ -1967,6 +1968,61 @@ public class Files1 {
         } else {
             return sb.toString();
         }
+    }
+
+    /**
+     * 路径是否统一化
+     * <p>
+     * /home/.././etc --> false
+     * /home/./etc --> false
+     * /home/ --> true
+     * /home --> true
+     *
+     * @param path 路径
+     * @return 是否统一化
+     */
+    public static boolean isNormalize(String path) {
+        String[] ps = getPath(path).split("/");
+        for (int i = 0; i < ps.length; i++) {
+            String s = ps[i];
+            if (".".equals(s)) {
+                return false;
+            } else if ("..".equals(s)) {
+                return false;
+            } else {
+                continue;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 10进制权限转8进制权限
+     * <p>
+     * 777 -> 511
+     *
+     * @param permission 10进制
+     * @return 8进制
+     */
+    public static int permission10to8(int permission) {
+        return Integer.parseInt(new BigInteger(permission + Strings.EMPTY, 8).toString(10));
+    }
+
+    /**
+     * 8进制权限转10进制权限
+     * <p>
+     * 511 -> 777
+     *
+     * @param permission 8进制
+     * @return 10进制
+     */
+    public static int permission8to10(int permission) {
+        return Integer.parseInt(new BigInteger(permission + Strings.EMPTY, 10).toString(8));
+    }
+
+    public static void main(String[] args) {
+        System.out.println(permission10to8(777));
+        System.out.println(permission8to10(511));
     }
 
     // -------------------- sign --------------------

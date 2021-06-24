@@ -69,8 +69,8 @@ public class SftpTests {
         System.out.println(e.getSize("/root/文本1.txt"));
         System.out.println(e.getSize("/root/文本2.txt"));
         System.out.println(e.getSize("/root/文本3.txt"));
-        System.out.println(e.clear("/root/文本.txt"));
-        System.out.println(e.clear("/root/文本2.txt"));
+        System.out.println(e.truncate("/root/文本.txt"));
+        System.out.println(e.truncate("/root/文本2.txt"));
 
     }
 

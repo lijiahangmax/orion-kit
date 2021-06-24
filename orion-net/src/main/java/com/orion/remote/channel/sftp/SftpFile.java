@@ -30,7 +30,7 @@ public class SftpFile implements Serializable {
         this.size = attrs.getSize();
         this.uid = attrs.getUId();
         this.gid = attrs.getGId();
-        this.permission = attrs.getPermissions();
+        this.permission = Files1.permission8to10(attrs.getPermissions() & 0XFFF);
         this.permissionString = attrs.getPermissionsString();
         this.accessTime = Dates.date(attrs.getATime());
         this.modifyTime = Dates.date(attrs.getMTime());
@@ -67,7 +67,7 @@ public class SftpFile implements Serializable {
     private int gid;
 
     /**
-     * 8进制权限
+     * 10进制的 8进制权限
      */
     private int permission;
 
@@ -194,7 +194,7 @@ public class SftpFile implements Serializable {
 
     public SftpFile setPermission(int permission) {
         this.permission = permission;
-        this.attrs.setPERMISSIONS(permission);
+        this.attrs.setPERMISSIONS(Files1.permission10to8(permission));
         return this;
     }
 
