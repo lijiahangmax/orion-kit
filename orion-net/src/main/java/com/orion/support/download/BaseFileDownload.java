@@ -45,11 +45,6 @@ public abstract class BaseFileDownload implements Runnable {
      */
     protected int bufferSize;
 
-    /**
-     * 计算实时速率
-     */
-    protected boolean computeRate;
-
     public BaseFileDownload(String remote, File local, String lockSuffix, int bufferSize) {
         Valid.notEmpty(remote, "download remote file is empty");
         Valid.notNull(local, "local file is null");
@@ -61,27 +56,16 @@ public abstract class BaseFileDownload implements Runnable {
     }
 
     /**
-     * 开启计算实时速率
-     *
-     * @param computeRate rate
-     */
-    public void computeRate(boolean computeRate) {
-        this.computeRate = computeRate;
-    }
-
-    /**
      * 开始下载
      *
      * @throws IOException IOException
      */
     protected void startDownload() throws IOException {
+        boolean error = false;
         try {
-            if (computeRate) {
-                progress.computeRate();
-            }
             long remoteSize = this.getFileSize();
             progress.end(remoteSize);
-            if (local.exists() && local.isFile()) {
+            if (Files1.isFile(local)) {
                 long localSize = local.length();
                 if (localSize == remoteSize) {
                     // 跳过
@@ -103,10 +87,10 @@ public abstract class BaseFileDownload implements Runnable {
                 this.download();
             }
         } catch (Exception e) {
-            progress.finish(true);
+            error = true;
             throw e;
         } finally {
-            progress.finish();
+            progress.finish(error);
         }
     }
 

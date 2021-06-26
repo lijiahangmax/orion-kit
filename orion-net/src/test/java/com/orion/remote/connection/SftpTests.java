@@ -5,7 +5,6 @@ import com.orion.remote.connection.sftp.SftpExecutor;
 import com.orion.remote.connection.sftp.SftpFile;
 import com.orion.remote.connection.sftp.bigfile.SftpDownload;
 import com.orion.remote.connection.sftp.bigfile.SftpUpload;
-import com.orion.support.progress.ByteTransferProgress;
 import com.orion.utils.Threads;
 import com.orion.utils.collect.Lists;
 import com.orion.utils.io.Streams;
@@ -183,30 +182,34 @@ public class SftpTests {
 
     @Test
     public void bigUpload() {
-        SftpUpload u = e.upload("/root/a/b/c/a.rar", new File("C:\\Users\\ljh15\\Desktop\\a.rar"));
-        u.computeRate(true);
+        SftpUpload u = e.upload("/root/a/b/c/a5.rar", new File("C:\\Users\\ljh15\\Desktop\\a.rar"));
+        u.getProgress()
+                .computeRate()
+                .rateAcceptor(pr -> {
+                    System.out.println(pr.getProgress() * 100 + "% " + pr.getNowRate() / 1024 + "kb/s");
+                })
+                .callback(pr -> {
+                    System.out.println("done");
+                    System.exit(0);
+                });
         new Thread(u).start();
-        ByteTransferProgress p = u.getProgress();
-        while (!p.isDone()) {
-            System.out.println(p.getProgress() * 100 + "% " + p.getNowRate() / 1024 + "kb/s");
-            Threads.sleep(500);
-        }
-        System.out.println(p.getProgress() * 100 + "% " + p.getNowRate() / 1024 + "kb/s");
-        System.out.println("done");
+        Threads.sleep(30000000L);
     }
 
     @Test
     public void bigDownload() {
         SftpDownload u = e.download("/root/ffmpeg", new File("C:\\Users\\ljh15\\Desktop\\ffmpeg.flv"));
-        u.computeRate(true);
+        u.getProgress()
+                .computeRate()
+                .rateAcceptor(pr -> {
+                    System.out.println(pr.getProgress() * 100 + "% " + pr.getNowRate() / 1024 + "kb/s");
+                })
+                .callback(pr -> {
+                    System.out.println("done");
+                    System.exit(0);
+                });
         new Thread(u).start();
-        ByteTransferProgress p = u.getProgress();
-        while (!p.isDone()) {
-            System.out.println(p.getProgress() * 100 + "% " + p.getNowRate() / 1024 + "kb/s");
-            Threads.sleep(500);
-        }
-        System.out.println(p.getProgress() * 100 + "% " + p.getNowRate() / 1024 + "kb/s");
-        System.out.println("done");
+        Threads.sleep(30000000L);
     }
 
     @After

@@ -107,6 +107,11 @@ public class Systems {
      */
     public static final int PROCESS_NUM;
 
+    /**
+     * 随机 seed
+     */
+    public static final int SEED;
+
     static {
         LINE_SEPARATOR = getProperty("line.separator", Const.LF);
         FILE_SEPARATOR = File.separator;
@@ -142,6 +147,7 @@ public class Systems {
         JAVA_SPEC_VERSION = runtimeBean.getSpecVersion();
         Runtime runtime = Runtime.getRuntime();
         PROCESS_NUM = runtime.availableProcessors();
+        SEED = Randoms.randomInt(100000000, 999999999);
     }
 
     /**

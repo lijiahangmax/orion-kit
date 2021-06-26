@@ -65,8 +65,6 @@ public class SftpExecutor implements SafeCloseable {
         this.client = client;
         this.charset = charset;
         this.bufferSize = Const.BUFFER_KB_32;
-        // 默认并行数必须为1
-        this.client.setRequestParallelism(1);
         try {
             this.client.setCharset(charset);
         } catch (IOException e) {

@@ -183,6 +183,15 @@ public class Randoms {
     /**
      * 返回一个随机的布尔值
      *
+     * @return boolean
+     */
+    public static boolean randomBoolean() {
+        return RANDOM.nextDouble() > 0.5;
+    }
+
+    /**
+     * 返回一个随机的布尔值
+     *
      * @param i 几率 1/i
      * @return boolean
      */

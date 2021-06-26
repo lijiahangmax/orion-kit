@@ -202,11 +202,7 @@ public class SftpExecutor extends BaseExecutor {
             }
             return new SftpFile(path, attr);
         } catch (Exception e) {
-            if (SftpErrorMessage.NO_SUCH_FILE.getMessage().equals(e.getMessage())) {
-                return null;
-            } else {
-                throw Exceptions.sftp(e);
-            }
+            return null;
         }
     }
 

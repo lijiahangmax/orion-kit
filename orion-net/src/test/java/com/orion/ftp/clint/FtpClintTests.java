@@ -5,7 +5,6 @@ import com.orion.ftp.client.bigfile.FtpDownload;
 import com.orion.ftp.client.bigfile.FtpUpload;
 import com.orion.ftp.client.config.FtpConfig;
 import com.orion.ftp.client.pool.FtpClientFactory;
-import com.orion.support.progress.ByteTransferProgress;
 import com.orion.utils.Threads;
 import com.orion.utils.collect.Lists;
 import com.orion.utils.io.Streams;
@@ -154,29 +153,33 @@ public class FtpClintTests {
     @Test
     public void bigUpload() {
         FtpUpload u = i.upload("/big/big.rar", "C:\\Users\\ljh15\\Desktop\\big.rar");
-        u.computeRate(true);
+        u.getProgress()
+                .computeRate()
+                .rateAcceptor(pr -> {
+                    System.out.println(pr.getProgress() * 100 + "% " + pr.getNowRate() / 1024 + "kb/s");
+                })
+                .callback(pr -> {
+                    System.out.println("done");
+                    System.exit(0);
+                });
         new Thread(u).start();
-        ByteTransferProgress p = u.getProgress();
-        while (!p.isDone()) {
-            System.out.println(p.getProgress() * 100 + "% " + p.getNowRate() / 1024 + "kb/s");
-            Threads.sleep(500);
-        }
-        System.out.println(p.getProgress() * 100 + "% " + p.getNowRate() / 1024 + "kb/s");
-        System.out.println("done");
+        Threads.sleep(30000000L);
     }
 
     @Test
     public void bigDownload() {
         FtpDownload u = i.download("/big/big.rar", "C:\\Users\\ljh15\\Desktop\\16.7.rar");
-        u.computeRate(true);
+        u.getProgress()
+                .computeRate()
+                .rateAcceptor(pr -> {
+                    System.out.println(pr.getProgress() * 100 + "% " + pr.getNowRate() / 1024 + "kb/s");
+                })
+                .callback(pr -> {
+                    System.out.println("done");
+                    System.exit(0);
+                });
         new Thread(u).start();
-        ByteTransferProgress p = u.getProgress();
-        while (!p.isDone()) {
-            System.out.println(p.getProgress() * 100 + "% " + p.getNowRate() / 1024 + "kb/s");
-            Threads.sleep(500);
-        }
-        System.out.println(p.getProgress() * 100 + "% " + p.getNowRate() / 1024 + "kb/s");
-        System.out.println("done");
+        Threads.sleep(30000000L);
     }
 
     @After

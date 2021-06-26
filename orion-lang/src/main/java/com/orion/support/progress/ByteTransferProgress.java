@@ -1,9 +1,12 @@
 package com.orion.support.progress;
 
 import com.orion.constant.Const;
+import com.orion.utils.Objects1;
 import com.orion.utils.Threads;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
 
 /**
  * 数据传输进度条
@@ -64,6 +67,21 @@ public class ByteTransferProgress implements Progress {
      */
     protected volatile boolean done;
 
+    /**
+     * 进度调度器
+     */
+    private ExecutorService rateExecutor;
+
+    /**
+     * 进度处理器
+     */
+    private Consumer<ByteTransferProgress> rateAcceptor;
+
+    /**
+     * 传输完成回调
+     */
+    private Consumer<ByteTransferProgress> callback;
+
     public ByteTransferProgress(long end) {
         this(0, end);
     }
@@ -74,8 +92,8 @@ public class ByteTransferProgress implements Progress {
         this.end = end;
     }
 
-    public void computeRate() {
-        this.computeRate(Const.MS_S_1);
+    public ByteTransferProgress computeRate() {
+        return this.computeRate(Const.MS_S_1);
     }
 
     /**
@@ -83,9 +101,43 @@ public class ByteTransferProgress implements Progress {
      *
      * @param interval 间隔
      */
-    public void computeRate(int interval) {
+    public ByteTransferProgress computeRate(int interval) {
         this.computeRate = true;
         this.interval = interval;
+        return this;
+    }
+
+    /**
+     * 进度调度器
+     *
+     * @param rateExecutor 线程池
+     * @return this
+     */
+    public ByteTransferProgress rateExecutor(ExecutorService rateExecutor) {
+        this.rateExecutor = rateExecutor;
+        return this;
+    }
+
+    /**
+     * 进度回调
+     *
+     * @param rateAcceptor acceptor
+     * @return this
+     */
+    public ByteTransferProgress rateAcceptor(Consumer<ByteTransferProgress> rateAcceptor) {
+        this.rateAcceptor = rateAcceptor;
+        return this;
+    }
+
+    /**
+     * 完成回调
+     *
+     * @param callback 回调器
+     * @return this
+     */
+    public ByteTransferProgress callback(Consumer<ByteTransferProgress> callback) {
+        this.callback = callback;
+        return this;
     }
 
     /**
@@ -104,13 +156,16 @@ public class ByteTransferProgress implements Progress {
     public void start() {
         this.startTime = System.currentTimeMillis();
         if (computeRate) {
-            Threads.CACHE_EXECUTOR.execute(() -> {
+            Threads.start(() -> {
                 while (!done) {
                     long size = current.get();
                     Threads.sleep(interval);
                     nowRate = current.get() - size;
+                    if (rateAcceptor != null) {
+                        rateAcceptor.accept(this);
+                    }
                 }
-            });
+            }, Objects1.def(rateExecutor, Threads.CACHE_EXECUTOR));
         }
     }
 
@@ -176,6 +231,9 @@ public class ByteTransferProgress implements Progress {
         this.endTime = System.currentTimeMillis();
         this.done = true;
         this.error = error;
+        if (callback != null) {
+            callback.accept(this);
+        }
     }
 
     @Override

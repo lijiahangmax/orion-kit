@@ -44,11 +44,6 @@ public abstract class BaseFileUpload implements Runnable {
      */
     protected int bufferSize;
 
-    /**
-     * 计算实时速率
-     */
-    protected boolean computeRate;
-
     protected BaseFileUpload(String remote, File local, String lockSuffix, int bufferSize) {
         Valid.notEmpty(remote, "remote file is empty");
         Valid.notNull(local, "upload file is null");
@@ -63,24 +58,13 @@ public abstract class BaseFileUpload implements Runnable {
     }
 
     /**
-     * 开启计算实时速率
-     *
-     * @param computeRate rate
-     */
-    public void computeRate(boolean computeRate) {
-        this.computeRate = computeRate;
-    }
-
-    /**
      * 开始上传
      *
      * @throws IOException IOException
      */
     protected void startUpload() throws IOException {
+        boolean error = false;
         try {
-            if (computeRate) {
-                progress.computeRate();
-            }
             long remoteSize = this.getFileSize();
             if (remoteSize == -1) {
                 // 远程文件为空 直接上传
@@ -101,10 +85,10 @@ public abstract class BaseFileUpload implements Runnable {
                 }
             }
         } catch (Exception e) {
-            progress.finish(true);
+            error = true;
             throw e;
         } finally {
-            progress.finish();
+            progress.finish(error);
         }
     }
 
