@@ -36,7 +36,7 @@ public class SftpExecutorTests {
                 .connect(20000)
                 .getSftpExecutor();
         e.connect(20000)
-                .filenameEncoding(Const.UTF_8);
+                .charset(Const.UTF_8);
     }
 
     @Test

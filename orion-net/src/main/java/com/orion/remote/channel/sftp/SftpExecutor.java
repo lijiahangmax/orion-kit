@@ -72,7 +72,7 @@ public class SftpExecutor extends BaseExecutor {
         super.connect();
         try {
             this.home = channel.getHome();
-            this.filenameEncoding(charset);
+            this.charset(charset);
         } catch (SftpException e) {
             throw Exceptions.sftp("could not read home path", e);
         }
@@ -84,7 +84,7 @@ public class SftpExecutor extends BaseExecutor {
         super.connect(timeout);
         try {
             this.home = channel.getHome();
-            this.filenameEncoding(charset);
+            this.charset(charset);
         } catch (SftpException e) {
             throw Exceptions.sftp("could not read home path", e);
         }
@@ -113,9 +113,10 @@ public class SftpExecutor extends BaseExecutor {
      * @param charset 编码格式
      * @return ignore
      */
-    public boolean filenameEncoding(String charset) {
+    public boolean charset(String charset) {
         try {
             channel.setFilenameEncoding(charset);
+            this.charset = charset;
             return true;
         } catch (Exception e) {
             return false;

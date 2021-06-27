@@ -112,8 +112,8 @@ public abstract class BaseFileDownload implements Runnable {
                 progress.accept(read);
                 out.write(bs, 0, read);
             }
-        } finally {
             lock.unLock();
+        } finally {
             Streams.close(out);
             this.transferFinish();
         }
@@ -138,8 +138,8 @@ public abstract class BaseFileDownload implements Runnable {
                 progress.accept(read);
                 out.write(bs, 0, read);
             }
-        } finally {
             lock.unLock();
+        } finally {
             Streams.close(out);
             this.transferFinish();
         }

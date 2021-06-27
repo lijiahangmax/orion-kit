@@ -323,13 +323,13 @@ public class FileLocks {
 
         @Override
         public boolean isLocked() {
-            init();
+            this.init();
             return lockFile.exists();
         }
 
         private void init() {
             if (this.lockFile == null) {
-                this.lockFile = new File(this.file.getParent() + Const.SEPARATOR + this.prefix + this.file.getName() + this.suffix);
+                this.lockFile = new File(file.getParent() + Const.SEPARATOR + prefix + file.getName() + suffix);
             }
         }
 

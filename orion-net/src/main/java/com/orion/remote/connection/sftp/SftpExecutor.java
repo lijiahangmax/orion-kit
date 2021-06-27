@@ -91,6 +91,7 @@ public class SftpExecutor implements SafeCloseable {
     public SftpExecutor charset(String charset) {
         try {
             client.setCharset(charset);
+            this.charset = charset;
         } catch (IOException e) {
             throw Exceptions.unsupportedEncoding(e);
         }
