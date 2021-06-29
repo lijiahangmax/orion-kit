@@ -24,7 +24,7 @@ public interface JsonAble {
      * @return jsonString
      */
     default String toJson() {
-        return Jsons.toJson(this);
+        return Jsons.toJsonWriteNull(this);
     }
 
 }

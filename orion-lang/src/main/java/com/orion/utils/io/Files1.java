@@ -1805,6 +1805,24 @@ public class Files1 {
      *
      * @param path 需要处理的文件路径
      */
+    public static boolean isWindowsPath(String path) {
+        return Matches.isWindowsPath(path);
+    }
+
+    /**
+     * 判断是否符是合法的文件路径
+     *
+     * @param path 需要处理的文件路径
+     */
+    public static boolean isLinuxPath(String path) {
+        return Matches.isLinuxPath(path);
+    }
+
+    /**
+     * 判断是否符是合法的文件路径
+     *
+     * @param path 需要处理的文件路径
+     */
     public static boolean isPath(String path) {
         return Matches.isWindowsPath(path) || Matches.isLinuxPath(path);
     }
