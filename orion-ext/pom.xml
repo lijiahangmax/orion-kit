@@ -54,6 +54,14 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <!-- git -->
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>5.11.1.202105131744-r</version>
+        </dependency>
+
     </dependencies>
 
     <build>
