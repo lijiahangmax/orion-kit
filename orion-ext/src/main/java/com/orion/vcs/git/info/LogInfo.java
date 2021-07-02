@@ -85,4 +85,15 @@ public class LogInfo implements Serializable {
         this.message = message;
     }
 
+    @Override
+    public String toString() {
+        return "LogInfo{" +
+                "id='" + id + '\'' +
+                ", email='" + email + '\'' +
+                ", name='" + name + '\'' +
+                ", time=" + time +
+                ", message='" + message + '\'' +
+                '}';
+    }
+
 }

@@ -47,6 +47,13 @@ public abstract class Gits implements SafeCloseable {
         };
     }
 
+    /**
+     * 检出分支代码
+     *
+     * @param branchName 分支名称
+     * @return this
+     * @throws Exception Exception
+     */
     public Gits checkout(String branchName) throws Exception {
         git.checkout().setName(branchName)
                 .setCreateBranch(false)
@@ -54,19 +61,36 @@ public abstract class Gits implements SafeCloseable {
         return this;
     }
 
+    /**
+     * pull代码
+     *
+     * @return this
+     * @throws Exception Exception
+     */
     public Gits pull() throws Exception {
         git.pull().call();
         return this;
     }
 
+    /**
+     * 还原版本 hard
+     *
+     * @param version commitId
+     * @return this
+     * @throws Exception Exception
+     */
     public Gits reset(String version) throws Exception {
-        git.reset()
-                .setMode(ResetCommand.ResetType.HARD)
-                .setRef(version)
-                .call();
-        return this;
+        return this.reset(version, ResetCommand.ResetType.HARD);
     }
 
+    /**
+     * 还原版本
+     *
+     * @param version commitId
+     * @param type    类型
+     * @return this
+     * @throws Exception Exception
+     */
     public Gits reset(String version, ResetCommand.ResetType type) throws Exception {
         git.reset()
                 .setRef(version)
@@ -75,10 +99,23 @@ public abstract class Gits implements SafeCloseable {
         return this;
     }
 
+    /**
+     * 分支列表
+     *
+     * @return list
+     * @throws Exception Exception
+     */
     public List<BranchInfo> branchList() throws Exception {
         return this.branchList(null);
     }
 
+    /**
+     * 分支列表
+     *
+     * @param name 分支名称
+     * @return list
+     * @throws Exception Exception
+     */
     public List<BranchInfo> branchList(String name) throws Exception {
         List<Ref> refs = git.branchList().setContains(name)
                 .setListMode(ListBranchCommand.ListMode.REMOTE)
@@ -93,18 +130,46 @@ public abstract class Gits implements SafeCloseable {
                 }).collect(Collectors.toList());
     }
 
+    /**
+     * 日志列表
+     *
+     * @return 当前分支日志列表
+     * @throws Exception Exception
+     */
     public List<LogInfo> logList() throws Exception {
         return this.logList(git.getRepository().getBranch(), 10);
     }
 
+    /**
+     * 日志列表
+     *
+     * @param count 日志数量
+     * @return 当前分支日志列表
+     * @throws Exception Exception
+     */
     public List<LogInfo> logList(int count) throws Exception {
         return this.logList(git.getRepository().getBranch(), count);
     }
 
+    /**
+     * 日志列表
+     *
+     * @param branch 分支名称
+     * @return 分支日志列表
+     * @throws Exception Exception
+     */
     public List<LogInfo> logList(String branch) throws Exception {
         return this.logList(branch, 10);
     }
 
+    /**
+     * 日志列表
+     *
+     * @param branch 分支名称
+     * @param count  日志数量
+     * @return 分支日志列表
+     * @throws Exception Exception
+     */
     public List<LogInfo> logList(String branch, int count) throws Exception {
         Repository repo = git.getRepository();
         Ref b = git.branchList()
@@ -128,6 +193,19 @@ public abstract class Gits implements SafeCloseable {
             logs.add(log);
         }
         return logs;
+    }
+
+    /**
+     * 清空工作目录其他文件
+     *
+     * @return return
+     * @throws Exception Exception
+     */
+    public Gits clean() throws Exception {
+        git.clean().setForce(true)
+                .setCleanDirectories(true)
+                .call();
+        return this;
     }
 
     public Git getGit() {
