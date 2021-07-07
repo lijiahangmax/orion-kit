@@ -16,13 +16,21 @@ public class Stacks {
     private Stacks() {
     }
 
+    public static List<StackTrace> currentStacks() {
+        return currentStacks(current());
+    }
+
+    public static List<StackTrace> currentStacks(Exception e) {
+        return currentStacks(e.getStackTrace());
+    }
+
     /**
      * 获取当前所有栈内信息
      *
+     * @param stackTrace stackTrace
      * @return 栈内信息
      */
-    public static List<StackTrace> currentStacks() {
-        StackTraceElement[] stackTrace = new Exception().getStackTrace();
+    public static List<StackTrace> currentStacks(StackTraceElement[] stackTrace) {
         List<StackTrace> r = new ArrayList<>();
         for (StackTraceElement traceElement : stackTrace) {
             r.add(new StackTrace(traceElement));
@@ -30,76 +38,131 @@ public class Stacks {
         return r;
     }
 
-    /**
-     * 获取当前栈内信息
-     *
-     * @param index 栈下标
-     * @return 栈内信息
-     */
     public static StackTrace currentStack(int index) {
-        StackTraceElement[] stackTrace = new Exception().getStackTrace();
-        return new StackTrace(stackTrace[index]);
+        return currentStack(current(), index);
+    }
+
+    public static StackTrace currentStack(Exception e, int index) {
+        return currentStack(e.getStackTrace(), index);
     }
 
     /**
      * 获取当前栈内信息
      *
+     * @param index      栈下标
+     * @param stackTrace stackTrace
      * @return 栈内信息
      */
+    public static StackTrace currentStack(StackTraceElement[] stackTrace, int index) {
+        return new StackTrace(stackTrace[index]);
+    }
+
     public static StackTrace currentStack() {
-        StackTraceElement[] stackTrace = new Exception().getStackTrace();
-        return new StackTrace(stackTrace[stackTrace.length - 1]);
+        return currentStack(current());
+    }
+
+    public static StackTrace currentStack(Exception e) {
+        return currentStack(e.getStackTrace());
+    }
+
+    /**
+     * 获取当前栈内信息
+     *
+     * @param stackTrace stackTrace
+     * @return 栈内信息
+     */
+    public static StackTrace currentStack(StackTraceElement[] stackTrace) {
+        return new StackTrace(Arrays1.last(stackTrace));
+    }
+
+    public static String currentFile() {
+        return currentFile(current());
+    }
+
+    public static String currentFile(Exception e) {
+        return currentFile(e.getStackTrace());
     }
 
     /**
      * 获取当前文件
      *
+     * @param stackTrace stackTrace
      * @return 当前文件
      */
-    public static String currentFile() {
-        StackTraceElement[] stackTrace = new Exception().getStackTrace();
-        return stackTrace[stackTrace.length - 1].getFileName();
+    public static String currentFile(StackTraceElement[] stackTrace) {
+        return Arrays1.last(stackTrace).getFileName();
+    }
+
+    public static String currentClass() {
+        return currentClass(current());
+    }
+
+    public static String currentClass(Exception e) {
+        return currentClass(e.getStackTrace());
     }
 
     /**
      * 获取当前类
      *
+     * @param stackTrace stackTrace
      * @return 当前类
      */
-    public static String currentClass() {
-        StackTraceElement[] stackTrace = new Exception().getStackTrace();
-        return stackTrace[stackTrace.length - 1].getClassName();
+    public static String currentClass(StackTraceElement[] stackTrace) {
+        return Arrays1.last(stackTrace).getClassName();
+    }
+
+    public static String currentMethod() {
+        return currentMethod(current());
+    }
+
+    public static String currentMethod(Exception e) {
+        return currentMethod(e.getStackTrace());
     }
 
     /**
      * 获取当前方法
      *
+     * @param stackTrace stackTrace
      * @return 栈内当前方法
      */
-    public static String currentMethod() {
-        StackTraceElement[] stackTrace = new Exception().getStackTrace();
-        return stackTrace[stackTrace.length - 1].getMethodName();
+    public static String currentMethod(StackTraceElement[] stackTrace) {
+        return Arrays1.last(stackTrace).getMethodName();
+    }
+
+    public static int currentLineNumber() {
+        return currentLineNumber(current());
+    }
+
+    public static int currentLineNumber(Exception e) {
+        return currentLineNumber(e.getStackTrace());
     }
 
     /**
      * 获取当前行
      *
+     * @param stackTrace stackTrace
      * @return 栈内信息
      */
-    public static int currentLineNumber() {
-        StackTraceElement[] stackTrace = new Exception().getStackTrace();
-        return stackTrace[stackTrace.length - 1].getLineNumber();
+    public static int currentLineNumber(StackTraceElement[] stackTrace) {
+        return Arrays1.last(stackTrace).getLineNumber();
+    }
 
+    public static boolean currentNative() {
+        return currentNative(current());
+    }
+
+    public static boolean currentNative(Exception e) {
+        return currentNative(e.getStackTrace());
     }
 
     /**
      * 获取当前方法是否是本地方法
      *
+     * @param stackTrace stackTrace
      * @return true 本地方法
      */
-    public static boolean currentNetive() {
-        StackTraceElement[] stackTrace = new Exception().getStackTrace();
-        return stackTrace[stackTrace.length - 1].isNativeMethod();
+    public static boolean currentNative(StackTraceElement[] stackTrace) {
+        return Arrays1.last(stackTrace).isNativeMethod();
     }
 
     /**
@@ -124,6 +187,10 @@ public class Stacks {
             list.add(new StackTrace(e));
         }
         return list;
+    }
+
+    private static StackTraceElement[] current() {
+        return Thread.currentThread().getStackTrace();
     }
 
     /**

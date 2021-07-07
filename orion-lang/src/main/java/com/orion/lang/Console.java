@@ -131,14 +131,14 @@ public class Console {
     /**
      * @return 返回当前栈位置
      */
-    public static String where() {
+    public static String stack() {
         return Stacks.currentStack().toRawString();
     }
 
     /**
      * @return 返回当前行号
      */
-    public static Integer lineNumber() {
+    public static Integer line() {
         return Stacks.currentLineNumber();
     }
 
