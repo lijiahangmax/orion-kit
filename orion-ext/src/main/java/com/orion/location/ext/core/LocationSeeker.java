@@ -284,7 +284,7 @@ public class LocationSeeker {
     }
 
     /**
-     * 解析ip地址，返回该ip地址对应的国家省份信息
+     * 解析ip地址, 返回该ip地址对应的国家省份信息
      *
      * @param ip ipv4
      * @return ignore

@@ -170,7 +170,7 @@ public class CityHash {
     }
 
     /**
-     * 计算64位City Hash值，种子1使用默认的{@link #K_2}
+     * 计算64位City Hash值, 种子1使用默认的{@link #K_2}
      *
      * @param data 数据
      * @param seed 种子2

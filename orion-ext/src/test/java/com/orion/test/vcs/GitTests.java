@@ -18,6 +18,9 @@ public class GitTests {
     @Before
     public void before() throws Exception {
         gits = Gits.of(new File("A:\\tmp\\git\\tmp"));
+        System.out.println(gits.getBranch());
+        System.out.println(gits.getRemoteUrl());
+        System.out.println(gits.getDirectory());
     }
 
     @Test

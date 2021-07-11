@@ -204,4 +204,8 @@ public abstract class Const {
 
     public static final String LIMIT_1 = "LIMIT 1";
 
+    public static final String ENTITY = "entity";
+
+    public static final String PAGER = "pager";
+
 }

@@ -14,6 +14,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 /**
  * git本地仓库基本操作
  * <p>
- * checkout pull reset log branch
+ * checkout pull reset log branch clean
  * <p>
  * 其他功能请用命令行
  *
@@ -44,6 +45,11 @@ public abstract class Gits implements SafeCloseable {
 
     public static Gits of(File path) throws Exception {
         return new Gits(Git.open(path)) {
+        };
+    }
+
+    public static Gits of(Repository repo) {
+        return new Gits(Git.wrap(repo)) {
         };
     }
 
@@ -208,8 +214,40 @@ public abstract class Gits implements SafeCloseable {
         return this;
     }
 
+    /**
+     * 获取目录
+     *
+     * @return 目录
+     */
+    public String getDirectory() {
+        return git.getRepository().getDirectory().getParent();
+    }
+
+    /**
+     * 获取远程url
+     *
+     * @return url
+     */
+    public String getRemoteUrl() {
+        return git.getRepository().getConfig().getString("remote", "origin", "url");
+    }
+
+    /**
+     * 获取当前分支
+     *
+     * @return branch
+     * @throws IOException IOException
+     */
+    public String getBranch() throws IOException {
+        return git.getRepository().getBranch();
+    }
+
     public Git getGit() {
         return git;
+    }
+
+    public Repository getRepository() {
+        return git.getRepository();
     }
 
     @Override

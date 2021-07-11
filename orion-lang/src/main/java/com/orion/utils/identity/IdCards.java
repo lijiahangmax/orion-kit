@@ -106,7 +106,7 @@ public class IdCards {
     /**
      * 是否有效身份证号
      *
-     * @param idCard 身份证号，支持18位、15位
+     * @param idCard 身份证号, 支持18位、15位
      * @return 是否有效
      */
     public static boolean isValidCard(String idCard) {
@@ -131,7 +131,7 @@ public class IdCards {
      * 第7~14位数字表示: 出生年月日
      * 第15、16位数字表示: 所在地的派出所的代码
      * 第17位数字表示性别: 奇数表示男性, 偶数表示女性
-     * 第18位数字是校检码: 用来检验身份证的正确性。校检码可以是0~9的数字，有时也用x表示
+     * 第18位数字是校检码: 用来检验身份证的正确性 校检码可以是0~9的数字, 有时也用x表示
      * <p>
      * 校验码的计算方法为:
      * 将前面的身份证号码17位数分别乘以不同的系数, 从第一位到第十七位的系数分别为: 7 9 10 5 8 4 2 1 6 3 7 9 10 5 8 4 2
@@ -299,10 +299,10 @@ public class IdCards {
     }
 
     /**
-     * 根据身份编号获取户籍省份，只支持15或18位身份证号码
+     * 根据身份编号获取户籍省份, 只支持15或18位身份证号码
      *
      * @param idCard 身份编码
-     * @return 省级编码。
+     * @return 省级编码
      */
     public static String getProvince(String idCard) {
         int len = idCard.length();

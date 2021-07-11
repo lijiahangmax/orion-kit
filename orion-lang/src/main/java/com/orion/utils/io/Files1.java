@@ -637,13 +637,14 @@ public class Files1 {
             target.mkdirs();
         }
         File[] files = source.listFiles();
+        String sourceName = source.getName();
         if (files != null) {
             for (File file : files) {
                 String path = file.getName();
                 if (file.isDirectory()) {
-                    copyDir(file, new File(target.getAbsolutePath() + "/" + path));
+                    copyDir(file, new File(target.getAbsolutePath() + "/" + sourceName + "/" + path));
                 } else {
-                    copy(file, new File(target.getAbsolutePath() + "/" + path));
+                    copy(file, new File(target.getAbsolutePath() + "/" + sourceName + "/" + path));
                 }
             }
         }
