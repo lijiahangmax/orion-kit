@@ -648,6 +648,22 @@ public class Exceptions {
         return new ScriptExecuteException(e);
     }
 
+    public static VcsException vcs() {
+        return new VcsException();
+    }
+
+    public static VcsException vcs(Throwable t) {
+        return new VcsException(t);
+    }
+
+    public static VcsException vcs(String s) {
+        return new VcsException(s);
+    }
+
+    public static VcsException vcs(String s, Throwable t) {
+        return new VcsException(s, t);
+    }
+
     public static Error error() {
         return new Error();
     }

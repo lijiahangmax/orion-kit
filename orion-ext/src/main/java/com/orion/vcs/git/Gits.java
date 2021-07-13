@@ -2,6 +2,7 @@ package com.orion.vcs.git;
 
 import com.orion.able.SafeCloseable;
 import com.orion.utils.Arrays1;
+import com.orion.utils.Exceptions;
 import com.orion.utils.io.Streams;
 import com.orion.vcs.git.info.BranchInfo;
 import com.orion.vcs.git.info.LogInfo;
@@ -43,9 +44,13 @@ public abstract class Gits implements SafeCloseable {
         };
     }
 
-    public static Gits of(File path) throws Exception {
-        return new Gits(Git.open(path)) {
-        };
+    public static Gits of(File path) {
+        try {
+            return new Gits(Git.open(path)) {
+            };
+        } catch (IOException e) {
+            throw Exceptions.vcs(e);
+        }
     }
 
     public static Gits of(Repository repo) {
@@ -58,24 +63,30 @@ public abstract class Gits implements SafeCloseable {
      *
      * @param branchName 分支名称
      * @return this
-     * @throws Exception Exception
      */
-    public Gits checkout(String branchName) throws Exception {
-        git.checkout().setName(branchName)
-                .setCreateBranch(false)
-                .call();
-        return this;
+    public Gits checkout(String branchName) {
+        try {
+            git.checkout().setName(branchName)
+                    .setCreateBranch(false)
+                    .call();
+            return this;
+        } catch (Exception e) {
+            throw Exceptions.vcs(e);
+        }
     }
 
     /**
      * pull代码
      *
      * @return this
-     * @throws Exception Exception
      */
-    public Gits pull() throws Exception {
-        git.pull().call();
-        return this;
+    public Gits pull() {
+        try {
+            git.pull().call();
+            return this;
+        } catch (Exception e) {
+            throw Exceptions.vcs(e);
+        }
     }
 
     /**
@@ -83,9 +94,8 @@ public abstract class Gits implements SafeCloseable {
      *
      * @param version commitId
      * @return this
-     * @throws Exception Exception
      */
-    public Gits reset(String version) throws Exception {
+    public Gits reset(String version) {
         return this.reset(version, ResetCommand.ResetType.HARD);
     }
 
@@ -95,23 +105,25 @@ public abstract class Gits implements SafeCloseable {
      * @param version commitId
      * @param type    类型
      * @return this
-     * @throws Exception Exception
      */
-    public Gits reset(String version, ResetCommand.ResetType type) throws Exception {
-        git.reset()
-                .setRef(version)
-                .setMode(type)
-                .call();
-        return this;
+    public Gits reset(String version, ResetCommand.ResetType type) {
+        try {
+            git.reset()
+                    .setRef(version)
+                    .setMode(type)
+                    .call();
+            return this;
+        } catch (Exception e) {
+            throw Exceptions.vcs(e);
+        }
     }
 
     /**
      * 分支列表
      *
      * @return list
-     * @throws Exception Exception
      */
-    public List<BranchInfo> branchList() throws Exception {
+    public List<BranchInfo> branchList() {
         return this.branchList(null);
     }
 
@@ -120,30 +132,36 @@ public abstract class Gits implements SafeCloseable {
      *
      * @param name 分支名称
      * @return list
-     * @throws Exception Exception
      */
-    public List<BranchInfo> branchList(String name) throws Exception {
-        List<Ref> refs = git.branchList().setContains(name)
-                .setListMode(ListBranchCommand.ListMode.REMOTE)
-                .call();
-        return refs.stream()
-                .filter(r -> !r.getName().endsWith("/HEAD"))
-                .map(ref -> {
-                    BranchInfo info = new BranchInfo();
-                    info.setId(ref.getObjectId().name());
-                    info.setName(Arrays1.last(ref.getName().split("/")));
-                    return info;
-                }).collect(Collectors.toList());
+    public List<BranchInfo> branchList(String name) {
+        try {
+            List<Ref> refs = git.branchList().setContains(name)
+                    .setListMode(ListBranchCommand.ListMode.REMOTE)
+                    .call();
+            return refs.stream()
+                    .filter(r -> !r.getName().endsWith("/HEAD"))
+                    .map(ref -> {
+                        BranchInfo info = new BranchInfo();
+                        info.setId(ref.getObjectId().name());
+                        info.setName(Arrays1.last(ref.getName().split("/")));
+                        return info;
+                    }).collect(Collectors.toList());
+        } catch (Exception e) {
+            throw Exceptions.vcs(e);
+        }
     }
 
     /**
      * 日志列表
      *
      * @return 当前分支日志列表
-     * @throws Exception Exception
      */
-    public List<LogInfo> logList() throws Exception {
-        return this.logList(git.getRepository().getBranch(), 10);
+    public List<LogInfo> logList() {
+        try {
+            return this.logList(git.getRepository().getBranch(), 10);
+        } catch (Exception e) {
+            throw Exceptions.vcs(e);
+        }
     }
 
     /**
@@ -151,10 +169,13 @@ public abstract class Gits implements SafeCloseable {
      *
      * @param count 日志数量
      * @return 当前分支日志列表
-     * @throws Exception Exception
      */
-    public List<LogInfo> logList(int count) throws Exception {
-        return this.logList(git.getRepository().getBranch(), count);
+    public List<LogInfo> logList(int count) {
+        try {
+            return this.logList(git.getRepository().getBranch(), count);
+        } catch (Exception e) {
+            throw Exceptions.vcs(e);
+        }
     }
 
     /**
@@ -162,9 +183,8 @@ public abstract class Gits implements SafeCloseable {
      *
      * @param branch 分支名称
      * @return 分支日志列表
-     * @throws Exception Exception
      */
-    public List<LogInfo> logList(String branch) throws Exception {
+    public List<LogInfo> logList(String branch) {
         return this.logList(branch, 10);
     }
 
@@ -174,44 +194,50 @@ public abstract class Gits implements SafeCloseable {
      * @param branch 分支名称
      * @param count  日志数量
      * @return 分支日志列表
-     * @throws Exception Exception
      */
-    public List<LogInfo> logList(String branch, int count) throws Exception {
-        Repository repo = git.getRepository();
-        Ref b = git.branchList()
-                .setContains(branch)
-                .setListMode(ListBranchCommand.ListMode.ALL)
-                .call()
-                .get(0);
-        if (b == null) {
-            return new ArrayList<>();
+    public List<LogInfo> logList(String branch, int count) {
+        try {
+            Repository repo = git.getRepository();
+            Ref b = git.branchList()
+                    .setContains(branch)
+                    .setListMode(ListBranchCommand.ListMode.ALL)
+                    .call()
+                    .get(0);
+            if (b == null) {
+                return new ArrayList<>();
+            }
+            ObjectId bid = repo.resolve(b.getName());
+            Iterable<RevCommit> commits = git.log().setMaxCount(count).add(bid).call();
+            List<LogInfo> logs = new ArrayList<>();
+            for (RevCommit commit : commits) {
+                LogInfo log = new LogInfo();
+                log.setId(commit.getId().name());
+                log.setEmail(commit.getCommitterIdent().getName());
+                log.setName(commit.getCommitterIdent().getName());
+                log.setTime(commit.getCommitTime());
+                log.setMessage(commit.getFullMessage());
+                logs.add(log);
+            }
+            return logs;
+        } catch (Exception e) {
+            throw Exceptions.vcs(e);
         }
-        ObjectId bid = repo.resolve(b.getName());
-        Iterable<RevCommit> commits = git.log().setMaxCount(count).add(bid).call();
-        List<LogInfo> logs = new ArrayList<>();
-        for (RevCommit commit : commits) {
-            LogInfo log = new LogInfo();
-            log.setId(commit.getId().name());
-            log.setEmail(commit.getCommitterIdent().getName());
-            log.setName(commit.getCommitterIdent().getName());
-            log.setTime(commit.getCommitTime());
-            log.setMessage(commit.getFullMessage());
-            logs.add(log);
-        }
-        return logs;
     }
 
     /**
      * 清空工作目录其他文件
      *
      * @return return
-     * @throws Exception Exception
      */
-    public Gits clean() throws Exception {
-        git.clean().setForce(true)
-                .setCleanDirectories(true)
-                .call();
-        return this;
+    public Gits clean() {
+        try {
+            git.clean().setForce(true)
+                    .setCleanDirectories(true)
+                    .call();
+            return this;
+        } catch (Exception e) {
+            throw Exceptions.vcs(e);
+        }
     }
 
     /**
@@ -236,10 +262,13 @@ public abstract class Gits implements SafeCloseable {
      * 获取当前分支
      *
      * @return branch
-     * @throws IOException IOException
      */
-    public String getBranch() throws IOException {
-        return git.getRepository().getBranch();
+    public String getBranch() {
+        try {
+            return git.getRepository().getBranch();
+        } catch (Exception e) {
+            throw Exceptions.vcs(e);
+        }
     }
 
     public Git getGit() {

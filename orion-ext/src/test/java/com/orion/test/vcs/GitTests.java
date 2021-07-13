@@ -25,12 +25,12 @@ public class GitTests {
 
     @Test
     public void testCheckout() throws Exception {
-        gits.checkout("master").pull();
+        gits.checkout("master").pull().close();
     }
 
     @Test
     public void reset() throws Exception {
-        gits.checkout("develop").reset("482a5dbcec5607abd5f8cd2ab1adac323616f2bd");
+        gits.checkout("develop").reset("482a5dbcec5607abd5f8cd2ab1adac323616f2bd").close();
     }
 
     @Test
@@ -45,7 +45,7 @@ public class GitTests {
 
     @Test
     public void clean() throws Exception {
-        gits.clean();
+        gits.clean().close();
     }
 
 }
