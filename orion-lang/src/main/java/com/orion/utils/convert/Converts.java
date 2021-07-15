@@ -7,6 +7,8 @@ import com.orion.utils.time.Dates;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 转化对象类型
@@ -42,6 +44,12 @@ public class Converts {
      */
     public static <T, R> R to(T t, Conversion<T, R> f) {
         return f.apply(t);
+    }
+
+    public static <T, R> List<R> toList(List<T> list, Class<R> targetClass) {
+        return list.stream()
+                .map(s -> to(s, targetClass))
+                .collect(Collectors.toList());
     }
 
     // -------------------- toString --------------------

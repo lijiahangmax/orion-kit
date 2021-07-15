@@ -660,23 +660,10 @@ public class Dates {
         return "未知";
     }
 
-    /**
-     * 获得与当前时间的前后
-     *
-     * @param date 对比的时间
-     * @return 结果
-     */
     public static String ago(Date date) {
         return ago(new Date(), date, false, false);
     }
 
-    /**
-     * 获得时间的前后
-     *
-     * @param source 源时间
-     * @param date   对比的时间
-     * @return 结果
-     */
     public static String ago(Date source, Date date) {
         return ago(source, date, false, false);
     }
@@ -768,23 +755,10 @@ public class Dates {
         return "刚刚";
     }
 
-    /**
-     * 获得与当前时间的前后
-     *
-     * @param d 对比的时间
-     * @return 结果
-     */
     public static String dateAgo(Date d) {
         return dateAgo(new Date(), d, true);
     }
 
-    /**
-     * 获得与当前时间的前后
-     *
-     * @param source 源时间
-     * @param d      对比的时间
-     * @return 结果
-     */
     public static String dateAgo(Date source, Date d) {
         return dateAgo(source, d, true);
     }
@@ -952,8 +926,75 @@ public class Dates {
         return "刚刚";
     }
 
+    public static String interval(Date date1, Date date2) {
+        return interval(intervalMs(date1, date2), false, null, null, null, null);
+    }
+
+    public static String interval(Date date1, Date date2, boolean full) {
+        return interval(intervalMs(date1, date2), full, null, null, null, null);
+    }
+
+    public static String interval(Date date1, Date date2, String day, String hour, String minute, String second) {
+        return interval(intervalMs(date1, date2), false, day, hour, minute, second);
+    }
+
+    public static String interval(Date date1, Date date2, boolean full, String day, String hour, String minute, String second) {
+        return interval(intervalMs(date1, date2), full, day, hour, minute, second);
+    }
+
+    public static String interval(long ms) {
+        return interval(ms, false, null, null, null, null);
+    }
+
+    public static String interval(long ms, boolean full) {
+        return interval(ms, full, null, null, null, null);
+    }
+
     /**
      * 时差
+     *
+     * @param ms     时间戳毫秒
+     * @param full   为0是否显示 0天0时0分1秒 : 1秒
+     * @param day    天显示的文字
+     * @param hour   时显示的文字
+     * @param minute 分显示的文字
+     * @param second 秒显示的文字
+     * @return 时差
+     */
+    public static String interval(long ms, boolean full, String day, String hour, String minute, String second) {
+        long[] analysis = intervalAnalysis(ms);
+        if (full) {
+            return analysis[0] + (day == null ? "天" : day)
+                    + analysis[1] + (hour == null ? "时" : hour)
+                    + analysis[2] + (minute == null ? "分" : minute)
+                    + analysis[3] + (second == null ? "秒" : second);
+        }
+        boolean ay = true, ah = true, am = true;
+        if (analysis[0] == 0) {
+            ay = false;
+        }
+        if (!ay && analysis[1] == 0) {
+            ah = false;
+        }
+        if (!ah && analysis[2] == 0) {
+            am = false;
+        }
+        StringBuilder sb = new StringBuilder();
+        if (ay) {
+            sb.append(analysis[0]).append(day == null ? "天" : day);
+        }
+        if (ah) {
+            sb.append(analysis[1]).append(hour == null ? "时" : hour);
+        }
+        if (am) {
+            sb.append(analysis[2]).append(minute == null ? "分" : minute);
+        }
+        sb.append(analysis[3]).append(second == null ? "秒" : second);
+        return sb.toString();
+    }
+
+    /**
+     * 时差毫秒
      *
      * @param date1 时间1
      * @param date2 时间2
@@ -963,43 +1004,8 @@ public class Dates {
         return Math.abs(date1.getTime() - date2.getTime());
     }
 
-    /**
-     * 时差解构
-     *
-     * @param date1 时间1
-     * @param date2 时间2
-     * @return 时差 [天,时,分,秒]
-     */
     public static long[] intervalAnalysis(Date date1, Date date2) {
-        long d1 = date1.getTime(), d2 = date2.getTime();
-        return intervalAnalysis((d1 - d2) > 0 ? d1 - d2 : d2 - d1);
-    }
-
-    /**
-     * 时差
-     *
-     * @param date1 时间1
-     * @param date2 时间2
-     * @return 时差 如0天0时0分3秒
-     */
-    public static String interval(Date date1, Date date2) {
-        return interval(date1, date2, null, null, null, null);
-    }
-
-    /**
-     * 时差
-     *
-     * @param date1  时间1
-     * @param date2  时间2
-     * @param day    天显示的文字
-     * @param hour   时显示的文字
-     * @param minute 分显示的文字
-     * @param second 秒显示的文字
-     * @return 时差
-     */
-    public static String interval(Date date1, Date date2, String day, String hour, String minute, String second) {
-        long d1 = date1.getTime(), d2 = date2.getTime();
-        return interval((d1 - d2) > 0 ? d1 - d2 : d2 - d1, day, hour, minute, second);
+        return intervalAnalysis(intervalMs(date1, date2));
     }
 
     /**
@@ -1017,51 +1023,18 @@ public class Dates {
     }
 
     /**
-     * 时差
-     *
-     * @param ms 时间戳毫秒
-     * @return 时差 如0天0时0分3秒
-     */
-    public static String interval(long ms) {
-        return interval(ms, null, null, null, null);
-    }
-
-    /**
-     * 时差
-     *
-     * @param ms     时间戳毫秒
-     * @param day    天显示的文字
-     * @param hour   时显示的文字
-     * @param minute 分显示的文字
-     * @param second 秒显示的文字
-     * @return 时差
-     */
-    public static String interval(long ms, String day, String hour, String minute, String second) {
-        long distanceDay = ms / DAY_STAMP;
-        long distanceHour = ms % DAY_STAMP / HOUR_STAMP;
-        long distanceMinute = ms % DAY_STAMP % HOUR_STAMP / MINUTE_STAMP;
-        long distanceSecond = ms % DAY_STAMP % HOUR_STAMP % MINUTE_STAMP / MILLI;
-        return distanceDay + (day == null ? "天" : day) + distanceHour + (hour == null ? "时" : hour) + distanceMinute + (minute == null ? "分" : minute) + distanceSecond + (second == null ? "秒" : second);
-    }
-
-    /**
      * 转换格式
-     *
-     * @param d 时间
-     * @param o 原格式
-     * @param n 新格式
-     * @return 日期
-     */
-    public static String convert(String d, String o, String n) {
-        return format(parse(d, o), n);
-    }
-
-    /**
-     * 转换格式
+     * <p>
+     * 使用格式推断
      *
      * @param d 时间
      * @param n 新格式
      * @return 日期
+     * @see #parse(String)
+     * @see #PARSE_PATTERN
+     * @see #PARSE_PATTERN1
+     * @see #PARSE_PATTERN2
+     * @see #WORLD
      */
     public static String convert(String d, String n) {
         Date parse = parse(d);
@@ -1069,6 +1042,18 @@ public class Dates {
             return Strings.EMPTY;
         }
         return format(parse, n);
+    }
+
+    /**
+     * 转换格式
+     *
+     * @param d      时间
+     * @param before 原格式
+     * @param after  新格式
+     * @return 日期
+     */
+    public static String convert(String d, String before, String after) {
+        return format(parse(d, before), after);
     }
 
     public static boolean isLeapYear() {
