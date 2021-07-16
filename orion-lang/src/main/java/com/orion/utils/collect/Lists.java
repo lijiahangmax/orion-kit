@@ -1,6 +1,7 @@
 package com.orion.utils.collect;
 
 import com.orion.lang.collect.EmptyList;
+import com.orion.lang.collect.LimitList;
 import com.orion.lang.collect.MutableArrayList;
 import com.orion.lang.collect.SingletonList;
 import com.orion.utils.Arrays1;
@@ -68,6 +69,26 @@ public class Lists extends Collections {
             return new MutableArrayList<>();
         }
         return new MutableArrayList<>(c);
+    }
+
+    public static <E> LimitList<E> newLimitList() {
+        return new LimitList<>();
+    }
+
+    public static <E> LimitList<E> newLimitList(int limit) {
+        return new LimitList<>(limit);
+    }
+
+    public static <E> LimitList<E> newLimitList(int initialCapacity, int limit) {
+        return new LimitList<>(initialCapacity, limit);
+    }
+
+    public static <E> LimitList<E> newLimitList(Collection<? extends E> c) {
+        return new LimitList<>(c);
+    }
+
+    public static <E> LimitList<E> newLimitList(Collection<? extends E> c, int limit) {
+        return new LimitList<>(c, limit);
     }
 
     public static <E> List<E> newCopyOnWriteList() {

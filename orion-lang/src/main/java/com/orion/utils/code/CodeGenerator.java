@@ -6,8 +6,8 @@ import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.orion.constant.Const;
 import com.orion.utils.Colors;
+import com.orion.utils.awt.Images;
 import com.orion.utils.codec.Base64s;
-import com.orion.utils.image.Images;
 import com.orion.utils.io.Streams;
 
 import javax.imageio.ImageIO;

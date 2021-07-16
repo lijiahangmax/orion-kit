@@ -1,9 +1,6 @@
 package com.orion.utils.collect;
 
-import com.orion.lang.collect.ConcurrentReferenceHashMap;
-import com.orion.lang.collect.EmptyMap;
-import com.orion.lang.collect.MutableHashMap;
-import com.orion.lang.collect.SingletonMap;
+import com.orion.lang.collect.*;
 import com.orion.lang.wrapper.Args;
 import com.orion.lang.wrapper.Pair;
 import com.orion.utils.Arrays1;
@@ -78,15 +75,15 @@ public class Maps {
         return new LinkedHashMap<>(m);
     }
 
-    public static <K, V> ConcurrentHashMap<K, V> newCurrentMap() {
+    public static <K, V> ConcurrentHashMap<K, V> newCurrentHashMap() {
         return new ConcurrentHashMap<>(16);
     }
 
-    public static <K, V> ConcurrentHashMap<K, V> newCurrentMap(int capacity) {
+    public static <K, V> ConcurrentHashMap<K, V> newCurrentHashMap(int capacity) {
         return new ConcurrentHashMap<>(capacity);
     }
 
-    public static <K, V> ConcurrentHashMap<K, V> newCurrentMap(Map<? extends K, ? extends V> m) {
+    public static <K, V> ConcurrentHashMap<K, V> newCurrentHashMap(Map<? extends K, ? extends V> m) {
         if (m == null) {
             return new ConcurrentHashMap<>(16);
         }
@@ -106,6 +103,21 @@ public class Maps {
             return new MutableHashMap<>(16);
         }
         return new MutableHashMap<>(m);
+    }
+
+    public static <K, V> MutableLinkedHashMap<K, V> newLinkedMutableMap() {
+        return new MutableLinkedHashMap<>(16);
+    }
+
+    public static <K, V> MutableLinkedHashMap<K, V> newLinkedMutableMap(int capacity) {
+        return new MutableLinkedHashMap<>(capacity);
+    }
+
+    public static <K, V> MutableLinkedHashMap<K, V> newLinkedMutableMap(Map<? extends K, ? extends V> m) {
+        if (m == null) {
+            return new MutableLinkedHashMap<>(16);
+        }
+        return new MutableLinkedHashMap<>(m);
     }
 
     public static <K, V> IdentityHashMap<K, V> newIdentityHashMap() {

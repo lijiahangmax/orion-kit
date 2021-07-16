@@ -48,7 +48,7 @@ public class DomExt {
     }
 
     public DomExt(String file) {
-        this(DomExt.class.getClassLoader().getResourceAsStream(file));
+        this(new File(file));
     }
 
     public DomExt(InputStream in) {

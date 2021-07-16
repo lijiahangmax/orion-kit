@@ -29,24 +29,14 @@ public class YmlExt {
     private MutableHashMap<String, Object> mutableHashMap;
 
     public YmlExt(String path) {
-        InputStream in = null;
-        try {
-            in = PropertiesExt.class.getClassLoader().getResourceAsStream(path);
-            mutableHashMap = Yaml.loadType(in, MutableHashMap.class);
-        } catch (IOException e) {
-            throw Exceptions.ioRuntime(e);
-        } catch (Exception e) {
-            throw Exceptions.runtime(e);
-        } finally {
-            Streams.close(in);
-        }
+        this(new File(path));
     }
 
     public YmlExt(File file) {
         FileInputStream in = null;
         try {
             in = Files1.openInputStream(file);
-            mutableHashMap = Yaml.loadType(in, MutableHashMap.class);
+            this.mutableHashMap = Yaml.loadType(in, MutableHashMap.class);
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         } catch (Exception e) {
@@ -58,7 +48,7 @@ public class YmlExt {
 
     public YmlExt(InputStream in) {
         try {
-            mutableHashMap = Yaml.loadType(in, MutableHashMap.class);
+            this.mutableHashMap = Yaml.loadType(in, MutableHashMap.class);
         } catch (Exception e) {
             throw Exceptions.runtime(e);
         }

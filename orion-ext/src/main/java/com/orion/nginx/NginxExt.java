@@ -32,12 +32,8 @@ public class NginxExt {
         }
     }
 
-    public NginxExt(String resourcePath) {
-        try {
-            this.config = NgxConfig.read(NginxExt.class.getClassLoader().getResourceAsStream(resourcePath));
-        } catch (Exception e) {
-            throw Exceptions.parse("parse nginx config file error resource path: '" + resourcePath + "'", e);
-        }
+    public NginxExt(String path) {
+        this(new File(path));
     }
 
     public NginxExt(InputStream in) {

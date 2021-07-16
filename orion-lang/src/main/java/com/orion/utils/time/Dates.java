@@ -1019,6 +1019,9 @@ public class Dates {
         long distanceHour = ms % DAY_STAMP / HOUR_STAMP;
         long distanceMinute = ms % DAY_STAMP % HOUR_STAMP / MINUTE_STAMP;
         long distanceSecond = ms % DAY_STAMP % HOUR_STAMP % MINUTE_STAMP / MILLI;
+        if (distanceSecond == 0 && ms != 0) {
+            distanceSecond = 1;
+        }
         return new long[]{distanceDay, distanceHour, distanceMinute, distanceSecond};
     }
 
