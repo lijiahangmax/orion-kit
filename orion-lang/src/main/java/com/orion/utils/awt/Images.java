@@ -1,12 +1,15 @@
-package com.orion.utils.image;
+package com.orion.utils.awt;
 
 import com.orion.constant.Const;
+import com.orion.utils.Exceptions;
 import com.orion.utils.codec.Base64s;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
@@ -104,6 +107,30 @@ public class Images {
         return image;
     }
 
+    public static BufferedImage getRadiusImage(BufferedImage image, int radius) {
+        return getRadiusImage(image, radius, radius);
+    }
+
+    /**
+     * 绘制圆角
+     *
+     * @param image image
+     * @param arcw  arcw
+     * @param arch  arch
+     * @return 圆角image
+     */
+    public static BufferedImage getRadiusImage(BufferedImage image, float arcw, float arch) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        BufferedImage transparentImage = getTransparentImage(width, height);
+        Graphics2D g2d = transparentImage.createGraphics();
+        Images.setAntiAliasing(g2d);
+        g2d.setClip(new RoundRectangle2D.Float(0, 0, width, height, arcw, arch));
+        g2d.drawImage(image, 0, 0, null);
+        g2d.dispose();
+        return transparentImage;
+    }
+
     /**
      * 获取 BufferedImage
      *
@@ -114,7 +141,7 @@ public class Images {
         try {
             return ImageIO.read(new File(path));
         } catch (IOException e) {
-            return null;
+            throw Exceptions.ioRuntime(e);
         }
     }
 
@@ -128,7 +155,7 @@ public class Images {
         try {
             return ImageIO.read(file);
         } catch (IOException e) {
-            return null;
+            throw Exceptions.ioRuntime(e);
         }
     }
 
@@ -142,7 +169,7 @@ public class Images {
         try {
             return ImageIO.read(Streams.toInputStream(bs));
         } catch (IOException e) {
-            return null;
+            throw Exceptions.ioRuntime(e);
         }
     }
 
@@ -156,7 +183,7 @@ public class Images {
         try {
             return ImageIO.read(in);
         } catch (IOException e) {
-            return null;
+            throw Exceptions.ioRuntime(e);
         }
     }
 
@@ -170,7 +197,7 @@ public class Images {
         try {
             return ImageIO.read(Streams.toInputStream(Base64s.img64Decode(base64)));
         } catch (IOException e) {
-            return null;
+            throw Exceptions.ioRuntime(e);
         }
     }
 
@@ -184,8 +211,36 @@ public class Images {
         try {
             return ImageIO.read(Streams.toInputStream(Base64s.decode(bs)));
         } catch (IOException e) {
-            return null;
+            throw Exceptions.ioRuntime(e);
         }
+    }
+
+    public static BufferedImage getImageByIcons(byte[] bs) {
+        return getImageByIcons(new ImageIcon(bs));
+    }
+
+    public static BufferedImage getImageByIcons(InputStream in) throws IOException {
+        return getImageByIcons(new ImageIcon(Streams.toByteArray(in)));
+    }
+
+    public static BufferedImage getImageByIcons(String base64) {
+        return getImageByIcons(new ImageIcon(Base64s.img64Decode(base64)));
+    }
+
+    /**
+     * 通过 ImageIcon 获取图片 解决读取文件是红色遮罩层的问题
+     *
+     * @param icon icon
+     * @return BufferedImage
+     */
+    public static BufferedImage getImageByIcons(ImageIcon icon) {
+        BufferedImage bufferedImage = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_RGB);
+        Graphics g = bufferedImage.createGraphics();
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, icon.getIconWidth(), icon.getIconHeight());
+        g.drawImage(icon.getImage(), 0, 0, null);
+        g.dispose();
+        return bufferedImage;
     }
 
     /**
@@ -221,7 +276,7 @@ public class Images {
             ImageIO.write(img, format, stream);
             return stream.toByteArray();
         } catch (IOException e) {
-            return null;
+            throw Exceptions.ioRuntime(e);
         }
     }
 

@@ -1,4 +1,4 @@
-package com.orion.utils.image;
+package com.orion.utils.awt;
 
 import com.orion.able.Executable;
 import com.orion.constant.Const;
@@ -28,6 +28,14 @@ public class ImageDrawStream implements Executable {
         this.g2d = g2d;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+    }
+
+    public static ImageDrawStream of(BufferedImage image) {
+        return new ImageDrawStream(image);
+    }
+
+    public static ImageDrawStream of(Graphics2D g2d) {
+        return new ImageDrawStream(g2d);
     }
 
     // -------------------- 绘制图片 --------------------

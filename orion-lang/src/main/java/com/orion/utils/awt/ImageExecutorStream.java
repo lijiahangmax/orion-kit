@@ -1,4 +1,4 @@
-package com.orion.utils.image;
+package com.orion.utils.awt;
 
 import com.orion.utils.io.Streams;
 import net.coobird.thumbnailator.Thumbnails;
@@ -26,10 +26,10 @@ public class ImageExecutorStream {
      */
     private String format;
 
-    private Thumbnails.Builder builder;
+    private Thumbnails.Builder<?> builder;
 
     public ImageExecutorStream(String name) {
-        builder = Thumbnails.of(ImageExecutorStream.class.getClassLoader().getResourceAsStream(name));
+        builder = Thumbnails.of(new File(name));
     }
 
     public ImageExecutorStream(File file) {
@@ -42,6 +42,22 @@ public class ImageExecutorStream {
 
     public ImageExecutorStream(byte[] bs) {
         builder = Thumbnails.of(Streams.toInputStream(bs));
+    }
+
+    public static ImageExecutorStream of(String name) {
+        return new ImageExecutorStream(name);
+    }
+
+    public static ImageExecutorStream of(File file) {
+        return new ImageExecutorStream(file);
+    }
+
+    public static ImageExecutorStream of(InputStream in) {
+        return new ImageExecutorStream(in);
+    }
+
+    public static ImageExecutorStream of(byte[] bs) {
+        return new ImageExecutorStream(bs);
     }
 
     /**
@@ -388,7 +404,7 @@ public class ImageExecutorStream {
         }
     }
 
-    public Thumbnails.Builder getBuilder() {
+    public Thumbnails.Builder<?> getBuilder() {
         return builder;
     }
 

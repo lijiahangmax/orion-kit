@@ -1,12 +1,10 @@
-package com.orion.utils.image;
+package com.orion.utils.awt;
 
 import com.orion.able.Processable;
 import com.orion.utils.Chars;
 import com.orion.utils.Colors;
 
 import java.awt.*;
-import java.awt.font.FontRenderContext;
-import java.awt.font.GlyphVector;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 
@@ -46,6 +44,10 @@ public class ImageIcons implements Processable<Character, BufferedImage> {
         this.font = new Font("宋体", Font.PLAIN | Font.BOLD, 45);
     }
 
+    public static ImageIcons create() {
+        return new ImageIcons();
+    }
+
     /**
      * base64编码图标
      *
@@ -77,11 +79,8 @@ public class ImageIcons implements Processable<Character, BufferedImage> {
         g2d.fill(new RoundRectangle2D.Float(0, 0, size, size, size, size));
         g2d.setColor(fontColor);
         g2d.setFont(font);
-        FontRenderContext context = g2d.getFontRenderContext();
-        GlyphVector gv = font.createGlyphVector(context, c.toString());
-        Rectangle bounds = gv.getPixelBounds(null, 0, 0);
-        int width = bounds.width;
-        int height = bounds.height;
+        int[] wh = Fonts.getWidthHeightPixel(g2d, font, c.toString());
+        int width = wh[0], height = wh[1];
         int x, y;
         x = (size - width) / 2;
         if (Chars.isAscii(c)) {

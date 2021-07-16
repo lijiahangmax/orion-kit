@@ -1,4 +1,4 @@
-package com.orion.utils.image;
+package com.orion.utils.awt;
 
 import com.orion.able.Awaitable;
 import com.orion.utils.Colors;
