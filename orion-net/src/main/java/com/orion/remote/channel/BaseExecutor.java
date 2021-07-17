@@ -83,6 +83,11 @@ public abstract class BaseExecutor implements Executable, SafeCloseable {
         return this;
     }
 
+    @Override
+    public void close() {
+        this.disconnectChannel();
+    }
+
     /**
      * @return 是否已连接
      */

@@ -93,15 +93,13 @@ public class ScpExecutor {
      * @throws IOException IOException
      */
     public void downloadFile(String remoteFile, OutputStream out, Writer writer, boolean close) throws IOException {
-        InputStream in = this.getFileInputStream(remoteFile);
-        try {
+        try (InputStream in = this.getFileInputStream(remoteFile)) {
             if (out != null) {
                 Streams.transfer(in, out);
             } else {
                 Streams.transfer(in, writer);
             }
         } finally {
-            Streams.close(in);
             if (close) {
                 Streams.close(out);
                 Streams.close(writer);
@@ -239,15 +237,12 @@ public class ScpExecutor {
      * @throws IOException IOException
      */
     public void uploadFile(InputStream in, long len, String remoteDir, String remoteFileName, boolean close) throws IOException {
-        OutputStream out = null;
-        try {
-            out = this.client.put(remoteFileName, len, remoteDir, "0600");
+        try (OutputStream out = this.client.put(remoteFileName, len, remoteDir, "0600")) {
             Streams.transfer(in, out);
             out.flush();
         } finally {
-            Streams.close(out);
             if (close) {
-                in.close();
+                Streams.close(in);
             }
         }
     }

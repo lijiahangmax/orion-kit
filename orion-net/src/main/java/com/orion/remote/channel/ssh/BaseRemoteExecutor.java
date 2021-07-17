@@ -53,11 +53,6 @@ public abstract class BaseRemoteExecutor extends BaseExecutor {
     protected boolean run;
 
     /**
-     * 是否关闭
-     */
-    protected volatile boolean close;
-
-    /**
      * 是否执行完毕
      */
     protected volatile boolean done;
@@ -271,9 +266,9 @@ public abstract class BaseRemoteExecutor extends BaseExecutor {
         Runnable runnable = new HookRunnable(() -> {
             streamHandler.accept(this, inputStream);
         }, () -> {
-            done = true;
-            if (this.callback != null) {
-                this.callback.accept(this);
+            this.done = true;
+            if (callback != null) {
+                callback.accept(this);
             }
         }, true);
         Threads.start(runnable, scheduler);
@@ -284,10 +279,9 @@ public abstract class BaseRemoteExecutor extends BaseExecutor {
      */
     @Override
     public void close() {
-        this.close = true;
         Streams.close(inputStream);
         Streams.close(outputStream);
-        super.disconnect();
+        super.disconnectChannel();
     }
 
     /**
@@ -309,10 +303,6 @@ public abstract class BaseRemoteExecutor extends BaseExecutor {
 
     public boolean isRun() {
         return run;
-    }
-
-    public boolean isClose() {
-        return close;
     }
 
     public boolean isDone() {

@@ -147,12 +147,11 @@ public class CommandExecutor extends BaseRemoteExecutor {
      */
     @Override
     public void close() {
-        this.close = true;
         Streams.close(outputStream);
         Streams.close(inputStream);
         Streams.close(errorStream);
         Streams.close(inheritStream);
-        super.disconnect();
+        super.disconnectChannel();
     }
 
     /**

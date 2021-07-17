@@ -3,7 +3,9 @@ package com.orion.remote.channel;
 import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
+import com.orion.able.SafeCloseable;
 import com.orion.constant.Const;
+import com.orion.remote.TerminalType;
 
 /**
  * 控制台 Shell
@@ -12,7 +14,7 @@ import com.orion.constant.Const;
  * @version 1.0.0
  * @since 2020/9/22 11:11
  */
-public class ConsoleShell {
+public class ConsoleShell implements SafeCloseable {
 
     /**
      * 主机
@@ -68,16 +70,14 @@ public class ConsoleShell {
         session.setConfig("StrictHostKeyChecking", "no");
         session.connect(Const.MS_S_3);
         this.channelShell = (ChannelShell) session.openChannel("shell");
-        channelShell.setPtyType("xterm");
+        channelShell.setPtyType(TerminalType.XTERM.getType());
         channelShell.setInputStream(System.in);
         channelShell.setOutputStream(System.out);
         channelShell.connect();
     }
 
-    /**
-     * 关闭连接
-     */
-    public void disconnect() {
+    @Override
+    public void close() {
         session.disconnect();
         channelShell.disconnect();
     }

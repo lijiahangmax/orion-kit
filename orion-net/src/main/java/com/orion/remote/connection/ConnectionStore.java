@@ -234,7 +234,7 @@ public class ConnectionStore implements AutoCloseable {
 
     @Override
     public void close() {
-        this.connection.close();
+        connection.close();
     }
 
     public String getHost() {
