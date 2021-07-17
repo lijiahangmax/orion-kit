@@ -2,6 +2,7 @@ package com.orion.function.select;
 
 import com.orion.utils.Exceptions;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -116,8 +117,8 @@ public class Selector<P, R> {
      * @param r def
      * @return value
      */
-    public R or(R r) {
-        return this.or(() -> r);
+    public R orElse(R r) {
+        return selected ? factory.apply(param) : r;
     }
 
     /**
@@ -133,6 +134,26 @@ public class Selector<P, R> {
             throw supplier.get();
         }
         return factory.apply(param);
+    }
+
+    /**
+     * 是否命中
+     *
+     * @return 是否命中
+     */
+    public boolean isSelected() {
+        return selected;
+    }
+
+    /**
+     * 如果命中则处理
+     *
+     * @param consumer consumer
+     */
+    public void ifPresent(Consumer<R> consumer) {
+        if (selected) {
+            consumer.accept(factory.apply(param));
+        }
     }
 
 }

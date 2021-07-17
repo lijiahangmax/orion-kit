@@ -664,6 +664,22 @@ public class Exceptions {
         return new VcsException(s, t);
     }
 
+    public static LogException log() {
+        return new LogException();
+    }
+
+    public static LogException log(Throwable t) {
+        return new LogException(t);
+    }
+
+    public static LogException log(String s) {
+        return new LogException(s);
+    }
+
+    public static LogException log(String s, Throwable t) {
+        return new LogException(s, t);
+    }
+
     public static Error error() {
         return new Error();
     }

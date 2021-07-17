@@ -17,7 +17,7 @@ public class SelectorTest {
                 .test(Branches.eq(1).then("一"))
                 .test(Branches.eq(2).then("二"))
                 .test(Branches.eq(3).then("三"))
-                .or("def");
+                .orElse("def");
         System.out.println(va);
     }
 

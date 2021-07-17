@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -63,11 +64,23 @@ public class Objects1 {
      * @param f function
      * @return 如果对象不为空调用function
      */
-    public static <T, R> R of(T o, Function<T, R> f) {
+    public static <T, R> R map(T o, Function<T, R> f) {
         if (!isNull(o) && !isNull(f)) {
             return f.apply(o);
         }
         return null;
+    }
+
+    /**
+     * 如果对象不为null调用consumer
+     *
+     * @param o 对象
+     * @param c consumer
+     */
+    public static <T> void accept(T o, Consumer<T> c) {
+        if (!isNull(o) && !isNull(c)) {
+            c.accept(o);
+        }
     }
 
     /**
