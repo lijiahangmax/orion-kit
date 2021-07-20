@@ -5,6 +5,7 @@ import com.orion.able.Executable;
 import com.orion.able.SafeCloseable;
 import com.orion.constant.Letters;
 import com.orion.lang.thread.HookRunnable;
+import com.orion.support.Attempt;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.Threads;
@@ -14,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.ExecutorService;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -44,7 +44,7 @@ public abstract class BaseRemoteExecutor implements Executable, SafeCloseable {
     /**
      * 标准输出流处理器
      */
-    protected BiConsumer<? super BaseRemoteExecutor, InputStream> streamHandler;
+    protected Consumer<InputStream> streamHandler;
 
     /**
      * 执行完毕回调
@@ -93,12 +93,26 @@ public abstract class BaseRemoteExecutor implements Executable, SafeCloseable {
     }
 
     /**
+     * 转流倒output
+     *
+     * @param out out
+     * @return this
+     * @throws IOException IOException
+     */
+    public BaseRemoteExecutor transfer(OutputStream out) throws IOException {
+        this.streamHandler = Attempt.rethrows(i -> {
+            Streams.transfer(i, out);
+        });
+        return this;
+    }
+
+    /**
      * 设置标准输出流处理器
      *
      * @param streamHandler 标准输出流处理器
      * @return this
      */
-    public BaseRemoteExecutor streamHandler(BiConsumer<? super BaseRemoteExecutor, InputStream> streamHandler) {
+    public BaseRemoteExecutor streamHandler(Consumer<InputStream> streamHandler) {
         this.streamHandler = streamHandler;
         return this;
     }
@@ -199,9 +213,18 @@ public abstract class BaseRemoteExecutor implements Executable, SafeCloseable {
      * @return this
      */
     public BaseRemoteExecutor exit() {
-        return this.write(Strings.bytes("exit 0"), true);
+        return this.exit(0);
     }
 
+    /**
+     * 退出 键入 exit ?
+     *
+     * @param code code
+     * @return this
+     */
+    public BaseRemoteExecutor exit(int code) {
+        return this.write(Strings.bytes("exit " + code), true);
+    }
 
     @Override
     public void exec() {
@@ -221,7 +244,7 @@ public abstract class BaseRemoteExecutor implements Executable, SafeCloseable {
      */
     protected void listenerInput() {
         Runnable runnable = new HookRunnable(() -> {
-            streamHandler.accept(this, inputStream);
+            streamHandler.accept(inputStream);
         }, () -> {
             this.done = true;
             if (callback != null) {

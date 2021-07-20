@@ -6,13 +6,13 @@ import com.orion.constant.Const;
 import com.orion.remote.channel.sftp.SftpExecutor;
 import com.orion.remote.channel.ssh.CommandExecutor;
 import com.orion.remote.channel.ssh.ShellExecutor;
-import com.orion.support.Attempt;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.Valid;
 import com.orion.utils.io.Streams;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 /**
  * Session Store
@@ -303,7 +303,7 @@ public class SessionStore implements SafeCloseable {
         }
     }
 
-    public static String getCommandOutputResultString(CommandExecutor executor) {
+    public static String getCommandOutputResultString(CommandExecutor executor) throws IOException {
         return new String(getCommandOutputResult(executor));
     }
 
@@ -312,13 +312,14 @@ public class SessionStore implements SafeCloseable {
      *
      * @param executor executor
      * @return result
+     * @throws IOException IOException
      */
-    public static byte[] getCommandOutputResult(CommandExecutor executor) {
+    public static byte[] getCommandOutputResult(CommandExecutor executor) throws IOException {
         Valid.notNull(executor, "command executor is null");
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
             executor.sync()
-                    .streamHandler((p, i) -> Attempt.uncheck(Streams::transfer, i, out))
+                    .transfer(out)
                     .exec();
             return out.toByteArray();
         } finally {

@@ -1,6 +1,6 @@
 package com.orion.remote.channel;
 
-import com.orion.function.impl.ReaderLineBiConsumer;
+import com.orion.function.impl.ReaderLineConsumer;
 import com.orion.remote.channel.ssh.ShellExecutor;
 import com.orion.utils.Threads;
 
@@ -18,7 +18,7 @@ public class ShellExecutorTests {
                 .setTimeout(20000)
                 .connect(20000)
                 .getShellExecutor();
-        e.streamHandler(ReaderLineBiConsumer.getDefaultPrint2());
+        e.streamHandler(ReaderLineConsumer.getDefaultPrint());
         e.callback(exe -> System.out.println("end...."));
         e.connect(20000).exec();
         e.write("ps -ef | grep java\n")

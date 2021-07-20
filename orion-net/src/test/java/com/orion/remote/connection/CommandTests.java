@@ -1,8 +1,10 @@
 package com.orion.remote.connection;
 
-import com.orion.function.impl.ReaderLineBiConsumer;
+import com.orion.function.impl.ReaderLineConsumer;
 import com.orion.remote.connection.ssh.CommandExecutor;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * @author Jiahang Li
@@ -24,8 +26,8 @@ public class CommandTests {
                 .auth("root", "admin123")
                 // .auth("root", new File("C:\\Users\\ljh15\\Desktop\\server\\key\\230"), "123456")
                 .getCommandExecutor("ls -la /as");
-        executor.streamHandler(ReaderLineBiConsumer.getDefaultPrint2());
-        executor.errorStreamHandler(ReaderLineBiConsumer.getDefaultPrint2());
+        executor.streamHandler(ReaderLineConsumer.getDefaultPrint());
+        executor.errorStreamHandler(ReaderLineConsumer.getDefaultPrint());
         // executor.inherit();
         executor.callback(s -> System.out.println("end"));
         executor.exec();
@@ -36,7 +38,7 @@ public class CommandTests {
                 .auth("root", "admin123");
         // .auth("root", new File("C:\\Users\\ljh15\\Desktop\\server\\key\\230"), "123456");
         CommandExecutor executor = c.getCommandExecutor("echo 1");
-        executor.streamHandler(ReaderLineBiConsumer.getDefaultPrint2());
+        executor.streamHandler(ReaderLineConsumer.getDefaultPrint());
         executor.callback(s -> {
             System.out.println("执行结束");
             s.close();
@@ -46,7 +48,7 @@ public class CommandTests {
     }
 
     @Test
-    public void test1() {
+    public void test1() throws IOException {
         ConnectionStore c = new ConnectionStore("192.168.146.230")
                 .auth("root", "admin123");
 
@@ -60,7 +62,7 @@ public class CommandTests {
     }
 
     @Test
-    public void test2() {
+    public void test2() throws IOException {
         ConnectionStore c = new ConnectionStore("192.168.146.230")
                 .auth("root", "admin123");
 
@@ -74,7 +76,7 @@ public class CommandTests {
     }
 
     @Test
-    public void test3() {
+    public void test3() throws IOException {
         ConnectionStore c = new ConnectionStore("192.168.146.230")
                 .auth("root", "admin123");
 

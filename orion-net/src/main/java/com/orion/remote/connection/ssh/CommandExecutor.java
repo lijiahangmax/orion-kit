@@ -6,14 +6,16 @@ import ch.ethz.ssh2.StreamGobbler;
 import com.orion.constant.Const;
 import com.orion.lang.thread.HookRunnable;
 import com.orion.remote.ExitCode;
+import com.orion.support.Attempt;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Threads;
 import com.orion.utils.io.Streams;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.SequenceInputStream;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * 抽象命令执行器
@@ -66,7 +68,7 @@ public class CommandExecutor extends BaseRemoteExecutor {
     /**
      * 错误输出流处理器
      */
-    private BiConsumer<? super BaseRemoteExecutor, InputStream> errorStreamHandler;
+    private Consumer<InputStream> errorStreamHandler;
 
     /**
      * 是否同步获取输出
@@ -168,10 +170,25 @@ public class CommandExecutor extends BaseRemoteExecutor {
      * @param errorStreamHandler 错误输出流处理器
      * @return this
      */
-    public BaseRemoteExecutor errorStreamHandler(BiConsumer<? super BaseRemoteExecutor, InputStream> errorStreamHandler) {
+    public BaseRemoteExecutor errorStreamHandler(Consumer<InputStream> errorStreamHandler) {
         this.errorStreamHandler = errorStreamHandler;
         return this;
     }
+
+    /**
+     * 转流倒output
+     *
+     * @param out out
+     * @return this
+     * @throws IOException IOException
+     */
+    public BaseRemoteExecutor transferError(OutputStream out) throws IOException {
+        this.errorStreamHandler = Attempt.rethrows(i -> {
+            Streams.transfer(i, out);
+        });
+        return this;
+    }
+
 
     /**
      * 启动并且读取输出
@@ -218,12 +235,12 @@ public class CommandExecutor extends BaseRemoteExecutor {
         if (sync) {
             try {
                 if (inherit) {
-                    streamHandler.accept(this, inheritStream);
+                    streamHandler.accept(inheritStream);
                 } else {
-                    streamHandler.accept(this, inputStream);
+                    streamHandler.accept(inputStream);
                 }
                 if (errorStreamHandler != null && !inherit) {
-                    errorStreamHandler.accept(this, errorStream);
+                    errorStreamHandler.accept(errorStream);
                 }
             } finally {
                 this.done = true;
@@ -234,12 +251,12 @@ public class CommandExecutor extends BaseRemoteExecutor {
         } else {
             Runnable runnable = new HookRunnable(() -> {
                 if (inherit) {
-                    streamHandler.accept(this, inheritStream);
+                    streamHandler.accept(inheritStream);
                 } else {
-                    streamHandler.accept(this, inputStream);
+                    streamHandler.accept(inputStream);
                 }
                 if (errorStreamHandler != null && !inherit) {
-                    errorStreamHandler.accept(this, errorStream);
+                    errorStreamHandler.accept(errorStream);
                 }
             }, () -> {
                 this.done = true;

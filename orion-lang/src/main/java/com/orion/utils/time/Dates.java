@@ -26,6 +26,8 @@ public class Dates {
     public static final String YMDHM = "yyyy-MM-dd HH:mm";
     public static final String YMDHMS = "yyyy-MM-dd HH:mm:ss";
     public static final String YMDHMSS = "yyyy-MM-dd HH:mm:ss SSS";
+    public static final String HMS = "HH:mm:ss";
+    public static final String HMSS = "HH:mm:ss SSS";
     public static final String YM1 = "yyyy/MM";
     public static final String YMD1 = "yyyy/MM/dd";
     public static final String YMDHM1 = "yyyy/MM/dd HH/mm";
@@ -682,13 +684,13 @@ public class Dates {
         Calendar c2 = Calendar.getInstance();
         c1.setTime(source);
         c2.setTime(date);
-        long now = c1.getTime().getTime(), d = date.getTime();
+        long s = source.getTime(), d = date.getTime();
         int nowYear = c1.get(Calendar.YEAR),
                 dYear = c2.get(Calendar.YEAR),
                 nowDay = c1.get(Calendar.DAY_OF_MONTH),
                 dDay = c2.get(Calendar.DAY_OF_MONTH);
-        if (now - d > 0) {
-            long before = now - d;
+        if (s - d > 0) {
+            long before = s - d;
             if (nowYear - dYear > 10 && vague) {
                 return "很久以前";
             }
@@ -719,8 +721,8 @@ public class Dates {
             if (before > MINUTE_STAMP) {
                 return (before / MINUTE_STAMP) + "分钟前";
             }
-        } else if (d - now > 0) {
-            long after = d - now;
+        } else if (d - s > 0) {
+            long after = d - s;
             if (dYear - nowYear > 10 && vague) {
                 return "很久以后";
             }

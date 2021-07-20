@@ -3,6 +3,7 @@ package com.orion.remote.channel.ssh;
 import com.jcraft.jsch.ChannelExec;
 import com.orion.lang.thread.HookRunnable;
 import com.orion.remote.ExitCode;
+import com.orion.support.Attempt;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.Threads;
@@ -10,9 +11,10 @@ import com.orion.utils.io.Streams;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.SequenceInputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * 命令执行器
@@ -56,7 +58,7 @@ public class CommandExecutor extends BaseRemoteExecutor {
     /**
      * 错误输出流处理器
      */
-    private BiConsumer<? super BaseRemoteExecutor, InputStream> errorStreamHandler;
+    private Consumer<InputStream> errorStreamHandler;
 
     public CommandExecutor(ChannelExec channel, String command) {
         this(channel, Strings.bytes(command, StandardCharsets.UTF_8));
@@ -124,8 +126,22 @@ public class CommandExecutor extends BaseRemoteExecutor {
      * @param errorStreamHandler 错误输出流处理器
      * @return this
      */
-    public BaseRemoteExecutor errorStreamHandler(BiConsumer<? super BaseRemoteExecutor, InputStream> errorStreamHandler) {
+    public CommandExecutor errorStreamHandler(Consumer<InputStream> errorStreamHandler) {
         this.errorStreamHandler = errorStreamHandler;
+        return this;
+    }
+
+    /**
+     * 转流倒output
+     *
+     * @param out out
+     * @return this
+     * @throws IOException IOException
+     */
+    public BaseRemoteExecutor transferError(OutputStream out) throws IOException {
+        this.errorStreamHandler = Attempt.rethrows(i -> {
+            Streams.transfer(i, out);
+        });
         return this;
     }
 
@@ -179,12 +195,12 @@ public class CommandExecutor extends BaseRemoteExecutor {
         if (sync) {
             try {
                 if (inherit) {
-                    streamHandler.accept(this, inheritStream);
+                    streamHandler.accept(inheritStream);
                 } else {
-                    streamHandler.accept(this, inputStream);
+                    streamHandler.accept(inputStream);
                 }
                 if (errorStreamHandler != null && !inherit) {
-                    errorStreamHandler.accept(this, errorStream);
+                    errorStreamHandler.accept(errorStream);
                 }
             } finally {
                 this.done = true;
@@ -195,12 +211,12 @@ public class CommandExecutor extends BaseRemoteExecutor {
         } else {
             Runnable runnable = new HookRunnable(() -> {
                 if (inherit) {
-                    streamHandler.accept(this, inheritStream);
+                    streamHandler.accept(inheritStream);
                 } else {
-                    streamHandler.accept(this, inputStream);
+                    streamHandler.accept(inputStream);
                 }
                 if (errorStreamHandler != null && !inherit) {
-                    errorStreamHandler.accept(this, errorStream);
+                    errorStreamHandler.accept(errorStream);
                 }
             }, () -> {
                 this.done = true;

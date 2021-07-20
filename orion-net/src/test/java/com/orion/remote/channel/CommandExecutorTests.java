@@ -1,8 +1,10 @@
 package com.orion.remote.channel;
 
-import com.orion.function.impl.ReaderLineBiConsumer;
+import com.orion.function.impl.ReaderLineConsumer;
 import com.orion.remote.channel.ssh.CommandExecutor;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * @author Jiahang Li
@@ -29,8 +31,8 @@ public class CommandExecutorTests {
             System.out.println(e.getExitCode());
             e.close();
         });
-        e.streamHandler(ReaderLineBiConsumer.getDefaultPrint2());
-        e.errorStreamHandler(ReaderLineBiConsumer.getDefaultPrint2());
+        e.streamHandler(ReaderLineConsumer.getDefaultPrint());
+        e.errorStreamHandler(ReaderLineConsumer.getDefaultPrint());
         e.connect().exec();
     }
 
@@ -41,7 +43,7 @@ public class CommandExecutorTests {
                 .setTimeout(20000)
                 .connect(20000)
                 .getCommandExecutor("echo $PATH");
-        e.inherit().streamHandler(ReaderLineBiConsumer.getDefaultPrint2());
+        e.inherit().streamHandler(ReaderLineConsumer.getDefaultPrint());
         e.callback(exe -> {
             System.out.println("结束....");
             System.out.println(e.getExitCode());
@@ -51,7 +53,7 @@ public class CommandExecutorTests {
     }
 
     @Test
-    public void test1() {
+    public void test1() throws IOException {
         SessionHolder.addIdentity("C:\\Users\\ljh15\\Desktop\\env", "admin123");
 
         SessionStore store = SessionHolder.getSession("192.168.146.230", "root")
@@ -68,7 +70,7 @@ public class CommandExecutorTests {
     }
 
     @Test
-    public void test2() {
+    public void test2() throws IOException {
         SessionStore store = SessionHolder.getSession("192.168.146.230", "root")
                 .setPassword("admin123")
                 .connect();
@@ -84,7 +86,7 @@ public class CommandExecutorTests {
     }
 
     @Test
-    public void test3() {
+    public void test3() throws IOException {
         SessionStore store = SessionHolder.getSession("192.168.146.230", "root")
                 .setPassword("admin123")
                 .connect();

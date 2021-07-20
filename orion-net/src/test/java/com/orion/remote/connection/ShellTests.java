@@ -1,7 +1,7 @@
 package com.orion.remote.connection;
 
 import com.orion.constant.Const;
-import com.orion.function.impl.ReaderLineBiConsumer;
+import com.orion.function.impl.ReaderLineConsumer;
 import com.orion.lang.thread.ExecutorBuilder;
 import com.orion.remote.connection.ssh.ShellExecutor;
 import com.orion.utils.Threads;
@@ -30,7 +30,7 @@ public class ShellTests {
         ConnectionStore store = new ConnectionStore("192.168.146.230")
                 .auth("root", "admin123");
         ShellExecutor e = store.getShellExecutor();
-        e.streamHandler(ReaderLineBiConsumer.getDefaultPrint2());
+        e.streamHandler(ReaderLineConsumer.getDefaultPrint());
         e.scheduler(EXECUTOR);
         e.exec();
         e.write("ps -ef | grep java\n")

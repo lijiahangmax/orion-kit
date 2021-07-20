@@ -10,7 +10,6 @@ import com.orion.remote.connection.scp.ScpExecutor;
 import com.orion.remote.connection.sftp.SftpExecutor;
 import com.orion.remote.connection.ssh.CommandExecutor;
 import com.orion.remote.connection.ssh.ShellExecutor;
-import com.orion.support.Attempt;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
 import com.orion.utils.io.Streams;
@@ -209,7 +208,7 @@ public class ConnectionStore implements AutoCloseable {
         }
     }
 
-    public static String getCommandOutputResultString(CommandExecutor executor) {
+    public static String getCommandOutputResultString(CommandExecutor executor) throws IOException {
         return new String(getCommandOutputResult(executor));
     }
 
@@ -218,13 +217,14 @@ public class ConnectionStore implements AutoCloseable {
      *
      * @param executor executor
      * @return result
+     * @throws IOException IOException
      */
-    public static byte[] getCommandOutputResult(CommandExecutor executor) {
+    public static byte[] getCommandOutputResult(CommandExecutor executor) throws IOException {
         Valid.notNull(executor, "command executor is null");
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
             executor.sync()
-                    .streamHandler((p, i) -> Attempt.uncheck(Streams::transfer, i, out))
+                    .transfer(out)
                     .exec();
             return out.toByteArray();
         } finally {
