@@ -4,7 +4,6 @@ import com.orion.constant.Const;
 import com.orion.lang.Console;
 import com.orion.lang.thread.*;
 import com.orion.lang.wrapper.Tuple;
-import com.orion.utils.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +35,7 @@ public class Threads {
      */
     public static final ExecutorService CACHE_EXECUTOR = ExecutorBuilder.create()
             .setNamedThreadFactory("orion-cache-thread-")
-            .setCorePoolSize(2)
+            .setCorePoolSize(1)
             .setMaxPoolSize(Integer.MAX_VALUE)
             .setKeepAliveTime(Const.MS_S_60)
             .setWorkQueue(new SynchronousQueue<>())
@@ -53,11 +52,6 @@ public class Threads {
         });
     }
 
-    /**
-     * 执行线程
-     *
-     * @param r ignore
-     */
     public static void start(Runnable r) {
         GLOBAL_EXECUTOR.execute(r);
     }
@@ -78,46 +72,19 @@ public class Threads {
     /**
      * 执行线程
      *
-     * @param rs         线程
-     * @param concurrent true并发执行
+     * @param rs   线程
+     * @param pool 线程池
      */
-    public static void start(List<Runnable> rs, boolean concurrent) {
-        start(rs, GLOBAL_EXECUTOR, concurrent);
-    }
-
-    /**
-     * 执行线程
-     *
-     * @param rs         线程
-     * @param pool       线程池
-     * @param concurrent true并发执行
-     */
-    public static void start(List<Runnable> rs, ExecutorService pool, boolean concurrent) {
+    public static void start(List<Runnable> rs, ExecutorService pool) {
+        Valid.notEmpty(rs, "task is empty");
         if (pool == null) {
             pool = GLOBAL_EXECUTOR;
         }
-        if (concurrent) {
-            concurrentRunnable(rs, pool);
-        } else {
-            int size = Lists.size(rs);
-            if (size >= 1) {
-                Lists.compact(rs);
-                int size1 = Lists.size(rs);
-                if (size1 >= 1) {
-                    for (int i = 0; i < size1; i++) {
-                        pool.execute(rs.get(i));
-                    }
-                }
-            }
+        for (Runnable r : rs) {
+            pool.execute(r);
         }
     }
 
-    /**
-     * 执行线程
-     *
-     * @param c ignore
-     * @return Future
-     */
     public static <V> Future<V> call(Callable<V> c) {
         return GLOBAL_EXECUTOR.submit(c);
     }
@@ -139,54 +106,27 @@ public class Threads {
     /**
      * 执行线程
      *
-     * @param cs         ignore
-     * @param concurrent true并发
+     * @param cs   ignore
+     * @param pool 线程池
      * @return Future
      */
-    public static <V> List<Future<V>> call(List<Callable<V>> cs, boolean concurrent) {
-        return call(cs, GLOBAL_EXECUTOR, concurrent);
-    }
-
-    /**
-     * 执行线程
-     *
-     * @param cs         ignore
-     * @param pool       线程池
-     * @param concurrent true并发
-     * @return Future
-     */
-    public static <V> List<Future<V>> call(List<Callable<V>> cs, ExecutorService pool, boolean concurrent) {
+    public static <V> List<Future<V>> call(List<Callable<V>> cs, ExecutorService pool) {
+        Valid.notEmpty(cs, "task is empty");
         if (pool == null) {
             pool = GLOBAL_EXECUTOR;
         }
-        if (concurrent) {
-            return concurrentCallable(cs, pool);
-        } else {
-            List<Future<V>> list = new ArrayList<>();
-            int size = Lists.size(cs);
-            if (size >= 1) {
-                Lists.compact(cs);
-                int size1 = Lists.size(cs);
-                if (size1 >= 1) {
-                    for (int i = 0; i < size1; i++) {
-                        list.add(pool.submit(cs.get(i)));
-                    }
-                }
-            }
-            return list;
+        List<Future<V>> list = new ArrayList<>();
+        for (Callable<V> c : cs) {
+            list.add(pool.submit(c));
         }
+        return list;
     }
 
-    /**
-     * 线程休眠
-     *
-     * @param millis 毫秒
-     */
     public static void sleep(long millis) {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
-            Exceptions.printStacks(e);
+            throw Exceptions.interruptedRuntime(e);
         }
     }
 
@@ -200,7 +140,7 @@ public class Threads {
         try {
             unit.sleep(duration);
         } catch (InterruptedException e) {
-            Exceptions.printStacks(e);
+            throw Exceptions.interruptedRuntime(e);
         }
     }
 
@@ -217,19 +157,92 @@ public class Threads {
     }
 
     /**
-     * 并发多次单个线程
-     * <p>
-     * 线程池的核心线程数必须大于等于并发次数
+     * 阻塞运行线程
      *
-     * @param count 并发次数
+     * @param r     线程
+     * @param count 执行次数
      * @param pool  线程池
-     * @param r     runnable
+     * @throws InterruptedException InterruptedException
      */
-    public static void concurrent(int count, ExecutorService pool, Runnable r) {
+    public static void blockRun(Runnable r, int count, ExecutorService pool) throws InterruptedException {
+        blockRun(r, new CountDownLatch(count), pool);
+    }
+
+    /**
+     * 阻塞运行线程
+     *
+     * @param r    线程
+     * @param c    闭锁
+     * @param pool 线程池
+     * @throws InterruptedException InterruptedException
+     */
+    public static void blockRun(Runnable r, CountDownLatch c, ExecutorService pool) throws InterruptedException {
+        Valid.notNull(r, "task is null");
         if (pool == null) {
             pool = GLOBAL_EXECUTOR;
         }
+        long count = c.getCount();
+        for (int i = 0; i < count; i++) {
+            pool.execute(new HookRunnable(r, c::countDown));
+        }
+        c.await();
+    }
+
+    /**
+     * 阻塞运行线程
+     *
+     * @param rs   线程
+     * @param pool 线程池
+     * @throws InterruptedException InterruptedException
+     */
+    public static void blockRun(List<Runnable> rs, ExecutorService pool) throws InterruptedException {
+        Valid.notEmpty(rs, "task is empty");
+        if (pool == null) {
+            pool = GLOBAL_EXECUTOR;
+        }
+        CountDownLatch c = new CountDownLatch(rs.size());
+        for (Runnable r : rs) {
+            pool.execute(new HookRunnable(r, c::countDown));
+        }
+        c.await();
+    }
+
+    /**
+     * 并发多次单个线程
+     * <p>
+     * 线程池的最大线程数必须大于等于并发次数
+     *
+     * @param r     runnable
+     * @param count 并发次数
+     * @param pool  线程池
+     * @return 屏障
+     */
+    public static CyclicBarrier concurrent(Runnable r, int count, ExecutorService pool) {
+        if (pool == null) {
+            pool = CACHE_EXECUTOR;
+        }
         CyclicBarrier cb = new CyclicBarrier(count);
+        ConcurrentRunnable cr = new ConcurrentRunnable(r, cb);
+        for (int i = 0; i < count; i++) {
+            pool.execute(cr);
+        }
+        return cb;
+    }
+
+    /**
+     * 并发多次单个线程
+     * <p>
+     * 线程池的最大线程数必须大于等于并发次数
+     *
+     * @param r    runnable
+     * @param pool 线程池
+     * @param cb   屏障
+     */
+    public static void concurrent(Runnable r, ExecutorService pool, CyclicBarrier cb) {
+        if (pool == null) {
+            pool = CACHE_EXECUTOR;
+        }
+        int count = cb.getParties();
         ConcurrentRunnable cr = new ConcurrentRunnable(r, cb);
         for (int i = 0; i < count; i++) {
             pool.execute(cr);
@@ -239,16 +252,37 @@ public class Threads {
     /**
      * 并发多次单个线程
      * <p>
-     * 线程池的核心线程数必须大于等于并发次数
+     * 线程池的最大线程数必须大于等于并发次数
      *
+     * @param r    runnable
+     * @param pool 线程池
+     * @param cd   闭锁
+     */
+    public static void concurrent(Runnable r, ExecutorService pool, CountDownLatch cd) {
+        if (pool == null) {
+            pool = CACHE_EXECUTOR;
+        }
+        ConcurrentRunnable cr = new ConcurrentRunnable(r, cd);
+        long count = cd.getCount();
+        for (int i = 0; i < count; i++) {
+            pool.execute(cr);
+            cd.countDown();
+        }
+    }
+
+    /**
+     * 并发多次单个线程
+     * <p>
+     * 线程池的最大线程数必须大于等于并发次数
+     *
+     * @param c     callable
      * @param count 并发次数
      * @param pool  线程池
-     * @param c     callable
      * @return Future
      */
-    public static <V> List<Future<V>> concurrent(int count, ExecutorService pool, Callable<V> c) {
+    public static <V> List<Future<V>> concurrent(Callable<V> c, int count, ExecutorService pool) {
         if (pool == null) {
-            pool = GLOBAL_EXECUTOR;
+            pool = CACHE_EXECUTOR;
         }
         List<Future<V>> list = new ArrayList<>(count);
         CyclicBarrier cb = new CyclicBarrier(count);
@@ -260,54 +294,91 @@ public class Threads {
     }
 
     /**
+     * 并发多次单个线程
+     * <p>
+     * 线程池的最大线程数必须大于等于并发次数
+     *
+     * @param c    callable
+     * @param pool 线程池
+     * @param cb   屏障
+     * @return Future
+     */
+    public static <V> List<Future<V>> concurrent(Callable<V> c, ExecutorService pool, CyclicBarrier cb) {
+        if (pool == null) {
+            pool = CACHE_EXECUTOR;
+        }
+        int count = cb.getParties();
+        List<Future<V>> list = new ArrayList<>();
+        ConcurrentCallable<V> cc = new ConcurrentCallable<>(c, cb);
+        for (int i = 0; i < count; i++) {
+            list.add(pool.submit(cc));
+        }
+        return list;
+    }
+
+    /**
+     * 并发多次单个线程
+     * <p>
+     * 线程池的最大线程数必须大于等于并发次数
+     *
+     * @param c    callable
+     * @param pool 线程池
+     * @param cd   闭锁
+     * @return Future
+     */
+    public static <V> List<Future<V>> concurrent(Callable<V> c, ExecutorService pool, CountDownLatch cd) {
+        if (pool == null) {
+            pool = CACHE_EXECUTOR;
+        }
+        long count = cd.getCount();
+        List<Future<V>> list = new ArrayList<>();
+        ConcurrentCallable<V> cc = new ConcurrentCallable<>(c, cd);
+        for (int i = 0; i < count; i++) {
+            list.add(pool.submit(cc));
+            cd.countDown();
+        }
+        return list;
+    }
+
+    /**
      * 并发多个线程
      * <p>
-     * 线程池的核心线程数必须大于等于并发线程的长度
+     * 线程池的最大线程数必须大于等于并发次数
      *
      * @param rs   线程
      * @param pool 线程池
      */
     public static void concurrentRunnable(List<Runnable> rs, ExecutorService pool) {
+        Valid.notEmpty(rs, "task is empty");
         if (pool == null) {
-            pool = GLOBAL_EXECUTOR;
+            pool = CACHE_EXECUTOR;
         }
-        int size = Lists.size(rs);
-        if (size >= 1) {
-            Lists.compact(rs);
-            int size1 = Lists.size(rs);
-            if (size1 >= 1) {
-                CyclicBarrier cb = new CyclicBarrier(size1);
-                for (int i = 0; i < size1; i++) {
-                    ConcurrentRunnable cr = new ConcurrentRunnable(rs.get(i), cb);
-                    pool.execute(cr);
-                }
-            }
+        CyclicBarrier cb = new CyclicBarrier(rs.size());
+        for (Runnable r : rs) {
+            ConcurrentRunnable cr = new ConcurrentRunnable(r, cb);
+            pool.execute(cr);
         }
     }
 
     /**
      * 并发多个线程
      * <p>
-     * 线程池的核心线程数必须大于等于并发线程的长度
+     * 线程池的最大线程数必须大于等于并发次数
      *
      * @param cs   线程
      * @param pool 线程池
      * @return Future
      */
     public static <V> List<Future<V>> concurrentCallable(List<Callable<V>> cs, ExecutorService pool) {
+        Valid.notEmpty(cs, "task is empty");
+        if (pool == null) {
+            pool = CACHE_EXECUTOR;
+        }
         List<Future<V>> list = new ArrayList<>();
-        int size = Lists.size(cs);
-        if (size >= 1) {
-            Lists.compact(cs);
-            int size1 = Lists.size(cs);
-            if (size1 >= 1) {
-                CyclicBarrier cb = new CyclicBarrier(size1);
-                for (int i = 0; i < size1; i++) {
-                    ConcurrentCallable<V> cr = new ConcurrentCallable<>(cs.get(i), cb);
-                    list.add(pool.submit(cr));
-                }
-                pool.shutdown();
-            }
+        CyclicBarrier cb = new CyclicBarrier(cs.size());
+        for (Callable<V> c : cs) {
+            ConcurrentCallable<V> cr = new ConcurrentCallable<>(c, cb);
+            list.add(pool.submit(cr));
         }
         return list;
     }
@@ -358,7 +429,7 @@ public class Threads {
             if (!pool.awaitTermination(shutdownTimeout, timeUnit)) {
                 pool.shutdownNow();
                 if (!pool.awaitTermination(shutdownNowTimeout, timeUnit)) {
-                    Console.error("Pool did not terminated");
+                    Console.error("thread pool did not terminated");
                 }
             }
         } catch (InterruptedException ie) {
@@ -377,7 +448,7 @@ public class Threads {
         try {
             pool.shutdownNow();
             if (!pool.awaitTermination(timeout, TimeUnit.MILLISECONDS)) {
-                Console.error("Pool did not terminated");
+                Console.error("thread pool did not terminated");
             }
         } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
@@ -395,7 +466,7 @@ public class Threads {
         try {
             pool.shutdownNow();
             if (!pool.awaitTermination(timeout, timeUnit)) {
-                Console.error("Pool did not terminated");
+                Console.error("thread pool did not terminated");
             }
         } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();

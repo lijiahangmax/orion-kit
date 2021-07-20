@@ -31,19 +31,19 @@ public class IdTests {
     }
 
     private static void sequence() {
-        Threads.concurrent(100, Executors.newCachedThreadPool(), () -> System.out.println(Sequences.next()));
+        Threads.concurrent(() -> System.out.println(Sequences.next()), 100, Executors.newCachedThreadPool());
     }
 
     private static void snowflake() {
-        Threads.concurrent(100, Executors.newCachedThreadPool(), () -> System.out.println(SnowFlakes.next()));
+        Threads.concurrent(() -> System.out.println(SnowFlakes.next()), 100, Executors.newCachedThreadPool());
     }
 
     private static void objectId() {
-        Threads.concurrent(100, Executors.newCachedThreadPool(), () -> System.out.println(ObjectIds.next()));
+        Threads.concurrent(() -> System.out.println(ObjectIds.next()), 100, Executors.newCachedThreadPool());
     }
 
     private static void uuid() {
-        Threads.concurrent(100, Executors.newCachedThreadPool(), () -> System.out.println(UUIds.random15Long()));
+        Threads.concurrent(() -> System.out.println(UUIds.random15Long()), 100, Executors.newCachedThreadPool());
     }
 
 }

@@ -1,6 +1,7 @@
 package com.orion.lang.thread;
 
 import com.orion.utils.Exceptions;
+import com.orion.utils.Valid;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
@@ -15,39 +16,35 @@ import java.util.concurrent.CyclicBarrier;
 public class ConcurrentRunnable implements Runnable {
 
     private Runnable r;
+
     private CyclicBarrier cb;
+
     private CountDownLatch cd;
 
     public ConcurrentRunnable(Runnable r, CyclicBarrier cb) {
+        Valid.notNull(r, "runnable is null");
+        Valid.notNull(cb, "cyclicBarrier is null");
         this.r = r;
         this.cb = cb;
     }
 
     public ConcurrentRunnable(Runnable r, CountDownLatch cd) {
+        Valid.notNull(r, "runnable is null");
+        Valid.notNull(cd, "countDownLatch is null");
         this.r = r;
         this.cd = cd;
     }
 
     @Override
     public void run() {
-        if (r != null) {
+        try {
             if (cb != null) {
-                try {
-                    cb.await();
-                } catch (Exception e) {
-                    throw Exceptions.task(e);
-                }
+                cb.await();
             } else if (cd != null) {
-                try {
-                    cd.await();
-                } catch (Exception e) {
-                    throw Exceptions.task(e);
-                }
-            } else {
-                throw Exceptions.nullPoint("cyclicBarrier or countDownLatch is null");
+                cd.await();
             }
-        } else {
-            throw Exceptions.nullPoint("runnable or consumer is null");
+        } catch (Exception e) {
+            throw Exceptions.task(e);
         }
         r.run();
     }
