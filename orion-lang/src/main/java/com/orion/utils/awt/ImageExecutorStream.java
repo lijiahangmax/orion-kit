@@ -3,6 +3,7 @@ package com.orion.utils.awt;
 import com.orion.utils.io.Streams;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Position;
+import net.coobird.thumbnailator.resizers.configurations.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -126,7 +127,7 @@ public class ImageExecutorStream {
     }
 
     /**
-     * 设置 缩放比例
+     * 设置 缩放比例 0 - 1
      *
      * @param scale 缩放比例
      * @return this
@@ -171,6 +172,17 @@ public class ImageExecutorStream {
     }
 
     /**
+     * 设置图片输出质量
+     *
+     * @param quality 质量 0 - 1
+     * @return this
+     */
+    public ImageExecutorStream quality(double quality) {
+        builder.outputQuality(quality);
+        return this;
+    }
+
+    /**
      * 设置是否覆盖输出文件
      *
      * @param overWrite true覆盖
@@ -188,6 +200,61 @@ public class ImageExecutorStream {
      */
     public ImageExecutorStream unOverWrite() {
         builder.allowOverwrite(false);
+        return this;
+    }
+
+    /**
+     * 设置缩放时的模式
+     *
+     * @param scalingMode 缩放模式
+     * @return this
+     */
+    public ImageExecutorStream scalingMode(ScalingMode scalingMode) {
+        builder.scalingMode(scalingMode);
+        return this;
+    }
+
+    /**
+     * 设置调整大小时的渲染模式
+     *
+     * @param rendering 渲染模式
+     * @return this
+     */
+    public ImageExecutorStream rendering(Rendering rendering) {
+        builder.rendering(rendering);
+        return this;
+    }
+
+    /**
+     * 设置插值模式
+     *
+     * @param alphaInterpolation alphaInterpolation
+     * @return this
+     */
+    public ImageExecutorStream alphaInterpolation(AlphaInterpolation alphaInterpolation) {
+        builder.alphaInterpolation(alphaInterpolation);
+        return this;
+    }
+
+    /**
+     * 设置抗锯齿
+     *
+     * @param antialias 抗锯齿
+     * @return this
+     */
+    public ImageExecutorStream antialias(Antialiasing antialias) {
+        builder.antialiasing(antialias);
+        return this;
+    }
+
+    /**
+     * 设置抖动模式
+     *
+     * @param dithering dithering
+     * @return this
+     */
+    public ImageExecutorStream dithering(Dithering dithering) {
+        builder.dithering(dithering);
         return this;
     }
 
@@ -324,7 +391,24 @@ public class ImageExecutorStream {
     // -------------------- 裁剪 --------------------
 
     /**
-     * 剪裁
+     * 剪裁图片
+     * 需要先调用 {{@link #size(int, int)}} 方法
+     *
+     * @return this
+     */
+    public ImageExecutorStream crop() {
+        builder.crop((Position) (enclosingWidth, enclosingHeight, width, height, insetLeft, insetRight, insetTop, insetBottom) -> new Point());
+        return this;
+    }
+
+    public ImageExecutorStream sourceRegion(int width, int height) {
+        builder.sourceRegion(0, 0, width, height);
+        return this;
+    }
+
+    /**
+     * 设置缩放源图片大小
+     * 需要先调用 {{@link #scale(double)} 方法
      *
      * @param x      横坐标
      * @param y      纵坐标
@@ -334,19 +418,6 @@ public class ImageExecutorStream {
      */
     public ImageExecutorStream sourceRegion(int x, int y, int width, int height) {
         builder.sourceRegion(x, y, width, height);
-        return this;
-    }
-
-    /**
-     * 剪裁
-     *
-     * @param p      位置信息
-     * @param width  剪裁宽
-     * @param height 剪裁高
-     * @return this
-     */
-    public ImageExecutorStream sourceRegion(Position p, int width, int height) {
-        builder.sourceRegion(p, width, height);
         return this;
     }
 

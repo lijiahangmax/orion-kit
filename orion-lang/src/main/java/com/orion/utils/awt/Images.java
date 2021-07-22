@@ -84,12 +84,10 @@ public class Images {
      * 设置抗锯齿
      *
      * @param g2d g2d
-     * @return g2d
      */
-    public static Graphics2D setAntiAliasing(Graphics2D g2d) {
+    public static void setAntiAliasing(Graphics2D g2d) {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        return g2d;
     }
 
     /**

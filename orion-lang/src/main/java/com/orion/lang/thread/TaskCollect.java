@@ -39,7 +39,7 @@ public class TaskCollect {
      * @return this
      */
     public TaskCollect tasks(Callable<?>... tasks) {
-        futures = new Future<?>[tasks.length];
+        this.futures = new Future<?>[tasks.length];
         for (int i = 0; i < tasks.length; i++) {
             Callable<?> task = tasks[i];
             try {
