@@ -107,7 +107,7 @@ public class Selector<P, R> {
      * @param supplier def supplier
      * @return value
      */
-    public R or(Supplier<R> supplier) {
+    public R orGet(Supplier<R> supplier) {
         return selected ? factory.apply(param) : supplier.get();
     }
 
