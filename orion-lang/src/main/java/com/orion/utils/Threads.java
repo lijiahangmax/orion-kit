@@ -110,7 +110,7 @@ public class Threads {
      * @param pool 线程池
      * @return Future
      */
-    public static <V> List<Future<V>> call(List<Callable<V>> cs, ExecutorService pool) {
+    public static <V> List<Future<V>> call(List<? extends Callable<V>> cs, ExecutorService pool) {
         Valid.notEmpty(cs, "task is empty");
         if (pool == null) {
             pool = GLOBAL_EXECUTOR;
@@ -195,7 +195,7 @@ public class Threads {
      * @param pool 线程池
      * @throws InterruptedException InterruptedException
      */
-    public static void blockRun(List<Runnable> rs, ExecutorService pool) throws InterruptedException {
+    public static void blockRun(List<? extends Runnable> rs, ExecutorService pool) throws InterruptedException {
         Valid.notEmpty(rs, "task is empty");
         if (pool == null) {
             pool = GLOBAL_EXECUTOR;
@@ -348,7 +348,7 @@ public class Threads {
      * @param rs   线程
      * @param pool 线程池
      */
-    public static void concurrentRunnable(List<Runnable> rs, ExecutorService pool) {
+    public static void concurrentRunnable(List<? extends Runnable> rs, ExecutorService pool) {
         Valid.notEmpty(rs, "task is empty");
         if (pool == null) {
             pool = CACHE_EXECUTOR;
@@ -369,7 +369,7 @@ public class Threads {
      * @param pool 线程池
      * @return Future
      */
-    public static <V> List<Future<V>> concurrentCallable(List<Callable<V>> cs, ExecutorService pool) {
+    public static <V> List<Future<V>> concurrentCallable(List<? extends Callable<V>> cs, ExecutorService pool) {
         Valid.notEmpty(cs, "task is empty");
         if (pool == null) {
             pool = CACHE_EXECUTOR;

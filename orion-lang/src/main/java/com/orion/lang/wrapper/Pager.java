@@ -205,10 +205,6 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, Js
         return this;
     }
 
-    private void resetOffset() {
-        this.setOffset((page - 1) * limit);
-    }
-
     public int getOffset() {
         return offset;
     }
@@ -244,6 +240,27 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, Js
     public Pager<T> setSql(String sql) {
         this.sql = sql;
         return this;
+    }
+
+    public Pager<T> toNextPage() {
+        return this.setPages(page + 1);
+    }
+
+    /**
+     * 下几页
+     *
+     * @param nextPage next
+     * @return this
+     */
+    public Pager<T> toNextPage(int nextPage) {
+        return this.setPages(page + nextPage);
+    }
+
+    /**
+     * 重置偏移量
+     */
+    private void resetOffset() {
+        this.setOffset((page - 1) * limit);
     }
 
     /**

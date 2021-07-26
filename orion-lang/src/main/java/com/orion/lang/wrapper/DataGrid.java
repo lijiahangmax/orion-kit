@@ -65,7 +65,7 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
     }
 
     public DataGrid(List<T> rows) {
-        this(rows, 0);
+        this(rows, Lists.size(rows));
     }
 
     public DataGrid(List<T> rows, int total) {
@@ -184,7 +184,7 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
 
     public DataGrid<T> setLimit(int limit) {
         this.limit = limit;
-        return this;
+        return this.setTotal(total);
     }
 
     public int getPages() {
@@ -210,6 +210,15 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
     public DataGrid<T> setSize(int size) {
         this.size = size;
         return this;
+    }
+
+    /**
+     * 是否还有下一页
+     *
+     * @return 是否还有下一页
+     */
+    public boolean hasNextPage() {
+        return pages > page;
     }
 
     @JSONField(serialize = false)
