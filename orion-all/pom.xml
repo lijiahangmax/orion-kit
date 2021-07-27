@@ -76,6 +76,13 @@
             <artifactId>orion-spring</artifactId>
             <version>${orion.spring.version}</version>
         </dependency>
+
+        <!-- generator -->
+        <dependency>
+            <groupId>com.orion.kit</groupId>
+            <artifactId>orion-generator</artifactId>
+            <version>${orion.generator.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

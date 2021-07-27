@@ -20,6 +20,7 @@
         <module>orion-web</module>
         <module>orion-redis</module>
         <module>orion-spring</module>
+        <module>orion-generator</module>
         <module>orion-all</module>
     </modules>
 
@@ -38,6 +39,7 @@
         <orion.web.version>1.0.0</orion.web.version>
         <orion.redis.version>1.0.0</orion.redis.version>
         <orion.spring.version>1.0.0</orion.spring.version>
+        <orion.generator.version>1.0.0</orion.generator.version>
         <orion.all.version>1.0.0</orion.all.version>
         <junit.version>4.12</junit.version>
         <spring.version>4.3.10.RELEASE</spring.version>
@@ -76,6 +78,7 @@
         <groovy.script.version>3.0.4</groovy.script.version>
         <jsoup.version>1.13.1</jsoup.version>
         <ua.utils.version>1.21</ua.utils.version>
+        <jgit.version>5.11.1.202105131744-r</jgit.version>
     </properties>
 
     <developers>
