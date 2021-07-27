@@ -1,8 +1,8 @@
-package com.orion.dom;
+package com.orion.utils.ext.dom;
 
 import com.orion.able.Buildable;
 import com.orion.constant.Const;
-import com.orion.utils.Exceptions;
+import com.orion.utils.Valid;
 import com.orion.utils.collect.Lists;
 import com.orion.utils.collect.Maps;
 import org.dom4j.Attribute;
@@ -41,9 +41,10 @@ public class DomBuilder implements Buildable<DomBuilder> {
     /**
      * 编码格式
      */
-    private String charset = Const.UTF_8;
+    private String charset;
 
     public DomBuilder() {
+        this.charset = Const.UTF_8;
     }
 
     /**
@@ -97,9 +98,7 @@ public class DomBuilder implements Buildable<DomBuilder> {
      */
     @Override
     public DomBuilder build() {
-        if (domTag == null) {
-            throw Exceptions.argument("DomTag is null");
-        }
+        Valid.notNull(domTag, "domTag is null");
         this.document = new DefaultDocument();
         this.document.setXMLEncoding(charset);
         Element rootElement = new DefaultElement(domTag.getName());

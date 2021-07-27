@@ -1,4 +1,4 @@
-package com.orion.dom;
+package com.orion.utils.ext.dom;
 
 import com.orion.utils.Exceptions;
 
@@ -78,15 +78,15 @@ public class DomTag implements Serializable {
     }
 
     public DomTag newChildNode(String name) {
-        if (value == null) {
-            if (this.childNode == null) {
-                this.childNode = new ArrayList<>();
-            }
-            DomTag domTag = new DomTag(name);
-            this.childNode.add(domTag);
-            return domTag;
+        if (value != null) {
+            throw Exceptions.argument("value is not null");
         }
-        throw Exceptions.argument("value is not null");
+        if (this.childNode == null) {
+            this.childNode = new ArrayList<>();
+        }
+        DomTag domTag = new DomTag(name);
+        this.childNode.add(domTag);
+        return domTag;
     }
 
     public List<DomTag> getChildNode() {
@@ -94,22 +94,22 @@ public class DomTag implements Serializable {
     }
 
     public DomTag addChildNode(DomTag child) {
-        if (value == null) {
-            if (this.childNode == null) {
-                this.childNode = new ArrayList<>();
-            }
-            this.childNode.add(child);
-            return this;
+        if (value != null) {
+            throw Exceptions.argument("value is not null");
         }
-        throw Exceptions.argument("value is not null");
+        if (this.childNode == null) {
+            this.childNode = new ArrayList<>();
+        }
+        this.childNode.add(child);
+        return this;
     }
 
     public DomTag setChildNode(List<DomTag> childNode) {
-        if (value == null) {
-            this.childNode = childNode;
-            return this;
+        if (value != null) {
+            throw Exceptions.argument("value is not null");
         }
-        throw Exceptions.argument("value is not null");
+        this.childNode = childNode;
+        return this;
     }
 
     public String getValue() {
@@ -117,15 +117,15 @@ public class DomTag implements Serializable {
     }
 
     public DomTag setValue(String value) {
-        if (childNode == null) {
-            this.value = value;
-            return this;
+        if (childNode != null) {
+            throw Exceptions.argument("childNode is not null");
         }
-        throw Exceptions.argument("childNode is not null");
+        this.value = value;
+        return this;
     }
 
     public DomTag cdata() {
-        cdata = true;
+        this.cdata = true;
         return this;
     }
 

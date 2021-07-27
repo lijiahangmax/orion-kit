@@ -1,5 +1,6 @@
-package com.orion.dom;
+package com.orion.utils.ext.dom;
 
+import com.orion.constant.Const;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.collect.Lists;
@@ -32,7 +33,7 @@ public class DomExt {
     /**
      * XML读取
      */
-    private static SAXReader reader = new SAXReader();
+    private SAXReader reader = new SAXReader();
 
     /**
      * document
@@ -143,7 +144,7 @@ public class DomExt {
      * @return 格式化后的xml
      */
     public static String format(String xml) {
-        return format(xml, "    ", false);
+        return format(xml, Const.SPACE_4, false);
     }
 
     /**
@@ -154,7 +155,7 @@ public class DomExt {
      * @return 格式化后的xml
      */
     public static String format(String xml, boolean newLine) {
-        return format(xml, "    ", newLine);
+        return format(xml, Const.SPACE_4, newLine);
     }
 
     /**
@@ -294,7 +295,7 @@ public class DomExt {
      */
     public static Document toDocument(String xml) {
         try {
-            return reader.read(new ByteArrayInputStream(Strings.bytes(xml)));
+            return new SAXReader().read(new ByteArrayInputStream(Strings.bytes(xml)));
         } catch (Exception e) {
             throw Exceptions.argument("xml parse to document error " + e.getMessage(), e);
         }
@@ -692,7 +693,7 @@ public class DomExt {
      * @return 格式化后的xml
      */
     public String formatXML() {
-        return format(document.asXML(), "    ", false);
+        return format(document.asXML(), Const.SPACE_4, false);
     }
 
     /**

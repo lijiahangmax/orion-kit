@@ -1,10 +1,9 @@
 package com.orion.utils.ext;
 
-import com.orion.lang.collect.MutableHashMap;
 import com.orion.lang.collect.MutableHashSet;
+import com.orion.lang.collect.MutableLinkedHashMap;
 import com.orion.utils.Exceptions;
 import com.orion.utils.io.Files1;
-import com.orion.utils.io.Streams;
 import org.ho.yaml.Yaml;
 
 import java.io.File;
@@ -26,29 +25,25 @@ import java.util.function.BiConsumer;
 @SuppressWarnings("unchecked")
 public class YmlExt {
 
-    private MutableHashMap<String, Object> mutableHashMap;
+    private MutableLinkedHashMap<String, Object> store;
 
     public YmlExt(String path) {
         this(new File(path));
     }
 
     public YmlExt(File file) {
-        FileInputStream in = null;
-        try {
-            in = Files1.openInputStream(file);
-            this.mutableHashMap = Yaml.loadType(in, MutableHashMap.class);
+        try (FileInputStream in = Files1.openInputStream(file)) {
+            this.store = Yaml.loadType(in, MutableLinkedHashMap.class);
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         } catch (Exception e) {
             throw Exceptions.runtime(e);
-        } finally {
-            Streams.close(in);
         }
     }
 
     public YmlExt(InputStream in) {
         try {
-            this.mutableHashMap = Yaml.loadType(in, MutableHashMap.class);
+            this.store = Yaml.loadType(in, MutableLinkedHashMap.class);
         } catch (Exception e) {
             throw Exceptions.runtime(e);
         }
@@ -58,23 +53,43 @@ public class YmlExt {
     }
 
     /**
-     * 获取YmlExt
+     * 获取 YmlExt
+     *
+     * @param file file
+     * @return YmlExt
+     */
+    public static YmlExt load(File file) {
+        return new YmlExt(file);
+    }
+
+    /**
+     * 获取 YmlExt
+     *
+     * @param in in
+     * @return YmlExt
+     */
+    public static YmlExt load(InputStream in) {
+        return new YmlExt(in);
+    }
+
+    /**
+     * 获取 YmlExt
      *
      * @param yml ymlString
      * @return YmlExt
      */
-    public static YmlExt toYmlExt(String yml) {
+    public static YmlExt load(String yml) {
         YmlExt ymlExt = new YmlExt();
-        ymlExt.mutableHashMap = Yaml.loadType(yml, MutableHashMap.class);
+        ymlExt.store = Yaml.loadType(yml, MutableLinkedHashMap.class);
         return ymlExt;
     }
 
     public MutableHashSet<String> getKeys() {
-        return new MutableHashSet<>(mutableHashMap.keySet());
+        return new MutableHashSet<>(store.keySet());
     }
 
-    public MutableHashMap<String, Object> getValues() {
-        return mutableHashMap;
+    public MutableLinkedHashMap<String, Object> getValues() {
+        return store;
     }
 
     /**
@@ -85,14 +100,14 @@ public class YmlExt {
      */
     public Map<String, Object> getValues(String key) {
         try {
-            Map value = null;
+            Map<String, Object> value = null;
             String[] nodes = key.split("\\.");
             int len = nodes.length;
             for (int i = 0; i < len; i++) {
                 if (i == 0) {
-                    value = mutableHashMap.getObject(nodes[0]);
+                    value = store.getObject(nodes[0]);
                 } else {
-                    value = ((Map) value.get(nodes[i]));
+                    value = ((Map<String, Object>) value.get(nodes[i]));
                 }
             }
             return value;
@@ -109,14 +124,14 @@ public class YmlExt {
      */
     public Set<String> getKeys(String key) {
         try {
-            Map map = null;
+            Map<String, ?> map = null;
             String[] nodes = key.split("\\.");
             int len = nodes.length;
             for (int i = 0; i < len; i++) {
                 if (i == 0) {
-                    map = mutableHashMap.getObject(nodes[0]);
+                    map = store.getObject(nodes[0]);
                 } else if (len - 1 > i) {
-                    map = ((Map) map.get(nodes[i]));
+                    map = ((Map<String, ?>) map.get(nodes[i]));
                 }
                 if (len - 1 == i) {
                     if (i == 0) {
@@ -124,7 +139,7 @@ public class YmlExt {
                     } else {
                         Object last = map.get(nodes[i]);
                         if (last instanceof Map) {
-                            return ((Map) last).keySet();
+                            return ((Map<String, ?>) last).keySet();
                         } else {
                             return new HashSet<>();
                         }
@@ -146,18 +161,18 @@ public class YmlExt {
     public String getValue(String key) {
         try {
             String value = null;
-            Map map = null;
+            Map<String, Object> map = null;
             String[] nodes = key.split("\\.");
             int len = nodes.length;
             for (int i = 0; i < len; i++) {
                 if (i == 0) {
                     if (len == 1) {
-                        value = mutableHashMap.getObject(nodes[0]).toString();
+                        value = store.getObject(nodes[0]).toString();
                     } else {
-                        map = mutableHashMap.getObject(nodes[0]);
+                        map = store.getObject(nodes[0]);
                     }
                 } else if (len - 1 > i) {
-                    map = (Map) map.get(nodes[i]);
+                    map = (Map<String, Object>) map.get(nodes[i]);
                 } else if (len - 1 == i) {
                     value = map.get(nodes[i]).toString();
                 }
@@ -168,12 +183,12 @@ public class YmlExt {
         }
     }
 
-    public MutableHashMap<String, Object> getMap() {
-        return mutableHashMap;
+    public MutableLinkedHashMap<String, Object> getMap() {
+        return store;
     }
 
     public void forEach(BiConsumer<Object, Object> action) {
-        this.mutableHashMap.forEach(action);
+        this.store.forEach(action);
     }
 
 }

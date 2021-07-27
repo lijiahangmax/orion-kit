@@ -1,4 +1,4 @@
-package com.orion.dom;
+package com.orion.utils.ext.dom;
 
 /**
  * XML解析参数
