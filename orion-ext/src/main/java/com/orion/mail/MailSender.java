@@ -28,7 +28,7 @@ public class MailSender implements Sendable<MailMessage> {
 
     private PasswordAuthentication authentication;
 
-    public MailSender(MailServerType type) {
+    public MailSender(MailServerProvider type) {
         this(type.getHost(), type.getPort());
     }
 
@@ -155,6 +155,10 @@ public class MailSender implements Sendable<MailMessage> {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public Properties getProps() {
+        return props;
     }
 
 }

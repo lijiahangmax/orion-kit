@@ -7,7 +7,7 @@ package com.orion.mail;
  * @version 1.0.0
  * @since 2020/3/16 16:06
  */
-public enum MailServerType {
+public enum MailServerType implements MailServerProvider {
 
     /**
      * 网易
@@ -24,19 +24,21 @@ public enum MailServerType {
      */
     YD139("smtp.139.com", 465);
 
-    private String host;
+    private final String host;
 
-    private int port;
+    private final int port;
 
     MailServerType(String host, int port) {
         this.host = host;
         this.port = port;
     }
 
+    @Override
     public String getHost() {
         return host;
     }
 
+    @Override
     public int getPort() {
         return port;
     }
