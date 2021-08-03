@@ -12,11 +12,11 @@ public enum SftpErrorMessage {
     /**
      * 未找到文件
      */
-    NO_SUCH_FILE("No such file"),
+    NO_SUCH_FILE("no such file"),
 
-    BAD_MESSAGE("Bad message");
+    BAD_MESSAGE("bad message");
 
-    private String message;
+    private final String message;
 
     SftpErrorMessage(String message) {
         this.message = message;

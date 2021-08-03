@@ -30,7 +30,7 @@ public enum ScriptType {
      */
     PYTHON("python");
 
-    private String type;
+    private final String type;
 
     ScriptType(String type) {
         this.type = type;

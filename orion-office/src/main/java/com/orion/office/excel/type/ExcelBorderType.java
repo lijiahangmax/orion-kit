@@ -51,7 +51,7 @@ public enum ExcelBorderType {
      */
     DOUBLE(BorderStyle.DOUBLE.getCode());
 
-    private int code;
+    private final int code;
 
     ExcelBorderType(int code) {
         this.code = code;

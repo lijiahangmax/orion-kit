@@ -48,7 +48,7 @@ public enum HashMessageDigest {
         this.digest = digest;
     }
 
-    String digest;
+    private final String digest;
 
     public String getDigest() {
         return digest;

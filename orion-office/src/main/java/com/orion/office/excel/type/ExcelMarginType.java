@@ -42,7 +42,7 @@ public enum ExcelMarginType {
      */
     FOOTER(Sheet.FooterMargin);
 
-    private short code;
+    private final short code;
 
     ExcelMarginType(short code) {
         this.code = code;

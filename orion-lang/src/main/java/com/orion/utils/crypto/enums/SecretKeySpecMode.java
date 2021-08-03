@@ -60,7 +60,7 @@ public enum SecretKeySpecMode {
         this.mode = mode;
     }
 
-    String mode;
+    private final String mode;
 
     public String getMode() {
         return mode;

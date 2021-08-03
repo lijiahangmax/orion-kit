@@ -86,7 +86,7 @@ public enum HttpContentType {
      */
     MULTIPART_FORM(StandardContentType.MULTIPART_FORM);
 
-    String type;
+    private final String type;
 
     HttpContentType(String type) {
         this.type = type;

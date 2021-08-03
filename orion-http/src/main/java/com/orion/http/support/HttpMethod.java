@@ -51,7 +51,7 @@ public enum HttpMethod {
      */
     TRACE("TRACE");
 
-    private String method;
+    private final String method;
 
     HttpMethod(String method) {
         this.method = method;

@@ -44,7 +44,7 @@ public enum RSASignature {
      */
     SHA512("SHA512WithRSA");
 
-    String model;
+    private final String model;
 
     RSASignature(String model) {
         this.model = model;

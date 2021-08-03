@@ -38,7 +38,7 @@ public enum CipherAlgorithm {
         this.mode = model;
     }
 
-    String mode;
+    private final String mode;
 
     public String getMode() {
         return mode;

@@ -41,7 +41,7 @@ public enum ExcelVerticalAlignType {
      */
     DISTRIBUTED(VerticalAlignment.DISTRIBUTED.getCode());
 
-    private int code;
+    private final int code;
 
     ExcelVerticalAlignType(int code) {
         this.code = code;

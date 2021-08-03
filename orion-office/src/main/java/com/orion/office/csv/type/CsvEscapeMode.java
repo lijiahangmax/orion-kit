@@ -19,7 +19,7 @@ public enum CsvEscapeMode {
      */
     BACKSLASH(2);
 
-    int mode;
+    private final int mode;
 
     CsvEscapeMode(int mode) {
         this.mode = mode;

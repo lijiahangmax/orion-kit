@@ -24,7 +24,7 @@ public enum ExitCode {
      */
     NULL(null);
 
-    private Integer code;
+    private final Integer code;
 
     ExitCode(Integer code) {
         this.code = code;

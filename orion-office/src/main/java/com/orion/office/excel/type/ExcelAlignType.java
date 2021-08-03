@@ -51,7 +51,7 @@ public enum ExcelAlignType {
      */
     DISTRIBUTED(HorizontalAlignment.DISTRIBUTED.getCode());
 
-    private int code;
+    private final int code;
 
     ExcelAlignType(int code) {
         this.code = code;

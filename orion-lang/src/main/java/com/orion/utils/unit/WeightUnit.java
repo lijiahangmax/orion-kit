@@ -23,28 +23,28 @@ public enum WeightUnit {
     MG {
         @Override
         public BigDecimal toMilligram(BigDecimal u) {
-            return u.setScale(scale, roundModel);
+            return u.setScale(SCALE, ROUND_MODE);
         }
 
         @Override
         public BigDecimal toGram(BigDecimal u) {
-            return u.setScale(scale, roundModel)
-                    .divide(THOUSAND, roundModel);
+            return u.setScale(SCALE, ROUND_MODE)
+                    .divide(THOUSAND, ROUND_MODE);
         }
 
         @Override
         public BigDecimal toKilogram(BigDecimal u) {
-            return u.setScale(scale, roundModel)
-                    .divide(THOUSAND, roundModel)
-                    .divide(THOUSAND, roundModel);
+            return u.setScale(SCALE, ROUND_MODE)
+                    .divide(THOUSAND, ROUND_MODE)
+                    .divide(THOUSAND, ROUND_MODE);
         }
 
         @Override
         public BigDecimal toTon(BigDecimal u) {
-            return u.setScale(scale, roundModel)
-                    .divide(THOUSAND, roundModel)
-                    .divide(THOUSAND, roundModel)
-                    .divide(THOUSAND, roundModel);
+            return u.setScale(SCALE, ROUND_MODE)
+                    .divide(THOUSAND, ROUND_MODE)
+                    .divide(THOUSAND, ROUND_MODE)
+                    .divide(THOUSAND, ROUND_MODE);
         }
     },
 
@@ -54,26 +54,26 @@ public enum WeightUnit {
     G {
         @Override
         public BigDecimal toMilligram(BigDecimal u) {
-            return u.setScale(scale, roundModel)
+            return u.setScale(SCALE, ROUND_MODE)
                     .multiply(THOUSAND);
         }
 
         @Override
         public BigDecimal toGram(BigDecimal u) {
-            return u.setScale(scale, roundModel);
+            return u.setScale(SCALE, ROUND_MODE);
         }
 
         @Override
         public BigDecimal toKilogram(BigDecimal u) {
-            return u.setScale(scale, roundModel)
-                    .divide(THOUSAND, roundModel);
+            return u.setScale(SCALE, ROUND_MODE)
+                    .divide(THOUSAND, ROUND_MODE);
         }
 
         @Override
         public BigDecimal toTon(BigDecimal u) {
-            return u.setScale(scale, roundModel)
-                    .divide(THOUSAND, roundModel)
-                    .divide(THOUSAND, roundModel);
+            return u.setScale(SCALE, ROUND_MODE)
+                    .divide(THOUSAND, ROUND_MODE)
+                    .divide(THOUSAND, ROUND_MODE);
         }
     },
 
@@ -83,26 +83,26 @@ public enum WeightUnit {
     KG {
         @Override
         public BigDecimal toMilligram(BigDecimal u) {
-            return u.setScale(scale, roundModel)
+            return u.setScale(SCALE, ROUND_MODE)
                     .multiply(THOUSAND)
                     .multiply(THOUSAND);
         }
 
         @Override
         public BigDecimal toGram(BigDecimal u) {
-            return u.setScale(scale, roundModel)
+            return u.setScale(SCALE, ROUND_MODE)
                     .multiply(THOUSAND);
         }
 
         @Override
         public BigDecimal toKilogram(BigDecimal u) {
-            return u.setScale(scale, roundModel);
+            return u.setScale(SCALE, ROUND_MODE);
         }
 
         @Override
         public BigDecimal toTon(BigDecimal u) {
-            return u.setScale(scale, roundModel)
-                    .divide(THOUSAND, roundModel);
+            return u.setScale(SCALE, ROUND_MODE)
+                    .divide(THOUSAND, ROUND_MODE);
         }
     },
 
@@ -112,7 +112,7 @@ public enum WeightUnit {
     T {
         @Override
         public BigDecimal toMilligram(BigDecimal u) {
-            return u.setScale(scale, roundModel)
+            return u.setScale(SCALE, ROUND_MODE)
                     .multiply(THOUSAND)
                     .multiply(THOUSAND)
                     .multiply(THOUSAND);
@@ -120,20 +120,20 @@ public enum WeightUnit {
 
         @Override
         public BigDecimal toGram(BigDecimal u) {
-            return u.setScale(scale, roundModel)
+            return u.setScale(SCALE, ROUND_MODE)
                     .multiply(THOUSAND)
                     .multiply(THOUSAND);
         }
 
         @Override
         public BigDecimal toKilogram(BigDecimal u) {
-            return u.setScale(scale, roundModel)
+            return u.setScale(SCALE, ROUND_MODE)
                     .multiply(THOUSAND);
         }
 
         @Override
         public BigDecimal toTon(BigDecimal u) {
-            return u.setScale(scale, roundModel);
+            return u.setScale(SCALE, ROUND_MODE);
         }
     };
 
@@ -142,12 +142,12 @@ public enum WeightUnit {
     /**
      * 舍入模式
      */
-    private static RoundingMode roundModel = RoundingMode.FLOOR;
+    private static final RoundingMode ROUND_MODE = RoundingMode.FLOOR;
 
     /**
      * 舍入精度
      */
-    private static int scale = 8;
+    private static final int SCALE = 8;
 
     /**
      * ? -> MG

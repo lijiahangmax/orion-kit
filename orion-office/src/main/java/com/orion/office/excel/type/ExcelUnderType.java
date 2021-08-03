@@ -36,7 +36,7 @@ public enum ExcelUnderType {
      */
     DOUBLE_ACCOUNTING(Font.U_DOUBLE_ACCOUNTING);
 
-    private int code;
+    private final int code;
 
     ExcelUnderType(int code) {
         this.code = code;

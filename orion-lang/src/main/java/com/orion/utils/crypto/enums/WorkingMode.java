@@ -43,7 +43,7 @@ public enum WorkingMode {
         this.mode = mode;
     }
 
-    private String mode;
+    private final String mode;
 
     public String getMode() {
         return mode;

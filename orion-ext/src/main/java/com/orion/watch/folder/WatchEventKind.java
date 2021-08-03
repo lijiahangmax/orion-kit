@@ -41,7 +41,7 @@ public enum WatchEventKind {
             DELETE.getValue()
     };
 
-    private java.nio.file.WatchEvent.Kind<?> value;
+    private final java.nio.file.WatchEvent.Kind<?> value;
 
     WatchEventKind(java.nio.file.WatchEvent.Kind<?> value) {
         this.value = value;

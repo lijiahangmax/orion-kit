@@ -58,7 +58,7 @@ public enum ApacheClientRetryPolicy {
         return !(request instanceof HttpEntityEnclosingRequest);
     });
 
-    private HttpRequestRetryHandler handler;
+    private final HttpRequestRetryHandler handler;
 
     ApacheClientRetryPolicy(HttpRequestRetryHandler handler) {
         this.handler = handler;

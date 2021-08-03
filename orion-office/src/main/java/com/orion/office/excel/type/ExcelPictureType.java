@@ -84,9 +84,9 @@ public enum ExcelPictureType {
         this.suffix = suffix;
     }
 
-    private int type1;
+    private final int type1;
 
-    private int type2;
+    private final int type2;
 
     private String suffix;
 

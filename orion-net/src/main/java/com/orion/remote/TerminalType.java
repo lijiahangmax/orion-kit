@@ -75,7 +75,7 @@ public enum TerminalType {
         this.type = type;
     }
 
-    private String type;
+    private final String type;
 
     public String getType() {
         return type;

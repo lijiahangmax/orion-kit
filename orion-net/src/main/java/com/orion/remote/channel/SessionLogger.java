@@ -53,7 +53,7 @@ public enum SessionLogger {
 
     private static String fatalTag = "{}";
 
-    private int level;
+    private final int level;
 
     SessionLogger(int level) {
         this.level = level;
