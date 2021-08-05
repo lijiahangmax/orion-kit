@@ -1,7 +1,7 @@
 package com.orion.utils.time;
 
+import com.orion.utils.Compares;
 import com.orion.utils.Valid;
-import com.orion.utils.math.Numbers;
 
 import java.util.Date;
 
@@ -27,13 +27,7 @@ public class DateRanges {
      * @return true有交差
      */
     public static boolean cross(Date rangeStart1, Date rangeEnd1, Date rangeStart2, Date rangeEnd2) {
-        Valid.notNull(rangeStart1, "rangeStart1 is null");
-        Valid.notNull(rangeEnd1, "rangeEnd1 is null");
-        Valid.notNull(rangeStart2, "rangeStart2 is null");
-        Valid.notNull(rangeEnd2, "rangeEnd2 is null");
-        long start1 = rangeStart1.getTime(), end1 = rangeEnd1.getTime(),
-                start2 = rangeStart2.getTime(), end2 = rangeEnd2.getTime();
-        return Numbers.cross(start1, end1, start2, end2);
+        return Compares.cross(rangeStart1, rangeEnd1, rangeStart2, rangeEnd2);
     }
 
     /**
@@ -52,16 +46,13 @@ public class DateRanges {
     /**
      * 判断时间是否在这个时间段内
      *
+     * @param date       时间
      * @param rangeStart 范围开始时间
      * @param rangeEnd   范围结束时间
-     * @param date       时间
      * @return true 包含
      */
-    public static boolean inRange(Date rangeStart, Date rangeEnd, Date date) {
-        Valid.notNull(rangeStart, "rangeStart is null");
-        Valid.notNull(rangeEnd, "rangeEnd is null");
-        Valid.notNull(date, "date is null");
-        return Numbers.inRange(rangeStart.getTime(), rangeEnd.getTime(), date.getTime());
+    public static boolean inRange(Date date, Date rangeStart, Date rangeEnd) {
+        return Compares.inRange(date, rangeStart, rangeEnd);
     }
 
     /**
@@ -72,8 +63,8 @@ public class DateRanges {
      * @param date       时间
      * @return true 不包含
      */
-    public static boolean notInRange(Date rangeStart, Date rangeEnd, Date date) {
-        return !inRange(rangeStart, rangeEnd, date);
+    public static boolean notInRange(Date date, Date rangeStart, Date rangeEnd) {
+        return !inRange(date, rangeStart, rangeEnd);
     }
 
     /**
@@ -86,11 +77,7 @@ public class DateRanges {
      * @return true 包含
      */
     public static boolean rangeInRange(Date rangeStart, Date rangeEnd, Date testRangeStart, Date testRangeEnd) {
-        Valid.notNull(rangeStart, "rangeStart is null");
-        Valid.notNull(rangeEnd, "rangeEnd is null");
-        Valid.notNull(testRangeStart, "testRangeStart is null");
-        Valid.notNull(testRangeEnd, "testRangeEnd is null");
-        return Numbers.rangeInRange(rangeStart.getTime(), rangeEnd.getTime(), testRangeStart.getTime(), testRangeEnd.getTime());
+        return Compares.rangeInRange(rangeStart, rangeEnd, testRangeStart, testRangeEnd);
     }
 
     /**

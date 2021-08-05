@@ -93,56 +93,56 @@ public abstract class Valid {
         }
     }
 
-    public static <T extends Comparable<T>> T lt(T t1, T t2) {
-        return lt(t1, t2, "the validated numbers not less than");
+    public static <T extends Comparable<T>> T lt(T value, T refer) {
+        return lt(value, refer, "the validated numbers not less than");
     }
 
-    public static <T extends Comparable<T>> T lt(T t1, T t2, String message, Object... values) {
-        notNull(t1);
-        notNull(t2);
-        if (t1.compareTo(t2) >= 0) {
+    public static <T extends Comparable<T>> T lt(T value, T refer, String message, Object... values) {
+        notNull(value);
+        notNull(refer);
+        if (value.compareTo(refer) >= 0) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
-        return t1;
+        return value;
     }
 
-    public static <T extends Comparable<T>> T lte(T t1, T t2) {
-        return lte(t1, t2, "the validated numbers not less than or equal");
+    public static <T extends Comparable<T>> T lte(T value, T refer) {
+        return lte(value, refer, "the validated numbers not less than or equal");
     }
 
-    public static <T extends Comparable<T>> T lte(T t1, T t2, String message, Object... values) {
-        notNull(t1);
-        notNull(t2);
-        if (t1.compareTo(t2) > 0) {
+    public static <T extends Comparable<T>> T lte(T value, T refer, String message, Object... values) {
+        notNull(value);
+        notNull(refer);
+        if (value.compareTo(refer) > 0) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
-        return t1;
+        return value;
     }
 
-    public static <T extends Comparable<T>> T gt(T t1, T t2) {
-        return gt(t1, t2, "the validated numbers not greater than");
+    public static <T extends Comparable<T>> T gt(T value, T refer) {
+        return gt(value, refer, "the validated numbers not greater than");
     }
 
-    public static <T extends Comparable<T>> T gt(T t1, T t2, String message, Object... values) {
-        notNull(t1);
-        notNull(t2);
-        if (t1.compareTo(t2) <= 0) {
+    public static <T extends Comparable<T>> T gt(T value, T refer, String message, Object... values) {
+        notNull(value);
+        notNull(refer);
+        if (value.compareTo(refer) <= 0) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
-        return t1;
+        return value;
     }
 
-    public static <T extends Comparable<T>> T gte(T t1, T t2) {
-        return gte(t1, t2, "the validated numbers not greater than or equal");
+    public static <T extends Comparable<T>> T gte(T value, T refer) {
+        return gte(value, refer, "the validated numbers not greater than or equal");
     }
 
-    public static <T extends Comparable<T>> T gte(T t1, T t2, String message, Object... values) {
-        notNull(t1);
-        notNull(t2);
-        if (t1.compareTo(t2) < 0) {
+    public static <T extends Comparable<T>> T gte(T value, T refer, String message, Object... values) {
+        notNull(value);
+        notNull(refer);
+        if (value.compareTo(refer) < 0) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
-        return t1;
+        return value;
     }
 
     public static boolean isTrue(BooleanSupplier s) {

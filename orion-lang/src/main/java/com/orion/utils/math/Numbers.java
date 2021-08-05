@@ -1,6 +1,7 @@
 package com.orion.utils.math;
 
 import com.orion.utils.Arrays1;
+import com.orion.utils.Compares;
 import com.orion.utils.Strings;
 import com.orion.utils.Valid;
 
@@ -969,67 +970,67 @@ public class Numbers {
     /**
      * 判断是否在区间内 开区间
      *
+     * @param num   测试的数字
      * @param start 区间开始
      * @param end   区间结束
-     * @param num   测试的数字
      * @return true 在区间内
      */
-    public static boolean inRange(byte start, byte end, byte num) {
-        return start <= num && num <= end;
+    public static boolean inRange(byte num, byte start, byte end) {
+        return Compares.inRange(num, start, end);
     }
 
-    public static boolean inRange(short start, short end, short num) {
-        return start <= num && num <= end;
+    public static boolean inRange(short num, short start, short end) {
+        return Compares.inRange(num, start, end);
     }
 
-    public static boolean inRange(int start, int end, int num) {
-        return start <= num && num <= end;
+    public static boolean inRange(int num, int start, int end) {
+        return Compares.inRange(num, start, end);
     }
 
-    public static boolean inRange(long start, long end, long num) {
-        return start <= num && num <= end;
+    public static boolean inRange(long num, long start, long end) {
+        return Compares.inRange(num, start, end);
     }
 
-    public static boolean inRange(float start, float end, float num) {
-        return start <= num && num <= end;
+    public static boolean inRange(float num, float start, float end) {
+        return Compares.inRange(num, start, end);
     }
 
-    public static boolean inRange(double start, double end, double num) {
-        return start <= num && num <= end;
+    public static boolean inRange(double num, double start, double end) {
+        return Compares.inRange(num, start, end);
     }
 
     /**
      * 判断是否不在区间内 开区间
      *
+     * @param num   测试的数字
      * @param start 区间开始
      * @param end   区间结束
-     * @param num   测试的数字
      *              [1, 1] 1 true
      *              [1, 2] 1 true
      * @return true 不在区间内
      */
-    public static boolean notInRange(byte start, byte end, byte num) {
-        return !inRange(start, end, num);
+    public static boolean notInRange(byte num, byte start, byte end) {
+        return !inRange(num, start, end);
     }
 
-    public static boolean notInRange(short start, short end, short num) {
-        return !inRange(start, end, num);
+    public static boolean notInRange(short num, short start, short end) {
+        return !inRange(num, start, end);
     }
 
-    public static boolean notInRange(int start, int end, int num) {
-        return !inRange(start, end, num);
+    public static boolean notInRange(int num, int start, int end) {
+        return !inRange(num, start, end);
     }
 
-    public static boolean notInRange(long start, long end, long num) {
-        return !inRange(start, end, num);
+    public static boolean notInRange(long num, long start, long end) {
+        return !inRange(num, start, end);
     }
 
-    public static boolean notInRange(float start, float end, float num) {
-        return !inRange(start, end, num);
+    public static boolean notInRange(float num, float start, float end) {
+        return !inRange(num, start, end);
     }
 
-    public static boolean notInRange(double start, double end, double num) {
-        return !inRange(start, end, num);
+    public static boolean notInRange(double num, double start, double end) {
+        return !inRange(num, start, end);
     }
 
     /**
@@ -1045,33 +1046,27 @@ public class Numbers {
      * @return true 在区间内
      */
     public static boolean rangeInRange(byte rangeStart, byte rangeEnd, byte testRangeStart, byte testRangeEnd) {
-        return (rangeStart <= testRangeStart && rangeStart <= testRangeEnd) &&
-                (testRangeStart <= rangeEnd && testRangeEnd <= rangeEnd);
+        return Compares.rangeInRange(rangeStart, rangeEnd, testRangeStart, testRangeEnd);
     }
 
     public static boolean rangeInRange(short rangeStart, short rangeEnd, short testRangeStart, short testRangeEnd) {
-        return (rangeStart <= testRangeStart && rangeStart <= testRangeEnd) &&
-                (testRangeStart <= rangeEnd && testRangeEnd <= rangeEnd);
+        return Compares.rangeInRange(rangeStart, rangeEnd, testRangeStart, testRangeEnd);
     }
 
     public static boolean rangeInRange(int rangeStart, int rangeEnd, int testRangeStart, int testRangeEnd) {
-        return (rangeStart <= testRangeStart && rangeStart <= testRangeEnd) &&
-                (testRangeStart <= rangeEnd && testRangeEnd <= rangeEnd);
+        return Compares.rangeInRange(rangeStart, rangeEnd, testRangeStart, testRangeEnd);
     }
 
     public static boolean rangeInRange(long rangeStart, long rangeEnd, long testRangeStart, long testRangeEnd) {
-        return (rangeStart <= testRangeStart && rangeStart <= testRangeEnd) &&
-                (testRangeStart <= rangeEnd && testRangeEnd <= rangeEnd);
+        return Compares.rangeInRange(rangeStart, rangeEnd, testRangeStart, testRangeEnd);
     }
 
     public static boolean rangeInRange(float rangeStart, float rangeEnd, float testRangeStart, float testRangeEnd) {
-        return (rangeStart <= testRangeStart && rangeStart <= testRangeEnd) &&
-                (testRangeStart <= rangeEnd && testRangeEnd <= rangeEnd);
+        return Compares.rangeInRange(rangeStart, rangeEnd, testRangeStart, testRangeEnd);
     }
 
     public static boolean rangeInRange(double rangeStart, double rangeEnd, double testRangeStart, double testRangeEnd) {
-        return (rangeStart <= testRangeStart && rangeStart <= testRangeEnd) &&
-                (testRangeStart <= rangeEnd && testRangeEnd <= rangeEnd);
+        return Compares.rangeInRange(rangeStart, rangeEnd, testRangeStart, testRangeEnd);
     }
 
     /**
@@ -1124,57 +1119,27 @@ public class Numbers {
      * @return 是否有交差
      */
     public static boolean cross(byte start1, byte end1, byte start2, byte end2) {
-        if (end1 <= start2 || end2 <= start1) {
-            return false;
-        }
-        return (start1 == start2 && end1 == end2) ||
-                Numbers.rangeInRange(start1, end1, start2, end2) || Numbers.inRange(start1, end1, start2) ||
-                Numbers.rangeInRange(start2, end2, start1, end1) || Numbers.inRange(start2, end2, start1);
+        return Compares.cross(start1, end1, start2, end2);
     }
 
     public static boolean cross(short start1, short end1, short start2, short end2) {
-        if (end1 <= start2 || end2 <= start1) {
-            return false;
-        }
-        return (start1 == start2 && end1 == end2) ||
-                Numbers.rangeInRange(start1, end1, start2, end2) || Numbers.inRange(start1, end1, start2) ||
-                Numbers.rangeInRange(start2, end2, start1, end1) || Numbers.inRange(start2, end2, start1);
+        return Compares.cross(start1, end1, start2, end2);
     }
 
     public static boolean cross(int start1, int end1, int start2, int end2) {
-        if (end1 <= start2 || end2 <= start1) {
-            return false;
-        }
-        return (start1 == start2 && end1 == end2) ||
-                Numbers.rangeInRange(start1, end1, start2, end2) || Numbers.inRange(start1, end1, start2) ||
-                Numbers.rangeInRange(start2, end2, start1, end1) || Numbers.inRange(start2, end2, start1);
+        return Compares.cross(start1, end1, start2, end2);
     }
 
     public static boolean cross(long start1, long end1, long start2, long end2) {
-        if (end1 <= start2 || end2 <= start1) {
-            return false;
-        }
-        return (start1 == start2 && end1 == end2) ||
-                Numbers.rangeInRange(start1, end1, start2, end2) || Numbers.inRange(start1, end1, start2) ||
-                Numbers.rangeInRange(start2, end2, start1, end1) || Numbers.inRange(start2, end2, start1);
+        return Compares.cross(start1, end1, start2, end2);
     }
 
     public static boolean cross(float start1, float end1, float start2, float end2) {
-        if (end1 <= start2 || end2 <= start1) {
-            return false;
-        }
-        return (start1 == start2 && end1 == end2) ||
-                Numbers.rangeInRange(start1, end1, start2, end2) || Numbers.inRange(start1, end1, start2) ||
-                Numbers.rangeInRange(start2, end2, start1, end1) || Numbers.inRange(start2, end2, start1);
+        return Compares.cross(start1, end1, start2, end2);
     }
 
     public static boolean cross(double start1, double end1, double start2, double end2) {
-        if (end1 <= start2 || end2 <= start1) {
-            return false;
-        }
-        return (start1 == start2 && end1 == end2) ||
-                Numbers.rangeInRange(start1, end1, start2, end2) || Numbers.inRange(start1, end1, start2) ||
-                Numbers.rangeInRange(start2, end2, start1, end1) || Numbers.inRange(start2, end2, start1);
+        return Compares.cross(start1, end1, start2, end2);
     }
 
     /**

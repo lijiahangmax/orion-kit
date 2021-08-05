@@ -1,6 +1,7 @@
 package com.orion.function.select;
 
 import com.orion.utils.Arrays1;
+import com.orion.utils.Compares;
 import com.orion.utils.Objects1;
 
 import java.util.function.Function;
@@ -82,7 +83,7 @@ public class Branches<P> {
      * @return {@link Branches}
      */
     public static <P extends Comparable<P>> Branches<P> compared(P v) {
-        return new Branches<>(p -> Objects1.compared(p, v));
+        return new Branches<>(p -> Compares.compared(p, v));
     }
 
     /**

@@ -11,7 +11,6 @@ import java.io.*;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -104,37 +103,6 @@ public class Objects1 {
             return Arrays1.arrayEquals(o1, o2);
         }
         return false;
-    }
-
-    /**
-     * 比较接口判断相等
-     *
-     * @param o1  对象1
-     * @param o2  对象2
-     * @param <T> ignore
-     * @return ignore
-     */
-    public static <T extends Comparable<T>> boolean compared(T o1, T o2) {
-        if (o1 == null || o2 == null) {
-            return false;
-        }
-        return o1.compareTo(o2) == 0;
-    }
-
-    /**
-     * 比较接口判断相等
-     *
-     * @param o1  对象1
-     * @param o2  对象2
-     * @param c   比较接口
-     * @param <T> ignore
-     * @return ignore
-     */
-    public static <T> boolean compared(T o1, T o2, Comparator<T> c) {
-        if (o1 == null || o2 == null) {
-            return false;
-        }
-        return c.compare(o1, o2) == 0;
     }
 
     /**
@@ -361,31 +329,6 @@ public class Objects1 {
         } catch (Exception e) {
             throw Exceptions.argument("failed to deserialize object", e);
         }
-    }
-
-    /**
-     * 比较接口
-     *
-     * @param o1  对象1
-     * @param o2  对象2
-     * @param <T> ignore
-     * @return ignore
-     */
-    public static <T extends Comparable<T>> int compare(T o1, T o2) {
-        return o1.compareTo(o2);
-    }
-
-    /**
-     * 比较接口
-     *
-     * @param o1  对象1
-     * @param o2  对象2
-     * @param c   比较接口
-     * @param <T> ignore
-     * @return ignore
-     */
-    public static <T> int compare(T o1, T o2, Comparator<T> c) {
-        return c.compare(o1, o2);
     }
 
     /**

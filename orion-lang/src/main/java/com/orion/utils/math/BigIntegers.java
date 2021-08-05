@@ -1,14 +1,14 @@
 package com.orion.utils.math;
 
 import com.orion.utils.Arrays1;
+import com.orion.utils.Compares;
 import com.orion.utils.Objects1;
-import com.orion.utils.Valid;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
- * BigInteger工具类
+ * BigInteger 工具类
  *
  * @author Li
  * @version 1.0.0
@@ -656,65 +656,14 @@ public class BigIntegers {
     }
 
     /**
-     * 小于
+     * 等于
      *
      * @param d1 ignore
      * @param d2 ignore
-     * @return 小于true
+     * @return 等于true
      */
-    public static boolean lt(BigInteger d1, BigInteger d2) {
-        if (d1 == null || d2 == null) {
-            return false;
-        }
-        return d1.compareTo(d2) < 0;
-    }
-
-    /**
-     * 小于等于
-     *
-     * @param d1 ignore
-     * @param d2 ignore
-     * @return 小于等于true
-     */
-    public static boolean lte(BigInteger d1, BigInteger d2) {
-        if (d1 == null && d2 == null) {
-            return true;
-        }
-        if (d1 != null && d2 != null) {
-            return d1.compareTo(d2) <= 0;
-        }
-        return false;
-    }
-
-    /**
-     * 大于
-     *
-     * @param d1 ignore
-     * @param d2 ignore
-     * @return 大于true
-     */
-    public static boolean gt(BigInteger d1, BigInteger d2) {
-        if (d1 == null || d2 == null) {
-            return false;
-        }
-        return d1.compareTo(d2) > 0;
-    }
-
-    /**
-     * 大于等于
-     *
-     * @param d1 ignore
-     * @param d2 ignore
-     * @return 大于等于true
-     */
-    public static boolean gte(BigInteger d1, BigInteger d2) {
-        if (d1 == null && d2 == null) {
-            return true;
-        }
-        if (d1 != null && d2 != null) {
-            return d1.compareTo(d2) >= 0;
-        }
-        return false;
+    public static boolean eq(BigInteger d1, BigInteger d2) {
+        return Objects1.eq(d1, d2);
     }
 
     /**
@@ -724,8 +673,8 @@ public class BigIntegers {
      * @param d2 ignore
      * @return 等于true
      */
-    public static boolean eq(BigInteger d1, BigInteger d2) {
-        return Objects1.eq(d1, d2);
+    public static boolean compared(BigInteger d1, BigInteger d2) {
+        return Compares.compared(d1, d2);
     }
 
     /**
@@ -817,107 +766,6 @@ public class BigIntegers {
             return false;
         }
         return d.compareTo(BigInteger.ZERO) >= 0;
-    }
-
-    /**
-     * 判断是否在区间内 开区间
-     *
-     * @param start 区间开始
-     * @param end   区间结束
-     * @param num   测试的数字
-     * @return true 在区间内
-     */
-    public static boolean inRange(BigInteger start, BigInteger end, BigInteger num) {
-        Valid.notNull(start, "rangeStart is null");
-        Valid.notNull(end, "rangeEnd is null");
-        Valid.notNull(num, "test num is null");
-        return start.compareTo(num) <= 0 && num.compareTo(end) <= 0;
-    }
-
-    /**
-     * 判断是否不在区间内 开区间
-     *
-     * @param start 区间开始
-     * @param end   区间结束
-     * @param num   测试的数字
-     * @return true 不在区间内
-     */
-    public static boolean notInRange(BigInteger start, BigInteger end, BigInteger num) {
-        return !inRange(start, end, num);
-    }
-
-    /**
-     * 判断一个区间是否在另一个区间内 开区间
-     *
-     * @param rangeStart     区间开始
-     * @param rangeEnd       区间结束
-     * @param testRangeStart 测试的区间开始
-     * @param testRangeEnd   测试的区间结束
-     *                       [1, 1], [1, 1] true
-     *                       [1, 2], [1, 1] true
-     *                       [1, 2], [1, 2] true
-     * @return true 在区间内
-     */
-    public static boolean rangeInRange(BigInteger rangeStart, BigInteger rangeEnd, BigInteger testRangeStart, BigInteger testRangeEnd) {
-        Valid.notNull(rangeStart, "rangeStart is null");
-        Valid.notNull(rangeEnd, "rangeEnd is null");
-        Valid.notNull(testRangeStart, "testRangeStart is null");
-        Valid.notNull(testRangeEnd, "testRangeEnd is null");
-        return (rangeStart.compareTo(testRangeStart) <= 0 && rangeStart.compareTo(testRangeEnd) <= 0) &&
-                (testRangeStart.compareTo(rangeEnd) <= 0 && testRangeEnd.compareTo(rangeEnd) <= 0);
-    }
-
-    /**
-     * 判断一个区间是否不在另一个区间内 开区间
-     *
-     * @param rangeStart     区间开始
-     * @param rangeEnd       区间结束
-     * @param testRangeStart 测试的区间开始
-     * @param testRangeEnd   测试的区间结束
-     * @return true 不在区间内
-     */
-    public static boolean rangeNotInRange(BigInteger rangeStart, BigInteger rangeEnd, BigInteger testRangeStart, BigInteger testRangeEnd) {
-        return !rangeInRange(rangeStart, rangeEnd, testRangeStart, testRangeEnd);
-    }
-
-    /**
-     * 交差
-     *
-     * @param start1 开始区间1
-     * @param end1   结束区间1
-     * @param start2 开始区间2
-     * @param end2   结束区间2
-     *               [1, 1] [1, 1] false
-     *               [1, 1] [1, 2] false
-     *               [1, 2] [1, 1] false
-     *               [1, 2] [2, 3] false
-     *               [1, 2] [1, 2] true
-     * @return 是否有交差
-     */
-    public static boolean cross(BigInteger start1, BigInteger end1, BigInteger start2, BigInteger end2) {
-        Valid.notNull(start1, "rangeStart1 is null");
-        Valid.notNull(end1, "rangeEnd1 is null");
-        Valid.notNull(start2, "rangeStart2 is null");
-        Valid.notNull(end2, "rangeEnd2 is null");
-        if (end1.compareTo(start2) <= 0 || end2.compareTo(start1) <= 0) {
-            return false;
-        }
-        return (start1.equals(start2) && end1.equals(end2)) ||
-                rangeInRange(start1, end1, start2, end2) || inRange(start1, end1, start2) ||
-                rangeInRange(start2, end2, start1, end1) || inRange(start2, end2, start1);
-    }
-
-    /**
-     * 不交差
-     *
-     * @param start1 开始区间1
-     * @param end1   结束区间1
-     * @param start2 开始区间2
-     * @param end2   结束区间2
-     * @return 是否不交差
-     */
-    public static boolean uncross(BigInteger start1, BigInteger end1, BigInteger start2, BigInteger end2) {
-        return !cross(start1, end1, start2, end2);
     }
 
 }
