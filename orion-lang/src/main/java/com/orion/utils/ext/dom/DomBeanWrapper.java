@@ -12,81 +12,59 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 /**
- * XML 转 Bean工具类
+ * xml 转 bean 工具类
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/3/26 18:38
  */
 @SuppressWarnings("unchecked")
-class DomBeanWrapper {
+public class DomBeanWrapper {
 
-    /**
-     * XML 转 bean
-     *
-     * @param document document
-     * @param clazz    beanClass
-     * @param <T>      beanType
-     * @return bean
-     */
-    static <T> T toBean(Document document, Class<T> clazz) {
-        return toBean(document.getRootElement(), null, clazz);
+    private DomBeanWrapper() {
+    }
+
+    public static <T> T toBean(Document document, Class<T> clazz) {
+        return toBean(document.getRootElement(), clazz, null);
+    }
+
+    public static <T> T toBean(Document document, Class<T> clazz, Map<String, Object> convertMap) {
+        return toBean(document.getRootElement(), clazz, convertMap);
+    }
+
+    public static <T> T toBean(Element element, Class<T> clazz) {
+        return toBean(element, clazz, null);
     }
 
     /**
-     * XML 转 bean
+     * xml 转 bean
      *
-     * @param document   document
-     * @param convertMap 属性转换map key:xml value:bean
-     * @param clazz      beanClass
-     * @param <T>        beanType
+     * @param element       element
+     * @param convertMapper 属性转换map key:xml value:bean
+     * @param clazz         beanClass
+     * @param <T>           beanType
      * @return bean
      */
-    static <T> T toBean(Document document, Map<String, Object> convertMap, Class<T> clazz) {
-        return toBean(document.getRootElement(), convertMap, clazz);
-    }
-
-    /**
-     * XML 转 bean
-     *
-     * @param element element
-     * @param clazz   beanClass
-     * @param <T>     beanType
-     * @return bean
-     */
-    static <T> T toBean(Element element, Class<T> clazz) {
-        return toBean(element, null, clazz);
-    }
-
-    /**
-     * XML 转 bean
-     *
-     * @param element    element
-     * @param convertMap 属性转换map key:xml value:bean
-     * @param clazz      beanClass
-     * @param <T>        beanType
-     * @return bean
-     */
-    static <T> T toBean(Element element, Map<String, Object> convertMap, Class<T> clazz) {
+    public static <T> T toBean(Element element, Class<T> clazz, Map<String, Object> convertMapper) {
         T t = Constructors.newInstance(clazz);
         List<Element> elements = element.elements();
         List<Method> setterMethod = Methods.getSetterMethods(clazz);
-        Map<String, Integer> normMap = new LinkedHashMap<>();
-        Map<String, Integer> childMap = new LinkedHashMap<>();
+        Map<String, Integer> singleMap = new LinkedHashMap<>();
+        Map<String, Integer> multiMap = new LinkedHashMap<>();
         for (Element e : elements) {
             List<?> es = e.elements();
             String eName = e.getName();
             if (Lists.isEmpty(es)) {
-                normMap.merge(eName, 1, Integer::sum);
+                singleMap.merge(eName, 1, Integer::sum);
             } else {
-                childMap.merge(eName, 1, Integer::sum);
+                multiMap.merge(eName, 1, Integer::sum);
             }
         }
-        for (Map.Entry<String, Integer> entry : normMap.entrySet()) {
+        for (Map.Entry<String, Integer> singleEntry : singleMap.entrySet()) {
             for (Method method : setterMethod) {
-                String elementSet = Methods.getSetterMethodNameByFieldName(entry.getKey());
-                if (convertMap != null) {
-                    Object getSetter = convertMap.get(entry.getKey());
+                String elementSet = Methods.getSetterMethodNameByFieldName(singleEntry.getKey());
+                if (convertMapper != null) {
+                    Object getSetter = convertMapper.get(singleEntry.getKey());
                     if (getSetter instanceof String) {
                         elementSet = Methods.getSetterMethodNameByFieldName(getSetter.toString());
                     }
@@ -95,7 +73,7 @@ class DomBeanWrapper {
                     Class<?> paramType = method.getParameterTypes()[0];
                     Class<?> paramsClass = null;
                     if (paramType.equals(Object.class)) {
-                        if (entry.getValue() == 1) {
+                        if (singleEntry.getValue() == 1) {
                             paramType = String.class;
                             paramsClass = String.class;
                         } else {
@@ -125,17 +103,17 @@ class DomBeanWrapper {
                             }
                         }
                         Collection<Object> c = ((Collection<Object>) Constructors.newInstance(paramType));
-                        Collection<Element> list = element.elements(entry.getKey());
+                        Collection<Element> list = element.elements(singleEntry.getKey());
                         for (Element e : list) {
                             c.add(e.getStringValue());
                         }
                         paramValue = c;
                     } else if (paramsClass.equals(String.class)) {
-                        paramValue = element.element(entry.getKey()).getStringValue();
+                        paramValue = element.element(singleEntry.getKey()).getStringValue();
                     }
                     if (paramValue == null) {
                         try {
-                            paramValue = element.element(entry.getKey()).getStringValue();
+                            paramValue = element.element(singleEntry.getKey()).getStringValue();
                         } catch (Exception e) {
                             Exceptions.printStacks(e);
                         }
@@ -146,11 +124,11 @@ class DomBeanWrapper {
                 }
             }
         }
-        for (Map.Entry<String, Integer> entry : childMap.entrySet()) {
+        for (Map.Entry<String, Integer> multiEntry : multiMap.entrySet()) {
             for (Method method : setterMethod) {
-                String elementSet = Methods.getSetterMethodNameByFieldName(entry.getKey());
-                if (convertMap != null) {
-                    Object getSetter = convertMap.get(entry.getKey());
+                String elementSet = Methods.getSetterMethodNameByFieldName(multiEntry.getKey());
+                if (convertMapper != null) {
+                    Object getSetter = convertMapper.get(multiEntry.getKey());
                     if (getSetter instanceof String) {
                         elementSet = Methods.getSetterMethodNameByFieldName(getSetter.toString());
                     }
@@ -174,17 +152,17 @@ class DomBeanWrapper {
                     }
                     Object paramValue;
                     if (paramsClass.equals(Map.class)) {
-                        paramValue = toMap(paramType, element.element(entry.getKey()));
+                        paramValue = toMap(element.element(multiEntry.getKey()), paramType);
                     } else {
-                        if (convertMap != null) {
-                            Object childConvertMap = convertMap.get(entry.getKey());
+                        if (convertMapper != null) {
+                            Object childConvertMap = convertMapper.get(multiEntry.getKey());
                             if (childConvertMap instanceof Map) {
-                                paramValue = toBean(element.element(entry.getKey()), ((Map<String, Object>) childConvertMap), paramType);
+                                paramValue = toBean(element.element(multiEntry.getKey()), paramType, ((Map<String, Object>) childConvertMap));
                             } else {
-                                paramValue = toBean(element.element(entry.getKey()), null, paramType);
+                                paramValue = toBean(element.element(multiEntry.getKey()), paramType, null);
                             }
                         } else {
-                            paramValue = toBean(element.element(entry.getKey()), null, paramType);
+                            paramValue = toBean(element.element(multiEntry.getKey()), paramType, null);
                         }
                     }
                     Methods.invokeMethodInfer(t, method.getName(), paramValue);
@@ -194,35 +172,24 @@ class DomBeanWrapper {
         return t;
     }
 
-    /**
-     * XML 解析为 Map 只有标签值, 没有属性值, 不具有跟标签
-     *
-     * @param document document
-     * @return Map
-     */
-    static Map<String, Object> toMap(Document document) {
-        return toMap(LinkedHashMap.class, document.getRootElement());
+    public static Map<String, Object> toMap(Document document) {
+        return toMap(document.getRootElement(), LinkedHashMap.class);
+    }
+
+    public static Map<String, Object> toMap(Element element) {
+        return toMap(element, LinkedHashMap.class);
     }
 
     /**
-     * XML 解析为 Map 只有标签值, 没有属性值, 不具有跟标签
+     * xml 解析为 map 只有标签值, 没有属性值, 不具有跟标签
      *
-     * @param element element
-     * @return Map
+     * @param element  element
+     * @param mapClass mapClass
+     * @return map
      */
-    static Map<String, Object> toMap(Element element) {
-        return toMap(LinkedHashMap.class, element);
-    }
-
-    /**
-     * XML 解析为 Map 只有标签值, 没有属性值, 不具有跟标签
-     *
-     * @param element element
-     * @return Map
-     */
-    static Map<String, Object> toMap(Class<?> mapClass, Element element) {
+    public static Map<String, Object> toMap(Element element, Class<?> mapClass) {
         Map<String, Object> map;
-        if (mapClass.equals(Map.class)) {
+        if (mapClass == null || mapClass.equals(Map.class)) {
             map = new LinkedHashMap<>();
         } else {
             map = ((Map<String, Object>) Constructors.newInstance(mapClass));
@@ -232,72 +199,66 @@ class DomBeanWrapper {
         for (Element e : elements) {
             countMap.merge(e.getName(), 1, Integer::sum);
         }
-        for (Map.Entry<String, Integer> entry : countMap.entrySet()) {
-            if (entry.getValue() == 1) {
-                Element element1 = element.element(entry.getKey());
-                if (!Lists.isEmpty(element1.elements())) {
-                    map.put(entry.getKey(), toMap(element1));
+        for (Map.Entry<String, Integer> countEntry : countMap.entrySet()) {
+            if (countEntry.getValue() == 1) {
+                Element child = element.element(countEntry.getKey());
+                if (!Lists.isEmpty(child.elements())) {
+                    map.put(countEntry.getKey(), toMap(child));
                 } else {
-                    map.put(entry.getKey(), element1.getStringValue());
+                    map.put(countEntry.getKey(), child.getStringValue());
                 }
             } else {
                 List<Object> list = new ArrayList<>();
-                List<Element> element1 = element.elements(entry.getKey());
-                for (Element element2 : element1) {
-                    if (!Lists.isEmpty(element2.elements())) {
-                        list.add(toMap(element2));
+                List<Element> childList = element.elements(countEntry.getKey());
+                for (Element child : childList) {
+                    if (!Lists.isEmpty(child.elements())) {
+                        list.add(toMap(child));
                     } else {
-                        list.add(element2.getStringValue());
+                        list.add(child.getStringValue());
                     }
                 }
-                map.put(entry.getKey(), list);
+                map.put(countEntry.getKey(), list);
             }
         }
         return map;
     }
 
-    /**
-     * XML 解析为 DomNode 有标签值, 有属性值, 不具有跟标签
-     *
-     * @param document document
-     * @return DomNode
-     */
-    static Map<String, DomNode> toDomNode(Document document) {
+    public static Map<String, DomNode> toDomNode(Document document) {
         return toDomNode(document.getRootElement());
     }
 
     /**
-     * XML 解析为 DomNode 有标签值, 有属性值, 不具有跟标签
+     * xml 解析为 domNode 有标签值, 有属性值, 不具有跟标签
      *
      * @param element element
-     * @return DomNode
+     * @return domNode
      */
-    static Map<String, DomNode> toDomNode(Element element) {
+    public static Map<String, DomNode> toDomNode(Element element) {
         Map<String, DomNode> map = new LinkedHashMap<>();
         Map<String, Integer> countMap = new LinkedHashMap<>();
         List<Element> elements = element.elements();
         for (Element e : elements) {
             countMap.merge(e.getName(), 1, Integer::sum);
         }
-        for (Map.Entry<String, Integer> entry : countMap.entrySet()) {
-            if (entry.getValue() == 1) {
-                Element element1 = element.element(entry.getKey());
-                if (!Lists.isEmpty(element1.elements())) {
-                    map.put(entry.getKey(), new DomNode(toDomNode(element1)).setAttr(DomExt.getAttributes(element1)));
+        for (Map.Entry<String, Integer> countEntry : countMap.entrySet()) {
+            if (countEntry.getValue() == 1) {
+                Element child = element.element(countEntry.getKey());
+                if (!Lists.isEmpty(child.elements())) {
+                    map.put(countEntry.getKey(), new DomNode(toDomNode(child)).setAttr(DomSupport.getAttributes(child)));
                 } else {
-                    map.put(entry.getKey(), new DomNode(element1.getStringValue()).setAttr(DomExt.getAttributes(element1)));
+                    map.put(countEntry.getKey(), new DomNode(child.getStringValue()).setAttr(DomSupport.getAttributes(child)));
                 }
             } else {
                 List<DomNode> list = new ArrayList<>();
-                List<Element> element1 = element.elements(entry.getKey());
-                for (Element element2 : element1) {
-                    if (!Lists.isEmpty(element2.elements())) {
-                        list.add(new DomNode(toDomNode(element2)).setAttr(DomExt.getAttributes(element2)));
+                List<Element> childList = element.elements(countEntry.getKey());
+                for (Element child : childList) {
+                    if (!Lists.isEmpty(child.elements())) {
+                        list.add(new DomNode(toDomNode(child)).setAttr(DomSupport.getAttributes(child)));
                     } else {
-                        list.add(new DomNode(element2.getStringValue()).setAttr(DomExt.getAttributes(element2)));
+                        list.add(new DomNode(child.getStringValue()).setAttr(DomSupport.getAttributes(child)));
                     }
                 }
-                map.put(entry.getKey(), new DomNode(list));
+                map.put(countEntry.getKey(), new DomNode(list));
             }
         }
         return map;

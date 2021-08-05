@@ -8,6 +8,7 @@ import com.orion.utils.collect.Maps;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.Element;
+import org.dom4j.io.OutputFormat;
 import org.dom4j.tree.DefaultAttribute;
 import org.dom4j.tree.DefaultCDATA;
 import org.dom4j.tree.DefaultDocument;
@@ -29,9 +30,9 @@ import java.util.Map;
 public class DomBuilder implements Buildable<DomBuilder> {
 
     /**
-     * 构建xml信息
+     * 构建 xml 信息
      */
-    private DomTag domTag;
+    private DomElement domElement;
 
     /**
      * document
@@ -48,40 +49,37 @@ public class DomBuilder implements Buildable<DomBuilder> {
     }
 
     /**
-     * 获取根节点信息
+     * 创建实例
      *
-     * @return 节点
+     * @return DomBuilder
      */
-    public DomTag getDomTag() {
-        return domTag;
+    public static DomBuilder create() {
+        return new DomBuilder();
     }
 
     /**
      * 设置节点信息
      *
-     * @param domTag domTag
+     * @param domElement domElement
      * @return this
      */
-    public DomBuilder setDomTag(DomTag domTag) {
-        this.domTag = domTag;
+    public DomBuilder setDomElement(DomElement domElement) {
+        this.domElement = domElement;
         return this;
     }
 
     /**
-     * 获取根节点信息
+     * 创建根节点信息
      *
      * @param name 标签
      * @return 节点
      */
-    public DomTag getDomRootTag(String name) {
-        if (domTag == null) {
-            domTag = new DomTag(name);
-        }
-        return domTag;
+    public DomElement createRootElement(String name) {
+        return this.domElement = new DomElement(name);
     }
 
     /**
-     * 设置xml编码格式
+     * 设置 xml 编码格式
      *
      * @param charset 编码格式
      * @return this
@@ -98,21 +96,21 @@ public class DomBuilder implements Buildable<DomBuilder> {
      */
     @Override
     public DomBuilder build() {
-        Valid.notNull(domTag, "domTag is null");
+        Valid.notNull(domElement, "element is null");
         this.document = new DefaultDocument();
-        this.document.setXMLEncoding(charset);
-        Element rootElement = new DefaultElement(domTag.getName());
-        this.document.setRootElement(rootElement);
-        rootElement.setAttributes(getAttribute(domTag.getAttributes()));
-        if (domTag.getValue() != null) {
-            if (domTag.getCdata()) {
-                rootElement.add(new DefaultCDATA(domTag.getValue()));
+        document.setXMLEncoding(charset);
+        Element rootElement = new DefaultElement(domElement.getName());
+        document.setRootElement(rootElement);
+        rootElement.setAttributes(this.getAttribute(domElement.getAttributes()));
+        if (domElement.getValue() != null) {
+            if (domElement.isCdata()) {
+                rootElement.add(new DefaultCDATA(domElement.getValue()));
             } else {
-                rootElement.setText(domTag.getValue());
+                rootElement.setText(domElement.getValue());
             }
-        } else if (!Lists.isEmpty(domTag.getChildNode())) {
-            for (DomTag info : this.domTag.getChildNode()) {
-                buildChildElement(rootElement, info);
+        } else if (!Lists.isEmpty(domElement.getChildNode())) {
+            for (DomElement info : domElement.getChildNode()) {
+                this.buildChildElement(rootElement, info);
             }
         }
         return this;
@@ -121,28 +119,28 @@ public class DomBuilder implements Buildable<DomBuilder> {
     /**
      * 构建子节点
      *
-     * @param element 上级节点
-     * @param domTag  dom信息
+     * @param element    上级节点
+     * @param domElement dom信息
      */
-    private void buildChildElement(Element element, DomTag domTag) {
-        DefaultElement e = new DefaultElement(domTag.getName());
+    private void buildChildElement(Element element, DomElement domElement) {
+        DefaultElement e = new DefaultElement(domElement.getName());
         element.add(e);
-        e.setAttributes(getAttribute(domTag.getAttributes()));
-        if (domTag.getValue() != null) {
-            if (domTag.getCdata()) {
-                e.add(new DefaultCDATA(domTag.getValue()));
+        e.setAttributes(this.getAttribute(domElement.getAttributes()));
+        if (domElement.getValue() != null) {
+            if (domElement.isCdata()) {
+                e.add(new DefaultCDATA(domElement.getValue()));
             } else {
-                e.setText(domTag.getValue());
+                e.setText(domElement.getValue());
             }
-        } else if (!Lists.isEmpty(domTag.getChildNode())) {
-            for (DomTag info : domTag.getChildNode()) {
+        } else if (!Lists.isEmpty(domElement.getChildNode())) {
+            for (DomElement info : domElement.getChildNode()) {
                 buildChildElement(e, info);
             }
         }
     }
 
     /**
-     * Map 转 List<Attribute>
+     * map 转 list<Attribute>
      *
      * @param map map
      * @return attribute
@@ -159,25 +157,34 @@ public class DomBuilder implements Buildable<DomBuilder> {
     }
 
     /**
-     * 获取 Document
+     * 获取 document
      *
-     * @return Document
+     * @return document
      */
     public Document getDocument() {
         return document;
     }
 
     /**
-     * 获取 RootElement
+     * 获取根节点信息
      *
-     * @return RootElement
+     * @return 节点
+     */
+    public DomElement getDomElement() {
+        return domElement;
+    }
+
+    /**
+     * 获取 rootElement
+     *
+     * @return rootElement
      */
     public Element getRootElement() {
         return document.getRootElement();
     }
 
     /**
-     * 获取 XML
+     * 获取 xml
      *
      * @return XML
      */
@@ -186,12 +193,22 @@ public class DomBuilder implements Buildable<DomBuilder> {
     }
 
     /**
-     * 获取格式化的 XML
+     * 获取格式化的 xml
      *
-     * @return XML
+     * @return xml
      */
     public String getFormatXml() {
-        return DomExt.format(document.asXML());
+        return DomSupport.format(document);
+    }
+
+    /**
+     * 获取格式化的 xml
+     *
+     * @param format format
+     * @return xml
+     */
+    public String getFormatXml(OutputFormat format) {
+        return DomSupport.format(document, format);
     }
 
     /**
@@ -200,7 +217,7 @@ public class DomBuilder implements Buildable<DomBuilder> {
      * @param file 本地文件
      */
     public void write(File file) throws IOException {
-        DomExt.write(document.asXML(), file);
+        DomSupport.write(document.asXML(), file);
     }
 
     @Override

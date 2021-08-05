@@ -1,6 +1,5 @@
 package com.orion.utils.ext.dom;
 
-import com.orion.able.JsonAble;
 import com.orion.lang.collect.MutableArrayList;
 import com.orion.lang.collect.MutableHashMap;
 
@@ -16,7 +15,7 @@ import java.util.Map;
  * @since 2020/3/26 21:41
  */
 @SuppressWarnings("ALL")
-public class DomNode implements Serializable, JsonAble {
+public class DomNode implements Serializable {
 
     /**
      * 值
@@ -76,12 +75,7 @@ public class DomNode implements Serializable, JsonAble {
 
     @Override
     public String toString() {
-        return toJson();
-    }
-
-    @Override
-    public String toJsonString() {
-        return toJson();
+        return String.valueOf(value);
     }
 
 }

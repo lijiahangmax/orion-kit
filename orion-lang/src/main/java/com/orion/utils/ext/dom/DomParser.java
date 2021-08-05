@@ -9,6 +9,9 @@ import java.util.List;
 
 /**
  * XML解析器
+ * <p>
+ * 如: bean[1] > property > list > ref[0]:name=c
+ * 语法: [n] 下标  k:v 属性
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -26,7 +29,7 @@ class DomParser {
     DomParser(Element element, String formula) {
         this.element = element;
         this.formula = formula;
-        toParams();
+        this.toParams();
     }
 
     /**
@@ -70,7 +73,7 @@ class DomParser {
      * @return element的value
      */
     String getElementValue() {
-        return getElement().getText();
+        return this.getElement().getText();
     }
 
     /**
@@ -84,36 +87,36 @@ class DomParser {
             if (domParserParam.getIndex() != 0 && domParserParam.getKey() != null) {
                 List<Element> elements = now.elements(domParserParam.getName());
                 if (elements == null || elements.size() < domParserParam.getIndex() + 1) {
-                    throw Exceptions.runtime(Strings.format("not found element {}, index: {}, attr: {}, attrValue: {}", domParserParam.getName(), domParserParam.getIndex(), domParserParam.getKey(), domParserParam.getValue()));
+                    throw Exceptions.noSuchElement(Strings.format("not found element {}, index: {}, attr: {}, attrValue: {}", domParserParam.getName(), domParserParam.getIndex(), domParserParam.getKey(), domParserParam.getValue()));
                 }
                 Element element = elements.get(domParserParam.getIndex());
-                String attribute = DomExt.getAttribute(element, domParserParam.getKey());
+                String attribute = DomSupport.getAttribute(element, domParserParam.getKey());
                 if (attribute != null && attribute.equals(domParserParam.getValue())) {
                     now = element;
                 } else {
-                    throw Exceptions.runtime(Strings.format("not found element {}, index: {}, attr: {}, attrValue: {}", domParserParam.getName(), domParserParam.getIndex(), domParserParam.getKey(), domParserParam.getValue()));
+                    throw Exceptions.noSuchElement(Strings.format("not found element {}, index: {}, attr: {}, attrValue: {}", domParserParam.getName(), domParserParam.getIndex(), domParserParam.getKey(), domParserParam.getValue()));
                 }
             } else if (domParserParam.getIndex() != 0) {
                 List<Element> elements = now.elements(domParserParam.getName());
                 if (elements == null || elements.size() < domParserParam.getIndex() + 1) {
-                    throw Exceptions.runtime(Strings.format("not found element {}, index: {}", domParserParam.getName(), domParserParam.getIndex()));
+                    throw Exceptions.noSuchElement(Strings.format("not found element {}, index: {}", domParserParam.getName(), domParserParam.getIndex()));
                 }
                 now = elements.get(domParserParam.getIndex());
             } else if (domParserParam.getKey() != null) {
                 Element element = now.element(domParserParam.getName());
                 if (element == null) {
-                    throw Exceptions.runtime(Strings.format("not found element {}", domParserParam.getName()));
+                    throw Exceptions.noSuchElement(Strings.format("not found element {}", domParserParam.getName()));
                 }
-                String attribute = DomExt.getAttribute(element, domParserParam.getKey());
+                String attribute = DomSupport.getAttribute(element, domParserParam.getKey());
                 if (attribute != null && attribute.equals(domParserParam.getValue())) {
                     now = element;
                 } else {
-                    throw Exceptions.runtime(Strings.format("not found element {}, attr: {}, attrValue: {}", domParserParam.getName(), domParserParam.getKey(), domParserParam.getValue()));
+                    throw Exceptions.noSuchElement(Strings.format("not found element {}, attr: {}, attrValue: {}", domParserParam.getName(), domParserParam.getKey(), domParserParam.getValue()));
                 }
             } else {
                 Element element = now.element(domParserParam.getName());
                 if (element == null) {
-                    throw Exceptions.runtime(Strings.format("not found element {}", domParserParam.getName()));
+                    throw Exceptions.noSuchElement(Strings.format("not found element {}", domParserParam.getName()));
                 }
                 now = element;
             }

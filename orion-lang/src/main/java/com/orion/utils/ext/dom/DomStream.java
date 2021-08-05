@@ -4,6 +4,7 @@ import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.Valid;
 import com.orion.utils.collect.Lists;
+import org.dom4j.Document;
 import org.dom4j.Element;
 
 import java.util.ArrayList;
@@ -23,12 +24,25 @@ public class DomStream {
     private Element element;
 
     public DomStream(String xml) {
-        this(DomExt.toDocument(xml).getRootElement());
+        this(DomSupport.toElement(xml));
+    }
+
+    public DomStream(Document document) {
+        Valid.notNull(document, "the document is null");
+        this.element = document.getRootElement();
     }
 
     public DomStream(Element element) {
         Valid.notNull(element, "the element is null");
         this.element = element;
+    }
+
+    public static DomStream of(String xml) {
+        return new DomStream(xml);
+    }
+
+    public static DomStream of(Element element) {
+        return new DomStream(element);
     }
 
     // -------------------- child --------------------
@@ -116,7 +130,7 @@ public class DomStream {
         List<Element> elements = this.element.elements(tag);
         int i = 0;
         for (Element element : elements) {
-            String attribute = DomExt.getAttribute(element, attrKey);
+            String attribute = DomSupport.getAttribute(element, attrKey);
             if (attribute != null) {
                 if (attrValue == null) {
                     if (i++ == index) {
@@ -231,7 +245,7 @@ public class DomStream {
             if (parent != null) {
                 if (parent.getName().trim().equals(tag.trim())) {
                     if (attrKey != null) {
-                        String attribute = DomExt.getAttribute(parent, attrKey);
+                        String attribute = DomSupport.getAttribute(parent, attrKey);
                         if (attribute != null) {
                             if (attrValue == null) {
                                 if (i++ == index) {
@@ -372,7 +386,7 @@ public class DomStream {
             Element nowElement = elements.get(i);
             if (nowElement.getName().trim().equals(tag.trim())) {
                 if (attrKey != null) {
-                    String attribute = DomExt.getAttribute(nowElement, attrKey);
+                    String attribute = DomSupport.getAttribute(nowElement, attrKey);
                     if (attribute != null) {
                         if (attrValue == null) {
                             if (is++ == index) {
@@ -513,7 +527,7 @@ public class DomStream {
             Element nowElement = elements.get(i);
             if (nowElement.getName().trim().equals(tag.trim())) {
                 if (attrKey != null) {
-                    String attribute = DomExt.getAttribute(nowElement, attrKey);
+                    String attribute = DomSupport.getAttribute(nowElement, attrKey);
                     if (attribute != null) {
                         if (attrValue == null) {
                             if (is++ == index) {
@@ -724,7 +738,7 @@ public class DomStream {
      * @return value
      */
     public String getAttribute(String key) {
-        return DomExt.getAttribute(this.element, key);
+        return DomSupport.getAttribute(this.element, key);
     }
 
     /**
@@ -733,7 +747,7 @@ public class DomStream {
      * @return value
      */
     public Map<String, String> getAttributes() {
-        return DomExt.getAttributes(this.element);
+        return DomSupport.getAttributes(this.element);
     }
 
     /**

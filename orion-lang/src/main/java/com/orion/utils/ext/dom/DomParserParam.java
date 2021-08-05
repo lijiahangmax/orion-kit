@@ -10,22 +10,22 @@ package com.orion.utils.ext.dom;
 class DomParserParam {
 
     /**
-     * dom名称
+     * dom 名称
      */
     private String name;
 
     /**
-     * dom下标
+     * dom 下标
      */
     private int index;
 
     /**
-     * dom属性
+     * dom 属性
      */
     private String key;
 
     /**
-     * dom属性值
+     * dom 属性值
      */
     private String value;
 
