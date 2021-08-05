@@ -5,6 +5,7 @@ import com.orion.exception.argument.InvalidArgumentException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
@@ -72,6 +73,26 @@ public abstract class Valid {
         }
     }
 
+    public static <T> void compare(T t1, T t2, Comparator<T> comparator) {
+        compare(t1, t2, comparator, "the validated numbers not compare {} {}", t1, t2);
+    }
+
+    public static <T> void compare(T t1, T t2, Comparator<T> comparator, String message, Object... values) {
+        if (comparator.compare(t1, t2) != 0) {
+            throw Exceptions.invalidArgument(Strings.format(message, values));
+        }
+    }
+
+    public static <T> void notCompare(T t1, T t2, Comparator<T> comparator) {
+        notCompare(t1, t2, comparator, "the validated numbers is compare {} {}", t1, t2);
+    }
+
+    public static <T> void notCompare(T t1, T t2, Comparator<T> comparator, String message, Object... values) {
+        if (comparator.compare(t1, t2) == 0) {
+            throw Exceptions.invalidArgument(Strings.format(message, values));
+        }
+    }
+
     public static <T extends Comparable<T>> T lt(T t1, T t2) {
         return lt(t1, t2, "the validated numbers not less than");
     }
@@ -125,13 +146,11 @@ public abstract class Valid {
     }
 
     public static boolean isTrue(BooleanSupplier s) {
-        if (!s.getAsBoolean()) {
-            throw Exceptions.invalidArgument("the validated expression is false");
-        }
-        return true;
+        return isTrue(s, "the validated expression is false");
     }
 
     public static boolean isTrue(BooleanSupplier s, String message, Object... values) {
+        notNull(s);
         if (!s.getAsBoolean()) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
@@ -139,10 +158,7 @@ public abstract class Valid {
     }
 
     public static boolean isTrue(boolean expression) {
-        if (!expression) {
-            throw Exceptions.invalidArgument("the validated expression is false");
-        }
-        return true;
+        return isTrue(expression, "the validated expression is false");
     }
 
     public static boolean isTrue(boolean expression, String message, Object... values) {
@@ -153,13 +169,11 @@ public abstract class Valid {
     }
 
     public static boolean isFalse(BooleanSupplier s) {
-        if (s.getAsBoolean()) {
-            throw Exceptions.invalidArgument("the validated expression is true");
-        }
-        return false;
+        return isFalse(s, "the validated expression is true");
     }
 
     public static boolean isFalse(BooleanSupplier s, String message, Object... values) {
+        notNull(s);
         if (s.getAsBoolean()) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
@@ -167,10 +181,7 @@ public abstract class Valid {
     }
 
     public static boolean isFalse(boolean expression) {
-        if (expression) {
-            throw Exceptions.invalidArgument("the validated expression is true");
-        }
-        return false;
+        return isFalse(expression, "the validated expression is true");
     }
 
     public static boolean isFalse(boolean expression, String message, Object... values) {
@@ -189,6 +200,58 @@ public abstract class Valid {
             throw Exceptions.nullArgument(Strings.format(message, values));
         }
         return object;
+    }
+
+    public static <T> T in(T t, T... arr) {
+        return in(t, arr, "the validated object not in array");
+    }
+
+    public static <T> T in(T t, T[] arr, String message, Object... values) {
+        notNull(t);
+        notEmpty(arr);
+        if (!Arrays1.contains(arr, t)) {
+            throw Exceptions.invalidArgument(Strings.format(message, values));
+        }
+        return t;
+    }
+
+    public static <T> T in(T t, Collection<? extends T> c) {
+        return in(t, c, "the validated object not in collection");
+    }
+
+    public static <T> T in(T t, Collection<? extends T> c, String message, Object... values) {
+        notNull(t);
+        notEmpty(c);
+        if (!c.contains(t)) {
+            throw Exceptions.invalidArgument(Strings.format(message, values));
+        }
+        return t;
+    }
+
+    public static <T> T notIn(T t, T... arr) {
+        return notIn(t, arr, "the validated object in array");
+    }
+
+    public static <T> T notIn(T t, T[] arr, String message, Object... values) {
+        notNull(t);
+        notEmpty(arr);
+        if (Arrays1.contains(arr, t)) {
+            throw Exceptions.invalidArgument(Strings.format(message, values));
+        }
+        return t;
+    }
+
+    public static <T> T notIn(T t, Collection<? extends T> c) {
+        return notIn(t, c, "the validated object in collection");
+    }
+
+    public static <T> T notIn(T t, Collection<? extends T> c, String message, Object... values) {
+        notNull(t);
+        notEmpty(c);
+        if (c.contains(t)) {
+            throw Exceptions.invalidArgument(Strings.format(message, values));
+        }
+        return t;
     }
 
     public static <T> T[] notEmpty(T[] array) {
@@ -259,7 +322,7 @@ public abstract class Valid {
     }
 
     public static String isInteger(String s) {
-        return isInteger(s, "the validated character sequence not integers");
+        return isInteger(s, "the validated character sequence not integer");
     }
 
     public static String isInteger(String s, String message, Object... values) {
@@ -403,12 +466,8 @@ public abstract class Valid {
     }
 
     public static BigDecimal notZero(BigDecimal value, String message, Object... values) {
-        if (value == null) {
-            throw Exceptions.nullArgument();
-        }
-        if (BigDecimal.ZERO.equals(value)) {
-            throw Exceptions.invalidArgument(Strings.format(message, values));
-        }
+        notNull(value);
+        notCompare(BigDecimal.ZERO, value, message, values);
         return value;
     }
 
@@ -417,10 +476,17 @@ public abstract class Valid {
     }
 
     public static BigInteger notZero(BigInteger value, String message, Object... values) {
-        if (value == null) {
-            throw Exceptions.nullArgument();
-        }
-        if (BigInteger.ZERO.equals(value)) {
+        notNull(value);
+        notCompare(BigInteger.ZERO, value, message, values);
+        return value;
+    }
+
+    public static double notNaN(float value) {
+        return notNaN(value, "the validated value is not a number");
+    }
+
+    public static double notNaN(float value, String message, Object... values) {
+        if (Float.isNaN(value)) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
         return value;
@@ -437,87 +503,97 @@ public abstract class Valid {
         return value;
     }
 
-    public static <T> void notInclude(T start, T end, Comparable<T> value) {
-        notInclude(start, end, value, "the value {} is not in the specified inclusive range of {} to {}", value, start, end);
+    public static <T extends Comparable<T>> T inRange(T value, T start, T end) {
+        return inRange(value, start, end, "the value {} is not in the specified inclusive range of {} to {}", value, start, end);
     }
 
-    public static <T> void notInclude(T start, T end, Comparable<T> value, String message, Object... values) {
-        if (value.compareTo(start) < 0 || value.compareTo(end) > 0) {
+    public static <T extends Comparable<T>> T inRange(T value, T start, T end, String message, Object... values) {
+        notNull(value);
+        notNull(start);
+        notNull(end);
+        if (!Compares.inRange(value, start, end)) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
-    }
-
-    public static long notInclude(long start, long end, long value) {
-        if (value < start || value > end) {
-            throw Exceptions.invalidArgument(Strings.format("the value {} is not in the specified inclusive range of {} to {}", value, start, end));
-        }
         return value;
     }
 
-    public static long notInclude(long start, long end, long value, String message, Object... values) {
-        if (value < start || value > end) {
-            throw Exceptions.invalidArgument(Strings.format(message, value));
-        }
-        return value;
+    public static <T extends Comparable<T>> T notInRange(T value, T start, T end) {
+        return notInRange(start, end, value, "the value {} in the specified inclusive range of {} to {}", value, start, end);
     }
 
-    public static double notInclude(double start, double end, double value) {
-        if (value < start || value > end) {
-            throw Exceptions.invalidArgument(Strings.format("the value {} is not in the specified inclusive range of {} to {}", value, start, end));
-        }
-        return value;
-    }
-
-    public static double notInclude(double start, double end, double value, String message, Object... values) {
-        if (value < start || value > end) {
-            throw Exceptions.invalidArgument(Strings.format(message, value));
-        }
-        return value;
-    }
-
-    public static <T> void notCompare(T start, T end, Comparable<T> value) {
-        if (value.compareTo(start) <= 0 || value.compareTo(end) >= 0) {
-            throw Exceptions.invalidArgument(Strings.format("the value {} is not in the specified exclusive range of {} to {}", value, start, end));
-        }
-    }
-
-    public static <T> void notCompare(T start, T end, Comparable<T> value, String message, Object... values) {
-        if (value.compareTo(start) <= 0 || value.compareTo(end) >= 0) {
+    public static <T extends Comparable<T>> T notInRange(T value, T start, T end, String message, Object... values) {
+        notNull(value);
+        notNull(start);
+        notNull(end);
+        if (Compares.inRange(value, start, end)) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
-    }
-
-    public static long notExclude(long start, long end, long value) {
-        if (value <= start || value >= end) {
-            throw Exceptions.invalidArgument(Strings.format("the value {} is not in the specified exclusive range of {} to {}", value, start, end));
-        }
         return value;
     }
 
-    public static long notExclude(long start, long end, long value, String message, Object... values) {
-        if (value <= start || value >= end) {
-            throw Exceptions.invalidArgument(Strings.format(message, value));
-        }
-        return value;
+    public static String validLengthIn(String s, int start, int end) {
+        return validLengthIn(s, start, end, "the validated value length is not in {} of {}", start, end);
     }
 
-    public static double notExclude(double start, double end, double value) {
-        if (value <= start || value >= end) {
-            throw Exceptions.invalidArgument(Strings.format("the value {} is not in the specified exclusive range of {} to {}", value, start, end));
+    public static String validLengthIn(String s, int start, int end, String message, Object... values) {
+        notNull(s);
+        if (!Compares.inRange(s.length(), start, end)) {
+            throw Exceptions.invalidArgument(Strings.format(message, values));
         }
-        return value;
+        return s;
     }
 
-    public static double notExclude(double start, double end, double value, String message, Object... values) {
-        if (value <= start || value >= end) {
-            throw Exceptions.invalidArgument(Strings.format(message, value));
+    public static String validLengthGt(String s, int length) {
+        return validLengthGt(s, length, "the validated value length is not greater than {}", length);
+    }
+
+    public static String validLengthGt(String s, int length, String message, Object... values) {
+        notNull(s);
+        if (s.length() <= length) {
+            throw Exceptions.invalidArgument(Strings.format(message, values));
         }
-        return value;
+        return s;
+    }
+
+    public static String validLengthGte(String s, int length) {
+        return validLengthGte(s, length, "the validated value length is not greater than or equal{}", length);
+    }
+
+    public static String validLengthGte(String s, int length, String message, Object... values) {
+        notNull(s);
+        if (s.length() < length) {
+            throw Exceptions.invalidArgument(Strings.format(message, values));
+        }
+        return s;
+    }
+
+    public static String validLengthLt(String s, int length) {
+        return validLengthLt(s, length, "the validated value length is not less than {}", length);
+    }
+
+    public static String validLengthLt(String s, int length, String message, Object... values) {
+        notNull(s);
+        if (s.length() >= length) {
+            throw Exceptions.invalidArgument(Strings.format(message, values));
+        }
+        return s;
+    }
+
+    public static String validLengthLte(String s, int length) {
+        return validLengthLte(s, length, "the validated value length is not less than or equal{}", length);
+    }
+
+    public static String validLengthLte(String s, int length, String message, Object... values) {
+        notNull(s);
+        if (s.length() > length) {
+            throw Exceptions.invalidArgument(Strings.format(message, values));
+        }
+        return s;
     }
 
     public static <T> T isInstanceOf(Object obj, Class<T> type) {
         if (!type.isInstance(obj)) {
-            throw Exceptions.invalidArgument(Strings.format("Expected type: {}, actual: {}", type.getName(), obj == null ? "null" : obj.getClass().getName()));
+            throw Exceptions.invalidArgument(Strings.format("expected type: {}, actual: {}", type.getName(), obj == null ? "null" : obj.getClass().getName()));
         }
         return type.cast(obj);
     }
