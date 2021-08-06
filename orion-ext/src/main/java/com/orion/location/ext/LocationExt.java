@@ -1,7 +1,7 @@
 package com.orion.location.ext;
 
 import com.orion.constant.Const;
-import com.orion.lang.builder.StringSymbolBuilder;
+import com.orion.lang.builder.StringJoiner;
 import com.orion.location.ext.core.LocationSeeker;
 import com.orion.location.region.core.Region;
 import com.orion.utils.Exceptions;
@@ -26,7 +26,7 @@ public class LocationExt {
     /**
      * dat文件
      */
-    private static final String DAT_PATH = StringSymbolBuilder.of(Systems.FILE_SEPARATOR)
+    private static final String DAT_PATH = StringJoiner.of(Systems.FILE_SEPARATOR)
             .with(Systems.HOME_DIR)
             .with(Const.ORION_DISPLAY)
             .with(".region")

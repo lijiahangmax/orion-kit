@@ -42,7 +42,7 @@ public class Xsses {
         s = s.replaceAll("<", "&lt;");
         s = s.replaceAll(">", "&gt;");
         s = s.replaceAll(" ", "&nbsp;");
-        s = s.replaceAll("'", "&#39;");
+        s = s.replaceAll("'", "&apos;");
         s = s.replaceAll("\"", "&quot;");
         s = s.replaceAll("\n", "<br/>");
         s = s.replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
@@ -63,7 +63,6 @@ public class Xsses {
         s = s.replaceAll("&lt;", "<");
         s = s.replaceAll("&gt;", ">");
         s = s.replaceAll("&nbsp;", " ");
-        s = s.replaceAll("&#39;", "'");
         s = s.replaceAll("&apos;", "'");
         s = s.replaceAll("&quot;", "\"");
         s = s.replaceAll("<br/>", "\n");

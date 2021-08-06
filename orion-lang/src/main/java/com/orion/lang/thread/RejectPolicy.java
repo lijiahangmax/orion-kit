@@ -32,7 +32,7 @@ public enum RejectPolicy {
      */
     CALLER_RUNS(new ThreadPoolExecutor.CallerRunsPolicy());
 
-    private RejectedExecutionHandler handler;
+    private final RejectedExecutionHandler handler;
 
     RejectPolicy(RejectedExecutionHandler handler) {
         this.handler = handler;

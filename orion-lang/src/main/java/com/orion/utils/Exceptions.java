@@ -29,6 +29,20 @@ public class Exceptions {
     }
 
     /**
+     * 获取异常摘要信息
+     *
+     * @param e e
+     * @return 摘要
+     */
+    public static String getDigest(Throwable e) {
+        if (e.getMessage() == null) {
+            return e.getClass().getName();
+        } else {
+            return e.getClass().getName() + Strings.SPACE + e.getMessage();
+        }
+    }
+
+    /**
      * Throwable ->  RuntimeException
      *
      * @param e Throwable

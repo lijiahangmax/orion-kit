@@ -230,8 +230,7 @@ public class Scripts {
      */
     public static Invocable evalInvocable(ScriptEngine engine, String script) {
         Object eval = eval(engine, script);
-        Valid.isInstanceOf(eval, Invocable.class, "script cannot invocable");
-        return (Invocable) eval;
+        return Valid.isInstanceOf(eval, Invocable.class, "script cannot invocable");
     }
 
     /**

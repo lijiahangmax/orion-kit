@@ -1,7 +1,7 @@
 package com.orion.location.region;
 
 import com.orion.constant.Const;
-import com.orion.lang.builder.StringSymbolBuilder;
+import com.orion.lang.builder.StringJoiner;
 import com.orion.location.region.block.DataBlock;
 import com.orion.location.region.config.DbConfig;
 import com.orion.location.region.core.DbSearcher;
@@ -30,7 +30,7 @@ public class LocationRegions {
     /**
      * db文件路径
      */
-    private static final String DB_PATH = StringSymbolBuilder.of(Systems.FILE_SEPARATOR)
+    private static final String DB_PATH = StringJoiner.of(Systems.FILE_SEPARATOR)
             .with(Systems.HOME_DIR)
             .with(Const.ORION_DISPLAY)
             .with(".region")

@@ -51,7 +51,7 @@ public class WeightRandomMap<T> extends TreeMap<Double, T> implements Serializab
      * @return this
      */
     public WeightRandomMap<T> put(T o, double weight) {
-        return put(new WeightObject<>(o, weight));
+        return this.put(new WeightObject<>(o, weight));
     }
 
     /**

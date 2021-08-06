@@ -18,7 +18,7 @@ import java.util.function.Supplier;
  * @version 1.0.0
  * @since 2021/2/10 10:20
  */
-public class StringSymbolBuilder implements Buildable<String> {
+public class StringJoiner implements Buildable<String> {
 
     private String prefix;
 
@@ -30,36 +30,38 @@ public class StringSymbolBuilder implements Buildable<String> {
 
     private Function<String, String> wrapper;
 
-    private List<String> modifiers = new ArrayList<>();
+    private List<String> modifiers;
 
-    public StringSymbolBuilder() {
+    public StringJoiner() {
+        this.modifiers = new ArrayList<>();
     }
 
-    public StringSymbolBuilder(String symbol) {
+    public StringJoiner(String symbol) {
+        this(symbol, null, null);
+    }
+
+    public StringJoiner(String symbol, String prefix, String suffix) {
         this.symbol = symbol;
-    }
-
-    public StringSymbolBuilder(String prefix, String suffix, String symbol) {
         this.prefix = prefix;
         this.suffix = suffix;
-        this.symbol = symbol;
+        this.modifiers = new ArrayList<>();
     }
 
-    public static StringSymbolBuilder of() {
-        return new StringSymbolBuilder();
+    public static StringJoiner of() {
+        return new StringJoiner();
     }
 
-    public static StringSymbolBuilder of(String symbol) {
-        return new StringSymbolBuilder(symbol);
+    public static StringJoiner of(String symbol) {
+        return new StringJoiner(symbol);
     }
 
-    public static StringSymbolBuilder of(Supplier<String> symbolSupplier) {
+    public static StringJoiner of(Supplier<String> symbolSupplier) {
         Valid.notNull(symbolSupplier, "symbol supplier is null");
-        return new StringSymbolBuilder(symbolSupplier.get());
+        return new StringJoiner(symbolSupplier.get());
     }
 
-    public static StringSymbolBuilder of(String prefix, String suffix, String symbol) {
-        return new StringSymbolBuilder(prefix, suffix, symbol);
+    public static StringJoiner of(String symbol, String prefix, String suffix) {
+        return new StringJoiner(symbol, prefix, suffix);
     }
 
     /**
@@ -68,7 +70,7 @@ public class StringSymbolBuilder implements Buildable<String> {
      * @param symbol symbol
      * @return this
      */
-    public StringSymbolBuilder symbol(String symbol) {
+    public StringJoiner symbol(String symbol) {
         this.symbol = symbol;
         return this;
     }
@@ -79,7 +81,7 @@ public class StringSymbolBuilder implements Buildable<String> {
      * @param symbolSupplier symbol
      * @return this
      */
-    public StringSymbolBuilder symbol(Supplier<String> symbolSupplier) {
+    public StringJoiner symbol(Supplier<String> symbolSupplier) {
         Valid.notNull(symbolSupplier, "symbol supplier is null");
         this.symbol = symbolSupplier.get();
         return this;
@@ -91,7 +93,7 @@ public class StringSymbolBuilder implements Buildable<String> {
      * @param prefix prefix
      * @return this
      */
-    public StringSymbolBuilder prefix(String prefix) {
+    public StringJoiner prefix(String prefix) {
         this.prefix = prefix;
         return this;
     }
@@ -102,7 +104,7 @@ public class StringSymbolBuilder implements Buildable<String> {
      * @param prefixSupplier prefix
      * @return this
      */
-    public StringSymbolBuilder prefix(Supplier<String> prefixSupplier) {
+    public StringJoiner prefix(Supplier<String> prefixSupplier) {
         Valid.notNull(prefixSupplier, "prefix supplier is null");
         this.prefix = prefixSupplier.get();
         return this;
@@ -114,7 +116,7 @@ public class StringSymbolBuilder implements Buildable<String> {
      * @param suffix suffix
      * @return this
      */
-    public StringSymbolBuilder suffix(String suffix) {
+    public StringJoiner suffix(String suffix) {
         this.suffix = suffix;
         return this;
     }
@@ -125,7 +127,7 @@ public class StringSymbolBuilder implements Buildable<String> {
      * @param suffixSupplier suffix
      * @return this
      */
-    public StringSymbolBuilder suffix(Supplier<String> suffixSupplier) {
+    public StringJoiner suffix(Supplier<String> suffixSupplier) {
         Valid.notNull(suffixSupplier, "suffix supplier is null");
         this.suffix = suffixSupplier.get();
         return this;
@@ -136,7 +138,7 @@ public class StringSymbolBuilder implements Buildable<String> {
      *
      * @return this
      */
-    public StringSymbolBuilder skipNull() {
+    public StringJoiner skipNull() {
         addFilter(Objects::nonNull);
         return this;
     }
@@ -146,7 +148,7 @@ public class StringSymbolBuilder implements Buildable<String> {
      *
      * @return this
      */
-    public StringSymbolBuilder skipEmpty() {
+    public StringJoiner skipEmpty() {
         addFilter(Strings::isNotEmpty);
         return this;
     }
@@ -156,7 +158,7 @@ public class StringSymbolBuilder implements Buildable<String> {
      *
      * @return this
      */
-    public StringSymbolBuilder skipBlank() {
+    public StringJoiner skipBlank() {
         addFilter(Strings::isNotBlank);
         return this;
     }
@@ -167,7 +169,7 @@ public class StringSymbolBuilder implements Buildable<String> {
      * @param filter 过滤器
      * @return this
      */
-    public StringSymbolBuilder filter(Predicate<String> filter) {
+    public StringJoiner filter(Predicate<String> filter) {
         addFilter(filter);
         return this;
     }
@@ -191,18 +193,18 @@ public class StringSymbolBuilder implements Buildable<String> {
      * @param wrapper wrapper
      * @return this
      */
-    public StringSymbolBuilder wrapper(Function<String, String> wrapper) {
+    public StringJoiner wrapper(Function<String, String> wrapper) {
         Valid.notNull(wrapper, "wrapper is null");
         this.wrapper = wrapper;
         return this;
     }
 
-    public StringSymbolBuilder with(String s) {
+    public StringJoiner with(String s) {
         modifiers.add(s);
         return this;
     }
 
-    public StringSymbolBuilder with(Supplier<String> supplier) {
+    public StringJoiner with(Supplier<String> supplier) {
         Valid.notNull(supplier, "supplier is null");
         modifiers.add(supplier.get());
         return this;
