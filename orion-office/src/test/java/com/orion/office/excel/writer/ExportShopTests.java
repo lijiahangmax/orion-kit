@@ -30,7 +30,7 @@ public class ExportShopTests {
             shop.setBusinessCode(CreditCodes.random());
             File picFile = new File("C:\\Users\\ljh15\\Desktop\\data\\pic\\" + i + ".jpg");
             if (picFile.exists()) {
-                shop.setBusinessPicture(Base64s.img64Encode(FileReaders.readFast(picFile)));
+                shop.setBusinessPicture(Base64s.img64Encode(FileReaders.readAllBytesFast(picFile)));
             }
             shop.setBusinessFile("C:/Users/ljh15/Desktop/export/index.html");
             shop.setMargin(BigDecimal.valueOf(Randoms.randomDouble(0, 10)));

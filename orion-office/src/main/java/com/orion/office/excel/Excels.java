@@ -1227,7 +1227,7 @@ public class Excels {
      * @return Picture
      */
     public static Picture setPicture(Workbook workbook, Sheet sheet, File image, int rowIndex, int columnIndex) {
-        return setPicture(workbook, sheet, FileReaders.readFast(image), rowIndex, columnIndex, null, null);
+        return setPicture(workbook, sheet, FileReaders.readAllBytesFast(image), rowIndex, columnIndex, null, null);
     }
 
     /**
@@ -1242,7 +1242,7 @@ public class Excels {
      * @return Picture
      */
     public static Picture setPicture(Workbook workbook, Sheet sheet, File image, int rowIndex, int columnIndex, String fileName) {
-        return setPicture(workbook, sheet, FileReaders.readFast(image), rowIndex, columnIndex, fileName, null);
+        return setPicture(workbook, sheet, FileReaders.readAllBytesFast(image), rowIndex, columnIndex, fileName, null);
     }
 
     /**
@@ -1257,7 +1257,7 @@ public class Excels {
      * @return Picture
      */
     public static Picture setPicture(Workbook workbook, Sheet sheet, File image, int rowIndex, int columnIndex, ExcelPictureType type) {
-        return setPicture(workbook, sheet, FileReaders.readFast(image), rowIndex, columnIndex, null, type);
+        return setPicture(workbook, sheet, FileReaders.readAllBytesFast(image), rowIndex, columnIndex, null, type);
     }
 
     /**
@@ -1271,7 +1271,7 @@ public class Excels {
      * @return Picture
      */
     public static Picture setPicture(Workbook workbook, Sheet sheet, String image, int rowIndex, int columnIndex) {
-        return setPicture(workbook, sheet, FileReaders.readFast(image), rowIndex, columnIndex, null, null);
+        return setPicture(workbook, sheet, FileReaders.readAllBytesFast(image), rowIndex, columnIndex, null, null);
     }
 
     /**
@@ -1286,7 +1286,7 @@ public class Excels {
      * @return Picture
      */
     public static Picture setPicture(Workbook workbook, Sheet sheet, String image, int rowIndex, int columnIndex, String fileName) {
-        return setPicture(workbook, sheet, FileReaders.readFast(image), rowIndex, columnIndex, fileName, null);
+        return setPicture(workbook, sheet, FileReaders.readAllBytesFast(image), rowIndex, columnIndex, fileName, null);
     }
 
     /**
@@ -1301,7 +1301,7 @@ public class Excels {
      * @return Picture
      */
     public static Picture setPicture(Workbook workbook, Sheet sheet, String image, int rowIndex, int columnIndex, ExcelPictureType type) {
-        return setPicture(workbook, sheet, FileReaders.readFast(image), rowIndex, columnIndex, null, type);
+        return setPicture(workbook, sheet, FileReaders.readAllBytesFast(image), rowIndex, columnIndex, null, type);
     }
 
     /**

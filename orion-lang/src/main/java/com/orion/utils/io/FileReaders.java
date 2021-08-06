@@ -242,7 +242,37 @@ public class FileReaders {
         }
     }
 
+    // -------------------- read all --------------------
+
+    public static byte[] readAllBytes(String file) {
+        return readAllBytes(new File(file));
+    }
+
+    public static byte[] readAllBytes(File file) {
+        try (FileInputStream in = openInputStream(file)) {
+            return Streams.toByteArray(in);
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime(e);
+        }
+    }
+
     // -------------------- read line --------------------
+
+    public static String readLine(String file) {
+        return readLine(new File(file), 0L, null);
+    }
+
+    public static String readLine(File file) {
+        return readLine(file, 0L, null);
+    }
+
+    public static String readLine(String file, String charset) {
+        return readLine(new File(file), 0L, charset);
+    }
+
+    public static String readLine(File file, String charset) {
+        return readLine(file, 0L, charset);
+    }
 
     public static String readLine(String file, long skipByte) {
         return readLine(new File(file), skipByte, null);
@@ -284,6 +314,30 @@ public class FileReaders {
     }
 
     // -------------------- read lines --------------------
+
+    public static List<String> readLines(File file) {
+        return readLines(file, 0L, -1, null);
+    }
+
+    public static List<String> readLines(String file) {
+        return readLines(new File(file), 0L, -1, null);
+    }
+
+    public static List<String> readLines(File file, int readLines) {
+        return readLines(file, 0L, readLines, null);
+    }
+
+    public static List<String> readLines(String file, int readLines) {
+        return readLines(new File(file), 0L, readLines, null);
+    }
+
+    public static List<String> readLines(String file, int readLines, String charset) {
+        return readLines(new File(file), 0L, readLines, charset);
+    }
+
+    public static List<String> readLines(File file, int readLines, String charset) {
+        return readLines(file, 0L, readLines, charset);
+    }
 
     public static List<String> readLines(File file, long skipByte) {
         return readLines(file, skipByte, -1, null);
@@ -507,14 +561,14 @@ public class FileReaders {
         }
     }
 
-    // -------------------- fast read --------------------
+    // -------------------- fast read all --------------------
 
-    public static byte[] readFast(String file) {
-        return readFast(Paths.get(file));
+    public static byte[] readAllBytesFast(String file) {
+        return readAllBytesFast(Paths.get(file));
     }
 
-    public static byte[] readFast(File file) {
-        return readFast(Paths.get(file.getAbsolutePath()));
+    public static byte[] readAllBytesFast(File file) {
+        return readAllBytesFast(Paths.get(file.getAbsolutePath()));
     }
 
     /**
@@ -523,7 +577,7 @@ public class FileReaders {
      * @param path path
      * @return bytes
      */
-    public static byte[] readFast(Path path) {
+    public static byte[] readAllBytesFast(Path path) {
         try {
             return Files.readAllBytes(path);
         } catch (Exception e) {

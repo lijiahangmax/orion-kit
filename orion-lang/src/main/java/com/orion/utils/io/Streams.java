@@ -4,7 +4,6 @@ import com.orion.constant.Const;
 import com.orion.lang.iterator.ByteArrayIterator;
 import com.orion.lang.iterator.LineIterator;
 import com.orion.utils.Strings;
-import com.orion.utils.Systems;
 import com.orion.utils.Valid;
 import com.orion.utils.crypto.Signatures;
 import com.orion.utils.crypto.enums.HashMessageDigest;
@@ -149,7 +148,7 @@ public class Streams {
         return readLines(new InputStreamReader(input));
     }
 
-    public static List readLines(InputStream input, String charset) throws IOException {
+    public static List<String> readLines(InputStream input, String charset) throws IOException {
         if (charset == null) {
             return readLines(input);
         } else {
@@ -242,46 +241,35 @@ public class Streams {
         }
     }
 
-    public static void writeLines(Collection lines, String eof, OutputStream output) throws IOException {
+    public static void writeLines(Collection<?> lines, String eof, OutputStream output) throws IOException {
+        writeLines(lines, eof, output, null);
+    }
+
+    public static void writeLines(Collection<?> lines, String eof, OutputStream output, String charset) throws IOException {
         if (lines == null) {
             return;
         }
         if (eof == null) {
-            eof = Systems.LINE_SEPARATOR;
+            eof = Const.LF;
         }
         for (Object line : lines) {
             if (line != null) {
-                output.write(Strings.bytes(line.toString()));
-            }
-            output.write(Strings.bytes(eof));
-        }
-    }
-
-    public static void writeLines(Collection lines, String eof, OutputStream output, String charset) throws IOException {
-        if (charset == null) {
-            writeLines(lines, charset, output);
-        } else {
-            if (lines == null) {
-                return;
-            }
-            if (eof == null) {
-                eof = Systems.LINE_SEPARATOR;
-            }
-            for (Object line : lines) {
-                if (line != null) {
+                if (charset == null) {
+                    output.write(Strings.bytes(line.toString()));
+                } else {
                     output.write(Strings.bytes(line.toString(), charset));
                 }
-                output.write(Strings.bytes(eof, charset));
             }
+            output.write(Strings.bytes(eof, charset));
         }
     }
 
-    public static void writeLines(Collection lines, String eof, Writer writer) throws IOException {
+    public static void writeLines(Collection<?> lines, String eof, Writer writer) throws IOException {
         if (lines == null) {
             return;
         }
         if (eof == null) {
-            eof = Systems.LINE_SEPARATOR;
+            eof = Const.LF;
         }
         for (Object line : lines) {
             if (line != null) {
@@ -539,7 +527,7 @@ public class Streams {
         return new LineIterator(reader);
     }
 
-    public static LineIterator lineIterator(InputStream input) throws IOException {
+    public static LineIterator lineIterator(InputStream input) {
         return new LineIterator(new InputStreamReader(input));
     }
 
@@ -558,7 +546,7 @@ public class Streams {
 
     // -------------------- byte array iterator --------------------
 
-    public static ByteArrayIterator byteArrayIterator(InputStream input, byte[] buffer) throws IOException {
+    public static ByteArrayIterator byteArrayIterator(InputStream input, byte[] buffer) {
         return new ByteArrayIterator(input, buffer);
     }
 
