@@ -2,6 +2,7 @@ package com.orion.lang.wrapper;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.orion.able.JsonAble;
+import com.orion.lang.iterator.EmptyIterator;
 import com.orion.lang.support.CloneSupport;
 import com.orion.utils.collect.Lists;
 import com.orion.utils.json.Jsons;
@@ -337,12 +338,18 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, Js
 
     @Override
     public Iterator<T> iterator() {
-        return rows.iterator();
+        if (!this.isEmpty()) {
+            return rows.iterator();
+        } else {
+            return new EmptyIterator<>();
+        }
     }
 
     @Override
     public void forEach(Consumer<? super T> action) {
-        rows.forEach(action);
+        if (!this.isEmpty()) {
+            rows.forEach(action);
+        }
     }
 
     @Override

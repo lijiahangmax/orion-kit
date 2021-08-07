@@ -3,6 +3,7 @@ package com.orion.lang.wrapper;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.orion.able.JsonAble;
 import com.orion.lang.iterator.ArrayIterator;
+import com.orion.lang.iterator.EmptyIterator;
 import com.orion.lang.support.CloneSupport;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Valid;
@@ -133,18 +134,12 @@ public class Tuple extends CloneSupport<Tuple> implements Serializable, JsonAble
     }
 
     @Override
-    public String toString() {
-        return Arrays.toString(members);
-    }
-
-    @Override
-    public String toJsonString() {
-        return Jsons.toJsonWriteNull(members);
-    }
-
-    @Override
     public Iterator<Object> iterator() {
-        return new ArrayIterator<>(members).iterator();
+        if (!this.isEmpty()) {
+            return new ArrayIterator<>(members).iterator();
+        } else {
+            return new EmptyIterator<>();
+        }
     }
 
     @Override
@@ -154,7 +149,19 @@ public class Tuple extends CloneSupport<Tuple> implements Serializable, JsonAble
 
     @Override
     public void forEach(Consumer<? super Object> action) {
-        new ArrayIterator<>(members).forEach(action);
+        if (!this.isEmpty()) {
+            new ArrayIterator<>(members).forEach(action);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(members);
+    }
+
+    @Override
+    public String toJsonString() {
+        return Jsons.toJsonWriteNull(members);
     }
 
 }

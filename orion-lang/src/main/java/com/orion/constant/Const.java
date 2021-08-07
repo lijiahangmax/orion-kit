@@ -100,6 +100,8 @@ public abstract class Const {
 
     public static final int MS_S_1 = 1000;
 
+    public static final int MS_S_2 = 1000 * 2;
+
     public static final int MS_S_3 = 1000 * 3;
 
     public static final int MS_S_5 = 1000 * 5;
@@ -148,6 +150,10 @@ public abstract class Const {
 
     public static final int N_1000 = 1000;
 
+    public static final int N_10000 = 10000;
+
+    public static final int N_100000 = 100000;
+
     // -------------------- suffix --------------------
 
     public static final String SUFFIX_CSV = "csv";
@@ -155,6 +161,16 @@ public abstract class Const {
     public static final String SUFFIX_XLS = "xls";
 
     public static final String SUFFIX_XLSX = "xlsx";
+
+    public static final String SUFFIX_DOC = "doc";
+
+    public static final String SUFFIX_DOCX = "docx";
+
+    public static final String SUFFIX_PDF = "pdf";
+
+    public static final String SUFFIX_JAVA = "java";
+
+    public static final String SUFFIX_CLASS = "class";
 
     public static final String SUFFIX_PNG = "png";
 
@@ -165,6 +181,16 @@ public abstract class Const {
     public static final String SUFFIX_ZIP = "zip";
 
     public static final String SUFFIX_LOG = "log";
+
+    public static final String SUFFIX_XML = "xml";
+
+    public static final String SUFFIX_JSON = "json";
+
+    public static final String SUFFIX_YML = "yml";
+
+    public static final String SUFFIX_TXT = "txt";
+
+    public static final String SUFFIX_PROPERTIES = "properties";
 
     public static final String SUFFIX_FILE = "file";
 
@@ -186,6 +212,18 @@ public abstract class Const {
 
     public static final String FONT_MICROSOFT_ELEGANT_BLACK = "微软雅黑";
 
+    // -------------------- sql --------------------
+
+    public static final String LIMIT_1 = "LIMIT 1";
+
+    public static final String ENTITY = "entity";
+
+    public static final String UPDATE = "update";
+
+    public static final String LIST = "list";
+
+    public static final String PAGER = "pager";
+
     // -------------------- others --------------------
 
     public static final String BR = "<br/>";
@@ -205,11 +243,5 @@ public abstract class Const {
     public static final Integer ENABLE = 1;
 
     public static final Integer DISABLE = 2;
-
-    public static final String LIMIT_1 = "LIMIT 1";
-
-    public static final String ENTITY = "entity";
-
-    public static final String PAGER = "pager";
 
 }
