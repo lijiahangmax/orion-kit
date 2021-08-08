@@ -9,11 +9,11 @@ package com.orion.utils;
  */
 public class CharConverts {
 
-    private static final String NATIVE_PREFIX = "\\u";
+    private static final String UNICODE_PREFIX = "\\u";
 
-    private static final String UNICODE_PREFIX = "&#";
+    private static final String HTML_ENTITY_PREFIX = "&#";
 
-    private static final String UNICODE_SUFFIX = ";";
+    private static final String HTML_ENTITY_SUFFIX = ";";
 
     private CharConverts() {
     }
@@ -29,7 +29,7 @@ public class CharConverts {
         StringBuilder sb = new StringBuilder();
         char[] chars = str.toCharArray();
         for (char c : chars) {
-            sb.append(UNICODE_PREFIX).append((int) c).append(UNICODE_SUFFIX);
+            sb.append(HTML_ENTITY_PREFIX).append((int) c).append(HTML_ENTITY_SUFFIX);
         }
         return sb.toString();
     }
@@ -82,7 +82,7 @@ public class CharConverts {
     private static String ToUnicodeChar(char c, boolean convertNumber) {
         if (convertNumber || c > 255) {
             StringBuilder sb = new StringBuilder();
-            sb.append(NATIVE_PREFIX);
+            sb.append(UNICODE_PREFIX);
             int code = (c >> 8);
             String tmp = Integer.toHexString(code);
             if (tmp.length() == 1) {
@@ -111,12 +111,12 @@ public class CharConverts {
     public static String fromUnicode(String str) {
         StringBuilder sb = new StringBuilder();
         int begin = 0;
-        int index = str.indexOf(NATIVE_PREFIX);
+        int index = str.indexOf(UNICODE_PREFIX);
         while (index != -1) {
             sb.append(str, begin, index);
             sb.append(fromUnicodeChar(str.substring(index, index + 6)));
             begin = index + 6;
-            index = str.indexOf(NATIVE_PREFIX, begin);
+            index = str.indexOf(UNICODE_PREFIX, begin);
         }
         sb.append(str.substring(begin));
         return sb.toString();
@@ -133,7 +133,7 @@ public class CharConverts {
         if (str.length() != 6) {
             throw Exceptions.argument("ascii string of a native character must be 6 character.");
         }
-        if (!NATIVE_PREFIX.equals(str.substring(0, 2))) {
+        if (!UNICODE_PREFIX.equals(str.substring(0, 2))) {
             throw Exceptions.argument("ascii string of a native character must start with \"\\u\".");
         }
         String tmp = str.substring(2, 4);
