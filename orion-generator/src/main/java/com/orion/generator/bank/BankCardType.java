@@ -19,14 +19,26 @@ public enum BankCardType {
      */
     CREDIT("信用卡/贷记卡");
 
-    private final String name;
+    private final String type;
 
-    BankCardType(String name) {
-        this.name = name;
+    BankCardType(String type) {
+        this.type = type;
     }
 
-    public String getName() {
-        return name;
+    public String getType() {
+        return type;
+    }
+
+    public static BankCardType of(String card) {
+        if (card == null) {
+            return null;
+        }
+        for (BankCardType value : values()) {
+            if (value.name().toLowerCase().equals(card.toLowerCase())) {
+                return value;
+            }
+        }
+        return null;
     }
 
 }

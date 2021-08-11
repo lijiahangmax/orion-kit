@@ -988,7 +988,7 @@ public enum BankNameType {
         put("49102", 16);
         put("622836", 16);
         put("622837", 16);
-        put("622841", 19);
+        put("622841", 16);
         put("6349102", 16);
         put("6353591", 16);
     }}),
@@ -1051,10 +1051,10 @@ public enum BankNameType {
         put("621084", 16);
         put("620107", 16);
     }}, new LinkedHashMap<String, Integer>() {{
-        put("5453242", 18);
-        put("5491031", 18);
-        put("5544033", 18);
-        put("553242", 18);
+        put("5453242", 16);
+        put("5491031", 16);
+        put("5544033", 16);
+        put("553242", 16);
         put("559051", 16);
         put("622166", 16);
         put("622168", 16);
@@ -1226,7 +1226,7 @@ public enum BankNameType {
         put("409668", 16);
         put("409669", 16);
         put("409671", 16);
-        put("456351", 19);
+        put("456351", 16);
         put("512315", 16);
         put("512316", 16);
         put("512411", 16);
@@ -1329,6 +1329,18 @@ public enum BankNameType {
 
     public Map<String, Integer> getCreditPrefix() {
         return creditPrefix;
+    }
+
+    public static BankNameType of(String code) {
+        if (code == null) {
+            return null;
+        }
+        for (BankNameType value : values()) {
+            if (value.code.toLowerCase().equals(code.toLowerCase())) {
+                return value;
+            }
+        }
+        return null;
     }
 
 }
