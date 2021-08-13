@@ -186,17 +186,27 @@ public class Randoms {
      * @return boolean
      */
     public static boolean randomBoolean() {
-        return RANDOM.nextDouble() > 0.5;
+        return RANDOM.nextDouble() < 0.5;
     }
 
     /**
      * 返回一个随机的布尔值
      *
-     * @param i 几率 1/i
+     * @param ratio 几率 1/ratio
      * @return boolean
      */
-    public static boolean randomBoolean(int i) {
-        return RANDOM.nextInt(i) == i - 1;
+    public static boolean randomBoolean(int ratio) {
+        return RANDOM.nextInt(ratio) == ratio - 1;
+    }
+
+    /**
+     * 返回一个随机的布尔值 ratio%
+     *
+     * @param ratio ratio 0 ~ 1
+     * @return boolean
+     */
+    public static boolean randomBoolean(double ratio) {
+        return RANDOM.nextDouble() < ratio;
     }
 
     /**

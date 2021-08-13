@@ -1,5 +1,6 @@
 package com.orion.http.useragent;
 
+import com.orion.utils.Arrays1;
 import com.orion.utils.Strings;
 import com.orion.utils.random.Randoms;
 
@@ -100,11 +101,11 @@ public class UserAgentGenerators {
         // group
         ua.append(Strings.SPACE)
                 .append("(")
-                .append(SYSTEM_GROUP[Randoms.randomInt(0, SYSTEM_GROUP.length)])
+                .append(Arrays1.random(SYSTEM_GROUP))
                 .append(")")
                 .append(Strings.SPACE);
         // engine
-        String engine = BROWSER_ENGINE[Randoms.randomInt(0, BROWSER_ENGINE.length)];
+        String engine = Arrays1.random(BROWSER_ENGINE);
         ua.append(engine).append(Strings.SPACE);
         if (engine.startsWith(GECKO)) {
             ua.append(BROWSER_VERSION[Randoms.randomInt(BROWSER_VERSION.length - FIRE_FOX_VERSION_NUM, BROWSER_VERSION.length)]);
@@ -113,10 +114,10 @@ public class UserAgentGenerators {
         // version
         int versionNum = Randoms.randomInt(2);
         if (versionNum == 0) {
-            // 1
+            // 1个
             ua.append(BROWSER_VERSION[Randoms.randomInt(0, BROWSER_VERSION.length - FIRE_FOX_VERSION_NUM)]);
         } else if (versionNum == 1) {
-            // 2
+            // 2个
             ua.append(BROWSER_VERSION[Randoms.randomInt(0, BROWSER_VERSION.length - FIRE_FOX_VERSION_NUM)])
                     .append(Strings.SPACE)
                     .append(BROWSER_VERSION[Randoms.randomInt(0, BROWSER_VERSION.length - FIRE_FOX_VERSION_NUM)]);

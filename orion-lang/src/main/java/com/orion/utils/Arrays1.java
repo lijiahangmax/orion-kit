@@ -3,6 +3,7 @@ package com.orion.utils;
 import com.orion.function.Mapper;
 import com.orion.function.Reduce;
 import com.orion.utils.convert.Converts;
+import com.orion.utils.random.Randoms;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -208,16 +209,12 @@ public class Arrays1 {
      */
     @SuppressWarnings("unchecked")
     public static <T> T gets(Object arr, int i) {
-        if (arr == null) {
-            throw Exceptions.runtime("array is undefined");
-        }
+        Valid.notNull(arr, "array is null");
         return (T) Array.get(arr, i);
     }
 
     public static <T> T get(T[] arr, int i) {
-        if (arr == null) {
-            throw Exceptions.runtime("array is undefined");
-        }
+        Valid.notNull(arr, "array is null");
         if (arr.length <= i) {
             throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
@@ -225,9 +222,7 @@ public class Arrays1 {
     }
 
     public static byte get(byte[] arr, int i) {
-        if (arr == null) {
-            throw Exceptions.runtime("array is undefined");
-        }
+        Valid.notNull(arr, "array is null");
         if (arr.length <= i) {
             throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
@@ -235,9 +230,7 @@ public class Arrays1 {
     }
 
     public static short get(short[] arr, int i) {
-        if (arr == null) {
-            throw Exceptions.runtime("array is undefined");
-        }
+        Valid.notNull(arr, "array is null");
         if (arr.length <= i) {
             throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
@@ -245,9 +238,7 @@ public class Arrays1 {
     }
 
     public static int get(int[] arr, int i) {
-        if (arr == null) {
-            throw Exceptions.runtime("array is undefined");
-        }
+        Valid.notNull(arr, "array is null");
         if (arr.length <= i) {
             throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
@@ -255,9 +246,7 @@ public class Arrays1 {
     }
 
     public static long get(long[] arr, int i) {
-        if (arr == null) {
-            throw Exceptions.runtime("array is undefined");
-        }
+        Valid.notNull(arr, "array is null");
         if (arr.length <= i) {
             throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
@@ -265,9 +254,7 @@ public class Arrays1 {
     }
 
     public static float get(float[] arr, int i) {
-        if (arr == null) {
-            throw Exceptions.runtime("array is undefined");
-        }
+        Valid.notNull(arr, "array is null");
         if (arr.length <= i) {
             throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
@@ -275,9 +262,7 @@ public class Arrays1 {
     }
 
     public static double get(double[] arr, int i) {
-        if (arr == null) {
-            throw Exceptions.runtime("array is undefined");
-        }
+        Valid.notNull(arr, "array is null");
         if (arr.length <= i) {
             throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
@@ -285,9 +270,7 @@ public class Arrays1 {
     }
 
     public static boolean get(boolean[] arr, int i) {
-        if (arr == null) {
-            throw Exceptions.runtime("array is undefined");
-        }
+        Valid.notNull(arr, "array is null");
         if (arr.length <= i) {
             throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
@@ -295,9 +278,7 @@ public class Arrays1 {
     }
 
     public static char get(char[] arr, int i) {
-        if (arr == null) {
-            throw Exceptions.runtime("array is undefined");
-        }
+        Valid.notNull(arr, "array is null");
         if (arr.length <= i) {
             throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
@@ -315,16 +296,12 @@ public class Arrays1 {
      * @param <T>   ignore
      */
     public static <T> void sets(Object arr, int i, T value) {
-        if (arr == null) {
-            throw Exceptions.runtime("array is undefined");
-        }
+        Valid.notNull(arr, "array is null");
         Array.set(arr, i, value);
     }
 
     public static <T> void set(T[] arr, int i, T value) {
-        if (arr == null) {
-            throw Exceptions.runtime("array is undefined");
-        }
+        Valid.notNull(arr, "array is null");
         if (arr.length <= i) {
             throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
@@ -332,9 +309,7 @@ public class Arrays1 {
     }
 
     public static void set(byte[] arr, int i, byte value) {
-        if (arr == null) {
-            throw Exceptions.runtime("array is undefined");
-        }
+        Valid.notNull(arr, "array is null");
         if (arr.length <= i) {
             throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
@@ -342,9 +317,7 @@ public class Arrays1 {
     }
 
     public static void set(short[] arr, int i, short value) {
-        if (arr == null) {
-            throw Exceptions.runtime("array is undefined");
-        }
+        Valid.notNull(arr, "array is null");
         if (arr.length <= i) {
             throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
@@ -352,9 +325,7 @@ public class Arrays1 {
     }
 
     public static void set(int[] arr, int i, int value) {
-        if (arr == null) {
-            throw Exceptions.runtime("array is undefined");
-        }
+        Valid.notNull(arr, "array is null");
         if (arr.length <= i) {
             throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
@@ -362,9 +333,7 @@ public class Arrays1 {
     }
 
     public static void set(long[] arr, int i, long value) {
-        if (arr == null) {
-            throw Exceptions.runtime("array is undefined");
-        }
+        Valid.notNull(arr, "array is null");
         if (arr.length <= i) {
             throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
@@ -372,9 +341,7 @@ public class Arrays1 {
     }
 
     public static void set(float[] arr, int i, float value) {
-        if (arr == null) {
-            throw Exceptions.runtime("array is undefined");
-        }
+        Valid.notNull(arr, "array is null");
         if (arr.length <= i) {
             throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
@@ -382,9 +349,7 @@ public class Arrays1 {
     }
 
     public static void set(double[] arr, int i, double value) {
-        if (arr == null) {
-            throw Exceptions.runtime("array is undefined");
-        }
+        Valid.notNull(arr, "array is null");
         if (arr.length <= i) {
             throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
@@ -392,9 +357,7 @@ public class Arrays1 {
     }
 
     public static void set(boolean[] arr, int i, boolean value) {
-        if (arr == null) {
-            throw Exceptions.runtime("array is undefined");
-        }
+        Valid.notNull(arr, "array is null");
         if (arr.length <= i) {
             throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
@@ -402,16 +365,61 @@ public class Arrays1 {
     }
 
     public static void set(char[] arr, int i, char value) {
-        if (arr == null) {
-            throw Exceptions.runtime("array is undefined");
-        }
+        Valid.notNull(arr, "array is null");
         if (arr.length <= i) {
             throw Exceptions.arrayIndex("array length: " + arr.length + " get index: " + i);
         }
         arr[i] = value;
     }
 
-    // -------------------- Mapper Reducer --------------------
+    // -------------------- random --------------------
+
+    public static <T> T random(T[] arr) {
+        Valid.notNull(arr, "array is null");
+        return arr[Randoms.randomInt(arr.length)];
+    }
+
+    public static byte random(byte[] arr) {
+        Valid.notNull(arr, "array is null");
+        return arr[Randoms.randomInt(arr.length)];
+    }
+
+    public static short random(short[] arr) {
+        Valid.notNull(arr, "array is null");
+        return arr[Randoms.randomInt(arr.length)];
+    }
+
+    public static int random(int[] arr) {
+        Valid.notNull(arr, "array is null");
+        return arr[Randoms.randomInt(arr.length)];
+    }
+
+    public static long random(long[] arr) {
+        Valid.notNull(arr, "array is null");
+        return arr[Randoms.randomInt(arr.length)];
+    }
+
+    public static float random(float[] arr) {
+        Valid.notNull(arr, "array is null");
+        return arr[Randoms.randomInt(arr.length)];
+    }
+
+    public static double random(double[] arr) {
+        Valid.notNull(arr, "array is null");
+        return arr[Randoms.randomInt(arr.length)];
+    }
+
+    public static boolean random(boolean[] arr) {
+        Valid.notNull(arr, "array is null");
+        return arr[Randoms.randomInt(arr.length)];
+    }
+
+    public static char random(char[] arr) {
+        Valid.notNull(arr, "array is null");
+        return arr[Randoms.randomInt(arr.length)];
+    }
+
+    // -------------------- mapper reducer --------------------
 
     /**
      * 映射

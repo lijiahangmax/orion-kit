@@ -3,6 +3,7 @@ package com.orion.utils.convert;
 import com.orion.function.Conversion;
 import com.orion.utils.*;
 import com.orion.utils.time.Dates;
+import com.orion.utils.time.Dates8;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -75,7 +76,7 @@ public class Converts {
         if (o == null) {
             return null;
         }
-        LocalDate date = Dates.localDate(o);
+        LocalDate date = Dates8.localDate(o);
         if (date == null) {
             throw Exceptions.convert(Strings.format("unable to convert [{}: {}] to [LocalDate]", o.getClass().getName(), o.toString()));
         }
@@ -86,7 +87,7 @@ public class Converts {
         if (o == null) {
             return null;
         }
-        LocalDateTime date = Dates.localDateTime(o);
+        LocalDateTime date = Dates8.localDateTime(o);
         if (date == null) {
             throw Exceptions.convert(Strings.format("unable to convert [{}: {}] to [LocalDateTime]", o.getClass().getName(), o.toString()));
         }

@@ -3,7 +3,7 @@ package com.orion.utils.convert;
 import com.orion.function.Conversion;
 import com.orion.utils.math.BigDecimals;
 import com.orion.utils.math.BigIntegers;
-import com.orion.utils.time.Dates;
+import com.orion.utils.time.Dates8;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -72,8 +72,8 @@ public class BasicTypeStoreProvider implements Serializable {
     private final static Conversion TO_BIG_INTEGER = BigIntegers::toBigInteger;
     private final static Conversion TO_STRING = Converts::toString;
     private final static Conversion TO_DATE = Converts::toDate;
-    private final static Conversion TO_LOCAL_DATE_TIME = Dates::localDateTime;
-    private final static Conversion TO_LOCAL_DATE = Dates::localDate;
+    private final static Conversion TO_LOCAL_DATE_TIME = Dates8::localDateTime;
+    private final static Conversion TO_LOCAL_DATE = Dates8::localDate;
 
     private void loadNumber() {
         store.register(Number.class, Byte.class, TO_BYTE);
