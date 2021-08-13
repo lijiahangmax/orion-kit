@@ -1,15 +1,17 @@
 package com.orion.utils.time;
 
-import com.orion.lang.collect.ConcurrentReferenceHashMap;
 import com.orion.utils.Strings;
 import com.orion.utils.Valid;
 import com.orion.utils.convert.Converts;
 import com.orion.utils.time.format.FastDateFormat;
 
-import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
-import java.util.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * 日期时间工具类
@@ -18,50 +20,21 @@ import java.util.*;
  * @version 1.0.0
  * @since 2019/10/9 10:38
  */
-public class Dates {
-
-    public static final String WORLD = "EEE MMM dd HH:mm:ss z yyyy";
-    public static final String YM = "yyyy-MM";
-    public static final String YMD = "yyyy-MM-dd";
-    public static final String YMDHM = "yyyy-MM-dd HH:mm";
-    public static final String YMDHMS = "yyyy-MM-dd HH:mm:ss";
-    public static final String YMDHMSS = "yyyy-MM-dd HH:mm:ss SSS";
-    public static final String HMS = "HH:mm:ss";
-    public static final String HMSS = "HH:mm:ss SSS";
-    public static final String YM1 = "yyyy/MM";
-    public static final String YMD1 = "yyyy/MM/dd";
-    public static final String YMDHM1 = "yyyy/MM/dd HH/mm";
-    public static final String YMDHMS1 = "yyyy/MM/dd HH/mm/ss";
-    public static final String YMDHMSS1 = "yyyy/MM/dd HH/mm/ss SSS";
-    public static final String YM2 = "yyyyMM";
-    public static final String YMD2 = "yyyyMMdd";
-    public static final String YMDHM2 = "yyyyMMddHHmm";
-    public static final String YMDHMS2 = "yyyyMMddHHmmss";
-    public static final String YMDHMSS2 = "yyyyMMddHHmmssSSS";
-    private static final String[] PARSE_PATTERN = {YMDHMS, YMD, YM, YMDHM, YMDHMSS};
-    private static final String[] PARSE_PATTERN1 = {YMDHMS1, YMD1, YM1, YMDHM1, YMDHMSS1};
-    private static final String[] PARSE_PATTERN2 = {YMDHMS2, YMD2, YM2, YMDHM2, YMDHMSS2};
-
-    private static final long WEEK_STAMP = 604800000L;
-    private static final long YEAR_STAMP = 31536000000L;
-    private static final long MONTH_STAMP = 2592000000L;
-    private static final long DAY_STAMP = 86400000L;
-    private static final long HOUR_STAMP = 3600000L;
-    private static final long MINUTE_STAMP = 60000L;
-    private static final long MILLI = 1000L;
-
-    private static final ZoneId DEFAULT_ZONE_ID = ZoneId.systemDefault();
-    private static final ZoneOffset DEFAULT_ZONE_OFFSET = ZoneOffset.of("+8");
-    private static final ZoneOffset DEFAULT_ZERO_ZONE_OFFSET = ZoneOffset.ofHours(0);
-
-    private static final Map<String, DateTimeFormatter> DATE_TIME_FORMAT_CONTAINER = new ConcurrentReferenceHashMap<>(16, ConcurrentReferenceHashMap.ReferenceType.SOFT);
+public class Dates extends BaseDates {
 
     private Dates() {
     }
 
-    static {
-        DATE_TIME_FORMAT_CONTAINER.put(YMD, DateTimeFormatter.ofPattern(YMD));
-        DATE_TIME_FORMAT_CONTAINER.put(YMDHMS, DateTimeFormatter.ofPattern(YMDHMS));
+    public static Date date() {
+        return new Date();
+    }
+
+    public static Date date(int ms) {
+        return new Date(ms * MILLI);
+    }
+
+    public static Date date(long ms) {
+        return new Date(ms);
     }
 
     /**
@@ -107,76 +80,13 @@ public class Dates {
         } else if (o instanceof String) {
             return parse((String) o);
         } else if (o instanceof LocalDate) {
-            return date((LocalDate) o);
+            return date(o);
         } else if (o instanceof LocalDateTime) {
-            return date((LocalDateTime) o);
+            return date(o);
         } else if (o instanceof Instant) {
-            return date((Instant) o);
+            return date(o);
         }
         return null;
-    }
-
-    /**
-     * 将对象转化为 LocalDateTime
-     *
-     * @param o 对象
-     * @return LocalDateTime
-     */
-    public static LocalDateTime localDateTime(Object o) {
-        if (o == null) {
-            return null;
-        }
-        if (o instanceof LocalDateTime) {
-            return (LocalDateTime) o;
-        }
-        Date date = date(o);
-        if (date == null) {
-            return null;
-        }
-        return localDateTime(date);
-    }
-
-    /**
-     * 将对象转化为 LocalDate
-     *
-     * @param o 对象
-     * @return LocalDate
-     */
-    public static LocalDate localDate(Object o) {
-        if (o == null) {
-            return null;
-        }
-        if (o instanceof LocalDate) {
-            return (LocalDate) o;
-        }
-        Date date = date(o);
-        if (date == null) {
-            return null;
-        }
-        return localDate(date);
-    }
-
-    /**
-     * 判断对象是否为时间格式 不包含String
-     *
-     * @param c c
-     * @return ignore
-     */
-    public static boolean isDateClass(Class<?> c) {
-        return c == Long.TYPE || c == Long.class ||
-                c == Integer.TYPE || c == Integer.class ||
-                c == Date.class || c == Calendar.class ||
-                c == LocalDate.class || c == LocalDateTime.class || c == Instant.class;
-    }
-
-    /**
-     * 是否是时间戳毫秒
-     *
-     * @param l ignore
-     * @return true 是
-     */
-    public static boolean isMilli(long l) {
-        return l > 1000000000000L;
     }
 
     /**
@@ -221,6 +131,20 @@ public class Dates {
             c.set(Calendar.MILLISECOND, ms);
         }
         return c.getTime();
+    }
+
+    public static String current() {
+        return FastDateFormat.getInstance(YMDHMS).format(new Date());
+    }
+
+    /**
+     * 获取当前时间
+     *
+     * @param pattern 格式
+     * @return 当前时间
+     */
+    public static String current(String pattern) {
+        return FastDateFormat.getInstance(pattern).format(new Date());
     }
 
     public static Date clearHms() {
@@ -450,20 +374,6 @@ public class Dates {
         return dates;
     }
 
-    public static String current() {
-        return FastDateFormat.getInstance(YMDHMS).format(new Date());
-    }
-
-    /**
-     * 获取当前时间
-     *
-     * @param pattern 格式
-     * @return 当前时间
-     */
-    public static String current(String pattern) {
-        return FastDateFormat.getInstance(pattern).format(new Date());
-    }
-
     public static String format(Date d) {
         return FastDateFormat.getInstance(YMDHMS).format(d);
     }
@@ -511,7 +421,7 @@ public class Dates {
         }
         String pattern = null;
         if (d.contains("-")) {
-            for (String s : PARSE_PATTERN) {
+            for (String s : PARSE_PATTERN_GROUP1) {
                 if (d.length() == s.length()) {
                     pattern = s;
                     break;
@@ -521,7 +431,7 @@ public class Dates {
                 return parse(d, pattern);
             }
         } else if (d.contains("/")) {
-            for (String s : PARSE_PATTERN1) {
+            for (String s : PARSE_PATTERN_GROUP2) {
                 if (d.length() == s.length()) {
                     pattern = s;
                     break;
@@ -531,7 +441,7 @@ public class Dates {
                 return parse(d, pattern);
             }
         } else if (Strings.isNumber(d)) {
-            for (String s : PARSE_PATTERN2) {
+            for (String s : PARSE_PATTERN_GROUP3) {
                 if (d.length() == s.length()) {
                     pattern = s;
                     break;
@@ -630,36 +540,27 @@ public class Dates {
     /**
      * 将GMT时间转为date
      *
-     * @param s 英国时间
+     * @param s GMT时间
      * @return date
      */
     public static Date world(String s) {
         return parse(s, WORLD, Locale.US);
     }
 
+    public static String hourType() {
+        return hourType(new Date());
+    }
+
     /**
      * 时间段
      *
-     * @param hour 小时
+     * @param date date
      * @return 时间段
      */
-    public static String hourType(int hour) {
-        if (hour >= 0 && hour < 6) {
-            return "凌晨";
-        } else if (hour >= 6 && hour < 11) {
-            return "上午";
-        } else if (hour >= 11 && hour < 13) {
-            return "中午";
-        } else if (hour >= 13 && hour < 18) {
-            return "下午";
-        } else if (hour >= 18 && hour < 20) {
-            return "傍晚";
-        } else if (hour >= 20 && hour < 22) {
-            return "晚上";
-        } else if (hour >= 22 && hour <= 23) {
-            return "深夜";
-        }
-        return "未知";
+    public static String hourType(Date date) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        return hourType(c.get(Calendar.HOUR_OF_DAY));
     }
 
     public static String ago(Date date) {
@@ -761,19 +662,19 @@ public class Dates {
         return dateAgo(new Date(), d, true);
     }
 
-    public static String dateAgo(Date source, Date d) {
-        return dateAgo(source, d, true);
+    public static String dateAgo(Date source, Date date) {
+        return dateAgo(source, date, true);
     }
 
     /**
      * 获得时间的前后
      *
      * @param source 源时间
-     * @param d      对比的时间
+     * @param date   对比的时间
      * @param strict 是否使用精确时间 如: 23小时前/昨天
      * @return 结果
      */
-    public static String dateAgo(Date source, Date d, boolean strict) {
+    public static String dateAgo(Date source, Date date, boolean strict) {
         DateStream ss = stream(source);
         // 目标时间
         int sYear = ss.getYear(),
@@ -782,13 +683,13 @@ public class Dates {
                 sHour = ss.getHour(),
                 sMinute = ss.getMinute();
         // 比较时间
-        DateStream ds = stream(d);
+        DateStream ds = stream(date);
         int dYear = ds.getYear(),
                 dMonth = ds.getMonth(),
                 dDay = ds.getDay(),
                 dHour = ds.getHour(),
                 dMinute = ds.getMinute();
-        if (d.before(source)) {
+        if (date.before(source)) {
             if (sYear > dYear) {
                 if ((sYear - dYear) > 10) {
                     return "很久以前";
@@ -860,7 +761,7 @@ public class Dates {
             if (sMinute > dMinute) {
                 return sMinute - dMinute + "分钟前";
             }
-        } else if (d.after(source)) {
+        } else if (date.after(source)) {
             if (sYear < dYear) {
                 if ((dYear - sYear) > 10) {
                     return "很久以后";
@@ -940,22 +841,11 @@ public class Dates {
         return interval(intervalMs(date1, date2), false, day, hour, minute, second);
     }
 
-    public static String interval(Date date1, Date date2, boolean full, String day, String hour, String minute, String second) {
-        return interval(intervalMs(date1, date2), full, day, hour, minute, second);
-    }
-
-    public static String interval(long ms) {
-        return interval(ms, false, null, null, null, null);
-    }
-
-    public static String interval(long ms, boolean full) {
-        return interval(ms, full, null, null, null, null);
-    }
-
     /**
      * 时差
      *
-     * @param ms     时间戳毫秒
+     * @param date1  时间1
+     * @param date2  时间2
      * @param full   为0是否显示 0天0时0分1秒 : 1秒
      * @param day    天显示的文字
      * @param hour   时显示的文字
@@ -963,36 +853,8 @@ public class Dates {
      * @param second 秒显示的文字
      * @return 时差
      */
-    public static String interval(long ms, boolean full, String day, String hour, String minute, String second) {
-        long[] analysis = intervalAnalysis(ms);
-        if (full) {
-            return analysis[0] + (day == null ? "天" : day)
-                    + analysis[1] + (hour == null ? "时" : hour)
-                    + analysis[2] + (minute == null ? "分" : minute)
-                    + analysis[3] + (second == null ? "秒" : second);
-        }
-        boolean ay = true, ah = true, am = true;
-        if (analysis[0] == 0) {
-            ay = false;
-        }
-        if (!ay && analysis[1] == 0) {
-            ah = false;
-        }
-        if (!ah && analysis[2] == 0) {
-            am = false;
-        }
-        StringBuilder sb = new StringBuilder();
-        if (ay) {
-            sb.append(analysis[0]).append(day == null ? "天" : day);
-        }
-        if (ah) {
-            sb.append(analysis[1]).append(hour == null ? "时" : hour);
-        }
-        if (am) {
-            sb.append(analysis[2]).append(minute == null ? "分" : minute);
-        }
-        sb.append(analysis[3]).append(second == null ? "秒" : second);
-        return sb.toString();
+    public static String interval(Date date1, Date date2, boolean full, String day, String hour, String minute, String second) {
+        return interval(intervalMs(date1, date2), full, day, hour, minute, second);
     }
 
     /**
@@ -1006,25 +868,15 @@ public class Dates {
         return Math.abs(date1.getTime() - date2.getTime());
     }
 
-    public static long[] intervalAnalysis(Date date1, Date date2) {
-        return intervalAnalysis(intervalMs(date1, date2));
-    }
-
     /**
      * 时差解构
      *
-     * @param ms 时间戳毫秒
+     * @param date1 时间1
+     * @param date2 时间2
      * @return 时差 [天,时,分,秒]
      */
-    public static long[] intervalAnalysis(long ms) {
-        long distanceDay = ms / DAY_STAMP;
-        long distanceHour = ms % DAY_STAMP / HOUR_STAMP;
-        long distanceMinute = ms % DAY_STAMP % HOUR_STAMP / MINUTE_STAMP;
-        long distanceSecond = ms % DAY_STAMP % HOUR_STAMP % MINUTE_STAMP / MILLI;
-        if (distanceSecond == 0 && ms != 0) {
-            distanceSecond = 1;
-        }
-        return new long[]{distanceDay, distanceHour, distanceMinute, distanceSecond};
+    public static long[] intervalAnalysis(Date date1, Date date2) {
+        return intervalAnalysis(intervalMs(date1, date2));
     }
 
     /**
@@ -1036,9 +888,9 @@ public class Dates {
      * @param n 新格式
      * @return 日期
      * @see #parse(String)
-     * @see #PARSE_PATTERN
-     * @see #PARSE_PATTERN1
-     * @see #PARSE_PATTERN2
+     * @see #PARSE_PATTERN_GROUP1
+     * @see #PARSE_PATTERN_GROUP2
+     * @see #PARSE_PATTERN_GROUP3
      * @see #WORLD
      */
     public static String convert(String d, String n) {
@@ -1063,25 +915,19 @@ public class Dates {
 
     public static boolean isLeapYear() {
         Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);
-        return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
-    }
-
-    public static boolean isLeapYear(Date d) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(d);
-        int year = c.get(Calendar.YEAR);
-        return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
+        return isLeapYear(c.get(Calendar.YEAR));
     }
 
     /**
      * 是否为闰年
      *
-     * @param year 年
+     * @param d date
      * @return true闰年
      */
-    public static boolean isLeapYear(int year) {
-        return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
+    public static boolean isLeapYear(Date d) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(d);
+        return isLeapYear(c.get(Calendar.YEAR));
     }
 
     public static int getMonthLastDay() {
@@ -1089,31 +935,16 @@ public class Dates {
         return getMonthLastDay(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1);
     }
 
+    /**
+     * 获得月份的最后一天
+     *
+     * @param date date
+     * @return 最后一天
+     */
     public static int getMonthLastDay(Date date) {
         Calendar c = Calendar.getInstance();
         c.setTime(date);
         return getMonthLastDay(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1);
-    }
-
-    /**
-     * 获得月份的最后一天
-     *
-     * @param y 年份
-     * @param m 月份
-     * @return 最后一天
-     */
-    public static int getMonthLastDay(int y, int m) {
-        if (m == 1 || m == 3 || m == 5 || m == 7 || m == 8 || m == 10 || m == 12) {
-            return 31;
-        } else if (m == 2) {
-            if (isLeapYear(y)) {
-                return 29;
-            } else {
-                return 28;
-            }
-        } else {
-            return 30;
-        }
     }
 
     public boolean isAm() {
@@ -1156,315 +987,17 @@ public class Dates {
         return Calendar.PM == c.get(Calendar.AM_PM);
     }
 
-    // -------------------- JDK8 --------------------
-
-    public static Instant instant() {
-        return Instant.now();
-    }
-
-    public static Instant instant(Date date) {
-        return Instant.ofEpochMilli(date.getTime());
-    }
-
-    public static Instant instant(long ms) {
-        // ms是时间戳毫秒
-        return Instant.ofEpochMilli(ms);
-    }
-
-    public static Instant instant(LocalDate d) {
-        return d.atStartOfDay().toInstant(DEFAULT_ZERO_ZONE_OFFSET);
-    }
-
-    public static Instant instant(LocalDate d, ZoneOffset offset) {
-        return d.atStartOfDay().toInstant(offset);
-    }
-
-    public static Instant instant(LocalDateTime dt) {
-        return dt.toInstant(DEFAULT_ZONE_OFFSET);
-    }
-
-    public static Instant instant(LocalDateTime dt, ZoneOffset offset) {
-        return dt.toInstant(offset);
-    }
-
-    public static long timestamp() {
-        return System.currentTimeMillis() / MILLI;
-    }
-
-    public static long timestamp(Date date) {
-        return date.getTime() / MILLI;
-    }
-
-    public static long timestamp(Instant instant) {
-        return instant.getEpochSecond();
-    }
-
-    public static long timestamp(LocalDate d) {
-        return d.atStartOfDay().toInstant(DEFAULT_ZERO_ZONE_OFFSET).getEpochSecond();
-    }
-
-    public static long timestamp(LocalDate d, ZoneOffset offset) {
-        return d.atStartOfDay().toInstant(offset).toEpochMilli() / MILLI;
-    }
-
-    public static long timestamp(LocalDateTime d) {
-        return d.toEpochSecond(DEFAULT_ZONE_OFFSET);
-    }
-
-    public static long timestamp(LocalDateTime d, ZoneOffset offset) {
-        return d.toEpochSecond(offset);
-    }
-
-    public static Date date() {
-        return new Date();
-    }
-
-    public static Date date(int ms) {
-        return new Date(ms * MILLI);
-    }
-
-    public static Date date(long ms) {
-        return new Date(ms);
-    }
-
-    public static Date date(Instant instant) {
-        return Date.from(instant);
-    }
-
-    public static Date date(LocalDate d) {
-        return Date.from(d.atStartOfDay().toInstant(DEFAULT_ZONE_OFFSET));
-    }
-
-    public static Date date(LocalDate d, ZoneOffset offset) {
-        return Date.from(d.atStartOfDay().toInstant(offset));
-    }
-
-    public static Date date(LocalDateTime d) {
-        return Date.from(d.atZone(DEFAULT_ZONE_OFFSET).toInstant());
-    }
-
-    public static Date date(LocalDateTime d, ZoneOffset offset) {
-        return Date.from(d.atZone(offset).toInstant());
-    }
-
-    public static LocalDate localDate() {
-        return LocalDate.now();
-    }
-
-    public static LocalDate localDate(int year, int month, int day) {
-        return LocalDate.of(year, month, day);
-    }
-
-    public static LocalDate localDate(long ms) {
-        return LocalDateTime.ofEpochSecond(ms / MILLI, 0, DEFAULT_ZONE_OFFSET).toLocalDate();
-    }
-
-    public static LocalDate localDate(long ms, ZoneOffset offset) {
-        return LocalDateTime.ofEpochSecond(ms / MILLI, 0, offset).toLocalDate();
-    }
-
-    public static LocalDate localDate(Date date) {
-        return LocalDateTime.ofInstant(date.toInstant(), DEFAULT_ZONE_ID).toLocalDate();
-    }
-
-    public static LocalDate localDate(Date date, ZoneId zoneId) {
-        return LocalDateTime.ofInstant(date.toInstant(), zoneId).toLocalDate();
-    }
-
-    public static LocalDate localDate(Instant instant) {
-        return LocalDateTime.ofInstant(instant, DEFAULT_ZONE_ID).toLocalDate();
-    }
-
-    public static LocalDate localDate(Instant instant, ZoneId zoneId) {
-        return LocalDateTime.ofInstant(instant, zoneId).toLocalDate();
-    }
-
-    public static LocalDate localDate(LocalDateTime d) {
-        return d.toLocalDate();
-    }
-
-    public static LocalTime localTime() {
-        return LocalTime.now();
-    }
-
-    public static LocalTime localTime(int h, int m, int s) {
-        return LocalTime.of(h, m, s);
-    }
-
-    public static LocalTime localTime(int h, int m, int s, int nano) {
-        return LocalTime.of(h, m, s, nano);
-    }
-
-    public static LocalTime localTime(long ms, int nano) {
-        return LocalDateTime.ofEpochSecond(ms / MILLI, nano, DEFAULT_ZONE_OFFSET).toLocalTime();
-    }
-
-    public static LocalTime localTime(long ms, int nano, ZoneOffset offset) {
-        return LocalDateTime.ofEpochSecond(ms / MILLI, nano, offset).toLocalTime();
-    }
-
-    public static LocalTime localTime(long ms) {
-        return LocalDateTime.ofEpochSecond(ms / MILLI, 0, DEFAULT_ZONE_OFFSET).toLocalTime();
-    }
-
-    public static LocalTime localTime(long ms, ZoneOffset offset) {
-        return LocalDateTime.ofEpochSecond(ms / MILLI, 0, offset).toLocalTime();
-    }
-
-    public static LocalTime localTime(Date date) {
-        return LocalDateTime.ofInstant(date.toInstant(), DEFAULT_ZONE_ID).toLocalTime();
-    }
-
-    public static LocalTime localTime(Date date, ZoneId zoneId) {
-        return LocalDateTime.ofInstant(date.toInstant(), zoneId).toLocalTime();
-    }
-
-    public static LocalTime localTime(Instant instant) {
-        return LocalDateTime.ofInstant(instant, DEFAULT_ZONE_ID).toLocalTime();
-    }
-
-    public static LocalTime localTime(Instant instant, ZoneId zoneId) {
-        return LocalDateTime.ofInstant(instant, zoneId).toLocalTime();
-    }
-
-    public static LocalTime localTime(LocalDateTime d) {
-        return d.toLocalTime();
-    }
-
-    public static LocalDateTime localDateTime() {
-        return LocalDateTime.now();
-    }
-
-    public static LocalDateTime localDateTime(int year, int month, int day) {
-        return LocalDateTime.of(year, month, day, 0, 0, 0);
-    }
-
-    public static LocalDateTime localDateTime(int year, int month, int day, int h, int m, int s) {
-        return LocalDateTime.of(year, month, day, h, m, s);
-    }
-
-    public static LocalDateTime localDateTime(int year, int month, int day, int h, int m, int s, int ms) {
-        return LocalDateTime.of(year, month, day, h, m, s, ms);
-    }
-
-    public static LocalDateTime localDateTime(long ms) {
-        return LocalDateTime.ofEpochSecond(ms / MILLI, 0, DEFAULT_ZONE_OFFSET);
-    }
-
-    public static LocalDateTime localDateTime(long ms, ZoneOffset offset) {
-        return LocalDateTime.ofEpochSecond(ms / MILLI, 0, offset);
-    }
-
-    public static LocalDateTime localDateTime(Date date) {
-        return LocalDateTime.ofInstant(date.toInstant(), DEFAULT_ZONE_ID);
-    }
-
-    public static LocalDateTime localDateTime(Date date, ZoneId zoneId) {
-        return LocalDateTime.ofInstant(date.toInstant(), zoneId);
-    }
-
-    public static LocalDateTime localDateTime(Instant instant) {
-        return LocalDateTime.ofInstant(instant, DEFAULT_ZONE_ID);
-    }
-
-    public static LocalDateTime localDateTime(Instant instant, ZoneId zoneId) {
-        return LocalDateTime.ofInstant(instant, zoneId);
-    }
-
-    public static LocalDateTime localDateTime(LocalDate d) {
-        return d.atStartOfDay();
-    }
-
-    public static LocalDateTime localDateTime(LocalDate d, LocalTime t) {
-        return LocalDateTime.of(d, t);
-    }
-
-    public static LocalDateTime clearHms(LocalDateTime d) {
-        return LocalDateTime.of(d.toLocalDate(), LocalTime.of(0, 0, 0, 0));
-    }
-
-    public static LocalDateTime clearDay(LocalDateTime d) {
-        return d.withDayOfMonth(1);
-    }
-
-    public static LocalDateTime clearDayHms(LocalDateTime d) {
-        return LocalDateTime.of(d.toLocalDate().withDayOfMonth(1), LocalTime.of(0, 0, 0, 0));
-    }
-
-    public static String format(TemporalAccessor d) {
-        return format(d, YMDHMS);
-    }
-
-    public static String format(TemporalAccessor d, String pattern) {
-        try {
-            DateTimeFormatter formatter = DATE_TIME_FORMAT_CONTAINER.get(pattern);
-            if (formatter == null) {
-                formatter = DateTimeFormatter.ofPattern(pattern);
-                DATE_TIME_FORMAT_CONTAINER.put(pattern, formatter);
-            }
-            return formatter.format(d);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
     /**
-     * 日期转化
+     * 判断时间是否在未来
      *
-     * @param d ignore
-     * @return ignore
+     * @param date date
+     * @return true 在未来
      */
-    public static TemporalAccessor parser(String d) {
-        TemporalAccessor r = null;
-        String pattern = null;
-        if (d.contains("-")) {
-            for (String s : PARSE_PATTERN) {
-                if (d.length() == s.length()) {
-                    pattern = s;
-                    break;
-                }
-            }
-            if (pattern != null) {
-                return parser(d, pattern);
-            }
-        } else if (d.contains("/")) {
-            for (String s : PARSE_PATTERN1) {
-                if (d.length() == s.length()) {
-                    pattern = s;
-                    break;
-                }
-            }
-            if (pattern != null) {
-                return parser(d, pattern);
-            }
-        } else if (Strings.isNumber(d)) {
-            for (String s : PARSE_PATTERN2) {
-                if (d.length() == s.length()) {
-                    pattern = s;
-                    break;
-                }
-            }
-            if (pattern != null) {
-                return parser(d, pattern);
-            }
-        }
-        return r;
+    public static boolean inFuture(Date date) {
+        return inFuture(date.getTime());
     }
 
-    public static TemporalAccessor parser(String d, String pattern) {
-        try {
-            DateTimeFormatter formatter = DATE_TIME_FORMAT_CONTAINER.get(pattern);
-            if (formatter == null) {
-                formatter = DateTimeFormatter.ofPattern(pattern);
-                DATE_TIME_FORMAT_CONTAINER.put(pattern, formatter);
-            }
-            return formatter.parse(d);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    // -------------------- Stream --------------------
+    // -------------------- stream --------------------
 
     public static DateStream stream() {
         return new DateStream(new Date());
