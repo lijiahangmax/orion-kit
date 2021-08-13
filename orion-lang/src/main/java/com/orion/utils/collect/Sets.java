@@ -230,9 +230,30 @@ public class Sets extends Collections {
     }
 
     /**
+     * 从set获取元素
+     *
+     * @param set set
+     * @param i
+     * @param <E> ignore
+     * @return 元素
+     */
+    public static <E> E get(Set<E> set, int i) {
+        if (size(set) <= i) {
+            return null;
+        }
+        int idx = 0;
+        for (E e : set) {
+            if (idx++ == i) {
+                return e;
+            }
+        }
+        return null;
+    }
+
+    /**
      * 从set随机获取一个元素
      *
-     * @param set map
+     * @param set set
      * @param <E> ignore
      * @return 元素
      */
@@ -243,7 +264,7 @@ public class Sets extends Collections {
         } else if (size == 1) {
             return set.iterator().next();
         } else {
-            return (E) (set.toArray()[Randoms.RANDOM.nextInt(size)]);
+            return get(set, Randoms.RANDOM.nextInt(size));
         }
     }
 

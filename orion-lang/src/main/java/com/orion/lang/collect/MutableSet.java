@@ -32,6 +32,9 @@ public interface MutableSet<E> extends Set<E> {
     }
 
     default E get(int i) {
+        if (size() <= i) {
+            return null;
+        }
         int idx = 0;
         for (E e : this) {
             if (idx++ == i) {

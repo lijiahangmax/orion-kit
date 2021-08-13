@@ -7,7 +7,6 @@ import com.orion.utils.Arrays1;
 import com.orion.utils.Strings;
 import com.orion.utils.Valid;
 import com.orion.utils.math.Numbers;
-import com.orion.utils.random.Randoms;
 
 import java.util.Collections;
 import java.util.*;
@@ -421,7 +420,7 @@ public class Maps {
         } else if (size == 1) {
             return Pair.of(map.entrySet().iterator().next());
         } else {
-            K randomKey = ((K) map.keySet().toArray()[Randoms.RANDOM.nextInt(size)]);
+            K randomKey = (K) Arrays1.random(map.keySet().toArray());
             return new Pair<K, V>(randomKey, map.get(randomKey));
         }
     }
