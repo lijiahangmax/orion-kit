@@ -1,16 +1,34 @@
 package com.orion.utils.identity;
 
-import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
 import com.orion.utils.regexp.Matches;
 import com.orion.utils.regexp.Patterns;
+import com.orion.utils.time.Birthdays;
 import com.orion.utils.time.DateStream;
 import com.orion.utils.time.Dates;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * 身份证工具类
+ * <p>
+ * 18位身份证
+ * 第1、2位数字表示: 所在省份的代码
+ * 第3、4位数字表示: 所在城市的代码
+ * 第5、6位数字表示: 所在区县的代码
+ * 第7~14位数字表示: 出生年月日
+ * 第15、16位数字表示: 所在地的派出所的顺序码
+ * 第17位数字表示性别: 奇数表示男性, 偶数表示女性
+ * 第18位数字是校检码: 用来检验身份证的正确性 校检码可以是0~9的数字, 有时也用x表示
+ * <p>
+ * 校验码的计算方法为:
+ * 将前面的身份证号码17位数分别乘以不同的系数, 从第一位到第十七位的系数分别为: 7 9 10 5 8 4 2 1 6 3 7 9 10 5 8 4 2
+ * 将这17位数字和系数相乘的结果相加除以11取余
+ * 余数 0 1 2 3 4 5 6 7 8 9 10
+ * 对应 1 0 X 9 8 7 6 5 4 3 2
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -91,7 +109,7 @@ public class IdCards {
         }
         if (Matches.test(idCard, Patterns.INTEGER)) {
             // 获取出生年月日
-            Date birthDate = Dates.parse("19" + idCard.substring(6, 12), "yyyyMMdd");
+            Date birthDate = Dates.parse("19" + idCard.substring(6, 12), Dates.YMD2);
             int year = Dates.stream(birthDate).getYear();
             StringBuilder idCard18 = new StringBuilder().append(idCard, 0, 6).append(year).append(idCard.substring(8));
             // 获取校验位
@@ -124,20 +142,6 @@ public class IdCards {
 
     /**
      * 判断18位身份证的合法性
-     * <p>
-     * 第1、2位数字表示: 所在省份的代码
-     * 第3、4位数字表示: 所在城市的代码
-     * 第5、6位数字表示: 所在区县的代码
-     * 第7~14位数字表示: 出生年月日
-     * 第15、16位数字表示: 所在地的派出所的代码
-     * 第17位数字表示性别: 奇数表示男性, 偶数表示女性
-     * 第18位数字是校检码: 用来检验身份证的正确性 校检码可以是0~9的数字, 有时也用x表示
-     * <p>
-     * 校验码的计算方法为:
-     * 将前面的身份证号码17位数分别乘以不同的系数, 从第一位到第十七位的系数分别为: 7 9 10 5 8 4 2 1 6 3 7 9 10 5 8 4 2
-     * 将这17位数字和系数相乘的结果相加除以11取余
-     * 余数 0 1 2 3 4 5 6 7 8 9 10
-     * 对应 1 0 X 9 8 7 6 5 4 3 2
      *
      * @param idCard 身份编码
      * @return 是否有效
@@ -148,16 +152,16 @@ public class IdCards {
         }
         // 省份
         String proCode = idCard.substring(0, 2);
-        if (null == CITY_CODES.get(proCode)) {
+        if (CITY_CODES.get(proCode) == null) {
             return false;
         }
         // 生日
-        Date birthDay = Dates.parse(idCard.substring(6, 14), "yyyyMMdd");
+        Date birthDay = Dates.parse(idCard.substring(6, 14), Dates.YMD2);
         if (birthDay == null) {
             return false;
         }
         DateStream bs = Dates.stream(birthDay);
-        if (!isBirthday(bs.getYear(), bs.getMonth(), bs.getDay())) {
+        if (!Birthdays.isBirthdayNotFuture(bs.getYear(), bs.getMonth(), bs.getDay())) {
             return false;
         }
         // 前17位
@@ -188,12 +192,12 @@ public class IdCards {
                 return false;
             }
             // 校验生日
-            Date birthDay = Dates.parse("19" + idCard.substring(6, 12), "yyyyMMdd");
+            Date birthDay = Dates.parse("19" + idCard.substring(6, 12), Dates.YMD2);
             if (birthDay == null) {
                 return false;
             }
             DateStream bs = Dates.stream(birthDay);
-            return isBirthday(bs.getYear(), bs.getMonth(), bs.getDay());
+            return Birthdays.isBirthdayNotFuture(bs.getYear(), bs.getMonth(), bs.getDay());
         } else {
             return false;
         }
@@ -218,7 +222,7 @@ public class IdCards {
      */
     public static int getAge(String idCard, Date range) {
         String birth = getBirth(idCard);
-        return age(Dates.parse(birth, "yyyyMMdd"), range);
+        return Birthdays.getAge(Dates.parse(birth, Dates.YMD2), range);
     }
 
     /**
@@ -286,16 +290,16 @@ public class IdCards {
      * 只支持15或18位身份证号码
      *
      * @param idCard 身份编号
-     * @return 0女 1男
+     * @return true男
      */
-    public static int getGender(String idCard) {
+    public static boolean getGender(String idCard) {
         int len = idCard.length();
         Valid.isTrue(() -> len == 15 || len == 18, "ID Card length must be 15 or 18");
         if (len == CHINA_ID_MIN_LENGTH) {
             idCard = convertCard(idCard);
         }
         char sCardChar = Objects.requireNonNull(idCard).charAt(16);
-        return sCardChar % 2;
+        return sCardChar % 2 == 1;
     }
 
     /**
@@ -311,23 +315,29 @@ public class IdCards {
     }
 
     /**
-     * 获得18位身份证校验码
+     * 将身份证的每位和对应位的加权因子相乘之后, 再得到和值
      *
-     * @param code17 18位身份证号中的前17位
-     * @return 第18位
+     * @param arr 身份证号码的数组
+     * @return 身份证编码
      */
-    private static char getCheckCode18(String code17) {
-        return getCheckCode18(getPowerSum(code17.toCharArray()));
+    public static int getPowerSum(char[] arr) {
+        int sum = 0;
+        if (POWER.length == arr.length) {
+            for (int i = 0; i < arr.length; i++) {
+                sum += Integer.parseInt(String.valueOf(arr[i])) * POWER[i];
+            }
+        }
+        return sum;
     }
 
     /**
      * 将power和值与11取模获得余数进行校验码判断
      *
-     * @param iSum 加权和
+     * @param sum 加权和
      * @return 校验位
      */
-    private static char getCheckCode18(int iSum) {
-        switch (iSum % 11) {
+    public static char getCheckCode18(int sum) {
+        switch (sum % 11) {
             case 10:
                 return '2';
             case 9:
@@ -356,113 +366,13 @@ public class IdCards {
     }
 
     /**
-     * 将身份证的每位和对应位的加权因子相乘之后, 再得到和值
+     * 获得18位身份证校验码
      *
-     * @param iArr 身份证号码的数组
-     * @return 身份证编码
+     * @param code17 18位身份证号中的前17位
+     * @return 第18位
      */
-    private static int getPowerSum(char[] iArr) {
-        int iSum = 0;
-        if (POWER.length == iArr.length) {
-            for (int i = 0; i < iArr.length; i++) {
-                iSum += Integer.parseInt(String.valueOf(iArr[i])) * POWER[i];
-            }
-        }
-        return iSum;
-    }
-
-    /**
-     * 验证是否为生日
-     *
-     * @param year  年
-     * @param month 月
-     * @param day   日
-     * @return 是否为生日
-     */
-    public static boolean isBirthday(int year, int month, int day) {
-        int thisYear = Dates.stream().getYear();
-        if (year < 1900 || year > thisYear) {
-            return false;
-        }
-        if (month < 1 || month > 12) {
-            return false;
-        }
-        if (day < 1 || day > 31) {
-            return false;
-        }
-        if (day == 31 && (month == 4 || month == 6 || month == 9 || month == 11)) {
-            return false;
-        }
-        if (month == 2) {
-            return day < 29 || (day == 29 && Dates.isLeapYear(year));
-        }
-        return true;
-    }
-
-    /**
-     * 计算年龄
-     *
-     * @param birthday 生日
-     * @return 年龄
-     */
-    public static int age(Date birthday) {
-        return age(birthday.getTime(), System.currentTimeMillis());
-    }
-
-    /**
-     * 计算年龄
-     *
-     * @param birthday 生日
-     * @return 年龄
-     */
-    public static int age(long birthday) {
-        return age(birthday, System.currentTimeMillis());
-    }
-
-    /**
-     * 计算年龄
-     *
-     * @param birthday 生日
-     * @param range    需要对比的日期
-     * @return 年龄
-     */
-    public static int age(Date birthday, Date range) {
-        if (null == range) {
-            range = new Date();
-        }
-        return age(birthday.getTime(), range.getTime());
-    }
-
-    /**
-     * 计算年龄
-     *
-     * @param birthday 生日
-     * @param range    需要对比的日期
-     * @return 年龄
-     */
-    public static int age(long birthday, long range) {
-        if (birthday > range) {
-            throw Exceptions.argument("birthday is after range!");
-        }
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(range);
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH);
-        int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
-        boolean isLastDayOfMonth = dayOfMonth == cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-        cal.setTimeInMillis(birthday);
-        int age = year - cal.get(Calendar.YEAR);
-        int monthBirth = cal.get(Calendar.MONTH);
-        if (month == monthBirth) {
-            int dayOfMonthBirth = cal.get(Calendar.DAY_OF_MONTH);
-            boolean isLastDayOfMonthBirth = dayOfMonthBirth == cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-            if ((!isLastDayOfMonth || !isLastDayOfMonthBirth) && dayOfMonth < dayOfMonthBirth) {
-                age--;
-            }
-        } else if (month < monthBirth) {
-            age--;
-        }
-        return age;
+    public static char getCheckCode18(String code17) {
+        return getCheckCode18(getPowerSum(code17.toCharArray()));
     }
 
 }
