@@ -32,11 +32,11 @@ class Collections {
      * @return String
      */
     public static String join(Collection c) {
-        return join(c, ",", "", "");
+        return join(c, ",", Strings.EMPTY, Strings.EMPTY);
     }
 
     public static String join(Collection c, String split) {
-        return join(c, split, "", "");
+        return join(c, split, Strings.EMPTY, Strings.EMPTY);
     }
 
     public static String join(Collection c, String split, String open, String end) {
