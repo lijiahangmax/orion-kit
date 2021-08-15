@@ -1,4 +1,4 @@
-package com.orion.generator;
+package com.orion.generator.name;
 
 import com.orion.lang.collect.WeightRandomMap;
 import com.orion.utils.Arrays1;
@@ -6,7 +6,7 @@ import com.orion.utils.Strings;
 import com.orion.utils.random.Randoms;
 
 /**
- * 名称生成器
+ * 中文名称生成器
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -14,7 +14,7 @@ import com.orion.utils.random.Randoms;
  */
 public class NameGenerator {
 
-    private static final WeightRandomMap<String> FIRST_NAME = new WeightRandomMap<>();
+    private static final WeightRandomMap<String> FIRST_NAME;
 
     private static final String[] BOY_NAME;
 
@@ -24,6 +24,7 @@ public class NameGenerator {
     }
 
     static {
+        FIRST_NAME = new WeightRandomMap<>();
         FIRST_NAME.put("李", 7.94);
         FIRST_NAME.put("王", 7.41);
         FIRST_NAME.put("张", 7.07);
@@ -136,10 +137,10 @@ public class NameGenerator {
                 "浩", "亮", "政", "谦", "亨", "奇", "固", "之", "轮", "翰", "朗", "伯", "宏", "言",
                 "若", "鸣", "朋", "斌", "梁", "栋", "维", "启", "克", "伦", "翔", "旭", "鹏", "泽",
                 "晨", "辰", "士", "以", "建", "家", "致", "树", "炎", "德", "行", "时", "泰", "盛",
-                "凯", "轩", "宇");
+                "凯", "轩", "宇", "坤", "航", "铭", "波", "君", "一", "显", "忠", "通", "硕");
 
         GIRL_NAME = Arrays1.of("俞", "倩", "倪", "倰", "偀", "偲", "妆", "佳", "亿", "仪", "寒",
-                "宜", "妶", "好", "妃", "姗", "姝", "姹", "姿", "婵",
+                "宜", "妶", "好", "妃", "姗", "姝", "姹", "姿", "婵", "佳", "璐",
                 "姑", "姜", "姣", "嫂", "嫦", "嫱", "姬", "娇", "娟", "嫣", "婕",
                 "婧", "娴", "婉", "姐", "姞", "姯", "姲", "姳", "娘", "娜", "妹",
                 "妍", "妙", "妹", "娆", "娉", "娥", "媚", "媱", "嫔", "婷", "玟",
@@ -161,7 +162,7 @@ public class NameGenerator {
                 "丹", "彤", "颜", "影", "韵", "音", "银", "纯", "纹", "思", "丝",
                 "纤", "爽", "舒", "伊", "依", "亚", "融", "园", "文", "心", "火",
                 "炎", "烁", "炫", "煜", "烟", "炅", "然", "冉", "平", "屏", "评",
-                "宛", "玉", "雨");
+                "宛", "玉", "雨", "樱", "梅", "媛", "微");
     }
 
     /**
@@ -169,7 +170,7 @@ public class NameGenerator {
      *
      * @return 姓氏
      */
-    public static String nextFirstName() {
+    public static String generatorFirstName() {
         return FIRST_NAME.next();
     }
 
@@ -178,8 +179,8 @@ public class NameGenerator {
      *
      * @return 男名字
      */
-    public static String nextBoyName1() {
-        return BOY_NAME[Randoms.randomInt(0, BOY_NAME.length)];
+    public static String generatorBoyName1() {
+        return Arrays1.random(BOY_NAME);
     }
 
     /**
@@ -187,8 +188,8 @@ public class NameGenerator {
      *
      * @return 女名字
      */
-    public static String nextGirlName1() {
-        return GIRL_NAME[Randoms.randomInt(0, GIRL_NAME.length)];
+    public static String generatorGirlName1() {
+        return Arrays1.random(GIRL_NAME);
     }
 
     /**
@@ -196,11 +197,11 @@ public class NameGenerator {
      *
      * @return 男名字
      */
-    public static String nextBoyName2() {
+    public static String generatorBoyName2() {
         if (Randoms.randomBoolean(5)) {
-            return BOY_NAME[Randoms.randomInt(0, BOY_NAME.length)] + BOY_NAME[Randoms.randomInt(0, BOY_NAME.length)];
+            return Arrays1.random(GIRL_NAME) + Arrays1.random(BOY_NAME);
         } else {
-            return GIRL_NAME[Randoms.randomInt(0, GIRL_NAME.length)] + BOY_NAME[Randoms.randomInt(0, BOY_NAME.length)];
+            return Arrays1.random(BOY_NAME) + Arrays1.random(BOY_NAME);
         }
     }
 
@@ -209,11 +210,11 @@ public class NameGenerator {
      *
      * @return 女名字
      */
-    public static String nextGirlName2() {
+    public static String generatorGirlName2() {
         if (Randoms.randomBoolean(5)) {
-            return BOY_NAME[Randoms.randomInt(0, BOY_NAME.length)] + GIRL_NAME[Randoms.randomInt(0, GIRL_NAME.length)];
+            return Arrays1.random(BOY_NAME) + Arrays1.random(GIRL_NAME);
         } else {
-            return GIRL_NAME[Randoms.randomInt(0, GIRL_NAME.length)] + GIRL_NAME[Randoms.randomInt(0, GIRL_NAME.length)];
+            return Arrays1.random(GIRL_NAME) + Arrays1.random(GIRL_NAME);
         }
     }
 
@@ -222,7 +223,7 @@ public class NameGenerator {
      *
      * @return 中文
      */
-    public static String nextChar() {
+    public static String generatorChar() {
         return Randoms.randomChineseChar() + Strings.EMPTY;
     }
 
@@ -231,8 +232,8 @@ public class NameGenerator {
      *
      * @return 男名
      */
-    public static String nextBoyNameHasRandom() {
-        return Randoms.randomChineseChar() + BOY_NAME[Randoms.randomInt(0, BOY_NAME.length)];
+    public static String generatorBoyNameHasRandom() {
+        return Randoms.randomChineseChar() + Arrays1.random(BOY_NAME);
     }
 
     /**
@@ -240,8 +241,8 @@ public class NameGenerator {
      *
      * @return 女名
      */
-    public static String nextGirlNameHasRandom() {
-        return Randoms.randomChineseChar() + GIRL_NAME[Randoms.randomInt(0, GIRL_NAME.length)];
+    public static String generatorGirlNameHasRandom() {
+        return Randoms.randomChineseChar() + Arrays1.random(GIRL_NAME);
     }
 
     /**
@@ -249,8 +250,8 @@ public class NameGenerator {
      *
      * @return 名称
      */
-    public static String nextName() {
-        return nextName(Randoms.randomBoolean(2));
+    public static String generatorName() {
+        return generatorName(Randoms.randomBoolean(2));
     }
 
     /**
@@ -259,8 +260,8 @@ public class NameGenerator {
      * @param sex 性别 男true
      * @return 名称
      */
-    public static String nextName(boolean sex) {
-        return nextName(sex, Randoms.randomBoolean(3));
+    public static String generatorName(boolean sex) {
+        return generatorName(sex, Randoms.randomBoolean(3));
     }
 
     /**
@@ -270,11 +271,11 @@ public class NameGenerator {
      * @param oneChar 是否是单字
      * @return 名称
      */
-    public static String nextName(boolean sex, boolean oneChar) {
+    public static String generatorName(boolean sex, boolean oneChar) {
         if (sex) {
-            return FIRST_NAME.next() + (oneChar ? nextBoyName1() : nextBoyName2());
+            return FIRST_NAME.next() + (oneChar ? generatorBoyName1() : generatorBoyName2());
         } else {
-            return FIRST_NAME.next() + (oneChar ? nextGirlName1() : nextGirlName2());
+            return FIRST_NAME.next() + (oneChar ? generatorGirlName1() : generatorGirlName2());
         }
     }
 

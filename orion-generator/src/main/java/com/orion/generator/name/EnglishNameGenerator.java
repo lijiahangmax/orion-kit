@@ -1,5 +1,6 @@
 package com.orion.generator.name;
 
+import com.orion.utils.Arrays1;
 import com.orion.utils.Strings;
 import com.orion.utils.random.Randoms;
 
@@ -124,7 +125,7 @@ public class EnglishNameGenerator {
      * @return 姓名
      */
     public static String generatorName1() {
-        return NAMES[Randoms.RANDOM.nextInt(NAMES.length)];
+        return Arrays1.random(NAMES);
     }
 
     /**
@@ -133,7 +134,7 @@ public class EnglishNameGenerator {
      * @return 姓名
      */
     public static String generatorName2() {
-        return NAMES[Randoms.RANDOM.nextInt(NAMES.length)] + Strings.SPACE + NAMES[Randoms.RANDOM.nextInt(NAMES.length)];
+        return Arrays1.random(NAMES) + Strings.SPACE + Arrays1.random(NAMES);
     }
 
     /**

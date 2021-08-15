@@ -11,6 +11,13 @@ import org.junit.Test;
 public class EmailGeneratorTest {
 
     @Test
+    public void test() {
+        for (int i = 0; i < 10; i++) {
+            System.out.println(EmailGenerator.generatorEmail());
+        }
+    }
+
+    @Test
     public void test1() {
         for (int i = 0; i < 10; i++) {
             System.out.println(EmailGenerator.generatorRealEmail());
@@ -20,7 +27,7 @@ public class EmailGeneratorTest {
     @Test
     public void test2() {
         for (int i = 0; i < 10; i++) {
-            System.out.println(EmailGenerator.generatorEmail());
+            System.out.println(EmailGenerator.generatorRandomEmail());
         }
     }
 

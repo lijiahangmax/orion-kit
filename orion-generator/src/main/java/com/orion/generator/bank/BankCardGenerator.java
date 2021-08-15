@@ -1,6 +1,7 @@
 package com.orion.generator.bank;
 
 import com.orion.lang.wrapper.Pair;
+import com.orion.utils.Arrays1;
 import com.orion.utils.Strings;
 import com.orion.utils.collect.Sets;
 import com.orion.utils.random.Randoms;
@@ -37,9 +38,8 @@ public class BankCardGenerator {
      * @return card
      */
     public static Pair<BankNameType, String> generatorCard(BankCardType card) {
-        BankNameType[] values = BankNameType.values();
-        BankNameType bankName = values[Randoms.RANDOM.nextInt(values.length)];
-        return Pair.of(bankName, generatorCard(bankName, card));
+        BankNameType bank = Arrays1.random(BankNameType.values());
+        return Pair.of(bank, generatorCard(bank, card));
     }
 
     /**
@@ -70,7 +70,7 @@ public class BankCardGenerator {
         }
         // 随机前缀
         Set<String> keys = prefixMap.keySet();
-        String prefix = Objects.requireNonNull(Sets.get(keys, Randoms.RANDOM.nextInt(keys.size())));
+        String prefix = Objects.requireNonNull(Sets.random(keys));
         Integer length = prefixMap.get(prefix);
         // 填充随机数
         int contentLength = length - prefix.length() - 1;

@@ -1,5 +1,6 @@
 package com.orion.generator.email;
 
+import com.orion.utils.Arrays1;
 import com.orion.utils.random.Randoms;
 
 /**
@@ -32,6 +33,10 @@ public class EmailGenerator {
         };
     }
 
+    public static String generatorEmail() {
+        return Randoms.randomBoolean(5) ? generatorRandomEmail() : generatorRealEmail();
+    }
+
     /**
      * 随机生成一个真实的邮箱地址
      *
@@ -40,7 +45,7 @@ public class EmailGenerator {
     public static String generatorRealEmail() {
         return generatorContent()
                 .append('@')
-                .append(REAL_EMAIL_SUFFIX[Randoms.randomInt(REAL_EMAIL_SUFFIX.length)])
+                .append(Arrays1.random(REAL_EMAIL_SUFFIX))
                 .toString();
     }
 
@@ -49,12 +54,12 @@ public class EmailGenerator {
      *
      * @return 邮箱
      */
-    public static String generatorEmail() {
+    public static String generatorRandomEmail() {
         return generatorContent()
                 .append('@')
                 .append(Randoms.randomLetter(Randoms.randomInt(3, 6)).toLowerCase())
                 .append('.')
-                .append(DOMAIN_SUFFIX[Randoms.randomInt(DOMAIN_SUFFIX.length)])
+                .append(Arrays1.random(DOMAIN_SUFFIX))
                 .toString();
     }
 

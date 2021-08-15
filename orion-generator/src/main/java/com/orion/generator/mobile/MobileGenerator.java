@@ -1,5 +1,6 @@
 package com.orion.generator.mobile;
 
+import com.orion.utils.Arrays1;
 import com.orion.utils.Strings;
 import com.orion.utils.random.Randoms;
 
@@ -33,7 +34,7 @@ public class MobileGenerator {
      * @return 前缀
      */
     public static String getMobilePrefix() {
-        return MOBILE_PREFIX[Randoms.RANDOM.nextInt(MOBILE_PREFIX.length)] + Strings.EMPTY;
+        return Arrays1.random(MOBILE_PREFIX) + Strings.EMPTY;
     }
 
     /**
@@ -52,7 +53,7 @@ public class MobileGenerator {
      * @return mobile
      */
     public static String generateMobile(String prefix) {
-        return prefix + Strings.leftPad("" + Randoms.RANDOM.nextInt(99999999), 8, "0");
+        return prefix + Strings.leftPad(Strings.EMPTY + Randoms.RANDOM.nextInt(99999999), 8, "0");
     }
 
 }
