@@ -109,8 +109,8 @@ public class StopWatch {
      * @return 开始计时的时间
      */
     public long start() {
-        from = current();
-        to = from;
+        this.from = current();
+        this.to = from;
         return from;
     }
 
@@ -120,7 +120,7 @@ public class StopWatch {
      * @return 结束时间
      */
     public long stop() {
-        to = current();
+        this.to = current();
         return to;
     }
 
@@ -165,7 +165,7 @@ public class StopWatch {
      * @return use%
      */
     private String getUse(StopTag tag) {
-        return Numbers.setScale(((double) tag.getDuration() / (double) (to - from)) * 100, 7);
+        return Numbers.setScale(((double) tag.getDuration() / (double) (to - from)) * 100, 6);
     }
 
     /**
@@ -190,9 +190,9 @@ public class StopWatch {
      */
     public StopTag tag(String name) {
         if (tags == null) {
-            tags = new LinkedList<>();
+            this.tags = new LinkedList<>();
         }
-        lastTag = new StopTag(name, current(), lastTag);
+        this.lastTag = new StopTag(name, current(), lastTag);
         tags.add(lastTag);
         return lastTag;
     }
@@ -205,7 +205,7 @@ public class StopWatch {
      * @return ignore
      */
     public StopTag tag(String tpl, Object... args) {
-        return tag(Strings.format(tpl, args));
+        return this.tag(Strings.format(tpl, args));
     }
 
     /**
@@ -213,18 +213,18 @@ public class StopWatch {
      */
     @Override
     public String toString() {
-        String prefix = String.format("Total: %d%s : [%s] => [%s]",
+        String prefix = String.format("Total: %d%s; [%s] => [%s]",
                 this.getDuration(),
                 nano ? "ns" : "ms",
-                nano ? from : Dates.format(new Date(from), "yyyy-MM-dd HH:mm:ss.SSS"),
-                nano ? to : Dates.format(new Date(to), "yyyy-MM-dd HH:mm:ss.SSS"));
+                nano ? from : Dates.format(new Date(from), "HH:mm:ss.SSS"),
+                nano ? to : Dates.format(new Date(to), "HH:mm:ss.SSS"));
         if (tags == null) {
             return prefix;
         }
         StringBuilder sb = new StringBuilder(prefix).append(Const.LF);
         for (int i = 0; i < tags.size(); i++) {
             StopTag tag = tags.get(i);
-            sb.append(String.format("  -> %5s: %d%s  %5s%%",
+            sb.append(String.format("  -> %4s: %d%s  %4s%%",
                     tag.name == null ? "TAG" + i : tag.name,
                     tag.getDuration(),
                     nano ? "ns" : "ms",

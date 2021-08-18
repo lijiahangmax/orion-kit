@@ -20,7 +20,7 @@ public class Tests {
         StopWatch w = StopWatch.begin();
 
         w.stop();
-        System.out.println("\n\n\n\n\n" + w);
+        System.out.println("\n\n\n" + w);
     }
 
 }

@@ -37,17 +37,29 @@ import java.util.regex.Pattern;
 @SuppressWarnings("ALL")
 public class Files1 {
 
-    private Files1() {
-    }
-
     /**
      * IO 临时文件夹
      */
-    public static final String IO_TEMP_DIR = File.separator + Const.ORION_DISPLAY + File.separator + ".temp" + File.separator;
+    private static final String IO_TEMP_DIR = File.separator + Const.ORION_DISPLAY + File.separator + ".temp" + File.separator;
+
+    public static final String SEPARATOR = "/";
+
+    public static final String WINDOWS_SEPARATOR = "\\";
+
+    private static final String WINDOWS_SEPARATOR_DOUBLE = "\\\\";
+
+    private static final String OMIT = "...";
+
+    private static final String WINDOWS_SEPARATOR_REG = "\\\\+";
+
+    private static final String LINUX_SEPARATOR_REG = "/+";
 
     private static final String[] SIZE_UNIT = {"K", "KB", "M", "MB", "MBPS", "G", "GB", "T", "TB", "B"};
 
     private static final long[] SIZE_UNIT_EFFECT = {1000, 1024, 1000 * 1000, 1024 * 1024, 1024 * 128, 1000 * 1000 * 1000, 1024 * 1024 * 1024, 1000 * 1000 * 1000 * 1000L, 1024 * 1024 * 1024 * 1024L, 1};
+
+    private Files1() {
+    }
 
     // -------------------- attr --------------------
 
@@ -642,9 +654,9 @@ public class Files1 {
             for (File file : files) {
                 String path = file.getName();
                 if (file.isDirectory()) {
-                    copyDir(file, new File(target.getAbsolutePath() + "/" + sourceName + "/" + path));
+                    copyDir(file, new File(target.getAbsolutePath() + SEPARATOR + sourceName + SEPARATOR + path));
                 } else {
-                    copy(file, new File(target.getAbsolutePath() + "/" + sourceName + "/" + path));
+                    copy(file, new File(target.getAbsolutePath() + SEPARATOR + sourceName + SEPARATOR + path));
                 }
             }
         }
@@ -882,12 +894,12 @@ public class Files1 {
     }
 
     public static boolean mv(File file, String name) {
-        return file.renameTo(new File(file.getParentFile() + "/" + name));
+        return file.renameTo(new File(file.getParentFile() + SEPARATOR + name));
     }
 
     public static boolean mv(String file, String name) {
         File f = new File(file);
-        return f.renameTo(new File(f.getParentFile() + "/" + name));
+        return f.renameTo(new File(f.getParentFile() + SEPARATOR + name));
     }
 
     /**
@@ -1758,7 +1770,7 @@ public class Files1 {
             return System.getProperty(Systems.HOME_DIR);
         }
         path = path.trim();
-        if (path.startsWith("\\") || path.startsWith("/")) {
+        if (path.startsWith(WINDOWS_SEPARATOR) || path.startsWith(SEPARATOR)) {
             return replacePath(Systems.HOME_DIR + path);
         } else {
             return replacePath(Systems.HOME_DIR + File.separator + path);
@@ -1774,8 +1786,8 @@ public class Files1 {
     public static String getRootPathFile(String path, String file) {
         path = getRootPath(path);
         file = file.trim();
-        if (!(file.startsWith("\\") || file.startsWith("/")) && !(path.endsWith("\\") || path.endsWith("/"))) {
-            path += "/" + file;
+        if (!(file.startsWith(WINDOWS_SEPARATOR) || file.startsWith(SEPARATOR)) && !(path.endsWith(WINDOWS_SEPARATOR) || path.endsWith(SEPARATOR))) {
+            path += SEPARATOR + file;
         }
         return replacePath(path);
     }
@@ -1788,15 +1800,15 @@ public class Files1 {
      */
     public static String replacePath(String path) {
         // windows下
-        if ("\\".equals(File.separator)) {
-            path = path.replaceAll("/+", "\\\\");
-            if ("\\".equals(path.substring(0, 1))) {
+        if (WINDOWS_SEPARATOR.equals(File.separator)) {
+            path = path.replaceAll(LINUX_SEPARATOR_REG, WINDOWS_SEPARATOR_DOUBLE);
+            if (WINDOWS_SEPARATOR.equals(path.substring(0, 1))) {
                 path = path.substring(1);
             }
         }
         // linux下
-        if ("/".equals(File.separator)) {
-            path = path.replaceAll("\\\\+", "/");
+        if (SEPARATOR.equals(File.separator)) {
+            path = path.replaceAll(WINDOWS_SEPARATOR_REG, SEPARATOR);
         }
         return path;
     }
@@ -1859,11 +1871,11 @@ public class Files1 {
      * @return 文件名称
      */
     public static String getFileName(String file) {
-        file = file.replaceAll("\\\\+", "/").replaceAll("//+", "/");
-        if (file.equals("/")) {
-            return "/";
+        file = getPath(file);
+        if (file.equals(SEPARATOR)) {
+            return SEPARATOR;
         }
-        String[] paths = file.split("/");
+        String[] paths = file.split(SEPARATOR);
         return paths[paths.length - 1];
     }
 
@@ -1884,10 +1896,10 @@ public class Files1 {
      * @return 上级路径
      */
     public static String getParentPath(String file) {
-        String[] paths = file.replaceAll("\\\\+", "/").replaceAll("//+", "/").split("/");
+        String[] paths = getPath(file).split(SEPARATOR);
         StringBuilder sb = new StringBuilder();
         for (int i = 0, len = paths.length - 1; i < len; i++) {
-            sb.append(paths[i]).append("/");
+            sb.append(paths[i]).append(SEPARATOR);
         }
         return sb.toString();
     }
@@ -1909,15 +1921,15 @@ public class Files1 {
      * @return 上级路径
      */
     public static List<String> getParentPaths(String file) {
-        file = file.replaceAll("\\\\+", "/").replaceAll("//+", "/");
-        String[] paths = file.split("/");
+        file = getPath(file);
+        String[] paths = file.split(SEPARATOR);
         List<String> list = new ArrayList<>();
         StringBuilder sb;
         if (paths[0].contains(":")) {
-            sb = new StringBuilder(paths[0] + "/");
+            sb = new StringBuilder(paths[0] + SEPARATOR);
             paths[0] = null;
         } else {
-            sb = new StringBuilder("/");
+            sb = new StringBuilder(SEPARATOR);
         }
         for (int i = 0, len = paths.length - 1; i < len; i++) {
             String path = paths[i];
@@ -1925,7 +1937,7 @@ public class Files1 {
                 continue;
             }
             list.add(sb.append(path).toString());
-            sb.append("/");
+            sb.append(SEPARATOR);
         }
         return list;
     }
@@ -1947,7 +1959,17 @@ public class Files1 {
      * @return path
      */
     public static String getPath(String path) {
-        return path.replaceAll("\\\\+", "/").replaceAll("/+", "/");
+        return path.replaceAll(WINDOWS_SEPARATOR_REG, SEPARATOR).replaceAll(LINUX_SEPARATOR_REG, SEPARATOR);
+    }
+
+    /**
+     * 获取windows路径
+     *
+     * @param path path
+     * @return window路径
+     */
+    public static String getWindowsPath(String path) {
+        return path.replaceAll(WINDOWS_SEPARATOR_REG, WINDOWS_SEPARATOR_DOUBLE).replaceAll(LINUX_SEPARATOR_REG, WINDOWS_SEPARATOR_DOUBLE);
     }
 
     /**
@@ -1961,17 +1983,17 @@ public class Files1 {
         String separator, pre, p;
         if (paths.length == 1) {
             // linux
-            separator = "/";
-            pre = "/";
+            separator = SEPARATOR;
+            pre = SEPARATOR;
             p = paths[0];
         } else {
             // windows
-            separator = "\\";
-            pre = paths[0] + ":\\";
+            separator = WINDOWS_SEPARATOR;
+            pre = paths[0] + ":" + WINDOWS_SEPARATOR;
             p = paths[1];
         }
         StringBuilder sb = new StringBuilder(pre);
-        String[] ps = getPath(p).split("/");
+        String[] ps = getPath(p).split(SEPARATOR);
         for (int i = 0; i < ps.length; i++) {
             String s = ps[i];
             if (Strings.isBlank(s) || ".".equals(s)) {
@@ -2006,7 +2028,7 @@ public class Files1 {
      * @return 是否统一化
      */
     public static boolean isNormalize(String path) {
-        String[] ps = getPath(path).split("/");
+        String[] ps = getPath(path).split(SEPARATOR);
         for (int i = 0; i < ps.length; i++) {
             String s = ps[i];
             if (".".equals(s)) {
@@ -2018,6 +2040,55 @@ public class Files1 {
             }
         }
         return true;
+    }
+
+    /**
+     * 获取路径前缀
+     *
+     * @param path path
+     * @return 前缀
+     */
+    public static String getPathPrefix(String path) {
+        String[] paths = getPath(path).split(":");
+        if (paths.length == 1) {
+            // linux
+            return Files1.SEPARATOR;
+        } else {
+            // windows
+            return paths[0] + ":\\";
+        }
+    }
+
+    public static String omitPath(String path, int length) {
+        return omitPath(path, length, OMIT);
+    }
+
+    /**
+     * 省略路径
+     *
+     * @param path   path
+     * @param length length
+     * @param omit   省略符
+     * @return 省略后的路径
+     */
+    public static String omitPath(String path, int length, String omit) {
+        path = getPath(path);
+        String prefix = getPathPrefix(path);
+        // 最后一节长
+        String lastPath = path.substring(path.lastIndexOf(SEPARATOR));
+        if (lastPath.length() > length + omit.length()) {
+            return prefix + omit + lastPath.substring(0, length) + omit;
+        } else if (lastPath.length() == length) {
+            return prefix + omit + lastPath.substring(0, length);
+        }
+        // 第一节
+        length -= lastPath.length();
+        String firstPath = path.substring(0, path.length() - lastPath.length());
+        if (firstPath.length() > length + omit.length()) {
+            return path.substring(0, length) + omit + lastPath;
+        } else {
+            return path;
+        }
     }
 
     /**

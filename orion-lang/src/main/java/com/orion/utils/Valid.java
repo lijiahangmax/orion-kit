@@ -1,5 +1,6 @@
 package com.orion.utils;
 
+import com.orion.constant.Const;
 import com.orion.exception.argument.InvalidArgumentException;
 
 import java.math.BigDecimal;
@@ -24,11 +25,51 @@ import java.util.regex.Pattern;
 @SuppressWarnings("unused")
 public abstract class Valid {
 
+    private static final String VALID_NOT_EQUAL = "the validated objects not equal";
+    private static final String VALID_IS_EQUAL = "the validated objects is equal";
+    private static final String VALID_NOT_COMPARE = "the validated objects not compare";
+    private static final String VALID_IS_COMPARE = "the validated objects is compare";
+    private static final String VALID_NOT_LT = "the validated objects not less than";
+    private static final String VALID_NOT_LT_EQ = "the validated objects not less than or equal";
+    private static final String VALID_NOT_GT = "the validated objects not greater than";
+    private static final String VALID_NOT_GT_EQ = "the validated objects not greater than or equal";
+    private static final String VALID_IS_FALSE = "the validated expression is false";
+    private static final String VALID_IS_TRUE = "the validated expression is true";
+    private static final String VALID_IS_NULL = "the validated object is null";
+    private static final String VALID_NOT_ARRAY = "the validated object not in array";
+    private static final String VALID_NOT_COLLECTION = "the validated object not in collection";
+    private static final String VALID_NOT_IN_ARRAY = "the validated object in array";
+    private static final String VALID_NOT_IN_COLLECTION = "the validated object in collection";
+    private static final String VALID_ARRAY_IS_EMPTY = "the validated array is empty";
+    private static final String VALID_COLLECTION_IS_EMPTY = "the validated collection is empty";
+    private static final String VALID_MAP_IS_EMPTY = "the validated map is empty";
+    private static final String VALID_STRING_IS_EMPTY = "the validated string is empty";
+    private static final String VALID_STRING_IS_BLANK = "the validated string is blank";
+    private static final String VALID_STRING_NOT_NUMBER = "the validated string not numbers";
+    private static final String VALID_STRING_NOT_INTEGER = "the validated string not integer";
+    private static final String VALID_STRING_NOT_DOUBLE = "the validated string sequence not double";
+    private static final String VALID_ARRAY_INDEX = "the validated array index is invalid: {}";
+    private static final String VALID_COLLECTION_INDEX = "the validated collection index is invalid: {}";
+    private static final String VALID_ARRAY_CONTENTS_NULL = "the validated array contains null element";
+    private static final String VALID_COLLECTION_CONTENTS_NULL = "the validated collection contains null element";
+    private static final String VALID_STRING_NOT_MATCH = "the string {} not match the pattern {}";
+    private static final String VALID_STRING_MATCH = "the string {} match the pattern {}";
+    private static final String VALID_VALUE_IS_ZERO = "the validated value is zero";
+    private static final String VALID_VALUE_IS_NAN = "the validated value is not a number";
+    private static final String VALID_VALUE_NOT_IN_RANGE = "the value {} is not in the specified inclusive range of {} to {}";
+    private static final String VALID_VALUE_IN_RANGE = "the value {} in the specified inclusive range of {} to {}";
+    private static final String VALID_STRING_LENGTH = "the validated value length is not in {} of {}";
+    private static final String VALID_LENGTH_NOT_GT = "the validated value length is not greater than {}";
+    private static final String VALID_LENGTH_NOT_GT_EQ = "the validated value length is not greater than or equal {}";
+    private static final String VALID_LENGTH_NOT_LT = "the validated value length is not less than {}";
+    private static final String VALID_LENGTH_NOT_LT_EQ = "the validated value length is not less than or equal {}";
+    private static final String VALID_NOT_INSTANCE = "expected type: {}, actual: {}";
+
     public Valid() {
     }
 
     public static void eq(Object o1, Object o2) {
-        eq(o1, o2, "the validated objects not equal");
+        eq(o1, o2, VALID_NOT_EQUAL);
     }
 
     public static void eq(Object o1, Object o2, String message, Object... values) {
@@ -39,7 +80,7 @@ public abstract class Valid {
     }
 
     public static void neq(Object o1, Object o2) {
-        neq(o1, o2, "the validated objects is equal");
+        neq(o1, o2, VALID_IS_EQUAL);
     }
 
     public static void neq(Object o1, Object o2, String message, Object... values) {
@@ -50,7 +91,7 @@ public abstract class Valid {
     }
 
     public static <T extends Comparable<T>> void compare(T t1, T t2) {
-        compare(t1, t2, "the validated numbers not compare equal");
+        compare(t1, t2, VALID_NOT_COMPARE);
     }
 
     public static <T extends Comparable<T>> void compare(T t1, T t2, String message, Object... values) {
@@ -62,7 +103,7 @@ public abstract class Valid {
     }
 
     public static <T extends Comparable<T>> void notCompare(T t1, T t2) {
-        notCompare(t1, t2, "the validated numbers is compare equal");
+        notCompare(t1, t2, VALID_IS_COMPARE);
     }
 
     public static <T extends Comparable<T>> void notCompare(T t1, T t2, String message, Object... values) {
@@ -74,27 +115,29 @@ public abstract class Valid {
     }
 
     public static <T> void compare(T t1, T t2, Comparator<T> comparator) {
-        compare(t1, t2, comparator, "the validated numbers not compare {} {}", t1, t2);
+        compare(t1, t2, comparator, VALID_NOT_COMPARE);
     }
 
     public static <T> void compare(T t1, T t2, Comparator<T> comparator, String message, Object... values) {
+        Valid.notNull(comparator);
         if (comparator.compare(t1, t2) != 0) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
     }
 
     public static <T> void notCompare(T t1, T t2, Comparator<T> comparator) {
-        notCompare(t1, t2, comparator, "the validated numbers is compare {} {}", t1, t2);
+        notCompare(t1, t2, comparator, VALID_IS_COMPARE);
     }
 
     public static <T> void notCompare(T t1, T t2, Comparator<T> comparator, String message, Object... values) {
+        Valid.notNull(comparator);
         if (comparator.compare(t1, t2) == 0) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
     }
 
     public static <T extends Comparable<T>> T lt(T value, T refer) {
-        return lt(value, refer, "the validated numbers not less than");
+        return lt(value, refer, VALID_NOT_LT);
     }
 
     public static <T extends Comparable<T>> T lt(T value, T refer, String message, Object... values) {
@@ -107,7 +150,7 @@ public abstract class Valid {
     }
 
     public static <T extends Comparable<T>> T lte(T value, T refer) {
-        return lte(value, refer, "the validated numbers not less than or equal");
+        return lte(value, refer, VALID_NOT_LT_EQ);
     }
 
     public static <T extends Comparable<T>> T lte(T value, T refer, String message, Object... values) {
@@ -120,7 +163,7 @@ public abstract class Valid {
     }
 
     public static <T extends Comparable<T>> T gt(T value, T refer) {
-        return gt(value, refer, "the validated numbers not greater than");
+        return gt(value, refer, VALID_NOT_GT);
     }
 
     public static <T extends Comparable<T>> T gt(T value, T refer, String message, Object... values) {
@@ -133,7 +176,7 @@ public abstract class Valid {
     }
 
     public static <T extends Comparable<T>> T gte(T value, T refer) {
-        return gte(value, refer, "the validated numbers not greater than or equal");
+        return gte(value, refer, VALID_NOT_GT_EQ);
     }
 
     public static <T extends Comparable<T>> T gte(T value, T refer, String message, Object... values) {
@@ -146,7 +189,7 @@ public abstract class Valid {
     }
 
     public static boolean isTrue(BooleanSupplier s) {
-        return isTrue(s, "the validated expression is false");
+        return isTrue(s, VALID_IS_FALSE);
     }
 
     public static boolean isTrue(BooleanSupplier s, String message, Object... values) {
@@ -158,7 +201,7 @@ public abstract class Valid {
     }
 
     public static boolean isTrue(boolean expression) {
-        return isTrue(expression, "the validated expression is false");
+        return isTrue(expression, VALID_IS_FALSE);
     }
 
     public static boolean isTrue(boolean expression, String message, Object... values) {
@@ -169,7 +212,7 @@ public abstract class Valid {
     }
 
     public static boolean isFalse(BooleanSupplier s) {
-        return isFalse(s, "the validated expression is true");
+        return isFalse(s, VALID_IS_TRUE);
     }
 
     public static boolean isFalse(BooleanSupplier s, String message, Object... values) {
@@ -181,7 +224,7 @@ public abstract class Valid {
     }
 
     public static boolean isFalse(boolean expression) {
-        return isFalse(expression, "the validated expression is true");
+        return isFalse(expression, VALID_IS_TRUE);
     }
 
     public static boolean isFalse(boolean expression, String message, Object... values) {
@@ -192,7 +235,7 @@ public abstract class Valid {
     }
 
     public static <T> T notNull(T object) {
-        return notNull(object, "the validated object is null");
+        return notNull(object, VALID_IS_NULL);
     }
 
     public static <T> T notNull(T object, String message, Object... values) {
@@ -203,7 +246,7 @@ public abstract class Valid {
     }
 
     public static <T> T in(T t, T... arr) {
-        return in(t, arr, "the validated object not in array");
+        return in(t, arr, VALID_NOT_ARRAY);
     }
 
     public static <T> T in(T t, T[] arr, String message, Object... values) {
@@ -216,7 +259,7 @@ public abstract class Valid {
     }
 
     public static <T> T in(T t, Collection<? extends T> c) {
-        return in(t, c, "the validated object not in collection");
+        return in(t, c, VALID_NOT_COLLECTION);
     }
 
     public static <T> T in(T t, Collection<? extends T> c, String message, Object... values) {
@@ -229,7 +272,7 @@ public abstract class Valid {
     }
 
     public static <T> T notIn(T t, T... arr) {
-        return notIn(t, arr, "the validated object in array");
+        return notIn(t, arr, VALID_NOT_IN_ARRAY);
     }
 
     public static <T> T notIn(T t, T[] arr, String message, Object... values) {
@@ -242,7 +285,7 @@ public abstract class Valid {
     }
 
     public static <T> T notIn(T t, Collection<? extends T> c) {
-        return notIn(t, c, "the validated object in collection");
+        return notIn(t, c, VALID_NOT_IN_COLLECTION);
     }
 
     public static <T> T notIn(T t, Collection<? extends T> c, String message, Object... values) {
@@ -255,7 +298,7 @@ public abstract class Valid {
     }
 
     public static <T> T[] notEmpty(T[] array) {
-        return notEmpty(array, "the validated array is empty");
+        return notEmpty(array, VALID_ARRAY_IS_EMPTY);
     }
 
     public static <T> T[] notEmpty(T[] array, String message, Object... values) {
@@ -269,7 +312,7 @@ public abstract class Valid {
     }
 
     public static <T extends Collection<?>> T notEmpty(T collection) {
-        return notEmpty(collection, "the validated collection is empty");
+        return notEmpty(collection, VALID_COLLECTION_IS_EMPTY);
     }
 
     public static <T extends Collection<?>> T notEmpty(T collection, String message, Object... values) {
@@ -283,7 +326,7 @@ public abstract class Valid {
     }
 
     public static <T extends Map<?, ?>> T notEmpty(T map) {
-        return notEmpty(map, "the validated map is empty");
+        return notEmpty(map, VALID_MAP_IS_EMPTY);
     }
 
     public static <T extends Map<?, ?>> T notEmpty(T map, String message, Object... values) {
@@ -297,7 +340,7 @@ public abstract class Valid {
     }
 
     public static String notEmpty(String s) {
-        return notEmpty(s, "the validated character sequence is empty");
+        return notEmpty(s, VALID_STRING_IS_EMPTY);
     }
 
     public static String notEmpty(String s, String message, Object... values) {
@@ -310,8 +353,19 @@ public abstract class Valid {
         return s;
     }
 
+    public static String notBlank(String s) {
+        return notBlank(s, VALID_STRING_IS_BLANK);
+    }
+
+    public static String notBlank(String s, String message, Object... values) {
+        if (Strings.isBlank(s)) {
+            throw Exceptions.invalidArgument(Strings.format(message, values));
+        }
+        return s;
+    }
+
     public static String isNumber(String s) {
-        return isNumber(s, "the validated character sequence not numbers");
+        return isNumber(s, VALID_STRING_NOT_NUMBER);
     }
 
     public static String isNumber(String s, String message, Object... values) {
@@ -322,7 +376,7 @@ public abstract class Valid {
     }
 
     public static String isInteger(String s) {
-        return isInteger(s, "the validated character sequence not integer");
+        return isInteger(s, VALID_STRING_NOT_INTEGER);
     }
 
     public static String isInteger(String s, String message, Object... values) {
@@ -333,7 +387,7 @@ public abstract class Valid {
     }
 
     public static String isDouble(String s) {
-        return isNumber(s, "the validated character sequence not double");
+        return isNumber(s, VALID_STRING_NOT_DOUBLE);
     }
 
     public static String isDouble(String s, String message, Object... values) {
@@ -343,19 +397,8 @@ public abstract class Valid {
         return s;
     }
 
-    public static String notBlank(String s) {
-        return notBlank(s, "the validated character sequence is blank");
-    }
-
-    public static String notBlank(String s, String message, Object... values) {
-        if (Strings.isBlank(s)) {
-            throw Exceptions.invalidArgument(Strings.format(message, values));
-        }
-        return s;
-    }
-
     public static <T> T validIndex(T[] array, int index) {
-        return validIndex(array, index, "the validated array index is invalid: {}", index);
+        return validIndex(array, index, VALID_ARRAY_INDEX, index);
     }
 
     public static <T> T validIndex(T[] array, int index, String message, Object... values) {
@@ -367,7 +410,7 @@ public abstract class Valid {
     }
 
     public static <T extends Collection<?>> void validIndex(T collection, int index) {
-        validIndex(collection, index, "the validated collection index is invalid: {}", index);
+        validIndex(collection, index, VALID_COLLECTION_INDEX, index);
     }
 
     public static <T extends Collection<?>> void validIndex(T collection, int index, String message, Object... values) {
@@ -378,7 +421,7 @@ public abstract class Valid {
     }
 
     public static <T> T[] noNullElements(T[] array) {
-        return noNullElements(array, "the validated array contains null element");
+        return noNullElements(array, VALID_ARRAY_CONTENTS_NULL);
     }
 
     public static <T> T[] noNullElements(T[] array, String message, Object... values) {
@@ -392,7 +435,7 @@ public abstract class Valid {
     }
 
     public static <T extends Iterable<?>> T noNullElements(T iterable) {
-        return noNullElements(iterable, "the validated collection contains null element");
+        return noNullElements(iterable, VALID_COLLECTION_CONTENTS_NULL);
     }
 
     public static <T extends Iterable<?>> T noNullElements(T iterable, String message, Object... values) {
@@ -407,7 +450,7 @@ public abstract class Valid {
     }
 
     public static String isMatches(String input, String pattern) {
-        return notMatches(input, pattern, "the string {} does not match the pattern {}", input, pattern);
+        return notMatches(input, pattern, VALID_STRING_NOT_MATCH, input, pattern);
     }
 
     public static String isMatches(String input, String pattern, String message, Object... values) {
@@ -418,7 +461,7 @@ public abstract class Valid {
     }
 
     public static String notMatches(String input, String pattern) {
-        return notMatches(input, pattern, "the string {} match the pattern {}", input, pattern);
+        return notMatches(input, pattern, VALID_STRING_MATCH, input, pattern);
     }
 
     public static String notMatches(String input, String pattern, String message, Object... values) {
@@ -429,7 +472,7 @@ public abstract class Valid {
     }
 
     public static int notZero(int value) {
-        return notZero(value, "the validated value is zero");
+        return notZero(value, VALID_VALUE_IS_ZERO);
     }
 
     public static int notZero(int value, String message, Object... values) {
@@ -440,7 +483,7 @@ public abstract class Valid {
     }
 
     public static long notZero(long value) {
-        return notZero(value, "the validated value is zero");
+        return notZero(value, VALID_VALUE_IS_ZERO);
     }
 
     public static long notZero(long value, String message, Object... values) {
@@ -451,7 +494,7 @@ public abstract class Valid {
     }
 
     public static double notZero(double value) {
-        return notZero(value, "the validated value is zero");
+        return notZero(value, VALID_VALUE_IS_ZERO);
     }
 
     public static double notZero(double value, String message, Object... values) {
@@ -462,7 +505,7 @@ public abstract class Valid {
     }
 
     public static BigDecimal notZero(BigDecimal value) {
-        return notZero(value, "the validated value is zero");
+        return notZero(value, VALID_VALUE_IS_ZERO);
     }
 
     public static BigDecimal notZero(BigDecimal value, String message, Object... values) {
@@ -472,7 +515,7 @@ public abstract class Valid {
     }
 
     public static BigInteger notZero(BigInteger value) {
-        return notZero(value, "the validated value is zero");
+        return notZero(value, VALID_VALUE_IS_ZERO);
     }
 
     public static BigInteger notZero(BigInteger value, String message, Object... values) {
@@ -482,7 +525,7 @@ public abstract class Valid {
     }
 
     public static double notNaN(float value) {
-        return notNaN(value, "the validated value is not a number");
+        return notNaN(value, VALID_VALUE_IS_NAN);
     }
 
     public static double notNaN(float value, String message, Object... values) {
@@ -493,7 +536,7 @@ public abstract class Valid {
     }
 
     public static double notNaN(double value) {
-        return notNaN(value, "the validated value is not a number");
+        return notNaN(value, VALID_VALUE_IS_NAN);
     }
 
     public static double notNaN(double value, String message, Object... values) {
@@ -504,7 +547,7 @@ public abstract class Valid {
     }
 
     public static <T extends Comparable<T>> T inRange(T value, T start, T end) {
-        return inRange(value, start, end, "the value {} is not in the specified inclusive range of {} to {}", value, start, end);
+        return inRange(value, start, end, VALID_VALUE_NOT_IN_RANGE, value, start, end);
     }
 
     public static <T extends Comparable<T>> T inRange(T value, T start, T end, String message, Object... values) {
@@ -518,7 +561,7 @@ public abstract class Valid {
     }
 
     public static <T extends Comparable<T>> T notInRange(T value, T start, T end) {
-        return notInRange(start, end, value, "the value {} in the specified inclusive range of {} to {}", value, start, end);
+        return notInRange(start, end, value, VALID_VALUE_IN_RANGE, value, start, end);
     }
 
     public static <T extends Comparable<T>> T notInRange(T value, T start, T end, String message, Object... values) {
@@ -532,7 +575,7 @@ public abstract class Valid {
     }
 
     public static String validLengthIn(String s, int start, int end) {
-        return validLengthIn(s, start, end, "the validated value length is not in {} of {}", start, end);
+        return validLengthIn(s, start, end, VALID_STRING_LENGTH, start, end);
     }
 
     public static String validLengthIn(String s, int start, int end, String message, Object... values) {
@@ -544,7 +587,7 @@ public abstract class Valid {
     }
 
     public static String validLengthGt(String s, int length) {
-        return validLengthGt(s, length, "the validated value length is not greater than {}", length);
+        return validLengthGt(s, length, VALID_LENGTH_NOT_GT, length);
     }
 
     public static String validLengthGt(String s, int length, String message, Object... values) {
@@ -556,7 +599,7 @@ public abstract class Valid {
     }
 
     public static String validLengthGte(String s, int length) {
-        return validLengthGte(s, length, "the validated value length is not greater than or equal{}", length);
+        return validLengthGte(s, length, VALID_LENGTH_NOT_GT_EQ, length);
     }
 
     public static String validLengthGte(String s, int length, String message, Object... values) {
@@ -568,7 +611,7 @@ public abstract class Valid {
     }
 
     public static String validLengthLt(String s, int length) {
-        return validLengthLt(s, length, "the validated value length is not less than {}", length);
+        return validLengthLt(s, length, VALID_LENGTH_NOT_LT, length);
     }
 
     public static String validLengthLt(String s, int length, String message, Object... values) {
@@ -580,7 +623,7 @@ public abstract class Valid {
     }
 
     public static String validLengthLte(String s, int length) {
-        return validLengthLte(s, length, "the validated value length is not less than or equal{}", length);
+        return validLengthLte(s, length, VALID_LENGTH_NOT_LT_EQ, length);
     }
 
     public static String validLengthLte(String s, int length, String message, Object... values) {
@@ -593,7 +636,7 @@ public abstract class Valid {
 
     public static <T> T isInstanceOf(Object obj, Class<T> type) {
         if (!type.isInstance(obj)) {
-            throw Exceptions.invalidArgument(Strings.format("expected type: {}, actual: {}", type.getName(), obj == null ? "null" : obj.getClass().getName()));
+            throw Exceptions.invalidArgument(Strings.format(VALID_NOT_INSTANCE, type.getName(), obj == null ? Const.NULL : obj.getClass().getName()));
         }
         return type.cast(obj);
     }
