@@ -25,6 +25,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -46,9 +47,7 @@ public class Files1 {
 
     public static final String WINDOWS_SEPARATOR = "\\";
 
-    private static final String WINDOWS_SEPARATOR_DOUBLE = "\\\\";
-
-    private static final String OMIT = "...";
+    private static final String WINDOWS_SEPARATOR_REPLICE = Matcher.quoteReplacement(WINDOWS_SEPARATOR);
 
     private static final String WINDOWS_SEPARATOR_REG = "\\\\+";
 
@@ -1801,7 +1800,7 @@ public class Files1 {
     public static String replacePath(String path) {
         // windows下
         if (WINDOWS_SEPARATOR.equals(File.separator)) {
-            path = path.replaceAll(LINUX_SEPARATOR_REG, WINDOWS_SEPARATOR_DOUBLE);
+            path = path.replaceAll(LINUX_SEPARATOR_REG, WINDOWS_SEPARATOR_REPLICE);
             if (WINDOWS_SEPARATOR.equals(path.substring(0, 1))) {
                 path = path.substring(1);
             }
@@ -1969,7 +1968,7 @@ public class Files1 {
      * @return window路径
      */
     public static String getWindowsPath(String path) {
-        return path.replaceAll(WINDOWS_SEPARATOR_REG, WINDOWS_SEPARATOR_DOUBLE).replaceAll(LINUX_SEPARATOR_REG, WINDOWS_SEPARATOR_DOUBLE);
+        return path.replaceAll(WINDOWS_SEPARATOR_REG, WINDOWS_SEPARATOR_REPLICE).replaceAll(LINUX_SEPARATOR_REG, WINDOWS_SEPARATOR_REPLICE);
     }
 
     /**
@@ -2060,7 +2059,7 @@ public class Files1 {
     }
 
     public static String omitPath(String path, int length) {
-        return omitPath(path, length, OMIT);
+        return omitPath(path, length, Const.OMIT);
     }
 
     /**

@@ -78,11 +78,11 @@
             <version>${jackson.version}</version>
         </dependency>
 
-        <!-- servlet -->
+        <!-- apache-compress -->
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>${servlet.version}</version>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>${apache.compress}</version>
         </dependency>
 
         <!-- dom4j -->
@@ -106,21 +106,21 @@
             <version>${yaml.version}</version>
         </dependency>
 
-        <!-- python -->
+        <!-- python script -->
         <!--        <dependency>-->
         <!--            <groupId>org.python</groupId>-->
         <!--            <artifactId>jython</artifactId>-->
         <!--            <version>${python.script.version}</version>-->
         <!--        </dependency>-->
 
-        <!-- lua -->
+        <!-- lua script -->
         <!--        <dependency>-->
         <!--            <groupId>org.luaj</groupId>-->
         <!--            <artifactId>luaj-jse</artifactId>-->
         <!--            <version>${lua.script.version}</version>-->
         <!--        </dependency>-->
 
-        <!-- groovy -->
+        <!-- groovy script -->
         <!--        <dependency>-->
         <!--            <groupId>org.codehaus.groovy</groupId>-->
         <!--            <artifactId>groovy-all</artifactId>-->

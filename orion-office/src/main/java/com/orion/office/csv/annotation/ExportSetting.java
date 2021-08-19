@@ -45,8 +45,8 @@ public @interface ExportSetting {
 
     /**
      * 转义类型
-     * 2. 反斜杠转义
      * 1. 双文本限定符转义
+     * 2. 反斜杠转义
      */
     CsvEscapeMode escapeMode() default CsvEscapeMode.DOUBLE_QUALIFIER;
 

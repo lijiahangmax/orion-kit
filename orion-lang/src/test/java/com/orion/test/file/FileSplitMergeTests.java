@@ -1,8 +1,8 @@
 package com.orion.test.file;
 
-import com.orion.utils.io.FileMerge;
-import com.orion.utils.io.FileSplit;
 import com.orion.utils.io.Files1;
+import com.orion.utils.io.split.FileMerge;
+import com.orion.utils.io.split.FileSplit;
 import org.junit.Test;
 
 import java.util.Arrays;

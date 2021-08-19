@@ -66,6 +66,8 @@ public abstract class Const {
 
     public static final String SPACE_4 = "    ";
 
+    public static final String OMIT = "...";
+
     // -------------------- charset --------------------
 
     public static final String ASCII = "US-ASCII";

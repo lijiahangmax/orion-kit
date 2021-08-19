@@ -1,8 +1,10 @@
-package com.orion.utils.io;
+package com.orion.utils.io.split;
 
 import com.orion.constant.Const;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
+import com.orion.utils.io.Files1;
+import com.orion.utils.io.Streams;
 
 import java.io.File;
 import java.io.FileOutputStream;

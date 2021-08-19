@@ -1,6 +1,6 @@
 package com.orion.test;
 
-import com.orion.utils.io.FileCompress;
+import com.orion.utils.io.compress.FileCompress;
 import org.junit.Test;
 
 /**

@@ -1,8 +1,10 @@
-package com.orion.utils.io;
+package com.orion.utils.io.compress;
 
 import com.orion.constant.Const;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
+import com.orion.utils.io.Files1;
+import com.orion.utils.io.Streams;
 
 import java.io.*;
 import java.util.Enumeration;
@@ -55,7 +57,7 @@ public class FileCompress {
     public static String compress(File file, String dest, String format) {
         format = Strings.def(format, Const.SUFFIX_ZIP);
         if (!file.exists()) {
-            throw Exceptions.runtime("File not found " + file);
+            throw Exceptions.runtime("file not found " + file);
         }
         if (Strings.isBlank(dest)) {
             dest = file.getAbsolutePath() + "." + format;
@@ -125,7 +127,7 @@ public class FileCompress {
      */
     public static String unCompress(File file, String destPath) {
         if (!file.exists()) {
-            throw Exceptions.runtime("File not found " + file);
+            throw Exceptions.runtime("file not found " + file);
         }
         if (Strings.isBlank(destPath)) {
             String name = file.getName();
