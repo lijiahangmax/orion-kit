@@ -69,6 +69,21 @@ public enum FakerType {
      */
     LICENSE_PLATE,
 
+    /**
+     * 社会统一信用代码
+     */
+    COMPANY_CREDIT_CODE,
+
+    /**
+     * 公司名称
+     */
+    COMPANY_NAME,
+
+    /**
+     * 常用ip
+     */
+    IP,
+
     ;
 
     public static final FakerType[] BASE = {NAME, MOBILE, EMAIL, ADDRESS, ID_CARD};

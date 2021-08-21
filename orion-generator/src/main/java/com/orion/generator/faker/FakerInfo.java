@@ -194,6 +194,21 @@ public class FakerInfo implements Serializable {
      */
     private String industry;
 
+    /**
+     * 社会统一信用代码
+     */
+    private String companyCreditCode;
+
+    /**
+     * 公司名称
+     */
+    private String companyName;
+
+    /**
+     * ip
+     */
+    private String ip;
+
     public String getName() {
         return name;
     }
@@ -480,6 +495,30 @@ public class FakerInfo implements Serializable {
 
     public void setIndustry(String industry) {
         this.industry = industry;
+    }
+
+    public String getCompanyCreditCode() {
+        return companyCreditCode;
+    }
+
+    public void setCompanyCreditCode(String companyCreditCode) {
+        this.companyCreditCode = companyCreditCode;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 
 }

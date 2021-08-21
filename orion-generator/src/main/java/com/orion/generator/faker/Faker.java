@@ -5,6 +5,7 @@ import com.orion.generator.addres.AddressSupport;
 import com.orion.generator.bank.BankCardGenerator;
 import com.orion.generator.bank.BankCardType;
 import com.orion.generator.bank.BankNameType;
+import com.orion.generator.company.CompanyGenerator;
 import com.orion.generator.education.EducationGenerator;
 import com.orion.generator.education.UniversityGenerator;
 import com.orion.generator.email.EmailGenerator;
@@ -16,6 +17,8 @@ import com.orion.generator.name.NameGenerator;
 import com.orion.generator.plate.LicensePlateGenerator;
 import com.orion.lang.wrapper.Pair;
 import com.orion.utils.Arrays1;
+import com.orion.utils.identity.CreditCodes;
+import com.orion.utils.net.IPs;
 import com.orion.utils.random.Randoms;
 
 import java.util.Arrays;
@@ -84,14 +87,19 @@ public class Faker {
         Arrays.sort(types, Comparator.comparing(Enum::ordinal));
         for (FakerType type : types) {
             if (FakerType.NAME.equals(type)) {
+                // 中文名
                 fakerInfo.setName(NameGenerator.generatorName(gender));
             } else if (FakerType.EN_NAME.equals(type)) {
+                // 英文名
                 fakerInfo.setEnName(EnglishNameGenerator.generatorName());
             } else if (FakerType.MOBILE.equals(type)) {
+                // 手机号
                 fakerInfo.setMobile(MobileGenerator.generateMobile());
             } else if (FakerType.EMAIL.equals(type)) {
+                // 邮箱
                 fakerInfo.setEmail(EmailGenerator.generatorEmail());
             } else if (FakerType.ADDRESS.equals(type)) {
+                // 住址
                 Integer provinceCode = AddressSupport.randomProvinceCode();
                 Integer cityCode = AddressSupport.randomCityCode(provinceCode);
                 Integer countyCode = AddressSupport.randomCountyCode(cityCode);
@@ -107,7 +115,14 @@ public class Faker {
                 fakerInfo.setAddress(address);
                 fakerInfo.setDetailAddress(detailAddress);
             } else if (FakerType.ID_CARD.equals(type)) {
-                String idCard = IdCardGenerator.generator(age, gender);
+                // 身份证
+                String idCard;
+                if (fakerInfo.getProvinceCode() != null && Randoms.randomBoolean()) {
+                    Integer countyCode = AddressSupport.randomCountyCode(AddressSupport.randomCityCode(fakerInfo.getProvinceCode()));
+                    idCard = IdCardGenerator.generator(countyCode.toString(), age, gender);
+                } else {
+                    idCard = IdCardGenerator.generator(age, gender);
+                }
                 String fullAddress = IdCardGenerator.getFullAddress(idCard);
                 String issueOrg = IdCardGenerator.getIssueOrg(idCard);
                 String periodString = IdCardGenerator.getPeriodString(idCard);
@@ -127,36 +142,67 @@ public class Faker {
                 fakerInfo.setIdCardCountryCode(codeExt[2]);
                 fakerInfo.setIdCardCountryName(addressExt[2]);
             } else if (FakerType.DEBIT_CARD.equals(type)) {
+                // 储蓄卡
                 Pair<BankNameType, String> bankPair = BankCardGenerator.generatorCard(BankCardType.DEBIT);
                 fakerInfo.setDebitCardNo(bankPair.getValue());
                 fakerInfo.setDebitBankCode(bankPair.getKey().getCode());
                 fakerInfo.setDebitBankName(bankPair.getKey().getName());
             } else if (FakerType.CREDIT_CARD.equals(type)) {
+                // 信用卡
                 Pair<BankNameType, String> bankPair = BankCardGenerator.generatorCard(BankCardType.CREDIT);
                 fakerInfo.setCreditCardNo(bankPair.getValue());
                 fakerInfo.setCreditBankCode(bankPair.getKey().getCode());
                 fakerInfo.setCreditBankName(bankPair.getKey().getName());
             } else if (FakerType.EDUCATION.equals(type)) {
+                // 学历
                 String education = EducationGenerator.generatorEducation(age);
                 fakerInfo.setEducation(education);
             } else if (FakerType.UNIVERSITY.equals(type)) {
+                // 高校名称
                 String university = Optional.ofNullable(fakerInfo.getEducation())
                         .map(UniversityGenerator::generatorUniversity)
                         .orElseGet(UniversityGenerator::generatorUniversity);
                 fakerInfo.setUniversity(university);
             } else if (FakerType.INDUSTRY.equals(type)) {
+                // 行业
                 String industry = IndustryGenerator.generatorIndustry(age);
                 fakerInfo.setIndustry(industry);
             } else if (FakerType.LICENSE_PLATE.equals(type)) {
+                // 车牌号
                 String licensePlate;
-                if (fakerInfo.getIdCardProvinceCode() != null) {
-                    licensePlate = LicensePlateGenerator.generator(fakerInfo.getIdCardProvinceCode());
-                } else if (fakerInfo.getProvinceCode() != null) {
+                if (fakerInfo.getProvinceCode() != null) {
                     licensePlate = LicensePlateGenerator.generator(fakerInfo.getProvinceCode());
+                } else if (fakerInfo.getIdCardProvinceCode() != null) {
+                    licensePlate = LicensePlateGenerator.generator(fakerInfo.getIdCardProvinceCode());
                 } else {
                     licensePlate = LicensePlateGenerator.generator();
                 }
                 fakerInfo.setLicensePlate(licensePlate);
+            } else if (FakerType.COMPANY_CREDIT_CODE.equals(type)) {
+                // 社会统一信用代码
+                fakerInfo.setCompanyCreditCode(CreditCodes.random());
+            } else if (FakerType.COMPANY_NAME.equals(type)) {
+                // 公司名称
+                int provinceCode;
+                String managementType;
+                // 省编码
+                if (fakerInfo.getProvinceCode() != null) {
+                    provinceCode = fakerInfo.getProvinceCode();
+                } else if (fakerInfo.getIdCardProvinceCode() != null) {
+                    provinceCode = fakerInfo.getIdCardProvinceCode();
+                } else {
+                    provinceCode = AddressSupport.randomProvinceCode();
+                }
+                // 行业经营类型
+                if (fakerInfo.getIndustry() != null) {
+                    managementType = IndustryGenerator.generatorManagementType(fakerInfo.getIndustry());
+                } else {
+                    managementType = IndustryGenerator.generatorManagementType(age);
+                }
+                fakerInfo.setCompanyName(CompanyGenerator.generatorCompanyName(provinceCode, managementType));
+            } else if (FakerType.IP.equals(type)) {
+                // ip
+                fakerInfo.setIp(IPs.randomIp());
             }
         }
         return fakerInfo;
