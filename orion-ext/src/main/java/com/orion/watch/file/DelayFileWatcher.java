@@ -1,5 +1,6 @@
 package com.orion.watch.file;
 
+import com.orion.constant.Const;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Threads;
 import com.orion.utils.Valid;
@@ -46,11 +47,11 @@ public class DelayFileWatcher extends FileWatcher {
     private volatile boolean run;
 
     public DelayFileWatcher(EventHandler handler, FileWatchEvent... events) {
-        this(5000, handler, events);
+        this(Const.MS_S_5, handler, events);
     }
 
     public DelayFileWatcher(int delayMillis, EventHandler handler, FileWatchEvent... events) {
-        Valid.notNull(handler, "Event handler is null");
+        Valid.notNull(handler, "event handler is null");
         this.delayMillis = delayMillis;
         this.eventHandler = handler;
         this.events = Arrays1.def(events, FileWatchEvent.ALL);
@@ -142,7 +143,7 @@ public class DelayFileWatcher extends FileWatcher {
 
     @Override
     public void watch() {
-        run = true;
+        this.run = true;
         while (run) {
             for (File file : watchKeys.keySet()) {
                 FileAttribute currAttr = Files1.getAttribute(file);
@@ -180,7 +181,7 @@ public class DelayFileWatcher extends FileWatcher {
 
     @Override
     public void stop() {
-        run = false;
+        this.run = false;
     }
 
     @Override

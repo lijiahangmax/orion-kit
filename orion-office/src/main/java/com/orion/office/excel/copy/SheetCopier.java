@@ -10,15 +10,15 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 
 /**
- * 拷贝Sheet, 拷贝的列宽有些许差异
+ * 拷贝Sheet
+ * 只能拷贝简单的对象 拷贝的列宽有些许差异
  * Streaming不适用
- * 只能拷贝基本元素
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/6/4 12:03
  */
-public class CopySheet {
+public class SheetCopier {
 
     /**
      * 源workbook
@@ -45,7 +45,7 @@ public class CopySheet {
      */
     private int column = 32;
 
-    public CopySheet(Workbook sourceWorkbook, Workbook targetWorkbook, Sheet sourceSheet, Sheet targetSheet) {
+    public SheetCopier(Workbook sourceWorkbook, Workbook targetWorkbook, Sheet sourceSheet, Sheet targetSheet) {
         Valid.notNull(sourceWorkbook, "sourceWorkbook is null");
         Valid.notNull(targetWorkbook, "targetWorkbook is null");
         Valid.notNull(sourceSheet, "sourceSheet is null");
@@ -62,7 +62,7 @@ public class CopySheet {
      */
     public void copy() {
         this.copyWorkbookColor();
-        this.copySheet();
+        this.copySheetStyle();
         this.copyMargin();
         this.copyPrint();
         for (Row source : sourceSheet) {
@@ -78,7 +78,7 @@ public class CopySheet {
      * @param column 列数
      * @return this
      */
-    public CopySheet setColumn(int column) {
+    public SheetCopier setColumn(int column) {
         this.column = column;
         return this;
     }
@@ -86,7 +86,7 @@ public class CopySheet {
     /**
      * 复制sheet属性
      */
-    private void copySheet() {
+    private void copySheetStyle() {
         targetSheet.setDefaultColumnWidth(sourceSheet.getDefaultColumnWidth());
         targetSheet.setDefaultRowHeight(sourceSheet.getDefaultRowHeight());
         targetSheet.setFitToPage(sourceSheet.getFitToPage());

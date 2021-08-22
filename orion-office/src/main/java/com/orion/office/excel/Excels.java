@@ -4,7 +4,7 @@ import com.monitorjbl.xlsx.StreamingReader;
 import com.monitorjbl.xlsx.impl.StreamingSheet;
 import com.monitorjbl.xlsx.impl.StreamingWorkbook;
 import com.orion.constant.Const;
-import com.orion.office.excel.copy.CopySheet;
+import com.orion.office.excel.copy.SheetCopier;
 import com.orion.office.excel.option.*;
 import com.orion.office.excel.picture.PictureParser;
 import com.orion.office.excel.style.FontStream;
@@ -1793,10 +1793,10 @@ public class Excels {
      * @param resourceIndex    源sheet索引
      * @return CopySheet
      */
-    public static CopySheet copySheet(Workbook resourceWorkbook, Workbook targetWorkbook, int resourceIndex) {
+    public static SheetCopier copySheet(Workbook resourceWorkbook, Workbook targetWorkbook, int resourceIndex) {
         Sheet resourceSheet = resourceWorkbook.getSheetAt(resourceIndex);
         Sheet targetSheet = targetWorkbook.createSheet(resourceSheet.getSheetName());
-        return new CopySheet(resourceWorkbook, targetWorkbook, resourceSheet, targetSheet);
+        return new SheetCopier(resourceWorkbook, targetWorkbook, resourceSheet, targetSheet);
     }
 
     /**
@@ -1808,7 +1808,7 @@ public class Excels {
      * @param targetIndex      目标sheet索引
      * @return CopySheet
      */
-    public static CopySheet copySheet(Workbook resourceWorkbook, Workbook targetWorkbook, int resourceIndex, int targetIndex) {
+    public static SheetCopier copySheet(Workbook resourceWorkbook, Workbook targetWorkbook, int resourceIndex, int targetIndex) {
         Sheet resourceSheet = resourceWorkbook.getSheetAt(resourceIndex);
         Sheet targetSheet;
         try {
@@ -1816,7 +1816,7 @@ public class Excels {
         } catch (Exception e) {
             targetSheet = targetWorkbook.createSheet(resourceSheet.getSheetName());
         }
-        return new CopySheet(resourceWorkbook, targetWorkbook, resourceSheet, targetSheet);
+        return new SheetCopier(resourceWorkbook, targetWorkbook, resourceSheet, targetSheet);
     }
 
     // -------------------- open --------------------

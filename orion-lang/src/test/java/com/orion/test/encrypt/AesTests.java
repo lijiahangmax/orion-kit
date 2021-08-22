@@ -3,6 +3,7 @@ package com.orion.test.encrypt;
 import com.orion.utils.crypto.AES;
 import com.orion.utils.crypto.Keys;
 import com.orion.utils.crypto.enums.CipherAlgorithm;
+import org.junit.Test;
 
 import javax.crypto.SecretKey;
 
@@ -13,11 +14,8 @@ import javax.crypto.SecretKey;
  */
 public class AesTests {
 
-    public static void main(String[] args) {
-        e();
-    }
-
-    private static void e() {
+    @Test
+    public void e() {
         String s = "123";
         String k1 = "123";
         String k2 = "345";

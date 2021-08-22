@@ -100,6 +100,12 @@ public abstract class Const {
 
     // -------------------- ms --------------------
 
+    public static final int MS_100 = 100;
+
+    public static final int MS_300 = 300;
+
+    public static final int MS_500 = 500;
+
     public static final int MS_S_1 = 1000;
 
     public static final int MS_S_2 = 1000 * 2;

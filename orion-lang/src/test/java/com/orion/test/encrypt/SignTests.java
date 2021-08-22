@@ -2,6 +2,7 @@ package com.orion.test.encrypt;
 
 import com.orion.utils.crypto.Signatures;
 import com.orion.utils.io.Files1;
+import org.junit.Test;
 
 import java.io.File;
 
@@ -12,11 +13,8 @@ import java.io.File;
  */
 public class SignTests {
 
-    public static void main(String[] args) {
-        e();
-    }
-
-    private static void e() {
+    @Test
+    public void e() {
         String s = "123";
         System.out.println("Signatures.md5(s) = " + Signatures.md5(s));
         System.out.println("Signatures.md5(s, \"salt\") = " + Signatures.md5(s, "salt"));

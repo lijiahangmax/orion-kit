@@ -5,6 +5,7 @@ import com.orion.utils.Strings;
 import com.orion.utils.crypto.Keys;
 import com.orion.utils.crypto.RSA;
 import com.orion.utils.crypto.enums.RSASignature;
+import org.junit.Test;
 
 import java.io.File;
 import java.security.PrivateKey;
@@ -31,13 +32,8 @@ public class RsaTests {
     private static Args.Two<RSAPublicKey, RSAPrivateKey> keys1 = RSA.generatorKeys(512);
     private static Args.Two<PublicKey, PrivateKey> keys2 = Keys.getPfxKeys(new File("C:\\Users\\ljh15\\Desktop\\key\\openssl.pfx"), "123456");
 
-    public static void main(String[] args) {
-        key();
-        ed();
-        pfx();
-    }
-
-    private static void ed() {
+    @Test
+    public void ed() {
         String d = "123";
         String e = RSA.encrypt(d, pub);
         String e1 = "J9Idok39JBzp+y8jHTxoTBrHwQ4lQFFGklTwMRMQKvnLyRvRZmmraDogzqKgIPihdveMdxauPRh+JitmTHdSBEsVwl2if5gjtL8Dndpqp9CiwzJMTmeq0ncGcsqHSMg3E+s/d4ZKctY/LL4O5u6Btu2KYF6CtVuegQS/Ohe6kjE=";
@@ -71,7 +67,8 @@ public class RsaTests {
         System.out.println("V6: " + v6);
     }
 
-    private static void pfx() {
+    @Test
+    public void pfx() {
         String d = "123";
         String e = RSA.encrypt(d, keys2.getArg1());
         String sign1 = RSA.sign(d, keys2.getArg2(), RSASignature.MD5);
@@ -83,7 +80,8 @@ public class RsaTests {
         System.out.println(v1);
     }
 
-    private static void key() {
+    @Test
+    public void key() {
         System.out.println(publicKey);
         System.out.println(privateKey);
         System.out.println(RSA.getPublicKey(privateKey));

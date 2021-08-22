@@ -2,6 +2,7 @@ package com.orion.test.encrypt;
 
 import com.orion.utils.crypto.DES;
 import com.orion.utils.crypto.DES3;
+import org.junit.Test;
 
 /**
  * @author Jiahang Li
@@ -10,7 +11,8 @@ import com.orion.utils.crypto.DES3;
  */
 public class DesTests {
 
-    public static void main(String[] args) {
+    @Test
+    public void g1() {
         String e = DES.encrypt("123", "a", "1");
         String e1 = DES.encrypt("123", "a");
         String e2 = DES3.encrypt("123", "a", "1");
