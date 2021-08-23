@@ -60,6 +60,26 @@ public class AddressSupport {
     }
 
     /**
+     * 获取省名称
+     *
+     * @param provinceCode provinceCode
+     * @return 省名称
+     */
+    public static String getProvinceName(int provinceCode) {
+        return AddressArea.PROVINCE.get(provinceCode);
+    }
+
+    /**
+     * 获取市名称
+     *
+     * @param cityCode cityCode
+     * @return 市名称
+     */
+    public static String getCityName(int cityCode) {
+        return AddressArea.CITY.get(cityCode);
+    }
+
+    /**
      * 获取县名称
      *
      * @param countyCode countyCode

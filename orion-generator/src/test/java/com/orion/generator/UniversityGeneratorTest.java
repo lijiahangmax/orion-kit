@@ -1,7 +1,7 @@
 package com.orion.generator;
 
+import com.orion.generator.education.EducationGenerator;
 import com.orion.generator.education.UniversityGenerator;
-import com.orion.generator.info.InformationGenerator;
 import org.junit.Test;
 
 /**
@@ -35,7 +35,7 @@ public class UniversityGeneratorTest {
     @Test
     public void gen5() {
         for (int i = 0; i < 30; i++) {
-            String edu = InformationGenerator.generatorEducation();
+            String edu = EducationGenerator.generatorEducation();
             System.out.println(edu + " " + UniversityGenerator.generatorUniversity(edu));
         }
     }

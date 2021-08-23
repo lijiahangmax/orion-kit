@@ -40,7 +40,7 @@ public class UniversityGenerator {
         };
 
         UNIVERSITY_HIGH_SUFFIX = new String[]{
-                "理工大学", "航天大学", "学院", "艺术大学", "体育大学", "医药大学", "化工大学",
+                "理工大学", "航天大学", "艺术大学", "体育大学", "医药大学", "化工大学",
                 "师范大学", "交通大学", "传媒大学", "医药大学", "政法大学", "财经大学",
                 "经贸大学", "农业大学", "科技大学", "大学"
         };
@@ -49,12 +49,12 @@ public class UniversityGenerator {
                 "职业技术学院", "工程职业学院", "职业学院", "高等专科学校", "职业大学", "高等专科学校"
         };
 
-        UNIVERSITY_LOW_EDUCATION = new String[]{
-                "中技", "中专", "专科"
-        };
-
         UNIVERSITY_HIGH_EDUCATION = new String[]{
                 "本科", "硕士", "博士", "研究生"
+        };
+
+        UNIVERSITY_LOW_EDUCATION = new String[]{
+                "专科"
         };
     }
 

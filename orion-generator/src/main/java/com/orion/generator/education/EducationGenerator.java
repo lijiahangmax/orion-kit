@@ -1,23 +1,24 @@
-package com.orion.generator.info;
+package com.orion.generator.education;
 
+import com.orion.lang.collect.WeightRandomMap;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Strings;
 import com.orion.utils.random.Randoms;
 
 /**
- * 信息生成器
+ * 学历生成器
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/8/13 17:13
  */
-public class InformationGenerator {
+public class EducationGenerator {
 
     private static final String[] EDUCATION;
 
-    private static final String[] INDUSTRY;
+    private static final WeightRandomMap<String> EDUCATION_WEIGHT;
 
-    private InformationGenerator() {
+    private EducationGenerator() {
     }
 
     static {
@@ -25,7 +26,19 @@ public class InformationGenerator {
     }
 
     static {
-        INDUSTRY = new String[]{"计算机", "互联网", "通信", "生产", "工艺", "制造", "医疗", "护理", "制药", "金融", "银行", "投资", "保险", "商业", "服务业", "个体经营", "文化", "广告", "传媒", "娱乐", "艺术", "表演", "律师", "法务", "培训", "教育", "公务员", "行政", "事业单位", "模特", "学生", "其他"};
+        EDUCATION_WEIGHT = new WeightRandomMap<>();
+        EDUCATION_WEIGHT.put(EDUCATION[0], 5);
+        EDUCATION_WEIGHT.put(EDUCATION[1], 20);
+        EDUCATION_WEIGHT.put(EDUCATION[2], 40);
+        EDUCATION_WEIGHT.put(EDUCATION[3], 30);
+        EDUCATION_WEIGHT.put(EDUCATION[4], 20);
+        EDUCATION_WEIGHT.put(EDUCATION[5], 10);
+        EDUCATION_WEIGHT.put(EDUCATION[6], 10);
+        EDUCATION_WEIGHT.put(EDUCATION[7], 15);
+        EDUCATION_WEIGHT.put(EDUCATION[8], 10);
+        EDUCATION_WEIGHT.put(EDUCATION[9], 5);
+        EDUCATION_WEIGHT.put(EDUCATION[10], 5);
+        EDUCATION_WEIGHT.put(EDUCATION[11], 5);
     }
 
     /**
@@ -66,29 +79,7 @@ public class InformationGenerator {
      * @return 学历
      */
     public static String generatorEducation() {
-        return Arrays1.random(EDUCATION);
-    }
-
-    /**
-     * 随机生成一个行业
-     *
-     * @param age age
-     * @return 行业
-     */
-    public static String generatorIndustry(int age) {
-        if (age <= 18) {
-            return Strings.EMPTY;
-        }
-        return Arrays1.random(INDUSTRY);
-    }
-
-    /**
-     * 随机生成一个行业
-     *
-     * @return 行业
-     */
-    public static String generatorIndustry() {
-        return Arrays1.random(INDUSTRY);
+        return EDUCATION_WEIGHT.next();
     }
 
 }

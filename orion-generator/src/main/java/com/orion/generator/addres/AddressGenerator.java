@@ -222,7 +222,8 @@ public class AddressGenerator {
             } else if (no == 1) {
                 sb.append(Randoms.randomInt(50) + 1)
                         .append('-')
-                        .append(Randoms.randomInt(400) + 1);
+                        .append(Randoms.randomInt(400) + 1)
+                        .append("号");
             }
         }
         return sb.toString();
