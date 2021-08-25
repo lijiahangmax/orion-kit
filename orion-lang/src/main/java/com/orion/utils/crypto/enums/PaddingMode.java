@@ -15,9 +15,24 @@ public enum PaddingMode {
     PKCS5_PADDING("PKCS5Padding"),
 
     /**
+     * PKCS7
+     */
+    PKCS7_PADDING("PKCS7Padding"),
+
+    /**
      * ISO10126
      */
     ISO_10126_PADDING("ISO10126Padding"),
+
+    /**
+     * ANSI_X_923_PADDING
+     */
+    ANSI_X_923_PADDING("X9.23PADDING"),
+
+    /**
+     * SSL3Padding
+     */
+    SSL3_PADDING("SSL3Padding"),
 
     /**
      * 不填充

@@ -12,7 +12,7 @@ import java.security.MessageDigest;
  * @version 1.0.0
  * @since 2020/9/28 15:59
  */
-public enum HashMessageDigest {
+public enum HashDigest {
 
     /**
      * MD5
@@ -44,7 +44,7 @@ public enum HashMessageDigest {
      */
     SHA512("SHA-512");
 
-    HashMessageDigest(String digest) {
+    HashDigest(String digest) {
         this.digest = digest;
     }
 
@@ -66,8 +66,8 @@ public enum HashMessageDigest {
         if (Strings.isBlank(digest)) {
             return null;
         }
-        HashMessageDigest[] values = values();
-        for (HashMessageDigest value : values) {
+        HashDigest[] values = values();
+        for (HashDigest value : values) {
             if (value.getDigest().equalsIgnoreCase(digest.trim())) {
                 return value.getMessageDigest();
             }
