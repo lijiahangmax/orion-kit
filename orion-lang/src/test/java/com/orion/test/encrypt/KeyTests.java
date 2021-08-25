@@ -2,6 +2,7 @@ package com.orion.test.encrypt;
 
 import com.orion.lang.wrapper.Args;
 import com.orion.utils.crypto.Keys;
+import org.junit.Test;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -13,7 +14,8 @@ import java.security.PublicKey;
  */
 public class KeyTests {
 
-    public static void main(String[] args) {
+    @Test
+    public void test1() {
         String k1 = Keys.getKey("C:\\Users\\ljh15\\Desktop\\key\\rsa_public.pem");
         String k2 = Keys.getKey("C:\\Users\\ljh15\\Desktop\\key\\rsa_private_pkcs8.pem");
         PublicKey k3 = Keys.getCerPublicKey("C:\\Users\\ljh15\\Desktop\\key\\openssl.cer");
@@ -25,7 +27,6 @@ public class KeyTests {
         System.out.println("k3 = " + k3);
         System.out.println("k4 = " + k4);
         System.out.println("k5 = " + k5);
-
     }
 
 }

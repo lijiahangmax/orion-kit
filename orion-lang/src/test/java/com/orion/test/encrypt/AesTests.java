@@ -1,8 +1,11 @@
 package com.orion.test.encrypt;
 
+import com.orion.utils.Strings;
+import com.orion.utils.Valid;
 import com.orion.utils.crypto.AES;
 import com.orion.utils.crypto.Keys;
 import com.orion.utils.crypto.enums.CipherAlgorithm;
+import com.orion.utils.random.Randoms;
 import org.junit.Test;
 
 import javax.crypto.SecretKey;
@@ -56,7 +59,19 @@ public class AesTests {
         System.out.println();
         System.out.println("g1 = " + g1);
         System.out.println("g2 = " + g2);
+    }
 
+    @Test
+    public void test1() {
+        SecretKey key = Keys.generatorKey("key", CipherAlgorithm.AES);
+        for (int i = 0; i < 1000; i++) {
+            String s = Strings.randomChars(Randoms.randomInt(5, 20));
+            String enc = AES.encrypt(s, key);
+            System.out.println(enc);
+            String dec = AES.decrypt(enc, key);
+            System.out.println(dec);
+            Valid.isTrue(s.equals(dec));
+        }
     }
 
 }

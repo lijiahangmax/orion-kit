@@ -1,8 +1,15 @@
 package com.orion.test.encrypt;
 
+import com.orion.utils.Strings;
+import com.orion.utils.Valid;
 import com.orion.utils.crypto.DES;
 import com.orion.utils.crypto.DES3;
+import com.orion.utils.crypto.Keys;
+import com.orion.utils.crypto.enums.CipherAlgorithm;
+import com.orion.utils.random.Randoms;
 import org.junit.Test;
+
+import javax.crypto.SecretKey;
 
 /**
  * @author Jiahang Li
@@ -29,6 +36,32 @@ public class DesTests {
         System.out.println(d1);
         System.out.println(d2);
         System.out.println(d3);
+    }
+
+    @Test
+    public void test1() {
+        SecretKey key = Keys.generatorKey("key", CipherAlgorithm.DES);
+        for (int i = 0; i < 1000; i++) {
+            String s = Strings.randomChars(Randoms.randomInt(5, 20));
+            String enc = DES.encrypt(s, key);
+            System.out.println(enc);
+            String dec = DES.decrypt(enc, key);
+            System.out.println(dec);
+            Valid.isTrue(s.equals(dec));
+        }
+    }
+
+    @Test
+    public void test2() {
+        SecretKey key = Keys.generatorKey("key", CipherAlgorithm.DES3);
+        for (int i = 0; i < 1000; i++) {
+            String s = Strings.randomChars(Randoms.randomInt(5, 20));
+            String enc = DES3.encrypt(s, key);
+            System.out.println(enc);
+            String dec = DES3.decrypt(enc, key);
+            System.out.println(dec);
+            Valid.isTrue(s.equals(dec));
+        }
     }
 
 }
