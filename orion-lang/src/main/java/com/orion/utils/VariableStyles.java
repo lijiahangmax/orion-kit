@@ -287,9 +287,7 @@ public enum VariableStyles {
      * @param variable 变量
      * @return ignore
      */
-    public String toSmallHump(String variable) {
-        throw Exceptions.unsupported();
-    }
+    public abstract String toSmallHump(String variable);
 
     /**
      * 转为大驼峰命名
@@ -297,9 +295,7 @@ public enum VariableStyles {
      * @param variable 变量
      * @return ignore
      */
-    public String toBigHump(String variable) {
-        throw Exceptions.unsupported();
-    }
+    public abstract String toBigHump(String variable);
 
     /**
      * 转为蛇形命名
@@ -307,9 +303,7 @@ public enum VariableStyles {
      * @param variable 变量
      * @return ignore
      */
-    public String toSerpentine(String variable) {
-        throw Exceptions.unsupported();
-    }
+    public abstract String toSerpentine(String variable);
 
     /**
      * 转为脊柱命名
@@ -317,9 +311,7 @@ public enum VariableStyles {
      * @param variable 变量
      * @return ignore
      */
-    public String toSpine(String variable) {
-        throw Exceptions.unsupported();
-    }
+    public abstract String toSpine(String variable);
 
 }
 

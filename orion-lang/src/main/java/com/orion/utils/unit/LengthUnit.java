@@ -1,7 +1,5 @@
 package com.orion.utils.unit;
 
-import com.orion.utils.Exceptions;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -23,35 +21,35 @@ public enum LengthUnit {
     MM {
         @Override
         public BigDecimal toMillimetre(BigDecimal u) {
-            return u.setScale(scale, roundModel);
+            return u.setScale(SCALE, ROUND_MODEL);
         }
 
         @Override
         public BigDecimal toCentimeter(BigDecimal u) {
-            return u.setScale(scale, roundModel)
-                    .divide(TEN, roundModel);
+            return u.setScale(SCALE, ROUND_MODEL)
+                    .divide(TEN, ROUND_MODEL);
         }
 
         @Override
         public BigDecimal toDecimetre(BigDecimal u) {
-            return u.setScale(scale, roundModel)
-                    .divide(TEN, roundModel)
-                    .divide(TEN, roundModel);
+            return u.setScale(SCALE, ROUND_MODEL)
+                    .divide(TEN, ROUND_MODEL)
+                    .divide(TEN, ROUND_MODEL);
         }
 
         @Override
         public BigDecimal toMetre(BigDecimal u) {
-            return u.setScale(scale, roundModel)
-                    .divide(TEN, roundModel)
-                    .divide(HUNDRED, roundModel);
+            return u.setScale(SCALE, ROUND_MODEL)
+                    .divide(TEN, ROUND_MODEL)
+                    .divide(HUNDRED, ROUND_MODEL);
         }
 
         @Override
         public BigDecimal toKilometre(BigDecimal u) {
-            return u.setScale(scale, roundModel)
-                    .divide(TEN, roundModel)
-                    .divide(HUNDRED, roundModel)
-                    .divide(THOUSAND, roundModel);
+            return u.setScale(SCALE, ROUND_MODEL)
+                    .divide(TEN, ROUND_MODEL)
+                    .divide(HUNDRED, ROUND_MODEL)
+                    .divide(THOUSAND, ROUND_MODEL);
         }
     },
 
@@ -61,32 +59,32 @@ public enum LengthUnit {
     CM {
         @Override
         public BigDecimal toMillimetre(BigDecimal u) {
-            return u.setScale(scale, roundModel)
+            return u.setScale(SCALE, ROUND_MODEL)
                     .multiply(TEN);
         }
 
         @Override
         public BigDecimal toCentimeter(BigDecimal u) {
-            return u.setScale(scale, roundModel);
+            return u.setScale(SCALE, ROUND_MODEL);
         }
 
         @Override
         public BigDecimal toDecimetre(BigDecimal u) {
-            return u.setScale(scale, roundModel)
-                    .divide(TEN, roundModel);
+            return u.setScale(SCALE, ROUND_MODEL)
+                    .divide(TEN, ROUND_MODEL);
         }
 
         @Override
         public BigDecimal toMetre(BigDecimal u) {
-            return u.setScale(scale, roundModel)
-                    .divide(HUNDRED, roundModel);
+            return u.setScale(SCALE, ROUND_MODEL)
+                    .divide(HUNDRED, ROUND_MODEL);
         }
 
         @Override
         public BigDecimal toKilometre(BigDecimal u) {
-            return u.setScale(scale, roundModel)
-                    .divide(HUNDRED, roundModel)
-                    .divide(THOUSAND, roundModel);
+            return u.setScale(SCALE, ROUND_MODEL)
+                    .divide(HUNDRED, ROUND_MODEL)
+                    .divide(THOUSAND, ROUND_MODEL);
         }
     },
 
@@ -96,32 +94,32 @@ public enum LengthUnit {
     DM {
         @Override
         public BigDecimal toMillimetre(BigDecimal u) {
-            return u.setScale(scale, roundModel)
+            return u.setScale(SCALE, ROUND_MODEL)
                     .multiply(HUNDRED);
         }
 
         @Override
         public BigDecimal toCentimeter(BigDecimal u) {
-            return u.setScale(scale, roundModel)
+            return u.setScale(SCALE, ROUND_MODEL)
                     .multiply(TEN);
         }
 
         @Override
         public BigDecimal toDecimetre(BigDecimal u) {
-            return u.setScale(scale, roundModel);
+            return u.setScale(SCALE, ROUND_MODEL);
         }
 
         @Override
         public BigDecimal toMetre(BigDecimal u) {
-            return u.setScale(scale, roundModel)
-                    .divide(TEN, roundModel);
+            return u.setScale(SCALE, ROUND_MODEL)
+                    .divide(TEN, ROUND_MODEL);
         }
 
         @Override
         public BigDecimal toKilometre(BigDecimal u) {
-            return u.setScale(scale, roundModel)
-                    .divide(TEN, roundModel)
-                    .divide(THOUSAND, roundModel);
+            return u.setScale(SCALE, ROUND_MODEL)
+                    .divide(TEN, ROUND_MODEL)
+                    .divide(THOUSAND, ROUND_MODEL);
         }
     },
 
@@ -131,32 +129,32 @@ public enum LengthUnit {
     M {
         @Override
         public BigDecimal toMillimetre(BigDecimal u) {
-            return u.setScale(scale, roundModel)
+            return u.setScale(SCALE, ROUND_MODEL)
                     .multiply(HUNDRED)
                     .multiply(TEN);
         }
 
         @Override
         public BigDecimal toCentimeter(BigDecimal u) {
-            return u.setScale(scale, roundModel)
+            return u.setScale(SCALE, ROUND_MODEL)
                     .multiply(HUNDRED);
         }
 
         @Override
         public BigDecimal toDecimetre(BigDecimal u) {
-            return u.setScale(scale, roundModel)
+            return u.setScale(SCALE, ROUND_MODEL)
                     .multiply(TEN);
         }
 
         @Override
         public BigDecimal toMetre(BigDecimal u) {
-            return u.setScale(scale, roundModel);
+            return u.setScale(SCALE, ROUND_MODEL);
         }
 
         @Override
         public BigDecimal toKilometre(BigDecimal u) {
-            return u.setScale(scale, roundModel)
-                    .divide(THOUSAND, roundModel);
+            return u.setScale(SCALE, ROUND_MODEL)
+                    .divide(THOUSAND, ROUND_MODEL);
         }
     },
 
@@ -166,7 +164,7 @@ public enum LengthUnit {
     KM {
         @Override
         public BigDecimal toMillimetre(BigDecimal u) {
-            return u.setScale(scale, roundModel)
+            return u.setScale(SCALE, ROUND_MODEL)
                     .multiply(TEN)
                     .multiply(HUNDRED)
                     .multiply(THOUSAND);
@@ -174,27 +172,27 @@ public enum LengthUnit {
 
         @Override
         public BigDecimal toCentimeter(BigDecimal u) {
-            return u.setScale(scale, roundModel)
+            return u.setScale(SCALE, ROUND_MODEL)
                     .multiply(HUNDRED)
                     .multiply(THOUSAND);
         }
 
         @Override
         public BigDecimal toDecimetre(BigDecimal u) {
-            return u.setScale(scale, roundModel)
+            return u.setScale(SCALE, ROUND_MODEL)
                     .multiply(TEN)
                     .multiply(THOUSAND);
         }
 
         @Override
         public BigDecimal toMetre(BigDecimal u) {
-            return u.setScale(scale, roundModel)
+            return u.setScale(SCALE, ROUND_MODEL)
                     .multiply(THOUSAND);
         }
 
         @Override
         public BigDecimal toKilometre(BigDecimal u) {
-            return u.setScale(scale, roundModel);
+            return u.setScale(SCALE, ROUND_MODEL);
         }
     };
 
@@ -207,12 +205,12 @@ public enum LengthUnit {
     /**
      * 舍入模式
      */
-    private static RoundingMode roundModel = RoundingMode.FLOOR;
+    private static final RoundingMode ROUND_MODEL = RoundingMode.FLOOR;
 
     /**
      * 舍入精度
      */
-    private static int scale = 8;
+    private static final int SCALE = 8;
 
     /**
      * ? -> MM
@@ -230,9 +228,7 @@ public enum LengthUnit {
      * @param u unit
      * @return MM
      */
-    public BigDecimal toMillimetre(BigDecimal u) {
-        throw Exceptions.unsupported();
-    }
+    public abstract BigDecimal toMillimetre(BigDecimal u);
 
     /**
      * ? -> CM
@@ -250,9 +246,7 @@ public enum LengthUnit {
      * @param u unit
      * @return CM
      */
-    public BigDecimal toCentimeter(BigDecimal u) {
-        throw Exceptions.unsupported();
-    }
+    public abstract BigDecimal toCentimeter(BigDecimal u);
 
     /**
      * ? -> DM
@@ -270,9 +264,7 @@ public enum LengthUnit {
      * @param u unit
      * @return DM
      */
-    public BigDecimal toDecimetre(BigDecimal u) {
-        throw Exceptions.unsupported();
-    }
+    public abstract BigDecimal toDecimetre(BigDecimal u);
 
     /**
      * ? -> M
@@ -290,9 +282,7 @@ public enum LengthUnit {
      * @param u unit
      * @return M
      */
-    public BigDecimal toMetre(BigDecimal u) {
-        throw Exceptions.unsupported();
-    }
+    public abstract BigDecimal toMetre(BigDecimal u);
 
     /**
      * ? -> KM
@@ -310,8 +300,6 @@ public enum LengthUnit {
      * @param u unit
      * @return KM
      */
-    public BigDecimal toKilometre(BigDecimal u) {
-        throw Exceptions.unsupported();
-    }
+    public abstract BigDecimal toKilometre(BigDecimal u);
 
 }

@@ -1,7 +1,5 @@
 package com.orion.utils.unit;
 
-import com.orion.utils.Exceptions;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -165,9 +163,7 @@ public enum WeightUnit {
      * @param u unit
      * @return MG
      */
-    public BigDecimal toMilligram(BigDecimal u) {
-        throw Exceptions.unsupported();
-    }
+    public abstract BigDecimal toMilligram(BigDecimal u);
 
     /**
      * ? -> G
@@ -185,9 +181,7 @@ public enum WeightUnit {
      * @param u unit
      * @return G
      */
-    public BigDecimal toGram(BigDecimal u) {
-        throw Exceptions.unsupported();
-    }
+    public abstract BigDecimal toGram(BigDecimal u);
 
     /**
      * ? -> KG
@@ -205,9 +199,7 @@ public enum WeightUnit {
      * @param u unit
      * @return KG
      */
-    public BigDecimal toKilogram(BigDecimal u) {
-        throw Exceptions.unsupported();
-    }
+    public abstract BigDecimal toKilogram(BigDecimal u);
 
     /**
      * ? -> T
@@ -225,8 +217,6 @@ public enum WeightUnit {
      * @param u unit
      * @return T
      */
-    public BigDecimal toTon(BigDecimal u) {
-        throw Exceptions.unsupported();
-    }
+    public abstract BigDecimal toTon(BigDecimal u);
 
 }
