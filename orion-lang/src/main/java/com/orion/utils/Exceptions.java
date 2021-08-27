@@ -226,20 +226,68 @@ public class Exceptions {
         return new InvokeRuntimeException(s, t);
     }
 
+    public static ParseRuntimeException parse() {
+        return new ParseRuntimeException();
+    }
+
+    public static ParseRuntimeException parse(int index) {
+        return new ParseRuntimeException(index);
+    }
+
+    public static ParseRuntimeException parse(String s) {
+        return new ParseRuntimeException(s);
+    }
+
+    public static ParseRuntimeException parse(String s, int index) {
+        return new ParseRuntimeException(s, index);
+    }
+
+    public static ParseRuntimeException parse(Throwable t) {
+        return new ParseRuntimeException(t);
+    }
+
+    public static ParseRuntimeException parse(int index, Throwable t) {
+        return new ParseRuntimeException(index, t);
+    }
+
+    public static ParseRuntimeException parse(String s, Throwable t) {
+        return new ParseRuntimeException(s, t);
+    }
+
+    public static ParseRuntimeException parse(String s, int index, Throwable t) {
+        return new ParseRuntimeException(s, index, t);
+    }
+
     public static ParseDateException parseDate() {
         return new ParseDateException();
     }
 
-    public static ParseDateException parseDate(Throwable t) {
-        return new ParseDateException(t);
+    public static ParseDateException parseDate(int index) {
+        return new ParseDateException(index);
     }
 
     public static ParseDateException parseDate(String s) {
         return new ParseDateException(s);
     }
 
-    public static ParseDateException parseDate(String s, Throwable t) {
-        return new ParseDateException(s, t);
+    public static ParseDateException parseDate(String s, int index) {
+        return new ParseDateException(s, index);
+    }
+
+    public static ParseCronException parseCron() {
+        return new ParseCronException();
+    }
+
+    public static ParseCronException parseCron(int index) {
+        return new ParseCronException(index);
+    }
+
+    public static ParseCronException parseCron(String s) {
+        return new ParseCronException(s);
+    }
+
+    public static ParseCronException parseCron(String s, int index) {
+        return new ParseCronException(s, index);
     }
 
     public static ConfigException config() {
@@ -472,22 +520,6 @@ public class Exceptions {
 
     public static HttpUnsupportedMethodException httpUnsupportedMethod(String s, Throwable t) {
         return new HttpUnsupportedMethodException(s, t);
-    }
-
-    public static ParseRuntimeException parse() {
-        return new ParseRuntimeException();
-    }
-
-    public static ParseRuntimeException parse(Throwable t) {
-        return new ParseRuntimeException(t);
-    }
-
-    public static ParseRuntimeException parse(String s) {
-        return new ParseRuntimeException(s);
-    }
-
-    public static ParseRuntimeException parse(String s, Throwable t) {
-        return new ParseRuntimeException(s, t);
     }
 
     public static AuthenticationException authentication() {
