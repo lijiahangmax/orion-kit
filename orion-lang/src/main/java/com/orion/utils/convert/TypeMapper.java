@@ -27,8 +27,8 @@ public abstract class TypeMapper<T> implements Serializable {
     }
 
     public TypeMapper(Class<T> sourceType, TypeStore store) {
-        Valid.notNull(sourceType, "SourceType is null");
-        Valid.notNull(store, "TypeStore is null");
+        Valid.notNull(sourceType, "sourceType is null");
+        Valid.notNull(store, "typeStore is null");
         this.sourceType = sourceType;
         this.store = store;
     }

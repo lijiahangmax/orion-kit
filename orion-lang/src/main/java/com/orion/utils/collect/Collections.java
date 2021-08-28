@@ -168,8 +168,7 @@ class Collections {
         if (isEmpty(c1) || isEmpty(c2)) {
             return new HashSet<>();
         }
-
-        HashSet<E> r = new HashSet<>(c1);
+        Set<E> r = new HashSet<>(c1);
         r.retainAll(c2);
         return r;
     }
