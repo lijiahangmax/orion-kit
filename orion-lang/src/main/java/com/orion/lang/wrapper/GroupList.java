@@ -1,12 +1,12 @@
 package com.orion.lang.wrapper;
 
 import com.orion.utils.Objects1;
-import com.orion.utils.reflect.Methods;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -17,29 +17,33 @@ import java.util.function.Predicate;
  * @version 1.0.0
  * @since 2020/1/3 15:59
  */
-public class GroupList<V> {
+public class GroupList<E> {
 
-    private List<V> list;
+    private List<E> list;
 
-    public GroupList(List<V> list) {
+    public GroupList(List<E> list) {
         this.list = list;
+    }
+
+    public static <E> GroupList<E> of(List<E> list) {
+        return new GroupList<>(list);
     }
 
     /**
      * 通过字段和值提取分组
      *
-     * @param field 字段
-     * @param value 值
+     * @param mapping 字段
+     * @param value   值
+     * @param <V>     V
      * @return ignore
      */
-    public List<V> group(String field, Object value) {
-        List<V> groupList = new ArrayList<>();
-        for (V v : list) {
+    public <V> List<E> group(Function<E, V> mapping, V value) {
+        List<E> groupList = new ArrayList<>();
+        for (E v : list) {
             if (v == null) {
                 continue;
             }
-            Object val = Methods.invokeMethod(v, Methods.getGetterMethodByCache(v.getClass(), field));
-            if (Objects1.eq(value, val)) {
+            if (Objects1.eq(value, mapping.apply(v))) {
                 groupList.add(v);
             }
         }
@@ -49,18 +53,19 @@ public class GroupList<V> {
     /**
      * 通过字段和值提取分组
      *
-     * @param field 字段
-     * @param f     Predicate
+     * @param mapping 字段
+     * @param f       Predicate
+     * @param <V>     V
      * @return ignore
      */
-    public List<V> group(String field, Predicate<V> f) {
-        List<V> groupList = new ArrayList<>();
-        for (V v : list) {
+    public <V> List<E> group(Function<E, V> mapping, Predicate<V> f) {
+        List<E> groupList = new ArrayList<>();
+        for (E v : list) {
             if (v == null) {
                 continue;
             }
-            V val = Methods.invokeMethod(v, Methods.getGetterMethodByCache(v.getClass(), field));
-            if (f.test(val)) {
+            V apply = mapping.apply(v);
+            if (f.test(apply)) {
                 groupList.add(v);
             }
         }
@@ -70,18 +75,18 @@ public class GroupList<V> {
     /**
      * 通过字段提取分组
      *
-     * @param field 字段
-     * @param <E>   ignore
+     * @param mapping 字段
+     * @param <V>     V
      * @return ignore
      */
-    public <E> Map<E, List<V>> group(String field) {
-        Map<E, List<V>> map = new LinkedHashMap<>();
-        for (V v : list) {
+    public <V> Map<V, List<E>> group(Function<E, V> mapping) {
+        Map<V, List<E>> map = new LinkedHashMap<>();
+        for (E v : list) {
             if (v == null) {
                 continue;
             }
-            E val = Methods.invokeMethod(v, Methods.getGetterMethodByCache(v.getClass(), field));
-            List<V> vs = map.computeIfAbsent(val, k -> new ArrayList<>());
+            V apply = mapping.apply(v);
+            List<E> vs = map.computeIfAbsent(apply, k -> new ArrayList<>());
             vs.add(v);
         }
         return map;
