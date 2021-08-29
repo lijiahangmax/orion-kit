@@ -1,6 +1,10 @@
 package com.orion.test.date;
 
+import com.orion.utils.random.Randoms;
+import com.orion.utils.time.DateStream;
 import com.orion.utils.time.Dates;
+import com.orion.utils.time.ago.DateAgo;
+import com.orion.utils.time.ago.DateAgo1;
 import org.junit.Test;
 
 import java.util.Date;
@@ -24,22 +28,30 @@ public class DateTests {
 
     @Test
     public void testAgo() {
+        Date now = new Date();
+        System.out.println(Dates.ago(now, now, false, false));
+        System.out.println(Dates.ago(now, now, true, false));
         Date date = Dates.stream().addSecond(2).get();
-        System.out.println(Dates.ago(new Date(), date, false, false));
-        System.out.println(Dates.ago(new Date(), date, true, true));
+        System.out.println(Dates.ago(now, date, false, false));
+        System.out.println(Dates.ago(now, date, true, true));
         date = Dates.stream().addSecond(-2).get();
-        System.out.println(Dates.ago(new Date(), date, false, false));
-        System.out.println(Dates.ago(new Date(), date, true, true));
+        System.out.println(Dates.ago(now, date, false, false));
+        System.out.println(Dates.ago(now, date, true, true));
     }
 
     @Test
-    public void testDateAgo() {
-        Date date = Dates.stream().addSecond(2).get();
-        System.out.println(Dates.dateAgo(new Date(), date, false));
-        System.out.println(Dates.dateAgo(new Date(), date, true));
-        date = Dates.stream().addSecond(-2).get();
-        System.out.println(Dates.dateAgo(new Date(), date, false));
-        System.out.println(Dates.dateAgo(new Date(), date, true));
+    public void testAgo1() {
+        DateStream s = new DateStream();
+        for (int i = 0; i < 50; i++) {
+            Date target = s.get();
+            System.out.print(Dates.format(target));
+            System.out.print("\t");
+            System.out.print(new DateAgo(target).ago());
+            System.out.print("\t");
+            System.out.print(new DateAgo1(target).strict(true).ago());
+            System.out.println();
+            s.addMinute(Randoms.randomInt(0, 100000));
+        }
     }
 
 }
