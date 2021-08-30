@@ -21,6 +21,7 @@ public class BankGeneratorTest {
         for (int i = 0; i < 100; i++) {
             Pair<BankNameType, String> p = BankCardGenerator.generatorCard();
             System.out.println(p);
+            System.out.println(BankCardGenerator.generatorOpeningBank(p.getKey()));
             assert BankCardSupport.valid(p.getValue());
         }
     }

@@ -1,5 +1,6 @@
 package com.orion.generator.bank;
 
+import com.orion.generator.addres.AddressSupport;
 import com.orion.lang.wrapper.Pair;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Strings;
@@ -21,6 +22,10 @@ public class BankCardGenerator {
 
     private BankCardGenerator() {
     }
+
+    private static final String BRANCH_BANK_NAME = "分行";
+
+    private static final String SUBBRANCH_BANK_NAME = "支行";
 
     /**
      * 随机生成 借记卡 银行卡号
@@ -79,6 +84,24 @@ public class BankCardGenerator {
         // 拼接检查码
         char checkCode = BankCardSupport.getCheckCode(cardNoCheck.toCharArray());
         return cardNoCheck + checkCode;
+    }
+
+    public static String generatorOpeningBank(BankNameType bank) {
+        return generatorOpeningBank(bank, AddressSupport.randomCountyCode());
+    }
+
+    /**
+     * 获取开户行名称
+     *
+     * @param bank       bank
+     * @param countyCode 县级编码
+     * @return 开户行名称
+     */
+    public static String generatorOpeningBank(BankNameType bank, Integer countyCode) {
+        int cityCode = Integer.parseInt(countyCode.toString().substring(0, 4));
+        String cityName = AddressSupport.getCityName(cityCode);
+        String countyName = AddressSupport.getCountyName(countyCode);
+        return bank.getName() + cityName + BRANCH_BANK_NAME + countyName + SUBBRANCH_BANK_NAME;
     }
 
 }

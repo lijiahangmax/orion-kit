@@ -100,25 +100,20 @@ public class Faker {
                 fakerInfo.setEmail(EmailGenerator.generatorEmail());
             } else if (FakerType.ADDRESS.equals(type)) {
                 // 住址
-                Integer provinceCode = AddressSupport.randomProvinceCode();
-                Integer cityCode = AddressSupport.randomCityCode(provinceCode);
-                Integer countyCode = AddressSupport.randomCountyCode(cityCode);
-                String address = AddressSupport.getCountyAddress(countyCode);
-                String[] addressExt = AddressSupport.getAddressExt(countyCode);
+                FakerInfo.FakerAddress fakerAddress = new FakerInfo.FakerAddress();
+                generatorAddressCode(fakerAddress);
+                String address = AddressSupport.getCountyAddress(fakerAddress.getCountryCode());
                 String detailAddress = AddressGenerator.generatorAddress();
-                fakerInfo.setProvinceCode(provinceCode);
-                fakerInfo.setProvinceName(addressExt[0]);
-                fakerInfo.setCityCode(cityCode);
-                fakerInfo.setCityName(addressExt[1]);
-                fakerInfo.setCountryCode(countyCode);
-                fakerInfo.setCountryName(addressExt[2]);
-                fakerInfo.setAddress(address);
-                fakerInfo.setDetailAddress(detailAddress);
+                fakerAddress.setAddress(address);
+                fakerAddress.setDetailAddress(detailAddress);
+                fakerInfo.setAddress(fakerAddress);
             } else if (FakerType.ID_CARD.equals(type)) {
                 // 身份证
                 String idCard;
-                if (fakerInfo.getProvinceCode() != null && Randoms.randomBoolean()) {
-                    Integer countyCode = AddressSupport.randomCountyCode(AddressSupport.randomCityCode(fakerInfo.getProvinceCode()));
+                if (fakerInfo.getAddress() != null && Randoms.randomBoolean()) {
+                    Integer provinceCode = fakerInfo.getAddress().getProvinceCode();
+                    Integer cityCode = AddressSupport.randomCityCode(provinceCode);
+                    Integer countyCode = AddressSupport.randomCountyCode(cityCode);
                     idCard = IdCardGenerator.generator(countyCode.toString(), age, gender);
                 } else {
                     idCard = IdCardGenerator.generator(age, gender);
@@ -129,30 +124,48 @@ public class Faker {
                 Date[] period = IdCardGenerator.getPeriod(idCard);
                 Integer[] codeExt = IdCardGenerator.getAddressCodeExt(idCard);
                 String[] addressExt = IdCardGenerator.getAddressExt(idCard);
-                fakerInfo.setIdCardNo(idCard);
-                fakerInfo.setIdCardAddress(fullAddress);
-                fakerInfo.setIdCardIssueOrg(issueOrg);
-                fakerInfo.setIdCardPeriod(periodString);
-                fakerInfo.setIdCardPeriodStart(period[0]);
-                fakerInfo.setIdCardPeriodEnd(period[1]);
-                fakerInfo.setIdCardProvinceCode(codeExt[0]);
-                fakerInfo.setIdCardProvinceName(addressExt[0]);
-                fakerInfo.setIdCardCityCode(codeExt[1]);
-                fakerInfo.setIdCardCityName(addressExt[1]);
-                fakerInfo.setIdCardCountryCode(codeExt[2]);
-                fakerInfo.setIdCardCountryName(addressExt[2]);
-            } else if (FakerType.DEBIT_CARD.equals(type)) {
-                // 储蓄卡
-                Pair<BankNameType, String> bankPair = BankCardGenerator.generatorCard(BankCardType.DEBIT);
-                fakerInfo.setDebitCardNo(bankPair.getValue());
-                fakerInfo.setDebitBankCode(bankPair.getKey().getCode());
-                fakerInfo.setDebitBankName(bankPair.getKey().getName());
-            } else if (FakerType.CREDIT_CARD.equals(type)) {
-                // 信用卡
-                Pair<BankNameType, String> bankPair = BankCardGenerator.generatorCard(BankCardType.CREDIT);
-                fakerInfo.setCreditCardNo(bankPair.getValue());
-                fakerInfo.setCreditBankCode(bankPair.getKey().getCode());
-                fakerInfo.setCreditBankName(bankPair.getKey().getName());
+                FakerInfo.FakerIdCard fakerIdCard = new FakerInfo.FakerIdCard();
+                fakerIdCard.setCardNo(idCard);
+                fakerIdCard.setAddress(fullAddress);
+                fakerIdCard.setIssueOrg(issueOrg);
+                fakerIdCard.setPeriod(periodString);
+                fakerIdCard.setPeriodStart(period[0]);
+                fakerIdCard.setPeriodEnd(period[1]);
+                fakerIdCard.setProvinceCode(codeExt[0]);
+                fakerIdCard.setProvinceName(addressExt[0]);
+                fakerIdCard.setCityCode(codeExt[1]);
+                fakerIdCard.setCityName(addressExt[1]);
+                fakerIdCard.setCountryCode(codeExt[2]);
+                fakerIdCard.setCountryName(addressExt[2]);
+                fakerInfo.setIdCard(fakerIdCard);
+            } else if (FakerType.DEBIT_CARD.equals(type) || FakerType.CREDIT_CARD.equals(type)) {
+                // 储蓄卡 | 信用卡
+                BankCardType cardType = FakerType.DEBIT_CARD.equals(type) ? BankCardType.DEBIT : BankCardType.CREDIT;
+                Pair<BankNameType, String> bankPair = BankCardGenerator.generatorCard(cardType);
+                FakerInfo.FakerBankCard card = new FakerInfo.FakerBankCard();
+                card.setCardNo(bankPair.getValue());
+                card.setBankCode(bankPair.getKey().getCode());
+                card.setBankName(bankPair.getKey().getName());
+                // 地址
+                FakerInfo.AddressCode addressCode = Optional.<FakerInfo.AddressCode>ofNullable(fakerInfo.getAddress()).orElse(fakerInfo.getIdCard());
+                if (addressCode != null) {
+                    card.setProvinceCode(addressCode.getProvinceCode());
+                    card.setProvinceName(addressCode.getProvinceName());
+                    card.setCityCode(addressCode.getCityCode());
+                    card.setCityName(addressCode.getCityName());
+                    card.setCountryCode(addressCode.getCountryCode());
+                    card.setCountryName(addressCode.getCountryName());
+                } else {
+                    generatorAddressCode(card);
+                }
+                card.setIssueOrg(BankCardGenerator.generatorOpeningBank(bankPair.getKey(), card.getCountryCode()));
+                if (FakerType.DEBIT_CARD.equals(type)) {
+                    // 储蓄卡
+                    fakerInfo.setDebitCard(card);
+                } else {
+                    // 信用卡
+                    fakerInfo.setCreditCard(card);
+                }
             } else if (FakerType.EDUCATION.equals(type)) {
                 // 学历
                 String education = EducationGenerator.generatorEducation(age);
@@ -169,36 +182,21 @@ public class Faker {
                 fakerInfo.setIndustry(industry);
             } else if (FakerType.LICENSE_PLATE.equals(type)) {
                 // 车牌号
-                String licensePlate;
-                if (fakerInfo.getProvinceCode() != null) {
-                    licensePlate = LicensePlateGenerator.generator(fakerInfo.getProvinceCode());
-                } else if (fakerInfo.getIdCardProvinceCode() != null) {
-                    licensePlate = LicensePlateGenerator.generator(fakerInfo.getIdCardProvinceCode());
-                } else {
-                    licensePlate = LicensePlateGenerator.generator();
-                }
+                int provinceCode = getProvinceCode(fakerInfo);
+                String licensePlate = LicensePlateGenerator.generator(provinceCode);
                 fakerInfo.setLicensePlate(licensePlate);
             } else if (FakerType.COMPANY_CREDIT_CODE.equals(type)) {
                 // 社会统一信用代码
                 fakerInfo.setCompanyCreditCode(CreditCodes.random());
             } else if (FakerType.COMPANY_NAME.equals(type)) {
                 // 公司名称
-                int provinceCode;
                 String managementType;
-                // 省编码
-                if (fakerInfo.getProvinceCode() != null) {
-                    provinceCode = fakerInfo.getProvinceCode();
-                } else if (fakerInfo.getIdCardProvinceCode() != null) {
-                    provinceCode = fakerInfo.getIdCardProvinceCode();
-                } else {
-                    provinceCode = AddressSupport.randomProvinceCode();
-                }
-                // 行业经营类型
                 if (fakerInfo.getIndustry() != null) {
                     managementType = IndustryGenerator.generatorManagementType(fakerInfo.getIndustry());
                 } else {
                     managementType = IndustryGenerator.generatorManagementType(age);
                 }
+                int provinceCode = getProvinceCode(fakerInfo);
                 fakerInfo.setCompanyName(CompanyGenerator.generatorCompanyName(provinceCode, managementType));
             } else if (FakerType.IP.equals(type)) {
                 // ip
@@ -206,6 +204,38 @@ public class Faker {
             }
         }
         return fakerInfo;
+    }
+
+    /**
+     * 获取省编码
+     *
+     * @param fakerInfo fakerInfo
+     * @return provinceCode
+     */
+    private static Integer getProvinceCode(FakerInfo fakerInfo) {
+        return Optional.ofNullable(fakerInfo.getAddress())
+                .map(FakerInfo.FakerAddress::getProvinceCode)
+                .orElseGet(() -> Optional.ofNullable(fakerInfo.getIdCard())
+                        .map(FakerInfo.FakerIdCard::getProvinceCode)
+                        .orElseGet(AddressSupport::randomProvinceCode));
+    }
+
+    /**
+     * 生成地址数据
+     *
+     * @param fakerAddress fakerAddress
+     */
+    private static void generatorAddressCode(FakerInfo.AddressCode fakerAddress) {
+        Integer provinceCode = AddressSupport.randomProvinceCode();
+        Integer cityCode = AddressSupport.randomCityCode(provinceCode);
+        Integer countyCode = AddressSupport.randomCountyCode(cityCode);
+        String[] addressExt = AddressSupport.getAddressExt(countyCode);
+        fakerAddress.setProvinceName(addressExt[0]);
+        fakerAddress.setCityName(addressExt[1]);
+        fakerAddress.setCountryName(addressExt[2]);
+        fakerAddress.setProvinceCode(provinceCode);
+        fakerAddress.setCityCode(cityCode);
+        fakerAddress.setCountryCode(countyCode);
     }
 
 }

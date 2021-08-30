@@ -18,6 +18,7 @@ public class FakerTest {
         for (int i = 0; i < 20; i++) {
             FakerInfo faker = Faker.generator(FakerType.BASE);
             System.out.println(JSON.toJSONString(faker, true));
+            System.out.println();
         }
     }
 
@@ -26,6 +27,16 @@ public class FakerTest {
         for (int i = 0; i < 20; i++) {
             FakerInfo faker = Faker.generator(FakerType.ALL);
             System.out.println(JSON.toJSONString(faker, true));
+            System.out.println();
+        }
+    }
+
+    @Test
+    public void faker3() {
+        for (int i = 0; i < 20; i++) {
+            FakerInfo faker = Faker.generator(FakerType.ID_CARD, FakerType.DEBIT_CARD);
+            System.out.println(JSON.toJSONString(faker, true));
+            System.out.println();
         }
     }
 
