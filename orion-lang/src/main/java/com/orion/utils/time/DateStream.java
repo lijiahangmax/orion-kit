@@ -91,10 +91,6 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
         return this;
     }
 
-    public int getYear() {
-        return c.get(Calendar.YEAR);
-    }
-
     // -------------------- month --------------------
 
     public DateStream addMonth(int m) {
@@ -110,10 +106,6 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
     public DateStream setMonth(int m) {
         c.set(Calendar.MONTH, m - 1);
         return this;
-    }
-
-    public int getMonth() {
-        return c.get(Calendar.MONTH) + 1;
     }
 
     // -------------------- week --------------------
@@ -133,10 +125,6 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
         return this;
     }
 
-    public int getWeek() {
-        return c.get(Calendar.WEEK_OF_MONTH);
-    }
-
     // -------------------- day --------------------
 
     public DateStream addDay(int d) {
@@ -152,10 +140,6 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
     public DateStream setDay(int d) {
         c.set(Calendar.DAY_OF_MONTH, d);
         return this;
-    }
-
-    public int getDay() {
-        return c.get(Calendar.DAY_OF_MONTH);
     }
 
     // -------------------- hour --------------------
@@ -175,10 +159,6 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
         return this;
     }
 
-    public int getHour() {
-        return c.get(Calendar.HOUR_OF_DAY);
-    }
-
     // -------------------- minute --------------------
 
     public DateStream addMinute(int m) {
@@ -194,10 +174,6 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
     public DateStream setMinute(int m) {
         c.set(Calendar.MINUTE, m);
         return this;
-    }
-
-    public int getMinute() {
-        return c.get(Calendar.MINUTE);
     }
 
     // -------------------- second --------------------
@@ -217,10 +193,6 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
         return this;
     }
 
-    public int getSecond() {
-        return c.get(Calendar.SECOND);
-    }
-
     // -------------------- milli second --------------------
 
     public DateStream addMilliSecond(int ms) {
@@ -238,10 +210,6 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
         return this;
     }
 
-    public int getMilliSecond() {
-        return c.get(Calendar.MILLISECOND);
-    }
-
     public DateStream add(int type, int v) {
         c.add(type, v);
         return this;
@@ -257,38 +225,123 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
         return this;
     }
 
+    // -------------------- compute --------------------
+
+    /**
+     * 日期的 00:00:00
+     * 清除时分秒
+     *
+     * @return this
+     */
+    public DateStream clearHms() {
+        Dates.clearHms(c);
+        return this;
+    }
+
+    /**
+     * 日期的 23:59:59
+     *
+     * @return this
+     */
+    public DateStream dayEnd() {
+        Dates.dayEnd(c);
+        return this;
+    }
+
+    /**
+     * 设置日期为1号
+     *
+     * @return this
+     */
+    public DateStream monthFirstDay() {
+        Dates.monthFirstDay(c, false);
+        return this;
+    }
+
+    /**
+     * 设置日期为1号 时间为00:00:00
+     *
+     * @return this
+     */
+    public DateStream monthFirstDayHms() {
+        Dates.monthFirstDay(c, true);
+        return this;
+    }
+
+    /**
+     * 设置日期为1号
+     *
+     * @param clearHms 是否设置时间为00:00:00
+     * @return this
+     */
+    public DateStream monthFirstDay(boolean clearHms) {
+        Dates.monthFirstDay(c, clearHms);
+        return this;
+    }
+
+    /**
+     * 设置日期为月份的最后一天
+     *
+     * @return this
+     */
+    public DateStream monthLastDay() {
+        Dates.monthLastDay(c, false);
+        return this;
+    }
+
+    /**
+     * 设置日期为月份的最后一天 时间为23:59:59
+     *
+     * @return this
+     */
+    public DateStream monthLastDayHms() {
+        Dates.monthLastDay(c, true);
+        return this;
+    }
+
+    /**
+     * 设置日期为月份的最后一天
+     *
+     * @param dayEnd 是否设置时间为23:59:59
+     * @return this
+     */
+    public DateStream monthLastDay(boolean dayEnd) {
+        Dates.monthLastDay(c, dayEnd);
+        return this;
+    }
+
     // -------------------- result --------------------
 
     public String format() {
-        return Dates.format(this.c.getTime());
+        return Dates.format(c.getTime());
     }
 
     public String format(String pattern) {
-        return Dates.format(this.c.getTime(), pattern);
+        return Dates.format(c.getTime(), pattern);
     }
 
     public String format(Locale locale) {
-        return Dates.format(this.c.getTime(), locale);
+        return Dates.format(c.getTime(), locale);
     }
 
     public String format(String pattern, Locale locale) {
-        return Dates.format(this.c.getTime(), pattern, locale);
+        return Dates.format(c.getTime(), pattern, locale);
     }
 
     public String format(TimeZone timeZone) {
-        return Dates.format(this.c.getTime(), timeZone);
+        return Dates.format(c.getTime(), timeZone);
     }
 
     public String format(String pattern, TimeZone timeZone) {
-        return Dates.format(this.c.getTime(), pattern, timeZone);
+        return Dates.format(c.getTime(), pattern, timeZone);
     }
 
     public String format(TimeZone timeZone, Locale locale) {
-        return Dates.format(this.c.getTime(), timeZone, locale);
+        return Dates.format(c.getTime(), timeZone, locale);
     }
 
     public String format(String pattern, TimeZone timeZone, Locale locale) {
-        return Dates.format(this.c.getTime(), pattern, timeZone, locale);
+        return Dates.format(c.getTime(), pattern, timeZone, locale);
     }
 
     /**
@@ -299,7 +352,7 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
      * @return true包含
      */
     public boolean inRange(Date start, Date end) {
-        return DateRanges.inRange(start, end, this.c.getTime());
+        return DateRanges.inRange(start, end, c.getTime());
     }
 
     /**
@@ -310,7 +363,7 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
      * @return true不包含
      */
     public boolean notInRange(Date start, Date end) {
-        return DateRanges.notInRange(start, end, this.c.getTime());
+        return DateRanges.notInRange(start, end, c.getTime());
     }
 
     /**
@@ -320,7 +373,7 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
      * @return true之前
      */
     public boolean before(Date d) {
-        return DateRanges.before(this.c.getTime(), d);
+        return DateRanges.before(c.getTime(), d);
     }
 
     /**
@@ -330,24 +383,99 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
      * @return true之后
      */
     public boolean after(Date d) {
-        return DateRanges.after(this.c.getTime(), d);
+        return DateRanges.after(c.getTime(), d);
     }
 
-    public int get(int type) {
+    /**
+     * 判断时间是否在未来
+     *
+     * @return true 在未来
+     */
+    public boolean inFuture() {
+        return Dates.inFuture(c.getTimeInMillis());
+    }
+
+    /**
+     * 是否为闰年
+     *
+     * @return true 闰年
+     */
+    public boolean isLeapYear() {
+        return Dates.isLeapYear(c);
+    }
+
+    /**
+     * 获得月份的最后一天
+     *
+     * @return 最后一天
+     */
+    public int getMonthLastDay() {
+        return Dates.getMonthLastDay(c);
+    }
+
+    public int getYear() {
+        return c.get(Calendar.YEAR);
+    }
+
+    public int getMonth() {
+        return c.get(Calendar.MONTH) + 1;
+    }
+
+    public int getWeek() {
+        return c.get(Calendar.WEEK_OF_MONTH);
+    }
+
+    public int getDay() {
+        return c.get(Calendar.DAY_OF_MONTH);
+    }
+
+    public int getHour() {
+        return c.get(Calendar.HOUR_OF_DAY);
+    }
+
+    public int getMinute() {
+        return c.get(Calendar.MINUTE);
+    }
+
+    public int getSecond() {
+        return c.get(Calendar.SECOND);
+    }
+
+    public int getMilliSecond() {
+        return c.get(Calendar.MILLISECOND);
+    }
+
+    public boolean isAm() {
+        return Calendar.PM == c.get(Calendar.AM_PM);
+    }
+
+    public boolean isPm() {
+        return Calendar.AM == c.get(Calendar.AM_PM);
+    }
+
+    public int getField(int type) {
         return c.get(type);
     }
 
+    public Date get() {
+        return c.getTime();
+    }
+
     public Date date() {
-        return this.c.getTime();
+        return c.getTime();
+    }
+
+    public long milliSecond() {
+        return c.getTimeInMillis();
     }
 
     public Calendar calendar() {
-        return this.c;
+        return c;
     }
 
     @Override
     public String toString() {
-        return this.c.toString();
+        return c.toString();
     }
 
 }

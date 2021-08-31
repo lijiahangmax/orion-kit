@@ -1,5 +1,7 @@
 package com.orion.utils.time;
 
+import com.orion.utils.Exceptions;
+
 import java.time.*;
 import java.util.Calendar;
 import java.util.Date;
@@ -194,16 +196,24 @@ class BaseDates {
      * @return 最后一天
      */
     public static int getMonthLastDay(int year, int month) {
-        if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) {
-            return 31;
-        } else if (month == 2) {
-            if (isLeapYear(year)) {
-                return 29;
-            } else {
-                return 28;
-            }
-        } else {
-            return 30;
+        switch (month) {
+            case 1:
+            case 3:
+            case 5:
+            case 7:
+            case 8:
+            case 10:
+            case 12:
+                return 31;
+            case 2:
+                return isLeapYear(year) ? 29 : 28;
+            case 4:
+            case 6:
+            case 9:
+            case 11:
+                return 30;
+            default:
+                throw Exceptions.argument("month must >= 1 and <= 12");
         }
     }
 

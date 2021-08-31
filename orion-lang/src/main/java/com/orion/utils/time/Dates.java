@@ -3,6 +3,7 @@ package com.orion.utils.time;
 import com.orion.utils.Strings;
 import com.orion.utils.Valid;
 import com.orion.utils.convert.Converts;
+import com.orion.utils.time.ago.DateAgo;
 import com.orion.utils.time.format.FastDateFormat;
 
 import java.time.Instant;
@@ -158,6 +159,7 @@ public class Dates extends BaseDates {
     }
 
     /**
+     * 日期的 00:00:00
      * 清除时分秒
      *
      * @param c 时间
@@ -168,66 +170,6 @@ public class Dates extends BaseDates {
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 0);
         c.set(Calendar.MILLISECOND, 0);
-        return c.getTime();
-    }
-
-    public static Date clearDay() {
-        return clearDay(Calendar.getInstance(), false);
-    }
-
-    public static Date clearDay(Date d) {
-        return clearDay(d, false);
-    }
-
-    /**
-     * 清除时间为1号
-     *
-     * @param c 时间
-     * @return 时间
-     */
-    public static Date clearDay(Calendar c) {
-        return clearDay(c, false);
-    }
-
-    public static Date clearDayHms() {
-        return clearDay(Calendar.getInstance(), true);
-    }
-
-    public static Date clearDayHms(Date d) {
-        return clearDay(d, true);
-    }
-
-    /**
-     * 清除时间为1号, 清除HMS
-     *
-     * @param c 时间
-     * @return 时间
-     */
-    public static Date clearDayHms(Calendar c) {
-        return clearDay(c, true);
-    }
-
-    public static Date clearDay(Date d, boolean clearHms) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(d);
-        return clearDay(c, clearHms);
-    }
-
-    /**
-     * 清除时间为当月1号
-     *
-     * @param c        时间
-     * @param clearHms 是否清除HMS
-     * @return 时间
-     */
-    public static Date clearDay(Calendar c, boolean clearHms) {
-        c.set(Calendar.DAY_OF_MONTH, 1);
-        if (clearHms) {
-            c.set(Calendar.HOUR_OF_DAY, 0);
-            c.set(Calendar.MINUTE, 0);
-            c.set(Calendar.SECOND, 0);
-            c.set(Calendar.MILLISECOND, 0);
-        }
         return c.getTime();
     }
 
@@ -242,7 +184,7 @@ public class Dates extends BaseDates {
     }
 
     /**
-     * 日期的  23:59:59
+     * 日期的 23:59:59
      *
      * @param c 时间
      * @return 23:59:59
@@ -255,46 +197,106 @@ public class Dates extends BaseDates {
         return c.getTime();
     }
 
-    public static Date monthEnd() {
-        return monthDayEnd(new Date(), false);
+    public static Date monthFirstDay() {
+        return monthFirstDay(Calendar.getInstance(), false);
     }
 
-    public static Date monthEnd(Date d) {
-        return monthDayEnd(d, false);
+    public static Date monthFirstDay(Date d) {
+        return monthFirstDay(d, false);
     }
 
     /**
-     * 月份的最后一天
+     * 设置日期为1号
      *
      * @param c 时间
      * @return 时间
      */
-    public static Date monthEnd(Calendar c) {
-        return monthDayEnd(c, false);
+    public static Date monthFirstDay(Calendar c) {
+        return monthFirstDay(c, false);
     }
 
-    public static Date monthDayEnd() {
-        return monthDayEnd(new Date(), true);
+    public static Date monthFirstDayHms() {
+        return monthFirstDay(Calendar.getInstance(), true);
     }
 
-    public static Date monthDayEnd(Date d) {
-        return monthDayEnd(d, true);
+    public static Date monthFirstDayHms(Date d) {
+        return monthFirstDay(d, true);
     }
 
     /**
-     * 月份的最后一天 时间的最后一秒
+     * 设置日期为1号, 清除HMS
      *
      * @param c 时间
      * @return 时间
      */
-    public static Date monthDayEnd(Calendar c) {
-        return monthDayEnd(c, true);
+    public static Date monthFirstDayHms(Calendar c) {
+        return monthFirstDay(c, true);
     }
 
-    public static Date monthDayEnd(Date d, boolean dayEnd) {
+    public static Date monthFirstDay(Date d, boolean clearHms) {
         Calendar c = Calendar.getInstance();
         c.setTime(d);
-        return monthDayEnd(c, dayEnd);
+        return monthFirstDay(c, clearHms);
+    }
+
+    /**
+     * 设置日期为当月1号
+     *
+     * @param c        时间
+     * @param clearHms 是否清除HMS
+     * @return 时间
+     */
+    public static Date monthFirstDay(Calendar c, boolean clearHms) {
+        c.set(Calendar.DAY_OF_MONTH, 1);
+        if (clearHms) {
+            c.set(Calendar.HOUR_OF_DAY, 0);
+            c.set(Calendar.MINUTE, 0);
+            c.set(Calendar.SECOND, 0);
+            c.set(Calendar.MILLISECOND, 0);
+        }
+        return c.getTime();
+    }
+
+    public static Date monthLastDay() {
+        return monthLastDay(new Date(), false);
+    }
+
+    public static Date monthLastDay(Date d) {
+        return monthLastDay(d, false);
+    }
+
+    /**
+     * 设置日期为月份的最后一天
+     *
+     * @param c 时间
+     * @return 时间
+     */
+    public static Date monthLastDay(Calendar c) {
+        return monthLastDay(c, false);
+    }
+
+    public static Date monthLastDayHms() {
+        return monthLastDay(new Date(), true);
+    }
+
+    public static Date monthLastDayHms(Date d) {
+        return monthLastDay(d, true);
+    }
+
+    /**
+     * 设置日期为月份的最后一天 时间的最后一秒
+     *
+     * @param c 时间
+     * @return 时间
+     */
+    public static Date monthLastDayHms(Calendar c) {
+        return monthLastDay(c, true);
+    }
+
+    public static Date monthLastDay(Date d, boolean dayEnd) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(d);
+        return monthLastDay(c, dayEnd);
     }
 
     /**
@@ -304,7 +306,7 @@ public class Dates extends BaseDates {
      * @param dayEnd 是否将时间 转化为 23:59:59
      * @return 时间
      */
-    public static Date monthDayEnd(Calendar c, boolean dayEnd) {
+    public static Date monthLastDay(Calendar c, boolean dayEnd) {
         c.set(Calendar.DAY_OF_MONTH, getMonthLastDay(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1));
         if (dayEnd) {
             c.set(Calendar.HOUR_OF_DAY, 23);
@@ -563,270 +565,25 @@ public class Dates extends BaseDates {
         return hourType(c.get(Calendar.HOUR_OF_DAY));
     }
 
-    public static String ago(Date date) {
-        return ago(new Date(), date, false, false);
+    public static String ago(Date target) {
+        return ago(new Date(), target, false, false);
     }
 
-    public static String ago(Date source, Date date) {
-        return ago(source, date, false, false);
+    public static String ago(Date source, Date target) {
+        return ago(source, target, false, false);
     }
 
     /**
      * 获得时间的前后
      *
      * @param source  源时间
-     * @param date    对比的时间
+     * @param target  对比的时间
      * @param vague   是否使用模糊时间 如: 昨天/23小时前
      * @param useWeek 是否使用周 如: 1周前/8天前
      * @return 结果
      */
-    public static String ago(Date source, Date date, boolean vague, boolean useWeek) {
-        Calendar c1 = Calendar.getInstance();
-        Calendar c2 = Calendar.getInstance();
-        c1.setTime(source);
-        c2.setTime(date);
-        long s = source.getTime(), d = date.getTime();
-        int nowYear = c1.get(Calendar.YEAR),
-                dYear = c2.get(Calendar.YEAR),
-                nowDay = c1.get(Calendar.DAY_OF_MONTH),
-                dDay = c2.get(Calendar.DAY_OF_MONTH);
-        if (s - d > 0) {
-            long before = s - d;
-            if (nowYear - dYear > 10 && vague) {
-                return "很久以前";
-            }
-            if (nowYear - dYear == 1 && vague) {
-                return "去年";
-            }
-            if (before > (DAY_STAMP * 365)) {
-                return (before / (DAY_STAMP * 365)) + "年前";
-            }
-            if (before > (MONTH_STAMP)) {
-                return (before / (MONTH_STAMP)) != 12 ? (before / (MONTH_STAMP)) + "月前" : "1年前";
-            }
-            if (before > WEEK_STAMP && useWeek) {
-                return (before / WEEK_STAMP) + "周前";
-            }
-            if (nowDay - dDay == 1 && vague) {
-                return "昨天";
-            }
-            if (nowDay - dDay == 2 && vague) {
-                return "前天";
-            }
-            if (before > DAY_STAMP) {
-                return (before / DAY_STAMP) + "天前";
-            }
-            if (before > HOUR_STAMP) {
-                return (before / HOUR_STAMP) + "小时前";
-            }
-            if (before > MINUTE_STAMP) {
-                return (before / MINUTE_STAMP) + "分钟前";
-            }
-        } else if (d - s > 0) {
-            long after = d - s;
-            if (dYear - nowYear > 10 && vague) {
-                return "很久以后";
-            }
-            if (dYear - nowYear == 1 && vague) {
-                return "明年";
-            }
-            if (after > (DAY_STAMP * 365)) {
-                return (after / (DAY_STAMP * 365)) + "年后";
-            }
-            if (after > (MONTH_STAMP)) {
-                return (after / (MONTH_STAMP)) != 12 ? (after / (MONTH_STAMP)) + "月后" : "1年后";
-            }
-            if (after > WEEK_STAMP && useWeek) {
-                return (after / WEEK_STAMP) + "周后";
-            }
-            if (dDay - nowDay == 1 && vague) {
-                return "明天";
-            }
-            if (dDay - nowDay == 2 && vague) {
-                return "后天";
-            }
-            if (after > DAY_STAMP) {
-                return (after / DAY_STAMP) + "天后";
-            }
-            if (after > HOUR_STAMP) {
-                return (after / HOUR_STAMP) + "小时后";
-            }
-            if (after > MINUTE_STAMP) {
-                return (after / MINUTE_STAMP) + "分钟后";
-            }
-        }
-        return "刚刚";
-    }
-
-    public static String dateAgo(Date d) {
-        return dateAgo(new Date(), d, true);
-    }
-
-    public static String dateAgo(Date source, Date date) {
-        return dateAgo(source, date, true);
-    }
-
-    /**
-     * 获得时间的前后
-     *
-     * @param source 源时间
-     * @param date   对比的时间
-     * @param strict 是否使用精确时间 如: 23小时前/昨天
-     * @return 结果
-     */
-    public static String dateAgo(Date source, Date date, boolean strict) {
-        DateStream ss = stream(source);
-        // 目标时间
-        int sYear = ss.getYear(),
-                sMonth = ss.getMonth(),
-                sDay = ss.getDay(),
-                sHour = ss.getHour(),
-                sMinute = ss.getMinute();
-        // 比较时间
-        DateStream ds = stream(date);
-        int dYear = ds.getYear(),
-                dMonth = ds.getMonth(),
-                dDay = ds.getDay(),
-                dHour = ds.getHour(),
-                dMinute = ds.getMinute();
-        if (date.before(source)) {
-            if (sYear > dYear) {
-                if ((sYear - dYear) > 10) {
-                    return "很久以前";
-                } else if (sYear - dYear == 1) {
-                    if (strict) {
-                        if (sMonth > dMonth) {
-                            return "1年前";
-                        } else if (sMonth == dMonth) {
-                            if (sDay > dDay) {
-                                return "1年前";
-                            } else {
-                                return "11月前";
-                            }
-                        } else {
-                            return 12 - (dMonth - sMonth) + "月前";
-                        }
-                    } else {
-                        return "去年";
-                    }
-                } else {
-                    return sYear - dYear + "年前";
-                }
-            }
-            if (sMonth > dMonth) {
-                if (sMonth - dMonth == 1 && strict) {
-                    if (sDay >= dDay) {
-                        return "1月前";
-                    } else {
-                        return getMonthLastDay(sYear, sMonth) - (dDay - sDay) + "天前";
-                    }
-                } else {
-                    return sMonth - dMonth + "月前";
-                }
-            }
-            if (sDay > dDay) {
-                if (strict) {
-                    if (sDay - dDay == 1) {
-                        if (sHour >= dHour) {
-                            return "昨天";
-                        } else {
-                            return 24 - (dHour - sHour) + "小时前";
-                        }
-                    } else if (sDay - dDay == 2) {
-                        return "前天";
-                    } else {
-                        return sDay - dDay + "天前";
-                    }
-                } else {
-                    if (sDay - dDay == 1) {
-                        return "昨天";
-                    } else if (sDay - dDay == 2) {
-                        return "前天";
-                    } else {
-                        return sDay - dDay + "天前";
-                    }
-                }
-            }
-            if (sHour > dHour) {
-                if (sHour - dHour == 1 && strict) {
-                    if (sMinute >= dMinute) {
-                        return "1小时前";
-                    } else {
-                        return 60 - (dMinute - sMinute) + "分钟前";
-                    }
-                } else {
-                    return sHour - dHour + "小时前";
-                }
-            }
-            if (sMinute > dMinute) {
-                return sMinute - dMinute + "分钟前";
-            }
-        } else if (date.after(source)) {
-            if (sYear < dYear) {
-                if ((dYear - sYear) > 10) {
-                    return "很久以后";
-                } else if (dYear - sYear == 1) {
-                    if (strict) {
-                        if (sMonth > dMonth) {
-                            return 12 + dMonth - sMonth + "月后";
-                        } else if (sMonth == dMonth) {
-                            if (dDay > sDay) {
-                                return "1年后";
-                            } else {
-                                return "11月后";
-                            }
-                        } else {
-                            return "1年后";
-                        }
-                    } else {
-                        return "明年";
-                    }
-                } else {
-                    return dYear - sYear + "年后";
-                }
-            }
-            if (sMonth < dMonth) {
-                if (dMonth - sMonth == 1 && strict) {
-                    if (sDay >= dDay) {
-                        return getMonthLastDay(sYear, sMonth) + (dDay - sDay) + "天后";
-                    } else {
-                        return "1月后";
-                    }
-                } else {
-                    return dMonth - sMonth + "月后";
-                }
-            }
-            if (sDay < dDay) {
-                if (dDay - sDay == 1 && strict) {
-                    if (dHour < sHour) {
-                        return 24 - (sHour - dHour) + "小时后";
-                    } else {
-                        return "明天";
-                    }
-                } else if (dDay - sDay == 1) {
-                    return "后天";
-                } else if (dDay - sDay == 2) {
-                    return "后天";
-                } else {
-                    return dDay - sDay + "天后";
-                }
-            }
-            if (sHour < dHour) {
-                if (dHour - sHour == 1 && strict) {
-                    if (dMinute < sMinute) {
-                        return 60 - (sMinute - dMinute) + "分钟后";
-                    } else {
-                        return "1小时后";
-                    }
-                } else {
-                    return dHour - sHour + "小时后";
-                }
-            }
-            if (sMinute < dMinute) {
-                return dMinute - sMinute + "分钟后";
-            }
-        }
-        return "刚刚";
+    public static String ago(Date source, Date target, boolean vague, boolean useWeek) {
+        return new DateAgo(source, target).vague(vague).useWeek(useWeek).ago();
     }
 
     public static String interval(Date date1, Date date2) {
@@ -918,15 +675,19 @@ public class Dates extends BaseDates {
         return isLeapYear(c.get(Calendar.YEAR));
     }
 
-    /**
-     * 是否为闰年
-     *
-     * @param d date
-     * @return true闰年
-     */
     public static boolean isLeapYear(Date d) {
         Calendar c = Calendar.getInstance();
         c.setTime(d);
+        return isLeapYear(c.get(Calendar.YEAR));
+    }
+
+    /**
+     * 是否为闰年
+     *
+     * @param c calendar
+     * @return true 闰年
+     */
+    public static boolean isLeapYear(Calendar c) {
         return isLeapYear(c.get(Calendar.YEAR));
     }
 
@@ -947,11 +708,21 @@ public class Dates extends BaseDates {
         return getMonthLastDay(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1);
     }
 
-    public boolean isAm() {
+    /**
+     * 获得月份的最后一天
+     *
+     * @param c calendar
+     * @return 最后一天
+     */
+    public static int getMonthLastDay(Calendar c) {
+        return getMonthLastDay(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1);
+    }
+
+    public static boolean isAm() {
         return isAm(Calendar.getInstance());
     }
 
-    public boolean isAm(Date d) {
+    public static boolean isAm(Date d) {
         Calendar c = Calendar.getInstance();
         c.setTime(d);
         return isAm(c);
@@ -963,15 +734,15 @@ public class Dates extends BaseDates {
      * @param c c
      * @return ignore
      */
-    public boolean isAm(Calendar c) {
+    public static boolean isAm(Calendar c) {
         return Calendar.AM == c.get(Calendar.AM_PM);
     }
 
-    public boolean isPm() {
+    public static boolean isPm() {
         return isPm(Calendar.getInstance());
     }
 
-    public boolean isPm(Date d) {
+    public static boolean isPm(Date d) {
         Calendar c = Calendar.getInstance();
         c.setTime(d);
         return isPm(c);
@@ -983,7 +754,7 @@ public class Dates extends BaseDates {
      * @param c c
      * @return ignore
      */
-    public boolean isPm(Calendar c) {
+    public static boolean isPm(Calendar c) {
         return Calendar.PM == c.get(Calendar.AM_PM);
     }
 
