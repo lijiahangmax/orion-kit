@@ -236,7 +236,7 @@ public abstract class BaseExcelWriter<K, V> {
      * @return this
      */
     public BaseExcelWriter<K, V> width(int column, int width) {
-        sheet.setColumnWidth(column, (int) ((width + 0.72) * 256));
+        sheet.setColumnWidth(column, Excels.getWidth(width));
         return this;
     }
 

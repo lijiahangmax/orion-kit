@@ -23,9 +23,12 @@ import java.util.List;
 public class PictureParser implements Analysable {
 
     /**
-     * 文件坐标 k1: row  k2: column value: PictureData
+     * 文件坐标
+     * k1: row
+     * k2: column
+     * value: PictureData
      */
-    private MultiHashMap<Integer, Integer, PictureData> picturePosition = new MultiHashMap<>();
+    private MultiHashMap<Integer, Integer, PictureData> picturePosition;
 
     private Workbook workbook;
 
@@ -34,6 +37,7 @@ public class PictureParser implements Analysable {
     public PictureParser(Workbook workbook, Sheet sheet) {
         this.workbook = workbook;
         this.sheet = sheet;
+        this.picturePosition = new MultiHashMap<>();
     }
 
     @Override

@@ -102,7 +102,7 @@ public class ExcelMerge extends BaseExcelWriteable {
      * @return this
      */
     public ExcelMerge width(int column, int width) {
-        sourceSheet.setColumnWidth(column, (int) ((width + 0.72) * 256));
+        sourceSheet.setColumnWidth(column, Excels.getWidth(width));
         return this;
     }
 

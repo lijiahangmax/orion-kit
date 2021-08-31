@@ -104,7 +104,7 @@ public class Excels {
         if (column == 26) {
             return Const.LETTERS[25];
         }
-        String out = Strings.EMPTY;
+        String out;
         if (column / 26 != 0) {
             if (column % 26 == 0) {
                 out = Const.LETTERS[column / 26 - 2];
@@ -117,6 +117,16 @@ public class Excels {
             out = Const.LETTERS[column - 1];
         }
         return out;
+    }
+
+    /**
+     * 获取 poi 的 width
+     *
+     * @param width width
+     * @return poi width
+     */
+    public static int getWidth(int width) {
+        return (int) ((width + 0.72) * 256);
     }
 
     /**
