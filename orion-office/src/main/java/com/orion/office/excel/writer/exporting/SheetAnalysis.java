@@ -14,76 +14,21 @@ import com.orion.utils.reflect.Annotations;
  * @version 1.0.0
  * @since 2020/12/29 17:49
  */
-public class ExportSheetAnalysis implements Analysable {
+public class SheetAnalysis implements Analysable {
 
     private Class<?> targetClass;
 
-    private ExportSheetOption sheetOption;
+    private SheetConfig sheetConfig;
 
-    public ExportSheetAnalysis(Class<?> targetClass, ExportSheetOption sheetOption) {
+    public SheetAnalysis(Class<?> targetClass, SheetConfig sheetConfig) {
         this.targetClass = targetClass;
-        this.sheetOption = sheetOption;
+        this.sheetConfig = sheetConfig;
     }
 
     @Override
     public void analysis() {
-        ExportSheet sheet = Annotations.getAnnotation(targetClass, ExportSheet.class);
-        if (sheet == null) {
-            throw Exceptions.parse("the exported class cannot be parsed because an @ExportSheet was not found");
-        }
-
-        String sheetName = sheet.name();
-        if (!Strings.isEmpty(sheetName)) {
-            sheetOption.setName(sheetName);
-        }
-        // 复用style
-        if (sheet.headerUseColumnStyle()) {
-            sheetOption.setHeaderUseColumnStyle(true);
-        }
-        // 默认行宽
-        int width = sheet.columnWidth();
-        if (width != -1) {
-            sheetOption.setColumnWidth(width);
-        }
-        // 默认行高
-        int defaultHeight = sheet.height();
-        if (defaultHeight != -1) {
-            sheetOption.setTitleHeight(defaultHeight);
-            sheetOption.setHeaderHeight(defaultHeight);
-            sheetOption.setRowHeight(defaultHeight);
-        }
-        // 标题行高
-        int titleHeight = sheet.titleHeight();
-        if (titleHeight != -1) {
-            sheetOption.setTitleHeight(titleHeight);
-        }
-        // 头部行高
-        int headerHeight = sheet.headerHeight();
-        if (headerHeight != -1) {
-            sheetOption.setHeaderHeight(headerHeight);
-        }
-        // 数据行高
-        int rowHeight = sheet.rowHeight();
-        if (rowHeight != -1) {
-            sheetOption.setRowHeight(rowHeight);
-        }
-        // 缩放
-        if (sheet.zoom() != -1) {
-            sheetOption.setZoom(sheet.zoom());
-        }
-        sheetOption.setSkipFieldHeader(sheet.skipFieldHeader());
-        sheetOption.setSkipComment(sheet.skipComment());
-        sheetOption.setSkipLink(sheet.skipLink());
-        sheetOption.setSkipPicture(sheet.skipPicture());
-        sheetOption.setSkipPictureException(sheet.skipPictureException());
-        sheetOption.setSkipSelectOption(sheet.skipSelectOption());
-        sheetOption.setFreezeHeader(sheet.freezeHeader());
-        sheetOption.setFilterHeader(sheet.filterHeader());
-        sheetOption.setSelected(sheet.selected());
-        sheetOption.setHidden(sheet.hidden());
-        sheetOption.setDisplayGridLines(sheet.displayGridLines());
-        sheetOption.setDisplayRowColHeadings(sheet.displayRowColHeadings());
-        sheetOption.setDisplayFormulas(sheet.displayFormulas());
+        // sheet
+        this.analysisSheet();
         // 标题
         this.analysisTitle();
         // 页眉
@@ -92,6 +37,73 @@ public class ExportSheetAnalysis implements Analysable {
         this.analysisFooter();
         // 打印
         this.analysisPrint();
+    }
+
+    /**
+     * 解析sheet
+     *
+     * @see ExportSheet
+     */
+    private void analysisSheet() {
+        ExportSheet sheet = Annotations.getAnnotation(targetClass, ExportSheet.class);
+        if (sheet == null) {
+            throw Exceptions.parse("the exported class cannot be parsed because an @ExportSheet was not found");
+        }
+
+        String sheetName = sheet.name();
+        if (!Strings.isEmpty(sheetName)) {
+            sheetConfig.sheetOption.setName(sheetName);
+        }
+        // 复用style
+        sheetConfig.sheetOption.setHeaderUseColumnStyle(sheet.headerUseColumnStyle());
+        // 列是否使用默认样式
+        sheetConfig.sheetOption.setColumnUseDefaultStyle(sheet.columnUseDefaultStyle());
+        // 是否将index作为排序字段
+        sheetConfig.sheetOption.setIndexToSort(sheet.indexToSort());
+        // 默认行宽
+        int width = sheet.columnWidth();
+        if (width != -1) {
+            sheetConfig.sheetOption.setColumnWidth(width);
+        }
+        // 默认行高
+        int defaultHeight = sheet.height();
+        if (defaultHeight != -1) {
+            sheetConfig.sheetOption.setTitleHeight(defaultHeight);
+            sheetConfig.sheetOption.setHeaderHeight(defaultHeight);
+            sheetConfig.sheetOption.setRowHeight(defaultHeight);
+        }
+        // 标题行高
+        int titleHeight = sheet.titleHeight();
+        if (titleHeight != -1) {
+            sheetConfig.sheetOption.setTitleHeight(titleHeight);
+        }
+        // 头部行高
+        int headerHeight = sheet.headerHeight();
+        if (headerHeight != -1) {
+            sheetConfig.sheetOption.setHeaderHeight(headerHeight);
+        }
+        // 数据行高
+        int rowHeight = sheet.rowHeight();
+        if (rowHeight != -1) {
+            sheetConfig.sheetOption.setRowHeight(rowHeight);
+        }
+        // 缩放
+        if (sheet.zoom() != -1) {
+            sheetConfig.sheetOption.setZoom(sheet.zoom());
+        }
+        sheetConfig.sheetOption.setSkipFieldHeader(sheet.skipFieldHeader());
+        sheetConfig.sheetOption.setSkipComment(sheet.skipComment());
+        sheetConfig.sheetOption.setSkipLink(sheet.skipLink());
+        sheetConfig.sheetOption.setSkipPicture(sheet.skipPicture());
+        sheetConfig.sheetOption.setSkipPictureException(sheet.skipPictureException());
+        sheetConfig.sheetOption.setSkipSelectOption(sheet.skipSelectOption());
+        sheetConfig.sheetOption.setFreezeHeader(sheet.freezeHeader());
+        sheetConfig.sheetOption.setFilterHeader(sheet.filterHeader());
+        sheetConfig.sheetOption.setSelected(sheet.selected());
+        sheetConfig.sheetOption.setHidden(sheet.hidden());
+        sheetConfig.sheetOption.setDisplayGridLines(sheet.displayGridLines());
+        sheetConfig.sheetOption.setDisplayRowColHeadings(sheet.displayRowColHeadings());
+        sheetConfig.sheetOption.setDisplayFormulas(sheet.displayFormulas());
     }
 
     /**
@@ -123,9 +135,9 @@ public class ExportSheetAnalysis implements Analysable {
         if (!Strings.isEmpty(borderColor)) {
             titleOption.setBorderColor(borderColor);
         }
-        FontOption fontOption = ExportColumnAnalysis.parseFont(title.font());
+        FontOption fontOption = SheetColumnAnalysis.parseFont(title.font());
         titleOption.setFont(fontOption);
-        sheetOption.setTitleOption(titleOption);
+        sheetConfig.sheetOption.setTitleOption(titleOption);
     }
 
     /**
@@ -142,7 +154,7 @@ public class ExportSheetAnalysis implements Analysable {
         headerOption.setLeft(header.left());
         headerOption.setCenter(header.center());
         headerOption.setRight(header.right());
-        sheetOption.setHeaderOption(headerOption);
+        sheetConfig.sheetOption.setHeaderOption(headerOption);
     }
 
     /**
@@ -159,7 +171,7 @@ public class ExportSheetAnalysis implements Analysable {
         footerOption.setLeft(footer.left());
         footerOption.setCenter(footer.center());
         footerOption.setRight(footer.right());
-        sheetOption.setFooterOption(footerOption);
+        sheetConfig.sheetOption.setFooterOption(footerOption);
     }
 
     /**
@@ -239,7 +251,7 @@ public class ExportSheetAnalysis implements Analysable {
         if (repeat.length != 0) {
             printOption.setRepeat(repeat);
         }
-        sheetOption.setPrintOption(printOption);
+        sheetConfig.sheetOption.setPrintOption(printOption);
     }
 
 }

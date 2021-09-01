@@ -41,17 +41,19 @@ public class ExportUserTests {
         list.add(null);
         list.add(null);
 
-        new ExcelExport<>(ExportUser.class)
+        ExcelExport<ExportUser> export = new ExcelExport<>(ExportUser.class);
+        export.skip(1);
+        export.init()
+                .getSheetConfig()
                 .cleanHeaderStyle(2)
-                .cleanColumnStyle(4)
-                .init()
-                .headers("二级标题", "", "day", "", "用户信息", "", "", "")
-                .skip(1)
+                .cleanColumnStyle(4);
+        export.headers("二级标题", "", "day", "", "用户信息", "", "", "")
+                // .skip(1)
                 .skipNullRows(false)
                 .addRows(list)
                 .merge(1, 0, 1)
                 .merge(1, 4, 7)
-                .write("C:\\Users\\ljh15\\Desktop\\1.xlsx")
+                .write("C:\\Users\\ljh15\\Desktop\\2.xlsx")
                 .close();
     }
 

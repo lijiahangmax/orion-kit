@@ -17,6 +17,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * Export 列 解析器
@@ -25,20 +27,17 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2020/12/29 18:05
  */
-public class ExportColumnAnalysis implements Analysable {
+public class SheetColumnAnalysis implements Analysable {
 
     private Class<?> targetClass;
 
     private int columnMaxIndex;
 
-    private ExportSheetOption sheetOption;
+    private SheetConfig sheetConfig;
 
-    private Map<Integer, ExportFieldOption> fieldOptions;
-
-    protected ExportColumnAnalysis(Class<?> targetClass, ExportSheetOption sheetOption, Map<Integer, ExportFieldOption> fieldOptions) {
+    protected SheetColumnAnalysis(Class<?> targetClass, SheetConfig sheetConfig) {
         this.targetClass = targetClass;
-        this.sheetOption = sheetOption;
-        this.fieldOptions = fieldOptions;
+        this.sheetConfig = sheetConfig;
     }
 
     @Override
@@ -65,6 +64,8 @@ public class ExportColumnAnalysis implements Analysable {
                     Annotations.getAnnotation(method, ExportIgnore.class),
                     method, null);
         }
+        // 如果将index作为排序字段则需要重新设置 fieldOptions的index 和 columnMaxIndex
+        this.indexToSort();
     }
 
     /**
@@ -90,7 +91,7 @@ public class ExportColumnAnalysis implements Analysable {
             throw Exceptions.parse("not found " + fieldName + "getter method");
         }
         int index = field.index();
-        sheetOption.setColumnMaxIndex(this.columnMaxIndex = Math.max(columnMaxIndex, index));
+        sheetConfig.sheetOption.setColumnMaxIndex(this.columnMaxIndex = Math.max(columnMaxIndex, index));
         // 解析 field
         ExportFieldOption exportFieldOption = this.analysisField(field, method);
         // 解析 font
@@ -98,15 +99,15 @@ public class ExportColumnAnalysis implements Analysable {
             exportFieldOption.setFontOption(this.analysisFont(font));
         }
         // 解析 comment
-        if (comment != null && !sheetOption.isSkipComment()) {
+        if (comment != null && !sheetConfig.sheetOption.isSkipComment()) {
             exportFieldOption.setCommentOption(this.analysisComment(comment));
         }
         // 解析 link
-        if (link != null && !sheetOption.isSkipLink()) {
+        if (link != null && !sheetConfig.sheetOption.isSkipLink()) {
             exportFieldOption.setLinkOption(this.analysisLink(link, exportFieldOption));
         }
         // 解析 picture
-        if (picture != null && !sheetOption.isSkipPicture()) {
+        if (picture != null && !sheetConfig.sheetOption.isSkipPicture()) {
             exportFieldOption.setPictureOption(this.analysisPicture(picture, exportFieldOption, method));
         }
     }
@@ -167,7 +168,7 @@ public class ExportColumnAnalysis implements Analysable {
         CellOption cellOption = new CellOption();
         cellOption.setFormat(field.format());
         exportFieldOption.setCellOption(cellOption);
-        fieldOptions.put(field.index(), exportFieldOption);
+        sheetConfig.fieldOptions.put(field.index(), exportFieldOption);
         return exportFieldOption;
     }
 
@@ -300,6 +301,26 @@ public class ExportColumnAnalysis implements Analysable {
             throw Exceptions.parse("failed to parse the picture text formula, reason: unknown formula " + option.getText());
         }
         return option;
+    }
+
+    /**
+     * 设置索引为排序
+     */
+    private void indexToSort() {
+        if (!sheetConfig.sheetOption.isIndexToSort()) {
+            return;
+        }
+        // 重新设置 fieldOptions
+        int i = 0;
+        Map<Integer, ExportFieldOption> sortedFieldOptions = new TreeMap<>();
+        Set<Map.Entry<Integer, ExportFieldOption>> fieldOptionEntries = sheetConfig.fieldOptions.entrySet();
+        for (Map.Entry<Integer, ExportFieldOption> fieldOptionEntry : fieldOptionEntries) {
+            sortedFieldOptions.put(i++, fieldOptionEntry.getValue());
+        }
+        sheetConfig.fieldOptions = sortedFieldOptions;
+        // 重新设置 columnMaxIndex
+        this.columnMaxIndex = fieldOptionEntries.size() - 1;
+        sheetConfig.sheetOption.setColumnMaxIndex(columnMaxIndex);
     }
 
     // -------------------- parser static --------------------

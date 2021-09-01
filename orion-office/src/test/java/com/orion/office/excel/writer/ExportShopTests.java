@@ -34,13 +34,17 @@ public class ExportShopTests {
             }
             shop.setBusinessFile("C:/Users/ljh15/Desktop/export/index.html");
             shop.setMargin(BigDecimal.valueOf(Randoms.randomDouble(0, 10)));
+            if (i % 10 == 0) {
+                return null;
+            }
             return shop;
         }).collect(Collectors.toList());
 
         new ExcelExport<>(ExportShop.class)
                 .init()
+                .skipNullRows(false)
                 .addRows(shopList)
-                .write("C:\\Users\\ljh15\\Desktop\\data\\shop.xlsx")
+                .write("C:\\Users\\ljh15\\Desktop\\1.xlsx")
                 .close();
     }
 

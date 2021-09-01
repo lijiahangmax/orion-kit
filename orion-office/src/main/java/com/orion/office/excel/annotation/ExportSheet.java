@@ -56,6 +56,17 @@ public @interface ExportSheet {
     int zoom() default -1;
 
     /**
+     * 列是否使用默认样式 全局
+     * skip() 会使用默认样式
+     */
+    boolean columnUseDefaultStyle() default false;
+
+    /**
+     * 是否将index作为排序字段
+     */
+    boolean indexToSort() default false;
+
+    /**
      * 表头是否使用数据列的样式
      */
     boolean headerUseColumnStyle() default true;

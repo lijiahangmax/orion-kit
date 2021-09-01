@@ -42,6 +42,17 @@ public class ExportSheetOption implements Serializable {
     private Integer zoom;
 
     /**
+     * 列是否使用默认样式 全局
+     * skip() 会使用默认样式
+     */
+    private boolean columnUseDefaultStyle;
+
+    /**
+     * 是否将index作为排序字段
+     */
+    private boolean indexToSort;
+
+    /**
      * 头是否使用列的样式
      */
     private boolean headerUseColumnStyle;
@@ -84,7 +95,7 @@ public class ExportSheetOption implements Serializable {
     /**
      * 是否跳过空行
      */
-    private boolean skipNullRows = true;
+    private boolean skipNullRows;
 
     /**
      * 是否固定表头
@@ -129,7 +140,7 @@ public class ExportSheetOption implements Serializable {
     /**
      * 标题和表头所占用的行数
      */
-    private int titleAndHeaderRows;
+    private int titleAndHeaderLastRowIndex;
 
     /**
      * 最大列索引
@@ -160,6 +171,10 @@ public class ExportSheetOption implements Serializable {
      * 是否不执行公式 会修改列宽单位
      */
     private boolean displayFormulas;
+
+    public ExportSheetOption() {
+        this.skipNullRows = true;
+    }
 
     public String getName() {
         return name;
@@ -207,6 +222,22 @@ public class ExportSheetOption implements Serializable {
 
     public void setZoom(Integer zoom) {
         this.zoom = zoom;
+    }
+
+    public boolean isColumnUseDefaultStyle() {
+        return columnUseDefaultStyle;
+    }
+
+    public void setColumnUseDefaultStyle(boolean columnUseDefaultStyle) {
+        this.columnUseDefaultStyle = columnUseDefaultStyle;
+    }
+
+    public boolean isIndexToSort() {
+        return indexToSort;
+    }
+
+    public void setIndexToSort(boolean indexToSort) {
+        this.indexToSort = indexToSort;
     }
 
     public boolean isHeaderUseColumnStyle() {
@@ -329,12 +360,12 @@ public class ExportSheetOption implements Serializable {
         this.printOption = printOption;
     }
 
-    public int getTitleAndHeaderRows() {
-        return titleAndHeaderRows;
+    public int getTitleAndHeaderLastRowIndex() {
+        return titleAndHeaderLastRowIndex;
     }
 
-    public void setTitleAndHeaderRows(int titleAndHeaderRows) {
-        this.titleAndHeaderRows = titleAndHeaderRows;
+    public void setTitleAndHeaderLastRowIndex(int titleAndHeaderLastRowIndex) {
+        this.titleAndHeaderLastRowIndex = titleAndHeaderLastRowIndex;
     }
 
     public int getColumnMaxIndex() {

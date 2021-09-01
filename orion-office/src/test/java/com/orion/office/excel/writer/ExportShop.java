@@ -14,11 +14,11 @@ import java.util.Date;
  * @version 1.0.0
  * @since 2020/12/30 9:44
  */
-@ExportSheet(name = "门店信息", filterHeader = true, freezeHeader = true, titleHeight = 30, rowHeight = 60, columnWidth = 20, headerUseColumnStyle = false)
+@ExportSheet(name = "门店信息", filterHeader = true, freezeHeader = true, titleHeight = 30, rowHeight = 60, columnWidth = 20, headerUseColumnStyle = false, indexToSort = true)
 @ExportTitle(title = "用户门店信息导出", useRow = 2, font = @ExportFont(fontSize = 22, fontName = "仿宋"))
 public class ExportShop {
 
-    @ExportField(index = 0, align = ExcelAlignType.CENTER, header = "门店id")
+    @ExportField(index = 0, align = ExcelAlignType.CENTER, selectOptions = {"下拉1", "下拉2"}, header = "门店id")
     @ExportFont(fontName = "微软雅黑")
     private Long shopId;
 
@@ -41,7 +41,7 @@ public class ExportShop {
     @ExportComment(comment = "点击文件超链接可直接定位")
     private String businessFile;
 
-    @ExportField(index = 6, type = ExcelFieldType.DECIMAL_FORMAT, format = "#.####万元", header = "保证金")
+    @ExportField(index = 7, type = ExcelFieldType.DECIMAL_FORMAT, format = "#.####万元", header = "保证金")
     private BigDecimal margin;
 
     public Long getShopId() {
