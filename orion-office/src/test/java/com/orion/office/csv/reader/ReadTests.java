@@ -12,7 +12,7 @@ import java.util.Arrays;
  * @version 1.0.0
  * @since 2021/2/7 15:29
  */
-public class ReadeTests {
+public class ReadTests {
 
     private static CsvReader array = new CsvReader("C:\\Users\\ljh15\\Desktop\\csv\\array.csv");
     private static CsvReader map = new CsvReader("C:\\Users\\ljh15\\Desktop\\csv\\map.csv");

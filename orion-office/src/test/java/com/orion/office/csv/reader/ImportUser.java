@@ -9,7 +9,7 @@ import com.orion.office.csv.annotation.ImportSetting;
  * @version 1.0.0
  * @since 2021/2/7 15:55
  */
-@ImportSetting(delimiter = ';')
+@ImportSetting(delimiter = ',')
 public class ImportUser {
 
     @ImportField(value = 1)
