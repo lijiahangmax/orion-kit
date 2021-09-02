@@ -79,13 +79,8 @@ public class ExcelBeanReader<T> extends BaseExcelReader<T> {
 
     protected ExcelBeanReader(Workbook workbook, Sheet sheet, Class<T> targetClass, List<T> rows, Consumer<T> consumer) {
         super(workbook, sheet, rows, consumer);
-        Valid.notNull(targetClass, "target class is null");
-        this.targetClass = targetClass;
-        Constructor<T> constructor = Constructors.getDefaultConstructor(targetClass);
-        if (constructor == null) {
-            throw Exceptions.argument("target class not found default constructor");
-        }
-        this.constructor = constructor;
+        this.targetClass = Valid.notNull(targetClass, "target class is null");
+        this.constructor = Valid.notNull(Constructors.getDefaultConstructor(targetClass), "target class not found default constructor");
         this.options = new HashMap<>();
         this.analysis = new ReaderColumnAnalysis(targetClass, streaming, options);
         this.analysis.analysis();

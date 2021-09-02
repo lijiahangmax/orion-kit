@@ -21,8 +21,6 @@ import java.util.Optional;
  */
 public class ExcelExport<T> extends BaseExcelWriteable {
 
-    private Workbook workbook;
-
     private Sheet sheet;
 
     /**
@@ -60,7 +58,6 @@ public class ExcelExport<T> extends BaseExcelWriteable {
     public ExcelExport(Class<T> targetClass, Workbook workbook, Sheet sheet) {
         super(workbook);
         Valid.notNull(targetClass, "target class is null");
-        this.workbook = workbook;
         this.sheetConfig = new SheetConfig();
         this.initializer = new ExportInitializer<>(workbook, sheet, targetClass, sheetConfig);
         sheetConfig.setInitializer(initializer);
@@ -290,10 +287,6 @@ public class ExcelExport<T> extends BaseExcelWriteable {
         return workbook.createDataFormat();
     }
 
-    public Workbook getWorkbook() {
-        return workbook;
-    }
-
     public Sheet getSheet() {
         return sheet;
     }
@@ -318,15 +311,6 @@ public class ExcelExport<T> extends BaseExcelWriteable {
      */
     public int getColumnMaxIndex() {
         return sheetConfig.sheetOption.getColumnMaxIndex();
-    }
-
-    /**
-     * 获取列数
-     *
-     * @return 列数
-     */
-    public int getColumnSize() {
-        return sheetConfig.sheetOption.getColumnSize();
     }
 
     /**

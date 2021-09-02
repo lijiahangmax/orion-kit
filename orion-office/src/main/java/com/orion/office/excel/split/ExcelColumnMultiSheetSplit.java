@@ -54,8 +54,7 @@ public class ExcelColumnMultiSheetSplit extends BaseExcelWriteable {
 
     public ExcelColumnMultiSheetSplit(Workbook sourceWorkbook, Sheet sourceSheet) {
         this(sourceWorkbook);
-        Valid.notNull(sourceSheet, "split sheet is null");
-        this.sourceSheet = sourceSheet;
+        this.sourceSheet = Valid.notNull(sourceSheet, "split sheet is null");
     }
 
     private ExcelColumnMultiSheetSplit(Workbook sourceWorkbook) {

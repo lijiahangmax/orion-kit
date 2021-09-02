@@ -53,8 +53,7 @@ public class ExcelColumnMultiSplit implements SafeCloseable {
 
     public ExcelColumnMultiSplit(Workbook sourceWorkbook, Sheet sourceSheet) {
         this(sourceWorkbook);
-        Valid.notNull(sourceSheet, "split sheet is null");
-        this.sourceSheet = sourceSheet;
+        this.sourceSheet = Valid.notNull(sourceSheet, "split sheet is null");
     }
 
     private ExcelColumnMultiSplit(Workbook sourceWorkbook) {

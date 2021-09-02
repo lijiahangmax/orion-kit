@@ -55,11 +55,9 @@ public class ExcelColumnSingleSplit extends BaseExcelWriteable {
 
     public ExcelColumnSingleSplit(Workbook sourceWorkbook, Sheet sourceSheet, int... columns) {
         super(new SXSSFWorkbook());
-        Valid.notNull(sourceWorkbook, "split workbook is null");
-        Valid.notNull(sourceSheet, "split sheet is null");
-        Valid.isFalse(Arrays1.isEmpty(columns), "split columns is empty");
-        this.sourceWorkbook = sourceWorkbook;
-        this.sourceSheet = sourceSheet;
+        this.sourceWorkbook = Valid.notNull(sourceWorkbook, "split workbook is null");
+        this.sourceSheet = Valid.notNull(sourceSheet, "split sheet is null");
+        Valid.isTrue(!Arrays1.isEmpty(columns), "split columns is empty");
         this.targetSheet = super.workbook.createSheet(sourceSheet.getSheetName());
         this.columns = columns;
         this.streaming = Excels.isStreamingSheet(sourceSheet);

@@ -157,7 +157,7 @@ public class ExcelMerge extends BaseExcelWriteable {
                 Excels.copyCellValue(cell, originCell);
             }
         }
-        skipRows = 0;
+        this.skipRows = 0;
         return this;
     }
 

@@ -134,7 +134,7 @@ public class ExcelMapReader<K, V> extends BaseExcelReader<MutableMap<K, V>> {
      */
     public ExcelMapReader<K, V> linked() {
         this.linked = true;
-        this.options = new LinkedHashMap<>(this.options);
+        this.options = new LinkedHashMap<>(options);
         return this;
     }
 

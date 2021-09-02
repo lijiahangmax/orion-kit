@@ -96,7 +96,7 @@ public class WriteTests {
                 .trim()
                 .headerUseRowStyle()
                 .skip();
-        CellStyle style = writer.createStyle();
+        CellStyle style = writer.createCellStyle();
         Font font = writer.createFont();
         font.setColor(Font.COLOR_RED);
         style.setFont(font);
@@ -133,9 +133,10 @@ public class WriteTests {
                 .filter(2)
                 .hidden(5)
                 .trim()
+                .columnUseDefaultStyle()
                 .headerUseRowStyle()
                 .skip();
-        CellStyle style = writer.createStyle();
+        CellStyle style = writer.createCellStyle();
         Font font = writer.createFont();
         font.setColor(Font.COLOR_RED);
         style.setFont(font);
@@ -171,7 +172,7 @@ public class WriteTests {
                 .hidden(5)
                 .selected()
                 .headerUseRowStyle();
-        CellStyle style = writer.createStyle();
+        CellStyle style = writer.createCellStyle();
         Font font = writer.createFont();
         font.setColor(Font.COLOR_RED);
         style.setFont(font);

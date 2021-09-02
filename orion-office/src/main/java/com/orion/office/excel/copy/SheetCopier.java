@@ -43,7 +43,7 @@ public class SheetCopier {
     /**
      * 列数
      */
-    private int column = 32;
+    private int column;
 
     public SheetCopier(Workbook sourceWorkbook, Workbook targetWorkbook, Sheet sourceSheet, Sheet targetSheet) {
         Valid.notNull(sourceWorkbook, "sourceWorkbook is null");
@@ -55,6 +55,7 @@ public class SheetCopier {
         this.targetWorkbook = targetWorkbook;
         this.sourceSheet = sourceSheet;
         this.targetSheet = targetSheet;
+        this.column = 32;
     }
 
     /**

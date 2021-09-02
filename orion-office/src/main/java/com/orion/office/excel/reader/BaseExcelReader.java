@@ -214,7 +214,7 @@ public abstract class BaseExcelReader<T> implements SafeCloseable {
      */
     protected void readRow() {
         this.checkInit();
-        T row = nextRow();
+        T row = this.nextRow();
         if (end || (row == null && skipNullRows)) {
             return;
         }
@@ -243,9 +243,9 @@ public abstract class BaseExcelReader<T> implements SafeCloseable {
         Row row = iterator.next();
         if (currentIndex++ == rowIndex) {
             rowIndex++;
-            return parserRow(row);
+            return this.parserRow(row);
         }
-        return nextRow();
+        return this.nextRow();
     }
 
     /**
@@ -262,7 +262,7 @@ public abstract class BaseExcelReader<T> implements SafeCloseable {
      * @return this
      */
     public BaseExcelReader<T> clear() {
-        if (store && this.rows != null) {
+        if (store && rows != null) {
             this.rows.clear();
         }
         return this;

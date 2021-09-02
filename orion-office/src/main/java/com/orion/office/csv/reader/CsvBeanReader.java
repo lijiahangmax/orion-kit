@@ -131,11 +131,7 @@ public class CsvBeanReader<T> extends BaseCsvReader<T> {
      * 解析class
      */
     protected void parseClass() {
-        Constructor<T> constructor = Constructors.getDefaultConstructor(targetClass);
-        if (constructor == null) {
-            throw Exceptions.argument("target class not found default constructor");
-        }
-        this.constructor = constructor;
+        this.constructor = Valid.notNull(Constructors.getDefaultConstructor(targetClass), "target class not found default constructor");
         ImportSetting setting = Annotations.getAnnotation(targetClass, ImportSetting.class);
         CsvReaderOption option = new CsvReaderOption();
         if (setting == null) {

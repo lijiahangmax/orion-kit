@@ -67,9 +67,8 @@ public class ExcelRowSplit extends DestinationGenerator {
     private boolean end;
 
     public ExcelRowSplit(Sheet sheet, int limit) {
-        Valid.notNull(sheet, "split sheet is null");
+        this.sheet = Valid.notNull(sheet, "split sheet is null");
         Valid.lte(0, limit, "limit not be lte 0");
-        this.sheet = sheet;
         this.columnSize = 32;
         this.limit = limit;
         this.streaming = Excels.isStreamingSheet(sheet);

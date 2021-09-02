@@ -32,7 +32,7 @@ public abstract class BaseExcelWriter<K, V> {
     /**
      * 当前行索引
      */
-    protected int cellIndex;
+    protected int rowIndex;
 
     /**
      * 最大列索引
@@ -50,6 +50,12 @@ public abstract class BaseExcelWriter<K, V> {
      * @see String
      */
     protected boolean trim;
+
+    /**
+     * 列是否使用默认样式 全局
+     * skip() 会使用默认样式
+     */
+    protected boolean columnUseDefaultStyle;
 
     /**
      * 是否使用头部样式
@@ -113,7 +119,7 @@ public abstract class BaseExcelWriter<K, V> {
      * @return this
      */
     public BaseExcelWriter<K, V> title(String title) {
-        return title(title, 1, columnMaxIndex);
+        return this.title(title, 1, columnMaxIndex);
     }
 
     /**
@@ -124,7 +130,7 @@ public abstract class BaseExcelWriter<K, V> {
      * @return this
      */
     public BaseExcelWriter<K, V> title(String title, int row) {
-        return title(title, row, columnMaxIndex);
+        return this.title(title, row, columnMaxIndex);
     }
 
     /**
@@ -139,12 +145,12 @@ public abstract class BaseExcelWriter<K, V> {
         Valid.gt(row, 0, "title use row must > 0");
         Valid.gte(lastColumnIndex, 0, "title last column index row must >= 0");
         // row
-        Row titleRow = sheet.createRow(cellIndex++);
+        Row titleRow = sheet.createRow(rowIndex++);
         if (titleHeight != 0) {
             titleRow.setHeightInPoints(titleHeight);
         }
         for (int i = 0; i < row - 1; i++) {
-            Row ignoreRow = sheet.createRow(cellIndex++);
+            Row ignoreRow = sheet.createRow(rowIndex++);
             if (titleHeight != 0) {
                 ignoreRow.setHeightInPoints(titleHeight);
             }
@@ -161,7 +167,7 @@ public abstract class BaseExcelWriter<K, V> {
             title = title.trim();
         }
         cell.setCellValue(title);
-        this.merge(cellIndex - row, cellIndex - 1, 0, lastColumnIndex, true);
+        this.merge(rowIndex - row, rowIndex - 1, 0, lastColumnIndex, true);
         return this;
     }
 
@@ -175,7 +181,7 @@ public abstract class BaseExcelWriter<K, V> {
         if (Arrays1.isEmpty(headers)) {
             return this;
         }
-        Row row = sheet.createRow(cellIndex++);
+        Row row = sheet.createRow(rowIndex++);
         if (headerHeight != 0) {
             row.setHeightInPoints(headerHeight);
         }
@@ -199,7 +205,7 @@ public abstract class BaseExcelWriter<K, V> {
      * @return this
      */
     public BaseExcelWriter<K, V> skip() {
-        cellIndex++;
+        rowIndex++;
         return this;
     }
 
@@ -210,7 +216,7 @@ public abstract class BaseExcelWriter<K, V> {
      * @return this
      */
     public BaseExcelWriter<K, V> skip(int i) {
-        cellIndex += i;
+        rowIndex += i;
         return this;
     }
 
@@ -232,6 +238,16 @@ public abstract class BaseExcelWriter<K, V> {
      */
     public BaseExcelWriter<K, V> trim() {
         this.trim = true;
+        return this;
+    }
+
+    /**
+     * 列是否使用默认样式 需要在设置样式之前调用
+     *
+     * @return this
+     */
+    public BaseExcelWriter<K, V> columnUseDefaultStyle() {
+        this.columnUseDefaultStyle = true;
         return this;
     }
 
@@ -326,6 +342,9 @@ public abstract class BaseExcelWriter<K, V> {
             headerStyles.put(column, style);
         }
         columnStyles.put(column, style);
+        if (columnUseDefaultStyle) {
+            sheet.setDefaultColumnStyle(column, style);
+        }
         return this;
     }
 
@@ -576,7 +595,7 @@ public abstract class BaseExcelWriter<K, V> {
             return this;
         }
         // 行
-        Row r = sheet.createRow(cellIndex++);
+        Row r = sheet.createRow(rowIndex++);
         if (rowHeight != 0) {
             r.setHeightInPoints(rowHeight);
         }
@@ -690,32 +709,60 @@ public abstract class BaseExcelWriter<K, V> {
         return workbook;
     }
 
-    public Sheet getSheet() {
-        return sheet;
-    }
-
-    public int getCellIndex() {
-        return cellIndex;
-    }
-
-    public int getColumnMaxIndex() {
-        return columnMaxIndex;
-    }
-
-    public int getColumnSize() {
-        return columnMaxIndex + 1;
-    }
-
-    public CellStyle createStyle() {
+    /**
+     * 获取一个单元格样式 用于样式修改
+     *
+     * @return 单元格样式
+     */
+    public CellStyle createCellStyle() {
         return workbook.createCellStyle();
     }
 
+    /**
+     * 获取一个字体 用于样式修改
+     *
+     * @return 字体
+     */
     public Font createFont() {
         return workbook.createFont();
     }
 
+    /**
+     * 获取一个格式 用于样式修改
+     *
+     * @return 格式
+     */
     public DataFormat createFormat() {
         return workbook.createDataFormat();
+    }
+
+    public Sheet getSheet() {
+        return sheet;
+    }
+
+    /**
+     * 获取总行数
+     *
+     * @return 总行数
+     */
+    public int getLines() {
+        return sheet.getLastRowNum() + 1;
+    }
+
+    /**
+     * 获取最大列索引
+     *
+     * @return 最大列索引
+     */
+    public int getColumnMaxIndex() {
+        return columnMaxIndex;
+    }
+
+    /**
+     * @return 写入的数据行数
+     */
+    public int getRowIndex() {
+        return rowIndex;
     }
 
 }

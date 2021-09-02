@@ -61,6 +61,10 @@ public class BaseExcelWriteable implements SafeCloseable {
         return this;
     }
 
+    public Workbook getWorkbook() {
+        return workbook;
+    }
+
     @Override
     public void close() {
         Streams.close(workbook);

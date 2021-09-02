@@ -372,10 +372,6 @@ public class ExportSheetOption implements Serializable {
         return columnMaxIndex;
     }
 
-    public int getColumnSize() {
-        return columnMaxIndex + 1;
-    }
-
     public void setColumnMaxIndex(int columnMaxIndex) {
         this.columnMaxIndex = columnMaxIndex;
     }
