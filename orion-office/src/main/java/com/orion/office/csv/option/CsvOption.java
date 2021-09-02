@@ -99,14 +99,14 @@ public class CsvOption implements Serializable {
     protected boolean trim;
 
     public CsvOption() {
-        textQualifier = Letters.QUOTE;
-        useTextQualifier = true;
-        delimiter = Letters.COMMA;
-        lineDelimiter = Letters.NULL;
-        comment = Letters.POUND;
-        escapeMode = ESCAPE_MODE_DOUBLED;
-        charset = StandardCharsets.UTF_8;
-        trim = true;
+        this.textQualifier = Letters.QUOTE;
+        this.useTextQualifier = true;
+        this.delimiter = Letters.COMMA;
+        this.lineDelimiter = Letters.NULL;
+        this.comment = Letters.POUND;
+        this.escapeMode = ESCAPE_MODE_DOUBLED;
+        this.charset = StandardCharsets.UTF_8;
+        this.trim = false;
     }
 
     protected CsvOption(CsvOption option) {

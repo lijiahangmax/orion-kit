@@ -20,10 +20,7 @@ import java.io.Writer;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -47,6 +44,11 @@ public class CsvBeanWriter<T> extends BaseCsvWriter<String, T> {
     private boolean addHeader;
 
     /**
+     * 是否将index作为排序字段
+     */
+    private boolean indexToSort;
+
+    /**
      * all getter
      */
     private Map<String, Method> getters;
@@ -54,7 +56,7 @@ public class CsvBeanWriter<T> extends BaseCsvWriter<String, T> {
     /**
      * 注解表头
      */
-    private Map<Integer, String> headers = new TreeMap<>();
+    private Map<Integer, String> headers;
 
     public CsvBeanWriter(String file, Class<T> targetClass) {
         this(new CsvWriter(file), targetClass);
@@ -74,8 +76,9 @@ public class CsvBeanWriter<T> extends BaseCsvWriter<String, T> {
 
     public CsvBeanWriter(CsvWriter writer, Class<T> targetClass) {
         super(writer);
-        Valid.notNull(this.targetClass = targetClass, "target class is null");
-        writer.setOption(this.parseClass());
+        this.targetClass = Valid.notNull(targetClass, "target class is null");
+        this.headers = new TreeMap<>();
+        this.parseClass();
         this.parseField();
     }
 
@@ -86,7 +89,7 @@ public class CsvBeanWriter<T> extends BaseCsvWriter<String, T> {
             throw Exceptions.parse("not found " + field + " getter method");
         }
         mapping.put(column, field);
-        maxColumnIndex = Math.max(maxColumnIndex, column);
+        this.maxColumnIndex = Math.max(maxColumnIndex, column);
         return this;
     }
 
@@ -116,17 +119,16 @@ public class CsvBeanWriter<T> extends BaseCsvWriter<String, T> {
 
     /**
      * 解析class
-     *
-     * @return CsvWriterOption
      */
-    protected CsvWriterOption parseClass() {
+    protected void parseClass() {
         ExportSetting setting = Annotations.getAnnotation(targetClass, ExportSetting.class);
+        CsvWriterOption option = new CsvWriterOption();
         if (setting == null) {
-            return new CsvWriterOption();
+            writer.setOption(option);
+            return;
         }
-        CsvWriterOption option = new CsvWriterOption()
-                .setForceQualifier(setting.forceQualifier());
-        option.setTextQualifier(setting.textQualifier())
+        option.setForceQualifier(setting.forceQualifier())
+                .setTextQualifier(setting.textQualifier())
                 .setUseTextQualifier(setting.useTextQualifier())
                 .setDelimiter(setting.delimiter())
                 .setLineDelimiter(setting.lineDelimiter())
@@ -135,7 +137,8 @@ public class CsvBeanWriter<T> extends BaseCsvWriter<String, T> {
                 .setUseTextQualifier(setting.useTextQualifier())
                 .setCharset(Charset.forName(setting.charset()))
                 .setTrim(setting.trim());
-        return option;
+        writer.setOption(option);
+        this.indexToSort = setting.indexToSort();
     }
 
     /**
@@ -157,6 +160,9 @@ public class CsvBeanWriter<T> extends BaseCsvWriter<String, T> {
                     Annotations.getAnnotation(method, ExportIgnore.class),
                     method, null);
         }
+        // 设置索引为排序
+        this.indexToSort();
+        // 设置表头
         if (addHeader && headers != null) {
             Optional.ofNullable(Maps.last(headers))
                     .map(Map.Entry::getKey)
@@ -194,10 +200,35 @@ public class CsvBeanWriter<T> extends BaseCsvWriter<String, T> {
             mapping.put(index, fieldName);
         }
         if (!Strings.isEmpty(header)) {
-            addHeader = true;
+            this.addHeader = true;
             headers.put(index, header);
         }
-        maxColumnIndex = Math.max(maxColumnIndex, index);
+        this.maxColumnIndex = Math.max(maxColumnIndex, index);
+    }
+
+    /**
+     * 将index作为排序字段
+     */
+    protected void indexToSort() {
+        if (!indexToSort) {
+            return;
+        }
+        // mapping
+        Map<Integer, String> sortMapping = new TreeMap<>();
+        // header
+        TreeMap<Integer, String> sortHeaders = new TreeMap<>();
+        int i = 0;
+        Set<Map.Entry<Integer, String>> mappingEntities = mapping.entrySet();
+        for (Map.Entry<Integer, String> mappingEntity : mappingEntities) {
+            sortMapping.put(i, mappingEntity.getValue());
+            sortHeaders.put(i, headers.get(mappingEntity.getKey()));
+            i++;
+        }
+        // 设置mapping 和 header
+        super.mapping = sortMapping;
+        this.headers = sortHeaders;
+        // 设置 maxColumnIndex
+        this.maxColumnIndex = mappingEntities.size() - 1;
     }
 
 }

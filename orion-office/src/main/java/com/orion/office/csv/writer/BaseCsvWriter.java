@@ -30,17 +30,17 @@ public abstract class BaseCsvWriter<K, V> implements SafeCloseable, SafeFlushabl
     /**
      * 是否跳过空行
      */
-    protected boolean skipNullRows = true;
+    protected boolean skipNullRows;
 
     /**
      * 默认值
      */
-    protected Map<K, String> defaultValue = new HashMap<>();
+    protected Map<K, String> defaultValue;
 
     /**
      * 数组容量
      */
-    protected int capacity = -1;
+    protected int capacity;
 
     /**
      * 映射最大列索引
@@ -52,11 +52,15 @@ public abstract class BaseCsvWriter<K, V> implements SafeCloseable, SafeFlushabl
      * key: column
      * value: valueKey
      */
-    protected Map<Integer, K> mapping = new TreeMap<>();
+    protected Map<Integer, K> mapping;
 
     public BaseCsvWriter(CsvWriter writer) {
         Valid.notNull(writer, "csv writer is null");
         this.writer = writer;
+        this.skipNullRows = true;
+        this.capacity = -1;
+        this.defaultValue = new HashMap<>();
+        this.mapping = new TreeMap<>();
     }
 
     /**
@@ -139,7 +143,7 @@ public abstract class BaseCsvWriter<K, V> implements SafeCloseable, SafeFlushabl
      * @return this
      */
     public BaseCsvWriter<K, V> mapping(int column, K k) {
-        maxColumnIndex = Math.max(maxColumnIndex, column);
+        this.maxColumnIndex = Math.max(maxColumnIndex, column);
         mapping.put(column, k);
         return this;
     }
@@ -155,7 +159,7 @@ public abstract class BaseCsvWriter<K, V> implements SafeCloseable, SafeFlushabl
             if (skipNullRows) {
                 return this;
             } else {
-                return skip();
+                return this.skip();
             }
         }
         try {

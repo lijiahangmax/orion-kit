@@ -89,7 +89,7 @@ public class WriteTests {
 
     @Test
     public void beanTests() {
-        CsvBeanWriter<ExportUser> writer = new CsvBeanWriter<>("C:\\Users\\ljh15\\Desktop\\csv\\bean.csv", ExportUser.class);
+        CsvBeanWriter<ExportUser> writer = new CsvBeanWriter<>("C:\\Users\\ljh15\\Desktop\\bean.csv", ExportUser.class);
         writer.getOption().setTrim(true);
         writer.defaultValue("desc", "def")
                 .skip()

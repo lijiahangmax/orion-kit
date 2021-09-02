@@ -63,6 +63,11 @@ public @interface ExportSetting {
     /**
      * 是否去除首尾空格
      */
-    boolean trim() default true;
+    boolean trim() default false;
+
+    /**
+     * 是否将index作为排序字段
+     */
+    boolean indexToSort() default false;
 
 }

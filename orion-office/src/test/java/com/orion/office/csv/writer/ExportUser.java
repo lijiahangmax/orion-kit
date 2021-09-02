@@ -9,7 +9,7 @@ import com.orion.office.csv.annotation.ExportSetting;
  * @version 1.0.0
  * @since 2021/1/30 1:24
  */
-@ExportSetting(delimiter = ';')
+@ExportSetting(delimiter = ',', indexToSort = true)
 public class ExportUser {
 
     @ExportField(value = 0, header = "序列")
@@ -22,10 +22,10 @@ public class ExportUser {
     @ExportField(value = 2, header = "name")
     private String name;
 
-    @ExportField(value = 3, header = "时间")
+    @ExportField(value = 4, header = "时间")
     private String date;
 
-    @ExportField(value = 4)
+    @ExportField(value = 6)
     private String desc;
 
     public int getNum() {
