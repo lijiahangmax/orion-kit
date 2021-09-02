@@ -236,9 +236,9 @@ public class ExcelExport<T> extends BaseExcelWriteable {
     public ExcelExport<T> addRows(List<T> rows) {
         initializer.checkInit();
         Integer rowHeight = sheetConfig.sheetOption.getRowHeight();
-        for (T data : rows) {
+        for (T row : rows) {
             this.rows++;
-            if (data == null && sheetConfig.sheetOption.isSkipNullRows()) {
+            if (row == null && sheetConfig.sheetOption.isSkipNullRows()) {
                 continue;
             }
             // 空行会有样式
@@ -248,8 +248,8 @@ public class ExcelExport<T> extends BaseExcelWriteable {
                 dataRow.setHeightInPoints(rowHeight);
             }
             // 设置值
-            sheetConfig.fieldOptions.forEach((k, v) -> {
-                processor.setCellValue(dataRow.createCell(k), initializer.rowIndex, k, data, v);
+            sheetConfig.fieldOptions.forEach((col, option) -> {
+                processor.setCellValue(dataRow.createCell(col), initializer.rowIndex, col, row, option);
             });
             initializer.rowIndex++;
         }

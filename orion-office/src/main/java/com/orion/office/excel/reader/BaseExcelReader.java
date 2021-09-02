@@ -59,7 +59,7 @@ public abstract class BaseExcelReader<T> implements SafeCloseable {
     /**
      * 是否跳过空行
      */
-    protected boolean skipNullRows = true;
+    protected boolean skipNullRows;
 
     /**
      * 是否清除空格
@@ -101,6 +101,7 @@ public abstract class BaseExcelReader<T> implements SafeCloseable {
         }
         this.workbook = workbook;
         this.sheet = sheet;
+        this.skipNullRows = true;
         this.rows = rows;
         this.consumer = consumer;
         this.store = rows != null;

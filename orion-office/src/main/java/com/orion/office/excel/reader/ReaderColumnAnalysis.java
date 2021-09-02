@@ -43,7 +43,7 @@ public class ReaderColumnAnalysis implements Analysable {
 
     @Override
     public void analysis() {
-        // 扫描setter
+        // setter cache
         List<Method> setterMethodList = Methods.getSetterMethodsByCache(this.targetClass);
         // 扫描field
         List<Field> fieldList = Fields.getFieldsByCache(this.targetClass);
@@ -52,6 +52,7 @@ public class ReaderColumnAnalysis implements Analysable {
                     Annotations.getAnnotation(field, ImportIgnore.class),
                     Methods.getSetterMethodByField(targetClass, field), field.getName());
         }
+        // 扫描setter
         for (Method method : setterMethodList) {
             this.analysisColumn(Annotations.getAnnotation(method, ImportField.class),
                     Annotations.getAnnotation(method, ImportIgnore.class),
@@ -80,6 +81,7 @@ public class ReaderColumnAnalysis implements Analysable {
         if (!Strings.isEmpty(parseFormat)) {
             option.setCellOption(new CellOption(parseFormat));
         }
+        // 解析
         this.analysisColumn(option, fieldName, method);
     }
 
@@ -99,6 +101,7 @@ public class ReaderColumnAnalysis implements Analysable {
         if (type == null) {
             option.setType(type = ExcelReadType.TEXT);
         }
+        // 判断是否支持流式操作
         if (streaming && (type.equals(ExcelReadType.LINK_ADDRESS) ||
                 type.equals(ExcelReadType.COMMENT) ||
                 type.equals(ExcelReadType.PICTURE))) {
@@ -107,11 +110,13 @@ public class ReaderColumnAnalysis implements Analysable {
         Class<?> parameterType = method.getParameterTypes()[0];
         switch (type) {
             case LINK_ADDRESS:
+                // 超链接
                 if (!parameterType.equals(String.class)) {
                     throw Exceptions.parse("read hyperlink address parameter type must be String");
                 }
                 break;
             case PICTURE:
+                // 图片
                 if (!parameterType.equals(byte[].class) &&
                         !parameterType.equals(String.class) &&
                         !parameterType.equals(OutputStream.class) &&

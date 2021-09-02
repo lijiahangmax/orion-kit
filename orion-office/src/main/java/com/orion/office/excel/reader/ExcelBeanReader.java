@@ -23,6 +23,10 @@ import java.util.function.Consumer;
 
 /**
  * Excel Bean 读取器
+ * <p>
+ * 支持高级数据类型
+ * <p>
+ * {@link Excels#getCellValue(Cell, ExcelReadType, com.orion.office.excel.option.CellOption)}
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -49,7 +53,7 @@ public class ExcelBeanReader<T> extends BaseExcelReader<T> {
      * key: setter
      * value: 配置
      */
-    protected Map<Method, ImportFieldOption> options = new HashMap<>();
+    protected Map<Method, ImportFieldOption> options;
 
     /**
      * 图片解析器
@@ -81,10 +85,11 @@ public class ExcelBeanReader<T> extends BaseExcelReader<T> {
         if (constructor == null) {
             throw Exceptions.argument("target class not found default constructor");
         }
-        this.init = false;
         this.constructor = constructor;
+        this.options = new HashMap<>();
         this.analysis = new ReaderColumnAnalysis(targetClass, streaming, options);
         this.analysis.analysis();
+        this.init = false;
     }
 
     /**
@@ -146,12 +151,16 @@ public class ExcelBeanReader<T> extends BaseExcelReader<T> {
 
     @Override
     public ExcelBeanReader<T> init() {
+        if (init) {
+            // 已初始化
+            return this;
+        }
         this.init = true;
         boolean havePicture = options.values().stream()
                 .map(ImportFieldOption::getType)
                 .anyMatch(ExcelReadType.PICTURE::equals);
         if (havePicture) {
-            pictureParser = new PictureParser(workbook, sheet);
+            this.pictureParser = new PictureParser(workbook, sheet);
             pictureParser.analysis();
         }
         return this;
@@ -166,27 +175,29 @@ public class ExcelBeanReader<T> extends BaseExcelReader<T> {
             return null;
         }
         T t = Constructors.newInstance(constructor);
-        options.forEach((k, v) -> {
-            int index = v.getIndex();
+        options.forEach((setter, option) -> {
+            int index = option.getIndex();
             Cell cell = row.getCell(index);
             Object value;
-            if (v.getType().equals(ExcelReadType.PICTURE)) {
+            if (option.getType().equals(ExcelReadType.PICTURE)) {
                 // 图片
-                value = this.getPicture(k, row.getRowNum(), index);
+                value = this.getPicture(setter, row.getRowNum(), index);
             } else {
-                value = Excels.getCellValue(cell, v.getType(), v.getCellOption());
+                // 值
+                value = Excels.getCellValue(cell, option.getType(), option.getCellOption());
             }
             if (value != null) {
                 if (trim && value instanceof String) {
                     value = ((String) value).trim();
                 }
+                // 调用setter
                 try {
-                    Methods.invokeSetterInfer(t, k, value);
+                    Methods.invokeSetterInfer(t, setter, value);
                 } catch (Exception e) {
                     // ignore
                 }
             } else if (nullInvoke) {
-                Methods.invokeMethod(t, k, (Object) null);
+                Methods.invokeMethod(t, setter, (Object) null);
             }
         });
         return t;
@@ -204,6 +215,7 @@ public class ExcelBeanReader<T> extends BaseExcelReader<T> {
         if (pictureParser == null) {
             return null;
         }
+        // 获取图片
         PictureData picture = pictureParser.getPicture(row, col);
         if (picture == null) {
             return null;

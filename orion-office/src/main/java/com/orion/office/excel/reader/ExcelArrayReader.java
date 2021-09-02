@@ -15,6 +15,10 @@ import java.util.function.Consumer;
 
 /**
  * Excel Array 读取器
+ * <p>
+ * 不支持高级数据类型
+ * <p>
+ * {@link Excels#getCellValue(Cell)}
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -132,7 +136,7 @@ public class ExcelArrayReader extends BaseExcelReader<String[]> {
      */
     public ExcelArrayReader capacity(int capacity) {
         if (!Arrays1.isEmpty(columns)) {
-            throw Exceptions.unsupported("if the column is set, the capacity is not supported");
+            throw Exceptions.unsupported("if the column is set the capacity is not supported");
         }
         this.columnSize = capacity;
         return this;
@@ -144,16 +148,19 @@ public class ExcelArrayReader extends BaseExcelReader<String[]> {
             return emptyArray;
         }
         if (columnSize == 0) {
-            columnSize = row.getLastCellNum();
+            this.columnSize = row.getLastCellNum();
         }
         String[] array = new String[columnSize];
         for (int i = 0; i < columnSize; i++) {
             Cell cell;
             if (Arrays1.isEmpty(columns)) {
+                // 读取所有列
                 cell = row.getCell(i);
             } else {
+                // 读取规定列
                 cell = row.getCell(columns[i]);
             }
+            // 读取值
             if (cell == null) {
                 array[i] = columnEmpty;
             } else {

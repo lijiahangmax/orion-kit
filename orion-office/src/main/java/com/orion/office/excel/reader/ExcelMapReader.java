@@ -18,6 +18,10 @@ import java.util.function.Consumer;
 
 /**
  * Excel Map 读取器
+ * <p>
+ * 支持高级数据类型
+ * <p>
+ * {@link Excels#getCellValue(Cell, ExcelReadType, com.orion.office.excel.option.CellOption)}
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -30,14 +34,14 @@ public class ExcelMapReader<K, V> extends BaseExcelReader<MutableMap<K, V>> {
      * key: mapKey
      * value: 配置
      */
-    private Map<K, ImportFieldOption> options = new HashMap<>();
+    private Map<K, ImportFieldOption> options;
 
     /**
      * 默认值
      * key: 列
      * value: 默认值
      */
-    private Map<K, V> defaultValue = new HashMap<>();
+    private Map<K, V> defaultValue;
 
     /**
      * 图片解析器
@@ -47,7 +51,7 @@ public class ExcelMapReader<K, V> extends BaseExcelReader<MutableMap<K, V>> {
     /**
      * 为null是否插入kay
      */
-    private boolean nullPutKey = true;
+    private boolean nullPutKey;
 
     /**
      * 是否使用 linkedMap
@@ -69,6 +73,9 @@ public class ExcelMapReader<K, V> extends BaseExcelReader<MutableMap<K, V>> {
     private ExcelMapReader(Workbook workbook, Sheet sheet, List<MutableMap<K, V>> rows, Consumer<MutableMap<K, V>> consumer) {
         super(workbook, sheet, rows, consumer);
         this.init = false;
+        this.options = new HashMap<>();
+        this.defaultValue = new HashMap<>();
+        this.nullPutKey = true;
     }
 
     /**
@@ -156,12 +163,16 @@ public class ExcelMapReader<K, V> extends BaseExcelReader<MutableMap<K, V>> {
 
     @Override
     public ExcelMapReader<K, V> init() {
+        if (init) {
+            // 已初始化
+            return this;
+        }
         this.init = true;
         boolean havePicture = options.values().stream()
                 .map(ImportFieldOption::getType)
                 .anyMatch(ExcelReadType.PICTURE::equals);
         if (havePicture) {
-            pictureParser = new PictureParser(workbook, sheet);
+            this.pictureParser = new PictureParser(workbook, sheet);
             pictureParser.analysis();
         }
         return this;
@@ -186,12 +197,15 @@ public class ExcelMapReader<K, V> extends BaseExcelReader<MutableMap<K, V>> {
             Object value = null;
             if (cell != null) {
                 if (type.equals(ExcelReadType.PICTURE)) {
+                    // 获取图片
                     value = this.getPicture(column, row);
                 } else {
+                    // 获取值
                     value = Excels.getCellValue(cell, type, option.getCellOption());
                 }
             }
             if (value == null) {
+                // 默认值
                 V defaultValue = this.defaultValue.get(key);
                 if (defaultValue == null) {
                     if (nullPutKey) {

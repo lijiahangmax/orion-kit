@@ -1,6 +1,5 @@
 package com.orion.office.excel.reader;
 
-import com.orion.able.SafeCloseable;
 import com.orion.utils.Exceptions;
 
 import java.util.Iterator;
@@ -14,14 +13,14 @@ import java.util.Iterator;
  * @version 1.0.0
  * @since 2021/2/2 17:42
  */
-public class ExcelReaderIterator<T> implements SafeCloseable, Iterator<T>, Iterable<T> {
+public class ExcelReaderIterator<T> implements Iterator<T>, Iterable<T> {
 
     private BaseExcelReader<T> reader;
 
     /**
      * 是否为第一次
      */
-    private boolean first = true;
+    private boolean first;
 
     /**
      * 是否还有下一个元素
@@ -35,6 +34,7 @@ public class ExcelReaderIterator<T> implements SafeCloseable, Iterator<T>, Itera
 
     public ExcelReaderIterator(BaseExcelReader<T> reader) {
         this.reader = reader;
+        this.first = true;
     }
 
     /**
@@ -50,8 +50,8 @@ public class ExcelReaderIterator<T> implements SafeCloseable, Iterator<T>, Itera
     @Override
     public boolean hasNext() {
         if (first) {
-            first = false;
-            hasNext = this.getNext();
+            this.first = false;
+            this.hasNext = this.getNext();
         }
         return hasNext;
     }
@@ -61,17 +61,17 @@ public class ExcelReaderIterator<T> implements SafeCloseable, Iterator<T>, Itera
         if (first) {
             boolean next = this.getNext();
             if (!next) {
-                throwNoSuch();
+                this.throwNoSuch();
             }
         }
         if (!hasNext && !first) {
-            throwNoSuch();
+            this.throwNoSuch();
         }
         if (first) {
             first = false;
         }
         T next = this.next;
-        hasNext = this.getNext();
+        this.hasNext = this.getNext();
         reader.rowNum++;
         return next;
     }
@@ -85,12 +85,12 @@ public class ExcelReaderIterator<T> implements SafeCloseable, Iterator<T>, Itera
         if (reader.end) {
             return false;
         }
-        next = reader.nextRow();
+        this.next = reader.nextRow();
         if (reader.end) {
             return false;
         }
         if (next == null && reader.skipNullRows) {
-            return getNext();
+            return this.getNext();
         }
         return true;
     }
@@ -100,11 +100,6 @@ public class ExcelReaderIterator<T> implements SafeCloseable, Iterator<T>, Itera
      */
     private void throwNoSuch() {
         throw Exceptions.noSuchElement("there are no more elements");
-    }
-
-    @Override
-    public void close() {
-        reader.close();
     }
 
 }

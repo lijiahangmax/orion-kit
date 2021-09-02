@@ -36,7 +36,7 @@ public abstract class BaseCsvReader<T> implements SafeCloseable {
     /**
      * 是否跳过空行
      */
-    protected boolean skipNullRows = true;
+    protected boolean skipNullRows;
 
     /**
      * 读取的记录
@@ -58,6 +58,7 @@ public abstract class BaseCsvReader<T> implements SafeCloseable {
         if (rows == null && consumer == null) {
             throw Exceptions.argument("rows container or row consumer one of them must not be empty");
         }
+        this.skipNullRows = true;
         this.rows = rows;
         this.consumer = consumer;
         this.store = rows != null;
@@ -163,7 +164,7 @@ public abstract class BaseCsvReader<T> implements SafeCloseable {
         try {
             boolean read = reader.readRow();
             if (!read) {
-                end = true;
+                this.end = true;
                 return null;
             }
             return parserRow(reader.getRow());

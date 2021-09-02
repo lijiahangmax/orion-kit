@@ -35,13 +35,13 @@ public class ImportShopTest {
 
     @Test
     public void testImport2() {
-        ExcelReaderIterator<ImportShop> iterator = new ExcelBeanReader<>(workbook, sheet, ImportShop.class)
-                .init()
+        ExcelBeanReader<ImportShop> reader = new ExcelBeanReader<>(workbook, sheet, ImportShop.class);
+        ExcelReaderIterator<ImportShop> iterator = reader.init()
                 .skip(2).iterator();
         for (ImportShop s : iterator) {
             System.out.println(Objects1.toString(s));
         }
-        iterator.close();
+        reader.close();
     }
 
     @Test
@@ -60,8 +60,8 @@ public class ImportShopTest {
 
     @Test
     public void testImport4() {
-        ExcelReaderIterator<ImportShop> iterator = new ExcelBeanReader<>(workbook, sheet, ImportShop.class)
-                .init()
+        ExcelBeanReader<ImportShop> reader = new ExcelBeanReader<>(workbook, sheet, ImportShop.class);
+        ExcelReaderIterator<ImportShop> iterator = reader.init()
                 .option("comment", 4, ExcelReadType.TEXT)
                 .option("businessFile", 5, ExcelReadType.TEXT)
                 .nullInvoke()
@@ -70,7 +70,7 @@ public class ImportShopTest {
         for (ImportShop s : iterator) {
             System.out.println(Objects1.toString(s));
         }
-        iterator.close();
+        reader.close();
     }
 
     @Test
@@ -86,14 +86,14 @@ public class ImportShopTest {
 
     @Test
     public void testArray2() {
-        ExcelReaderIterator<String[]> iterator = new ExcelArrayReader(workbook, sheet, Console::trace)
-                .columns(0, 1, 2)
+        ExcelArrayReader reader = new ExcelArrayReader(workbook, sheet, Console::trace);
+        ExcelReaderIterator<String[]> iterator = reader.columns(0, 1, 2)
                 .skip(2)
                 .iterator();
         for (String[] s : iterator) {
             System.out.println(Objects1.toString(s));
         }
-        iterator.close();
+        reader.close();
     }
 
     @Test
@@ -124,8 +124,8 @@ public class ImportShopTest {
 
     @Test
     public void testMap2() {
-        ExcelReaderIterator<MutableMap<String, Object>> iterator = new ExcelMapReader<String, Object>(workbook, sheet, Console::trace)
-                .linked()
+        ExcelMapReader<String, Object> reader = new ExcelMapReader<>(workbook, sheet, Console::trace);
+        ExcelReaderIterator<MutableMap<String, Object>> iterator = reader.linked()
                 .option("shopId", 0, ExcelReadType.TEXT)
                 .option("shopName", 1, ExcelReadType.TEXT)
                 .option("createDate", new ImportFieldOption(2, ExcelReadType.DATE, "yyyy年MM月dd日"))
@@ -145,7 +145,7 @@ public class ImportShopTest {
         for (MutableMap<String, Object> s : iterator) {
             System.out.println(Objects1.toString(s));
         }
-        iterator.close();
+        reader.close();
     }
 
 }
