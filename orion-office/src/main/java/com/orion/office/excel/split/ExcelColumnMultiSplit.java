@@ -30,14 +30,9 @@ public class ExcelColumnMultiSplit implements SafeCloseable {
     private Workbook sourceWorkbook;
 
     /**
-     * source sheet index
+     * source sheet
      */
-    private int sourceSheetIndex;
-
-    /**
-     * source sheet name
-     */
-    private String sourceSheetName;
+    private Sheet sourceSheet;
 
     /**
      * 跳过行数
@@ -45,19 +40,26 @@ public class ExcelColumnMultiSplit implements SafeCloseable {
     private int skip;
 
     public ExcelColumnMultiSplit(Workbook sourceWorkbook, int sourceSheetIndex) {
-        Valid.notNull(sourceWorkbook, "split workbook is null");
+        this(sourceWorkbook);
         Valid.gte(sourceSheetIndex, 0, "split sheet index must >= 0");
-        this.sourceWorkbook = sourceWorkbook;
-        this.sourceSheetIndex = sourceSheetIndex;
-        Valid.isFalse(Excels.isStreamingWorkbook(sourceWorkbook), "unsupported streaming reading, please use ExcelColumnSingleSplit");
+        this.sourceSheet = sourceWorkbook.getSheetAt(sourceSheetIndex);
     }
 
     public ExcelColumnMultiSplit(Workbook sourceWorkbook, String sourceSheetName) {
-        Valid.notNull(sourceWorkbook, "split workbook is null");
+        this(sourceWorkbook);
         Valid.notBlank(sourceSheetName, "split sheet name is null");
-        this.sourceWorkbook = sourceWorkbook;
-        this.sourceSheetName = sourceSheetName;
-        Valid.isFalse(Excels.isStreamingWorkbook(sourceWorkbook), "unsupported streaming reading, please use ExcelColumnSingleSplit");
+        this.sourceSheet = sourceWorkbook.getSheet(sourceSheetName);
+    }
+
+    public ExcelColumnMultiSplit(Workbook sourceWorkbook, Sheet sourceSheet) {
+        this(sourceWorkbook);
+        Valid.notNull(sourceSheet, "split sheet is null");
+        this.sourceSheet = sourceSheet;
+    }
+
+    private ExcelColumnMultiSplit(Workbook sourceWorkbook) {
+        this.sourceWorkbook = Valid.notNull(sourceWorkbook, "split workbook is null");
+        Valid.isTrue(!Excels.isStreamingWorkbook(sourceWorkbook), "unsupported streaming reading, please use ExcelColumnSingleSplit");
     }
 
     /**
@@ -141,12 +143,6 @@ public class ExcelColumnMultiSplit implements SafeCloseable {
      */
     public ExcelColumnMultiSplit split(int[] columns, String[] headers, String password, OutputStream out, boolean close) {
         Valid.notNull(out, "dest stream is null");
-        Sheet sourceSheet;
-        if (!Strings.isBlank(sourceSheetName)) {
-            sourceSheet = sourceWorkbook.getSheet(sourceSheetName);
-        } else {
-            sourceSheet = sourceWorkbook.getSheetAt(sourceSheetIndex);
-        }
         Workbook targetWorkbook = new SXSSFWorkbook();
         Sheet targetSheet = targetWorkbook.createSheet(sourceSheet.getSheetName());
         ExcelColumnSplitSupport.split(sourceSheet, targetWorkbook, targetSheet, columns, headers, skip, false);
@@ -170,12 +166,8 @@ public class ExcelColumnMultiSplit implements SafeCloseable {
         return sourceWorkbook;
     }
 
-    public int getSourceSheetIndex() {
-        return sourceSheetIndex;
-    }
-
-    public String getSourceSheetName() {
-        return sourceSheetName;
+    public Sheet getSourceSheet() {
+        return sourceSheet;
     }
 
 }

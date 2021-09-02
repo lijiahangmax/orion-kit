@@ -174,12 +174,12 @@ public abstract class DestinationGenerator implements SafeCloseable {
     protected void next() {
         if (this.hasNext()) {
             if (dest == null) {
-                currentOutputStream = generatorOutputStream();
+                this.currentOutputStream = this.generatorOutputStream();
             } else {
-                currentOutputStream = dest.get(currentDestIndex++);
+                this.currentOutputStream = dest.get(currentDestIndex++);
             }
         } else {
-            currentOutputStream = null;
+            this.currentOutputStream = null;
         }
     }
 

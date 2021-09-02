@@ -42,7 +42,7 @@ public abstract class BaseExcelWriter<K, V> {
     /**
      * 是否跳过null
      */
-    protected boolean skipNullRows = true;
+    protected boolean skipNullRows;
 
     /**
      * 是否清除空格
@@ -72,9 +72,9 @@ public abstract class BaseExcelWriter<K, V> {
     protected int rowHeight;
 
     /**
-     * 选项
+     * 配置项
      */
-    protected Map<K, WriteFieldOption> options = new LinkedHashMap<>();
+    protected Map<K, WriteFieldOption> options;
 
     /**
      * 标题样式
@@ -84,21 +84,26 @@ public abstract class BaseExcelWriter<K, V> {
     /**
      * 表头样式
      */
-    protected Map<Integer, CellStyle> headerStyles = new TreeMap<>();
+    protected Map<Integer, CellStyle> headerStyles;
 
     /**
      * 数据样式
      */
-    protected Map<Integer, CellStyle> columnStyles = new TreeMap<>();
+    protected Map<Integer, CellStyle> columnStyles;
 
     /**
      * 默认值
      */
-    private Map<K, Object> defaultValue = new HashMap<>();
+    private Map<K, Object> defaultValue;
 
     public BaseExcelWriter(Workbook workbook, Sheet sheet) {
         this.workbook = workbook;
         this.sheet = sheet;
+        this.skipNullRows = true;
+        this.options = new LinkedHashMap<>();
+        this.headerStyles = new TreeMap<>();
+        this.columnStyles = new TreeMap<>();
+        this.defaultValue = new HashMap<>();
     }
 
     /**
@@ -133,6 +138,7 @@ public abstract class BaseExcelWriter<K, V> {
     public BaseExcelWriter<K, V> title(String title, int row, int lastColumnIndex) {
         Valid.gt(row, 0, "title use row must > 0");
         Valid.gte(lastColumnIndex, 0, "title last column index row must >= 0");
+        // row
         Row titleRow = sheet.createRow(cellIndex++);
         if (titleHeight != 0) {
             titleRow.setHeightInPoints(titleHeight);
@@ -143,6 +149,7 @@ public abstract class BaseExcelWriter<K, V> {
                 ignoreRow.setHeightInPoints(titleHeight);
             }
         }
+        // cell
         Cell cell = titleRow.createCell(0);
         if (titleStyle == null) {
             titleStyle = workbook.createCellStyle();
@@ -502,40 +509,14 @@ public abstract class BaseExcelWriter<K, V> {
         this.columnMaxIndex = Math.max(columnMaxIndex, option.getIndex());
     }
 
-    /**
-     * 合并单元格
-     *
-     * @param row      合并行索引
-     * @param firstCol 合并开始列索引
-     * @param lastCol  合并结束列索引
-     * @return this
-     */
     public BaseExcelWriter<K, V> merge(int row, int firstCol, int lastCol) {
         return merge(new CellRangeAddress(row, row, firstCol, lastCol), true);
     }
 
-    /**
-     * 合并单元格
-     *
-     * @param row         合并行索引
-     * @param firstCol    合并开始列索引
-     * @param lastCol     合并结束列索引
-     * @param mergeBorder 是否合并边框
-     * @return this
-     */
     public BaseExcelWriter<K, V> merge(int row, int firstCol, int lastCol, boolean mergeBorder) {
         return merge(new CellRangeAddress(row, row, firstCol, lastCol), mergeBorder);
     }
 
-    /**
-     * 合并单元格
-     *
-     * @param firstRow 合并开始行索引
-     * @param lastRow  合并结束行索引
-     * @param firstCol 合并开始列索引
-     * @param lastCol  合并结束列索引
-     * @return this
-     */
     public BaseExcelWriter<K, V> merge(int firstRow, int lastRow, int firstCol, int lastCol) {
         return merge(new CellRangeAddress(firstRow, lastRow, firstCol, lastCol), true);
     }
@@ -594,6 +575,7 @@ public abstract class BaseExcelWriter<K, V> {
         if (row == null && skipNullRows) {
             return this;
         }
+        // 行
         Row r = sheet.createRow(cellIndex++);
         if (rowHeight != 0) {
             r.setHeightInPoints(rowHeight);
@@ -601,11 +583,12 @@ public abstract class BaseExcelWriter<K, V> {
         if (row == null) {
             return this;
         }
-        options.forEach((k, v) -> {
-            if (v == null) {
+        options.forEach((k, option) -> {
+            if (option == null) {
                 return;
             }
-            int columnIndex = v.getIndex();
+            // 单元格
+            int columnIndex = option.getIndex();
             Cell cell = r.createCell(columnIndex);
             CellStyle style = columnStyles.get(columnIndex);
             if (style != null) {
@@ -615,7 +598,7 @@ public abstract class BaseExcelWriter<K, V> {
             if (trim && value instanceof String) {
                 value = ((String) value).trim();
             }
-            Excels.setCellValue(cell, value, v.getType(), v.getCellOption());
+            Excels.setCellValue(cell, value, option.getType(), option.getCellOption());
         });
         return this;
     }

@@ -192,7 +192,7 @@ public abstract class BaseCsvWriter<K, V> implements SafeCloseable, SafeFlushabl
             if (skipNullRows) {
                 return this;
             } else {
-                return skip();
+                return this.skip();
             }
         }
         String[] parseRow = this.parseRow(row);
@@ -200,7 +200,7 @@ public abstract class BaseCsvWriter<K, V> implements SafeCloseable, SafeFlushabl
             if (skipNullRows) {
                 return this;
             } else {
-                return skip();
+                return this.skip();
             }
         }
         try {

@@ -54,7 +54,7 @@ public class ExcelRowSplit extends DestinationGenerator {
     /**
      * 列数
      */
-    private int columnSize = 32;
+    private int columnSize;
 
     private String password;
 
@@ -70,6 +70,7 @@ public class ExcelRowSplit extends DestinationGenerator {
         Valid.notNull(sheet, "split sheet is null");
         Valid.lte(0, limit, "limit not be lte 0");
         this.sheet = sheet;
+        this.columnSize = 32;
         this.limit = limit;
         this.streaming = Excels.isStreamingSheet(sheet);
         super.suffix = Const.SUFFIX_XLSX;
@@ -157,33 +158,37 @@ public class ExcelRowSplit extends DestinationGenerator {
                 // skip
                 iterator.next();
             } else {
-                end = true;
+                this.end = true;
                 return this;
             }
         }
         do {
             if (!super.hasNext()) {
-                end = true;
+                this.end = true;
                 return this;
             }
+            // 创建下一个工作簿
             this.nextWorkbook();
             int border = limit;
             if (!Arrays1.isEmpty(header)) {
                 border = limit + 1;
             }
+            // 读取
             while (iterator.hasNext()) {
                 this.addRow(currentIndex++, iterator.next());
                 if (currentIndex == border) {
                     break;
                 }
             }
+            // 未读取到则结束
             if (currentIndex == 0) {
-                end = true;
+                this.end = true;
                 break;
             }
             super.next();
+            // 如果小于边界 则证明无数据
             if (currentIndex < border) {
-                end = true;
+                this.end = true;
             }
             this.write();
         } while (!end);
@@ -198,15 +203,18 @@ public class ExcelRowSplit extends DestinationGenerator {
      */
     private void addRow(int rowIndex, Row row) {
         Row target = currentSheet.createRow(rowIndex);
+        // 设置行高
         if (!streaming) {
             target.setHeightInPoints(sheet.getDefaultRowHeightInPoints());
         }
         int i = 0;
         if (Arrays1.isEmpty(columns)) {
+            // 设置所有列
             for (Cell cell : row) {
                 this.setCellValue(cell, target.createCell(i++));
             }
         } else {
+            // 设置部分列
             for (int col : columns) {
                 this.setCellValue(row.getCell(col), target.createCell(i++));
             }
@@ -220,11 +228,13 @@ public class ExcelRowSplit extends DestinationGenerator {
      * @param targetCell target
      */
     private void setCellValue(Cell sourceCell, Cell targetCell) {
+        // 设置样式
         if (!streaming) {
             CellStyle targetStyle = currentWorkbook.createCellStyle();
             targetStyle.cloneStyleFrom(sourceCell.getCellStyle());
             targetCell.setCellStyle(targetStyle);
         }
+        // 设置值
         Excels.copyCellValue(sourceCell, targetCell);
     }
 
@@ -232,9 +242,10 @@ public class ExcelRowSplit extends DestinationGenerator {
      * 设置下一个workbook
      */
     private void nextWorkbook() {
-        currentIndex = 0;
-        currentWorkbook = new SXSSFWorkbook();
-        currentSheet = currentWorkbook.createSheet(sheet.getSheetName());
+        this.currentIndex = 0;
+        this.currentWorkbook = new SXSSFWorkbook();
+        this.currentSheet = currentWorkbook.createSheet(sheet.getSheetName());
+        // 非流式设置样式
         if (!streaming) {
             for (int i = 0; i < columnSize; i++) {
                 currentSheet.setColumnWidth(i, sheet.getColumnWidth(i));
@@ -243,13 +254,14 @@ public class ExcelRowSplit extends DestinationGenerator {
             currentSheet.setDefaultColumnWidth(sheet.getDefaultColumnWidth());
             currentSheet.setDefaultRowHeightInPoints(sheet.getDefaultRowHeightInPoints());
         }
+        // 设置表头
         if (!Arrays1.isEmpty(header)) {
             Row headerRow = currentSheet.createRow(0);
             for (int headerIndex = 0; headerIndex < header.length; headerIndex++) {
                 Cell headerRowCell = headerRow.createCell(headerIndex);
                 headerRowCell.setCellValue(header[headerIndex]);
             }
-            currentIndex = 1;
+            this.currentIndex = 1;
         }
     }
 

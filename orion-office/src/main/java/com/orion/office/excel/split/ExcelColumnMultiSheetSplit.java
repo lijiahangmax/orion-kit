@@ -26,14 +26,9 @@ public class ExcelColumnMultiSheetSplit extends BaseExcelWriteable {
     private Workbook sourceWorkbook;
 
     /**
-     * source sheet index
+     * source sheet
      */
-    private int sourceSheetIndex;
-
-    /**
-     * source sheet name
-     */
-    private String sourceSheetName;
+    private Sheet sourceSheet;
 
     /**
      * 跳过行数
@@ -46,21 +41,27 @@ public class ExcelColumnMultiSheetSplit extends BaseExcelWriteable {
     private int sheetNum;
 
     public ExcelColumnMultiSheetSplit(Workbook sourceWorkbook, int sourceSheetIndex) {
-        super(new SXSSFWorkbook());
-        Valid.notNull(sourceWorkbook, "split workbook is null");
+        this(sourceWorkbook);
         Valid.gte(sourceSheetIndex, 0, "split sheet index must >= 0");
-        this.sourceWorkbook = sourceWorkbook;
-        this.sourceSheetIndex = sourceSheetIndex;
-        Valid.isFalse(Excels.isStreamingWorkbook(sourceWorkbook), "unsupported streaming reading, please use ExcelColumnSingleSplit");
+        this.sourceSheet = sourceWorkbook.getSheetAt(sourceSheetIndex);
     }
 
     public ExcelColumnMultiSheetSplit(Workbook sourceWorkbook, String sourceSheetName) {
-        super(new SXSSFWorkbook());
-        Valid.notNull(sourceWorkbook, "split workbook is null");
+        this(sourceWorkbook);
         Valid.notBlank(sourceSheetName, "split sheet name is null");
-        this.sourceWorkbook = sourceWorkbook;
-        this.sourceSheetName = sourceSheetName;
-        Valid.isFalse(Excels.isStreamingWorkbook(sourceWorkbook), "unsupported streaming reading, please use ExcelColumnSingleSplit");
+        this.sourceSheet = sourceWorkbook.getSheet(sourceSheetName);
+    }
+
+    public ExcelColumnMultiSheetSplit(Workbook sourceWorkbook, Sheet sourceSheet) {
+        this(sourceWorkbook);
+        Valid.notNull(sourceSheet, "split sheet is null");
+        this.sourceSheet = sourceSheet;
+    }
+
+    private ExcelColumnMultiSheetSplit(Workbook sourceWorkbook) {
+        super(new SXSSFWorkbook());
+        this.sourceWorkbook = Valid.notNull(sourceWorkbook, "split workbook is null");
+        Valid.isTrue(!Excels.isStreamingWorkbook(sourceWorkbook), "unsupported streaming reading, please use ExcelColumnSingleSplit");
     }
 
     /**
@@ -125,12 +126,6 @@ public class ExcelColumnMultiSheetSplit extends BaseExcelWriteable {
      * @return this
      */
     public ExcelColumnMultiSheetSplit split(int[] columns, String[] headers, String password) {
-        Sheet sourceSheet;
-        if (!Strings.isBlank(sourceSheetName)) {
-            sourceSheet = sourceWorkbook.getSheet(sourceSheetName);
-        } else {
-            sourceSheet = sourceWorkbook.getSheetAt(sourceSheetIndex);
-        }
         Sheet targetSheet = super.workbook.createSheet(sourceSheet.getSheetName() + (++sheetNum));
         ExcelColumnSplitSupport.split(sourceSheet, super.workbook, targetSheet, columns, headers, skip, false);
         if (!Strings.isBlank(password)) {
@@ -149,12 +144,8 @@ public class ExcelColumnMultiSheetSplit extends BaseExcelWriteable {
         return sourceWorkbook;
     }
 
-    public int getSourceSheetIndex() {
-        return sourceSheetIndex;
-    }
-
-    public String getSourceSheetName() {
-        return sourceSheetName;
+    public Sheet getSourceSheet() {
+        return sourceSheet;
     }
 
     public Workbook getTargetWorkbook() {
