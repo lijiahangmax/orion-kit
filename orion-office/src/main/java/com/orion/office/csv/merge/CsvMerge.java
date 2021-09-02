@@ -115,7 +115,7 @@ public class CsvMerge implements SafeCloseable {
         while (!(lines = reader.clear().read(bufferLine).getRows()).isEmpty()) {
             writer.addRows(lines);
         }
-        skipRows = 0;
+        this.skipRows = 0;
         writer.flush();
         return this;
     }

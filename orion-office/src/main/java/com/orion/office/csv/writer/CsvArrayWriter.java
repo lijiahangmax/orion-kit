@@ -45,15 +45,18 @@ public class CsvArrayWriter extends BaseCsvWriter<Integer, String[]> {
         } else {
             length = len;
         }
+        // 指定大小
         store = new String[length];
         for (int i = 0; i < length; i++) {
             Integer index = mapping.getOrDefault(i, i);
             if (index >= length || index >= len) {
+                // 默认值
                 store[i] = defaultValue.getOrDefault(index, Strings.EMPTY);
                 continue;
             }
             String s = row[index];
             if (s == null) {
+                // 默认值
                 store[i] = defaultValue.getOrDefault(index, Strings.EMPTY);
             } else {
                 store[i] = s;

@@ -21,7 +21,7 @@ public class CsvReaderIterator<T> implements SafeCloseable, Iterator<T>, Iterabl
     /**
      * 是否为第一次
      */
-    private boolean first = true;
+    private boolean first;
 
     /**
      * 是否还有下一个元素
@@ -35,6 +35,7 @@ public class CsvReaderIterator<T> implements SafeCloseable, Iterator<T>, Iterabl
 
     public CsvReaderIterator(BaseCsvReader<T> reader) {
         this.reader = reader;
+        this.first = true;
     }
 
     @Override
@@ -45,8 +46,8 @@ public class CsvReaderIterator<T> implements SafeCloseable, Iterator<T>, Iterabl
     @Override
     public boolean hasNext() {
         if (first) {
-            first = false;
-            hasNext = this.getNext();
+            this.first = false;
+            this.hasNext = this.getNext();
         }
         return hasNext;
     }
@@ -54,19 +55,19 @@ public class CsvReaderIterator<T> implements SafeCloseable, Iterator<T>, Iterabl
     @Override
     public T next() {
         if (first) {
-            boolean next = getNext();
+            boolean next = this.getNext();
             if (!next) {
-                throwNoSuch();
+                this.throwNoSuch();
             }
         }
         if (!hasNext && !first) {
-            throwNoSuch();
+            this.throwNoSuch();
         }
         if (first) {
-            first = false;
+            this.first = false;
         }
         T next = this.next;
-        hasNext = this.getNext();
+        this.hasNext = this.getNext();
         reader.rowNum++;
         return next;
     }
@@ -80,12 +81,12 @@ public class CsvReaderIterator<T> implements SafeCloseable, Iterator<T>, Iterabl
         if (reader.end) {
             return false;
         }
-        next = reader.nextRow();
+        this.next = reader.nextRow();
         if (reader.end) {
             return false;
         }
         if (next == null && reader.skipNullRows) {
-            return getNext();
+            return this.getNext();
         }
         return true;
     }

@@ -117,16 +117,17 @@ public class CsvRowSplit extends DestinationGenerator {
     public CsvRowSplit split() {
         do {
             if (!super.hasNext()) {
-                end = true;
+                this.end = true;
                 break;
             }
+            // 读取行
             List<String[]> rows = reader.clear().read(limit).getRows();
             if (rows.isEmpty()) {
-                end = true;
+                this.end = true;
                 break;
             }
             if (rows.size() < limit) {
-                end = true;
+                this.end = true;
             }
             super.next();
             CsvArrayWriter currentWriter = new CsvArrayWriter(new CsvWriter(currentOutputStream, reader.getOption().toWriterOption()));
@@ -134,8 +135,10 @@ public class CsvRowSplit extends DestinationGenerator {
                 currentWriter.addRow(header);
             }
             if (Arrays1.isEmpty(columns)) {
+                // 读取所有列
                 currentWriter.addRows(rows);
             } else {
+                // 读取指定列
                 for (String[] row : rows) {
                     int length = row.length;
                     String[] newRow = new String[columns.length];

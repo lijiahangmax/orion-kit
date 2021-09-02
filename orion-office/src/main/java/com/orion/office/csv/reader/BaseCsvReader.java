@@ -54,7 +54,7 @@ public abstract class BaseCsvReader<T> implements SafeCloseable {
     protected boolean store;
 
     protected BaseCsvReader(CsvReader reader, List<T> rows, Consumer<T> consumer) {
-        Valid.notNull(this.reader = reader, "reader is null");
+        this.reader = Valid.notNull(reader, "reader is null");
         if (rows == null && consumer == null) {
             throw Exceptions.argument("rows container or row consumer one of them must not be empty");
         }
@@ -95,7 +95,7 @@ public abstract class BaseCsvReader<T> implements SafeCloseable {
      */
     public BaseCsvReader<T> skip(int i) {
         for (int s = 0; s < i; s++) {
-            skip();
+            this.skip();
         }
         return this;
     }
@@ -140,7 +140,7 @@ public abstract class BaseCsvReader<T> implements SafeCloseable {
      * 读取一行
      */
     protected void readRow() {
-        T row = nextRow();
+        T row = this.nextRow();
         if (end || (row == null && skipNullRows)) {
             return;
         }
@@ -162,12 +162,14 @@ public abstract class BaseCsvReader<T> implements SafeCloseable {
             return null;
         }
         try {
+            // 读取行
             boolean read = reader.readRow();
             if (!read) {
                 this.end = true;
                 return null;
             }
-            return parserRow(reader.getRow());
+            // 解析行
+            return this.parserRow(reader.getRow());
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         }
@@ -189,7 +191,7 @@ public abstract class BaseCsvReader<T> implements SafeCloseable {
      * @return value
      */
     protected String get(String[] row, int index) {
-        return get(row, index, null);
+        return this.get(row, index, null);
     }
 
     /**
@@ -219,8 +221,8 @@ public abstract class BaseCsvReader<T> implements SafeCloseable {
      * @return this
      */
     public BaseCsvReader<T> clear() {
-        if (store && this.rows != null) {
-            this.rows.clear();
+        if (store && rows != null) {
+            rows.clear();
         }
         return this;
     }

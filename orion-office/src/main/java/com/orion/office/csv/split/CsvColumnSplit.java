@@ -121,10 +121,12 @@ public class CsvColumnSplit implements SafeCloseable {
         CsvArrayWriter writer = new CsvArrayWriter(out);
         int length = columns.length;
         writer.capacity(length);
+        // 设置表头
         if (!Arrays1.isEmpty(headers)) {
             writer.headers(headers);
         }
         List<String[]> rows;
+        // 读取行
         while (!Lists.isEmpty(rows = reader.clear().read(bufferLine).getRows())) {
             for (String[] row : rows) {
                 int rowLength = row.length;

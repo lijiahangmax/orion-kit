@@ -106,6 +106,7 @@ public class CsvBeanWriter<T> extends BaseCsvWriter<String, T> {
             if (getter == null) {
                 continue;
             }
+            // 执行getter
             Method method = getters.get(getter);
             Object value = Methods.invokeMethod(row, method);
             if (value != null) {
@@ -172,8 +173,7 @@ public class CsvBeanWriter<T> extends BaseCsvWriter<String, T> {
                             s[i] = headers.get(i);
                         }
                         return s;
-                    })
-                    .ifPresent(this::headers);
+                    }).ifPresent(this::headers);
         }
     }
 

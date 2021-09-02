@@ -52,7 +52,7 @@ public class CsvBeanReader<T> extends BaseCsvReader<T> {
      * key: column
      * value: valueKey
      */
-    protected Map<Integer, String> mapping = new TreeMap<>();
+    protected Map<Integer, String> mapping;
 
     public CsvBeanReader(CsvReader reader, Class<T> targetClass) {
         this(reader, targetClass, new ArrayList<>(), null);
@@ -68,8 +68,9 @@ public class CsvBeanReader<T> extends BaseCsvReader<T> {
 
     protected CsvBeanReader(CsvReader reader, Class<T> targetClass, List<T> rows, Consumer<T> consumer) {
         super(reader, rows, consumer);
-        Valid.notNull(this.targetClass = targetClass, "target class is null");
-        reader.setOption(this.parseClass());
+        this.targetClass = Valid.notNull(targetClass, "target class is null");
+        this.mapping = new TreeMap<>();
+        this.parseClass();
         this.parseField();
     }
 
@@ -111,7 +112,8 @@ public class CsvBeanReader<T> extends BaseCsvReader<T> {
             if (setter == null) {
                 return;
             }
-            Object value = get(row, k);
+            Object value = this.get(row, k);
+            // 执行setter
             if (value != null) {
                 try {
                     Methods.invokeSetterInfer(t, setter, value);
@@ -127,21 +129,20 @@ public class CsvBeanReader<T> extends BaseCsvReader<T> {
 
     /**
      * 解析class
-     *
-     * @return CsvReaderOption
      */
-    protected CsvReaderOption parseClass() {
+    protected void parseClass() {
         Constructor<T> constructor = Constructors.getDefaultConstructor(targetClass);
         if (constructor == null) {
             throw Exceptions.argument("target class not found default constructor");
         }
         this.constructor = constructor;
         ImportSetting setting = Annotations.getAnnotation(targetClass, ImportSetting.class);
+        CsvReaderOption option = new CsvReaderOption();
         if (setting == null) {
-            return new CsvReaderOption();
+            reader.setOption(option);
+            return;
         }
-        CsvReaderOption option = new CsvReaderOption()
-                .setCaseSensitive(setting.caseSensitive())
+        option.setCaseSensitive(setting.caseSensitive())
                 .setUseComments(setting.useComments())
                 .setSafetySwitch(setting.safetySwitch())
                 .setSkipEmptyRows(setting.skipEmptyRows())
@@ -155,7 +156,7 @@ public class CsvBeanReader<T> extends BaseCsvReader<T> {
                 .setUseTextQualifier(setting.useTextQualifier())
                 .setCharset(Charset.forName(setting.charset()))
                 .setTrim(setting.trim());
-        return option;
+        reader.setOption(option);
     }
 
     /**

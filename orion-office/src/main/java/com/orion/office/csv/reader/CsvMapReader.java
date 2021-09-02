@@ -22,12 +22,12 @@ public class CsvMapReader<K, V> extends BaseCsvReader<MutableMap<K, V>> {
      * key: 列
      * value: 默认值
      */
-    private Map<K, V> defaultValue = new HashMap<>();
+    private Map<K, V> defaultValue;
 
     /**
      * 为null是否插入kay
      */
-    private boolean nullPutKey = true;
+    private boolean nullPutKey;
 
     /**
      * 是否使用 linkedMap
@@ -39,7 +39,7 @@ public class CsvMapReader<K, V> extends BaseCsvReader<MutableMap<K, V>> {
      * key: column
      * value: valueKey
      */
-    protected Map<Integer, K> mapping = new TreeMap<>();
+    protected Map<Integer, K> mapping;
 
     public CsvMapReader(CsvReader reader) {
         this(reader, new ArrayList<>(), null);
@@ -55,6 +55,9 @@ public class CsvMapReader<K, V> extends BaseCsvReader<MutableMap<K, V>> {
 
     protected CsvMapReader(CsvReader reader, List<MutableMap<K, V>> rows, Consumer<MutableMap<K, V>> consumer) {
         super(reader, rows, consumer);
+        this.nullPutKey = true;
+        this.defaultValue = new HashMap<>();
+        this.mapping = new TreeMap<>();
     }
 
     /**
@@ -123,8 +126,10 @@ public class CsvMapReader<K, V> extends BaseCsvReader<MutableMap<K, V>> {
             map = new MutableHashMap<>();
         }
         mapping.forEach((i, key) -> {
+            // 获取值
             String value = this.get(row, i);
             if (value == null) {
+                // 默认值
                 V defaultValue = this.defaultValue.get(key);
                 if (defaultValue == null) {
                     if (nullPutKey) {

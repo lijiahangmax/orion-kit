@@ -46,6 +46,7 @@ public class CsvMapWriter<K, V> extends BaseCsvWriter<K, Map<K, V>> {
         } else {
             store = new String[maxColumnIndex + 1];
         }
+        // 设置值
         for (int i = 0; i < store.length; i++) {
             K k = mapping.get(i);
             if (k == null) {

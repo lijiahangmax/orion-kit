@@ -39,7 +39,7 @@ public class CsvRawReader extends BaseCsvReader<String> {
     }
 
     /**
-     * 空行默认行 为""
+     * 空行默认行 为 ""
      *
      * @return this
      */
