@@ -1,9 +1,6 @@
 package com.orion.utils.collect;
 
-import com.orion.lang.collect.ConcurrentHashSet;
-import com.orion.lang.collect.EmptySet;
-import com.orion.lang.collect.MutableHashSet;
-import com.orion.lang.collect.SingletonSet;
+import com.orion.lang.collect.*;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Valid;
 import com.orion.utils.random.Randoms;
@@ -48,6 +45,13 @@ public class Sets extends Collections {
         return new TreeSet<>(comparator);
     }
 
+    public static <E> TreeSet<E> newTreeSet(SortedSet<E> s) {
+        if (s == null) {
+            return new TreeSet<>();
+        }
+        return new TreeSet<>(s);
+    }
+
     public static <E> TreeSet<E> newTreeSet(Collection<? extends E> c) {
         if (c == null) {
             return new TreeSet<>();
@@ -68,6 +72,28 @@ public class Sets extends Collections {
             return new MutableHashSet<>();
         }
         return new MutableHashSet<>(c);
+    }
+
+    public static <E> MutableTreeSet<E> newMutableTreeSet() {
+        return new MutableTreeSet<>();
+    }
+
+    public static <E> MutableTreeSet<E> newMutableTreeSet(Comparator<? super E> comparator) {
+        return new MutableTreeSet<>(comparator);
+    }
+
+    public static <E> MutableTreeSet<E> newMutableTreeSet(SortedSet<E> s) {
+        if (s == null) {
+            return new MutableTreeSet<>();
+        }
+        return new MutableTreeSet<>(s);
+    }
+
+    public static <E> MutableTreeSet<E> newMutableTreeSet(Collection<? extends E> c) {
+        if (c == null) {
+            return new MutableTreeSet<>();
+        }
+        return new MutableTreeSet<>(c);
     }
 
     public static <E> Set<E> newSynchronizedSet() {

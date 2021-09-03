@@ -98,6 +98,30 @@ public abstract class Const {
 
     public static final int BUFFER_KB_32 = 1024 * 32;
 
+    // -------------------- capacity --------------------
+
+    public static final int CAPACITY_1 = 1;
+
+    public static final int CAPACITY_2 = 2;
+
+    public static final int CAPACITY_4 = 4;
+
+    public static final int CAPACITY_8 = 8;
+
+    public static final int CAPACITY_16 = 16;
+
+    public static final int CAPACITY_32 = 32;
+
+    public static final int CAPACITY_64 = 64;
+
+    public static final int CAPACITY_128 = 128;
+
+    public static final int CAPACITY_256 = 256;
+
+    public static final int CAPACITY_512 = 512;
+
+    public static final int CAPACITY_1024 = 1024;
+
     // -------------------- ms --------------------
 
     public static final int MS_100 = 100;

@@ -68,7 +68,7 @@ public class CookiesExt {
      * @return cookies
      */
     public static Map<String, String> gets(HttpServletRequest request, String... keys) {
-        Map<String, String> map = new HashMap<>(16);
+        Map<String, String> map = new HashMap<>(Const.CAPACITY_16);
         Cookie[] cookies = request.getCookies();
         if (cookies == null) {
             return map;
@@ -90,7 +90,7 @@ public class CookiesExt {
      * @return cookies
      */
     public static Map<String, String> list(HttpServletRequest request) {
-        Map<String, String> map = new HashMap<>(16);
+        Map<String, String> map = new HashMap<>(Const.CAPACITY_16);
         Cookie[] cookies = request.getCookies();
         if (cookies == null) {
             return map;

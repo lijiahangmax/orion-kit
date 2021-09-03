@@ -137,7 +137,7 @@ public class Jsons {
      */
     public static <T> Set<T> toSet(String json, Class<T> clazz) {
         if (Strings.isBlank(json)) {
-            return new HashSet<>(16);
+            return new HashSet<>(Const.CAPACITY_16);
         }
         return JSON.parseObject(json, new TypeReference<Set<T>>(clazz) {
         });
@@ -151,7 +151,7 @@ public class Jsons {
      */
     public static Map<String, Object> toMap(String json) {
         if (Strings.isBlank(json)) {
-            return new HashMap<>(16);
+            return new HashMap<>(Const.CAPACITY_16);
         }
         return JSON.parseObject(json).getInnerMap();
     }
@@ -168,7 +168,7 @@ public class Jsons {
      */
     public static <K, V> Map<K, V> toMap(String json, Class<K> kc, Class<V> vc) {
         if (Strings.isBlank(json)) {
-            return new HashMap<>(16);
+            return new HashMap<>(Const.CAPACITY_16);
         }
         return JSON.parseObject(json, new TypeReference<Map<K, V>>(kc, vc) {
         });

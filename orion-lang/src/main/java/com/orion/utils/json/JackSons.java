@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.orion.constant.Const;
 import com.orion.utils.Strings;
 
 import java.util.*;
@@ -127,7 +128,7 @@ public class JackSons {
      */
     public static <K, V> Map<K, V> toMap(String json, Class<K> ks, Class<V> vs) {
         if (Strings.isEmpty(json)) {
-            return new HashMap<>(16);
+            return new HashMap<>(Const.CAPACITY_16);
         }
         try {
             return MapperInstance.objectMapper.readValue(json, getJavaType(Map.class, ks, vs));

@@ -1,9 +1,6 @@
 package com.orion.utils.collect;
 
-import com.orion.lang.collect.EmptyList;
-import com.orion.lang.collect.LimitList;
-import com.orion.lang.collect.MutableArrayList;
-import com.orion.lang.collect.SingletonList;
+import com.orion.lang.collect.*;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Objects1;
@@ -69,6 +66,36 @@ public class Lists extends Collections {
             return new MutableArrayList<>();
         }
         return new MutableArrayList<>(c);
+    }
+
+    public static <E> MutableLinkedList<E> newMutableLinkedList() {
+        return new MutableLinkedList<>();
+    }
+
+    public static <E> MutableLinkedList<E> newMutableLinkedList(Collection<? extends E> c) {
+        if (c == null) {
+            return new MutableLinkedList<>();
+        }
+        return new MutableLinkedList<>(c);
+    }
+
+    public static <E> MutableVector<E> newMutableVector() {
+        return new MutableVector<>();
+    }
+
+    public static <E> MutableVector<E> newMutableVector(int initialCapacity) {
+        return new MutableVector<>(initialCapacity);
+    }
+
+    public static <E> MutableVector<E> newMutableVector(int initialCapacity, int capacityIncrement) {
+        return new MutableVector<>(initialCapacity, capacityIncrement);
+    }
+
+    public static <E> MutableVector<E> newMutableVector(Collection<? extends E> c) {
+        if (c == null) {
+            return new MutableVector<>();
+        }
+        return new MutableVector<>(c);
     }
 
     public static <E> LimitList<E> newLimitList() {

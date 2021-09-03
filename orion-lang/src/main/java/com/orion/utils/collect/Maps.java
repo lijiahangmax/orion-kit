@@ -1,5 +1,6 @@
 package com.orion.utils.collect;
 
+import com.orion.constant.Const;
 import com.orion.lang.collect.*;
 import com.orion.lang.wrapper.Args;
 import com.orion.lang.wrapper.Pair;
@@ -30,7 +31,7 @@ public class Maps {
     // -------------------- new --------------------
 
     public static <K, V> Map<K, V> newMap() {
-        return new HashMap<>(16);
+        return new HashMap<>(Const.CAPACITY_16);
     }
 
     public static <K, V> Map<K, V> newMap(int capacity) {
@@ -39,7 +40,7 @@ public class Maps {
 
     public static <K, V> Map<K, V> newMap(Map<? extends K, ? extends V> m) {
         if (m == null) {
-            return new HashMap<>(16);
+            return new HashMap<>(Const.CAPACITY_16);
         }
         return new HashMap<>(m);
     }
@@ -60,7 +61,7 @@ public class Maps {
     }
 
     public static <K, V> LinkedHashMap<K, V> newLinkedMap() {
-        return new LinkedHashMap<>(16);
+        return new LinkedHashMap<>(Const.CAPACITY_16);
     }
 
     public static <K, V> LinkedHashMap<K, V> newLinkedMap(int capacity) {
@@ -69,13 +70,13 @@ public class Maps {
 
     public static <K, V> LinkedHashMap<K, V> newLinkedMap(Map<? extends K, ? extends V> m) {
         if (m == null) {
-            return new LinkedHashMap<>(16);
+            return new LinkedHashMap<>(Const.CAPACITY_16);
         }
         return new LinkedHashMap<>(m);
     }
 
     public static <K, V> ConcurrentHashMap<K, V> newCurrentHashMap() {
-        return new ConcurrentHashMap<>(16);
+        return new ConcurrentHashMap<>(Const.CAPACITY_16);
     }
 
     public static <K, V> ConcurrentHashMap<K, V> newCurrentHashMap(int capacity) {
@@ -84,13 +85,13 @@ public class Maps {
 
     public static <K, V> ConcurrentHashMap<K, V> newCurrentHashMap(Map<? extends K, ? extends V> m) {
         if (m == null) {
-            return new ConcurrentHashMap<>(16);
+            return new ConcurrentHashMap<>(Const.CAPACITY_16);
         }
         return new ConcurrentHashMap<>(m);
     }
 
     public static <K, V> MutableHashMap<K, V> newMutableMap() {
-        return new MutableHashMap<>(16);
+        return new MutableHashMap<>(Const.CAPACITY_16);
     }
 
     public static <K, V> MutableHashMap<K, V> newMutableMap(int capacity) {
@@ -99,28 +100,65 @@ public class Maps {
 
     public static <K, V> MutableHashMap<K, V> newMutableMap(Map<? extends K, ? extends V> m) {
         if (m == null) {
-            return new MutableHashMap<>(16);
+            return new MutableHashMap<>(Const.CAPACITY_16);
         }
         return new MutableHashMap<>(m);
     }
 
-    public static <K, V> MutableLinkedHashMap<K, V> newLinkedMutableMap() {
-        return new MutableLinkedHashMap<>(16);
+    public static <K, V> MutableTreeMap<K, V> newMutableTreeMap() {
+        return new MutableTreeMap<>();
     }
 
-    public static <K, V> MutableLinkedHashMap<K, V> newLinkedMutableMap(int capacity) {
+    public static <K, V> MutableTreeMap<K, V> newMutableTreeMap(Comparator<? super K> comparator) {
+        return new MutableTreeMap<>(comparator);
+    }
+
+    public static <K, V> MutableTreeMap<K, V> newMutableTreeMap(SortedMap<K, ? extends V> m) {
+        if (m == null) {
+            return new MutableTreeMap<>();
+        }
+        return new MutableTreeMap<>(m);
+    }
+
+    public static <K, V> MutableTreeMap<K, V> newMutableTreeMap(Map<? extends K, ? extends V> m) {
+        if (m == null) {
+            return new MutableTreeMap<>();
+        }
+        return new MutableTreeMap<>(m);
+    }
+
+    public static <K, V> MutableLinkedHashMap<K, V> newMutableLinkedMap() {
+        return new MutableLinkedHashMap<>(Const.CAPACITY_16);
+    }
+
+    public static <K, V> MutableLinkedHashMap<K, V> newMutableLinkedMap(int capacity) {
         return new MutableLinkedHashMap<>(capacity);
     }
 
-    public static <K, V> MutableLinkedHashMap<K, V> newLinkedMutableMap(Map<? extends K, ? extends V> m) {
+    public static <K, V> MutableLinkedHashMap<K, V> newMutableLinkedMap(Map<? extends K, ? extends V> m) {
         if (m == null) {
-            return new MutableLinkedHashMap<>(16);
+            return new MutableLinkedHashMap<>(Const.CAPACITY_16);
         }
         return new MutableLinkedHashMap<>(m);
     }
 
+    public static <K, V> MutableConcurrentHashMap<K, V> newMutableConcurrentHashMap() {
+        return new MutableConcurrentHashMap<>(Const.CAPACITY_16);
+    }
+
+    public static <K, V> MutableConcurrentHashMap<K, V> newMutableConcurrentHashMap(int capacity) {
+        return new MutableConcurrentHashMap<>(capacity);
+    }
+
+    public static <K, V> MutableConcurrentHashMap<K, V> newMutableConcurrentHashMap(Map<? extends K, ? extends V> m) {
+        if (m == null) {
+            return new MutableConcurrentHashMap<>(Const.CAPACITY_16);
+        }
+        return new MutableConcurrentHashMap<>(m);
+    }
+
     public static <K, V> IdentityHashMap<K, V> newIdentityHashMap() {
-        return new IdentityHashMap<>(16);
+        return new IdentityHashMap<>(Const.CAPACITY_16);
     }
 
     public static <K, V> IdentityHashMap<K, V> newIdentityHashMap(int capacity) {
@@ -129,13 +167,13 @@ public class Maps {
 
     public static <K, V> IdentityHashMap<K, V> newIdentityHashMap(Map<? extends K, ? extends V> m) {
         if (m == null) {
-            return new IdentityHashMap<>(16);
+            return new IdentityHashMap<>(Const.CAPACITY_16);
         }
         return new IdentityHashMap<>(m);
     }
 
     public static <K, V> WeakHashMap<K, V> newWeakHashMap() {
-        return new WeakHashMap<>(16);
+        return new WeakHashMap<>(Const.CAPACITY_16);
     }
 
     public static <K, V> WeakHashMap<K, V> newWeakHashMap(int capacity) {
@@ -144,13 +182,13 @@ public class Maps {
 
     public static <K, V> WeakHashMap<K, V> newWeakHashMap(Map<? extends K, ? extends V> m) {
         if (m == null) {
-            return new WeakHashMap<>(16);
+            return new WeakHashMap<>(Const.CAPACITY_16);
         }
         return new WeakHashMap<>(m);
     }
 
     public static <K, V> ConcurrentReferenceHashMap<K, V> newConcurrentWeakHashMap() {
-        return new ConcurrentReferenceHashMap<>(16, ConcurrentReferenceHashMap.ReferenceType.WEAK);
+        return new ConcurrentReferenceHashMap<>(Const.CAPACITY_16, ConcurrentReferenceHashMap.ReferenceType.WEAK);
     }
 
     public static <K, V> ConcurrentReferenceHashMap<K, V> newConcurrentWeakHashMap(int capacity) {
@@ -158,7 +196,7 @@ public class Maps {
     }
 
     public static <K, V> ConcurrentReferenceHashMap<K, V> newConcurrentSoftHashMap() {
-        return new ConcurrentReferenceHashMap<>(16, ConcurrentReferenceHashMap.ReferenceType.SOFT);
+        return new ConcurrentReferenceHashMap<>(Const.CAPACITY_16, ConcurrentReferenceHashMap.ReferenceType.SOFT);
     }
 
     public static <K, V> ConcurrentReferenceHashMap<K, V> newConcurrentSoftHashMap(int capacity) {
@@ -166,12 +204,12 @@ public class Maps {
     }
 
     public static <K, V> Map<K, V> newSynchronizedMap() {
-        return Collections.synchronizedMap(new HashMap<>(16));
+        return Collections.synchronizedMap(new HashMap<>(Const.CAPACITY_16));
     }
 
     public static <K, V> Map<K, V> newSynchronizedMap(Map<K, V> m) {
         if (m == null) {
-            return Collections.synchronizedMap(new HashMap<>(16));
+            return Collections.synchronizedMap(new HashMap<>(Const.CAPACITY_16));
         }
         return Collections.synchronizedMap(m);
     }
@@ -223,7 +261,7 @@ public class Maps {
     public static <E extends Map.Entry<K, V>, K, V> Map<K, V> of(E... entries) {
         int len = Arrays1.length(entries);
         if (len == 0) {
-            return new HashMap<>(16);
+            return new HashMap<>(Const.CAPACITY_16);
         }
         Map<K, V> map = new HashMap<>(getNoCapacitySize(len));
         for (int i = 0; i < len; i++) {
@@ -236,7 +274,7 @@ public class Maps {
         int klen = Arrays1.length(keys);
         int vlen = Arrays1.length(values);
         if (klen == 0) {
-            return new HashMap<>(16);
+            return new HashMap<>(Const.CAPACITY_16);
         }
         Map<K, V> map = new HashMap<>(getNoCapacitySize(klen));
         for (int i = 0; i < klen; i++) {
@@ -253,7 +291,7 @@ public class Maps {
     public static <K, V> Map<K, V> of(Args.Entry<K, V>... entries) {
         int len = Arrays1.length(entries);
         if (len == 0) {
-            return new HashMap<>(16);
+            return new HashMap<>(Const.CAPACITY_16);
         }
         Map<K, V> map = new HashMap<>(getNoCapacitySize(len));
         for (int i = 0; i < len; i++) {
@@ -264,7 +302,7 @@ public class Maps {
 
     public static <K, V> Map<K, V> of(Object... kv) {
         if (kv == null) {
-            return new HashMap<>(16);
+            return new HashMap<>(Const.CAPACITY_16);
         }
         int c = kv.length / 2;
         int hn = kv.length % 2;
@@ -283,7 +321,7 @@ public class Maps {
         Valid.notNull(vf, "value convert function is null");
         int size = size(map);
         if (size == 0) {
-            return new HashMap<>(16);
+            return new HashMap<>(Const.CAPACITY_16);
         }
         Map<K2, V2> res = new HashMap<>(getNoCapacitySize(size));
         map.forEach((k, v) -> {
@@ -304,7 +342,7 @@ public class Maps {
     @SafeVarargs
     public static <K, V> Map<K, V> merge(Map<K, V> map, Map<K, V>... ms) {
         if (map == null) {
-            map = new HashMap<>(16);
+            map = new HashMap<>(Const.CAPACITY_16);
         }
         if (ms == null) {
             return map;
