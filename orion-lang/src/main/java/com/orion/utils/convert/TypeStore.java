@@ -4,7 +4,6 @@ import com.orion.function.Conversion;
 import com.orion.lang.collect.MultiConcurrentHashMap;
 import com.orion.lang.iterator.ClassIterator;
 import com.orion.lang.support.CloneSupport;
-import com.orion.lang.wrapper.Pair;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
@@ -26,24 +25,23 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version 1.0.0
  * @since 2020/11/9 14:29
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings({"unchecked"})
 public class TypeStore extends CloneSupport<TypeStore> implements Serializable {
 
     private static final long serialVersionUID = 12038041239487192L;
 
     public static final TypeStore STORE = new TypeStore();
 
-    public TypeStore() {
-    }
+    private final MultiConcurrentHashMap<Class<?>, Class<?>, Conversion<?, ?>> conversionMapping;
 
-    private static final ConcurrentHashMap<Pair<Class<?>, Class<?>>, Boolean> IMPL_MAP = new ConcurrentHashMap<>();
+    public TypeStore() {
+        this.conversionMapping = new MultiConcurrentHashMap<>();
+    }
 
     static {
         // 装载基础Mapper
         new BasicTypeStoreProvider(STORE);
     }
-
-    private final MultiConcurrentHashMap<Class<?>, Class<?>, Conversion<?, ?>> conversionMapping = new MultiConcurrentHashMap<>();
 
     /**
      * 注册转换器
@@ -92,36 +90,41 @@ public class TypeStore extends CloneSupport<TypeStore> implements Serializable {
         Valid.notNull(t, "convert target object is null");
         Class<?> sourceClass = t.getClass();
         targetClass = (Class<R>) Classes.getWrapClass(targetClass);
+        // 检查是否可以直接转换
         if (canDirectConvert(sourceClass, targetClass, false)) {
             return (R) t;
         }
+        // 获取类转换器
         Conversion<T, R> conversion = (Conversion<T, R>) this.get(sourceClass, targetClass);
         if (conversion != null) {
             return conversion.apply(t);
         }
-        // sourceParentClass
+        // 获取父类转换器
         for (Class<?> sourceParentClass : new ClassIterator<>(sourceClass)) {
             conversion = (Conversion<T, R>) this.get(sourceParentClass, targetClass);
             if (conversion != null) {
                 return conversion.apply(t);
             }
         }
-        // check base array
+        // 检查是否是数组
         if (!Classes.isArray(targetClass)) {
             throw Exceptions.convert(Strings.format("unable to convert source [{}] class to target [{}] class", sourceClass, targetClass));
         }
+        // 如果不是基本类型的数组则无法转换
         Class<?> baseArrayClass = Classes.getBaseArrayClass(targetClass);
         if (baseArrayClass.equals(targetClass)) {
             throw Exceptions.convert(Strings.format("unable to convert source [{}] class to target [{}] class", sourceClass, targetClass));
         }
+        // 如果 targetClass 是 sourceClass 的包装类数组则直接包装
         if (sourceClass.equals(baseArrayClass)) {
             return (R) Arrays1.wrap(t);
         }
-        // get base array
-        Conversion baseConvert = this.get(sourceClass, baseArrayClass);
+        // 尝试使用 targetClass 的基本类型数组获取
+        Conversion<T, ?> baseConvert = (Conversion<T, ?>) this.get(sourceClass, baseArrayClass);
         if (baseConvert == null) {
             throw Exceptions.convert(Strings.format("unable to convert source [{}] class to target [{}] class", sourceClass, targetClass));
         }
+        // 如果能获取到则将转换结果包装
         Object apply = baseConvert.apply(t);
         if (apply != null) {
             return (R) Arrays1.wrap(apply);
@@ -130,7 +133,7 @@ public class TypeStore extends CloneSupport<TypeStore> implements Serializable {
     }
 
     /**
-     * 获取适配的 class
+     * 获取适配的 class 不适配父类
      *
      * @param sourceType 原始类型
      * @return set
@@ -140,7 +143,7 @@ public class TypeStore extends CloneSupport<TypeStore> implements Serializable {
     }
 
     /**
-     * 获取所有适配的 class
+     * 获取所有适配的 class 适配父类
      *
      * @param sourceType 原始类型
      * @return set
@@ -163,7 +166,7 @@ public class TypeStore extends CloneSupport<TypeStore> implements Serializable {
     }
 
     /**
-     * 获取适配的 Conversion
+     * 获取适配的 Conversion 不适配父类
      *
      * @param sourceType 原始类型
      * @return map
@@ -173,7 +176,7 @@ public class TypeStore extends CloneSupport<TypeStore> implements Serializable {
     }
 
     /**
-     * 获取所有适配的 Conversion
+     * 获取所有适配的 Conversion 适配父类
      *
      * @param sourceType 原始类型
      * @return map
@@ -284,26 +287,7 @@ public class TypeStore extends CloneSupport<TypeStore> implements Serializable {
             return true;
         }
         // check impl
-        return checkImpl(targetClass, sourceClass);
-    }
-
-    /**
-     * 检查target是否为require的实现类
-     *
-     * @param require ignore
-     * @param target  ignore
-     * @return ignore
-     */
-    private static boolean checkImpl(Class<?> require, Class<?> target) {
-        Pair<Class<?>, Class<?>> e = new Pair<>(require, target);
-        Boolean b = IMPL_MAP.get(e);
-        if (b == null) {
-            boolean i = Classes.isImplClass(require, target);
-            IMPL_MAP.put(e, i);
-            return i;
-        } else {
-            return b;
-        }
+        return Classes.isImplClass(targetClass, sourceClass);
     }
 
 }

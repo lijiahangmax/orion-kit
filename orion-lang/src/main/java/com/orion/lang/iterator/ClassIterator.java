@@ -39,12 +39,11 @@ public class ClassIterator<T> implements Iterator<Class<? super T>>, Iterable<Cl
         if (clazz.getName().contains(Classes.CGLIB_CLASS_SEPARATOR)) {
             return false;
         }
-        current = current.getSuperclass();
-        if (includeObject) {
-            return current != null;
-        } else {
-            return !Object.class.equals(current);
+        this.current = current.getSuperclass();
+        if (current == null) {
+            return false;
         }
+        return includeObject || !Object.class.equals(current);
     }
 
     /**
