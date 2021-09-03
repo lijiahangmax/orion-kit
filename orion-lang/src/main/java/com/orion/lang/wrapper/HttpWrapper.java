@@ -3,6 +3,7 @@ package com.orion.lang.wrapper;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.orion.able.Logable;
 import com.orion.able.Mapable;
+import com.orion.constant.Const;
 import com.orion.lang.support.CloneSupport;
 import com.orion.utils.Objects1;
 import com.orion.utils.Strings;
@@ -236,7 +237,7 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
 
     @Override
     public Map<String, Object> toMap() {
-        Map<String, Object> map = new HashMap<>(6);
+        Map<String, Object> map = new HashMap<>(Const.CAPACITY_8);
         map.put("code", code);
         map.put("msg", msg);
         map.put("data", data);

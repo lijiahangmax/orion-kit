@@ -88,7 +88,7 @@ public class CreditCodes {
         Integer codeIndex;
         for (int i = 0; i < 17; i++) {
             codeIndex = CODE_INDEX_MAP.get(creditCode.charAt(i));
-            if (null == codeIndex) {
+            if (codeIndex == null) {
                 return -1;
             }
             sum += codeIndex * WEIGHT[i];

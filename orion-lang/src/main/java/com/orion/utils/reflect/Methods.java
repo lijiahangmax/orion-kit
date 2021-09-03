@@ -1,5 +1,6 @@
 package com.orion.utils.reflect;
 
+import com.orion.constant.Const;
 import com.orion.lang.collect.ConcurrentReferenceHashMap;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
@@ -45,9 +46,9 @@ public class Methods {
      */
     protected static final String BOOLEAN_GETTER_PREFIX = "is";
 
-    private static final Map<Class<?>, List<Method>> CLASS_SET_METHOD_CACHE = new ConcurrentReferenceHashMap<>(16, ConcurrentReferenceHashMap.ReferenceType.SOFT);
+    private static final Map<Class<?>, List<Method>> CLASS_SET_METHOD_CACHE = new ConcurrentReferenceHashMap<>(Const.CAPACITY_16, ConcurrentReferenceHashMap.ReferenceType.SOFT);
 
-    private static final Map<Class<?>, List<Method>> CLASS_GET_METHOD_CACHE = new ConcurrentReferenceHashMap<>(16, ConcurrentReferenceHashMap.ReferenceType.SOFT);
+    private static final Map<Class<?>, List<Method>> CLASS_GET_METHOD_CACHE = new ConcurrentReferenceHashMap<>(Const.CAPACITY_16, ConcurrentReferenceHashMap.ReferenceType.SOFT);
 
     private Methods() {
     }

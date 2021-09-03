@@ -18,14 +18,14 @@ public class CityHash {
     }
 
     // Some primes between 2^63 and 2^64 for various uses.
-    private static final long K_0 = 0xc3a5c85c97cb3127L;
-    private static final long K_1 = 0xb492b66fbe98f273L;
-    private static final long K_2 = 0x9ae16a3b2f90404fL;
-    private static final long K_MUL = 0x9ddfea08eb382d69L;
+    private static final long K_0 = 0xC3A5C85C97CB3127L;
+    private static final long K_1 = 0xB492B66FBE98F273L;
+    private static final long K_2 = 0x9AE16A3B2F90404FL;
+    private static final long K_MUL = 0x9DDFEA08EB382D69L;
 
     // Magic numbers for 32-bit hashing.  Copied from Murmur3.
-    private static final int C_1 = 0xcc9e2d51;
-    private static final int C_2 = 0x1b873593;
+    private static final int C_1 = 0xCC9E2D51;
+    private static final int C_2 = 0x1B873593;
 
     /**
      * 计算32位City Hash值
@@ -48,19 +48,19 @@ public class CityHash {
         int a4 = rotate32(fetch32(data, len - 20) * C_1, 17) * C_2;
         h ^= a0;
         h = rotate32(h, 19);
-        h = h * 5 + 0xe6546b64;
+        h = h * 5 + 0xE6546B64;
         h ^= a2;
         h = rotate32(h, 19);
-        h = h * 5 + 0xe6546b64;
+        h = h * 5 + 0xE6546B64;
         g ^= a1;
         g = rotate32(g, 19);
-        g = g * 5 + 0xe6546b64;
+        g = g * 5 + 0xE6546B64;
         g ^= a3;
         g = rotate32(g, 19);
-        g = g * 5 + 0xe6546b64;
+        g = g * 5 + 0xE6546B64;
         f += a4;
         f = rotate32(f, 19);
-        f = f * 5 + 0xe6546b64;
+        f = f * 5 + 0xE6546B64;
         int iters = (len - 1) / 20;
 
         int pos = 0;
@@ -72,16 +72,16 @@ public class CityHash {
             a4 = fetch32(data, pos + 16);
             h ^= a0;
             h = rotate32(h, 18);
-            h = h * 5 + 0xe6546b64;
+            h = h * 5 + 0xE6546B64;
             f += a1;
             f = rotate32(f, 19);
             f = f * C_1;
             g += a2;
             g = rotate32(g, 18);
-            g = g * 5 + 0xe6546b64;
+            g = g * 5 + 0xE6546B64;
             h ^= a3 + a1;
             h = rotate32(h, 19);
-            h = h * 5 + 0xe6546b64;
+            h = h * 5 + 0xE6546B64;
             g ^= a4;
             g = Integer.reverseBytes(g) * 5;
             h += a4 * 5;
@@ -100,10 +100,10 @@ public class CityHash {
         f = rotate32(f, 11) * C_1;
         f = rotate32(f, 17) * C_1;
         h = rotate32(h + g, 19);
-        h = h * 5 + 0xe6546b64;
+        h = h * 5 + 0xE6546B64;
         h = rotate32(h, 17) * C_1;
         h = rotate32(h + f, 19);
-        h = h * 5 + 0xe6546b64;
+        h = h * 5 + 0xE6546B64;
         h = rotate32(h, 17) * C_1;
         return h;
     }
@@ -324,13 +324,13 @@ public class CityHash {
         }
         if (len >= 4) {
             long mul = K_2 + len * 2;
-            long a = fetch32(byteArray, 0) & 0xffffffffL;
-            return hashLen16(len + (a << 3), fetch32(byteArray, len - 4) & 0xffffffffL, mul);
+            long a = fetch32(byteArray, 0) & 0xFFFFFFFFL;
+            return hashLen16(len + (a << 3), fetch32(byteArray, len - 4) & 0xFFFFFFFFL, mul);
         }
         if (len > 0) {
-            int a = byteArray[0] & 0xff;
-            int b = byteArray[len >>> 1] & 0xff;
-            int c = byteArray[len - 1] & 0xff;
+            int a = byteArray[0] & 0xFF;
+            int b = byteArray[len >>> 1] & 0xFF;
+            int c = byteArray[len - 1] & 0xFF;
             int y = a + (b << 8);
             int z = len + (c << 2);
             return shiftMix(y * K_2 ^ z * K_0) * K_2;
@@ -376,7 +376,7 @@ public class CityHash {
         OrderIter orderIter = new OrderIter(8);
         while (orderIter.hasNext()) {
             int next = orderIter.next();
-            long value = (byteArray[next + start] & 0xffL) << (next * 8);
+            long value = (byteArray[next + start] & 0xFFL) << (next * 8);
             result |= value;
         }
         return result;
@@ -387,7 +387,7 @@ public class CityHash {
         OrderIter orderIter = new OrderIter(4);
         while (orderIter.hasNext()) {
             int next = orderIter.next();
-            int value = (byteArray[next + start] & 0xff) << (next * 8);
+            int value = (byteArray[next + start] & 0xFF) << (next * 8);
             result |= value;
         }
         return result;
@@ -441,9 +441,9 @@ public class CityHash {
 
     private static int fmix(int h) {
         h ^= h >>> 16;
-        h *= 0x85ebca6b;
+        h *= 0x85EBCA6B;
         h ^= h >>> 13;
-        h *= 0xc2b2ae35;
+        h *= 0xC2B2AE35;
         h ^= h >>> 16;
         return h;
     }
@@ -455,7 +455,7 @@ public class CityHash {
         a *= C_2;
         h ^= a;
         h = rotate32(h, 19);
-        return h * 5 + 0xe6546b64;
+        return h * 5 + 0xE6546B64;
     }
 
     private static Number128 weakHashLen32WithSeeds(long w, long x, long y, long z, long a, long b) {

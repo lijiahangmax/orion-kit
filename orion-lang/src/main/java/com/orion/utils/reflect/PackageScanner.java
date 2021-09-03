@@ -359,7 +359,7 @@ public class PackageScanner {
     @SafeVarargs
     public final Map<Class<?>, Set<Constructor<?>>> getAnnotatedConstructor(Class<? extends Annotation>... annotatedClasses) {
         Valid.notEmpty(annotatedClasses, "annotated classes length is 0");
-        Map<Class<?>, Set<Constructor<?>>> annotatedClass = new HashMap<>(16);
+        Map<Class<?>, Set<Constructor<?>>> annotatedClass = new HashMap<>(Const.CAPACITY_16);
         for (Class<?> c : classes) {
             Set<Constructor<?>> constructors = null;
             for (Constructor<?> constructor : c.getDeclaredConstructors()) {
@@ -388,7 +388,7 @@ public class PackageScanner {
     public final Map<Class<?>, Set<Constructor<?>>> getAnnotatedConstructorByAnnotatedClass(Class<? extends Annotation> classAnnotatedClass, Class<? extends Annotation>... constructorAnnotateClasses) {
         Valid.notNull(classAnnotatedClass, "class annotated class is null");
         Valid.notEmpty(constructorAnnotateClasses, "constructor annotate classes length is 0");
-        Map<Class<?>, Set<Constructor<?>>> annotatedClass = new HashMap<>(16);
+        Map<Class<?>, Set<Constructor<?>>> annotatedClass = new HashMap<>(Const.CAPACITY_16);
         for (Class<?> c : classes) {
             boolean hasAnnotated = Annotations.present(c, classAnnotatedClass);
             if (!hasAnnotated) {
@@ -419,7 +419,7 @@ public class PackageScanner {
     @SafeVarargs
     public final Map<Class<?>, Set<Method>> getAnnotatedMethod(Class<? extends Annotation>... annotatedClasses) {
         Valid.notEmpty(annotatedClasses, "annotated classes length is 0");
-        Map<Class<?>, Set<Method>> annotatedClass = new HashMap<>(16);
+        Map<Class<?>, Set<Method>> annotatedClass = new HashMap<>(Const.CAPACITY_16);
         for (Class<?> c : classes) {
             Set<Method> methods = null;
             for (Method method : c.getDeclaredMethods()) {
@@ -448,7 +448,7 @@ public class PackageScanner {
     public final Map<Class<?>, Set<Method>> getAnnotatedMethodByAnnotatedClass(Class<? extends Annotation> classAnnotatedClass, Class<? extends Annotation>... methodAnnotateClasses) {
         Valid.notNull(classAnnotatedClass, "class annotated class is null");
         Valid.notEmpty(methodAnnotateClasses, "method annotated classes length is 0");
-        Map<Class<?>, Set<Method>> annotatedClass = new HashMap<>(16);
+        Map<Class<?>, Set<Method>> annotatedClass = new HashMap<>(Const.CAPACITY_16);
         for (Class<?> c : classes) {
             boolean hasAnnotated = Annotations.present(c, classAnnotatedClass);
             if (!hasAnnotated) {
@@ -479,7 +479,7 @@ public class PackageScanner {
     @SafeVarargs
     public final Map<Class<?>, Set<Field>> getAnnotatedField(Class<? extends Annotation>... annotatedClasses) {
         Valid.notEmpty(annotatedClasses, "annotated classes length is 0");
-        Map<Class<?>, Set<Field>> annotatedClass = new HashMap<>(16);
+        Map<Class<?>, Set<Field>> annotatedClass = new HashMap<>(Const.CAPACITY_16);
         for (Class<?> c : classes) {
             Set<Field> fields = null;
             for (Field field : c.getDeclaredFields()) {
@@ -508,7 +508,7 @@ public class PackageScanner {
     public final Map<Class<?>, Set<Field>> getAnnotatedFieldByAnnotatedClass(Class<? extends Annotation> classAnnotatedClass, Class<? extends Annotation>... fieldAnnotatedClasses) {
         Valid.notNull(classAnnotatedClass, "class annotated class is null");
         Valid.notEmpty(fieldAnnotatedClasses, "field annotated classes length is 0");
-        Map<Class<?>, Set<Field>> annotatedClass = new HashMap<>(16);
+        Map<Class<?>, Set<Field>> annotatedClass = new HashMap<>(Const.CAPACITY_16);
         for (Class<?> c : classes) {
             boolean hasAnnotated = Annotations.present(c, classAnnotatedClass);
             if (!hasAnnotated) {

@@ -58,7 +58,8 @@ public abstract class Valid {
     private static final String VALID_VALUE_IS_NAN = "the validated value is not a number";
     private static final String VALID_VALUE_NOT_IN_RANGE = "the value {} is not in the specified inclusive range of {} to {}";
     private static final String VALID_VALUE_IN_RANGE = "the value {} in the specified inclusive range of {} to {}";
-    private static final String VALID_STRING_LENGTH = "the validated value length is not in {} of {}";
+    private static final String VALID_STRING_LENGTH = "the validated value length is not equal {}";
+    private static final String VALID_STRING_LENGTH_IN = "the validated value length is not in {} of {}";
     private static final String VALID_LENGTH_NOT_GT = "the validated value length is not greater than {}";
     private static final String VALID_LENGTH_NOT_GT_EQ = "the validated value length is not greater than or equal {}";
     private static final String VALID_LENGTH_NOT_LT = "the validated value length is not less than {}";
@@ -574,8 +575,20 @@ public abstract class Valid {
         return value;
     }
 
+    public static String validLength(String s, int length) {
+        return validLength(s, length, VALID_STRING_LENGTH, length);
+    }
+
+    public static String validLength(String s, int length, String message, Object... values) {
+        notNull(s);
+        if (s.length() != length) {
+            throw Exceptions.invalidArgument(Strings.format(message, values));
+        }
+        return s;
+    }
+
     public static String validLengthIn(String s, int start, int end) {
-        return validLengthIn(s, start, end, VALID_STRING_LENGTH, start, end);
+        return validLengthIn(s, start, end, VALID_STRING_LENGTH_IN, start, end);
     }
 
     public static String validLengthIn(String s, int start, int end, String message, Object... values) {

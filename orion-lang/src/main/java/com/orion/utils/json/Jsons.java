@@ -70,10 +70,10 @@ public class Jsons {
      * @return ignore
      */
     public static String toJson(Object bean, SerializerFeature... features) {
-        if (null == bean) {
+        if (bean == null) {
             return Strings.EMPTY;
         } else {
-            if (null == features) {
+            if (features == null) {
                 return JSON.toJSONString(bean);
             } else {
                 return JSON.toJSONString(bean, features);

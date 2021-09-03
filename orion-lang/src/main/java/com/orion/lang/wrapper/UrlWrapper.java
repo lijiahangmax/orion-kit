@@ -2,6 +2,7 @@ package com.orion.lang.wrapper;
 
 import com.orion.able.Logable;
 import com.orion.able.Mapable;
+import com.orion.constant.Const;
 import com.orion.lang.support.CloneSupport;
 import com.orion.utils.Strings;
 import com.orion.utils.json.Jsons;
@@ -152,7 +153,7 @@ public class UrlWrapper<T> extends CloneSupport<UrlWrapper<T>> implements Wrappe
 
     @Override
     public Map<String, Object> toMap() {
-        Map<String, Object> map = new HashMap<>(8);
+        Map<String, Object> map = new HashMap<>(Const.CAPACITY_8);
         map.put("url", url);
         map.put("type", type);
         map.put("data", data);

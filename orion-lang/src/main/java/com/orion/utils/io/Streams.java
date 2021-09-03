@@ -6,7 +6,7 @@ import com.orion.lang.iterator.LineIterator;
 import com.orion.utils.Strings;
 import com.orion.utils.Valid;
 import com.orion.utils.crypto.Signatures;
-import com.orion.utils.crypto.enums.HashMessageDigest;
+import com.orion.utils.crypto.enums.HashDigest;
 
 import java.io.*;
 import java.security.MessageDigest;
@@ -415,7 +415,7 @@ public class Streams {
      * @return 签名
      */
     public static String md5(InputStream in) {
-        return sign(in, HashMessageDigest.MD5);
+        return sign(in, HashDigest.MD5);
     }
 
     /**
@@ -425,7 +425,7 @@ public class Streams {
      * @return 签名
      */
     public static String sha1(InputStream in) {
-        return sign(in, HashMessageDigest.SHA1);
+        return sign(in, HashDigest.SHA1);
     }
 
     /**
@@ -435,7 +435,7 @@ public class Streams {
      * @return 签名
      */
     public static String sha224(InputStream in) {
-        return sign(in, HashMessageDigest.SHA224);
+        return sign(in, HashDigest.SHA224);
     }
 
     /**
@@ -445,7 +445,7 @@ public class Streams {
      * @return 签名
      */
     public static String sha256(InputStream in) {
-        return sign(in, HashMessageDigest.SHA256);
+        return sign(in, HashDigest.SHA256);
     }
 
     /**
@@ -455,7 +455,7 @@ public class Streams {
      * @return 签名
      */
     public static String sha384(InputStream in) {
-        return sign(in, HashMessageDigest.SHA256);
+        return sign(in, HashDigest.SHA256);
     }
 
     /**
@@ -465,7 +465,7 @@ public class Streams {
      * @return 签名
      */
     public static String sha512(InputStream in) {
-        return sign(in, HashMessageDigest.SHA512);
+        return sign(in, HashDigest.SHA512);
     }
 
     /**
@@ -475,7 +475,7 @@ public class Streams {
      * @param type 加密类型 MD5 SHA-1 SHA-224 SHA-256 SHA-384 SHA-512
      * @return 签名
      */
-    public static String sign(InputStream in, HashMessageDigest type) {
+    public static String sign(InputStream in, HashDigest type) {
         try {
             MessageDigest m = type.getMessageDigest();
             byte[] buffer = new byte[Const.BUFFER_KB_8];

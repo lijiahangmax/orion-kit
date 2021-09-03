@@ -3,6 +3,7 @@ package com.orion.lang.wrapper;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.orion.able.Logable;
 import com.orion.able.Mapable;
+import com.orion.constant.Const;
 import com.orion.constant.Letters;
 import com.orion.id.UUIds;
 import com.orion.lang.support.CloneSupport;
@@ -328,7 +329,7 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
 
     @Override
     public Map<String, Object> toMap() {
-        Map<String, Object> map = new HashMap<>(8);
+        Map<String, Object> map = new HashMap<>(Const.CAPACITY_8);
         map.put("code", code);
         map.put("msg", msg);
         map.put("data", data);
