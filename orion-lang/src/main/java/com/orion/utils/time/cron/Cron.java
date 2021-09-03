@@ -1,5 +1,6 @@
 package com.orion.utils.time.cron;
 
+import com.orion.constant.Const;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
 import com.orion.utils.time.Dates;
@@ -30,8 +31,8 @@ public class Cron implements Serializable {
     protected static final Integer ALL_SPEC = ALL_SPEC_INT;
     protected static final Integer NO_SPEC = NO_SPEC_INT;
 
-    protected static final Map<String, Integer> MONTH_MAP = new HashMap<>(16);
-    protected static final Map<String, Integer> WEEK_DAY_MAP = new HashMap<>(16);
+    protected static final Map<String, Integer> MONTH_MAP = new HashMap<>(Const.CAPACITY_16);
+    protected static final Map<String, Integer> WEEK_DAY_MAP = new HashMap<>(Const.CAPACITY_16);
 
     static {
         MONTH_MAP.put("JAN", 0);

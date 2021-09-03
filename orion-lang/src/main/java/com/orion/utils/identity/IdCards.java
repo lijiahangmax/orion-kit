@@ -40,14 +40,9 @@ public class IdCards {
     }
 
     /**
-     * 中国公民身份证号码最小长度
+     * 第二代 中国公民身份证号码长度
      */
-    private static final int CHINA_ID_MIN_LENGTH = 15;
-
-    /**
-     * 中国公民身份证号码最大长度
-     */
-    private static final int CHINA_ID_MAX_LENGTH = 18;
+    private static final int CHINA_ID_LENGTH = 18;
 
     /**
      * 每位加权因子
@@ -98,56 +93,13 @@ public class IdCards {
     }
 
     /**
-     * 将15位身份证号码转换为18位
-     *
-     * @param idCard 15位身份编码
-     * @return 18位身份编码
-     */
-    public static String convertCard(String idCard) {
-        if (idCard.length() != CHINA_ID_MIN_LENGTH) {
-            return null;
-        }
-        if (Matches.test(idCard, Patterns.INTEGER)) {
-            // 获取出生年月日
-            Date birthDate = Dates.parse("19" + idCard.substring(6, 12), Dates.YMD2);
-            int year = Dates.stream(birthDate).getYear();
-            StringBuilder idCard18 = new StringBuilder().append(idCard, 0, 6).append(year).append(idCard.substring(8));
-            // 获取校验位
-            char sVal = getCheckCode18(idCard18.toString());
-            idCard18.append(sVal);
-            return idCard18.toString();
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * 是否有效身份证号
-     *
-     * @param idCard 身份证号, 支持18位、15位
-     * @return 是否有效
-     */
-    public static boolean isValidCard(String idCard) {
-        idCard = idCard.trim();
-        int length = idCard.length();
-        switch (length) {
-            case 18:
-                return isValidCard18(idCard);
-            case 15:
-                return isValidCard15(idCard);
-            default:
-                return false;
-        }
-    }
-
-    /**
      * 判断18位身份证的合法性
      *
      * @param idCard 身份编码
      * @return 是否有效
      */
-    public static boolean isValidCard18(String idCard) {
-        if (CHINA_ID_MAX_LENGTH != idCard.length()) {
+    public static boolean isValidCard(String idCard) {
+        if (CHINA_ID_LENGTH != idCard.length()) {
             return false;
         }
         // 省份
@@ -176,35 +128,7 @@ public class IdCards {
     }
 
     /**
-     * 验证15位身份编码是否合法
-     *
-     * @param idCard 身份编码
-     * @return 是否有效
-     */
-    public static boolean isValidCard15(String idCard) {
-        if (CHINA_ID_MIN_LENGTH != idCard.length()) {
-            return false;
-        }
-        if (Matches.test(idCard, Patterns.INTEGER)) {
-            // 省份
-            String proCode = idCard.substring(0, 2);
-            if (null == CITY_CODES.get(proCode)) {
-                return false;
-            }
-            // 校验生日
-            Date birthDay = Dates.parse("19" + idCard.substring(6, 12), Dates.YMD2);
-            if (birthDay == null) {
-                return false;
-            }
-            DateStream bs = Dates.stream(birthDay);
-            return Birthdays.isBirthdayNotFuture(bs.getYear(), bs.getMonth(), bs.getDay());
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * 根据身份编号获取年龄 只支持15或18位身份证号码
+     * 根据身份编号获取年龄
      *
      * @param idCard 身份编号
      * @return 年龄
@@ -214,7 +138,7 @@ public class IdCards {
     }
 
     /**
-     * 根据身份编号获取指定日期当时的年龄年龄 只支持15或18位身份证号码
+     * 根据身份编号获取指定日期当时的年龄年龄
      *
      * @param idCard 身份编号
      * @param range  边界
@@ -226,92 +150,103 @@ public class IdCards {
     }
 
     /**
-     * 根据身份编号获取生日 只支持15或18位身份证号码
+     * 根据身份编号获取生日
      *
      * @param idCard 身份编号
      * @return yyyyMMdd
      */
     public static String getBirth(String idCard) {
-        int len = idCard.length();
-        Valid.isTrue(() -> len == 15 || len == 18, "ID Card length must be 15 or 18");
-        if (len == CHINA_ID_MIN_LENGTH) {
-            idCard = convertCard(idCard);
-        }
+        Valid.validLength(idCard, CHINA_ID_LENGTH, "ID Card length must be 18");
+
         return Objects.requireNonNull(idCard).substring(6, 14);
     }
 
     /**
-     * 根据身份编号获取生日年 只支持15或18位身份证号码
+     * 根据身份编号获取生日年
      *
      * @param idCard 身份编号
      * @return yyyy
      */
-    public static Short getYear(String idCard) {
-        int len = idCard.length();
-        Valid.isTrue(() -> len == 15 || len == 18, "ID Card length must be 15 or 18");
-        if (len == CHINA_ID_MIN_LENGTH) {
-            idCard = convertCard(idCard);
-        }
-        return Short.valueOf(Objects.requireNonNull(idCard).substring(6, 10));
+    public static int getYear(String idCard) {
+        Valid.validLength(idCard, CHINA_ID_LENGTH, "ID Card length must be 18");
+        return Integer.parseInt(Objects.requireNonNull(idCard).substring(6, 10));
     }
 
     /**
-     * 根据身份编号获取生日月 只支持15或18位身份证号码
+     * 根据身份编号获取生日月
      *
      * @param idCard 身份编号
      * @return MM
      */
-    public static short getMonth(String idCard) {
-        int len = idCard.length();
-        Valid.isTrue(() -> len == 15 || len == 18, "ID Card length must be 15 or 18");
-        if (len == CHINA_ID_MIN_LENGTH) {
-            idCard = convertCard(idCard);
-        }
-        return Short.parseShort(Objects.requireNonNull(idCard).substring(10, 12));
+    public static int getMonth(String idCard) {
+        Valid.validLength(idCard, CHINA_ID_LENGTH, "ID Card length must be 18");
+        return Integer.parseInt(Objects.requireNonNull(idCard).substring(10, 12));
     }
 
     /**
-     * 根据身份编号获取生日天 只支持15或18位身份证号码
+     * 根据身份编号获取生日天
      *
      * @param idCard 身份编号
      * @return dd
      */
-    public static short getDay(String idCard) {
-        int len = idCard.length();
-        Valid.isTrue(() -> len == 15 || len == 18, "ID Card length must be 15 or 18");
-        if (len == CHINA_ID_MIN_LENGTH) {
-            idCard = convertCard(idCard);
-        }
-        return Short.parseShort(Objects.requireNonNull(idCard).substring(12, 14));
+    public static int getDay(String idCard) {
+        Valid.validLength(idCard, CHINA_ID_LENGTH, "ID Card length must be 18");
+        return Integer.parseInt(Objects.requireNonNull(idCard).substring(12, 14));
     }
 
     /**
      * 根据身份编号获取性别
-     * 只支持15或18位身份证号码
      *
      * @param idCard 身份编号
      * @return true男
      */
     public static boolean getGender(String idCard) {
-        int len = idCard.length();
-        Valid.isTrue(() -> len == 15 || len == 18, "ID Card length must be 15 or 18");
-        if (len == CHINA_ID_MIN_LENGTH) {
-            idCard = convertCard(idCard);
-        }
-        char sCardChar = Objects.requireNonNull(idCard).charAt(16);
-        return sCardChar % 2 == 1;
+        Valid.validLength(idCard, CHINA_ID_LENGTH, "ID Card length must be 18");
+        return idCard.charAt(16) % 2 == 1;
     }
 
     /**
-     * 根据身份编号获取户籍省份, 只支持15或18位身份证号码
+     * 根据身份编号获取户籍省份
      *
      * @param idCard 身份编码
      * @return 省级编码
      */
     public static String getProvince(String idCard) {
-        int len = idCard.length();
-        Valid.isTrue(() -> len == 15 || len == 18, "ID Card length must be 15 or 18");
+        Valid.validLength(idCard, CHINA_ID_LENGTH, "ID Card length must be 18");
         return CITY_CODES.get(idCard.substring(0, 2));
+    }
+
+    /**
+     * 根据身份编号获取户籍省级编码
+     *
+     * @param idCard 身份编码
+     * @return 省级编码
+     */
+    public static Integer getProvinceCode(String idCard) {
+        Valid.validLength(idCard, CHINA_ID_LENGTH, "ID Card length must be 18");
+        return Integer.valueOf(idCard.substring(0, 2));
+    }
+
+    /**
+     * 根据身份编号获取户籍市级编码
+     *
+     * @param idCard 身份编码
+     * @return 市级编码
+     */
+    public static Integer getCityCode(String idCard) {
+        Valid.validLength(idCard, CHINA_ID_LENGTH, "ID Card length must be 18");
+        return Integer.valueOf(idCard.substring(0, 4));
+    }
+
+    /**
+     * 根据身份编号获取户籍县级编码
+     *
+     * @param idCard 身份编码
+     * @return 县级编码
+     */
+    public static Integer getCountryCode(String idCard) {
+        Valid.validLength(idCard, CHINA_ID_LENGTH, "ID Card length must be 18");
+        return Integer.valueOf(idCard.substring(0, 6));
     }
 
     /**

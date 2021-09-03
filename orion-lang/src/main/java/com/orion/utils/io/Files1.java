@@ -7,7 +7,7 @@ import com.orion.id.UUIds;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.Systems;
-import com.orion.utils.crypto.enums.HashMessageDigest;
+import com.orion.utils.crypto.enums.HashDigest;
 import com.orion.utils.math.Numbers;
 import com.orion.utils.regexp.Matches;
 
@@ -2123,7 +2123,7 @@ public class Files1 {
      * @return 签名
      */
     public static String md5(File file) {
-        return sign(file, HashMessageDigest.MD5);
+        return sign(file, HashDigest.MD5);
     }
 
     /**
@@ -2133,7 +2133,7 @@ public class Files1 {
      * @return 签名
      */
     public static String md5(String file) {
-        return sign(new File(file), HashMessageDigest.MD5);
+        return sign(new File(file), HashDigest.MD5);
     }
 
     /**
@@ -2143,7 +2143,7 @@ public class Files1 {
      * @return 签名
      */
     public static String sha1(File file) {
-        return sign(file, HashMessageDigest.SHA1);
+        return sign(file, HashDigest.SHA1);
     }
 
     /**
@@ -2153,7 +2153,7 @@ public class Files1 {
      * @return 签名
      */
     public static String sha1(String file) {
-        return sign(new File(file), HashMessageDigest.SHA1);
+        return sign(new File(file), HashDigest.SHA1);
     }
 
     /**
@@ -2163,7 +2163,7 @@ public class Files1 {
      * @return 签名
      */
     public static String sha224(File file) {
-        return sign(file, HashMessageDigest.SHA224);
+        return sign(file, HashDigest.SHA224);
     }
 
     /**
@@ -2173,7 +2173,7 @@ public class Files1 {
      * @return 签名
      */
     public static String sha224(String file) {
-        return sign(new File(file), HashMessageDigest.SHA224);
+        return sign(new File(file), HashDigest.SHA224);
     }
 
     /**
@@ -2183,7 +2183,7 @@ public class Files1 {
      * @return 签名
      */
     public static String sha256(File file) {
-        return sign(file, HashMessageDigest.SHA256);
+        return sign(file, HashDigest.SHA256);
     }
 
     /**
@@ -2193,7 +2193,7 @@ public class Files1 {
      * @return 签名
      */
     public static String sha256(String file) {
-        return sign(new File(file), HashMessageDigest.SHA256);
+        return sign(new File(file), HashDigest.SHA256);
     }
 
     /**
@@ -2203,7 +2203,7 @@ public class Files1 {
      * @return 签名
      */
     public static String sha384(File file) {
-        return sign(file, HashMessageDigest.SHA384);
+        return sign(file, HashDigest.SHA384);
     }
 
     /**
@@ -2213,7 +2213,7 @@ public class Files1 {
      * @return 签名
      */
     public static String sha384(String file) {
-        return sign(new File(file), HashMessageDigest.SHA384);
+        return sign(new File(file), HashDigest.SHA384);
     }
 
     /**
@@ -2223,7 +2223,7 @@ public class Files1 {
      * @return 签名
      */
     public static String sha512(File file) {
-        return sign(file, HashMessageDigest.SHA512);
+        return sign(file, HashDigest.SHA512);
     }
 
     /**
@@ -2233,7 +2233,7 @@ public class Files1 {
      * @return 签名
      */
     public static String sha512(String file) {
-        return sign(new File(file), HashMessageDigest.SHA512);
+        return sign(new File(file), HashDigest.SHA512);
     }
 
     /**
@@ -2243,7 +2243,7 @@ public class Files1 {
      * @param type 加密类型 MD5 SHA-1 SHA-224 SHA-256 SHA-384 SHA-512
      * @return 签名
      */
-    public static String sign(String file, HashMessageDigest type) {
+    public static String sign(String file, HashDigest type) {
         return sign(new File(file), type);
     }
 
@@ -2254,7 +2254,7 @@ public class Files1 {
      * @param type 加密类型 MD5 SHA-1 SHA-224 SHA-256 SHA-384 SHA-512
      * @return 签名
      */
-    public static String sign(File file, HashMessageDigest type) {
+    public static String sign(File file, HashDigest type) {
         if (file == null || !file.exists() || !file.isFile()) {
             return null;
         }

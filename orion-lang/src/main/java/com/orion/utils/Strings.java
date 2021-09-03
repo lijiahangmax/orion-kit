@@ -47,7 +47,7 @@ public class Strings {
      * @return 字符串
      */
     public static String str(Object obj, String charset) {
-        if (null == obj) {
+        if (obj == null) {
             return null;
         }
         Charset cs;
@@ -74,7 +74,7 @@ public class Strings {
      * @param s 字符串
      * @return 长度
      */
-    public static int length(CharSequence s) {
+    public static int length(String s) {
         return s == null ? 0 : s.length();
     }
 
@@ -93,18 +93,40 @@ public class Strings {
         }
     }
 
-    /**
-     * 如果为空串返回默认值
-     *
-     * @param s   s
-     * @param def def
-     * @return s or def
-     */
-    public static String ifBlank(String s, String def) {
-        if (isBlank(s)) {
+    public static String def(String str) {
+        if (isBlank(str)) {
+            return Strings.EMPTY;
+        }
+        return str;
+    }
+
+    public static String def(String str, String def) {
+        if (isBlank(str)) {
             return def;
         }
-        return s;
+        return str;
+    }
+
+    /**
+     * 默认值
+     *
+     * @param str 字符串
+     * @param def 默认值
+     * @return 如果字符串为空返回默认值
+     */
+    public static String def(String str, Supplier<String> def) {
+        if (isBlank(str)) {
+            return def.get();
+        }
+        return str;
+    }
+
+    public static String ifBlank(String s) {
+        return isBlank(s) ? EMPTY : s;
+    }
+
+    public static String ifBlank(String s, String def) {
+        return isBlank(s) ? def : s;
     }
 
     /**
@@ -115,10 +137,16 @@ public class Strings {
      * @return s or def
      */
     public static String ifBlank(String s, Supplier<String> def) {
-        if (isBlank(s)) {
-            return def.get();
-        }
-        return s;
+        return isBlank(s) ? def.get() : s;
+    }
+
+    public static String ifEmpty(String s) {
+        return isEmpty(s) ? EMPTY : s;
+
+    }
+
+    public static String ifEmpty(String s, String def) {
+        return isEmpty(s) ? def : s;
     }
 
     /**
@@ -129,24 +157,7 @@ public class Strings {
      * @return s or def
      */
     public static String ifEmpty(String s, Supplier<String> def) {
-        if (isEmpty(s)) {
-            return def.get();
-        }
-        return s;
-    }
-
-    /**
-     * 如果为空返回默认值
-     *
-     * @param s   s
-     * @param def def
-     * @return s or def
-     */
-    public static String ifEmpty(String s, String def) {
-        if (isEmpty(s)) {
-            return def;
-        }
-        return s;
+        return isEmpty(s) ? def.get() : s;
     }
 
     /**
@@ -520,7 +531,7 @@ public class Strings {
      * @param separator 分隔符
      * @return ignore
      */
-    public static String subStringBefore(String s, String separator) {
+    public static String substringBefore(String s, String separator) {
         if (isEmpty(s) || isEmpty(separator)) {
             return s;
         }
@@ -538,7 +549,7 @@ public class Strings {
      * @param separator 分隔符
      * @return ignore
      */
-    public static String subStringBeforeLast(String s, String separator) {
+    public static String substringBeforeLast(String s, String separator) {
         if (isEmpty(s) || isEmpty(separator)) {
             return s;
         }
@@ -556,7 +567,7 @@ public class Strings {
      * @param separator 分隔符
      * @return ignore
      */
-    public static String subStringAfter(String s, String separator) {
+    public static String substringAfter(String s, String separator) {
         if (isEmpty(s) || isEmpty(separator)) {
             return s;
         }
@@ -574,7 +585,7 @@ public class Strings {
      * @param separator 分隔符
      * @return ignore
      */
-    public static String subStringAfterLast(String s, String separator) {
+    public static String substringAfterLast(String s, String separator) {
         if (isEmpty(s) || isEmpty(separator)) {
             return s;
         }
@@ -602,12 +613,6 @@ public class Strings {
         }
     }
 
-    /**
-     * 连接字符串
-     *
-     * @param strs 连接字符串
-     * @return ignore
-     */
     public static String join(String... strs) {
         if (Arrays1.length(strs) == 0) {
             return Strings.EMPTY;
@@ -641,13 +646,6 @@ public class Strings {
         return sb.toString();
     }
 
-    /**
-     * 连接字符串
-     *
-     * @param list   需要处理的列表
-     * @param symbol symbol
-     * @return 连接后的字符串
-     */
     public static String join(List<String> list, String symbol) {
         return join(list, symbol, Strings.EMPTY, Strings.EMPTY);
     }
@@ -856,22 +854,11 @@ public class Strings {
         return build.toString();
     }
 
-    /**
-     * 创建StringBuilder对象
-     *
-     * @return StringBuilder
-     */
     public static StringBuilder newBuilder() {
         return new StringBuilder();
     }
 
-    /**
-     * 创建StringBuilder对象
-     *
-     * @param s 初始化字符串
-     * @return StringBuilder
-     */
-    public static StringBuilder newBuilder(CharSequence s) {
+    public static StringBuilder newBuilder(String s) {
         return new StringBuilder(s);
     }
 
@@ -885,31 +872,14 @@ public class Strings {
         return new StringBuilder(capacity);
     }
 
-    /**
-     * 创建StringBuffer对象
-     *
-     * @return StringBuffer
-     */
     public static StringBuffer newBuffer() {
         return new StringBuffer();
     }
 
-    /**
-     * 创建StringBuffer对象
-     *
-     * @param s 初始化字符串
-     * @return StringBuffer
-     */
-    public static StringBuffer newBuffer(CharSequence s) {
+    public static StringBuffer newBuffer(String s) {
         return new StringBuffer(s);
     }
 
-    /**
-     * 创建StringBuffer对象
-     *
-     * @param capacity 初始化容量
-     * @return StringBuffer
-     */
     public static StringBuffer newBuffer(int capacity) {
         return new StringBuffer(capacity);
     }
@@ -1152,88 +1122,6 @@ public class Strings {
     }
 
     /**
-     * 默认值
-     *
-     * @param str 字符串
-     * @return 如果字符串为空返回默认值
-     */
-    public static String def(String str) {
-        if (isBlank(str)) {
-            return Strings.EMPTY;
-        }
-        return str;
-    }
-
-    /**
-     * 默认值
-     *
-     * @param str 字符串
-     * @param def 默认值
-     * @return 如果字符串为空返回默认值
-     */
-    public static String def(String str, String def) {
-        if (isBlank(str)) {
-            return def;
-        }
-        return str;
-    }
-
-    /**
-     * 默认值
-     *
-     * @param str 字符串
-     * @param def 默认值
-     * @return 如果字符串为空返回默认值
-     */
-    public static String def(String str, Supplier<String> def) {
-        if (isBlank(str)) {
-            return def.get();
-        }
-        return str;
-    }
-
-    /**
-     * 默认值
-     *
-     * @param str 字符串
-     * @return 如果字符串为空返回默认值
-     */
-    public static String defIfEmpty(String str) {
-        if (isEmpty(str)) {
-            return Strings.EMPTY;
-        }
-        return str;
-    }
-
-    /**
-     * 默认值
-     *
-     * @param str 字符串
-     * @param def 默认值
-     * @return 如果字符串为空返回默认值
-     */
-    public static String defIfEmpty(String str, String def) {
-        if (isEmpty(str)) {
-            return def;
-        }
-        return str;
-    }
-
-    /**
-     * 默认值
-     *
-     * @param str 字符串
-     * @param def 默认值
-     * @return 如果字符串为空返回默认值
-     */
-    public static String defIfEmpty(String str, Supplier<String> def) {
-        if (isEmpty(str)) {
-            return def.get();
-        }
-        return str;
-    }
-
-    /**
      * 生成一串字符
      *
      * @return 字符
@@ -1262,24 +1150,58 @@ public class Strings {
         return str(cs);
     }
 
+    public static String omit(String str, int length) {
+        return centerOmit(str, length, length, Const.OMIT);
+    }
+
     /**
      * 省略字符串结尾
+     * <p>
+     * [3] 1234567 123...
+     * [4] 1234567 1234567
      *
-     * @param str  字符串
-     * @param omit 省略几位
+     * @param str    字符串
+     * @param length 保留几位
+     * @param omit   省略符
      * @return 省略后的字符串
      */
-    public static String omit(String str, int omit) {
+    public static String omit(String str, int length, String omit) {
+        return centerOmit(str, length, length, omit);
+    }
+
+    public static String centerOmit(String str, int leftLength, int length) {
+        return centerOmit(str, leftLength, length, Const.OMIT);
+    }
+
+    /**
+     * 省略字符串中间
+     * <p>
+     * [1, 3] 1234567 1...67
+     * [2, 3] 1234567 12...7
+     * [2, 4] 1234567 1234567
+     *
+     * @param str    字符串
+     * @param length 左侧保留几位
+     * @param length 总共保留几位
+     * @param omit   省略符
+     * @return 省略后的字符串
+     */
+    public static String centerOmit(String str, int leftLength, int length, String omit) {
+        Valid.gte(length, leftLength, "length must >= left length");
         if (isEmpty(str)) {
             return str;
         }
-        int length = length(str);
-        if (omit >= length) {
-            return Strings.EMPTY;
+        int len = length(str);
+        if (length >= len) {
+            return str;
         }
-        char[] cs = new char[length - omit];
-        System.arraycopy(str.toCharArray(), 0, cs, 0, length - omit);
-        return str(cs);
+        String left = str.substring(0, leftLength);
+        int rightLen = len - leftLength;
+        if (rightLen > length - leftLength + omit.length()) {
+            return left + omit + str.substring(len - (length - leftLength));
+        } else {
+            return str;
+        }
     }
 
     /**

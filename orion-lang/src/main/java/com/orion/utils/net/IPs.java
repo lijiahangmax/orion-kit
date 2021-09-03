@@ -300,10 +300,10 @@ public class IPs {
      */
     public static String num10ToIp(int ip) {
         int[] b = new int[4];
-        b[0] = (ip >> 24) & 0xff;
-        b[1] = (ip >> 16) & 0xff;
-        b[2] = (ip >> 8) & 0xff;
-        b[3] = ip & 0xff;
+        b[0] = (ip >> 24) & 0xFF;
+        b[1] = (ip >> 16) & 0xFF;
+        b[2] = (ip >> 8) & 0xFF;
+        b[3] = ip & 0xFF;
         return b[0] + "." + b[1] + "." + b[2] + "." + b[3];
     }
 
@@ -352,7 +352,7 @@ public class IPs {
      * @return key:ip value: host
      */
     public static Map<String, String> getLocalHosts() {
-        Map<String, String> result = new HashMap<>(16);
+        Map<String, String> result = new HashMap<>(Const.CAPACITY_16);
         try {
             InetAddress[] allAddress = InetAddress.getAllByName(getDefaultHostName());
             for (InetAddress address : allAddress) {
@@ -434,7 +434,7 @@ public class IPs {
      * @return MAC地址
      */
     public static String getMacAddress(InetAddress address) {
-        if (null == address) {
+        if (address == null) {
             return null;
         }
         try {
