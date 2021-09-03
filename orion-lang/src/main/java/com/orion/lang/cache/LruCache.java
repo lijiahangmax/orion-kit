@@ -1,5 +1,7 @@
 package com.orion.lang.cache;
 
+import com.orion.constant.Const;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
@@ -28,7 +30,7 @@ public class LruCache<K, V> extends LinkedHashMap<K, V> {
     /**
      * 重入锁
      */
-    private final Lock lock = new ReentrantLock();
+    private final Lock lock;
 
     /**
      * 最大容量
@@ -40,8 +42,9 @@ public class LruCache<K, V> extends LinkedHashMap<K, V> {
     }
 
     public LruCache(int maxCapacity) {
-        super(16, DEFAULT_LOAD_FACTOR, true);
+        super(Const.CAPACITY_16, DEFAULT_LOAD_FACTOR, true);
         this.maxCapacity = maxCapacity;
+        this.lock = new ReentrantLock();
     }
 
     public static <K, V> LruCache<K, V> newLru() {
@@ -54,7 +57,7 @@ public class LruCache<K, V> extends LinkedHashMap<K, V> {
 
     @Override
     protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
-        return size() > maxCapacity;
+        return this.size() > maxCapacity;
     }
 
     @Override

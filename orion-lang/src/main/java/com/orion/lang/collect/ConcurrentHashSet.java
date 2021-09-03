@@ -35,14 +35,14 @@ public class ConcurrentHashSet<E> extends AbstractSet<E> implements Serializable
     }
 
     public ConcurrentHashSet(Map<? extends E, ?> m) {
-        store = new ConcurrentHashMap<>(m.size());
+        this.store = new ConcurrentHashMap<>(m.size());
         for (E e : m.keySet()) {
             store.put(e, VALUE);
         }
     }
 
     public ConcurrentHashSet(Collection<? extends E> s) {
-        store = new ConcurrentHashMap<>(s.size());
+        this.store = new ConcurrentHashMap<>(s.size());
         for (E e : s) {
             store.put(e, VALUE);
         }

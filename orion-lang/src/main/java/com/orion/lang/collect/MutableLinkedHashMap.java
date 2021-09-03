@@ -19,16 +19,16 @@ public class MutableLinkedHashMap<K, V> extends LinkedHashMap<K, V> implements M
         super();
     }
 
-    public MutableLinkedHashMap(int initialCapacity, float loadFactor, boolean accessOrder) {
-        super(initialCapacity, loadFactor, accessOrder);
+    public MutableLinkedHashMap(int initialCapacity) {
+        super(initialCapacity);
     }
 
     public MutableLinkedHashMap(int initialCapacity, float loadFactor) {
         super(initialCapacity, loadFactor);
     }
 
-    public MutableLinkedHashMap(int initialCapacity) {
-        super(initialCapacity);
+    public MutableLinkedHashMap(int initialCapacity, float loadFactor, boolean accessOrder) {
+        super(initialCapacity, loadFactor, accessOrder);
     }
 
     public MutableLinkedHashMap(Map<? extends K, ? extends V> m) {
