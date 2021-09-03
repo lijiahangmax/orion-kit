@@ -111,7 +111,7 @@ public class ThreadFactoryBuilder implements Buildable<ThreadFactory> {
     private static ThreadFactory build(ThreadFactoryBuilder builder) {
         String namePrefix = builder.prefix;
         UncaughtExceptionHandler handler = builder.uncaughtExceptionHandler;
-        AtomicLong count = (null == namePrefix) ? null : new AtomicLong();
+        AtomicLong count = namePrefix == null ? null : new AtomicLong();
         return r -> {
             Thread thread;
             if (builder.group == null) {

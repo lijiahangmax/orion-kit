@@ -45,7 +45,7 @@ public class CharConverts {
         StringBuilder sb = new StringBuilder();
         String[] chars = value.split(";");
         for (String un : chars) {
-            sb.append((char) Integer.parseInt(un.substring(2)));
+            sb.append((char) Integer.parseInt(un.trim().substring(2)));
         }
         return sb.toString();
     }
@@ -66,7 +66,7 @@ public class CharConverts {
         char[] chars = str.toCharArray();
         StringBuilder sb = new StringBuilder();
         for (char c : chars) {
-            sb.append(ToUnicodeChar(c, convertNumber));
+            sb.append(toUnicodeChar(c, convertNumber));
         }
         return sb.toString();
     }
@@ -79,7 +79,7 @@ public class CharConverts {
      * @param convertNumber 是否转换字母和数字
      * @return unicode
      */
-    private static String ToUnicodeChar(char c, boolean convertNumber) {
+    private static String toUnicodeChar(char c, boolean convertNumber) {
         if (convertNumber || c > 255) {
             StringBuilder sb = new StringBuilder();
             sb.append(UNICODE_PREFIX);

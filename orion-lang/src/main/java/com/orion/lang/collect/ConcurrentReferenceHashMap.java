@@ -108,7 +108,7 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
 
     protected int getHash(Object o) {
         int hash = o == null ? 0 : o.hashCode();
-        hash += (hash << 15) ^ 0xffffcd7d;
+        hash += (hash << 15) ^ 0xFFFFCD7D;
         hash ^= (hash >>> 10);
         hash += (hash << 3);
         hash ^= (hash >>> 6);

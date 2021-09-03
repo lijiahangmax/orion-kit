@@ -217,7 +217,7 @@ public class FtpInstance implements SafeCloseable {
             String[] dirs = Files1.getPath(dir).split(SEPARATOR);
             String base = config.getRemoteRootDir();
             for (String d : dirs) {
-                if (null == d || Strings.EMPTY.equals(d)) {
+                if (d == null || Strings.EMPTY.equals(d)) {
                     continue;
                 }
                 base = serverCharset(base + SEPARATOR + d);

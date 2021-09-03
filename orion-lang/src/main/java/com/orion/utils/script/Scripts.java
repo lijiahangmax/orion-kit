@@ -60,13 +60,13 @@ public class Scripts {
             System.setProperty("python.import.site", "false");
         }
         ScriptEngine engine = MANAGER.getEngineByName(type);
-        if (null == engine) {
+        if (engine == null) {
             engine = MANAGER.getEngineByExtension(type);
         }
-        if (null == engine) {
+        if (engine == null) {
             engine = MANAGER.getEngineByMimeType(type);
         }
-        if (null == engine) {
+        if (engine == null) {
             throw Exceptions.unsupported("unsupported script type [" + type + "]");
         }
         return engine;

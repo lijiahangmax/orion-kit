@@ -25,7 +25,7 @@ public class IdCardGeneratorTest {
             System.out.print(IdCardGenerator.getPeriodString(c) + " ");
             System.out.print(IdCardGenerator.getAddress(c) + " ");
             System.out.println();
-            Valid.isTrue(IdCards.isValidCard18(c));
+            Valid.isTrue(IdCards.isValidCard(c));
             Valid.isTrue(IdCards.getAge(c) == 18);
         }
     }
@@ -44,7 +44,7 @@ public class IdCardGeneratorTest {
             System.out.print(Arrays.toString(IdCardGenerator.getAddressCodeExt(c)) + " ");
             System.out.print(Arrays.toString(IdCardGenerator.getAddressExt(c)) + " ");
             System.out.println();
-            Valid.isTrue(IdCards.isValidCard18(c));
+            Valid.isTrue(IdCards.isValidCard(c));
         }
     }
 

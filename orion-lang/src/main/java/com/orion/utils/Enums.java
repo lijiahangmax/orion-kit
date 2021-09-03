@@ -98,7 +98,7 @@ public class Enums {
      * @return 枚举值
      */
     public static <E extends Enum<E>> E getEnum(Class<E> enumClass, String value, E def) {
-        if (null == enumClass || Strings.isBlank(value)) {
+        if (enumClass == null || Strings.isBlank(value)) {
             return def;
         }
         try {
@@ -145,7 +145,7 @@ public class Enums {
      */
     public static List<String> getNames(Class<? extends Enum<?>> clazz) {
         Enum<?>[] enums = clazz.getEnumConstants();
-        if (null == enums) {
+        if (enums == null) {
             return new ArrayList<>();
         }
         List<String> list = new ArrayList<>(enums.length);
@@ -225,11 +225,11 @@ public class Enums {
      *
      * @param clazz     枚举类
      * @param fieldName 字段名
-     * @return IGNORE
+     * @return ignore
      */
     public static Map<String, Object> getFieldValues(Class<? extends Enum<?>> clazz, String fieldName) {
         Enum<?>[] enums = clazz.getEnumConstants();
-        if (null == enums) {
+        if (enums == null) {
             return null;
         }
         Map<String, Object> map = new HashMap<>(enums.length);

@@ -112,8 +112,8 @@ public abstract class CodeGenerator {
         this.font = new Font(Const.FONT_MICROSOFT_ELEGANT_BLACK, Font.PLAIN, 18);
         this.fontColor = Color.BLACK;
         this.wordsButtonMargin = 10;
-        this.encodeHint = new HashMap<>(8);
-        this.decodeHint = new HashMap<>(8);
+        this.encodeHint = new HashMap<>(Const.CAPACITY_8);
+        this.decodeHint = new HashMap<>(Const.CAPACITY_8);
         encodeHint.put(EncodeHintType.ERROR_CORRECTION, this.toErrorCorrectionLevel());
         encodeHint.put(EncodeHintType.CHARACTER_SET, charset);
         encodeHint.put(EncodeHintType.MARGIN, 1);

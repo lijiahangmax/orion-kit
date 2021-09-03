@@ -1887,7 +1887,7 @@ public class Arrays1 {
         }
     }
 
-    // -------------------- drap --------------------
+    // -------------------- unWrap --------------------
 
     /**
      * 将数组转化为其基本装类
@@ -1895,7 +1895,7 @@ public class Arrays1 {
      * @param arr 数组
      * @return 基本数组
      */
-    public static byte[] drap(Byte[] arr) {
+    public static byte[] unWrap(Byte[] arr) {
         int length = length(arr);
         if (length == 0) {
             return new byte[0];
@@ -1907,7 +1907,7 @@ public class Arrays1 {
         return n;
     }
 
-    public static short[] drap(Short[] arr) {
+    public static short[] unWrap(Short[] arr) {
         int length = length(arr);
         if (length == 0) {
             return new short[0];
@@ -1919,7 +1919,7 @@ public class Arrays1 {
         return n;
     }
 
-    public static int[] drap(Integer[] arr) {
+    public static int[] unWrap(Integer[] arr) {
         int length = length(arr);
         if (length == 0) {
             return new int[0];
@@ -1931,7 +1931,7 @@ public class Arrays1 {
         return n;
     }
 
-    public static long[] drap(Long[] arr) {
+    public static long[] unWrap(Long[] arr) {
         int length = length(arr);
         if (length == 0) {
             return new long[0];
@@ -1943,7 +1943,7 @@ public class Arrays1 {
         return n;
     }
 
-    public static float[] drap(Float[] arr) {
+    public static float[] unWrap(Float[] arr) {
         int length = length(arr);
         if (length == 0) {
             return new float[0];
@@ -1955,7 +1955,7 @@ public class Arrays1 {
         return n;
     }
 
-    public static double[] drap(Double[] arr) {
+    public static double[] unWrap(Double[] arr) {
         int length = length(arr);
         if (length == 0) {
             return new double[0];
@@ -1967,7 +1967,7 @@ public class Arrays1 {
         return n;
     }
 
-    public static boolean[] drap(Boolean[] arr) {
+    public static boolean[] unWrap(Boolean[] arr) {
         int length = length(arr);
         if (length == 0) {
             return new boolean[0];
@@ -1979,7 +1979,7 @@ public class Arrays1 {
         return n;
     }
 
-    public static char[] drap(Character[] arr) {
+    public static char[] unWrap(Character[] arr) {
         int length = length(arr);
         if (length == 0) {
             return new char[0];
@@ -1991,25 +1991,25 @@ public class Arrays1 {
         return n;
     }
 
-    public static Object drap(Object arr) {
+    public static Object unWrap(Object arr) {
         if (arr == null) {
             return null;
         } else if (arr instanceof Byte[]) {
-            return drap((Byte[]) arr);
+            return unWrap((Byte[]) arr);
         } else if (arr instanceof Short[]) {
-            return drap((Short[]) arr);
+            return unWrap((Short[]) arr);
         } else if (arr instanceof Integer[]) {
-            return drap((Integer[]) arr);
+            return unWrap((Integer[]) arr);
         } else if (arr instanceof Long[]) {
-            return drap((Long[]) arr);
+            return unWrap((Long[]) arr);
         } else if (arr instanceof Float[]) {
-            return drap((Float[]) arr);
+            return unWrap((Float[]) arr);
         } else if (arr instanceof Double[]) {
-            return drap((Double[]) arr);
+            return unWrap((Double[]) arr);
         } else if (arr instanceof Boolean[]) {
-            return drap((Boolean[]) arr);
+            return unWrap((Boolean[]) arr);
         } else if (arr instanceof Character[]) {
-            return drap((Character[]) arr);
+            return unWrap((Character[]) arr);
         } else {
             return arr;
         }

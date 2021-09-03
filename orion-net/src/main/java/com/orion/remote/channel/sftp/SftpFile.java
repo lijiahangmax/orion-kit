@@ -30,7 +30,7 @@ public class SftpFile implements Serializable {
         this.size = attrs.getSize();
         this.uid = attrs.getUId();
         this.gid = attrs.getGId();
-        this.permission = Files1.permission8to10(attrs.getPermissions() & 0XFFF);
+        this.permission = Files1.permission8to10(attrs.getPermissions() & 0xFFF);
         this.permissionString = attrs.getPermissionsString();
         this.accessTime = Dates.date(attrs.getATime());
         this.modifyTime = Dates.date(attrs.getMTime());

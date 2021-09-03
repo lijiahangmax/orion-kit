@@ -150,8 +150,8 @@ public class Converts {
 
     public static short toShort(byte[] b) {
         if (b.length == 2) {
-            short s0 = (short) (b[0] & 0xff);
-            short s1 = (short) (b[1] & 0xff);
+            short s0 = (short) (b[0] & 0xFF);
+            short s1 = (short) (b[1] & 0xFF);
             s1 <<= 8;
             return (short) (s0 | s1);
         } else if (b.length == 4) {
@@ -203,7 +203,7 @@ public class Converts {
         if (o instanceof byte[]) {
             return toShort((byte[]) o);
         } else if (o instanceof Byte[]) {
-            return toShort(Arrays1.drap((Byte[]) o));
+            return toShort(Arrays1.unWrap((Byte[]) o));
         } else if (o instanceof Number) {
             return ((Number) o).shortValue();
         } else if (o instanceof Boolean) {
@@ -276,7 +276,7 @@ public class Converts {
         if (o instanceof byte[]) {
             return toInt((byte[]) o);
         } else if (o instanceof Byte[]) {
-            return toInt(Arrays1.drap((Byte[]) o));
+            return toInt(Arrays1.unWrap((Byte[]) o));
         } else if (o instanceof Number) {
             return ((Number) o).intValue();
         } else if (o instanceof Boolean) {
@@ -297,14 +297,14 @@ public class Converts {
         } else if (b.length == 4) {
             return (long) toInt(b);
         } else if (b.length == 8) {
-            long s0 = b[0] & 0xff;
-            long s1 = b[1] & 0xff;
-            long s2 = b[2] & 0xff;
-            long s3 = b[3] & 0xff;
-            long s4 = b[4] & 0xff;
-            long s5 = b[5] & 0xff;
-            long s6 = b[6] & 0xff;
-            long s7 = b[7] & 0xff;
+            long s0 = b[0] & 0xFF;
+            long s1 = b[1] & 0xFF;
+            long s2 = b[2] & 0xFF;
+            long s3 = b[3] & 0xFF;
+            long s4 = b[4] & 0xFF;
+            long s5 = b[5] & 0xFF;
+            long s6 = b[6] & 0xFF;
+            long s7 = b[7] & 0xFF;
             s1 <<= 8;
             s2 <<= 8 * 2;
             s3 <<= 8 * 3;
@@ -358,7 +358,7 @@ public class Converts {
         if (o instanceof byte[]) {
             return toLong((byte[]) o);
         } else if (o instanceof Byte[]) {
-            return toLong(Arrays1.drap((Byte[]) o));
+            return toLong(Arrays1.unWrap((Byte[]) o));
         } else if (o instanceof Number) {
             return ((Number) o).longValue();
         } else if (o instanceof Boolean) {
@@ -605,10 +605,10 @@ public class Converts {
 
     public static byte[] toBytes(int i) {
         byte[] bt = new byte[4];
-        bt[0] = (byte) (0xff & i);
-        bt[1] = (byte) ((0xff00 & i) >> 8);
-        bt[2] = (byte) ((0xff0000 & i) >> 16);
-        bt[3] = (byte) ((0xff000000 & i) >> 24);
+        bt[0] = (byte) (0xFF & i);
+        bt[1] = (byte) ((0xFF00 & i) >> 8);
+        bt[2] = (byte) ((0xFF0000 & i) >> 16);
+        bt[3] = (byte) ((0xFF000000 & i) >> 24);
         return bt;
     }
 
@@ -616,7 +616,7 @@ public class Converts {
         int temp = b;
         byte[] bs = new byte[2];
         for (int i = 0; i < bs.length; i++) {
-            bs[i] = (byte) (temp & 0xff);
+            bs[i] = (byte) (temp & 0xFF);
             temp = temp >> 8;
         }
         return bs;
@@ -626,7 +626,7 @@ public class Converts {
         long temp = n;
         byte[] b = new byte[8];
         for (int i = 0; i < b.length; i++) {
-            b[i] = (byte) (temp & 0xff);
+            b[i] = (byte) (temp & 0xFF);
             temp = temp >> 8;
         }
         return b;

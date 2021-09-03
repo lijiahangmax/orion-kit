@@ -123,7 +123,7 @@ public class Booleans {
         if (array.length == 0) {
             return false;
         }
-        boolean[] primitive = Arrays1.drap(array);
+        boolean[] primitive = Arrays1.unWrap(array);
         return and(primitive) ? Boolean.TRUE : Boolean.FALSE;
     }
 
@@ -161,7 +161,7 @@ public class Booleans {
         if (array.length == 0) {
             return false;
         }
-        boolean[] primitive = Arrays1.drap(array);
+        boolean[] primitive = Arrays1.unWrap(array);
         return or(primitive) ? Boolean.TRUE : Boolean.FALSE;
     }
 

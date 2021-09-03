@@ -93,7 +93,7 @@ public class ObjectIds {
             if (symbol && i % 4 == 0 && i != 0) {
                 buf.append("-");
             }
-            t = array[i] & 0xff;
+            t = array[i] & 0xFF;
             if (t < 16) {
                 buf.append('0');
             }

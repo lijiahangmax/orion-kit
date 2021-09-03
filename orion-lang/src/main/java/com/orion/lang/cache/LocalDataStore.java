@@ -1,5 +1,6 @@
 package com.orion.lang.cache;
 
+import com.orion.constant.Const;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.io.Files1;
@@ -24,12 +25,12 @@ public class LocalDataStore {
     /**
      * 本地文件
      */
-    private File localDataStoreFile = new File(Files1.getPath(System.getProperty("user.dir") + "/data/dataStore.map"));
+    private File localDataStoreFile;
 
     /**
      * 数据容器
      */
-    private Map<Object, Object> localStore = null;
+    private Map<Object, Object> localStore;
 
     /**
      * 默认store
@@ -37,12 +38,12 @@ public class LocalDataStore {
     public static final LocalDataStore STORE = new LocalDataStore();
 
     public LocalDataStore() {
-        init();
+        this(new File(Files1.getPath(System.getProperty("user.dir") + "/data/dataStore.map")));
     }
 
     public LocalDataStore(File file) {
-        localDataStoreFile = file;
-        init();
+        this.localDataStoreFile = file;
+        this.init();
     }
 
     /**
@@ -56,44 +57,9 @@ public class LocalDataStore {
             in = new ObjectInputStream(new FileInputStream(localDataStoreFile));
             localStore = (Map<Object, Object>) in.readObject();
         } catch (Exception e) {
-            localStore = new HashMap<>(4);
+            localStore = new HashMap<>(Const.CAPACITY_8);
         } finally {
             Streams.close(in);
-        }
-    }
-
-    /**
-     * 写入
-     */
-    private void write() {
-        if (localStore != null) {
-            forceClean();
-            ObjectOutputStream out = null;
-            try {
-                out = new ObjectOutputStream(new FileOutputStream(localDataStoreFile));
-                out.writeObject(localStore);
-                out.writeObject(null);
-            } catch (Exception e) {
-                throw Exceptions.ioRuntime(e);
-            } finally {
-                Streams.close(out);
-            }
-        }
-    }
-
-    /**
-     * 清空文件数据
-     */
-    public void forceClean() {
-        BufferedWriter clean = null;
-        try {
-            clean = new BufferedWriter(new FileWriter(localDataStoreFile));
-            clean.write(Strings.EMPTY);
-            clean.flush();
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
-        } finally {
-            Streams.close(clean);
         }
     }
 
@@ -109,7 +75,7 @@ public class LocalDataStore {
      */
     public void put(Serializable key, Serializable value) {
         localStore.put(key, value);
-        write();
+        this.write();
     }
 
     /**
@@ -119,7 +85,7 @@ public class LocalDataStore {
      */
     public void putAll(Map<? extends Serializable, ? extends Serializable> map) {
         localStore.putAll(map);
-        write();
+        this.write();
     }
 
     /**
@@ -149,7 +115,7 @@ public class LocalDataStore {
      */
     public void remove(Object key) {
         localStore.remove(key);
-        write();
+        this.write();
     }
 
     /**
@@ -164,14 +130,49 @@ public class LocalDataStore {
      */
     public void clear() {
         localStore.clear();
-        write();
+        this.write();
     }
 
     /**
      * 持久化
      */
     public void save() {
-        write();
+        this.write();
+    }
+
+    /**
+     * 写入
+     */
+    private void write() {
+        if (localStore != null) {
+            this.forceClean();
+            ObjectOutputStream out = null;
+            try {
+                out = new ObjectOutputStream(new FileOutputStream(localDataStoreFile));
+                out.writeObject(localStore);
+                out.writeObject(null);
+            } catch (Exception e) {
+                throw Exceptions.ioRuntime(e);
+            } finally {
+                Streams.close(out);
+            }
+        }
+    }
+
+    /**
+     * 清空文件数据
+     */
+    public void forceClean() {
+        BufferedWriter clean = null;
+        try {
+            clean = new BufferedWriter(new FileWriter(localDataStoreFile));
+            clean.write(Strings.EMPTY);
+            clean.flush();
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime(e);
+        } finally {
+            Streams.close(clean);
+        }
     }
 
     @Override
