@@ -8,16 +8,23 @@ import java.util.TimeZone;
 
 /**
  * copy with apache
+ *
+ * @author Jiahang Li
+ * @version 1.0.0
+ * @since 2021/8/25 12:36
  */
-class GmtTimeZone extends TimeZone {
+final class GmtTimeZone extends TimeZone {
 
     private static final int MILLISECONDS_PER_MINUTE = Const.MS_S_60;
+
     private static final int MINUTES_PER_HOUR = 60;
+
     private static final int HOURS_PER_DAY = 24;
 
     private static final long serialVersionUID = 1L;
 
     private final int offset;
+
     private final String zoneId;
 
     GmtTimeZone(boolean negate, int hours, int minutes) {
@@ -28,8 +35,8 @@ class GmtTimeZone extends TimeZone {
             throw Exceptions.argument(minutes + " minutes out of range");
         }
         int milliseconds = (minutes + (hours * MINUTES_PER_HOUR)) * MILLISECONDS_PER_MINUTE;
-        offset = negate ? -milliseconds : milliseconds;
-        zoneId = twoDigits(
+        this.offset = negate ? -milliseconds : milliseconds;
+        this.zoneId = twoDigits(
                 twoDigits(new StringBuilder(9).append("GMT").append(negate ? '-' : '+'), hours)
                         .append(':'), minutes).toString();
 
@@ -71,7 +78,7 @@ class GmtTimeZone extends TimeZone {
 
     @Override
     public String toString() {
-        return "[GmtTimeZone id=\"" + zoneId + "\",offset=" + offset + ']';
+        return "id=\"" + zoneId + "\", offset=" + offset;
     }
 
     @Override
