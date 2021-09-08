@@ -38,7 +38,7 @@ public class Types {
      * @return 原始class
      */
     public static Class<?> getClass(Type type) {
-        if (null != type) {
+        if (type != null) {
             if (type instanceof Class) {
                 return (Class<?>) type;
             } else if (type instanceof ParameterizedType) {
@@ -65,7 +65,7 @@ public class Types {
 
     public static Type getParameterType(Method method, int index) {
         Type[] types = method.getGenericParameterTypes();
-        if (null != types && types.length > index) {
+        if (types != null && types.length > index) {
             return types[index];
         }
         return null;

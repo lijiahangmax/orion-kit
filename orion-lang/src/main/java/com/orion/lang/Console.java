@@ -63,7 +63,7 @@ public class Console {
      */
     public static void log(Throwable t, String tpl, Object... values) {
         out.println(Strings.format(tpl, values));
-        if (null != t) {
+        if (t != null) {
             Exceptions.printStacks(t);
             Streams.flush(out);
         }
@@ -109,7 +109,7 @@ public class Console {
      */
     public static void error(Throwable t, String tpl, Object... values) {
         err.println(Strings.format(tpl, values));
-        if (null != t) {
+        if (t != null) {
             Exceptions.printStacks(t);
             Streams.flush(err);
         }

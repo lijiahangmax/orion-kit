@@ -30,7 +30,7 @@ public class WeightRandomMap<T> extends TreeMap<Double, T> implements Serializab
     public WeightRandomMap(Collection<WeightObject<T>> weights) {
         if (Lists.isNotEmpty(weights)) {
             for (WeightObject<T> w : weights) {
-                put(w);
+                this.put(w);
             }
         }
     }
@@ -38,9 +38,15 @@ public class WeightRandomMap<T> extends TreeMap<Double, T> implements Serializab
     public WeightRandomMap(Map<T, Double> weights) {
         if (Maps.isNotEmpty(weights)) {
             for (Map.Entry<T, Double> e : weights.entrySet()) {
-                put(e.getKey(), e.getValue());
+                this.put(e.getKey(), e.getValue());
             }
         }
+    }
+
+    @Override
+    public T put(Double weight, T value) {
+        this.put(new WeightObject<>(value, weight));
+        return null;
     }
 
     /**
@@ -48,27 +54,24 @@ public class WeightRandomMap<T> extends TreeMap<Double, T> implements Serializab
      *
      * @param o      对象
      * @param weight 权重
-     * @return this
      */
-    public WeightRandomMap<T> put(T o, double weight) {
-        return this.put(new WeightObject<>(o, weight));
+    public void put(T o, double weight) {
+        this.put(new WeightObject<>(o, weight));
     }
 
     /**
      * 增加对象权重
      *
      * @param o 权重对象
-     * @return this
      */
-    public WeightRandomMap<T> put(WeightObject<T> o) {
-        if (null != o) {
+    public void put(WeightObject<T> o) {
+        if (o != null) {
             double weight = o.getWeight();
             if (o.getWeight() > 0) {
                 double lastWeight = (this.size() == 0) ? 0 : this.lastKey();
-                this.put(weight + lastWeight, o.getObject());
+                super.put(weight + lastWeight, o.getObject());
             }
         }
-        return this;
     }
 
     /**

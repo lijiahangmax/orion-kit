@@ -64,7 +64,7 @@ public class Clipboards {
      * @return 剪贴板内容
      */
     public static Object get(Transferable content, DataFlavor flavor) {
-        if (null != content && content.isDataFlavorSupported(flavor)) {
+        if (content != null && content.isDataFlavorSupported(flavor)) {
             try {
                 return content.getTransferData(flavor);
             } catch (UnsupportedFlavorException | IOException e) {

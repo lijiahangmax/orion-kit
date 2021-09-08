@@ -205,7 +205,7 @@ public class Lists extends Collections {
 
     public static <E> List<E> as(Iterator<E> iter) {
         List<E> list = new ArrayList<>();
-        if (null != iter) {
+        if (iter != null) {
             while (iter.hasNext()) {
                 list.add(iter.next());
             }
@@ -215,7 +215,7 @@ public class Lists extends Collections {
 
     public static <E> List<E> as(Enumeration<E> iter) {
         List<E> list = new ArrayList<>();
-        if (null != iter) {
+        if (iter != null) {
             while (iter.hasMoreElements()) {
                 list.add(iter.nextElement());
             }

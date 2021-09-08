@@ -213,7 +213,7 @@ public class Randoms {
      * 返回固定长度的数字
      *
      * @param length 长度
-     * @return ignor
+     * @return ignore
      */
     public static String randomNumber(int length) {
         StringBuilder sb = new StringBuilder();

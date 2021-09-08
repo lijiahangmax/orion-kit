@@ -119,7 +119,7 @@ public class ThreadFactoryBuilder implements Buildable<ThreadFactory> {
             } else {
                 thread = new Thread(builder.group, r);
             }
-            if (null != namePrefix) {
+            if (namePrefix != null) {
                 thread.setName(namePrefix + count.getAndIncrement());
             }
             if (builder.classLoader != null) {
@@ -127,7 +127,7 @@ public class ThreadFactoryBuilder implements Buildable<ThreadFactory> {
             }
             thread.setDaemon(builder.daemon);
             thread.setPriority(builder.priority);
-            if (null != handler) {
+            if (handler != null) {
                 thread.setUncaughtExceptionHandler(handler);
             }
             return thread;

@@ -144,7 +144,7 @@ public class Queues extends Collections {
 
     public static <E> Queue<E> as(Iterator<E> iter) {
         Queue<E> q = new ConcurrentLinkedQueue<>();
-        if (null != iter) {
+        if (iter != null) {
             while (iter.hasNext()) {
                 q.add(iter.next());
             }
@@ -154,7 +154,7 @@ public class Queues extends Collections {
 
     public static <E> Deque<E> asd(Iterator<E> iter) {
         Deque<E> q = new ConcurrentLinkedDeque<>();
-        if (null != iter) {
+        if (iter != null) {
             while (iter.hasNext()) {
                 q.add(iter.next());
             }
@@ -164,7 +164,7 @@ public class Queues extends Collections {
 
     public static <E> Queue<E> as(Enumeration<E> iter) {
         Queue<E> q = new ConcurrentLinkedQueue<>();
-        if (null != iter) {
+        if (iter != null) {
             while (iter.hasMoreElements()) {
                 q.add(iter.nextElement());
             }
@@ -174,7 +174,7 @@ public class Queues extends Collections {
 
     public static <E> Deque<E> asd(Enumeration<E> iter) {
         Deque<E> q = new ConcurrentLinkedDeque<>();
-        if (null != iter) {
+        if (iter != null) {
             while (iter.hasMoreElements()) {
                 q.add(iter.nextElement());
             }
