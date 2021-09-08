@@ -2,6 +2,7 @@ package com.orion.generator.faker;
 
 import com.orion.generator.addres.AddressGenerator;
 import com.orion.generator.addres.AddressSupport;
+import com.orion.generator.addres.Nationalities;
 import com.orion.generator.bank.BankCardGenerator;
 import com.orion.generator.bank.BankCardType;
 import com.orion.generator.bank.BankNameType;
@@ -124,6 +125,7 @@ public class Faker {
                 Date[] period = IdCardGenerator.getPeriod(idCard);
                 Integer[] codeExt = IdCardGenerator.getAddressCodeExt(idCard);
                 String[] addressExt = IdCardGenerator.getAddressExt(idCard);
+                String nation = Nationalities.getNation(codeExt[0]);
                 FakerInfo.FakerIdCard fakerIdCard = new FakerInfo.FakerIdCard();
                 fakerIdCard.setCardNo(idCard);
                 fakerIdCard.setAddress(fullAddress);
@@ -137,6 +139,7 @@ public class Faker {
                 fakerIdCard.setCityName(addressExt[1]);
                 fakerIdCard.setCountryCode(codeExt[2]);
                 fakerIdCard.setCountryName(addressExt[2]);
+                fakerIdCard.setNation(nation);
                 fakerInfo.setIdCard(fakerIdCard);
             } else if (FakerType.DEBIT_CARD.equals(type) || FakerType.CREDIT_CARD.equals(type)) {
                 // 储蓄卡 | 信用卡

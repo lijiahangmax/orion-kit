@@ -179,6 +179,11 @@ public class FakerInfo implements Serializable {
          */
         private Date periodEnd;
 
+        /**
+         * 民族
+         */
+        private String nation;
+
         public String getCardNo() {
             return cardNo;
         }
@@ -225,6 +230,14 @@ public class FakerInfo implements Serializable {
 
         public void setPeriodEnd(Date periodEnd) {
             this.periodEnd = periodEnd;
+        }
+
+        public String getNation() {
+            return nation;
+        }
+
+        public void setNation(String nation) {
+            this.nation = nation;
         }
 
         @Override

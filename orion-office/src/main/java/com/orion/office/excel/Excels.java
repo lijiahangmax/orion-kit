@@ -698,7 +698,7 @@ public class Excels {
      */
     public static int getColumnCount(Sheet sheet, int rowNum) {
         Row row = sheet.getRow(rowNum);
-        if (null != row) {
+        if (row != null) {
             return row.getLastCellNum();
         }
         return 0;

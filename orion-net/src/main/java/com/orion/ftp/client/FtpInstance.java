@@ -476,12 +476,12 @@ public class FtpInstance implements SafeCloseable {
             List<String> list = new ArrayList<>();
             if (lines > 0) {
                 String line;
-                for (int i = 0; i < lines && null != (line = in.readLine()); i++) {
+                for (int i = 0; i < lines && (line = in.readLine()) != null; i++) {
                     list.add(line);
                 }
             } else {
                 String line;
-                while (null != (line = in.readLine())) {
+                while ((line = in.readLine()) != null) {
                     list.add(line);
                 }
             }

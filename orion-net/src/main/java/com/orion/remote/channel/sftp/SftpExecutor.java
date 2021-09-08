@@ -682,11 +682,11 @@ public class SftpExecutor extends BaseExecutor {
             List<String> list = new ArrayList<>();
             String line;
             if (lines > 0) {
-                for (int i = 0; i < lines && null != (line = reader.readLine()); i++) {
+                for (int i = 0; i < lines && (line = reader.readLine()) != null; i++) {
                     list.add(line);
                 }
             } else {
-                while (null != (line = reader.readLine())) {
+                while ((line = reader.readLine()) != null) {
                     list.add(line);
                 }
             }
