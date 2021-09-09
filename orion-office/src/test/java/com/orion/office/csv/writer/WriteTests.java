@@ -100,4 +100,22 @@ public class WriteTests {
         writer.close();
     }
 
+    @Test
+    public void lambdaTests() {
+        CsvLambdaWriter<ExportUser> writer = new CsvLambdaWriter<>("C:\\Users\\ljh15\\Desktop\\csv\\lambda.csv");
+        writer.getOption().setTrim(true);
+        writer.capacity(5)
+                .mapping(0, ExportUser::getNum)
+                .mapping(1, ExportUser::getId)
+                .mapping(2, ExportUser::getName)
+                .mapping(3, ExportUser::getDate)
+                .mapping(4, ExportUser::getDesc, "desc")
+                .skip()
+                .headers("a", "b", "c", "d", "e")
+                .skip()
+                .addRows(bean);
+        writer.flush();
+        writer.close();
+    }
+
 }

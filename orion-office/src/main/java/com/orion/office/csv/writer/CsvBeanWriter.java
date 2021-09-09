@@ -88,9 +88,7 @@ public class CsvBeanWriter<T> extends BaseCsvWriter<String, T> {
         if (method == null) {
             throw Exceptions.parse("not found " + field + " getter method");
         }
-        mapping.put(column, field);
-        this.maxColumnIndex = Math.max(maxColumnIndex, column);
-        return this;
+        return (CsvBeanWriter<T>) super.mapping(column, field);
     }
 
     @Override

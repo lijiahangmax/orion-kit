@@ -127,12 +127,40 @@ public abstract class BaseCsvWriter<K, V> implements SafeCloseable, SafeFlushabl
     /**
      * 映射
      *
+     * @param k            valueKey
+     * @param column       column
+     * @param defaultValue defaultValue
+     * @return this
+     */
+    public BaseCsvWriter<K, V> mapping(K k, int column, String defaultValue) {
+        this.mapping(column, k);
+        this.defaultValue(k, defaultValue);
+        return this;
+    }
+
+    /**
+     * 映射
+     *
+     * @param column       column
+     * @param k            valueKey
+     * @param defaultValue defaultValue
+     * @return this
+     */
+    public BaseCsvWriter<K, V> mapping(int column, K k, String defaultValue) {
+        this.mapping(column, k);
+        this.defaultValue(k, defaultValue);
+        return this;
+    }
+
+    /**
+     * 映射
+     *
      * @param k      valueKey
      * @param column column
      * @return this
      */
     public BaseCsvWriter<K, V> mapping(K k, int column) {
-        return mapping(column, k);
+        return this.mapping(column, k);
     }
 
     /**
