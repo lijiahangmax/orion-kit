@@ -40,12 +40,7 @@ public class CsvLambdaWriter<T> extends BaseCsvWriter<Function<T, ?>, T> {
 
     @Override
     protected String[] parseRow(T row) {
-        String[] store;
-        if (capacity != -1) {
-            store = new String[capacity];
-        } else {
-            store = new String[maxColumnIndex + 1];
-        }
+        String[] store = super.capacityStore();
         // 设置值
         for (int i = 0; i < store.length; i++) {
             Function<T, ?> fun = mapping.get(i);

@@ -266,6 +266,19 @@ public abstract class BaseCsvWriter<K, V> implements SafeCloseable, SafeFlushabl
     }
 
     /**
+     * 开辟数组
+     *
+     * @return 开辟数组
+     */
+    protected String[] capacityStore() {
+        if (capacity != -1) {
+            return new String[capacity];
+        } else {
+            return new String[maxColumnIndex + 1];
+        }
+    }
+
+    /**
      * 解析行
      *
      * @param row 行

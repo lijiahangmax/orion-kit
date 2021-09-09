@@ -42,6 +42,8 @@ public class CsvArrayWriter extends BaseCsvWriter<Integer, String[]> {
         int length, len = row.length;
         if (capacity != -1) {
             length = capacity;
+        } else if (maxColumnIndex != 0) {
+            length = Math.max(maxColumnIndex + 1, len);
         } else {
             length = len;
         }

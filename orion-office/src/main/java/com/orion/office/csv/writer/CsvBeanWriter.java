@@ -93,12 +93,7 @@ public class CsvBeanWriter<T> extends BaseCsvWriter<String, T> {
 
     @Override
     protected String[] parseRow(T row) {
-        String[] store;
-        if (capacity != -1) {
-            store = new String[capacity];
-        } else {
-            store = new String[maxColumnIndex + 1];
-        }
+        String[] store = super.capacityStore();
         for (int i = 0; i < store.length; i++) {
             String getter = mapping.get(i);
             if (getter == null) {
