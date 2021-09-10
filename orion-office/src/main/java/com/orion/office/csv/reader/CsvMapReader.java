@@ -68,7 +68,7 @@ public class CsvMapReader<K, V> extends BaseCsvReader<MutableMap<K, V>> {
      * @return this
      */
     public CsvMapReader<K, V> mapping(K k, int column) {
-        return mapping(column, k);
+        return this.mapping(column, k);
     }
 
     /**
@@ -107,12 +107,12 @@ public class CsvMapReader<K, V> extends BaseCsvReader<MutableMap<K, V>> {
     /**
      * 设置默认值
      *
-     * @param key          key
-     * @param defaultValue 默认值
+     * @param key   key
+     * @param value 默认值
      * @return this
      */
-    public CsvMapReader<K, V> defaultValue(K key, V defaultValue) {
-        this.defaultValue.put(key, defaultValue);
+    public CsvMapReader<K, V> defaultValue(K key, V value) {
+        defaultValue.put(key, value);
         return this;
     }
 

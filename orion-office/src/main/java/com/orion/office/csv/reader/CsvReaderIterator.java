@@ -82,13 +82,7 @@ public class CsvReaderIterator<T> implements SafeCloseable, Iterator<T>, Iterabl
             return false;
         }
         this.next = reader.nextRow();
-        if (reader.end) {
-            return false;
-        }
-        if (next == null && reader.skipNullRows) {
-            return this.getNext();
-        }
-        return true;
+        return !reader.end;
     }
 
     /**
