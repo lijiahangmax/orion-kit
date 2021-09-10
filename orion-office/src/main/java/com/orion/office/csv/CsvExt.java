@@ -4,10 +4,7 @@ import com.orion.able.SafeCloseable;
 import com.orion.lang.collect.MutableMap;
 import com.orion.office.csv.core.CsvReader;
 import com.orion.office.csv.option.CsvReaderOption;
-import com.orion.office.csv.reader.CsvArrayReader;
-import com.orion.office.csv.reader.CsvBeanReader;
-import com.orion.office.csv.reader.CsvMapReader;
-import com.orion.office.csv.reader.CsvRawReader;
+import com.orion.office.csv.reader.*;
 import com.orion.utils.io.Files1;
 
 import java.io.File;
@@ -15,6 +12,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * CSV 提取器
@@ -96,7 +94,7 @@ public class CsvExt implements SafeCloseable {
     }
 
     /**
-     * 获取array读取器
+     * 获取 array 读取器
      *
      * @param consumer consumer
      * @return CsvArrayReader
@@ -116,7 +114,7 @@ public class CsvExt implements SafeCloseable {
     }
 
     /**
-     * 获取map读取器
+     * 获取 map 读取器
      *
      * @param consumer consumer
      * @param <K>      K
@@ -138,7 +136,7 @@ public class CsvExt implements SafeCloseable {
     }
 
     /**
-     * 获取bean读取器
+     * 获取 bean 读取器
      *
      * @param consumer consumer
      * @param <T>      T
@@ -146,6 +144,27 @@ public class CsvExt implements SafeCloseable {
      */
     public <T> CsvBeanReader<T> mapReader(Class<T> targetClass, Consumer<T> consumer) {
         return new CsvBeanReader<>(reader, targetClass, consumer);
+    }
+
+    // -------------------- lambda reader --------------------
+
+    public <T> CsvLambdaReader<T> lambdaReader(Supplier<T> supplier) {
+        return new CsvLambdaReader<>(reader, supplier);
+    }
+
+    public <T> CsvLambdaReader<T> lambdaReader(List<T> rows, Supplier<T> supplier) {
+        return new CsvLambdaReader<>(reader, rows, supplier);
+    }
+
+    /**
+     * 获取 lambda 读取器
+     *
+     * @param consumer consumer
+     * @param <T>      T
+     * @return CsvLambdaReader
+     */
+    public <T> CsvLambdaReader<T> lambdaReader(Consumer<T> consumer, Supplier<T> supplier) {
+        return new CsvLambdaReader<>(reader, consumer, supplier);
     }
 
     // -------------------- raw reader --------------------
@@ -159,7 +178,7 @@ public class CsvExt implements SafeCloseable {
     }
 
     /**
-     * 获取raw读取器
+     * 获取 raw 读取器
      *
      * @param consumer consumer
      * @return CsvRawReader
