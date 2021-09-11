@@ -47,13 +47,12 @@ public class ReadTests {
         CsvMapReader<String, Object> reader = new CsvMapReader<String, Object>(map, Console::trace)
                 .linked()
                 .nullPutKey(false)
-                .mapping("seq", 0)
-                .mapping("id", 1)
-                .mapping("name", 3)
-                .mapping("date", 2)
-                .mapping("empty1", 7)
-                .mapping("empty2", 8)
-                .defaultValue("empty2", "def");
+                .mapping(0, "seq")
+                .mapping(1, "id")
+                .mapping(2, "date")
+                .mapping(3, "name")
+                .mapping(7, "empty1")
+                .mapping(8, "empty2", "def");
         reader.skipEmptyRows(false)
                 .skip(3)
                 .read()
@@ -113,13 +112,12 @@ public class ReadTests {
         CsvMapReader<String, Object> reader = new CsvMapReader<String, Object>(map, Console::trace)
                 .linked()
                 .nullPutKey(false)
-                .mapping("seq", 0)
-                .mapping("id", 1)
-                .mapping("name", 3)
-                .mapping("date", 2)
-                .mapping("empty1", 7)
-                .mapping("empty2", 8)
-                .defaultValue("empty2", "def");
+                .mapping(0, "seq")
+                .mapping(1, "id")
+                .mapping(2, "date")
+                .mapping(3, "name")
+                .mapping(7, "empty1")
+                .mapping(8, "empty2", "def");
         reader.skipEmptyRows(false).skip(3);
         CsvReaderIterator<MutableMap<String, Object>> iterator = reader.iterator();
         while (iterator.hasNext()) {

@@ -112,16 +112,8 @@ public abstract class BaseCsvWriter<K, V> implements SafeCloseable, SafeFlushabl
         return this;
     }
 
-    /**
-     * 默认值
-     *
-     * @param k     k
-     * @param value value
-     * @return this
-     */
-    public BaseCsvWriter<K, V> defaultValue(K k, Object value) {
-        defaultValue.put(k, value);
-        return this;
+    public BaseCsvWriter<K, V> mapping(int column, K k) {
+        return this.mapping(column, k, null);
     }
 
     /**
@@ -133,21 +125,23 @@ public abstract class BaseCsvWriter<K, V> implements SafeCloseable, SafeFlushabl
      * @return this
      */
     public BaseCsvWriter<K, V> mapping(int column, K k, Object defaultValue) {
-        this.mapping(column, k);
-        this.defaultValue(k, defaultValue);
+        this.maxColumnIndex = Math.max(maxColumnIndex, column);
+        mapping.put(column, k);
+        if (defaultValue != null) {
+            this.defaultValue.put(k, defaultValue);
+        }
         return this;
     }
 
     /**
-     * 映射
+     * 默认值
      *
-     * @param column column
-     * @param k      valueKey
+     * @param k     k
+     * @param value value
      * @return this
      */
-    public BaseCsvWriter<K, V> mapping(int column, K k) {
-        this.maxColumnIndex = Math.max(maxColumnIndex, column);
-        mapping.put(column, k);
+    public BaseCsvWriter<K, V> defaultValue(K k, Object value) {
+        defaultValue.put(k, value);
         return this;
     }
 

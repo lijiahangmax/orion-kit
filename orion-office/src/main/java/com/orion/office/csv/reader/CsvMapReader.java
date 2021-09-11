@@ -61,29 +61,6 @@ public class CsvMapReader<K, V> extends BaseCsvReader<MutableMap<K, V>> {
     }
 
     /**
-     * 映射
-     *
-     * @param k      valueKey
-     * @param column column
-     * @return this
-     */
-    public CsvMapReader<K, V> mapping(K k, int column) {
-        return this.mapping(column, k);
-    }
-
-    /**
-     * 映射
-     *
-     * @param column column
-     * @param k      valueKey
-     * @return this
-     */
-    public CsvMapReader<K, V> mapping(int column, K k) {
-        mapping.put(column, k);
-        return this;
-    }
-
-    /**
      * 使用 linkedMap
      *
      * @return this
@@ -101,6 +78,26 @@ public class CsvMapReader<K, V> extends BaseCsvReader<MutableMap<K, V>> {
      */
     public CsvMapReader<K, V> nullPutKey(boolean nullPutKey) {
         this.nullPutKey = nullPutKey;
+        return this;
+    }
+
+    public CsvMapReader<K, V> mapping(int column, K k) {
+        return this.mapping(column, k, null);
+    }
+
+    /**
+     * 映射
+     *
+     * @param column       column
+     * @param k            valueKey
+     * @param defaultValue defaultValue
+     * @return this
+     */
+    public CsvMapReader<K, V> mapping(int column, K k, V defaultValue) {
+        mapping.put(column, k);
+        if (defaultValue != null) {
+            this.defaultValue.put(k, defaultValue);
+        }
         return this;
     }
 
