@@ -1,7 +1,7 @@
 package com.orion.office.csv.writer;
 
 import com.orion.office.csv.core.CsvWriter;
-import com.orion.utils.Strings;
+import com.orion.utils.Objects1;
 
 import java.io.File;
 import java.io.OutputStream;
@@ -53,13 +53,13 @@ public class CsvArrayWriter extends BaseCsvWriter<Integer, String[]> {
             Integer index = mapping.getOrDefault(i, i);
             if (index >= length || index >= len) {
                 // 默认值
-                store[i] = defaultValue.getOrDefault(index, Strings.EMPTY);
+                store[i] = Objects1.toString(defaultValue.get(index));
                 continue;
             }
             String s = row[index];
             if (s == null) {
                 // 默认值
-                store[i] = defaultValue.getOrDefault(index, Strings.EMPTY);
+                store[i] = Objects1.toString(defaultValue.get(index));
             } else {
                 store[i] = s;
             }

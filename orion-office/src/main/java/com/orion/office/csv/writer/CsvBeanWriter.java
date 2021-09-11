@@ -105,7 +105,7 @@ public class CsvBeanWriter<T> extends BaseCsvWriter<String, T> {
             if (value != null) {
                 store[i] = Objects1.toString(value);
             } else {
-                store[i] = defaultValue.getOrDefault(getter, Strings.EMPTY);
+                store[i] = Objects1.toString(defaultValue.get(getter));
             }
         }
         return store;

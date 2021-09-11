@@ -2,7 +2,6 @@ package com.orion.office.csv.writer;
 
 import com.orion.office.csv.core.CsvWriter;
 import com.orion.utils.Objects1;
-import com.orion.utils.Strings;
 
 import java.io.File;
 import java.io.OutputStream;
@@ -51,7 +50,7 @@ public class CsvLambdaWriter<T> extends BaseCsvWriter<Function<T, ?>, T> {
             if (v != null) {
                 store[i] = Objects1.toString(v);
             } else {
-                store[i] = defaultValue.getOrDefault(fun, Strings.EMPTY);
+                store[i] = Objects1.toString(defaultValue.get(fun));
             }
         }
         return store;

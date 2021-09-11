@@ -54,10 +54,9 @@ public class WriteTests {
         writer.getOption().setTrim(true);
         CsvArrayWriter cw = new CsvArrayWriter(writer);
         cw.capacity(8)
-                .mapping(5, new Integer(0))
-                .mapping(6, new Integer(1))
-                .mapping(7, new Integer(10))
-                .defaultValue(10, "def")
+                .mapping(5, 0)
+                .mapping(6, 1)
+                .mapping(7, 10, "def")
                 .addComment("comment")
                 .skip()
                 .addRow(null)
@@ -77,8 +76,7 @@ public class WriteTests {
                 .mapping(2, "date")
                 .mapping(3, "name")
                 .mapping(4, "id")
-                .mapping(5, "desc")
-                .defaultValue("desc", "def")
+                .mapping(5, "desc", "def")
                 .skip()
                 .headers("a", "b", "c", "d", "e")
                 .skip()

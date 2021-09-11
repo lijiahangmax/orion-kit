@@ -35,7 +35,7 @@ public abstract class BaseCsvWriter<K, V> implements SafeCloseable, SafeFlushabl
     /**
      * 默认值
      */
-    protected Map<K, String> defaultValue;
+    protected Map<K, Object> defaultValue;
 
     /**
      * 数组容量
@@ -119,7 +119,7 @@ public abstract class BaseCsvWriter<K, V> implements SafeCloseable, SafeFlushabl
      * @param value value
      * @return this
      */
-    public BaseCsvWriter<K, V> defaultValue(K k, String value) {
+    public BaseCsvWriter<K, V> defaultValue(K k, Object value) {
         defaultValue.put(k, value);
         return this;
     }
@@ -132,7 +132,7 @@ public abstract class BaseCsvWriter<K, V> implements SafeCloseable, SafeFlushabl
      * @param defaultValue defaultValue
      * @return this
      */
-    public BaseCsvWriter<K, V> mapping(int column, K k, String defaultValue) {
+    public BaseCsvWriter<K, V> mapping(int column, K k, Object defaultValue) {
         this.mapping(column, k);
         this.defaultValue(k, defaultValue);
         return this;
