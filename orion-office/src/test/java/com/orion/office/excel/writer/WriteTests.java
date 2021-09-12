@@ -1,5 +1,6 @@
 package com.orion.office.excel.writer;
 
+import com.orion.constant.Const;
 import com.orion.office.excel.option.FooterOption;
 import com.orion.office.excel.option.HeaderOption;
 import com.orion.office.excel.option.PrintOption;
@@ -67,7 +68,7 @@ public class WriteTests {
     @Before
     public void setProperties() {
         PropertiesOption option = new PropertiesOption()
-                .setAuthor("李佳航")
+                .setAuthor(Const.ORION_AUTHOR)
                 .setDescription("writeTests")
                 .setKeywords("poi writer");
         build.properties(option);
@@ -77,8 +78,8 @@ public class WriteTests {
     public void arrayTests1() {
         ExcelArrayWriter<Object> writer = build.createArrayWriter("array");
         writer.option(0, 0, ExcelFieldType.NUMBER)
-                .option(1, 2)
-                .option(2, 1, ExcelFieldType.FORMULA)
+                .option(1, 2, ExcelFieldType.FORMULA)
+                .option(2, 1)
                 .option(3, 3, ExcelFieldType.DATE_FORMAT, "yyyy-MM-dd HH:mm:ss")
                 .option(4, 4, ExcelFieldType.DECIMAL_FORMAT, "#,###$")
                 .option(5, 5)
@@ -115,12 +116,12 @@ public class WriteTests {
     @Test
     public void mapTests1() {
         ExcelMapWriter<String, Object> writer = build.createMapWriter("map");
-        writer.option("id", 0, ExcelFieldType.NUMBER)
-                .option("formula", 1, ExcelFieldType.FORMULA)
-                .option("name", 2)
-                .option("date", 3, ExcelFieldType.DATE_FORMAT, "yyyy-MM-dd HH:mm:ss")
-                .option("balance", 4, ExcelFieldType.DECIMAL_FORMAT, "#,###$")
-                .option("hidden", 5)
+        writer.option(0, "id", ExcelFieldType.NUMBER)
+                .option(1, "formula", ExcelFieldType.FORMULA)
+                .option(2, "name")
+                .option(3, "date", ExcelFieldType.DATE_FORMAT, "yyyy-MM-dd HH:mm:ss")
+                .option(4, "balance", ExcelFieldType.DECIMAL_FORMAT, "#,###$")
+                .option(5, "hidden")
                 .hidden(5)
                 .width(12)
                 .width(3, 20)
@@ -154,12 +155,12 @@ public class WriteTests {
     @Test
     public void beanTest1() {
         ExcelBeanWriter<WriteUser> writer = build.createBeanWriter("bean", WriteUser.class);
-        writer.option("id", 0, ExcelFieldType.NUMBER)
-                .option("formula", 1, ExcelFieldType.FORMULA)
-                .option("name", 2)
-                .option("date", 3, ExcelFieldType.DATE_FORMAT, "yyyy-MM-dd HH:mm:ss")
-                .option("balance", 4, ExcelFieldType.DECIMAL_FORMAT, "#,###$")
-                .option("disable", 5)
+        writer.option(0, "id", ExcelFieldType.NUMBER)
+                .option(1, "formula", ExcelFieldType.FORMULA)
+                .option(2, "name")
+                .option(3, "date", ExcelFieldType.DATE_FORMAT, "yyyy-MM-dd HH:mm:ss")
+                .option(4, "balance", ExcelFieldType.DECIMAL_FORMAT, "#,###$")
+                .option(5, "disable")
                 .hidden(5)
                 .width(12)
                 .width(3, 20)
@@ -185,8 +186,43 @@ public class WriteTests {
                 .setLeft("left")
                 .setCenter("中心")
                 .setRight("right");
-        writer.footer(option)
-                .displayGridLines();
+        writer.footer(option);
+    }
+
+    @Test
+    public void lambdaTest1() {
+        ExcelLambdaWriter<WriteUser> writer = build.createLambdaWriter("lambda");
+        writer.option(0, WriteUser::getId, ExcelFieldType.NUMBER)
+                .option(1, WriteUser::getFormula, ExcelFieldType.FORMULA)
+                .option(2, WriteUser::getName)
+                .option(3, WriteUser::getDate, ExcelFieldType.DATE_FORMAT, "yyyy-MM-dd HH:mm:ss")
+                .option(4, WriteUser::getBalance, ExcelFieldType.DECIMAL_FORMAT, "#,###$")
+                .option(5, WriteUser::getDisable)
+                .hidden(5)
+                .width(12)
+                .width(3, 20)
+                .titleHeight(15)
+                .headerHeight(30)
+                .rowHeight(20)
+                .title("测试 lambda 1", 2)
+                .freeze(3)
+                .filter(2)
+                .hidden(5)
+                .headerUseRowStyle();
+        CellStyle style = writer.createCellStyle();
+        Font font = writer.createFont();
+        font.setColor(Font.COLOR_RED);
+        style.setFont(font);
+        writer.style(0, style)
+                // 有样式
+                .headers("id", "公式", "名称", "时间", "金钱", "隐藏")
+                .skip()
+                .addRows(this.bean);
+        FooterOption option = new FooterOption()
+                .setLeft("left")
+                .setCenter("中心")
+                .setRight("right");
+        writer.footer(option);
     }
 
     @Test
@@ -194,6 +230,7 @@ public class WriteTests {
         this.arrayTests1();
         this.mapTests1();
         this.beanTest1();
+        this.lambdaTest1();
     }
 
     @After

@@ -14,22 +14,20 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
  */
 public class ExcelWriterBuilder extends BaseExcelWriteable {
 
-    /**
-     * workbook
-     */
-    private Workbook workbook;
-
     public ExcelWriterBuilder() {
         this(new SXSSFWorkbook());
     }
 
     public ExcelWriterBuilder(Workbook workbook) {
         super(workbook);
-        this.workbook = workbook;
+    }
+
+    public <T> ExcelArrayWriter<T> getArrayWriter(String name) {
+        return new ExcelArrayWriter<>(workbook, workbook.getSheet(name));
     }
 
     /**
-     * 获取array writer
+     * 获取 array writer
      *
      * @param <T>   T
      * @param index index
@@ -39,19 +37,12 @@ public class ExcelWriterBuilder extends BaseExcelWriteable {
         return new ExcelArrayWriter<>(workbook, workbook.getSheetAt(index));
     }
 
-    /**
-     * 获取array writer
-     *
-     * @param <T>  T
-     * @param name name
-     * @return ExcelArrayWriter
-     */
-    public <T> ExcelArrayWriter<T> getArrayWriter(String name) {
-        return new ExcelArrayWriter<>(workbook, workbook.getSheet(name));
+    public <K, V> ExcelMapWriter<K, V> getMapWriter(String name) {
+        return new ExcelMapWriter<>(workbook, workbook.getSheet(name));
     }
 
     /**
-     * 获取map writer
+     * 获取 map writer
      *
      * @param <K>   K
      * @param <V>   V
@@ -62,20 +53,12 @@ public class ExcelWriterBuilder extends BaseExcelWriteable {
         return new ExcelMapWriter<>(workbook, workbook.getSheetAt(index));
     }
 
-    /**
-     * 获取map writer
-     *
-     * @param <K>  K
-     * @param <V>  V
-     * @param name name
-     * @return ExcelMapWriter
-     */
-    public <K, V> ExcelMapWriter<K, V> getMapWriter(String name) {
-        return new ExcelMapWriter<>(workbook, workbook.getSheet(name));
+    public <T> ExcelBeanWriter<T> getBeanWriter(String name, Class<T> targetClass) {
+        return new ExcelBeanWriter<>(workbook, workbook.getSheet(name), targetClass);
     }
 
     /**
-     * 获取bean writer
+     * 获取 bean writer
      *
      * @param <T>         T
      * @param index       index
@@ -86,30 +69,27 @@ public class ExcelWriterBuilder extends BaseExcelWriteable {
         return new ExcelBeanWriter<>(workbook, workbook.getSheetAt(index), targetClass);
     }
 
-    /**
-     * 获取bean writer
-     *
-     * @param <T>         T
-     * @param name        name
-     * @param targetClass targetClass
-     * @return ExcelBeanWriter
-     */
-    public <T> ExcelBeanWriter<T> getBeanWriter(String name, Class<T> targetClass) {
-        return new ExcelBeanWriter<>(workbook, workbook.getSheet(name), targetClass);
+    public <T> ExcelLambdaWriter<T> getLambdaWriter(String name) {
+        return new ExcelLambdaWriter<>(workbook, workbook.getSheet(name));
     }
 
     /**
-     * 创建array writer
+     * 获取 lambda writer
      *
-     * @param <T> T
-     * @return ExcelArrayWriter
+     * @param <T>   T
+     * @param index index
+     * @return ExcelLambdaWriter
      */
+    public <T> ExcelLambdaWriter<T> getLambdaWriter(int index) {
+        return new ExcelLambdaWriter<>(workbook, workbook.getSheetAt(index));
+    }
+
     public <T> ExcelArrayWriter<T> createArrayWriter() {
         return new ExcelArrayWriter<>(workbook, workbook.createSheet());
     }
 
     /**
-     * 创建array writer
+     * 创建 array writer
      *
      * @param <T>  T
      * @param name name
@@ -119,19 +99,12 @@ public class ExcelWriterBuilder extends BaseExcelWriteable {
         return new ExcelArrayWriter<>(workbook, workbook.createSheet(name));
     }
 
-    /**
-     * 创建map writer
-     *
-     * @param <K> K
-     * @param <V> V
-     * @return ExcelMapWriter
-     */
     public <K, V> ExcelMapWriter<K, V> createMapWriter() {
         return new ExcelMapWriter<>(workbook, workbook.createSheet());
     }
 
     /**
-     * 创建map writer
+     * 创建 map writer
      *
      * @param <K>  K
      * @param <V>  V
@@ -142,19 +115,12 @@ public class ExcelWriterBuilder extends BaseExcelWriteable {
         return new ExcelMapWriter<>(workbook, workbook.createSheet(name));
     }
 
-    /**
-     * 创建bean writer
-     *
-     * @param <T>         T
-     * @param targetClass targetClass
-     * @return ExcelBeanWriter
-     */
     public <T> ExcelBeanWriter<T> createBeanWriter(Class<T> targetClass) {
         return new ExcelBeanWriter<>(workbook, workbook.createSheet(), targetClass);
     }
 
     /**
-     * 创建bean writer
+     * 创建 bean writer
      *
      * @param <T>         T
      * @param name        name
@@ -163,6 +129,21 @@ public class ExcelWriterBuilder extends BaseExcelWriteable {
      */
     public <T> ExcelBeanWriter<T> createBeanWriter(String name, Class<T> targetClass) {
         return new ExcelBeanWriter<>(workbook, workbook.createSheet(name), targetClass);
+    }
+
+    public <T> ExcelLambdaWriter<T> createLambdaWriter() {
+        return new ExcelLambdaWriter<>(workbook, workbook.createSheet());
+    }
+
+    /**
+     * 创建 lambda writer
+     *
+     * @param <T>  T
+     * @param name name
+     * @return ExcelLambdaWriter
+     */
+    public <T> ExcelLambdaWriter<T> createLambdaWriter(String name) {
+        return new ExcelLambdaWriter<>(workbook, workbook.createSheet(name));
     }
 
     /**
@@ -174,10 +155,6 @@ public class ExcelWriterBuilder extends BaseExcelWriteable {
     public ExcelWriterBuilder properties(PropertiesOption option) {
         Excels.setProperties(workbook, option);
         return this;
-    }
-
-    public Workbook getWorkbook() {
-        return workbook;
     }
 
 }

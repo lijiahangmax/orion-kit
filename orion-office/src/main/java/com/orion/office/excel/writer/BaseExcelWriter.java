@@ -242,16 +242,6 @@ public abstract class BaseExcelWriter<K, V> {
     }
 
     /**
-     * 列是否使用默认样式 需要在设置样式之前调用
-     *
-     * @return this
-     */
-    public BaseExcelWriter<K, V> columnUseDefaultStyle() {
-        this.columnUseDefaultStyle = true;
-        return this;
-    }
-
-    /**
      * 设置行宽
      *
      * @param column 列索引
@@ -317,6 +307,16 @@ public abstract class BaseExcelWriter<K, V> {
      */
     public BaseExcelWriter<K, V> headerHeight(int height) {
         this.headerHeight = (short) height;
+        return this;
+    }
+
+    /**
+     * 列是否使用默认样式 需要在设置样式之前调用
+     *
+     * @return this
+     */
+    public BaseExcelWriter<K, V> columnUseDefaultStyle() {
+        this.columnUseDefaultStyle = true;
         return this;
     }
 
@@ -453,42 +453,61 @@ public abstract class BaseExcelWriter<K, V> {
         return this;
     }
 
-    /**
-     * 添加列配置
-     *
-     * @param k      k
-     * @param column column
-     * @return this
-     */
-    public BaseExcelWriter<K, V> option(K k, int column) {
-        this.addOption(k, new WriteFieldOption(column));
+    public BaseExcelWriter<K, V> option(int column, K k) {
+        this.addOption(k, new WriteFieldOption(column), null);
+        return this;
+    }
+
+    public BaseExcelWriter<K, V> option(int column, K k, Object defaultValue) {
+        this.addOption(k, new WriteFieldOption(column), defaultValue);
+        return this;
+    }
+
+    public BaseExcelWriter<K, V> option(int column, K k, ExcelFieldType type) {
+        this.addOption(k, new WriteFieldOption(column, type), null);
+        return this;
+    }
+
+    public BaseExcelWriter<K, V> option(int column, K k, ExcelFieldType type, Object defaultValue) {
+        this.addOption(k, new WriteFieldOption(column, type), defaultValue);
+        return this;
+    }
+
+    public BaseExcelWriter<K, V> option(int column, K k, ExcelFieldType type, String format) {
+        this.addOption(k, new WriteFieldOption(column, type, format), null);
         return this;
     }
 
     /**
      * 添加列配置
      *
-     * @param k      k
-     * @param column column
-     * @param type   type
+     * @param k            k
+     * @param column       column
+     * @param type         type
+     * @param format       format
+     * @param defaultValue defaultValue
      * @return this
      */
-    public BaseExcelWriter<K, V> option(K k, int column, ExcelFieldType type) {
-        this.addOption(k, new WriteFieldOption(column, type));
+    public BaseExcelWriter<K, V> option(int column, K k, ExcelFieldType type, String format, Object defaultValue) {
+        this.addOption(k, new WriteFieldOption(column, type, format), defaultValue);
+        return this;
+    }
+
+    public BaseExcelWriter<K, V> option(K k, WriteFieldOption option) {
+        this.addOption(k, option, null);
         return this;
     }
 
     /**
      * 添加列配置
      *
-     * @param k      k
-     * @param column column
-     * @param type   type
-     * @param format format
+     * @param k            k
+     * @param option       option
+     * @param defaultValue defaultValue
      * @return this
      */
-    public BaseExcelWriter<K, V> option(K k, int column, ExcelFieldType type, String format) {
-        this.addOption(k, new WriteFieldOption(column, type, format));
+    public BaseExcelWriter<K, V> option(K k, WriteFieldOption option, Object defaultValue) {
+        this.addOption(k, option, defaultValue);
         return this;
     }
 
@@ -497,11 +516,14 @@ public abstract class BaseExcelWriter<K, V> {
      *
      * @param k      k
      * @param option option
-     * @return this
      */
-    public BaseExcelWriter<K, V> option(K k, WriteFieldOption option) {
-        this.addOption(k, option);
-        return this;
+    protected void addOption(K k, WriteFieldOption option, Object defaultValue) {
+        Valid.gte(option.getIndex(), 0, "title use row must >= 0");
+        options.put(k, option);
+        this.columnMaxIndex = Math.max(columnMaxIndex, option.getIndex());
+        if (defaultValue != null) {
+            this.defaultValue.put(k, defaultValue);
+        }
     }
 
     /**
@@ -514,18 +536,6 @@ public abstract class BaseExcelWriter<K, V> {
     public BaseExcelWriter<K, V> defaultValue(K k, Object value) {
         defaultValue.put(k, value);
         return this;
-    }
-
-    /**
-     * 添加列配置
-     *
-     * @param k      k
-     * @param option option
-     */
-    protected void addOption(K k, WriteFieldOption option) {
-        Valid.gte(option.getIndex(), 0, "title use row must >= 0");
-        this.options.put(k, option);
-        this.columnMaxIndex = Math.max(columnMaxIndex, option.getIndex());
     }
 
     public BaseExcelWriter<K, V> merge(int row, int firstCol, int lastCol) {
@@ -705,10 +715,6 @@ public abstract class BaseExcelWriter<K, V> {
      */
     protected abstract Object getValue(V row, K key);
 
-    public Workbook getWorkbook() {
-        return workbook;
-    }
-
     /**
      * 获取一个单元格样式 用于样式修改
      *
@@ -734,6 +740,10 @@ public abstract class BaseExcelWriter<K, V> {
      */
     public DataFormat createFormat() {
         return workbook.createDataFormat();
+    }
+
+    public Workbook getWorkbook() {
+        return workbook;
     }
 
     public Sheet getSheet() {

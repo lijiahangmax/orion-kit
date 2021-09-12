@@ -18,17 +18,13 @@ public class WriteFieldOption implements Serializable {
      */
     private int index;
 
-    private ExcelFieldType type = ExcelFieldType.AUTO;
-
-    private String format;
+    private ExcelFieldType type;
 
     private CellOption cellOption;
 
-    public WriteFieldOption() {
-    }
-
     public WriteFieldOption(int index) {
         this.index = index;
+        this.type = ExcelFieldType.AUTO;
     }
 
     public WriteFieldOption(int index, ExcelFieldType type) {
@@ -39,7 +35,6 @@ public class WriteFieldOption implements Serializable {
     public WriteFieldOption(int index, ExcelFieldType type, String format) {
         this.index = index;
         this.type = type;
-        this.format = format;
         this.cellOption = new CellOption(format);
     }
 
@@ -58,15 +53,6 @@ public class WriteFieldOption implements Serializable {
 
     public WriteFieldOption setType(ExcelFieldType type) {
         this.type = type;
-        return this;
-    }
-
-    public String getFormat() {
-        return format;
-    }
-
-    public WriteFieldOption setFormat(String format) {
-        this.format = format;
         return this;
     }
 

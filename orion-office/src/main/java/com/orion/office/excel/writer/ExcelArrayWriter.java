@@ -18,11 +18,10 @@ public class ExcelArrayWriter<T> extends BaseExcelWriter<Integer, T[]> {
 
     @Override
     protected Object getValue(T[] row, Integer key) {
-        T value = null;
-        if (row.length > key) {
-            value = row[key];
+        if (row.length <= key) {
+            return null;
         }
-        return value;
+        return row[key];
     }
 
 }
