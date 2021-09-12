@@ -12,7 +12,7 @@ import com.orion.utils.Valid;
 import java.util.List;
 
 /**
- * CSV 行切分器 可以获取行数据
+ * csv 行切分器 可以获取行数据
  *
  * @author Jiahang Li
  * @version 1.0.0

@@ -5,7 +5,7 @@ import com.orion.utils.Strings;
 import java.lang.annotation.*;
 
 /**
- * Csv 导出字段注解
+ * csv 导出字段注解
  * <p>
  * 可以加到 field 或 getter 上, 但是必须有getter方法
  *

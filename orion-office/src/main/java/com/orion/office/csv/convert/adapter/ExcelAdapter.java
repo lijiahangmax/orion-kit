@@ -16,7 +16,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.util.List;
 
 /**
- * CSV -> Excel 文本适配器
+ * csv -> excel 文本适配器
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -72,7 +72,7 @@ public class ExcelAdapter extends BaseExcelWriteable implements Adaptable<ExcelA
     }
 
     /**
-     * 跳过CSV一行
+     * 跳过一行
      *
      * @return this
      */
@@ -82,7 +82,7 @@ public class ExcelAdapter extends BaseExcelWriteable implements Adaptable<ExcelA
     }
 
     /**
-     * 跳过CSV行多
+     * 跳过行多
      *
      * @param i 行
      * @return this

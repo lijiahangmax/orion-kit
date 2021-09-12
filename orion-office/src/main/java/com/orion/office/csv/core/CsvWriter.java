@@ -17,7 +17,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 /**
- * CSV 写入器 core
+ * csv 写入器 core
  *
  * @author Jiahang Li
  * @version 1.0.0

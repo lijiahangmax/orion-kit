@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * Csv Raw 读取器
+ * csv raw 读取器
  *
  * @author Jiahang Li
  * @version 1.0.0

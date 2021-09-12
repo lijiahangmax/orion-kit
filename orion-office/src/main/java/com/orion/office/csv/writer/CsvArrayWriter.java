@@ -8,7 +8,7 @@ import java.io.OutputStream;
 import java.io.Writer;
 
 /**
- * Csv Array 导出器
+ * csv array 导出器
  *
  * @author Jiahang Li
  * @version 1.0.0

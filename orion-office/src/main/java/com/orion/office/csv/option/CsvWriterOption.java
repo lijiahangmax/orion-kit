@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.nio.charset.Charset;
 
 /**
- * CSV Writer 配置项
+ * csv writer 配置项
  *
  * @author Jiahang Li
  * @version 1.0.0

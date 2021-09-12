@@ -13,7 +13,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * Csv lambda 读取器
+ * csv lambda 读取器
  *
  * @author Jiahang Li
  * @version 1.0.0

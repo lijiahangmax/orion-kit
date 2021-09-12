@@ -8,7 +8,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 /**
- * CSV 配置项
+ * csv 配置项
  *
  * @author Jiahang Li
  * @version 1.0.0

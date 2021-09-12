@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 /**
- * Csv Map 读取器
+ * csv map 读取器
  *
  * @author Jiahang Li
  * @version 1.0.0

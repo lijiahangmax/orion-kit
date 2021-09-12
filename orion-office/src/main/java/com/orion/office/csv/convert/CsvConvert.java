@@ -5,7 +5,7 @@ import com.orion.office.csv.convert.adapter.ExcelAdapter;
 import com.orion.office.csv.reader.CsvArrayReader;
 
 /**
- * CSV 转换器
+ * csv 转换器
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -17,7 +17,7 @@ public class CsvConvert {
     }
 
     /**
-     * Excel 适配器
+     * excel 适配器
      *
      * @param csvExt csvExt
      * @return adapter
@@ -27,7 +27,7 @@ public class CsvConvert {
     }
 
     /**
-     * Excel 适配器
+     * excel 适配器
      *
      * @param reader reader
      * @return adapter

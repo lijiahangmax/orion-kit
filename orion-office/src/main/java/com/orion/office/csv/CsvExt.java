@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * CSV 提取器
+ * csv 提取器
  * 也支持其他格式的文本文件
  *
  * @author Jiahang Li

@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * CSV 读取类
+ * csv 读取类
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -845,7 +845,7 @@ public class CsvReader implements SafeCloseable {
     }
 
     private void endRecord() {
-        hasReadNextLine = true;
+        this.hasReadNextLine = true;
         currentRecord++;
     }
 
@@ -867,8 +867,8 @@ public class CsvReader implements SafeCloseable {
             columnBuffer.buffer = null;
             rawBuffer.buffer = null;
             Streams.close(reader);
-            reader = null;
-            closed = true;
+            this.reader = null;
+            this.closed = true;
         }
     }
 
@@ -981,11 +981,11 @@ public class CsvReader implements SafeCloseable {
         public int lineStart;
 
         public DataBuffer() {
-            buffer = new char[Const.BUFFER_KB_1];
-            position = 0;
-            count = 0;
-            columnStart = 0;
-            lineStart = 0;
+            this.buffer = new char[Const.BUFFER_KB_1];
+            this.position = 0;
+            this.count = 0;
+            this.columnStart = 0;
+            this.lineStart = 0;
         }
 
     }
@@ -997,8 +997,8 @@ public class CsvReader implements SafeCloseable {
         public int position;
 
         public ColumnBuffer() {
-            buffer = new char[CsvOption.INITIAL_COLUMN_BUFFER_SIZE];
-            position = 0;
+            this.buffer = new char[CsvOption.INITIAL_COLUMN_BUFFER_SIZE];
+            this.position = 0;
         }
     }
 
@@ -1009,8 +1009,8 @@ public class CsvReader implements SafeCloseable {
         public int position;
 
         public RawRecordBuffer() {
-            buffer = new char[CsvOption.INITIAL_COLUMN_BUFFER_SIZE * CsvOption.INITIAL_COLUMN_COUNT];
-            position = 0;
+            this.buffer = new char[CsvOption.INITIAL_COLUMN_BUFFER_SIZE * CsvOption.INITIAL_COLUMN_COUNT];
+            this.position = 0;
         }
     }
 
@@ -1023,9 +1023,9 @@ public class CsvReader implements SafeCloseable {
         public Map<String, Integer> indexByName;
 
         public HeadersHolder() {
-            headers = null;
-            length = 0;
-            indexByName = new HashMap<>();
+            this.headers = null;
+            this.length = 0;
+            this.indexByName = new HashMap<>();
         }
     }
 

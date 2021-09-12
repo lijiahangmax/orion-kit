@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.nio.charset.Charset;
 
 /**
- * CSV Reader 配置项
+ * csv reader 配置项
  *
  * @author Jiahang Li
  * @version 1.0.0

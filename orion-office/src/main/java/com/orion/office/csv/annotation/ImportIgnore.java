@@ -3,7 +3,7 @@ package com.orion.office.csv.annotation;
 import java.lang.annotation.*;
 
 /**
- * Csv 导入忽略字段注解
+ * csv 导入忽略字段注解
  * <p>
  * 可以加到 field 或 setter上
  *

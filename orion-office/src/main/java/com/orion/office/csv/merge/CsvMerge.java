@@ -9,7 +9,7 @@ import com.orion.utils.io.Streams;
 import java.util.List;
 
 /**
- * CSV行合并器
+ * csv 行合并器
  *
  * @author Jiahang Li
  * @version 1.0.0

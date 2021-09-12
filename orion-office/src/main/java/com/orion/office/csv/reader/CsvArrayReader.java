@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * Csv Array 读取器
+ * csv array 读取器
  *
  * @author Jiahang Li
  * @version 1.0.0

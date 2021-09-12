@@ -3,7 +3,7 @@ package com.orion.office.csv.annotation;
 import java.lang.annotation.*;
 
 /**
- * Csv 导入字段注解
+ * csv 导入字段注解
  * <p>
  * 可以加到 field 或 setter上, 但是必须有setter方法
  *

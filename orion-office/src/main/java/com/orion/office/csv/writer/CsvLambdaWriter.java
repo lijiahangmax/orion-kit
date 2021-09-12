@@ -9,7 +9,7 @@ import java.io.Writer;
 import java.util.function.Function;
 
 /**
- * Csv lambda 导出器
+ * csv lambda 导出器
  *
  * @author Jiahang Li
  * @version 1.0.0

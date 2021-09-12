@@ -10,13 +10,13 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * Csv 读取器 基类
+ * csv 读取器 基类
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/2/2 16:36
  */
-public abstract class BaseCsvReader<T> implements SafeCloseable {
+public abstract class BaseCsvReader<T> implements SafeCloseable, Iterable<T> {
 
     /**
      * 读取器
@@ -59,10 +59,11 @@ public abstract class BaseCsvReader<T> implements SafeCloseable {
     }
 
     /**
-     * Csv 迭代器 不会存储也不会消费
+     * csv 迭代器 不会存储也不会消费
      *
      * @return 迭代器
      */
+    @Override
     public CsvReaderIterator<T> iterator() {
         return new CsvReaderIterator<>(this);
     }

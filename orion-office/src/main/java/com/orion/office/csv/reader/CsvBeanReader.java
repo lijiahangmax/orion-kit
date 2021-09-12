@@ -25,7 +25,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Csv Bean 读取器
+ * csv bean 读取器
  *
  * @author Jiahang Li
  * @version 1.0.0

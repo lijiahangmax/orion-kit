@@ -7,7 +7,7 @@ import com.orion.office.csv.type.CsvEscapeMode;
 import java.lang.annotation.*;
 
 /**
- * Csv 导入配置注解
+ * csv 导入配置注解
  *
  * @author Jiahang Li
  * @version 1.0.0
