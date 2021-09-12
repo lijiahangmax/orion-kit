@@ -5,7 +5,7 @@ import com.orion.office.excel.type.ExcelUnderType;
 import java.io.Serializable;
 
 /**
- * Excel 字体参数
+ * excel 字体参数
  *
  * @author Jiahang Li
  * @version 1.0.0

@@ -3,7 +3,7 @@ package com.orion.office.excel.type;
 import org.apache.poi.ss.usermodel.PrintSetup;
 
 /**
- * Excel 纸张类型
+ * excel 纸张类型
  *
  * @author Jiahang Li
  * @version 1.0.0

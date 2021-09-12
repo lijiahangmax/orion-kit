@@ -9,7 +9,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
 
 /**
- * Excel 打印设置
+ * excel 打印设置
  *
  * @author Jiahang Li
  * @version 1.0.0

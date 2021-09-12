@@ -3,7 +3,7 @@ package com.orion.office.excel.type;
 import org.apache.poi.ss.usermodel.Sheet;
 
 /**
- * Excel 边距类型
+ * excel 边距类型
  * 1英寸 = 2.54cm
  *
  * @author Jiahang Li

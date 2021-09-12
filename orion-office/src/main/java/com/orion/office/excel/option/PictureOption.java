@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 
 /**
- * Excel 图片类型
+ * excel 图片类型
  *
  * @author Jiahang Li
  * @version 1.0.0

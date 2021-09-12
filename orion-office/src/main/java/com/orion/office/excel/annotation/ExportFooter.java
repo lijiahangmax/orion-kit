@@ -5,7 +5,7 @@ import com.orion.utils.Strings;
 import java.lang.annotation.*;
 
 /**
- * Excel 页脚注解
+ * excel 页脚注解
  *
  * @author Jiahang Li
  * @version 1.0.0

@@ -3,7 +3,7 @@ package com.orion.office.excel.type;
 import org.apache.poi.ss.usermodel.BorderStyle;
 
 /**
- * Excel 边框类型
+ * excel 边框类型
  *
  * @author Jiahang Li
  * @version 1.0.0

@@ -4,7 +4,7 @@ import com.orion.utils.reflect.Classes;
 import com.orion.utils.time.Dates;
 
 /**
- * Excel 字段类型
+ * excel 字段类型
  *
  * @author Jiahang Li
  * @version 1.0.0

@@ -5,7 +5,7 @@ import com.orion.office.excel.type.ExcelPaperType;
 import java.lang.annotation.*;
 
 /**
- * Excel 导出打印配置
+ * excel 导出打印配置
  *
  * @author Jiahang Li
  * @version 1.0.0

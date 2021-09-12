@@ -5,7 +5,7 @@ import com.orion.office.excel.type.ExcelPaperType;
 import java.io.Serializable;
 
 /**
- * Excel 打印参数
+ * excel 打印参数
  *
  * @author Jiahang Li
  * @version 1.0.0

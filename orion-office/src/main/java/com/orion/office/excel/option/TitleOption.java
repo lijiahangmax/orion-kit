@@ -7,7 +7,7 @@ import com.orion.office.excel.type.ExcelVerticalAlignType;
 import java.io.Serializable;
 
 /**
- * Excel 标题配置
+ * excel 标题配置
  *
  * @author Jiahang Li
  * @version 1.0.0

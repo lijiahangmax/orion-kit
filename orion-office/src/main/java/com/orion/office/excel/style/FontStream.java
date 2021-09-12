@@ -15,7 +15,7 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
- * Excel 字体样式流
+ * excel 字体样式
  *
  * @author Jiahang Li
  * @version 1.0.0

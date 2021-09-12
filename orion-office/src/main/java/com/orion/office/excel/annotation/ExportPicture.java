@@ -7,7 +7,7 @@ import com.orion.utils.Strings;
 import java.lang.annotation.*;
 
 /**
- * Excel 导出图片
+ * excel 导出图片
  * 可以和超链接一起使用
  *
  * @author Jiahang Li

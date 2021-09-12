@@ -3,7 +3,7 @@ package com.orion.office.excel.option;
 import java.io.Serializable;
 
 /**
- * Excel 页脚配置
+ * excel 页脚配置
  *
  * @author Jiahang Li
  * @version 1.0.0

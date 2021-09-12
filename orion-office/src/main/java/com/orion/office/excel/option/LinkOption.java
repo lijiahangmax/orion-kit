@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 
 /**
- * Excel 超链接配置
+ * excel 超链接配置
  *
  * @author Jiahang Li
  * @version 1.0.0

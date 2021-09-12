@@ -3,7 +3,7 @@ package com.orion.office.excel.type;
 import org.apache.poi.ss.usermodel.Font;
 
 /**
- * Excel 下滑线类型
+ * excel 下滑线类型
  *
  * @author Jiahang Li
  * @version 1.0.0

@@ -3,7 +3,7 @@ package com.orion.office.excel.option;
 import java.io.Serializable;
 
 /**
- * Excel 单元格参数
+ * excel 单元格参数
  *
  * @author Jiahang Li
  * @version 1.0.0

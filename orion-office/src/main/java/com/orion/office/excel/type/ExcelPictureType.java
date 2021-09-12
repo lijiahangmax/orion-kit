@@ -5,7 +5,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
- * Excel 图片类型
+ * excel 图片类型
  *
  * @author Jiahang Li
  * @version 1.0.0

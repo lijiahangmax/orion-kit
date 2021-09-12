@@ -1,7 +1,7 @@
 package com.orion.office.excel.type;
 
 /**
- * Excel 超链接类型
+ * excel 超链接类型
  *
  * @author Jiahang Li
  * @version 1.0.0

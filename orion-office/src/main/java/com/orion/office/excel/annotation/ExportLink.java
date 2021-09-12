@@ -6,7 +6,7 @@ import com.orion.office.excel.type.ExcelLinkType;
 import java.lang.annotation.*;
 
 /**
- * Excel 导出字段超链接注解
+ * excel 导出字段超链接注解
  * 可以和图片一起使用
  *
  * @author Jiahang Li

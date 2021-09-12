@@ -5,7 +5,7 @@ import com.orion.utils.Strings;
 import java.lang.annotation.*;
 
 /**
- * Excel 表头批注注解
+ * excel 表头批注注解
  *
  * @author Jiahang Li
  * @version 1.0.0

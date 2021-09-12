@@ -3,7 +3,7 @@ package com.orion.office.excel.type;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 
 /**
- * Excel 垂直对齐类型
+ * excel 垂直对齐类型
  *
  * @author Jiahang Li
  * @version 1.0.0

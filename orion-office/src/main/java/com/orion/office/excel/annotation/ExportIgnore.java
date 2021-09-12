@@ -3,7 +3,7 @@ package com.orion.office.excel.annotation;
 import java.lang.annotation.*;
 
 /**
- * Excel 导出忽略字段
+ * excel 导出忽略字段
  *
  * @author Jiahang Li
  * @version 1.0.0

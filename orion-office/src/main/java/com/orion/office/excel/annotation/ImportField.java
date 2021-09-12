@@ -6,7 +6,7 @@ import com.orion.utils.Strings;
 import java.lang.annotation.*;
 
 /**
- * Excel 导入注解
+ * excel 导入注解
  * 可以加到 set方法 或者 字段上, 但是必须有set方法
  *
  * @author Jiahang Li

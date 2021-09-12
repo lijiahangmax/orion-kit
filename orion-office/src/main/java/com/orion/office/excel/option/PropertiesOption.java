@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Excel 属性参数
+ * excel 属性参数
  *
  * @author Jiahang Li
  * @version 1.0.0

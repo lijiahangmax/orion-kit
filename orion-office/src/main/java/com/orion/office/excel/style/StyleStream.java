@@ -16,7 +16,7 @@ import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
- * Excel 单元格样式流
+ * excel 单元格样式
  *
  * @author Jiahang Li
  * @version 1.0.0
