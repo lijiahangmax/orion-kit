@@ -7,7 +7,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
 /**
- * Excel 行合并器 不支持复杂操作
+ * excel 行合并器 不支持复杂操作
  *
  * @author Jiahang Li
  * @version 1.0.0

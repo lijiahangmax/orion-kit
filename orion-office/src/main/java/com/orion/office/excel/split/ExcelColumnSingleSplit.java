@@ -10,7 +10,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
 /**
- * Excel 列拆分器 拆分一个文件一个sheet 不支持复杂类型 占用内存少
+ * excel 列拆分器 拆分一个文件一个sheet 不支持复杂类型 占用内存少
  *
  * @author Jiahang Li
  * @version 1.0.0

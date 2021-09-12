@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Excel -> CSV 适配器
+ * excel -> csv 适配器
  *
  * @author Jiahang Li
  * @version 1.0.0

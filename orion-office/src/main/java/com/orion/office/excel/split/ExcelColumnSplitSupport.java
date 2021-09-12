@@ -4,7 +4,7 @@ import com.orion.office.excel.Excels;
 import org.apache.poi.ss.usermodel.*;
 
 /**
- * Excel 列拆分
+ * excel 列拆分
  *
  * @author Jiahang Li
  * @version 1.0.0

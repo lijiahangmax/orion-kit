@@ -13,7 +13,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import java.util.Iterator;
 
 /**
- * Excel 行拆分器 能拆分多个文件一个sheet 不支持复杂类型
+ * excel 行拆分器 能拆分多个文件一个sheet 不支持复杂类型
  *
  * @author Jiahang Li
  * @version 1.0.0

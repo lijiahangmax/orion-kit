@@ -14,7 +14,7 @@ import java.io.File;
 import java.io.OutputStream;
 
 /**
- * Excel 列拆分器 拆分多个文件一个sheet 不支持复杂类型 占用内存少
+ * excel 列拆分器 拆分多个文件一个sheet 不支持复杂类型 占用内存少
  * 不支持流式读取 (流式只能读取一次)
  * 流式请用 {@link ExcelColumnSingleSplit}
  *

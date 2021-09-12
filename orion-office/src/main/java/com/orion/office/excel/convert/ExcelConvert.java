@@ -5,7 +5,7 @@ import com.orion.office.excel.convert.adapter.CsvAdapter;
 import org.apache.poi.ss.usermodel.Sheet;
 
 /**
- * Excel 转换器
+ * excel 转换器
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -17,7 +17,7 @@ public class ExcelConvert {
     }
 
     /**
-     * CSV适配器
+     * csv 适配器
      *
      * @param sheet  excelSheet
      * @param writer CsvArrayWriter
