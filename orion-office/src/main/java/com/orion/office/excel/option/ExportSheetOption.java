@@ -3,7 +3,7 @@ package com.orion.office.excel.option;
 import java.io.Serializable;
 
 /**
- * Export 表格参数
+ * export 表格参数
  *
  * @author Jiahang Li
  * @version 1.0.0

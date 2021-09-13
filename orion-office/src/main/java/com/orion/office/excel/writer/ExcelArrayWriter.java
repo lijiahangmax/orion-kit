@@ -4,7 +4,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 /**
- * Excel Array 写入器
+ * excel array 写入器
  *
  * @author Jiahang Li
  * @version 1.0.0

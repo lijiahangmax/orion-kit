@@ -6,7 +6,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
 /**
- * Excel 构建器
+ * excel 构建器
  *
  * @author Jiahang Li
  * @version 1.0.0

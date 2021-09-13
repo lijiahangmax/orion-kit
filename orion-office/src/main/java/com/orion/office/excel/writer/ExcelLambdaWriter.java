@@ -6,7 +6,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import java.util.function.Function;
 
 /**
- * Excel lambda 写入器
+ * excel lambda 写入器
  *
  * @author Jiahang Li
  * @version 1.0.0

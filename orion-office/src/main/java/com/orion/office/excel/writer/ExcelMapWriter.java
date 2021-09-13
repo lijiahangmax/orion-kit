@@ -6,7 +6,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import java.util.Map;
 
 /**
- * Excel Map 写入器
+ * excel map 写入器
  *
  * @author Jiahang Li
  * @version 1.0.0

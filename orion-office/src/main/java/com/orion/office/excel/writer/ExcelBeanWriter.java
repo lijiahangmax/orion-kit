@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Excel Bean 写入器 不支持注解
+ * excel bean 写入器 不支持注解
  * <p>
  * 如果要使用注解需要用 {@link com.orion.office.excel.writer.exporting.ExcelExport} 导出
  *

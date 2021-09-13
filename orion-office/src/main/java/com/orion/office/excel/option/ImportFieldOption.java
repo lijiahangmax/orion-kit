@@ -6,7 +6,7 @@ import com.orion.utils.Strings;
 import java.io.Serializable;
 
 /**
- * Import 读取字段参数
+ * import 读取字段参数
  *
  * @author Jiahang Li
  * @version 1.0.0

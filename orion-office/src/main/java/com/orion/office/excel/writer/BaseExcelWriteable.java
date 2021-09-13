@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.OutputStream;
 
 /**
- * Excel Writer 基类
+ * excel writer 基类
  *
  * @author Jiahang Li
  * @version 1.0.0

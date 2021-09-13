@@ -294,17 +294,17 @@ public abstract class BaseHttpRequest {
      * 构建请求
      */
     protected void buildRequest() {
-        Valid.notNull(this.url, "request url is null");
-        this.method = this.method.trim().toUpperCase();
-        if (this.isNoBodyRequest() && this.formParts != null) {
-            if (this.queryParams == null) {
+        Valid.notNull(url, "request url is null");
+        this.method = method.trim().toUpperCase();
+        if (this.isNoBodyRequest() && formParts != null) {
+            if (queryParams == null) {
                 this.queryParams = new LinkedHashMap<>();
             }
-            this.queryParams.putAll(this.formParts);
+            queryParams.putAll(formParts);
         }
         if (queryParams != null) {
-            this.queryString = Urls.buildQueryString(this.queryParams, this.queryStringEncode);
-            this.url += ("?" + this.queryString);
+            this.queryString = Urls.buildQueryString(queryParams, queryStringEncode);
+            this.url += ("?" + queryString);
         }
     }
 
@@ -314,11 +314,11 @@ public abstract class BaseHttpRequest {
      * @return ignore
      */
     protected boolean isNoBodyRequest() {
-        return HttpMethod.GET.method().equals(this.method) ||
-                HttpMethod.HEAD.method().equals(this.method) ||
-                HttpMethod.DELETE.method().equals(this.method) ||
-                HttpMethod.OPTIONS.method().equals(this.method) ||
-                HttpMethod.TRACE.method().equals(this.method);
+        return HttpMethod.GET.method().equals(method)
+                || HttpMethod.HEAD.method().equals(method)
+                || HttpMethod.DELETE.method().equals(method)
+                || HttpMethod.OPTIONS.method().equals(method)
+                || HttpMethod.TRACE.method().equals(method);
     }
 
     /**
