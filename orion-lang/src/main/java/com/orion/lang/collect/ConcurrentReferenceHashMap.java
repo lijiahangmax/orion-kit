@@ -519,8 +519,8 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
                 return false;
             }
             Map.Entry otherEntry = (Map.Entry) other;
-            return (Objects1.eq(getKey(), otherEntry.getKey()) &&
-                    Objects1.eq(getValue(), otherEntry.getValue()));
+            return (Objects1.eq(getKey(), otherEntry.getKey())
+                    && Objects1.eq(getValue(), otherEntry.getValue()));
         }
 
         @Override

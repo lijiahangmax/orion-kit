@@ -38,41 +38,19 @@ import static com.orion.utils.codec.Base64s.encode;
  */
 public class Keys {
 
-    private static final String AES_ALGORITHM = "SHA1PRNG";
-
-    private static final String AES_PROVIDER = "SUN";
-
     private Keys() {
     }
 
     // -------------------- CER --------------------
 
-    /**
-     * 读取cer公钥文件
-     *
-     * @param file 文件
-     * @return PublicKey
-     */
     public static PublicKey getCerPublicKey(File file) {
         return getCerPublicKey(Files1.openInputStreamSafe(file), true);
     }
 
-    /**
-     * 读取cer公钥文件
-     *
-     * @param file 文件
-     * @return PublicKey
-     */
     public static PublicKey getCerPublicKey(String file) {
         return getCerPublicKey(Files1.openInputStreamSafe(file), true);
     }
 
-    /**
-     * 读取cer公钥文件
-     *
-     * @param in 流
-     * @return PublicKey
-     */
     public static PublicKey getCerPublicKey(InputStream in) {
         return getCerPublicKey(in, false);
     }
@@ -86,7 +64,7 @@ public class Keys {
      */
     public static PublicKey getCerPublicKey(InputStream in, boolean close) {
         try {
-            CertificateFactory cf = CertificateFactory.getInstance("X.509");
+            CertificateFactory cf = CertificateFactory.getInstance(CryptoConst.X_509);
             X509Certificate cert = (X509Certificate) cf.generateCertificate(in);
             return cert.getPublicKey();
         } catch (Exception e) {
@@ -98,37 +76,16 @@ public class Keys {
         }
     }
 
-    // -------------------- FPX --------------------
+    // -------------------- PFX --------------------
 
-    /**
-     * 读取pfx文件提取公私钥
-     *
-     * @param file     fpx文件
-     * @param password 密码
-     * @return PublicKey, PrivateKey
-     */
     public static Args.Two<PublicKey, PrivateKey> getPfxKeys(File file, String password) {
         return getPfxKeys(Files1.openInputStreamSafe(file), password, true);
     }
 
-    /**
-     * 读取pfx文件提取公私钥
-     *
-     * @param file     fpx文件
-     * @param password 密码
-     * @return PublicKey, PrivateKey
-     */
     public static Args.Two<PublicKey, PrivateKey> getPfxKeys(String file, String password) {
         return getPfxKeys(Files1.openInputStreamSafe(file), password, true);
     }
 
-    /**
-     * 读取PFX私钥文件
-     *
-     * @param in       in
-     * @param password 密码
-     * @return PublicKey, PrivateKey
-     */
     public static Args.Two<PublicKey, PrivateKey> getPfxKeys(InputStream in, String password) {
         return getPfxKeys(in, password, false);
     }
@@ -144,7 +101,7 @@ public class Keys {
     public static Args.Two<PublicKey, PrivateKey> getPfxKeys(InputStream in, String password, boolean close) {
         try {
             char[] ps = password == null ? null : password.toCharArray();
-            KeyStore ks = KeyStore.getInstance("PKCS12");
+            KeyStore ks = KeyStore.getInstance(CryptoConst.PKCS12);
             ks.load(in, ps);
             Enumeration<String> aliases = ks.aliases();
             String keyAlias = null;
@@ -162,13 +119,6 @@ public class Keys {
         }
     }
 
-    /**
-     * 加载 KeyStore
-     *
-     * @param file     file
-     * @param password password
-     * @return KeyStore
-     */
     public static KeyStore getKeyStore(File file, String password) {
         return getKeyStore(Files1.openInputStreamSafe(file), password);
     }
@@ -183,7 +133,7 @@ public class Keys {
     public static KeyStore getKeyStore(InputStream in, String password) {
         char[] ps = password == null ? null : password.toCharArray();
         try {
-            KeyStore ks = KeyStore.getInstance("PKCS12");
+            KeyStore ks = KeyStore.getInstance(CryptoConst.PKCS12);
             ks.load(in, ps);
             return ks;
         } catch (Exception e) {
@@ -223,53 +173,22 @@ public class Keys {
         return new String(encode(key.getEncoded()));
     }
 
-    /**
-     * 获取秘钥文件内容
-     *
-     * @param file 秘钥文件
-     * @return Key
-     */
     public static String getKey(File file) {
         return getKey(new InputStreamReader(Files1.openInputStreamSafe(file)), true);
     }
 
-    /**
-     * 获取秘钥文件内容
-     *
-     * @param file 秘钥文件
-     * @return Key
-     */
     public static String getKey(String file) {
         return getKey(new InputStreamReader(Files1.openInputStreamSafe(file)), true);
     }
 
-    /**
-     * 获取秘钥文件内容
-     *
-     * @param in in
-     * @return Key
-     */
     public static String getKey(InputStream in) {
         return getKey(new InputStreamReader(in), false);
     }
 
-    /**
-     * 获取秘钥文件内容
-     *
-     * @param reader reader
-     * @return Key
-     */
     public static String getKey(Reader reader) {
         return getKey(reader, false);
     }
 
-    /**
-     * 获取秘钥文件内容
-     *
-     * @param reader reader
-     * @param close  是否关闭流
-     * @return Key
-     */
     public static String getKey(Reader reader, boolean close) {
         StringBuilder key = new StringBuilder();
         int c = 0;
@@ -286,7 +205,9 @@ public class Keys {
                 }
                 s = r.readLine();
             }
-            return key.toString().replaceAll(Const.LF, Strings.EMPTY).replaceAll(Const.CR, Strings.EMPTY);
+            return key.toString()
+                    .replaceAll(Const.LF, Strings.EMPTY)
+                    .replaceAll(Const.CR, Strings.EMPTY);
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         } finally {
@@ -297,6 +218,46 @@ public class Keys {
     }
 
     // -------------------- AES DES 3DES KEY --------------------
+
+    /**
+     * 获取key规格长度
+     *
+     * @param mode mode
+     * @return key 长度
+     */
+    public static int getKeySpecLength(CipherAlgorithm mode) {
+        switch (mode) {
+            case AES:
+                return CryptoConst.AES_KEY_LENGTH;
+            case DES:
+                return CryptoConst.DES_KEY_LENGTH;
+            case DES3:
+                return CryptoConst.DES3_KEY_LENGTH;
+            case RSA:
+                return CryptoConst.RSA_KEY_LENGTH;
+            default:
+                throw Exceptions.unsupported("unsupported get " + mode + "key spec length");
+        }
+    }
+
+    /**
+     * 获取key规格长度
+     *
+     * @param mode mode
+     * @return key 长度
+     */
+    public static int getIvSpecLength(CipherAlgorithm mode) {
+        switch (mode) {
+            case AES:
+                return CryptoConst.AES_IV_LENGTH;
+            case DES:
+                return CryptoConst.DES_IV_LENGTH;
+            case DES3:
+                return CryptoConst.DES3_IV_LENGTH;
+            default:
+                throw Exceptions.unsupported("unsupported get " + mode + "key spec length");
+        }
+    }
 
     /**
      * StringKey -> SecretKey
@@ -320,38 +281,20 @@ public class Keys {
         return new SecretKeySpec(decode(Strings.bytes(key)), mode.getMode());
     }
 
-    /**
-     * String -> SecretKey
-     *
-     * @param key  key
-     * @param mode CipherAlgorithm
-     * @return SecretKey
-     */
     public static SecretKey generatorKey(String key, CipherAlgorithm mode) {
-        return generatorKey(Strings.bytes(key), 128, mode);
+        return generatorKey(Strings.bytes(key), getKeySpecLength(mode), mode);
     }
 
-    /**
-     * String -> SecretKey
-     *
-     * @param key  key
-     * @param mode CipherAlgorithm
-     * @return SecretKey
-     */
     public static SecretKey generatorKey(byte[] key, CipherAlgorithm mode) {
-        return generatorKey(key, 128, mode);
+        return generatorKey(key, getKeySpecLength(mode), mode);
     }
 
-    /**
-     * String -> SecretKey
-     *
-     * @param key     key
-     * @param keySize AES key 位数  128 192 256
-     * @param mode    CipherAlgorithm
-     * @return SecretKey
-     */
     public static SecretKey generatorKey(String key, int keySize, CipherAlgorithm mode) {
         return generatorKey(Strings.bytes(key), keySize, mode);
+    }
+
+    public static SecretKey generatorKey(byte[] key, int keySize, CipherAlgorithm mode) {
+        return generatorKey(key, keySize, mode, CryptoConst.AES_ALGORITHM, CryptoConst.AES_PROVIDER);
     }
 
     /**
@@ -360,17 +303,17 @@ public class Keys {
      * @param key     key
      * @param keySize key 位数
      *                AES 128 192 256
-     *                DES 8
-     *                3DES 14 ~ 21
+     *                DES 8的倍数
+     *                3DES >=24 8的倍数
      * @param mode    CipherAlgorithm
      * @return SecretKey
      */
-    public static SecretKey generatorKey(byte[] key, int keySize, CipherAlgorithm mode) {
+    public static SecretKey generatorKey(byte[] key, int keySize, CipherAlgorithm mode, String algorithm, String provider) {
         try {
             switch (mode) {
                 case AES:
                     KeyGenerator keyGenerator = KeyGenerator.getInstance(mode.getMode());
-                    SecureRandom random = SecureRandom.getInstance(AES_ALGORITHM, AES_PROVIDER);
+                    SecureRandom random = SecureRandom.getInstance(algorithm, provider);
                     random.setSeed(key);
                     keyGenerator.init(keySize, random);
                     return SecretKeySpecMode.AES.getSecretKeySpec(keyGenerator.generateKey().getEncoded());
@@ -385,7 +328,7 @@ public class Keys {
                     }
                     return SecretKeyFactory.getInstance(mode.getMode()).generateSecret(new DESedeKeySpec(key));
                 default:
-                    return null;
+                    throw Exceptions.unsupported("unsupported generator " + mode + " key");
             }
         } catch (Exception e) {
             throw Exceptions.runtime(e);

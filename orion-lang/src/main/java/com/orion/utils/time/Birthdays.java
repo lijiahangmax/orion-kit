@@ -134,7 +134,7 @@ public class Birthdays {
      * @return 年龄
      */
     public static int getAge(Date birthday, Date range) {
-        if (null == range) {
+        if (range == null) {
             range = new Date();
         }
         return getAge(birthday.getTime(), range.getTime());
@@ -151,8 +151,7 @@ public class Birthdays {
         if (birthday > range) {
             throw Exceptions.argument("birthday is after range");
         }
-        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(range);
+        Calendar c = Dates.calendar(range);
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);
         int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);

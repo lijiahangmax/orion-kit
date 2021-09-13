@@ -18,24 +18,24 @@ class BaseDates {
     public static final String WORLD = "EEE MMM dd HH:mm:ss z yyyy";
     public static final String YM = "yyyy-MM";
     public static final String YMD = "yyyy-MM-dd";
-    public static final String YMDHM = "yyyy-MM-dd HH:mm";
-    public static final String YMDHMS = "yyyy-MM-dd HH:mm:ss";
-    public static final String YMDHMSS = "yyyy-MM-dd HH:mm:ss SSS";
+    public static final String YMD_HM = "yyyy-MM-dd HH:mm";
+    public static final String YMD_HMS = "yyyy-MM-dd HH:mm:ss";
+    public static final String YMD_HMSS = "yyyy-MM-dd HH:mm:ss SSS";
     public static final String HMS = "HH:mm:ss";
     public static final String HMSS = "HH:mm:ss SSS";
     public static final String YM1 = "yyyy/MM";
     public static final String YMD1 = "yyyy/MM/dd";
-    public static final String YMDHM1 = "yyyy/MM/dd HH/mm";
-    public static final String YMDHMS1 = "yyyy/MM/dd HH/mm/ss";
-    public static final String YMDHMSS1 = "yyyy/MM/dd HH/mm/ss SSS";
+    public static final String YMD_HM1 = "yyyy/MM/dd HH/mm";
+    public static final String YMD_HMS1 = "yyyy/MM/dd HH/mm/ss";
+    public static final String YMD_HMSS1 = "yyyy/MM/dd HH/mm/ss SSS";
     public static final String YM2 = "yyyyMM";
     public static final String YMD2 = "yyyyMMdd";
-    public static final String YMDHM2 = "yyyyMMddHHmm";
-    public static final String YMDHMS2 = "yyyyMMddHHmmss";
-    public static final String YMDHMSS2 = "yyyyMMddHHmmssSSS";
-    public static final String[] PARSE_PATTERN_GROUP1 = {YMDHMS, YMD, YM, YMDHM, YMDHMSS};
-    public static final String[] PARSE_PATTERN_GROUP2 = {YMDHMS1, YMD1, YM1, YMDHM1, YMDHMSS1};
-    public static final String[] PARSE_PATTERN_GROUP3 = {YMDHMS2, YMD2, YM2, YMDHM2, YMDHMSS2};
+    public static final String YMD_HM2 = "yyyyMMddHHmm";
+    public static final String YMD_HMS2 = "yyyyMMddHHmmss";
+    public static final String YMD_HMSS2 = "yyyyMMddHHmmssSSS";
+    public static final String[] PARSE_PATTERN_GROUP1 = {YMD_HMS, YMD, YM, YMD_HM, YMD_HMSS};
+    public static final String[] PARSE_PATTERN_GROUP2 = {YMD_HMS1, YMD1, YM1, YMD_HM1, YMD_HMSS1};
+    public static final String[] PARSE_PATTERN_GROUP3 = {YMD_HMS2, YMD2, YM2, YMD_HM2, YMD_HMSS2};
 
     public static final long WEEK_STAMP = 604800000L;
     public static final long YEAR_STAMP = 31536000000L;
@@ -43,11 +43,15 @@ class BaseDates {
     public static final long DAY_STAMP = 86400000L;
     public static final long HOUR_STAMP = 3600000L;
     public static final long MINUTE_STAMP = 60000L;
-    public static final long MILLI = 1000L;
+    public static final long SECOND_STAMP = 1000L;
 
     public static final ZoneId DEFAULT_ZONE_ID = ZoneId.systemDefault();
     public static final ZoneOffset DEFAULT_ZONE_OFFSET = ZoneOffset.of("+8");
     public static final ZoneOffset DEFAULT_ZERO_ZONE_OFFSET = ZoneOffset.ofHours(0);
+
+    private static final String PAD_HMS = "%04d-%02d-%02d";
+    private static final String PAD_YMD_HMS = "%04d-%02d-%02d %02d:%02d:%02d";
+    private static final String PAD_YMD_HMSS = "%04d-%02d-%02d %02d:%02d:%02d %03d";
 
     BaseDates() {
     }
@@ -59,10 +63,10 @@ class BaseDates {
      * @return ignore
      */
     public static boolean isDateClass(Class<?> c) {
-        return c == Long.TYPE || c == Long.class ||
-                c == Integer.TYPE || c == Integer.class ||
-                c == Date.class || c == Calendar.class ||
-                c == LocalDate.class || c == LocalDateTime.class || c == Instant.class;
+        return c == Long.TYPE || c == Long.class
+                || c == Integer.TYPE || c == Integer.class
+                || c == Date.class || c == Calendar.class
+                || c == LocalDate.class || c == LocalDateTime.class || c == Instant.class;
     }
 
     /**
@@ -171,7 +175,7 @@ class BaseDates {
         long distanceDay = ms / DAY_STAMP;
         long distanceHour = ms % DAY_STAMP / HOUR_STAMP;
         long distanceMinute = ms % DAY_STAMP % HOUR_STAMP / MINUTE_STAMP;
-        long distanceSecond = ms % DAY_STAMP % HOUR_STAMP % MINUTE_STAMP / MILLI;
+        long distanceSecond = ms % DAY_STAMP % HOUR_STAMP % MINUTE_STAMP / SECOND_STAMP;
         if (distanceSecond == 0 && ms != 0) {
             distanceSecond = 1;
         }
@@ -215,6 +219,59 @@ class BaseDates {
             default:
                 throw Exceptions.argument("month must >= 1 and <= 12");
         }
+    }
+
+    /**
+     * 获取季度
+     *
+     * @param month month
+     * @return 季度
+     */
+    public static int getQuarter(int month) {
+        switch (month) {
+            case 1:
+            case 2:
+            case 3:
+                return 1;
+            case 4:
+            case 5:
+            case 6:
+                return 2;
+            case 7:
+            case 8:
+            case 9:
+                return 3;
+            case 10:
+            case 11:
+            case 12:
+                return 4;
+            default:
+                throw Exceptions.argument("month must >= 1 and <= 12");
+        }
+    }
+
+    public static String pad(int year, int month, int day) {
+        return String.format(PAD_HMS, year, month, day);
+    }
+
+    public static String pad(int year, int month, int day, int hour, int minute, int second) {
+        return String.format(PAD_YMD_HMS, year, month, day, hour, minute, second);
+    }
+
+    /**
+     * 填充时间
+     *
+     * @param year   year
+     * @param month  month
+     * @param day    day
+     * @param hour   hour
+     * @param minute minute
+     * @param second second
+     * @param milli  milli
+     * @return yyyy-MM-dd HH:mm:ss
+     */
+    public static String pad(int year, int month, int day, int hour, int minute, int second, int milli) {
+        return String.format(PAD_YMD_HMSS, year, month, day, hour, minute, second, milli);
     }
 
 }

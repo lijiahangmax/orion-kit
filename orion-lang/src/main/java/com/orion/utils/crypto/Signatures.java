@@ -1,7 +1,7 @@
 package com.orion.utils.crypto;
 
 import com.orion.utils.Strings;
-import com.orion.utils.crypto.enums.HashMessageDigest;
+import com.orion.utils.crypto.enums.HashDigest;
 import com.orion.utils.crypto.enums.SecretKeySpecMode;
 
 import javax.crypto.Mac;
@@ -29,7 +29,7 @@ public class Signatures {
      * @return 签名
      */
     public static String md5(String s) {
-        return hashSign(Strings.bytes(s), HashMessageDigest.MD5.getMessageDigest());
+        return hashSign(Strings.bytes(s), HashDigest.MD5.getMessageDigest());
     }
 
     /**
@@ -39,7 +39,7 @@ public class Signatures {
      * @return 签名
      */
     public static String md5(byte[] bs) {
-        return hashSign(bs, HashMessageDigest.MD5.getMessageDigest());
+        return hashSign(bs, HashDigest.MD5.getMessageDigest());
     }
 
     /**
@@ -86,7 +86,7 @@ public class Signatures {
      */
     public static String md5(byte[] bs, byte[] salt, int times) {
         try {
-            MessageDigest digest = HashMessageDigest.MD5.getMessageDigest();
+            MessageDigest digest = HashDigest.MD5.getMessageDigest();
             digest.update(bs);
             for (int i = 0; i < times; i++) {
                 digest.update(salt);
@@ -104,7 +104,7 @@ public class Signatures {
      * @return 签名
      */
     public static String sha1(String s) {
-        return hashSign(Strings.bytes(s), HashMessageDigest.SHA1.getMessageDigest());
+        return hashSign(Strings.bytes(s), HashDigest.SHA1.getMessageDigest());
     }
 
     /**
@@ -114,7 +114,7 @@ public class Signatures {
      * @return 签名
      */
     public static String sha1(byte[] bs) {
-        return hashSign(bs, HashMessageDigest.SHA1.getMessageDigest());
+        return hashSign(bs, HashDigest.SHA1.getMessageDigest());
     }
 
     /**
@@ -124,7 +124,7 @@ public class Signatures {
      * @return 签名
      */
     public static String sha224(String s) {
-        return hashSign(Strings.bytes(s), HashMessageDigest.SHA224.getMessageDigest());
+        return hashSign(Strings.bytes(s), HashDigest.SHA224.getMessageDigest());
     }
 
     /**
@@ -134,7 +134,7 @@ public class Signatures {
      * @return 签名
      */
     public static String sha224(byte[] bs) {
-        return hashSign(bs, HashMessageDigest.SHA224.getMessageDigest());
+        return hashSign(bs, HashDigest.SHA224.getMessageDigest());
     }
 
     /**
@@ -144,7 +144,7 @@ public class Signatures {
      * @return 签名
      */
     public static String sha256(String s) {
-        return hashSign(Strings.bytes(s), HashMessageDigest.SHA256.getMessageDigest());
+        return hashSign(Strings.bytes(s), HashDigest.SHA256.getMessageDigest());
     }
 
     /**
@@ -154,7 +154,7 @@ public class Signatures {
      * @return 签名
      */
     public static String sha256(byte[] bs) {
-        return hashSign(bs, HashMessageDigest.SHA256.getMessageDigest());
+        return hashSign(bs, HashDigest.SHA256.getMessageDigest());
     }
 
     /**
@@ -164,7 +164,7 @@ public class Signatures {
      * @return 签名
      */
     public static String sha384(String s) {
-        return hashSign(Strings.bytes(s), HashMessageDigest.SHA384.getMessageDigest());
+        return hashSign(Strings.bytes(s), HashDigest.SHA384.getMessageDigest());
     }
 
     /**
@@ -174,7 +174,7 @@ public class Signatures {
      * @return 签名
      */
     public static String sha384(byte[] bs) {
-        return hashSign(bs, HashMessageDigest.SHA384.getMessageDigest());
+        return hashSign(bs, HashDigest.SHA384.getMessageDigest());
     }
 
     /**
@@ -184,7 +184,7 @@ public class Signatures {
      * @return 签名
      */
     public static String sha512(String s) {
-        return hashSign(Strings.bytes(s), HashMessageDigest.SHA512.getMessageDigest());
+        return hashSign(Strings.bytes(s), HashDigest.SHA512.getMessageDigest());
     }
 
     /**
@@ -194,7 +194,7 @@ public class Signatures {
      * @return 签名
      */
     public static String sha512(byte[] bs) {
-        return hashSign(bs, HashMessageDigest.SHA512.getMessageDigest());
+        return hashSign(bs, HashDigest.SHA512.getMessageDigest());
     }
 
     /**
@@ -205,7 +205,7 @@ public class Signatures {
      * @return 签名
      */
     public static String sign(String s, String type) {
-        return hashSign(Strings.bytes(s), HashMessageDigest.getMessageDigest(type));
+        return hashSign(Strings.bytes(s), HashDigest.getMessageDigest(type));
     }
 
     /**
@@ -216,7 +216,7 @@ public class Signatures {
      * @return 签名
      */
     public static String sign(byte[] bs, String type) {
-        return hashSign(bs, HashMessageDigest.getMessageDigest(type));
+        return hashSign(bs, HashDigest.getMessageDigest(type));
     }
 
     /**

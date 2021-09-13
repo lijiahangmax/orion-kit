@@ -23,13 +23,12 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
     private Calendar c;
 
     public DateStream() {
-        this.c = Calendar.getInstance();
+        this.c = Dates.calendar();
     }
 
     public DateStream(Date date) {
         Valid.notNull(date, "date is null");
-        this.c = Calendar.getInstance();
-        this.c.setTime(date);
+        this.c = Dates.calendar(date);
     }
 
     public DateStream(Date date, TimeZone timeZone) {
