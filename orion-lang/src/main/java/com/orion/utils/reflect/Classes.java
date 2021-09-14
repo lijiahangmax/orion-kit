@@ -402,12 +402,12 @@ public class Classes {
      */
     public static boolean isNumberClass(Class<?> clazz) {
         Valid.notNull(clazz, "class is null");
-        boolean n = clazz == Byte.TYPE || clazz == Short.TYPE ||
-                clazz == Integer.TYPE || clazz == Long.TYPE ||
-                clazz == Float.TYPE || clazz == Double.TYPE ||
-                clazz == Number.class;
-        if (n) {
-            return n;
+        boolean direct = clazz == Byte.TYPE || clazz == Short.TYPE
+                || clazz == Integer.TYPE || clazz == Long.TYPE
+                || clazz == Float.TYPE || clazz == Double.TYPE
+                || clazz == Number.class;
+        if (direct) {
+            return direct;
         }
         for (Class<?> superClass = clazz.getSuperclass(); superClass != null && superClass != Object.class; superClass = superClass.getSuperclass()) {
             if (superClass == Number.class) {

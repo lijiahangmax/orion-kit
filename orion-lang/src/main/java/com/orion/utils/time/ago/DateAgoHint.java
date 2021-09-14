@@ -1,5 +1,7 @@
 package com.orion.utils.time.ago;
 
+import java.io.Serializable;
+
 /**
  * 配置
  *
@@ -7,7 +9,9 @@ package com.orion.utils.time.ago;
  * @version 1.0.0
  * @since 2021/8/27 18:38
  */
-public class DateAgoHint {
+public class DateAgoHint implements Serializable {
+
+    private static final long serialVersionUID = 41684659873123848L;
 
     /**
      * 很久之前

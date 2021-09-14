@@ -1,5 +1,7 @@
 package com.orion.utils.time.ago;
 
+import com.orion.utils.time.Dates;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -79,10 +81,8 @@ public class DateAgo extends Ago {
         if (hint == null) {
             this.hint = new DateAgoHint();
         }
-        Calendar c1 = Calendar.getInstance();
-        Calendar c2 = Calendar.getInstance();
-        c1.setTime(source);
-        c2.setTime(target);
+        Calendar c1 = Dates.calendar(source);
+        Calendar c2 = Dates.calendar(target);
         long s = source.getTime(), t = target.getTime();
         int sYear = c1.get(Calendar.YEAR),
                 tYear = c2.get(Calendar.YEAR),
@@ -133,7 +133,7 @@ public class DateAgo extends Ago {
                 return (before / MINUTE_STAMP) + hint.minuteAgo;
             }
             // 刚刚
-            return vague ? hint.justNow : ((before / MILLI) + hint.secondAgo);
+            return vague ? hint.justNow : ((before / SECOND_STAMP) + hint.secondAgo);
         } else if (t - s > 0) {
             long after = t - s;
             // 很久之后
@@ -179,7 +179,7 @@ public class DateAgo extends Ago {
                 return (after / MINUTE_STAMP) + hint.minuteFuture;
             }
             // 片刻之前
-            return vague ? hint.moment : ((after / MILLI) + hint.secondFuture);
+            return vague ? hint.moment : ((after / SECOND_STAMP) + hint.secondFuture);
         } else {
             // 现在
             return vague ? hint.now : (0 + hint.secondAgo);

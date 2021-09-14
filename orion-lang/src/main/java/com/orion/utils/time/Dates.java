@@ -31,7 +31,7 @@ public class Dates extends BaseDates {
     }
 
     public static Date date(int ms) {
-        return new Date(ms * MILLI);
+        return new Date(ms * SECOND_STAMP);
     }
 
     public static Date date(long ms) {
@@ -50,18 +50,18 @@ public class Dates extends BaseDates {
             return null;
         }
         if (o instanceof Integer) {
-            return date((int) o * MILLI);
+            return date((int) o * SECOND_STAMP);
         } else if (o instanceof Long) {
             long l = (long) o;
             if (isMilli(l)) {
                 return date(l);
             } else {
-                return date(l * MILLI);
+                return date(l * SECOND_STAMP);
             }
-        } else if (o instanceof byte[] || o instanceof Byte[] || o instanceof short[] || o instanceof Short[] ||
-                o instanceof int[] || o instanceof Integer[] || o instanceof long[] || o instanceof Long[] ||
-                o instanceof float[] || o instanceof Float[] || o instanceof double[] || o instanceof Double[] ||
-                o instanceof char[] || o instanceof Character[] || o instanceof String[]) {
+        } else if (o instanceof byte[] || o instanceof Byte[] || o instanceof short[] || o instanceof Short[]
+                || o instanceof int[] || o instanceof Integer[] || o instanceof long[] || o instanceof Long[]
+                || o instanceof float[] || o instanceof Float[] || o instanceof double[] || o instanceof Double[]
+                || o instanceof char[] || o instanceof Character[] || o instanceof String[]) {
             try {
                 int[] analysis = Converts.toInts(o);
                 if (analysis.length == 3) {
@@ -81,13 +81,45 @@ public class Dates extends BaseDates {
         } else if (o instanceof String) {
             return parse((String) o);
         } else if (o instanceof LocalDate) {
-            return date(o);
+            return Dates8.date((LocalDate) o);
         } else if (o instanceof LocalDateTime) {
-            return date(o);
+            return Dates8.date((LocalDateTime) o);
         } else if (o instanceof Instant) {
-            return date(o);
+            return Dates8.date((Instant) o);
         }
         return null;
+    }
+
+    public static Calendar calendar() {
+        return Calendar.getInstance();
+    }
+
+    public static Calendar calendar(Date date) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        return c;
+    }
+
+    public static Calendar calendar(long milliSecond) {
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(milliSecond);
+        return c;
+    }
+
+    /**
+     * 获取日历
+     *
+     * @param o o
+     * @return 日历
+     */
+    public static Calendar calendar(Object o) {
+        Date date = date(o);
+        if (date == null) {
+            return null;
+        }
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        return c;
     }
 
     /**
@@ -126,7 +158,7 @@ public class Dates extends BaseDates {
      * @return 时间
      */
     public static Date build(int year, int month, int day, int h, int m, int s, int ms) {
-        Calendar c = Calendar.getInstance();
+        Calendar c = calendar();
         c.set(year, month - 1, day, h, m, s);
         if (ms != 0) {
             c.set(Calendar.MILLISECOND, ms);
@@ -135,7 +167,7 @@ public class Dates extends BaseDates {
     }
 
     public static String current() {
-        return FastDateFormat.getInstance(YMDHMS).format(new Date());
+        return FastDateFormat.getInstance(YMD_HMS).format(new Date());
     }
 
     /**
@@ -149,13 +181,11 @@ public class Dates extends BaseDates {
     }
 
     public static Date clearHms() {
-        return clearHms(Calendar.getInstance());
+        return clearHms(calendar());
     }
 
     public static Date clearHms(Date d) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(d);
-        return clearHms(c);
+        return clearHms(calendar(d));
     }
 
     /**
@@ -174,13 +204,11 @@ public class Dates extends BaseDates {
     }
 
     public static Date dayEnd() {
-        return dayEnd(Calendar.getInstance());
+        return dayEnd(calendar());
     }
 
     public static Date dayEnd(Date d) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(d);
-        return dayEnd(c);
+        return dayEnd(calendar(d));
     }
 
     /**
@@ -198,11 +226,11 @@ public class Dates extends BaseDates {
     }
 
     public static Date monthFirstDay() {
-        return monthFirstDay(Calendar.getInstance(), false);
+        return monthFirstDay(calendar(), false);
     }
 
     public static Date monthFirstDay(Date d) {
-        return monthFirstDay(d, false);
+        return monthFirstDay(calendar(d), false);
     }
 
     /**
@@ -216,11 +244,11 @@ public class Dates extends BaseDates {
     }
 
     public static Date monthFirstDayHms() {
-        return monthFirstDay(Calendar.getInstance(), true);
+        return monthFirstDay(calendar(), true);
     }
 
     public static Date monthFirstDayHms(Date d) {
-        return monthFirstDay(d, true);
+        return monthFirstDay(calendar(d), true);
     }
 
     /**
@@ -234,9 +262,7 @@ public class Dates extends BaseDates {
     }
 
     public static Date monthFirstDay(Date d, boolean clearHms) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(d);
-        return monthFirstDay(c, clearHms);
+        return monthFirstDay(calendar(d), clearHms);
     }
 
     /**
@@ -294,9 +320,7 @@ public class Dates extends BaseDates {
     }
 
     public static Date monthLastDay(Date d, boolean dayEnd) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(d);
-        return monthLastDay(c, dayEnd);
+        return monthLastDay(calendar(d), dayEnd);
     }
 
     /**
@@ -364,7 +388,7 @@ public class Dates extends BaseDates {
      */
     public static Date[] getIncrementDates(Date d, int field, int incr, int times) {
         Date[] dates = new Date[times];
-        Calendar c = Calendar.getInstance();
+        Calendar c = calendar();
         if (d != null) {
             c.setTime(d);
         }
@@ -377,7 +401,7 @@ public class Dates extends BaseDates {
     }
 
     public static String format(Date d) {
-        return FastDateFormat.getInstance(YMDHMS).format(d);
+        return FastDateFormat.getInstance(YMD_HMS).format(d);
     }
 
     public static String format(Date d, String pattern) {
@@ -385,7 +409,7 @@ public class Dates extends BaseDates {
     }
 
     public static String format(Date d, Locale locale) {
-        return FastDateFormat.getInstance(YMDHMS, locale).format(d);
+        return FastDateFormat.getInstance(YMD_HMS, locale).format(d);
     }
 
     public static String format(Date d, String pattern, Locale locale) {
@@ -393,7 +417,7 @@ public class Dates extends BaseDates {
     }
 
     public static String format(Date d, TimeZone timeZone) {
-        return FastDateFormat.getInstance(YMDHMS, timeZone).format(d);
+        return FastDateFormat.getInstance(YMD_HMS, timeZone).format(d);
     }
 
     public static String format(Date d, String pattern, TimeZone timeZone) {
@@ -401,7 +425,7 @@ public class Dates extends BaseDates {
     }
 
     public static String format(Date d, TimeZone timeZone, Locale locale) {
-        return FastDateFormat.getInstance(YMDHMS, timeZone, locale).format(d);
+        return FastDateFormat.getInstance(YMD_HMS, timeZone, locale).format(d);
     }
 
     /**
@@ -550,18 +574,26 @@ public class Dates extends BaseDates {
     }
 
     public static String hourType() {
-        return hourType(new Date());
+        return hourType(calendar());
     }
 
     /**
      * 时间段
      *
-     * @param date date
+     * @param d d
      * @return 时间段
      */
-    public static String hourType(Date date) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(date);
+    public static String hourType(Date d) {
+        return hourType(calendar(d));
+    }
+
+    /**
+     * 时间段
+     *
+     * @param c c
+     * @return 时间段
+     */
+    public static String hourType(Calendar c) {
         return hourType(c.get(Calendar.HOUR_OF_DAY));
     }
 
@@ -671,14 +703,11 @@ public class Dates extends BaseDates {
     }
 
     public static boolean isLeapYear() {
-        Calendar c = Calendar.getInstance();
-        return isLeapYear(c.get(Calendar.YEAR));
+        return isLeapYear(calendar());
     }
 
     public static boolean isLeapYear(Date d) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(d);
-        return isLeapYear(c.get(Calendar.YEAR));
+        return isLeapYear(calendar(d));
     }
 
     /**
@@ -692,20 +721,11 @@ public class Dates extends BaseDates {
     }
 
     public static int getMonthLastDay() {
-        Calendar c = Calendar.getInstance();
-        return getMonthLastDay(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1);
+        return getMonthLastDay(calendar());
     }
 
-    /**
-     * 获得月份的最后一天
-     *
-     * @param date date
-     * @return 最后一天
-     */
-    public static int getMonthLastDay(Date date) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(date);
-        return getMonthLastDay(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1);
+    public static int getMonthLastDay(Date d) {
+        return getMonthLastDay(calendar(d));
     }
 
     /**
@@ -718,14 +738,30 @@ public class Dates extends BaseDates {
         return getMonthLastDay(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1);
     }
 
+    public static int getQuarter() {
+        return getQuarter(calendar());
+    }
+
+    public static int getQuarter(Date d) {
+        return getQuarter(calendar(d));
+    }
+
+    /**
+     * 获取季度
+     *
+     * @param c calendar
+     * @return 季度
+     */
+    public static int getQuarter(Calendar c) {
+        return getQuarter(c.get(Calendar.MONTH) + 1);
+    }
+
     public static boolean isAm() {
-        return isAm(Calendar.getInstance());
+        return isAm(calendar());
     }
 
     public static boolean isAm(Date d) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(d);
-        return isAm(c);
+        return isAm(calendar(d));
     }
 
     /**
@@ -739,13 +775,11 @@ public class Dates extends BaseDates {
     }
 
     public static boolean isPm() {
-        return isPm(Calendar.getInstance());
+        return isPm(calendar());
     }
 
     public static boolean isPm(Date d) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(d);
-        return isPm(c);
+        return isPm(calendar(d));
     }
 
     /**

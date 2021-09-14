@@ -50,7 +50,7 @@ public class Enums {
      * @return name值
      */
     public static String toString(Enum<?> e) {
-        return null != e ? e.name() : null;
+        return e != null ? e.name() : null;
     }
 
     /**

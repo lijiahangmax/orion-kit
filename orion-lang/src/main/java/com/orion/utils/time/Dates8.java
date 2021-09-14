@@ -1,5 +1,6 @@
 package com.orion.utils.time;
 
+import com.orion.constant.Const;
 import com.orion.lang.collect.ConcurrentReferenceHashMap;
 import com.orion.utils.Strings;
 
@@ -18,14 +19,14 @@ import java.util.Map;
  */
 public class Dates8 extends BaseDates {
 
-    private static final Map<String, DateTimeFormatter> DATE_TIME_FORMAT_CONTAINER = new ConcurrentReferenceHashMap<>(16, ConcurrentReferenceHashMap.ReferenceType.SOFT);
+    private static final Map<String, DateTimeFormatter> DATE_TIME_FORMAT_CONTAINER = new ConcurrentReferenceHashMap<>(Const.CAPACITY_16, ConcurrentReferenceHashMap.ReferenceType.SOFT);
 
     private Dates8() {
     }
 
     static {
         DATE_TIME_FORMAT_CONTAINER.put(YMD, DateTimeFormatter.ofPattern(YMD));
-        DATE_TIME_FORMAT_CONTAINER.put(YMDHMS, DateTimeFormatter.ofPattern(YMDHMS));
+        DATE_TIME_FORMAT_CONTAINER.put(YMD_HMS, DateTimeFormatter.ofPattern(YMD_HMS));
     }
 
     /**
@@ -104,11 +105,11 @@ public class Dates8 extends BaseDates {
     }
 
     public static long timestamp() {
-        return System.currentTimeMillis() / MILLI;
+        return System.currentTimeMillis() / SECOND_STAMP;
     }
 
     public static long timestamp(Date date) {
-        return date.getTime() / MILLI;
+        return date.getTime() / SECOND_STAMP;
     }
 
     public static long timestamp(Instant instant) {
@@ -120,7 +121,7 @@ public class Dates8 extends BaseDates {
     }
 
     public static long timestamp(LocalDate d, ZoneOffset offset) {
-        return d.atStartOfDay().toInstant(offset).toEpochMilli() / MILLI;
+        return d.atStartOfDay().toInstant(offset).toEpochMilli() / SECOND_STAMP;
     }
 
     public static long timestamp(LocalDateTime d) {
@@ -160,11 +161,11 @@ public class Dates8 extends BaseDates {
     }
 
     public static LocalDate localDate(long ms) {
-        return LocalDateTime.ofEpochSecond(ms / MILLI, 0, DEFAULT_ZONE_OFFSET).toLocalDate();
+        return LocalDateTime.ofEpochSecond(ms / SECOND_STAMP, 0, DEFAULT_ZONE_OFFSET).toLocalDate();
     }
 
     public static LocalDate localDate(long ms, ZoneOffset offset) {
-        return LocalDateTime.ofEpochSecond(ms / MILLI, 0, offset).toLocalDate();
+        return LocalDateTime.ofEpochSecond(ms / SECOND_STAMP, 0, offset).toLocalDate();
     }
 
     public static LocalDate localDate(Date date) {
@@ -200,19 +201,19 @@ public class Dates8 extends BaseDates {
     }
 
     public static LocalTime localTime(long ms, int nano) {
-        return LocalDateTime.ofEpochSecond(ms / MILLI, nano, DEFAULT_ZONE_OFFSET).toLocalTime();
+        return LocalDateTime.ofEpochSecond(ms / SECOND_STAMP, nano, DEFAULT_ZONE_OFFSET).toLocalTime();
     }
 
     public static LocalTime localTime(long ms, int nano, ZoneOffset offset) {
-        return LocalDateTime.ofEpochSecond(ms / MILLI, nano, offset).toLocalTime();
+        return LocalDateTime.ofEpochSecond(ms / SECOND_STAMP, nano, offset).toLocalTime();
     }
 
     public static LocalTime localTime(long ms) {
-        return LocalDateTime.ofEpochSecond(ms / MILLI, 0, DEFAULT_ZONE_OFFSET).toLocalTime();
+        return LocalDateTime.ofEpochSecond(ms / SECOND_STAMP, 0, DEFAULT_ZONE_OFFSET).toLocalTime();
     }
 
     public static LocalTime localTime(long ms, ZoneOffset offset) {
-        return LocalDateTime.ofEpochSecond(ms / MILLI, 0, offset).toLocalTime();
+        return LocalDateTime.ofEpochSecond(ms / SECOND_STAMP, 0, offset).toLocalTime();
     }
 
     public static LocalTime localTime(Date date) {
@@ -252,11 +253,11 @@ public class Dates8 extends BaseDates {
     }
 
     public static LocalDateTime localDateTime(long ms) {
-        return LocalDateTime.ofEpochSecond(ms / MILLI, 0, DEFAULT_ZONE_OFFSET);
+        return LocalDateTime.ofEpochSecond(ms / SECOND_STAMP, 0, DEFAULT_ZONE_OFFSET);
     }
 
     public static LocalDateTime localDateTime(long ms, ZoneOffset offset) {
-        return LocalDateTime.ofEpochSecond(ms / MILLI, 0, offset);
+        return LocalDateTime.ofEpochSecond(ms / SECOND_STAMP, 0, offset);
     }
 
     public static LocalDateTime localDateTime(Date date) {
@@ -296,7 +297,7 @@ public class Dates8 extends BaseDates {
     }
 
     public static String format(TemporalAccessor d) {
-        return format(d, YMDHMS);
+        return format(d, YMD_HMS);
     }
 
     /**
