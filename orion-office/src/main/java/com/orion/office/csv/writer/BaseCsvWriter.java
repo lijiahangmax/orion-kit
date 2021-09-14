@@ -85,7 +85,7 @@ public abstract class BaseCsvWriter<K, V> implements SafeCloseable, SafeFlushabl
      */
     public BaseCsvWriter<K, V> skip(int i) {
         for (int j = 0; j < i; j++) {
-            skip();
+            this.skip();
         }
         return this;
     }

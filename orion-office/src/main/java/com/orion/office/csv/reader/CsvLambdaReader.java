@@ -2,6 +2,7 @@ package com.orion.office.csv.reader;
 
 import com.orion.lang.wrapper.Pair;
 import com.orion.office.csv.core.CsvReader;
+import com.orion.utils.Valid;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,18 +53,17 @@ public class CsvLambdaReader<T> extends BaseCsvReader<T> {
 
     protected CsvLambdaReader(CsvReader reader, List<T> rows, Consumer<T> consumer, Supplier<T> supplier) {
         super(reader, rows, consumer);
-        this.supplier = supplier;
+        this.supplier = Valid.notNull(supplier, "supplier is null");
         this.mapping = new TreeMap<>();
     }
 
     /**
-     * 如果列为null是否调用consumer
+     * 如果列为null是否调用function consumer
      *
      * @return this
      */
     public CsvLambdaReader<T> nullInvoke() {
         this.nullInvoke = true;
-        this.mapping = new TreeMap<>();
         return this;
     }
 
@@ -93,9 +93,9 @@ public class CsvLambdaReader<T> extends BaseCsvReader<T> {
             String value = this.get(row, k);
             if (value != null || nullInvoke) {
                 Function<String, ?> convert = v.getKey();
-                BiConsumer<T, Object> setter = (BiConsumer<T, Object>) v.getValue();
+                BiConsumer<T, Object> consumer = (BiConsumer<T, Object>) v.getValue();
                 Object val = convert.apply(value);
-                setter.accept(current, val);
+                consumer.accept(current, val);
             }
         });
         return current;
