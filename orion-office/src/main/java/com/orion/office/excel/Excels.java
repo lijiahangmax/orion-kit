@@ -50,7 +50,7 @@ import java.util.Date;
 import java.util.Optional;
 
 /**
- * Excel 工具类
+ * excel 工具类
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -151,6 +151,7 @@ public class Excels {
      * @return value
      * @see ExcelReadType#DECIMAL       可能为null
      * @see ExcelReadType#INTEGER       可能为null
+     * @see ExcelReadType#LONG          可能为null
      * @see ExcelReadType#DATE          可能为null
      * @see ExcelReadType#LINK_ADDRESS  可能为null
      * @see ExcelReadType#COMMENT       可能为null
@@ -167,6 +168,9 @@ public class Excels {
                 break;
             case INTEGER:
                 value = Excels.getCellInteger(cell, null, option);
+                break;
+            case LONG:
+                value = Excels.getCellLong(cell, null, option);
                 break;
             case DATE:
                 value = Excels.getCellDate(cell, null, option);
@@ -298,7 +302,7 @@ public class Excels {
                 String str = cell.getStringCellValue().trim();
                 if (option != null && !Strings.isEmpty(option.getFormat())) {
                     return BigDecimals.parse(str, option.getFormat());
-                } else {
+                } else if (Strings.isNumber(str)) {
                     return BigDecimals.toBigDecimal(str);
                 }
             default:
@@ -338,6 +342,40 @@ public class Excels {
     public static Integer getCellInteger(Cell cell, CellType type, CellOption option) {
         BigDecimal val = getCellDecimal(cell, type, option);
         return val == null ? null : val.intValue();
+    }
+
+    /**
+     * 获取数字
+     *
+     * @param cell cell
+     * @return Long
+     */
+    public static Long getCellLong(Cell cell) {
+        return getCellLong(cell, null, null);
+    }
+
+    /**
+     * 获取数字
+     *
+     * @param cell   cell
+     * @param option option
+     * @return Long
+     */
+    public static Long getCellLong(Cell cell, CellOption option) {
+        return getCellLong(cell, null, option);
+    }
+
+    /**
+     * 获取数字
+     *
+     * @param cell   cell
+     * @param type   type
+     * @param option option
+     * @return Long
+     */
+    public static Long getCellLong(Cell cell, CellType type, CellOption option) {
+        BigDecimal val = getCellDecimal(cell, type, option);
+        return val == null ? null : val.longValue();
     }
 
     /**

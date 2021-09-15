@@ -1,5 +1,6 @@
 package com.orion.office.excel.writer;
 
+import com.orion.office.excel.option.WriteFieldOption;
 import com.orion.utils.Valid;
 import com.orion.utils.reflect.Fields;
 import com.orion.utils.reflect.Methods;
@@ -8,6 +9,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -21,24 +23,29 @@ import java.util.stream.Collectors;
  */
 public class ExcelBeanWriter<T> extends BaseExcelWriter<String, T> {
 
+    private Class<T> targetClass;
+
     /**
      * getter
      */
-    private Map<String, Method> getter;
+    private Map<String, Method> getters;
 
     public ExcelBeanWriter(Workbook workbook, Sheet sheet, Class<T> targetClass) {
         super(workbook, sheet);
-        Valid.notNull(targetClass, "target class is null");
-        this.getter = Methods.getGetterMethodsByCache(targetClass).stream().collect(Collectors.toMap(Fields::getFieldNameByMethod, m -> m));
+        this.targetClass = Valid.notNull(targetClass, "target class is null");
+        this.getters = Methods.getGetterMethodsByCache(targetClass).stream()
+                .collect(Collectors.toMap(Fields::getFieldNameByMethod, Function.identity()));
+    }
+
+    @Override
+    protected void addOption(String field, WriteFieldOption option, Object defaultValue) {
+        Valid.notNull(getters.get(field), "not found getter method ({}) in {}", field, targetClass);
+        super.addOption(field, option, defaultValue);
     }
 
     @Override
     protected Object getValue(T row, String key) {
-        Method method = getter.get(key);
-        if (method == null) {
-            return null;
-        }
-        return Methods.invokeMethod(row, method);
+        return Methods.invokeMethod(row, getters.get(key));
     }
 
 }

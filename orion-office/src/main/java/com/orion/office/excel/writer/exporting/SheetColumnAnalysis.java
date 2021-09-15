@@ -21,7 +21,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 /**
- * Export 列 解析器
+ * export 列 解析器
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -274,9 +274,9 @@ public class SheetColumnAnalysis implements Analysable {
             throw Exceptions.parse("failed to parse the hyperlink address formula, reason: unknown formula " + option.getImage());
         }
         Class<?> pictureReturnType = pictureGetterMethod.getReturnType();
-        if (!Classes.isImplClass(InputStream.class, pictureReturnType) &&
-                !pictureReturnType.equals(byte[].class) &&
-                !(option.isBase64() && pictureReturnType.equals(String.class))) {
+        if (!Classes.isImplClass(InputStream.class, pictureReturnType)
+                && !pictureReturnType.equals(byte[].class)
+                && !(option.isBase64() && pictureReturnType.equals(String.class))) {
             throw Exceptions.parse("the image field type must not be InputStream, byte[], or Base64 String");
         }
 
