@@ -10,6 +10,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+
 /**
  * @author Jiahang Li
  * @version 1.0.0
@@ -22,7 +24,7 @@ public class ImportShopTest {
     private Sheet sheet = workbook.getSheetAt(0);
 
     @Test
-    public void testImport1() {
+    public void testBean1() {
         new ExcelBeanReader<>(workbook, sheet, ImportShop.class, Console::trace)
                 .trim()
                 .init()
@@ -34,7 +36,21 @@ public class ImportShopTest {
     }
 
     @Test
-    public void testImport2() {
+    public void testBean2() {
+        new ExcelBeanReader<>(workbook, sheet, ImportShop.class, Console::trace)
+                .option(4, "comment", ExcelReadType.TEXT)
+                .option(5, "businessFile", ExcelReadType.TEXT)
+                .nullInvoke()
+                .init()
+                .skip(2)
+                .read(2)
+                .skip(1)
+                .read()
+                .close();
+    }
+
+    @Test
+    public void testBeanIterator1() {
         ExcelBeanReader<ImportShop> reader = new ExcelBeanReader<>(workbook, sheet, ImportShop.class);
         ExcelReaderIterator<ImportShop> iterator = reader.init()
                 .skip(2).iterator();
@@ -45,26 +61,13 @@ public class ImportShopTest {
     }
 
     @Test
-    public void testImport3() {
-        new ExcelBeanReader<>(workbook, sheet, ImportShop.class, Console::trace)
-                .init()
-                .option("comment", 4, ExcelReadType.TEXT)
-                .option("businessFile", 5, ExcelReadType.TEXT)
-                .nullInvoke()
-                .skip(2)
-                .read(2)
-                .skip(1)
-                .read()
-                .close();
-    }
-
-    @Test
-    public void testImport4() {
+    public void testBeanIterator2() {
         ExcelBeanReader<ImportShop> reader = new ExcelBeanReader<>(workbook, sheet, ImportShop.class);
-        ExcelReaderIterator<ImportShop> iterator = reader.init()
-                .option("comment", 4, ExcelReadType.TEXT)
-                .option("businessFile", 5, ExcelReadType.TEXT)
+        ExcelReaderIterator<ImportShop> iterator = reader
+                .option(4, "comment", ExcelReadType.TEXT)
+                .option(5, "businessFile", ExcelReadType.TEXT)
                 .nullInvoke()
+                .init()
                 .skip(2)
                 .iterator();
         for (ImportShop s : iterator) {
@@ -100,14 +103,14 @@ public class ImportShopTest {
     public void testMap1() {
         new ExcelMapReader<String, Object>(workbook, sheet, Console::trace)
                 .linked()
-                .option("shopId", 0, ExcelReadType.TEXT)
-                .option("shopName", 1, ExcelReadType.TEXT)
+                .option(0, "shopId", ExcelReadType.TEXT)
+                .option(1, "shopName", ExcelReadType.TEXT)
                 .option("createDate", new ImportFieldOption(2, ExcelReadType.DATE, "yyyy年MM月dd日"))
-                .option("picture", 4, ExcelReadType.PICTURE)
-                .option("pictureValue", 4, ExcelReadType.TEXT)
-                .option("linkAddress", 5, ExcelReadType.LINK_ADDRESS)
-                .option("linkValue", 5, ExcelReadType.TEXT)
-                .option("comment", 5, ExcelReadType.COMMENT)
+                .option(4, "picture", ExcelReadType.PICTURE)
+                .option(4, "pictureValue", ExcelReadType.TEXT)
+                .option(5, "linkAddress", ExcelReadType.LINK_ADDRESS)
+                .option(5, "linkValue", ExcelReadType.TEXT)
+                .option(5, "comment", ExcelReadType.COMMENT)
                 .option("margin", new ImportFieldOption(6, ExcelReadType.DECIMAL, "#.####万元"))
                 .defaultValue("createDate", "默认日期")
                 .defaultValue("linkAddress", "默认地址")
@@ -126,14 +129,14 @@ public class ImportShopTest {
     public void testMap2() {
         ExcelMapReader<String, Object> reader = new ExcelMapReader<>(workbook, sheet, Console::trace);
         ExcelReaderIterator<MutableMap<String, Object>> iterator = reader.linked()
-                .option("shopId", 0, ExcelReadType.TEXT)
-                .option("shopName", 1, ExcelReadType.TEXT)
+                .option(0, "shopId", ExcelReadType.TEXT)
+                .option(1, "shopName", ExcelReadType.TEXT)
                 .option("createDate", new ImportFieldOption(2, ExcelReadType.DATE, "yyyy年MM月dd日"))
-                .option("picture", 4, ExcelReadType.PICTURE)
-                .option("pictureValue", 4, ExcelReadType.TEXT)
-                .option("linkAddress", 5, ExcelReadType.LINK_ADDRESS)
-                .option("linkValue", 5, ExcelReadType.TEXT)
-                .option("comment", 5, ExcelReadType.COMMENT)
+                .option(4, "picture", ExcelReadType.PICTURE)
+                .option(4, "pictureValue", ExcelReadType.TEXT)
+                .option(5, "linkAddress", ExcelReadType.LINK_ADDRESS)
+                .option(5, "linkValue", ExcelReadType.TEXT)
+                .option(5, "comment", ExcelReadType.COMMENT)
                 .option("margin", new ImportFieldOption(6, ExcelReadType.DECIMAL, "#.####万元"))
                 .defaultValue("createDate", "默认日期")
                 .defaultValue("linkAddress", "默认地址")
@@ -146,6 +149,42 @@ public class ImportShopTest {
             System.out.println(Objects1.toString(s));
         }
         reader.close();
+    }
+
+    @Test
+    public void testLambda1() {
+        new ExcelLambdaReader<>(workbook, sheet, Console::trace, ImportShop::new)
+                .<String, Long>option(0, ExcelReadType.TEXT, Long::valueOf, ImportShop::setShopId)
+                .option(1, ExcelReadType.TEXT, ImportShop::setShopName)
+                .option(new ImportFieldOption(2, ExcelReadType.DATE, "yyyy年MM月dd日"), ImportShop::setCreateDate)
+                .option(4, ExcelReadType.PICTURE, ImportShop::setBusinessPicture)
+                .option(5, ExcelReadType.LINK_ADDRESS, ImportShop::setComment)
+                .option(new ImportFieldOption(6, ExcelReadType.DECIMAL, "#.####万元"), BigDecimal::doubleValue, ImportShop::setMargin)
+                .init()
+                .skip(3)
+                .read(2)
+                .skip(1)
+                .trim()
+                .read()
+                .close();
+    }
+
+    @Test
+    public void testLambda2() {
+        ExcelLambdaReader<ImportShop> reader = new ExcelLambdaReader<>(workbook, sheet, Console::trace, ImportShop::new);
+        reader.nullAddEmptyBean()
+                .option(0, ExcelReadType.LONG, ImportShop::setShopId)
+                .option(1, ExcelReadType.TEXT, ImportShop::setShopName)
+                .option(new ImportFieldOption(2, ExcelReadType.DATE, "yyyy年MM月dd日"), ImportShop::setCreateDate)
+                // .option(4, ExcelReadType.PICTURE, ImportShop::setBusinessPicture)
+                .option(5, ExcelReadType.LINK_ADDRESS, ImportShop::setComment)
+                .option(new ImportFieldOption(6, ExcelReadType.DECIMAL, "#.####万元"), BigDecimal::doubleValue, ImportShop::setMargin)
+                .init()
+                .skip(3)
+                .trim();
+        for (ImportShop shop : reader) {
+            System.out.println(shop);
+        }
     }
 
 }

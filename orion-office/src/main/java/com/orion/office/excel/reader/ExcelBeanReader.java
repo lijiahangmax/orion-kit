@@ -1,19 +1,26 @@
 package com.orion.office.excel.reader;
 
 import com.orion.office.excel.Excels;
+import com.orion.office.excel.annotation.ImportField;
+import com.orion.office.excel.annotation.ImportIgnore;
+import com.orion.office.excel.option.CellOption;
 import com.orion.office.excel.option.ImportFieldOption;
-import com.orion.office.excel.picture.PictureParser;
 import com.orion.office.excel.type.ExcelReadType;
 import com.orion.utils.Exceptions;
+import com.orion.utils.Objects1;
+import com.orion.utils.Strings;
 import com.orion.utils.Valid;
 import com.orion.utils.codec.Base64s;
+import com.orion.utils.reflect.Annotations;
 import com.orion.utils.reflect.Constructors;
+import com.orion.utils.reflect.Fields;
 import com.orion.utils.reflect.Methods;
 import org.apache.poi.ss.usermodel.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,21 +29,23 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 /**
- * Excel Bean 读取器
+ * excel bean 读取器
  * <p>
  * 支持高级数据类型
  * <p>
- * {@link Excels#getCellValue(Cell, ExcelReadType, com.orion.office.excel.option.CellOption)}
+ * {@link Excels#getCellValue(Cell, ExcelReadType, CellOption)}
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/1/6 17:10
  */
-public class ExcelBeanReader<T> extends BaseExcelReader<T> {
+public class ExcelBeanReader<T> extends BaseExcelReader<String, T> {
 
     private Class<T> targetClass;
 
     private Constructor<T> constructor;
+
+    private Map<String, Method> setters;
 
     /**
      * 如果列为null是否调用setter(null)
@@ -47,23 +56,6 @@ public class ExcelBeanReader<T> extends BaseExcelReader<T> {
      * 如果行为null是否添加一个新的实例对象
      */
     private boolean nullAddEmptyBean;
-
-    /**
-     * 配置信息
-     * key: setter
-     * value: 配置
-     */
-    protected Map<Method, ImportFieldOption> options;
-
-    /**
-     * 图片解析器
-     */
-    private PictureParser pictureParser;
-
-    /**
-     * 解析器
-     */
-    private ReaderColumnAnalysis analysis;
 
     public ExcelBeanReader(Workbook workbook, Sheet sheet, Class<T> targetClass) {
         this(workbook, sheet, targetClass, new ArrayList<>(), null);
@@ -81,9 +73,9 @@ public class ExcelBeanReader<T> extends BaseExcelReader<T> {
         super(workbook, sheet, rows, consumer);
         this.targetClass = Valid.notNull(targetClass, "target class is null");
         this.constructor = Valid.notNull(Constructors.getDefaultConstructor(targetClass), "target class not found default constructor");
+        this.setters = new HashMap<>();
         this.options = new HashMap<>();
-        this.analysis = new ReaderColumnAnalysis(targetClass, streaming, options);
-        this.analysis.analysis();
+        this.analysisField();
         this.init = false;
     }
 
@@ -122,12 +114,12 @@ public class ExcelBeanReader<T> extends BaseExcelReader<T> {
     /**
      * 添加配置
      *
-     * @param field  field
      * @param column 列
+     * @param field  field
      * @param type   类型
      * @return this
      */
-    public ExcelBeanReader<T> option(String field, int column, ExcelReadType type) {
+    public ExcelBeanReader<T> option(int column, String field, ExcelReadType type) {
         this.addOption(field, new ImportFieldOption(column, type));
         return this;
     }
@@ -138,27 +130,11 @@ public class ExcelBeanReader<T> extends BaseExcelReader<T> {
      * @param field  field
      * @param option 配置
      */
+    @Override
     protected void addOption(String field, ImportFieldOption option) {
         Valid.notNull(option, "field option is null");
-        Method setter = Methods.getSetterMethodByCache(targetClass, field);
-        analysis.analysisColumn(option, field, setter);
-    }
-
-    @Override
-    public ExcelBeanReader<T> init() {
-        if (init) {
-            // 已初始化
-            return this;
-        }
-        this.init = true;
-        boolean havePicture = options.values().stream()
-                .map(ImportFieldOption::getType)
-                .anyMatch(ExcelReadType.PICTURE::equals);
-        if (havePicture) {
-            this.pictureParser = new PictureParser(workbook, sheet);
-            pictureParser.analysis();
-        }
-        return this;
+        Valid.notNull(setters.get(field), "not found setter method ({}) in {}", field, targetClass);
+        super.addOption(field, option);
     }
 
     @Override
@@ -170,7 +146,8 @@ public class ExcelBeanReader<T> extends BaseExcelReader<T> {
             return null;
         }
         T t = Constructors.newInstance(constructor);
-        options.forEach((setter, option) -> {
+        options.forEach((field, option) -> {
+            Method setter = setters.get(field);
             int index = option.getIndex();
             Cell cell = row.getCell(index);
             Object value;
@@ -232,12 +209,92 @@ public class ExcelBeanReader<T> extends BaseExcelReader<T> {
         return null;
     }
 
-    public Class<T> getTargetClass() {
-        return targetClass;
+    /**
+     * 解析field
+     */
+    private void analysisField() {
+        // setter cache
+        List<Method> setterMethodList = Methods.getSetterMethodsByCache(targetClass);
+        // 扫描field
+        List<Field> fieldList = Fields.getFieldsByCache(targetClass);
+        for (Field field : fieldList) {
+            this.analysisColumn(Annotations.getAnnotation(field, ImportField.class),
+                    Annotations.getAnnotation(field, ImportIgnore.class),
+                    Methods.getSetterMethodByField(targetClass, field), field.getName());
+        }
+        // 扫描setter
+        for (Method method : setterMethodList) {
+            String fieldName = Fields.getFieldNameByMethod(method);
+            setters.put(fieldName, method);
+            // 解析
+            this.analysisColumn(Annotations.getAnnotation(method, ImportField.class),
+                    Annotations.getAnnotation(method, ImportIgnore.class),
+                    method, fieldName);
+        }
     }
 
-    public Map<Method, ImportFieldOption> getOptions() {
-        return options;
+    /**
+     * 解析 field ignore
+     *
+     * @param field     field
+     * @param ignore    ignore
+     * @param method    method
+     * @param fieldName fieldName
+     */
+    private void analysisColumn(ImportField field, ImportIgnore ignore,
+                                Method method, String fieldName) {
+        if (field == null || ignore != null) {
+            return;
+        }
+        ImportFieldOption option = new ImportFieldOption();
+        option.setIndex(field.index());
+        option.setType(field.type());
+        String parseFormat = field.parseFormat();
+        if (!Strings.isEmpty(parseFormat)) {
+            option.setCellOption(new CellOption(parseFormat));
+        }
+        // 解析
+        this.analysisColumn(option, fieldName, method);
+    }
+
+    /**
+     * 解析option
+     *
+     * @param option    option
+     * @param fieldName fieldName
+     * @param method    method
+     */
+    private void analysisColumn(ImportFieldOption option, String fieldName, Method method) {
+        Valid.notNull(option, "option is null");
+        Valid.notNull(method, fieldName + " setter method not found from " + targetClass);
+        Valid.gte(option.getIndex(), 0, "index must >= 0");
+        // check
+        ExcelReadType type = Objects1.def(option.getType(), ExcelReadType.TEXT);
+        option.setType(type);
+        // 判断是否支持流式操作
+        this.checkStreamingSupportType(type);
+        Class<?> parameterType = method.getParameterTypes()[0];
+        switch (type) {
+            case LINK_ADDRESS:
+                // 超链接
+                if (!parameterType.equals(String.class)) {
+                    throw Exceptions.parse("read hyperlink address parameter type must be String");
+                }
+                break;
+            case PICTURE:
+                // 图片
+                if (!parameterType.equals(byte[].class)
+                        && !parameterType.equals(String.class)
+                        && !parameterType.equals(OutputStream.class)
+                        && !parameterType.equals(ByteArrayOutputStream.class)) {
+                    throw Exceptions.parse("read picture parameter type must be byte[], String, OutputStream or ByteArrayOutputStream");
+                }
+                break;
+            case TEXT:
+            default:
+                break;
+        }
+        options.put(fieldName, option);
     }
 
 }
