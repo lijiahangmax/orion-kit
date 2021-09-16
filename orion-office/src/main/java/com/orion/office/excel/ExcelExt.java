@@ -5,19 +5,23 @@ import com.orion.able.SafeCloseable;
 import com.orion.lang.collect.MutableMap;
 import com.orion.office.excel.reader.ExcelArrayReader;
 import com.orion.office.excel.reader.ExcelBeanReader;
+import com.orion.office.excel.reader.ExcelLambdaReader;
 import com.orion.office.excel.reader.ExcelMapReader;
 import com.orion.utils.Valid;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
- * Excel 提取器
+ * excel 提取器
  * <p>
  * 使用流式读取文件必须是 xlsx 文件
  *
@@ -97,127 +101,176 @@ public class ExcelExt implements SafeCloseable {
 
     // -------------------- array reader --------------------
 
-    public ExcelArrayReader arrayReader() {
-        return new ExcelArrayReader(workbook, workbook.getSheetAt(0));
-    }
-
     public ExcelArrayReader arrayReader(int sheetIndex) {
-        return new ExcelArrayReader(workbook, workbook.getSheetAt(sheetIndex));
+        return this.arrayReader(workbook.getSheetAt(sheetIndex), new ArrayList<>(), null);
     }
 
-    public ExcelArrayReader arrayReader(List<String[]> rows) {
-        return new ExcelArrayReader(workbook, workbook.getSheetAt(0), rows);
+    public ExcelArrayReader arrayReader(String sheetName) {
+        return this.arrayReader(workbook.getSheet(sheetName), new ArrayList<>(), null);
     }
 
     public ExcelArrayReader arrayReader(int sheetIndex, List<String[]> rows) {
-        return new ExcelArrayReader(workbook, workbook.getSheetAt(sheetIndex), rows);
+        return this.arrayReader(workbook.getSheetAt(sheetIndex), rows, null);
+    }
+
+    public ExcelArrayReader arrayReader(String sheetName, List<String[]> rows) {
+        return this.arrayReader(workbook.getSheet(sheetName), rows, null);
+    }
+
+    public ExcelArrayReader arrayReader(int sheetIndex, Consumer<String[]> consumer) {
+        return this.arrayReader(workbook.getSheetAt(sheetIndex), null, consumer);
+    }
+
+    public ExcelArrayReader arrayReader(String sheetName, Consumer<String[]> consumer) {
+        return this.arrayReader(workbook.getSheet(sheetName), null, consumer);
     }
 
     /**
-     * 获取第一个表格的array读取器
+     * 获取表格的 array 读取器
      *
+     * @param sheet    sheet
+     * @param rows     rows
      * @param consumer consumer
      * @return ExcelArrayReader
      */
-    public ExcelArrayReader arrayReader(Consumer<String[]> consumer) {
-        return new ExcelArrayReader(workbook, workbook.getSheetAt(0), consumer);
-    }
-
-    /**
-     * 获取表格的array读取器
-     *
-     * @param sheetIndex 表格索引
-     * @param consumer   consumer
-     * @return ExcelArrayReader
-     */
-    public ExcelArrayReader arrayReader(int sheetIndex, Consumer<String[]> consumer) {
-        return new ExcelArrayReader(workbook, workbook.getSheetAt(sheetIndex), consumer);
+    private ExcelArrayReader arrayReader(Sheet sheet, List<String[]> rows, Consumer<String[]> consumer) {
+        if (rows != null) {
+            return new ExcelArrayReader(workbook, sheet, rows);
+        } else {
+            return new ExcelArrayReader(workbook, sheet, consumer);
+        }
     }
 
     // -------------------- map reader --------------------
 
-    public <K, V> ExcelMapReader<K, V> mapReader() {
-        return new ExcelMapReader<>(workbook, workbook.getSheetAt(0));
-    }
-
     public <K, V> ExcelMapReader<K, V> mapReader(int sheetIndex) {
-        return new ExcelMapReader<>(workbook, workbook.getSheetAt(sheetIndex));
+        return this.mapReader(workbook.getSheetAt(sheetIndex), new ArrayList<>(), null);
     }
 
-    public <K, V> ExcelMapReader<K, V> mapReader(List<MutableMap<K, V>> rows) {
-        return new ExcelMapReader<>(workbook, workbook.getSheetAt(0), rows);
+    public <K, V> ExcelMapReader<K, V> mapReader(String sheetName) {
+        return this.mapReader(workbook.getSheet(sheetName), new ArrayList<>(), null);
     }
 
     public <K, V> ExcelMapReader<K, V> mapReader(int sheetIndex, List<MutableMap<K, V>> rows) {
-        return new ExcelMapReader<>(workbook, workbook.getSheetAt(sheetIndex), rows);
+        return this.mapReader(workbook.getSheetAt(sheetIndex), rows, null);
+    }
+
+    public <K, V> ExcelMapReader<K, V> mapReader(String sheetName, List<MutableMap<K, V>> rows) {
+        return this.mapReader(workbook.getSheet(sheetName), rows, null);
+    }
+
+    public <K, V> ExcelMapReader<K, V> mapReader(int sheetIndex, Consumer<MutableMap<K, V>> consumer) {
+        return this.mapReader(workbook.getSheetAt(sheetIndex), null, consumer);
+    }
+
+    public <K, V> ExcelMapReader<K, V> mapReader(String sheetName, Consumer<MutableMap<K, V>> consumer) {
+        return this.mapReader(workbook.getSheet(sheetName), null, consumer);
     }
 
     /**
-     * 获取第一个表格的map读取器
+     * 获取表格的 map 读取器
      *
+     * @param sheet    sheet
+     * @param rows     rows
      * @param consumer consumer
      * @param <K>      K
      * @param <V>      V
      * @return ExcelMapReader
      */
-    public <K, V> ExcelMapReader<K, V> mapReader(Consumer<MutableMap<K, V>> consumer) {
-        return new ExcelMapReader<>(workbook, workbook.getSheetAt(0), consumer);
+    private <K, V> ExcelMapReader<K, V> mapReader(Sheet sheet, List<MutableMap<K, V>> rows, Consumer<MutableMap<K, V>> consumer) {
+        if (rows != null) {
+            return new ExcelMapReader<>(workbook, sheet, rows);
+        } else {
+            return new ExcelMapReader<>(workbook, sheet, consumer);
+        }
+    }
+
+    // -------------------- bean reader --------------------
+
+    public <T> ExcelBeanReader<T> beanReader(int sheetIndex, Class<T> targetClass) {
+        return this.beanReader(workbook.getSheetAt(sheetIndex), targetClass, new ArrayList<>(), null);
+    }
+
+    public <T> ExcelBeanReader<T> beanReader(String sheetName, Class<T> targetClass) {
+        return this.beanReader(workbook.getSheet(sheetName), targetClass, new ArrayList<>(), null);
+    }
+
+    public <T> ExcelBeanReader<T> beanReader(int sheetIndex, Class<T> targetClass, List<T> rows) {
+        return this.beanReader(workbook.getSheetAt(sheetIndex), targetClass, rows, null);
+    }
+
+    public <T> ExcelBeanReader<T> beanReader(String sheetName, Class<T> targetClass, List<T> rows) {
+        return this.beanReader(workbook.getSheet(sheetName), targetClass, rows, null);
+    }
+
+    public <T> ExcelBeanReader<T> beanReader(int sheetIndex, Class<T> targetClass, Consumer<T> consumer) {
+        return this.beanReader(workbook.getSheetAt(sheetIndex), targetClass, null, consumer);
+    }
+
+    public <T> ExcelBeanReader<T> beanReader(String sheetName, Class<T> targetClass, Consumer<T> consumer) {
+        return this.beanReader(workbook.getSheet(sheetName), targetClass, null, consumer);
     }
 
     /**
-     * 获取表格的map读取器
+     * 获取表格的 bean 读取器
      *
-     * @param sheetIndex 表格索引
-     * @param consumer   consumer
-     * @param <K>        K
-     * @param <V>        V
-     * @return ExcelMapReader
-     */
-    public <K, V> ExcelMapReader<K, V> mapReader(int sheetIndex, Consumer<MutableMap<K, V>> consumer) {
-        return new ExcelMapReader<>(workbook, workbook.getSheetAt(sheetIndex), consumer);
-    }
-
-    // -------------------- import --------------------
-
-    public <T> ExcelBeanReader<T> sheetImport(Class<T> targetClass) {
-        return new ExcelBeanReader<>(workbook, workbook.getSheetAt(0), targetClass);
-    }
-
-    public <T> ExcelBeanReader<T> sheetImport(int sheetIndex, Class<T> targetClass) {
-        return new ExcelBeanReader<>(workbook, workbook.getSheetAt(sheetIndex), targetClass);
-    }
-
-    public <T> ExcelBeanReader<T> sheetImport(Class<T> targetClass, List<T> rows) {
-        return new ExcelBeanReader<>(workbook, workbook.getSheetAt(0), targetClass, rows);
-    }
-
-    public <T> ExcelBeanReader<T> sheetImport(int sheetIndex, Class<T> targetClass, List<T> rows) {
-        return new ExcelBeanReader<>(workbook, workbook.getSheetAt(sheetIndex), targetClass, rows);
-    }
-
-    /**
-     * 获取第一个表格的读取器
-     *
+     * @param sheet       sheet
      * @param targetClass bean class
+     * @param rows        rows
      * @param consumer    consumer
      * @param <T>         T
-     * @return ExcelImport
+     * @return ExcelBeanReader
      */
-    public <T> ExcelBeanReader<T> sheetImport(Class<T> targetClass, Consumer<T> consumer) {
-        return new ExcelBeanReader<>(workbook, workbook.getSheetAt(0), targetClass, consumer);
+    private <T> ExcelBeanReader<T> beanReader(Sheet sheet, Class<T> targetClass, List<T> rows, Consumer<T> consumer) {
+        if (rows != null) {
+            return new ExcelBeanReader<>(workbook, sheet, targetClass, rows);
+        } else {
+            return new ExcelBeanReader<>(workbook, sheet, targetClass, consumer);
+        }
+    }
+
+    // -------------------- lambda reader --------------------
+
+    public <T> ExcelLambdaReader<T> lambdaReader(int sheetIndex, Supplier<T> supplier) {
+        return this.lambdaReader(workbook.getSheetAt(sheetIndex), new ArrayList<>(), null, supplier);
+    }
+
+    public <T> ExcelLambdaReader<T> lambdaReader(String sheetName, Supplier<T> supplier) {
+        return this.lambdaReader(workbook.getSheet(sheetName), new ArrayList<>(), null, supplier);
+    }
+
+    public <T> ExcelLambdaReader<T> lambdaReader(int sheetIndex, List<T> rows, Supplier<T> supplier) {
+        return this.lambdaReader(workbook.getSheetAt(sheetIndex), rows, null, supplier);
+    }
+
+    public <T> ExcelLambdaReader<T> lambdaReader(String sheetName, List<T> rows, Supplier<T> supplier) {
+        return this.lambdaReader(workbook.getSheet(sheetName), rows, null, supplier);
+    }
+
+    public <T> ExcelLambdaReader<T> lambdaReader(int sheetIndex, Consumer<T> consumer, Supplier<T> supplier) {
+        return this.lambdaReader(workbook.getSheetAt(sheetIndex), null, consumer, supplier);
+    }
+
+    public <T> ExcelLambdaReader<T> lambdaReader(String sheetName, Consumer<T> consumer, Supplier<T> supplier) {
+        return this.lambdaReader(workbook.getSheet(sheetName), null, consumer, supplier);
     }
 
     /**
-     * 获取表格的读取器
+     * 获取表格的 lambda 读取器
      *
-     * @param sheetIndex  表格索引
-     * @param targetClass bean class
-     * @param consumer    consumer
-     * @param <T>         T
-     * @return ExcelImport
+     * @param sheet    sheet
+     * @param rows     rows
+     * @param consumer consumer
+     * @param supplier supplier
+     * @param <T>      T
+     * @return ExcelLambdaReader
      */
-    public <T> ExcelBeanReader<T> sheetImport(int sheetIndex, Class<T> targetClass, Consumer<T> consumer) {
-        return new ExcelBeanReader<>(workbook, workbook.getSheetAt(sheetIndex), targetClass, consumer);
+    private <T> ExcelLambdaReader<T> lambdaReader(Sheet sheet, List<T> rows, Consumer<T> consumer, Supplier<T> supplier) {
+        if (rows != null) {
+            return new ExcelLambdaReader<>(workbook, sheet, rows, supplier);
+        } else {
+            return new ExcelLambdaReader<>(workbook, sheet, consumer, supplier);
+        }
     }
 
     public Workbook getWorkbook() {

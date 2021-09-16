@@ -47,7 +47,7 @@ public class ExcelExtTests {
     @Test
     public void openExtReader() {
         ExcelExt x = new ExcelExt("C:\\Users\\ljh15\\Desktop\\data\\user.xlsx", true);
-        x.arrayReader(Console::trace).read().close();
+        x.arrayReader(0, Console::trace).read().close();
     }
 
     @Test

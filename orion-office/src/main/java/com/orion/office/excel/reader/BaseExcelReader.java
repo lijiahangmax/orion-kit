@@ -2,25 +2,31 @@ package com.orion.office.excel.reader;
 
 import com.monitorjbl.xlsx.impl.StreamingSheet;
 import com.orion.able.SafeCloseable;
+import com.orion.office.excel.option.ImportFieldOption;
+import com.orion.office.excel.picture.PictureParser;
+import com.orion.office.excel.type.ExcelReadType;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
 import com.orion.utils.io.Streams;
+import org.apache.poi.ss.usermodel.PictureData;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
- * Excel 读取器 基类
+ * excel 读取器 基类
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/1/4 17:09
  */
-public abstract class BaseExcelReader<T> implements SafeCloseable {
+public abstract class BaseExcelReader<K, T> implements SafeCloseable, Iterable<T> {
 
     protected Workbook workbook;
 
@@ -89,6 +95,18 @@ public abstract class BaseExcelReader<T> implements SafeCloseable {
     protected boolean store;
 
     /**
+     * 配置信息
+     * key: key
+     * value: 配置
+     */
+    protected Map<K, ImportFieldOption> options;
+
+    /**
+     * 图片解析器
+     */
+    protected PictureParser pictureParser;
+
+    /**
      * 是否已经初始化
      */
     protected boolean init;
@@ -112,10 +130,11 @@ public abstract class BaseExcelReader<T> implements SafeCloseable {
     }
 
     /**
-     * Excel 迭代器 不会存储也不会消费
+     * excel 迭代器 不会存储也不会消费
      *
      * @return 迭代器
      */
+    @Override
     public ExcelReaderIterator<T> iterator() {
         return new ExcelReaderIterator<>(this);
     }
@@ -125,8 +144,17 @@ public abstract class BaseExcelReader<T> implements SafeCloseable {
      *
      * @return this
      */
-    public BaseExcelReader<T> init() {
+    public BaseExcelReader<K, T> init() {
+        if (init) {
+            // 已初始化
+            return this;
+        }
         this.init = true;
+        boolean havePicture = this.checkHasPicture();
+        if (havePicture) {
+            this.pictureParser = new PictureParser(workbook, sheet);
+            pictureParser.analysis();
+        }
         return this;
     }
 
@@ -135,7 +163,7 @@ public abstract class BaseExcelReader<T> implements SafeCloseable {
      *
      * @return this
      */
-    public BaseExcelReader<T> skip() {
+    public BaseExcelReader<K, T> skip() {
         rowIndex++;
         return this;
     }
@@ -146,7 +174,7 @@ public abstract class BaseExcelReader<T> implements SafeCloseable {
      * @param i 行
      * @return this
      */
-    public BaseExcelReader<T> skip(int i) {
+    public BaseExcelReader<K, T> skip(int i) {
         rowIndex += i;
         return this;
     }
@@ -157,7 +185,7 @@ public abstract class BaseExcelReader<T> implements SafeCloseable {
      * @param skip 是否跳过空行
      * @return this
      */
-    public BaseExcelReader<T> skipNullRows(boolean skip) {
+    public BaseExcelReader<K, T> skipNullRows(boolean skip) {
         this.skipNullRows = skip;
         return this;
     }
@@ -167,7 +195,7 @@ public abstract class BaseExcelReader<T> implements SafeCloseable {
      *
      * @return this
      */
-    public BaseExcelReader<T> trim() {
+    public BaseExcelReader<K, T> trim() {
         this.trim = true;
         return this;
     }
@@ -177,7 +205,7 @@ public abstract class BaseExcelReader<T> implements SafeCloseable {
      *
      * @return this
      */
-    public BaseExcelReader<T> recalculationFormula() {
+    public BaseExcelReader<K, T> recalculationFormula() {
         sheet.setForceFormulaRecalculation(true);
         return this;
     }
@@ -187,7 +215,7 @@ public abstract class BaseExcelReader<T> implements SafeCloseable {
      *
      * @return this
      */
-    public BaseExcelReader<T> read() {
+    public BaseExcelReader<K, T> read() {
         this.checkInit();
         while (!end) {
             this.readRow();
@@ -201,10 +229,22 @@ public abstract class BaseExcelReader<T> implements SafeCloseable {
      * @param i 行
      * @return this
      */
-    public BaseExcelReader<T> read(int i) {
+    public BaseExcelReader<K, T> read(int i) {
         this.checkInit();
         for (int j = 0; j < i && !end; j++) {
             this.readRow();
+        }
+        return this;
+    }
+
+    /**
+     * 清空读取的行
+     *
+     * @return this
+     */
+    public BaseExcelReader<K, T> clear() {
+        if (store && rows != null) {
+            this.rows.clear();
         }
         return this;
     }
@@ -257,24 +297,76 @@ public abstract class BaseExcelReader<T> implements SafeCloseable {
     protected abstract T parserRow(Row row);
 
     /**
-     * 清空读取的行
-     *
-     * @return this
-     */
-    public BaseExcelReader<T> clear() {
-        if (store && rows != null) {
-            this.rows.clear();
-        }
-        return this;
-    }
-
-    /**
      * 检查是否初始化
      */
     protected void checkInit() {
         if (!init) {
-            throw Exceptions.init("excel reader uninitialized");
+            // 包含图片切未初始化则抛出异常
+            if (this.checkHasPicture()) {
+                throw Exceptions.init("excel reader uninitialized");
+            }
+            this.init = true;
         }
+    }
+
+    /**
+     * 检查是否包含图片
+     *
+     * @return true包含
+     */
+    protected boolean checkHasPicture() {
+        if (options == null) {
+            return false;
+        }
+        return options.values().stream()
+                .map(ImportFieldOption::getType)
+                .anyMatch(ExcelReadType.PICTURE::equals);
+    }
+
+    /**
+     * 检查是否为streaming支持的类型
+     *
+     * @param type type
+     */
+    protected void checkStreamingSupportType(ExcelReadType type) {
+        if (streaming && (type.equals(ExcelReadType.LINK_ADDRESS)
+                || type.equals(ExcelReadType.COMMENT)
+                || type.equals(ExcelReadType.PICTURE))) {
+            throw Exceptions.parse("streaming just support read value");
+        }
+    }
+
+    /**
+     * 添加配置
+     *
+     * @param k      k
+     * @param option 配置
+     */
+    protected void addOption(K k, ImportFieldOption option) {
+        Valid.notNull(option, "field option is null");
+        ExcelReadType type = option.getType();
+        if (type == null) {
+            throw Exceptions.init("type must not be null");
+        }
+        // 检查是否为streaming支持的类型
+        this.checkStreamingSupportType(type);
+        options.put(k, option);
+    }
+
+    /**
+     * 获取图片
+     *
+     * @param col 列
+     * @param row 行
+     * @return 图片
+     */
+    protected byte[] getPicture(int col, Row row) {
+        if (pictureParser == null) {
+            return null;
+        }
+        return Optional.ofNullable(pictureParser.getPicture(row.getRowNum(), col))
+                .map(PictureData::getData)
+                .orElse(null);
     }
 
     @Override
