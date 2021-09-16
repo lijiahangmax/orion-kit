@@ -25,11 +25,6 @@ public class ImportFieldOption implements Serializable {
     private ExcelReadType type;
 
     /**
-     * 格式
-     */
-    private String parseFormat;
-
-    /**
      * 单元格配置
      */
     private CellOption cellOption;
@@ -45,7 +40,6 @@ public class ImportFieldOption implements Serializable {
     public ImportFieldOption(int index, ExcelReadType type, String parseFormat) {
         this.index = index;
         this.type = type;
-        this.parseFormat = parseFormat;
         if (!Strings.isEmpty(parseFormat)) {
             this.cellOption = new CellOption(parseFormat);
         }
@@ -65,14 +59,6 @@ public class ImportFieldOption implements Serializable {
 
     public void setType(ExcelReadType type) {
         this.type = type;
-    }
-
-    public String getParseFormat() {
-        return parseFormat;
-    }
-
-    public void setParseFormat(String parseFormat) {
-        this.parseFormat = parseFormat;
     }
 
     public CellOption getCellOption() {

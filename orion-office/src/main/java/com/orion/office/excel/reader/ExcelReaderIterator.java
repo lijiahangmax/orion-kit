@@ -5,7 +5,7 @@ import com.orion.utils.Exceptions;
 import java.util.Iterator;
 
 /**
- * Excel 迭代器
+ * excel 迭代器
  * <p>
  * 不会存储也不会消费
  *
@@ -15,7 +15,7 @@ import java.util.Iterator;
  */
 public class ExcelReaderIterator<T> implements Iterator<T>, Iterable<T> {
 
-    private BaseExcelReader<T> reader;
+    private BaseExcelReader<?, T> reader;
 
     /**
      * 是否为第一次
@@ -32,7 +32,7 @@ public class ExcelReaderIterator<T> implements Iterator<T>, Iterable<T> {
      */
     private T next;
 
-    public ExcelReaderIterator(BaseExcelReader<T> reader) {
+    public ExcelReaderIterator(BaseExcelReader<?, T> reader) {
         this.reader = reader;
         this.first = true;
     }

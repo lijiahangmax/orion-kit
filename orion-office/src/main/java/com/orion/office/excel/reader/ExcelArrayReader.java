@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * Excel Array 读取器
+ * excel array 读取器
  * <p>
  * 不支持高级数据类型
  * <p>
@@ -24,7 +24,7 @@ import java.util.function.Consumer;
  * @version 1.0.0
  * @since 2021/1/5 10:04
  */
-public class ExcelArrayReader extends BaseExcelReader<String[]> {
+public class ExcelArrayReader extends BaseExcelReader<Integer, String[]> {
 
     /**
      * 读取的列

@@ -4,20 +4,18 @@ import com.orion.lang.collect.MutableHashMap;
 import com.orion.lang.collect.MutableLinkedHashMap;
 import com.orion.lang.collect.MutableMap;
 import com.orion.office.excel.Excels;
-import com.orion.office.excel.option.CellOption;
 import com.orion.office.excel.option.ImportFieldOption;
-import com.orion.office.excel.picture.PictureParser;
 import com.orion.office.excel.type.ExcelReadType;
-import com.orion.utils.Exceptions;
-import com.orion.utils.Strings;
-import com.orion.utils.Valid;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 
 import java.util.*;
 import java.util.function.Consumer;
 
 /**
- * Excel Map 读取器
+ * excel map 读取器
  * <p>
  * 支持高级数据类型
  * <p>
@@ -27,14 +25,7 @@ import java.util.function.Consumer;
  * @version 1.0.0
  * @since 2021/1/5 11:52
  */
-public class ExcelMapReader<K, V> extends BaseExcelReader<MutableMap<K, V>> {
-
-    /**
-     * 配置信息
-     * key: mapKey
-     * value: 配置
-     */
-    private Map<K, ImportFieldOption> options;
+public class ExcelMapReader<K, V> extends BaseExcelReader<K, MutableMap<K, V>> {
 
     /**
      * 默认值
@@ -42,11 +33,6 @@ public class ExcelMapReader<K, V> extends BaseExcelReader<MutableMap<K, V>> {
      * value: 默认值
      */
     private Map<K, V> defaultValue;
-
-    /**
-     * 图片解析器
-     */
-    private PictureParser pictureParser;
 
     /**
      * 为null是否插入kay
@@ -73,58 +59,65 @@ public class ExcelMapReader<K, V> extends BaseExcelReader<MutableMap<K, V>> {
     private ExcelMapReader(Workbook workbook, Sheet sheet, List<MutableMap<K, V>> rows, Consumer<MutableMap<K, V>> consumer) {
         super(workbook, sheet, rows, consumer);
         this.init = false;
+        this.nullPutKey = true;
         this.options = new HashMap<>();
         this.defaultValue = new HashMap<>();
-        this.nullPutKey = true;
     }
 
-    /**
-     * 添加配置
-     *
-     * @param key    key
-     * @param option 配置
-     * @return this
-     */
     public ExcelMapReader<K, V> option(K key, ImportFieldOption option) {
-        this.addOption(key, option);
+        this.addOption(key, option, null);
+        return this;
+    }
+
+    public ExcelMapReader<K, V> option(K key, ImportFieldOption option, V defaultValue) {
+        this.addOption(key, option, defaultValue);
+        return this;
+    }
+
+    public ExcelMapReader<K, V> option(int column, K key, ExcelReadType type) {
+        this.addOption(key, new ImportFieldOption(column, type), null);
         return this;
     }
 
     /**
      * 添加配置
      *
-     * @param key    key
-     * @param column 列
-     * @param type   类型
+     * @param column       列
+     * @param key          key
+     * @param type         类型
+     * @param defaultValue 默认值
      * @return this
      */
-    public ExcelMapReader<K, V> option(K key, int column, ExcelReadType type) {
-        this.addOption(key, new ImportFieldOption(column, type));
+    public ExcelMapReader<K, V> option(int column, K key, ExcelReadType type, V defaultValue) {
+        this.addOption(key, new ImportFieldOption(column, type), defaultValue);
         return this;
     }
 
     /**
      * 添加配置
      *
-     * @param key    key
-     * @param option 配置
+     * @param key          key
+     * @param option       配置
+     * @param defaultValue 默认值
      */
-    protected void addOption(K key, ImportFieldOption option) {
-        Valid.notNull(option, "field option is null");
-        ExcelReadType type = option.getType();
-        if (option.getIndex() == 0 && type == null) {
-            throw Exceptions.init("the index and type must not be null");
+    protected void addOption(K key, ImportFieldOption option, V defaultValue) {
+        super.addOption(key, option);
+        // 默认值
+        if (defaultValue != null) {
+            this.defaultValue.put(key, defaultValue);
         }
-        if (!Strings.isEmpty(option.getParseFormat())) {
-            option.setCellOption(new CellOption(option.getParseFormat()));
-        }
-        // 检查类型
-        if (streaming && (type.equals(ExcelReadType.LINK_ADDRESS) ||
-                type.equals(ExcelReadType.COMMENT) ||
-                type.equals(ExcelReadType.PICTURE))) {
-            throw Exceptions.parse("streaming just support read value");
-        }
-        options.put(key, option);
+    }
+
+    /**
+     * 设置默认值
+     *
+     * @param key   key
+     * @param value 默认值
+     * @return this
+     */
+    public ExcelMapReader<K, V> defaultValue(K key, V value) {
+        defaultValue.put(key, value);
+        return this;
     }
 
     /**
@@ -146,35 +139,6 @@ public class ExcelMapReader<K, V> extends BaseExcelReader<MutableMap<K, V>> {
      */
     public ExcelMapReader<K, V> nullPutKey(boolean nullPutKey) {
         this.nullPutKey = nullPutKey;
-        return this;
-    }
-
-    /**
-     * 设置默认值
-     *
-     * @param key          key
-     * @param defaultValue 默认值
-     * @return this
-     */
-    public ExcelMapReader<K, V> defaultValue(K key, V defaultValue) {
-        this.defaultValue.put(key, defaultValue);
-        return this;
-    }
-
-    @Override
-    public ExcelMapReader<K, V> init() {
-        if (init) {
-            // 已初始化
-            return this;
-        }
-        this.init = true;
-        boolean havePicture = options.values().stream()
-                .map(ImportFieldOption::getType)
-                .anyMatch(ExcelReadType.PICTURE::equals);
-        if (havePicture) {
-            this.pictureParser = new PictureParser(workbook, sheet);
-            pictureParser.analysis();
-        }
         return this;
     }
 
@@ -207,12 +171,10 @@ public class ExcelMapReader<K, V> extends BaseExcelReader<MutableMap<K, V>> {
             if (value == null) {
                 // 默认值
                 V defaultValue = this.defaultValue.get(key);
-                if (defaultValue == null) {
-                    if (nullPutKey) {
-                        map.put(key, null);
-                    }
-                } else {
+                if (defaultValue != null || nullPutKey) {
                     map.put(key, defaultValue);
+                } else {
+                    map.put(key, null);
                 }
             } else {
                 if (trim && value instanceof String) {
@@ -222,22 +184,6 @@ public class ExcelMapReader<K, V> extends BaseExcelReader<MutableMap<K, V>> {
             }
         });
         return map;
-    }
-
-    /**
-     * 获取图片
-     *
-     * @param col 列
-     * @param row 行
-     * @return 图片
-     */
-    private byte[] getPicture(int col, Row row) {
-        if (pictureParser == null) {
-            return null;
-        }
-        return Optional.ofNullable(pictureParser.getPicture(row.getRowNum(), col))
-                .map(PictureData::getData)
-                .orElse(null);
     }
 
 }
