@@ -6,13 +6,13 @@ import com.orion.utils.Exceptions;
 import com.orion.utils.io.Streams;
 import com.orion.vcs.git.info.BranchInfo;
 import com.orion.vcs.git.info.LogInfo;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.ListBranchCommand;
-import org.eclipse.jgit.api.ResetCommand;
+import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.transport.CredentialsProvider;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +34,8 @@ import java.util.stream.Collectors;
 public abstract class Gits implements SafeCloseable {
 
     private Git git;
+
+    private CredentialsProvider credentialsProvider;
 
     protected Gits(Git git) {
         this.git = git;
@@ -58,6 +60,23 @@ public abstract class Gits implements SafeCloseable {
         };
     }
 
+    public Gits auth(String username, char[] password) {
+        this.credentialsProvider = new UsernamePasswordCredentialsProvider(username, password);
+        return this;
+    }
+
+    /**
+     * 认证用户
+     *
+     * @param username username
+     * @param password password
+     * @return this
+     */
+    public Gits auth(String username, String password) {
+        this.credentialsProvider = new UsernamePasswordCredentialsProvider(username, password);
+        return this;
+    }
+
     /**
      * 检出分支代码
      *
@@ -75,14 +94,34 @@ public abstract class Gits implements SafeCloseable {
         }
     }
 
+    public Gits pull() {
+        return this.pull(null, null);
+    }
+
+    public Gits pull(String remote) {
+        return this.pull(remote, null);
+    }
+
     /**
      * pull代码
      *
+     * @param remote       远程主机
+     * @param remoteBranch 远程分支
      * @return this
      */
-    public Gits pull() {
+    public Gits pull(String remote, String remoteBranch) {
         try {
-            git.pull().call();
+            PullCommand pull = git.pull();
+            if (credentialsProvider != null) {
+                pull.setCredentialsProvider(credentialsProvider);
+            }
+            if (remote != null) {
+                pull.setRemote(remote);
+            }
+            if (remoteBranch != null) {
+                pull.setRemoteBranchName(remoteBranch);
+            }
+            pull.call();
             return this;
         } catch (Exception e) {
             throw Exceptions.vcs(e);
@@ -90,11 +129,53 @@ public abstract class Gits implements SafeCloseable {
     }
 
     /**
-     * 还原版本 hard
+     * push代码
      *
-     * @param version commitId
+     * @param remote 远程主机
      * @return this
      */
+    public Gits push(String remote) {
+        try {
+            PushCommand push = git.push();
+            if (credentialsProvider != null) {
+                push.setCredentialsProvider(credentialsProvider);
+            }
+            if (remote != null) {
+                push.setRemote(remote);
+            }
+            push.call();
+            return this;
+        } catch (Exception e) {
+            throw Exceptions.vcs(e);
+        }
+    }
+
+    public Gits fetch() {
+        return this.fetch(null);
+    }
+
+    /**
+     * fetch
+     *
+     * @param remote 远程主机
+     * @return this
+     */
+    public Gits fetch(String remote) {
+        try {
+            FetchCommand fetch = git.fetch();
+            if (credentialsProvider != null) {
+                fetch.setCredentialsProvider(credentialsProvider);
+            }
+            if (remote != null) {
+                fetch.setRemote(remote);
+            }
+            fetch.call();
+            return this;
+        } catch (Exception e) {
+            throw Exceptions.vcs(e);
+        }
+    }
+
     public Gits reset(String version) {
         return this.reset(version, ResetCommand.ResetType.HARD);
     }
@@ -118,11 +199,6 @@ public abstract class Gits implements SafeCloseable {
         }
     }
 
-    /**
-     * 分支列表
-     *
-     * @return list
-     */
     public List<BranchInfo> branchList() {
         return this.branchList(null);
     }
@@ -130,12 +206,12 @@ public abstract class Gits implements SafeCloseable {
     /**
      * 分支列表
      *
-     * @param name 分支名称
+     * @param branch 分支名称
      * @return list
      */
-    public List<BranchInfo> branchList(String name) {
+    public List<BranchInfo> branchList(String branch) {
         try {
-            List<Ref> refs = git.branchList().setContains(name)
+            List<Ref> refs = git.branchList().setContains(branch)
                     .setListMode(ListBranchCommand.ListMode.REMOTE)
                     .call();
             return refs.stream()
@@ -151,11 +227,6 @@ public abstract class Gits implements SafeCloseable {
         }
     }
 
-    /**
-     * 日志列表
-     *
-     * @return 当前分支日志列表
-     */
     public List<LogInfo> logList() {
         try {
             return this.logList(git.getRepository().getBranch(), 10);
@@ -164,12 +235,6 @@ public abstract class Gits implements SafeCloseable {
         }
     }
 
-    /**
-     * 日志列表
-     *
-     * @param count 日志数量
-     * @return 当前分支日志列表
-     */
     public List<LogInfo> logList(int count) {
         try {
             return this.logList(git.getRepository().getBranch(), count);
@@ -178,23 +243,10 @@ public abstract class Gits implements SafeCloseable {
         }
     }
 
-    /**
-     * 日志列表
-     *
-     * @param branch 分支名称
-     * @return 分支日志列表
-     */
     public List<LogInfo> logList(String branch) {
         return this.logList(branch, 10);
     }
 
-    /**
-     * 日志列表
-     *
-     * @param branch 分支名称
-     * @param count  日志数量
-     * @return 分支日志列表
-     */
     public List<LogInfo> logList(String branch, int count) {
         try {
             Repository repo = git.getRepository();

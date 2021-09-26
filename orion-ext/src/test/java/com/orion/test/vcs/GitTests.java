@@ -24,27 +24,27 @@ public class GitTests {
     }
 
     @Test
-    public void testCheckout() throws Exception {
+    public void testCheckout() {
         gits.checkout("master").pull().close();
     }
 
     @Test
-    public void reset() throws Exception {
+    public void reset() {
         gits.checkout("develop").reset("482a5dbcec5607abd5f8cd2ab1adac323616f2bd").close();
     }
 
     @Test
-    public void log() throws Exception {
-        gits.logList("develop").forEach(System.out::println);
+    public void log() {
+        gits.logList("dev1").forEach(System.out::println);
     }
 
     @Test
-    public void branchList() throws Exception {
-        gits.branchList().forEach(System.out::println);
+    public void branchList() {
+        gits.fetch().branchList().forEach(System.out::println);
     }
 
     @Test
-    public void clean() throws Exception {
+    public void clean() {
         gits.clean().close();
     }
 
