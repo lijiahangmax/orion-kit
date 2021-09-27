@@ -299,6 +299,30 @@ public class FileReaders {
         }
     }
 
+    public static String readLine(String file, int skipLine) {
+        return readLine(new File(file), skipLine, UTF_8);
+    }
+
+    public static String readLine(File file, int skipLine) {
+        return readLine(file, skipLine, UTF_8);
+    }
+
+    /**
+     * 读取一行
+     *
+     * @param file     文件
+     * @param skipLine 偏移行
+     * @param charset  编码格式
+     * @return 行
+     */
+    public static String readLine(String file, int skipLine, String charset) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(openInputStream(file), Strings.def(charset, UTF_8)))) {
+            return StreamReaders.readLine(reader, skipLine);
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime(e);
+        }
+    }
+
     // -------------------- read lines --------------------
 
     public static List<String> readLines(File file) {
@@ -414,7 +438,7 @@ public class FileReaders {
      */
     public static void lineConsumer(File file, String charset, Consumer<String> c) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(openInputStream(file), Strings.def(charset, UTF_8)))) {
-            StreamReaders.lineConsumer(reader, c);
+            Streams.lineConsumer(reader, c);
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         }
@@ -443,7 +467,7 @@ public class FileReaders {
      */
     public static LineIterator lineIterator(File file, String charset) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(openInputStream(file), Strings.def(charset, UTF_8)))) {
-            return StreamReaders.lineIterator(reader).autoClose(true);
+            return Streams.lineIterator(reader).autoClose(true);
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         }
@@ -464,7 +488,7 @@ public class FileReaders {
      */
     public static void byteArrayConsumer(File file, byte[] bytes, IntConsumer c) {
         try (InputStream in = Files1.openInputStream(file)) {
-            StreamReaders.byteArrayConsumer(in, bytes, c);
+            Streams.byteArrayConsumer(in, bytes, c);
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         }
@@ -485,7 +509,7 @@ public class FileReaders {
      */
     public static ByteArrayIterator byteArrayIterator(File file, byte[] buffer) {
         try {
-            return StreamReaders.byteArrayIterator(Files1.openInputStream(file), buffer).autoClose(true);
+            return Streams.byteArrayIterator(Files1.openInputStream(file), buffer).autoClose(true);
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         }
@@ -620,7 +644,7 @@ public class FileReaders {
      */
     public static LineIterator lineIteratorFast(Path file, Charset charset) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(openInputStreamFast(file), Objects1.def(charset, C_UTF_8)))) {
-            return StreamReaders.lineIterator(reader).autoClose(true);
+            return Streams.lineIterator(reader).autoClose(true);
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         }
@@ -645,7 +669,7 @@ public class FileReaders {
      */
     public static void byteArrayConsumerFast(Path file, byte[] bytes, IntConsumer c) {
         try (InputStream in = Files1.openInputStreamFast(file)) {
-            StreamReaders.byteArrayConsumer(in, bytes, c);
+            Streams.byteArrayConsumer(in, bytes, c);
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         }
@@ -670,7 +694,7 @@ public class FileReaders {
      */
     public static ByteArrayIterator byteArrayIteratorFast(Path file, byte[] buffer) {
         try {
-            return StreamReaders.byteArrayIterator(openInputStreamFast(file), buffer).autoClose(true);
+            return Streams.byteArrayIterator(openInputStreamFast(file), buffer).autoClose(true);
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         }

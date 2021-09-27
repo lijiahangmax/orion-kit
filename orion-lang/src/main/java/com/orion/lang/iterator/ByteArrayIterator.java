@@ -17,6 +17,7 @@ import java.util.Iterator;
  * @version 1.0.0
  * @since 2021/3/26 13:24
  */
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class ByteArrayIterator implements Iterator<Integer>, Iterable<Integer>, SafeCloseable, Serializable {
 
     private InputStream in;
@@ -45,6 +46,21 @@ public class ByteArrayIterator implements Iterator<Integer>, Iterable<Integer>, 
     public ByteArrayIterator autoClose(boolean autoClose) {
         this.autoClose = autoClose;
         return this;
+    }
+
+    /**
+     * 设置偏移量
+     *
+     * @param skip 偏移量
+     * @return this
+     */
+    public ByteArrayIterator skip(long skip) {
+        try {
+            in.skip(skip);
+            return this;
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
+        }
     }
 
     @Override

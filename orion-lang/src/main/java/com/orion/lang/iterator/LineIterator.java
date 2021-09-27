@@ -19,6 +19,7 @@ import java.util.Iterator;
  * @version 1.0.0
  * @since 2020/10/27 16:28
  */
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class LineIterator implements Iterator<String>, Iterable<String>, SafeCloseable, Serializable {
 
     private static final long serialVersionUID = 129389409684095L;
@@ -49,6 +50,40 @@ public class LineIterator implements Iterator<String>, Iterable<String>, SafeClo
     public LineIterator autoClose(boolean autoClose) {
         this.autoClose = autoClose;
         return this;
+    }
+
+    /**
+     * 设置偏移量
+     *
+     * @param skip 偏移量
+     * @return this
+     */
+    public LineIterator skip(long skip) {
+        try {
+            reader.skip(skip);
+            return this;
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
+        }
+    }
+
+    /**
+     * 设置偏移行
+     *
+     * @param skipLine 偏移行
+     * @return this
+     */
+    public LineIterator skipLine(int skipLine) {
+        try {
+            for (int i = 0; i < skipLine; i++) {
+                if (reader.readLine() == null) {
+                    break;
+                }
+            }
+            return this;
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
+        }
     }
 
     @Override

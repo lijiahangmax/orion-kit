@@ -10,9 +10,7 @@ import com.orion.utils.crypto.enums.HashDigest;
 
 import java.io.*;
 import java.security.MessageDigest;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
@@ -106,16 +104,14 @@ public class Streams {
     }
 
     public static void transfer(InputStream input, Writer output) throws IOException {
-        InputStreamReader in = new InputStreamReader(input);
-        transfer(in, output);
+        transfer(new InputStreamReader(input), output);
     }
 
     public static void transfer(InputStream input, Writer output, String charset) throws IOException {
         if (charset == null) {
             transfer(input, output);
         } else {
-            InputStreamReader in = new InputStreamReader(input, charset);
-            transfer(in, output);
+            transfer(new InputStreamReader(input, charset), output);
         }
     }
 
@@ -152,31 +148,6 @@ public class Streams {
             transfer(input, out);
             out.flush();
         }
-    }
-
-    // -------------------- read lines --------------------
-
-    public static List<String> readLines(InputStream input) throws IOException {
-        return readLines(new InputStreamReader(input));
-    }
-
-    public static List<String> readLines(InputStream input, String charset) throws IOException {
-        if (charset == null) {
-            return readLines(input);
-        } else {
-            return readLines(new InputStreamReader(input, charset));
-        }
-    }
-
-    public static List<String> readLines(Reader input) throws IOException {
-        BufferedReader reader = new BufferedReader(input);
-        List<String> list = new ArrayList<>();
-        String line = reader.readLine();
-        while (line != null) {
-            list.add(line);
-            line = reader.readLine();
-        }
-        return list;
     }
 
     // -------------------- write --------------------
