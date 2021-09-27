@@ -60,9 +60,42 @@ public abstract class Gits implements SafeCloseable {
         };
     }
 
-    public Gits auth(String username, char[] password) {
-        this.credentialsProvider = new UsernamePasswordCredentialsProvider(username, password);
-        return this;
+    public static Gits clone(String url, File path) {
+        return clone(url, path, null, (char[]) null);
+    }
+
+    public static Gits clone(String url, File path, String username, String password) {
+        return clone(url, path, username, password.toCharArray());
+    }
+
+    /**
+     * clone
+     *
+     * @param url      remoteUrl
+     * @param path     本地路径
+     * @param username 用户名
+     * @param password 密码
+     * @return Gits
+     */
+    public static Gits clone(String url, File path, String username, char[] password) {
+        try {
+            CloneCommand clone = Git.cloneRepository().setURI(url).setDirectory(path);
+            UsernamePasswordCredentialsProvider credential = null;
+            if (username != null && password != null) {
+                credential = new UsernamePasswordCredentialsProvider(username, password);
+                clone.setCredentialsProvider(credential);
+            }
+            Gits gits = new Gits(clone.call()) {
+            };
+            gits.credentialsProvider = credential;
+            return gits;
+        } catch (Exception e) {
+            throw Exceptions.vcs(e);
+        }
+    }
+
+    public Gits auth(String username, String password) {
+        return this.auth(username, password.toCharArray());
     }
 
     /**
@@ -72,13 +105,13 @@ public abstract class Gits implements SafeCloseable {
      * @param password password
      * @return this
      */
-    public Gits auth(String username, String password) {
+    public Gits auth(String username, char[] password) {
         this.credentialsProvider = new UsernamePasswordCredentialsProvider(username, password);
         return this;
     }
 
     /**
-     * 检出分支代码
+     * 检出分支
      *
      * @param branchName 分支名称
      * @return this
@@ -103,7 +136,7 @@ public abstract class Gits implements SafeCloseable {
     }
 
     /**
-     * pull代码
+     * pull
      *
      * @param remote       远程主机
      * @param remoteBranch 远程分支
@@ -129,7 +162,7 @@ public abstract class Gits implements SafeCloseable {
     }
 
     /**
-     * push代码
+     * push
      *
      * @param remote 远程主机
      * @return this

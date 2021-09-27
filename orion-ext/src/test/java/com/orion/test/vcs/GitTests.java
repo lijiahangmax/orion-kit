@@ -24,6 +24,11 @@ public class GitTests {
     }
 
     @Test
+    public void cloneTest() {
+        Gits.clone("https://gitee.com/lijiahangHome/tmp1.git", new File("C:\\Users\\ljh15\\Desktop\\1"));
+    }
+
+    @Test
     public void testCheckout() {
         gits.checkout("master").pull().close();
     }
