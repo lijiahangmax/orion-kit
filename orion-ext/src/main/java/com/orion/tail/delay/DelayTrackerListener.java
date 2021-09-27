@@ -33,7 +33,7 @@ public class DelayTrackerListener extends AbstractDelayTracker {
     public DelayTrackerListener(File tailFile, DataHandler handler) {
         super(tailFile);
         this.handler = Valid.notNull(handler, "data handler is null");
-        this.buffer = new byte[Const.BUFFER_KB_4];
+        this.buffer = new byte[Const.BUFFER_KB_8];
     }
 
     @Override

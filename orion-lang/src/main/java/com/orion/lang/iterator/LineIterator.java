@@ -1,6 +1,7 @@
 package com.orion.lang.iterator;
 
 import com.orion.able.SafeCloseable;
+import com.orion.constant.Const;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
 import com.orion.utils.io.Streams;
@@ -22,7 +23,7 @@ public class LineIterator implements Iterator<String>, Iterable<String>, SafeClo
 
     private static final long serialVersionUID = 129389409684095L;
 
-    private final BufferedReader bufferedReader;
+    private final BufferedReader reader;
 
     private String current;
 
@@ -31,12 +32,12 @@ public class LineIterator implements Iterator<String>, Iterable<String>, SafeClo
     private boolean autoClose;
 
     public LineIterator(Reader reader) {
+        this(reader, Const.BUFFER_KB_8);
+    }
+
+    public LineIterator(Reader reader, int bufferSize) {
         Valid.notNull(reader, "reader is null");
-        if (reader instanceof BufferedReader) {
-            this.bufferedReader = (BufferedReader) reader;
-        } else {
-            this.bufferedReader = new BufferedReader(reader);
-        }
+        this.reader = Streams.toBufferedReader(reader, bufferSize);
     }
 
     /**
@@ -58,7 +59,7 @@ public class LineIterator implements Iterator<String>, Iterable<String>, SafeClo
             return true;
         }
         try {
-            this.current = bufferedReader.readLine();
+            this.current = reader.readLine();
             if (current == null) {
                 this.finished = true;
                 return false;
@@ -75,9 +76,9 @@ public class LineIterator implements Iterator<String>, Iterable<String>, SafeClo
         if (!hasNext()) {
             throw Exceptions.noSuchElement("no more lines");
         }
-        String t = current;
+        String tmp = current;
         this.current = null;
-        return t;
+        return tmp;
     }
 
     @Override
@@ -85,7 +86,7 @@ public class LineIterator implements Iterator<String>, Iterable<String>, SafeClo
         this.finished = true;
         this.current = null;
         if (autoClose) {
-            Streams.close(bufferedReader);
+            Streams.close(reader);
         }
     }
 

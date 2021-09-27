@@ -29,6 +29,18 @@ public class Streams {
     private Streams() {
     }
 
+    public static BufferedReader toBufferedReader(Reader reader) {
+        return toBufferedReader(reader, Const.BUFFER_KB_8);
+    }
+
+    public static BufferedReader toBufferedReader(Reader reader, int bufferSize) {
+        if (reader instanceof BufferedReader) {
+            return (BufferedReader) reader;
+        } else {
+            return new BufferedReader(reader, bufferSize);
+        }
+    }
+
     // -------------------- close --------------------
 
     public static void close(AutoCloseable c) {
@@ -208,7 +220,7 @@ public class Streams {
             if (charset == null) {
                 output.write(Strings.bytes(new String(data)));
             } else {
-                output.write(Strings.bytes(new String(data)));
+                output.write(Strings.bytes(new String(data), charset));
             }
         }
     }
@@ -492,7 +504,7 @@ public class Streams {
     // -------------------- line consumer --------------------
 
     public static void lineConsumer(InputStream in, Consumer<String> c) throws IOException {
-        lineConsumer(new InputStreamReader(in), Const.BUFFER_KB_4, c);
+        lineConsumer(new InputStreamReader(in), Const.BUFFER_KB_8, c);
     }
 
     public static void lineConsumer(InputStream in, String charset, Consumer<String> c) throws IOException {
@@ -500,21 +512,16 @@ public class Streams {
             lineConsumer(in, c);
             return;
         }
-        lineConsumer(new InputStreamReader(in, charset), Const.BUFFER_KB_4, c);
+        lineConsumer(new InputStreamReader(in, charset), Const.BUFFER_KB_8, c);
     }
 
     public static void lineConsumer(Reader reader, Consumer<String> c) throws IOException {
-        lineConsumer(reader, Const.BUFFER_KB_4, c);
+        lineConsumer(reader, Const.BUFFER_KB_8, c);
     }
 
     public static void lineConsumer(Reader reader, int bufferSize, Consumer<String> c) throws IOException {
         Valid.notNull(reader, "reader is null");
-        BufferedReader bufferedReader;
-        if (reader instanceof BufferedReader) {
-            bufferedReader = (BufferedReader) reader;
-        } else {
-            bufferedReader = new BufferedReader(reader, bufferSize);
-        }
+        BufferedReader bufferedReader = toBufferedReader(reader, bufferSize);
         String line;
         while ((line = bufferedReader.readLine()) != null) {
             c.accept(line);

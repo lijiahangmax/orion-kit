@@ -6,21 +6,22 @@ import com.orion.lang.iterator.ByteArrayIterator;
 import com.orion.lang.iterator.LineIterator;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
+import com.orion.utils.Objects1;
 import com.orion.utils.Strings;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 import java.util.stream.Stream;
 
 import static com.orion.utils.io.Files1.openInputStream;
-import static com.orion.utils.io.Streams.close;
+import static com.orion.utils.io.Files1.openInputStreamFast;
 
 /**
  * 文件读取工具类
@@ -29,8 +30,11 @@ import static com.orion.utils.io.Streams.close;
  * @version 1.0.0
  * @since 2020/10/27 14:39
  */
-@SuppressWarnings("ResultOfMethodCallIgnored")
 public class FileReaders {
+
+    private static final String UTF_8 = Const.UTF_8;
+
+    private static final Charset C_UTF_8 = StandardCharsets.UTF_8;
 
     private FileReaders() {
     }
@@ -62,7 +66,7 @@ public class FileReaders {
     }
 
     public static String readLine(RandomAccessFile reader) throws IOException {
-        return readLine(reader, Const.UTF_8);
+        return readLine(reader, UTF_8);
     }
 
     /**
@@ -125,8 +129,8 @@ public class FileReaders {
         return new String(line, 0, linePos, charset);
     }
 
-    public static String readLines(RandomAccessFile reader) throws IOException {
-        return readLines(reader, Const.UTF_8);
+    public static String readAllLines(RandomAccessFile reader) throws IOException {
+        return readAllLines(reader, UTF_8);
     }
 
     /**
@@ -137,7 +141,7 @@ public class FileReaders {
      * @return lines
      * @throws IOException I/O异常
      */
-    public static String readLines(RandomAccessFile reader, String charset) throws IOException {
+    public static String readAllLines(RandomAccessFile reader, String charset) throws IOException {
         long pos = reader.getFilePointer();
         long length = reader.length();
         int more = (int) (length - pos);
@@ -187,7 +191,7 @@ public class FileReaders {
     }
 
     public static String readTailLines(RandomAccessFile reader, int line) throws IOException {
-        return readTailLines(reader, Const.UTF_8, line);
+        return readTailLines(reader, UTF_8, line);
     }
 
     /**
@@ -208,35 +212,28 @@ public class FileReaders {
     // -------------------- read --------------------
 
     public static int read(String file, byte[] bytes) {
-        return read(new File(file), bytes);
+        return read(new File(file), bytes, 0);
     }
 
     public static int read(File file, byte[] bytes) {
-        try (FileInputStream in = openInputStream(file)) {
-            return in.read(bytes);
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
-        }
+        return read(file, bytes, 0);
     }
 
-    public static int read(String file, byte[] bytes, long skipByte) {
-        return read(new File(file), bytes, skipByte);
+    public static int read(String file, byte[] bytes, long skip) {
+        return read(new File(file), bytes, skip);
     }
 
     /**
      * 读取文件
      *
-     * @param file     文件
-     * @param bytes    读取的数组
-     * @param skipByte 文件起始偏移量
+     * @param file  文件
+     * @param bytes 读取的数组
+     * @param skip  跳过的长度
      * @return 读取的长度
      */
-    public static int read(File file, byte[] bytes, long skipByte) {
+    public static int read(File file, byte[] bytes, long skip) {
         try (FileInputStream in = openInputStream(file)) {
-            if (skipByte > 0) {
-                in.skip(skipByte);
-            }
-            return in.read(bytes);
+            return StreamReaders.read(in, bytes, skip);
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         }
@@ -250,7 +247,7 @@ public class FileReaders {
 
     public static byte[] readAllBytes(File file) {
         try (FileInputStream in = openInputStream(file)) {
-            return Streams.toByteArray(in);
+            return StreamReaders.readAllBytes(in);
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         }
@@ -259,11 +256,11 @@ public class FileReaders {
     // -------------------- read line --------------------
 
     public static String readLine(String file) {
-        return readLine(new File(file), 0L, null);
+        return readLine(new File(file), 0L, UTF_8);
     }
 
     public static String readLine(File file) {
-        return readLine(file, 0L, null);
+        return readLine(file, 0L, UTF_8);
     }
 
     public static String readLine(String file, String charset) {
@@ -274,197 +271,134 @@ public class FileReaders {
         return readLine(file, 0L, charset);
     }
 
-    public static String readLine(String file, long skipByte) {
-        return readLine(new File(file), skipByte, null);
+    public static String readLine(String file, long skip) {
+        return readLine(new File(file), skip, UTF_8);
     }
 
-    public static String readLine(File file, long skipByte) {
-        return readLine(file, skipByte, null);
+    public static String readLine(File file, long skip) {
+        return readLine(file, skip, UTF_8);
     }
 
-    public static String readLine(String file, long skipByte, String charset) {
-        return readLine(new File(file), skipByte, charset);
+    public static String readLine(String file, long skip, String charset) {
+        return readLine(new File(file), skip, charset);
     }
 
     /**
      * 读取一行
      *
-     * @param file     文件
-     * @param skipByte 偏移量
-     * @param charset  编码格式
+     * @param file    文件
+     * @param skip    偏移量
+     * @param charset 编码格式
      * @return 行
      */
-    public static String readLine(File file, long skipByte, String charset) {
-        BufferedReader reader = null;
-        try {
-            if (charset == null) {
-                reader = new BufferedReader(new InputStreamReader(openInputStream(file)));
-            } else {
-                reader = new BufferedReader(new InputStreamReader(openInputStream(file), charset));
-            }
-            if (skipByte > 0) {
-                reader.skip(skipByte);
-            }
-            return reader.readLine();
+    public static String readLine(File file, long skip, String charset) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(openInputStream(file), Strings.def(charset, UTF_8)))) {
+            return StreamReaders.readLine(reader, skip);
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
-        } finally {
-            close(reader);
         }
     }
 
     // -------------------- read lines --------------------
 
     public static List<String> readLines(File file) {
-        return readLines(file, 0L, -1, null);
+        return readLines(file, 0L, -1, UTF_8);
     }
 
     public static List<String> readLines(String file) {
-        return readLines(new File(file), 0L, -1, null);
+        return readLines(new File(file), 0L, -1, UTF_8);
     }
 
-    public static List<String> readLines(File file, int readLines) {
-        return readLines(file, 0L, readLines, null);
+    public static List<String> readLines(File file, int lines) {
+        return readLines(file, 0L, lines, UTF_8);
     }
 
-    public static List<String> readLines(String file, int readLines) {
-        return readLines(new File(file), 0L, readLines, null);
+    public static List<String> readLines(String file, int lines) {
+        return readLines(new File(file), 0L, lines, UTF_8);
     }
 
-    public static List<String> readLines(String file, int readLines, String charset) {
-        return readLines(new File(file), 0L, readLines, charset);
+    public static List<String> readLines(String file, int lines, String charset) {
+        return readLines(new File(file), 0L, lines, charset);
     }
 
-    public static List<String> readLines(File file, int readLines, String charset) {
-        return readLines(file, 0L, readLines, charset);
+    public static List<String> readLines(File file, int lines, String charset) {
+        return readLines(file, 0L, lines, charset);
     }
 
-    public static List<String> readLines(File file, long skipByte) {
-        return readLines(file, skipByte, -1, null);
+    public static List<String> readLines(File file, long skip) {
+        return readLines(file, skip, -1, UTF_8);
     }
 
-    public static List<String> readLines(String file, long skipByte) {
-        return readLines(new File(file), skipByte, -1, null);
+    public static List<String> readLines(String file, long skip) {
+        return readLines(new File(file), skip, -1, UTF_8);
     }
 
-    public static List<String> readLines(File file, long skipByte, int readLines) {
-        return readLines(file, skipByte, readLines, null);
+    public static List<String> readLines(File file, long skip, int lines) {
+        return readLines(file, skip, lines, UTF_8);
     }
 
-    public static List<String> readLines(String file, long skipByte, int readLines) {
-        return readLines(new File(file), skipByte, readLines, null);
+    public static List<String> readLines(String file, long skip, int lines) {
+        return readLines(new File(file), skip, lines, UTF_8);
     }
 
-    public static List<String> readLines(String file, long skipByte, int readLines, String charset) {
-        return readLines(new File(file), skipByte, readLines, charset);
+    public static List<String> readLines(String file, long skip, int lines, String charset) {
+        return readLines(new File(file), skip, lines, charset);
     }
 
     /**
-     * 读取文件
+     * 读取多行
      *
-     * @param file      文件
-     * @param skipByte  文件偏移量
-     * @param readLines 读取多少行  <= 0 所有行
-     * @param charset   编码格式
+     * @param file    文件
+     * @param skip    文件偏移量
+     * @param lines   读取多少行  <= 0 所有行
+     * @param charset 编码格式
      * @return 行
      */
-    public static List<String> readLines(File file, long skipByte, int readLines, String charset) {
-        BufferedReader reader = null;
-        try {
-            if (charset == null) {
-                reader = new BufferedReader(new InputStreamReader(openInputStream(file)));
-            } else {
-                reader = new BufferedReader(new InputStreamReader(openInputStream(file), charset));
-            }
-            if (skipByte > 0) {
-                reader.skip(skipByte);
-            }
-            List<String> list = new ArrayList<>();
-            if (readLines <= 0) {
-                String line;
-                while (null != (line = reader.readLine())) {
-                    list.add(line);
-                }
-            } else {
-                String line;
-                int i = 0;
-                while (null != (line = reader.readLine()) && ++i <= readLines) {
-                    list.add(line);
-                }
-            }
-            return list;
+    public static List<String> readLines(File file, long skip, int lines, String charset) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(openInputStream(file), Strings.def(charset, UTF_8)))) {
+            return StreamReaders.readLines(reader, skip, lines);
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
-        } finally {
-            close(reader);
         }
     }
 
-    public static List<String> readLines(File file, int skipLine, int readLines) {
-        return readLines(file, skipLine, readLines, null);
+    public static List<String> readLines(File file, int skipLine, int lines) {
+        return readLines(file, skipLine, lines, UTF_8);
     }
 
-    public static List<String> readLines(String file, int skipLine, int readLines) {
-        return readLines(new File(file), skipLine, readLines, null);
+    public static List<String> readLines(String file, int skipLine, int lines) {
+        return readLines(new File(file), skipLine, lines, UTF_8);
     }
 
-    public static List<String> readLines(String file, int skipLine, int readLines, String charset) {
-        return readLines(new File(file), skipLine, readLines, charset);
+    public static List<String> readLines(String file, int skipLine, int lines, String charset) {
+        return readLines(new File(file), skipLine, lines, charset);
     }
 
     /**
-     * 读取文件
+     * 读取多行
      *
-     * @param file      文件
-     * @param skipLine  文件偏移行
-     * @param readLines 读取多少行  <=0 所有行
-     * @param charset   编码格式
+     * @param file     文件
+     * @param skipLine 文件偏移行
+     * @param lines    读取多少行  <=0 所有行
+     * @param charset  编码格式
      * @return 行
      */
-    public static List<String> readLines(File file, int skipLine, int readLines, String charset) {
-        BufferedReader reader = null;
-        try {
-            if (charset == null) {
-                reader = new BufferedReader(new InputStreamReader(openInputStream(file)));
-            } else {
-                reader = new BufferedReader(new InputStreamReader(openInputStream(file), charset));
-            }
-            List<String> list = new ArrayList<>();
-            if (skipLine > 0) {
-                for (int i = 0; i < skipLine; i++) {
-                    if (reader.readLine() == null) {
-                        return list;
-                    }
-                }
-            }
-            if (readLines <= 0) {
-                String line;
-                while (null != (line = reader.readLine())) {
-                    list.add(line);
-                }
-            } else {
-                String line;
-                int i = 0;
-                while (null != (line = reader.readLine()) && ++i <= readLines) {
-                    list.add(line);
-                }
-            }
-            return list;
+    public static List<String> readLines(File file, int skipLine, int lines, String charset) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(openInputStream(file), Strings.def(charset, UTF_8)))) {
+            return StreamReaders.readLines(reader, skipLine, lines);
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
-        } finally {
-            close(reader);
         }
     }
 
     // -------------------- line consumer --------------------
 
     public static void lineConsumer(String file, Consumer<String> c) {
-        lineConsumer(new File(file), null, c);
+        lineConsumer(new File(file), UTF_8, c);
     }
 
     public static void lineConsumer(File file, Consumer<String> c) {
-        lineConsumer(file, null, c);
+        lineConsumer(file, UTF_8, c);
     }
 
     public static void lineConsumer(String file, String charset, Consumer<String> c) {
@@ -479,8 +413,8 @@ public class FileReaders {
      * @param c       consumer
      */
     public static void lineConsumer(File file, String charset, Consumer<String> c) {
-        try (InputStream in = Files1.openInputStream(file)) {
-            Streams.lineConsumer(in, charset, c);
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(openInputStream(file), Strings.def(charset, UTF_8)))) {
+            StreamReaders.lineConsumer(reader, c);
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         }
@@ -489,11 +423,11 @@ public class FileReaders {
     // -------------------- line iterator --------------------
 
     public static LineIterator lineIterator(String file) {
-        return lineIterator(new File(file), null);
+        return lineIterator(new File(file), UTF_8);
     }
 
     public static LineIterator lineIterator(File file) {
-        return lineIterator(file, null);
+        return lineIterator(file, UTF_8);
     }
 
     public static LineIterator lineIterator(String file, String charset) {
@@ -508,12 +442,8 @@ public class FileReaders {
      * @return LineIterator
      */
     public static LineIterator lineIterator(File file, String charset) {
-        try {
-            if (charset == null) {
-                return new LineIterator(new InputStreamReader(Files1.openInputStream(file))).autoClose(true);
-            } else {
-                return new LineIterator(new InputStreamReader(Files1.openInputStream(file), charset)).autoClose(true);
-            }
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(openInputStream(file), Strings.def(charset, UTF_8)))) {
+            return StreamReaders.lineIterator(reader).autoClose(true);
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         }
@@ -534,7 +464,7 @@ public class FileReaders {
      */
     public static void byteArrayConsumer(File file, byte[] bytes, IntConsumer c) {
         try (InputStream in = Files1.openInputStream(file)) {
-            Streams.byteArrayConsumer(in, bytes, c);
+            StreamReaders.byteArrayConsumer(in, bytes, c);
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         }
@@ -555,7 +485,7 @@ public class FileReaders {
      */
     public static ByteArrayIterator byteArrayIterator(File file, byte[] buffer) {
         try {
-            return new ByteArrayIterator(Files1.openInputStream(file), buffer).autoClose(true);
+            return StreamReaders.byteArrayIterator(Files1.openInputStream(file), buffer).autoClose(true);
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         }
@@ -588,15 +518,15 @@ public class FileReaders {
     // -------------------- fast read lines --------------------
 
     public static List<String> readLinesFast(String file) {
-        return readLinesFast(Paths.get(file), null);
+        return readLinesFast(Paths.get(file), C_UTF_8);
     }
 
     public static List<String> readLinesFast(File file) {
-        return readLinesFast(Paths.get(file.getAbsolutePath()), null);
+        return readLinesFast(Paths.get(file.getAbsolutePath()), C_UTF_8);
     }
 
     public static List<String> readLinesFast(Path file) {
-        return readLinesFast(file, null);
+        return readLinesFast(file, C_UTF_8);
     }
 
     public static List<String> readLinesFast(String file, String charset) {
@@ -616,11 +546,7 @@ public class FileReaders {
      */
     public static List<String> readLinesFast(Path file, Charset charset) {
         try {
-            if (charset == null) {
-                return Files.readAllLines(file);
-            } else {
-                return Files.readAllLines(file, charset);
-            }
+            return Files.readAllLines(file, Objects1.def(charset, C_UTF_8));
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         }
@@ -629,15 +555,15 @@ public class FileReaders {
     // -------------------- fast line consumer --------------------
 
     public static void lineConsumerFast(String file, Consumer<String> c) {
-        lineConsumerFast(Paths.get(file), null, c);
+        lineConsumerFast(Paths.get(file), C_UTF_8, c);
     }
 
     public static void lineConsumerFast(File file, Consumer<String> c) {
-        lineConsumerFast(Paths.get(file.getAbsolutePath()), null, c);
+        lineConsumerFast(Paths.get(file.getAbsolutePath()), C_UTF_8, c);
     }
 
     public static void lineConsumerFast(Path file, Consumer<String> c) {
-        lineConsumerFast(file, null, c);
+        lineConsumerFast(file, C_UTF_8, c);
     }
 
     public static void lineConsumerFast(String file, String charset, Consumer<String> c) {
@@ -656,33 +582,25 @@ public class FileReaders {
      * @param c       consumer
      */
     public static void lineConsumerFast(Path file, Charset charset, Consumer<String> c) {
-        Stream<String> stream = null;
-        try {
-            if (charset == null) {
-                stream = Files.lines(file);
-            } else {
-                stream = Files.lines(file, charset);
-            }
+        try (Stream<String> stream = Files.lines(file, Objects1.def(charset, C_UTF_8))) {
             stream.forEach(c);
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
-        } finally {
-            close(stream);
         }
     }
 
     // -------------------- fast line iterator --------------------
 
     public static LineIterator lineIteratorFast(String file) {
-        return lineIteratorFast(Paths.get(file), null);
+        return lineIteratorFast(Paths.get(file), C_UTF_8);
     }
 
     public static LineIterator lineIteratorFast(File file) {
-        return lineIteratorFast(Paths.get(file.getAbsolutePath()), null);
+        return lineIteratorFast(Paths.get(file.getAbsolutePath()), C_UTF_8);
     }
 
     public static LineIterator lineIteratorFast(Path file) {
-        return lineIteratorFast(file, null);
+        return lineIteratorFast(file, C_UTF_8);
     }
 
     public static LineIterator lineIteratorFast(String file, String charset) {
@@ -701,12 +619,8 @@ public class FileReaders {
      * @return LineIterator
      */
     public static LineIterator lineIteratorFast(Path file, Charset charset) {
-        try {
-            if (charset == null) {
-                return new LineIterator(Files.newBufferedReader(file));
-            } else {
-                return new LineIterator(Files.newBufferedReader(file, charset));
-            }
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(openInputStreamFast(file), Objects1.def(charset, C_UTF_8)))) {
+            return StreamReaders.lineIterator(reader).autoClose(true);
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         }
@@ -731,7 +645,7 @@ public class FileReaders {
      */
     public static void byteArrayConsumerFast(Path file, byte[] bytes, IntConsumer c) {
         try (InputStream in = Files1.openInputStreamFast(file)) {
-            Streams.byteArrayConsumer(in, bytes, c);
+            StreamReaders.byteArrayConsumer(in, bytes, c);
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         }
@@ -756,7 +670,7 @@ public class FileReaders {
      */
     public static ByteArrayIterator byteArrayIteratorFast(Path file, byte[] buffer) {
         try {
-            return new ByteArrayIterator(Files1.openInputStreamFast(file), buffer).autoClose(true);
+            return StreamReaders.byteArrayIterator(openInputStreamFast(file), buffer).autoClose(true);
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
         }

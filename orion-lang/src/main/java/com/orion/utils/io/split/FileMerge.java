@@ -41,7 +41,7 @@ public class FileMerge implements Callable<String> {
     private int bufferSize;
 
     public FileMerge(String file) {
-        this(new File(file), Const.BUFFER_KB_4);
+        this(new File(file), Const.BUFFER_KB_8);
     }
 
     public FileMerge(String file, int bufferSize) {
@@ -49,7 +49,7 @@ public class FileMerge implements Callable<String> {
     }
 
     public FileMerge(File file) {
-        this(file, Const.BUFFER_KB_4);
+        this(file, Const.BUFFER_KB_8);
     }
 
     public FileMerge(File file, int bufferSize) {
@@ -62,8 +62,8 @@ public class FileMerge implements Callable<String> {
             throw Exceptions.runtime("file block does not exist");
         }
         this.blockFile = cf;
-        if (bufferSize < Const.BUFFER_KB_4) {
-            bufferSize = Const.BUFFER_KB_4;
+        if (bufferSize < Const.BUFFER_KB_8) {
+            bufferSize = Const.BUFFER_KB_8;
         }
         this.bufferSize = bufferSize;
     }

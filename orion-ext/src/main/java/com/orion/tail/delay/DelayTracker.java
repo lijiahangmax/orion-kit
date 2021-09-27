@@ -39,7 +39,7 @@ public class DelayTracker extends AbstractDelayTracker {
 
     @Override
     protected void read() throws IOException {
-        String read = FileReaders.readLines(reader, charset);
+        String read = FileReaders.readAllLines(reader, charset);
         if (read == null || read.isEmpty()) {
             return;
         }
