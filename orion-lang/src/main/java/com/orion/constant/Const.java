@@ -212,6 +212,16 @@ public abstract class Const {
 
     public static final String SUFFIX_ZIP = "zip";
 
+    public static final String SUFFIX_7Z = "7z";
+
+    public static final String SUFFIX_TAR = "tar";
+
+    public static final String SUFFIX_GZ = "gz";
+
+    public static final String SUFFIX_BZ2 = "bz2";
+
+    public static final String SUFFIX_TAR_GZ = "tag.gz";
+
     public static final String SUFFIX_LOG = "log";
 
     public static final String SUFFIX_XML = "xml";
