@@ -81,6 +81,7 @@
         <jsoup.version>1.13.1</jsoup.version>
         <ua.utils.version>1.21</ua.utils.version>
         <jgit.version>5.11.1.202105131744-r</jgit.version>
+        <bcprov.jdk15on.version>1.56</bcprov.jdk15on.version>
     </properties>
 
     <developers>

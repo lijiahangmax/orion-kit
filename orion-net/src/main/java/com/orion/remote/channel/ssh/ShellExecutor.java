@@ -54,8 +54,8 @@ public class ShellExecutor extends BaseRemoteExecutor {
         this.width = 1366;
         this.height = 768;
         try {
-            inputStream = this.channel.getInputStream();
-            outputStream = this.channel.getOutputStream();
+            this.inputStream = channel.getInputStream();
+            this.outputStream = channel.getOutputStream();
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         }

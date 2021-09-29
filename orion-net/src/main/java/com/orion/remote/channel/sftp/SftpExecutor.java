@@ -1136,7 +1136,7 @@ public class SftpExecutor extends BaseExecutor {
                 }
             }
         } catch (Exception e) {
-            // ingore
+            // ignore
         }
         return list;
     }

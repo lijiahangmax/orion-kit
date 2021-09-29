@@ -64,9 +64,9 @@ public class SftpDownload extends BaseFileDownload {
     @Override
     protected void initDownload(boolean breakPoint, long skip) throws IOException {
         if (breakPoint) {
-            in = executor.getInputStream(remote, skip);
+            this.in = executor.getInputStream(remote, skip);
         } else {
-            in = executor.getInputStream(remote);
+            this.in = executor.getInputStream(remote);
         }
     }
 

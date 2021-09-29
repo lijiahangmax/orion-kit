@@ -22,7 +22,7 @@ public class CompanyGenerator {
 
     static {
         SUFFIX = new String[]{
-                "有限责任公司", "股份有限公司",
+                "责任有限公司", "股份有限公司",
                 "发展有限公司", "有限公司", "公司"
         };
     }

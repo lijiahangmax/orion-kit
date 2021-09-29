@@ -1080,7 +1080,7 @@ public class FtpInstance implements SafeCloseable {
                 }
             }
         } catch (IOException e) {
-            // ingore
+            // ignore
         }
         return list;
     }

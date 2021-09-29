@@ -113,6 +113,13 @@
             <version>${yaml.version}</version>
         </dependency>
 
+        <!--国密-->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>${bcprov.jdk15on.version}</version>
+        </dependency>
+
         <!-- python script -->
         <!--        <dependency>-->
         <!--            <groupId>org.python</groupId>-->

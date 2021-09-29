@@ -1,6 +1,8 @@
 package com.orion.support.progress;
 
 /**
+ * 进度条
+ *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/3/12 21:34

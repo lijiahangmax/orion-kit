@@ -160,7 +160,7 @@ public class ByteTransferProgress implements Progress {
                 while (!done) {
                     long size = current.get();
                     Threads.sleep(interval);
-                    nowRate = current.get() - size;
+                    this.nowRate = current.get() - size;
                     if (rateAcceptor != null) {
                         rateAcceptor.accept(this);
                     }
