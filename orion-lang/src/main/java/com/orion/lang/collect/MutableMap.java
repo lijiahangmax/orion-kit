@@ -324,11 +324,11 @@ public interface MutableMap<K, V> extends Map<K, V> {
         return Converts.toString(v);
     }
 
-    default MutableString getStringExt(K k) {
+    default MutableString getMutableString(K k) {
         return new MutableString(Converts.toString(get(k)));
     }
 
-    default MutableString getStringExt(K k, String def) {
+    default MutableString getMutableString(K k, String def) {
         V v = get(k);
         if (v == null) {
             return new MutableString(def);
@@ -336,7 +336,7 @@ public interface MutableMap<K, V> extends Map<K, V> {
         return new MutableString(Converts.toString(v));
     }
 
-    default MutableString getStringExt(K k, MutableString def) {
+    default MutableString getMutableString(K k, MutableString def) {
         V v = get(k);
         if (v == null) {
             return def;

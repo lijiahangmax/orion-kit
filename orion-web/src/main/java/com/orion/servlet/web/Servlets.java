@@ -39,7 +39,7 @@ public class Servlets {
      *
      * @param request request
      * @param key     key
-     * @return stringExt
+     * @return MutableString
      */
     public static MutableString getParameter(HttpServletRequest request, String key) {
         return new MutableString(request.getParameter(key));
@@ -50,7 +50,7 @@ public class Servlets {
      *
      * @param request request
      * @param keys    keys
-     * @return stringExt
+     * @return MutableString
      */
     public static MutableHashMap<String, String> getParameters(HttpServletRequest request, String... keys) {
         MutableHashMap<String, String> map = new MutableHashMap<>();
@@ -64,7 +64,7 @@ public class Servlets {
      * 获取请求参数
      *
      * @param request request
-     * @return stringExt
+     * @return MutableString
      */
     public static MutableHashMap<String, String> getParameterMap(HttpServletRequest request) {
         Map<String, String[]> parameterMap = request.getParameterMap();

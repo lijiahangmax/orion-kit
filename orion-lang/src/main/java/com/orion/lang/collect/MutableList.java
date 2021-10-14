@@ -308,22 +308,22 @@ public interface MutableList<E> extends List<E> {
         return Converts.toString(e);
     }
 
-    default MutableString getStringExt(int i) {
+    default MutableString getMutableString(int i) {
         return new MutableString(Converts.toString(get(i)));
     }
 
-    default MutableString getStringExt(int i, MutableString def) {
+    default MutableString getMutableString(int i, String def) {
         E e = get(i);
         if (e == null) {
-            return def;
+            return new MutableString(def);
         }
         return new MutableString(Converts.toString(e));
     }
 
-    default MutableString getStringExt(int i, String def) {
+    default MutableString getMutableString(int i, MutableString def) {
         E e = get(i);
         if (e == null) {
-            return new MutableString(def);
+            return def;
         }
         return new MutableString(Converts.toString(e));
     }

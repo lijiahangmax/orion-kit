@@ -44,7 +44,6 @@ public interface Wrapper<T> extends Serializable, JsonAble {
 
     int URL_REDIRECT = 3;
 
-
     /**
      * 获取json
      *
