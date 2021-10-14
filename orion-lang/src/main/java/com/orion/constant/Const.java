@@ -220,7 +220,9 @@ public abstract class Const {
 
     public static final String SUFFIX_BZ2 = "bz2";
 
-    public static final String SUFFIX_TAR_GZ = "tag.gz";
+    public static final String SUFFIX_TAR_GZ = "tar.gz";
+
+    public static final String SUFFIX_TAR_BZ2 = "tar.bz2";
 
     public static final String SUFFIX_LOG = "log";
 
