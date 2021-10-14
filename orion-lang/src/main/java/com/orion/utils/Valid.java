@@ -477,7 +477,7 @@ public abstract class Valid {
     }
 
     public static int notZero(int value, String message, Object... values) {
-        if (0 == value) {
+        if (value == 0) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
         return value;
@@ -488,7 +488,7 @@ public abstract class Valid {
     }
 
     public static long notZero(long value, String message, Object... values) {
-        if (0 == value) {
+        if (value == 0) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
         return value;
@@ -499,7 +499,7 @@ public abstract class Valid {
     }
 
     public static double notZero(double value, String message, Object... values) {
-        if (0 == value) {
+        if (value == 0) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
         return value;

@@ -8,7 +8,7 @@ import org.junit.Test;
  * @version 1.0.0
  * @since 2020/5/13 18:26
  */
-public class StringExtTests {
+public class MutableStringTests {
 
     @Test
     public void s() {

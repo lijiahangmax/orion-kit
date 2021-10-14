@@ -28,7 +28,7 @@ public class FileDecrypt implements Callable<Boolean> {
 
     private String password;
 
-    private boolean autoClose = true;
+    private boolean autoClose;
 
     public FileDecrypt(File file, File dest, String password) {
         this(file, dest, password, Const.BUFFER_KB_8);
@@ -46,18 +46,12 @@ public class FileDecrypt implements Callable<Boolean> {
         this(reader, out, password, Const.BUFFER_KB_8);
     }
 
-    public FileDecrypt(File file, File dest, String password, int bufferSize) {
-        this.password = password;
-        try {
-            Files1.touch(dest);
-            this.reader = new BufferedReader(new FileReader(file), bufferSize);
-            this.out = Files1.openOutputStream(dest);
-        } catch (Exception e) {
-            throw Exceptions.ioRuntime(e);
-        }
+    public FileDecrypt(String file, String dest, String password, int bufferSize) {
+        this(new File(file), new File(dest), password, bufferSize);
     }
 
-    public FileDecrypt(String file, String dest, String password, int bufferSize) {
+    public FileDecrypt(File file, File dest, String password, int bufferSize) {
+        this.autoClose = true;
         this.password = password;
         try {
             Files1.touch(dest);
@@ -69,15 +63,15 @@ public class FileDecrypt implements Callable<Boolean> {
     }
 
     public FileDecrypt(InputStream in, OutputStream out, String password, int bufferSize) {
-        this.password = password;
         this.autoClose = false;
+        this.password = password;
         this.reader = new BufferedReader(new InputStreamReader(in), bufferSize);
         this.out = out;
     }
 
     public FileDecrypt(Reader reader, OutputStream out, String password, int bufferSize) {
-        this.password = password;
         this.autoClose = false;
+        this.password = password;
         this.reader = new BufferedReader(reader, bufferSize);
         this.out = out;
     }

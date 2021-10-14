@@ -140,7 +140,7 @@ public class BeanWrapper {
                     keyMap = (Map<String, ?>) field;
                 }
             }
-            String setterMethodName = "set" + Strings.firstUpper(key);
+            String setterMethodName = Methods.getSetterMethodNameByFieldName(key);
             for (Method setterMethod : setterMethods) {
                 Object value = entry.getValue();
                 if (setterMethod.getName().equals(setterMethodName)) {

@@ -32,7 +32,7 @@ public class FileEncrypt implements Callable<Boolean> {
 
     private int bufferSize;
 
-    private boolean autoClose = true;
+    private boolean autoClose;
 
     public FileEncrypt(File file, File dest, String password) {
         this(file, dest, password, Const.BUFFER_KB_8);
@@ -46,15 +46,12 @@ public class FileEncrypt implements Callable<Boolean> {
         this(in, out, password, Const.BUFFER_KB_8);
     }
 
-    public FileEncrypt(File file, File dest, String password, int bufferSize) {
-        this.password = password;
-        this.bufferSize = bufferSize;
-        Files1.touch(dest);
-        this.in = Files1.openInputStreamSafe(file);
-        this.out = Files1.openOutputStreamSafe(dest);
+    public FileEncrypt(String file, String dest, String password, int bufferSize) {
+        this(new File(file), new File(dest), password, bufferSize);
     }
 
-    public FileEncrypt(String file, String dest, String password, int bufferSize) {
+    public FileEncrypt(File file, File dest, String password, int bufferSize) {
+        this.autoClose = true;
         this.password = password;
         this.bufferSize = bufferSize;
         Files1.touch(dest);
@@ -63,8 +60,8 @@ public class FileEncrypt implements Callable<Boolean> {
     }
 
     public FileEncrypt(InputStream in, OutputStream out, String password, int bufferSize) {
-        this.password = password;
         this.autoClose = false;
+        this.password = password;
         this.in = in;
         this.out = out;
         this.bufferSize = bufferSize;

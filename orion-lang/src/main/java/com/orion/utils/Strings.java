@@ -167,7 +167,7 @@ public class Strings {
      * @return 空 true
      */
     public static boolean isBlank(String str) {
-        return str == null || Strings.EMPTY.equals(str) || Strings.EMPTY.equals(str.trim()) || 0 == str.replaceAll("\\s", Strings.EMPTY).length();
+        return str == null || Strings.EMPTY.equals(str) || Strings.EMPTY.equals(str.trim()) || str.replaceAll("\\s", Strings.EMPTY).length() == 0;
     }
 
     /**
@@ -227,7 +227,7 @@ public class Strings {
      * @return 空 true
      */
     public static boolean isEmpty(String str) {
-        return str == null || 0 == str.length();
+        return str == null || str.length() == 0;
     }
 
     /**
@@ -941,7 +941,6 @@ public class Strings {
      * @param str2 字符2
      * @return 相同true
      */
-    @SuppressWarnings("all")
     public static boolean eq(String str1, String str2) {
         return (str1 == str2) || (str1 != null && str1.equals(str2));
     }

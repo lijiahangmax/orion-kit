@@ -66,17 +66,25 @@ public class IPs {
     }
 
     /**
-     * 检查是否有ip, 或者合法
+     * 检查是否为合法ip
      *
-     * @param ip IP地址
+     * @param ip ip
      * @return ip地址
      */
     public static String checkIp(String ip) {
-        if (!Strings.isBlank(ip) && !Const.UNKNOWN.equalsIgnoreCase(ip)) {
-            return Const.LOCALHOST_IP_V6.equals(ip) ? Const.LOCALHOST_IP_V4 : ip;
-        } else {
+        if (Strings.isBlank(ip)) {
             return null;
         }
+        if (Const.UNKNOWN.equalsIgnoreCase(ip)) {
+            return null;
+        }
+        if (Const.LOCALHOST_IP_V6.equals(ip)) {
+            return Const.LOCALHOST_IP_V4;
+        }
+        if (!isIp(ip)) {
+            return null;
+        }
+        return ip;
     }
 
     /**
@@ -258,6 +266,56 @@ public class IPs {
     }
 
     /**
+     * 生成随机ip地址
+     *
+     * @return ip地址
+     */
+    public static String randomIp() {
+        int[] range = Arrays1.random(IP_RANGE);
+        return intToIp(range[0] + Randoms.randomInt(range[1] - range[0]));
+    }
+
+    /**
+     * ipv4 > long
+     *
+     * @param ip ipv4
+     * @return long
+     */
+    public static long ipToLong(String ip) {
+        String[] ips = ip.trim().split("\\.");
+        long ipLong = 0L;
+        for (int i = 0; i < 4; i++) {
+            ipLong = ipLong << 8 | Integer.parseInt(ips[i]);
+        }
+        return ipLong;
+    }
+
+    /**
+     * long > ipv4
+     *
+     * @param ip long
+     * @return ipv4
+     */
+    private static String longToIp(long ip) {
+        return intToIp((int) ip);
+    }
+
+    /**
+     * 将十进制转换成ip
+     *
+     * @param ip 10进制ip
+     * @return ip
+     */
+    public static String intToIp(int ip) {
+        int[] b = new int[4];
+        b[0] = (ip >> 24) & 0xFF;
+        b[1] = (ip >> 16) & 0xFF;
+        b[2] = (ip >> 8) & 0xFF;
+        b[3] = ip & 0xFF;
+        return b[0] + "." + b[1] + "." + b[2] + "." + b[3];
+    }
+
+    /**
      * 检测IP是否能ping通
      *
      * @param ip IP地址
@@ -280,31 +338,6 @@ public class IPs {
         } catch (Exception e) {
             return false;
         }
-    }
-
-    /**
-     * 生成随机ip地址
-     *
-     * @return ip地址
-     */
-    public static String randomIp() {
-        int[] range = Arrays1.random(IP_RANGE);
-        return num10ToIp(range[0] + Randoms.randomInt(range[1] - range[0]));
-    }
-
-    /**
-     * 将十进制转换成ip
-     *
-     * @param ip 10进制ip
-     * @return ip
-     */
-    public static String num10ToIp(int ip) {
-        int[] b = new int[4];
-        b[0] = (ip >> 24) & 0xFF;
-        b[1] = (ip >> 16) & 0xFF;
-        b[2] = (ip >> 8) & 0xFF;
-        b[3] = ip & 0xFF;
-        return b[0] + "." + b[1] + "." + b[2] + "." + b[3];
     }
 
     /**
