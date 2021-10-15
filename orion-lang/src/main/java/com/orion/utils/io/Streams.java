@@ -10,7 +10,6 @@ import com.orion.utils.crypto.enums.HashDigest;
 
 import java.io.*;
 import java.security.MessageDigest;
-import java.util.Collection;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
@@ -25,18 +24,6 @@ import java.util.function.IntConsumer;
 public class Streams {
 
     private Streams() {
-    }
-
-    public static BufferedReader toBufferedReader(Reader reader) {
-        return toBufferedReader(reader, Const.BUFFER_KB_8);
-    }
-
-    public static BufferedReader toBufferedReader(Reader reader, int bufferSize) {
-        if (reader instanceof BufferedReader) {
-            return (BufferedReader) reader;
-        } else {
-            return new BufferedReader(reader, bufferSize);
-        }
     }
 
     // -------------------- close --------------------
@@ -63,6 +50,32 @@ public class Streams {
         }
     }
 
+    // -------------------- buffer --------------------
+
+    public static BufferedReader toBufferedReader(Reader reader) {
+        return toBufferedReader(reader, Const.BUFFER_KB_8);
+    }
+
+    public static BufferedReader toBufferedReader(Reader reader, int bufferSize) {
+        if (reader instanceof BufferedReader) {
+            return (BufferedReader) reader;
+        } else {
+            return new BufferedReader(reader, bufferSize);
+        }
+    }
+
+    public static BufferedWriter toBufferedWriter(Writer writer) {
+        return toBufferedWriter(writer, Const.BUFFER_KB_8);
+    }
+
+    public static BufferedWriter toBufferedWriter(Writer writer, int bufferSize) {
+        if (writer instanceof BufferedWriter) {
+            return (BufferedWriter) writer;
+        } else {
+            return new BufferedWriter(writer, bufferSize);
+        }
+    }
+
     // -------------------- transfer --------------------
 
     public static int transfer(RandomAccessFile access, OutputStream output) throws IOException {
@@ -77,7 +90,7 @@ public class Streams {
         byte[] buffer = new byte[Const.BUFFER_KB_8];
         long count = 0;
         int n = 0;
-        while (-1 != (n = access.read(buffer))) {
+        while ((n = access.read(buffer)) != -1) {
             output.write(buffer, 0, n);
             count += n;
         }
@@ -95,8 +108,8 @@ public class Streams {
     public static long transferLarge(InputStream input, OutputStream output) throws IOException {
         byte[] buffer = new byte[Const.BUFFER_KB_8];
         long count = 0;
-        int n = 0;
-        while (-1 != (n = input.read(buffer))) {
+        int n;
+        while ((n = input.read(buffer)) != -1) {
             output.write(buffer, 0, n);
             count += n;
         }
@@ -127,7 +140,7 @@ public class Streams {
         char[] buffer = new char[Const.BUFFER_KB_8];
         long count = 0;
         int n;
-        while (-1 != (n = input.read(buffer))) {
+        while ((n = input.read(buffer)) != -1) {
             output.write(buffer, 0, n);
             count += n;
         }
@@ -147,118 +160,6 @@ public class Streams {
             OutputStreamWriter out = new OutputStreamWriter(output, charset);
             transfer(input, out);
             out.flush();
-        }
-    }
-
-    // -------------------- write --------------------
-
-    public static void write(byte[] data, OutputStream output) throws IOException {
-        if (data != null) {
-            output.write(data);
-        }
-    }
-
-    public static void write(byte[] data, Writer output) throws IOException {
-        if (data != null) {
-            output.write(new String(data));
-        }
-    }
-
-    public static void write(byte[] data, Writer output, String charset) throws IOException {
-        if (data != null) {
-            if (charset == null) {
-                output.write(new String(data));
-            } else {
-                output.write(new String(data, charset));
-            }
-        }
-    }
-
-    public static void write(char[] data, Writer output) throws IOException {
-        if (data != null) {
-            output.write(data);
-        }
-    }
-
-    public static void write(char[] data, OutputStream output) throws IOException {
-        if (data != null) {
-            output.write(Strings.bytes(new String(data)));
-        }
-    }
-
-    public static void write(char[] data, OutputStream output, String charset) throws IOException {
-        if (data != null) {
-            if (charset == null) {
-                output.write(Strings.bytes(new String(data)));
-            } else {
-                output.write(Strings.bytes(new String(data), charset));
-            }
-        }
-    }
-
-    public static void write(String data, Writer output) throws IOException {
-        if (data != null) {
-            output.write(data);
-        }
-    }
-
-    public static void write(String data, OutputStream output) throws IOException {
-        if (data != null) {
-            output.write(Strings.bytes(data));
-        }
-    }
-
-    public static void write(String data, OutputStream output, String charset) throws IOException {
-        if (data != null) {
-            if (charset == null) {
-                output.write(Strings.bytes(data));
-            } else {
-                output.write(Strings.bytes(data, charset));
-            }
-        }
-    }
-
-    public static void write(StringBuffer data, Writer output) throws IOException {
-        if (data != null) {
-            output.write(data.toString());
-        }
-    }
-
-    public static void writeLines(Collection<?> lines, String eof, OutputStream output) throws IOException {
-        writeLines(lines, eof, output, null);
-    }
-
-    public static void writeLines(Collection<?> lines, String eof, OutputStream output, String charset) throws IOException {
-        if (lines == null) {
-            return;
-        }
-        if (eof == null) {
-            eof = Const.LF;
-        }
-        for (Object line : lines) {
-            if (line != null) {
-                if (charset == null) {
-                    output.write(Strings.bytes(line.toString()));
-                } else {
-                    output.write(Strings.bytes(line.toString(), charset));
-                }
-            }
-            output.write(Strings.bytes(eof, charset));
-        }
-    }
-
-    public static void writeLines(Collection<?> lines, String eof, Writer writer) throws IOException {
-        if (lines == null) {
-            return;
-        }
-        if (eof == null) {
-            eof = Const.LF;
-        }
-        for (Object line : lines) {
-            if (line != null) {
-                writer.write(line.toString());
-            }
-            writer.write(eof);
         }
     }
 

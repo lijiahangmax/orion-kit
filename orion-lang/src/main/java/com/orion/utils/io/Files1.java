@@ -60,6 +60,14 @@ public class Files1 {
     private Files1() {
     }
 
+    public static File newFile(String parent, String file) {
+        return new File(getPath(parent), file);
+    }
+
+    public static File newFile(String file) {
+        return new File(getPath(file));
+    }
+
     // -------------------- attr --------------------
 
     public static FileAttribute getAttribute(String file) {
@@ -535,7 +543,7 @@ public class Files1 {
             }
             char[] cs = new char[Const.BUFFER_KB_8];
             int read;
-            while (-1 != (read = reader.read(cs))) {
+            while ((read = reader.read(cs)) != -1) {
                 writer.write(cs, 0, read);
             }
             writer.flush();
@@ -559,7 +567,7 @@ public class Files1 {
         try (OutputStream out = openOutputStream(file)) {
             byte[] bs = new byte[Const.BUFFER_KB_8];
             int read;
-            while (-1 != (read = in.read(bs))) {
+            while ((read = in.read(bs)) != -1) {
                 out.write(bs, 0, read);
             }
             out.flush();
@@ -591,7 +599,7 @@ public class Files1 {
                 out = new FileOutputStream(target, true);
                 byte[] bytes = new byte[Const.BUFFER_KB_8];
                 int read;
-                while (-1 != (read = in.read(bytes))) {
+                while ((read = in.read(bytes)) != -1) {
                     out.write(bytes, 0, read);
                 }
                 Streams.close(in);
@@ -622,7 +630,7 @@ public class Files1 {
             out = new FileOutputStream(target, true);
             byte[] bytes = new byte[Const.BUFFER_KB_8];
             int read;
-            while (-1 != (read = in.read(bytes))) {
+            while ((read = in.read(bytes)) != -1) {
                 out.write(bytes, 0, read);
             }
             out.flush();
@@ -892,13 +900,12 @@ public class Files1 {
         }
     }
 
-    public static boolean mv(File file, String name) {
-        return file.renameTo(new File(file.getParentFile() + SEPARATOR + name));
+    public static boolean mv(String file, String name) {
+        return mv(new File(file), name);
     }
 
-    public static boolean mv(String file, String name) {
-        File f = new File(file);
-        return f.renameTo(new File(f.getParentFile() + SEPARATOR + name));
+    public static boolean mv(File file, String name) {
+        return file.renameTo(new File(file.getParent(), name));
     }
 
     /**

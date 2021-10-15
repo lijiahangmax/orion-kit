@@ -84,7 +84,7 @@ public class FileReaders {
         int linePos = 0;
         int seek = 0;
         int read;
-        while (-1 != (read = reader.read(bytes))) {
+        while ((read = reader.read(bytes)) != -1) {
             seek += read;
             int bi = -1;
             for (int i = 0; i < read; i++) {

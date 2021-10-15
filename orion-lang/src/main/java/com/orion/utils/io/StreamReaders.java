@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 读取流工具类
+ * 输入流工具类
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -167,24 +167,7 @@ public class StreamReaders {
      * @return 行
      */
     public static List<String> readLines(Reader reader, long skip, int lines) throws IOException {
-        BufferedReader bufferedReader = Streams.toBufferedReader(reader);
-        if (skip > 0) {
-            reader.skip(skip);
-        }
-        List<String> list = new ArrayList<>();
-        if (lines <= 0) {
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                list.add(line);
-            }
-        } else {
-            String line;
-            int i = 0;
-            while ((line = bufferedReader.readLine()) != null && ++i <= lines) {
-                list.add(line);
-            }
-        }
-        return list;
+        return readLines(reader, skip, 0, lines);
     }
 
     /**
@@ -196,8 +179,15 @@ public class StreamReaders {
      * @return 行
      */
     public static List<String> readLines(Reader reader, int skipLine, int lines) throws IOException {
+        return readLines(reader, 0L, skipLine, lines);
+    }
+
+    private static List<String> readLines(Reader reader, long skip, int skipLine, int lines) throws IOException {
         BufferedReader bufferedReader = Streams.toBufferedReader(reader);
         List<String> list = new ArrayList<>();
+        if (skip > 0) {
+            reader.skip(skip);
+        }
         if (skipLine > 0) {
             for (int i = 0; i < skipLine; i++) {
                 if (bufferedReader.readLine() == null) {
