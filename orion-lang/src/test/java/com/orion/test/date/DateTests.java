@@ -3,6 +3,7 @@ package com.orion.test.date;
 import com.orion.utils.random.Randoms;
 import com.orion.utils.time.DateStream;
 import com.orion.utils.time.Dates;
+import com.orion.utils.time.LunarCalendar;
 import com.orion.utils.time.ago.DateAgo;
 import com.orion.utils.time.ago.DateAgo1;
 import org.junit.Test;
@@ -18,12 +19,11 @@ public class DateTests {
 
     @Test
     public void testFormat() {
-        System.out.println(Dates.current());
-    }
-
-    @Test
-    public void testParse() {
-        System.out.println(Dates.format(Dates.parse(Dates.current())));
+        String p = "yyyy-MM-dd HH:mm:ss SSS E W F X k a";
+        String format = Dates.current(p);
+        Date parse = Dates.parse(format, p);
+        System.out.println(format);
+        System.out.println(parse);
     }
 
     @Test
@@ -51,6 +51,18 @@ public class DateTests {
             System.out.print(new DateAgo1(target).strict(true).ago());
             System.out.println();
             s.addMinute(Randoms.randomInt(0, 100000));
+        }
+    }
+
+    @Test
+    public void testLunar() {
+        for (int i = 0; i < 50; i++) {
+            DateStream d = new DateStream();
+            d.addYear(i);
+            d.addDay(i);
+            Date date = d.get();
+            LunarCalendar lunarCalendar = new LunarCalendar(date);
+            System.out.println(Dates.format(date, Dates.YMD) + " " + lunarCalendar.toString() + " " + lunarCalendar.toChineseString());
         }
     }
 
