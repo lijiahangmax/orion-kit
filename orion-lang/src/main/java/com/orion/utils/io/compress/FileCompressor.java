@@ -69,6 +69,13 @@ public interface FileCompressor {
     void setFileName(String fileName);
 
     /**
+     * 设置压缩产物文件绝对路径
+     *
+     * @param path 压缩产物文件绝对路径
+     */
+    void setAbsoluteCompressPath(String path);
+
+    /**
      * 获取压缩产物文件绝对路径
      *
      * @return 压缩产物文件绝对路径

@@ -51,6 +51,11 @@ public abstract class BaseFileCompressor implements FileCompressor {
      */
     private String fileName;
 
+    /**
+     * 压缩产物绝对路径
+     */
+    private String absoluteCompressPath;
+
     public BaseFileCompressor(String suffix) {
         this.compressFiles = new LinkedHashMap<>();
         this.compressStreams = new LinkedHashMap<>();
@@ -116,7 +121,15 @@ public abstract class BaseFileCompressor implements FileCompressor {
     }
 
     @Override
+    public void setAbsoluteCompressPath(String path) {
+        this.absoluteCompressPath = path;
+    }
+
+    @Override
     public String getAbsoluteCompressPath() {
+        if (absoluteCompressPath != null) {
+            return absoluteCompressPath;
+        }
         return Files1.getPath(compressPath + "/" + fileName + "." + suffix);
     }
 

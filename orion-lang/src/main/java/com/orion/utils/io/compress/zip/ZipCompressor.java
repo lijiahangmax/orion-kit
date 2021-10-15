@@ -45,7 +45,7 @@ public class ZipCompressor extends BaseFileCompressor {
                 Streams.transfer(fileEntity.getValue(), out);
                 out.closeEntry();
             }
-            out.flush();
+            out.finish();
         }
     }
 
