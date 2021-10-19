@@ -570,6 +570,38 @@ public class Exceptions {
         return new ConvertException(s, t);
     }
 
+    public static EncryptException encrypt() {
+        return new EncryptException();
+    }
+
+    public static EncryptException encrypt(Throwable t) {
+        return new EncryptException(t);
+    }
+
+    public static EncryptException encrypt(String s) {
+        return new EncryptException(s);
+    }
+
+    public static EncryptException encrypt(String s, Throwable t) {
+        return new EncryptException(s, t);
+    }
+
+    public static DecryptException decrypt() {
+        return new DecryptException();
+    }
+
+    public static DecryptException decrypt(Throwable t) {
+        return new DecryptException(t);
+    }
+
+    public static DecryptException decrypt(String s) {
+        return new DecryptException(s);
+    }
+
+    public static DecryptException decrypt(String s, Throwable t) {
+        return new DecryptException(s, t);
+    }
+
     public static UnsupportedOperationException unsupported() {
         return new UnsupportedOperationException();
     }
