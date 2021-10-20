@@ -10,6 +10,11 @@ package com.orion.utils.crypto.enums;
 public enum WorkingMode {
 
     /**
+     * None
+     */
+    NONE("None"),
+
+    /**
      * 电子密码本模式 AES DES 3DES
      */
     ECB("ECB"),

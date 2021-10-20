@@ -10,6 +10,11 @@ package com.orion.utils.crypto.enums;
 public enum PaddingMode {
 
     /**
+     * PKCS1
+     */
+    PKCS1_PADDING("PKCS1Padding"),
+
+    /**
      * PKCS5
      */
     PKCS5_PADDING("PKCS5Padding"),

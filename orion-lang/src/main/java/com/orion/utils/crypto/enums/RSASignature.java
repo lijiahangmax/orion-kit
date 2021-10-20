@@ -15,6 +15,11 @@ import java.security.Signature;
 public enum RSASignature {
 
     /**
+     * NONE
+     */
+    NONE("NONEwithRSA"),
+
+    /**
      * MD5
      */
     MD5("MD5withRSA"),
