@@ -3,7 +3,7 @@ package com.orion.utils.crypto.enums;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
- * 秘钥标准
+ * 秘钥规格
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -25,6 +25,11 @@ public enum SecretKeySpecMode {
      * 3DES
      */
     DES3("DESEDE"),
+
+    /**
+     * SM4
+     */
+    SM4("SM4"),
 
     /**
      * HmacMD5
@@ -54,7 +59,9 @@ public enum SecretKeySpecMode {
     /**
      * HmacSHA512
      */
-    HMAC_SHA512("HmacSHA512");
+    HMAC_SHA512("HmacSHA512"),
+
+    ;
 
     SecretKeySpecMode(String mode) {
         this.mode = mode;
