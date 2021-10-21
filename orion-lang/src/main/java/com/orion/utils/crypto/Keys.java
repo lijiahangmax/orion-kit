@@ -13,9 +13,7 @@ import com.orion.utils.io.Streams;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.DESKeySpec;
-import javax.crypto.spec.DESedeKeySpec;
-import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.spec.*;
 import java.io.*;
 import java.security.KeyStore;
 import java.security.PrivateKey;
@@ -220,7 +218,7 @@ public class Keys {
     // -------------------- AES DES 3DES KEY --------------------
 
     /**
-     * 获取key规格长度
+     * 获取 key 规格长度
      *
      * @param mode mode
      * @return key 长度
@@ -233,18 +231,20 @@ public class Keys {
                 return CryptoConst.DES_KEY_LENGTH;
             case DES3:
                 return CryptoConst.DES3_KEY_LENGTH;
+            case SM4:
+                return CryptoConst.SM4_KEY_LENGTH;
             case RSA:
                 return CryptoConst.RSA_KEY_LENGTH;
             default:
-                throw Exceptions.unsupported("unsupported get " + mode + "key spec length");
+                throw Exceptions.unsupported("unsupported get " + mode + " key spec length");
         }
     }
 
     /**
-     * 获取key规格长度
+     * 获取 IV 规格长度
      *
      * @param mode mode
-     * @return key 长度
+     * @return IV 长度
      */
     public static int getIvSpecLength(CipherAlgorithm mode) {
         switch (mode) {
@@ -254,9 +254,64 @@ public class Keys {
                 return CryptoConst.DES_IV_LENGTH;
             case DES3:
                 return CryptoConst.DES3_IV_LENGTH;
+            case SM4:
+                return CryptoConst.SM4_IV_LENGTH;
             default:
-                throw Exceptions.unsupported("unsupported get " + mode + "key spec length");
+                throw Exceptions.unsupported("unsupported get " + mode + "iv spec length");
         }
+    }
+
+    /**
+     * 获取 GCM 规格长度
+     *
+     * @param mode mode
+     * @return GCM 长度
+     */
+    public static int getGcmSpecLength(CipherAlgorithm mode) {
+        switch (mode) {
+            case AES:
+                return CryptoConst.GCM_SPEC_LENGTH;
+            default:
+                throw Exceptions.unsupported("unsupported get " + mode + "gcm spec length");
+        }
+    }
+
+    public static IvParameterSpec getIvSpec(byte[] iv) {
+        return new IvParameterSpec(iv);
+    }
+
+    public static IvParameterSpec getIvSpec(CipherAlgorithm mode, byte[] iv) {
+        return getIvSpec(iv, getIvSpecLength(mode));
+    }
+
+    /**
+     * 获取向量
+     *
+     * @param iv        向量
+     * @param ivSpecLen 向量长度
+     * @return 填充后的向量
+     */
+    public static IvParameterSpec getIvSpec(byte[] iv, int ivSpecLen) {
+        return new IvParameterSpec(Arrays1.resize(iv, ivSpecLen));
+    }
+
+    public static GCMParameterSpec getGcmSpec(byte[] gcm) {
+        return new GCMParameterSpec(gcm.length, gcm);
+    }
+
+    public static GCMParameterSpec getGcmSpec(CipherAlgorithm mode, byte[] gcm) {
+        return new GCMParameterSpec(getGcmSpecLength(mode), gcm);
+    }
+
+    /**
+     * 生成 GCM 规范参数
+     *
+     * @param gcm        gcm
+     * @param gcmSpecLen 长度
+     * @return GCMParameterSpec
+     */
+    public static GCMParameterSpec getGcmSpec(byte[] gcm, int gcmSpecLen) {
+        return new GCMParameterSpec(gcmSpecLen, gcm);
     }
 
     /**
@@ -302,9 +357,10 @@ public class Keys {
      *
      * @param key     key
      * @param keySize key 位数
-     *                AES 128 192 256
-     *                DES 8的倍数
-     *                3DES >=24 8的倍数
+     *                AES 128 192 256  {@link CryptoConst#AES_KEY_LENGTH}
+     *                DES 8            {@link CryptoConst#DES_KEY_LENGTH}
+     *                3DES 24          {@link CryptoConst#DES3_KEY_LENGTH}
+     *                SM4  16          {@link CryptoConst#SM4_KEY_LENGTH}
      * @param mode    CipherAlgorithm
      * @return SecretKey
      */
@@ -318,15 +374,20 @@ public class Keys {
                     keyGenerator.init(keySize, random);
                     return SecretKeySpecMode.AES.getSecretKeySpec(keyGenerator.generateKey().getEncoded());
                 case DES:
-                    if (key.length < keySize) {
+                    if (key.length != keySize) {
                         key = Arrays1.resize(key, keySize);
                     }
                     return SecretKeyFactory.getInstance(mode.getMode()).generateSecret(new DESKeySpec(key));
                 case DES3:
-                    if (key.length < keySize) {
+                    if (key.length != keySize) {
                         key = Arrays1.resize(key, keySize);
                     }
                     return SecretKeyFactory.getInstance(mode.getMode()).generateSecret(new DESedeKeySpec(key));
+                case SM4:
+                    if (key.length != keySize) {
+                        key = Arrays1.resize(key, keySize);
+                    }
+                    return SecretKeySpecMode.SM4.getSecretKeySpec(key);
                 default:
                     throw Exceptions.unsupported("unsupported generator " + mode + " key");
             }

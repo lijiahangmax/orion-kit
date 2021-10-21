@@ -106,6 +106,25 @@ public class Objects1 {
     }
 
     /**
+     * 获取第一个非空对象
+     *
+     * @param values values
+     * @param <T>    T
+     * @return 非空对象 没有返回null
+     */
+    @SafeVarargs
+    public static <T> T firstNotNull(T... values) {
+        if (values != null) {
+            for (T val : values) {
+                if (val != null) {
+                    return val;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * 判断对象是否为null
      *
      * @param o 对象
