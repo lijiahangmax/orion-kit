@@ -1,6 +1,6 @@
 package com.orion.utils.crypto.symmetric;
 
-import com.orion.utils.Strings;
+import com.orion.utils.Exceptions;
 import com.orion.utils.crypto.enums.CipherAlgorithm;
 import com.orion.utils.crypto.enums.PaddingMode;
 import com.orion.utils.crypto.enums.WorkingMode;
@@ -20,109 +20,33 @@ import static com.orion.utils.codec.Base64s.encode;
  */
 public class EcbSymmetric extends BaseSymmetric {
 
-    public EcbSymmetric(CipherAlgorithm algorithm) {
-        super(algorithm, WorkingMode.ECB, PaddingMode.PKCS5_PADDING);
+    public EcbSymmetric(CipherAlgorithm algorithm, SecretKey secretKey) {
+        this(algorithm, PaddingMode.PKCS5_PADDING, secretKey);
     }
 
-    public EcbSymmetric(CipherAlgorithm algorithm, PaddingMode paddingMode) {
-        super(algorithm, WorkingMode.ECB, paddingMode);
+    public EcbSymmetric(CipherAlgorithm algorithm, PaddingMode paddingMode, SecretKey secretKey) {
+        super(algorithm, WorkingMode.ECB, paddingMode, secretKey);
     }
 
-    // -------------------- ENC --------------------
-
-    public String encrypt(String s, String key) {
-        byte[] bs = this.encrypt(Strings.bytes(s), null, Strings.bytes(key));
-        if (bs != null) {
-            return new String(bs);
-        }
-        return null;
-    }
-
-    public byte[] encrypt(byte[] bs, byte[] key) {
-        return encrypt(bs, null, key);
-    }
-
-    public String encrypt(String s, SecretKey key) {
-        byte[] bs = this.encrypt(Strings.bytes(s), key, null);
-        if (bs != null) {
-            return new String(bs);
-        }
-        return null;
-    }
-
-    public byte[] encrypt(byte[] bs, SecretKey key) {
-        return this.encrypt(bs, key, null);
-    }
-
-    /**
-     * 加密
-     *
-     * @param bs  明文
-     * @param key key
-     * @param k   StringKey
-     * @return 密文
-     */
-    private byte[] encrypt(byte[] bs, SecretKey key, byte[] k) {
+    @Override
+    public byte[] encrypt(byte[] plain) {
         try {
-            if (key == null) {
-                key = this.generatorKey(k);
-            }
             Cipher cipher = super.getCipher();
-            cipher.init(Cipher.ENCRYPT_MODE, key);
-            if (paddingMode.equals(PaddingMode.ZERO_PADDING)) {
-                return encode(cipher.doFinal(zeroPadding(bs, cipher.getBlockSize())));
-            } else {
-                return encode(cipher.doFinal(bs));
-            }
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            return encode(cipher.doFinal(this.zeroPadding(plain, cipher.getBlockSize())));
         } catch (Exception e) {
-            return null;
+            throw Exceptions.encrypt("encrypt data error", e);
         }
     }
 
-    // -------------------- DEC --------------------
-
-    public String decrypt(String s, String key) {
-        byte[] bs = this.decrypt(Strings.bytes(s), null, Strings.bytes(key));
-        if (bs != null) {
-            return new String(bs);
-        }
-        return null;
-    }
-
-    public byte[] decrypt(byte[] bs, byte[] key) {
-        return this.decrypt(bs, null, key);
-    }
-
-    public String decrypt(String s, SecretKey key) {
-        byte[] bs = this.decrypt(Strings.bytes(s), key, null);
-        if (bs != null) {
-            return new String(bs);
-        }
-        return null;
-    }
-
-    public byte[] decrypt(byte[] bs, SecretKey key) {
-        return this.decrypt(bs, key, null);
-    }
-
-    /**
-     * 解密
-     *
-     * @param bs  密文
-     * @param key key
-     * @param k   StringKey
-     * @return 明文
-     */
-    private byte[] decrypt(byte[] bs, SecretKey key, byte[] k) {
+    @Override
+    public byte[] decrypt(byte[] text) {
         try {
-            if (key == null) {
-                key = this.generatorKey(k);
-            }
             Cipher cipher = super.getCipher();
-            cipher.init(Cipher.DECRYPT_MODE, key);
-            return this.clearDecryptZero(cipher.doFinal(decode(bs)));
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            return this.clearZeroPadding(cipher.doFinal(decode(text)));
         } catch (Exception e) {
-            return null;
+            throw Exceptions.encrypt("decrypt data error", e);
         }
     }
 
