@@ -1,15 +1,14 @@
 package com.orion.utils.crypto.symmetric;
 
-import com.orion.utils.Arrays1;
-import com.orion.utils.crypto.Keys;
+import com.orion.utils.Strings;
+import com.orion.utils.Valid;
 import com.orion.utils.crypto.enums.CipherAlgorithm;
 import com.orion.utils.crypto.enums.PaddingMode;
 import com.orion.utils.crypto.enums.WorkingMode;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.GCMParameterSpec;
-import javax.crypto.spec.IvParameterSpec;
+import java.util.Arrays;
 
 /**
  * 非对称加密父类
@@ -20,67 +19,115 @@ import javax.crypto.spec.IvParameterSpec;
  */
 public abstract class BaseSymmetric {
 
+    /**
+     * 加密算法
+     */
     protected CipherAlgorithm algorithm;
 
+    /**
+     * 工作模式
+     */
     protected WorkingMode workingMode;
 
+    /**
+     * 填充模式
+     */
     protected PaddingMode paddingMode;
 
     /**
-     * 生成gcm规范参数 长度
-     * 128, 120, 112, 104, 96
+     * 秘钥
      */
-    protected int gcmSpecLen = 128;
+    protected SecretKey secretKey;
 
-    /**
-     * AES key 长度
-     * 128 192 256
-     */
-    protected int aesKeyLen = 128;
-
-    /**
-     * DES Key 长度
-     * 8的倍数
-     */
-    protected int desKeyLen = 8;
-
-    /**
-     * 3DES Key 长度
-     * >=24 8的倍数
-     */
-    protected int des3KeyLen = 24;
-
-    /**
-     * AES IV 长度
-     * >=16
-     */
-    protected int aesIvLen = 16;
-
-    /**
-     * DES IV 长度
-     * >=8
-     */
-    protected int desIvLen = 8;
-
-    /**
-     * 3DES IV 长度
-     * >=8
-     */
-    protected int des3IvLen = 8;
-
-    protected BaseSymmetric(CipherAlgorithm algorithm, WorkingMode workingMode, PaddingMode paddingMode) {
-        this.algorithm = algorithm;
-        this.workingMode = workingMode;
-        this.paddingMode = paddingMode;
+    protected BaseSymmetric(CipherAlgorithm cipherAlgorithm, WorkingMode workingMode, PaddingMode paddingMode, SecretKey secretKey) {
+        this.algorithm = Valid.notNull(cipherAlgorithm, "cipherAlgorithm is null");
+        this.workingMode = Valid.notNull(workingMode, "workingMode is null");
+        this.paddingMode = Valid.notNull(paddingMode, "paddingMode is null");
+        this.secretKey = Valid.notNull(secretKey, "secretKey is null");
     }
 
+    public byte[] encrypt(String plain) {
+        return this.encrypt(Strings.bytes(plain));
+    }
+
+    public String encryptAsString(String plain) {
+        return new String(this.encrypt(Strings.bytes(plain)));
+    }
+
+    public String encryptAsString(byte[] plain) {
+        return new String(this.encrypt(plain));
+    }
+
+    /**
+     * 加密
+     *
+     * @param plain 明文
+     * @return 密文
+     */
+    public abstract byte[] encrypt(byte[] plain);
+
+    public byte[] decrypt(String text) {
+        return this.decrypt(Strings.bytes(text));
+    }
+
+    public String decryptAsString(String text) {
+        return new String(this.decrypt(Strings.bytes(text)));
+    }
+
+    public String decryptAsString(byte[] text) {
+        return new String(this.decrypt(text));
+    }
+
+    /**
+     * 解密
+     *
+     * @param text 密文
+     * @return 明文
+     */
+    public abstract byte[] decrypt(byte[] text);
+
+    public boolean verify(String plain, String text) {
+        try {
+            return plain.equals(this.decryptAsString(text));
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * 验证加密结果
+     *
+     * @param plain 明文
+     * @param text  密文
+     * @return 是否成功
+     */
+    public boolean verify(byte[] plain, byte[] text) {
+        try {
+            return Arrays.equals(plain, this.decrypt(text));
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * 获取 cipher
+     *
+     * @return cipher
+     */
     protected Cipher getCipher() {
         return algorithm.getCipher(workingMode, paddingMode);
     }
 
-    protected byte[] clearDecryptZero(byte[] bytes) {
-        if (bytes == null) {
-            return null;
+    /**
+     * ZeroPadding 去除解密后的0位数
+     *
+     * @param bytes bytes
+     * @return bytes
+     */
+    protected byte[] clearZeroPadding(byte[] bytes) {
+        // 如果是0填充的话则需要去除0 否则解密结果的byte[]最后都是0 与明文比对会不匹配
+        if (!PaddingMode.ZERO_PADDING.equals(paddingMode)) {
+            return bytes;
         }
         int f = bytes.length;
         for (int i = 0; i < f; i++) {
@@ -95,103 +142,40 @@ public abstract class BaseSymmetric {
     }
 
     /**
-     * 0填充数据
+     * ZeroPadding 0填充数据
      *
-     * @param bs        数据
+     * @param bytes     数据
      * @param blockSize 块大小
      * @return 0填充块数据
      */
-    protected byte[] zeroPadding(byte[] bs, int blockSize) {
-        if (bs.length % blockSize == 0) {
-            return bs;
+    protected byte[] zeroPadding(byte[] bytes, int blockSize) {
+        // 如果是0填充的话则需要补全数据块的0
+        if (!PaddingMode.ZERO_PADDING.equals(paddingMode)) {
+            return bytes;
         }
-        int newSize = ((bs.length / blockSize) + 1) * blockSize;
-        byte[] bytes = new byte[newSize];
-        System.arraycopy(bs, 0, bytes, 0, bs.length);
-        return bytes;
-    }
-
-    /**
-     * 获取向量
-     *
-     * @param bs 向量
-     * @return 填充后的向量
-     */
-    protected IvParameterSpec getIvSpec(byte[] bs) {
-        switch (algorithm) {
-            case AES:
-                return new IvParameterSpec(Arrays1.resize(bs, aesIvLen));
-            case DES:
-                return new IvParameterSpec(Arrays1.resize(bs, desIvLen));
-            case DES3:
-                return new IvParameterSpec(Arrays1.resize(bs, des3IvLen));
-            default:
-                return null;
+        if (bytes.length % blockSize == 0) {
+            return bytes;
         }
+        int newSize = ((bytes.length / blockSize) + 1) * blockSize;
+        byte[] res = new byte[newSize];
+        System.arraycopy(bytes, 0, res, 0, bytes.length);
+        return res;
     }
 
-    /**
-     * 生成key
-     *
-     * @param bs key
-     * @return SecretKey
-     */
-    protected SecretKey generatorKey(byte[] bs) {
-        switch (algorithm) {
-            case AES:
-                return Keys.generatorKey(bs, aesKeyLen, algorithm);
-            case DES:
-                return Keys.generatorKey(bs, desKeyLen, algorithm);
-            case DES3:
-                return Keys.generatorKey(bs, des3KeyLen, algorithm);
-            default:
-                return null;
-        }
+    public CipherAlgorithm getAlgorithm() {
+        return algorithm;
     }
 
-    /**
-     * 生成gcm规范参数
-     *
-     * @param iv iv
-     * @return GCMParameterSpec
-     */
-    protected GCMParameterSpec getGcmSpec(byte[] iv) {
-        return new GCMParameterSpec(this.gcmSpecLen, iv);
+    public WorkingMode getWorkingMode() {
+        return workingMode;
     }
 
-    public BaseSymmetric setGcmSpecLen(int gcmSpecLen) {
-        this.gcmSpecLen = gcmSpecLen;
-        return this;
+    public PaddingMode getPaddingMode() {
+        return paddingMode;
     }
 
-    public BaseSymmetric setAesKeyLen(int aesKeyLen) {
-        this.aesKeyLen = aesKeyLen;
-        return this;
-    }
-
-    public BaseSymmetric setDesKeyLen(int desKeyLen) {
-        this.desKeyLen = desKeyLen;
-        return this;
-    }
-
-    public BaseSymmetric setDes3KeyLen(int des3KeyLen) {
-        this.des3KeyLen = des3KeyLen;
-        return this;
-    }
-
-    public BaseSymmetric setAesIvLen(int aesIvLen) {
-        this.aesIvLen = aesIvLen;
-        return this;
-    }
-
-    public BaseSymmetric setDesIvLen(int desIvLen) {
-        this.desIvLen = desIvLen;
-        return this;
-    }
-
-    public BaseSymmetric setDes3IvLen(int des3IvLen) {
-        this.des3IvLen = des3IvLen;
-        return this;
+    public SecretKey getSecretKey() {
+        return secretKey;
     }
 
 }
