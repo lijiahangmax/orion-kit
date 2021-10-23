@@ -2121,6 +2121,78 @@ public class Files1 {
         return Integer.parseInt(new BigInteger(permission + Strings.EMPTY, 10).toString(8));
     }
 
+    /**
+     * 10进制权限 转 字符串权限
+     * 读(r)=4
+     * 写(w)=2
+     * 执行(x)=1
+     *
+     * @param permission 777
+     * @return 字符串权限
+     */
+    public static String permission10toString(int permission) {
+        StringBuilder sb = new StringBuilder();
+        char[] chars = String.valueOf(permission).toCharArray();
+        for (char c : chars) {
+            int per = Integer.parseInt(c + Strings.EMPTY);
+            if ((per & 4) == 0) {
+                sb.append('-');
+            } else {
+                sb.append('r');
+            }
+            if ((per & 2) == 0) {
+                sb.append('-');
+            } else {
+                sb.append('w');
+            }
+            if ((per & 1) == 0) {
+                sb.append('-');
+            } else {
+                sb.append('x');
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 字符串权限 转  10进制权限
+     * 读(r)=4
+     * 写(w)=2
+     * 执行(x)=1
+     *
+     * @param permission rwx
+     * @return 10进制权限
+     */
+    public static int permissionStringTo10(String permission) {
+        StringBuilder res = new StringBuilder();
+        char[] chars = permission.toCharArray();
+        int length = chars.length;
+        if (length % 3 != 0) {
+            return -1;
+        }
+        for (int i = 0; i < length / 3; i++) {
+            int single = 0;
+            for (int j = 0; j < 3; j++) {
+                char per = chars[i * 3 + j];
+                switch (per) {
+                    case 'r':
+                        single += 4;
+                        break;
+                    case 'w':
+                        single += 2;
+                        break;
+                    case 'x':
+                        single += 1;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            res.append(single);
+        }
+        return Integer.parseInt(res.toString());
+    }
+
     // -------------------- sign --------------------
 
     /**
