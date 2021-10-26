@@ -114,7 +114,7 @@ public class ConnectionStore implements AutoCloseable {
      *
      * @param username   username
      * @param password   用户名密码或私钥密码
-     * @param pemKeyFile 私钥路径
+     * @param pemKeyFile 公钥路径
      * @param pemKey     私钥
      * @return this
      */

@@ -5,6 +5,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Logger;
 import com.orion.utils.Exceptions;
+import com.orion.utils.Valid;
 import com.orion.utils.io.Files1;
 
 import java.io.InputStream;
@@ -69,12 +70,13 @@ public class SessionHolder {
     }
 
     /**
-     * 添加秘钥登陆文件
+     * 添加公钥登陆文件
      *
-     * @param keyPath  文件路径
-     * @param password 文件密码
+     * @param keyPath  公钥路径
+     * @param password 公钥密码
      */
     public static void addIdentity(String keyPath, String password) {
+        Valid.notNull(password, "public key password is null");
         try {
             CH.addIdentity(keyPath, password);
         } catch (Exception e) {
@@ -83,12 +85,13 @@ public class SessionHolder {
     }
 
     /**
-     * 添加秘钥登陆文件
+     * 添加公钥登陆文件
      *
-     * @param keyPath  文件路径
-     * @param password 文件密码
+     * @param keyPath  公钥路径
+     * @param password 公钥密码
      */
     public static void addIdentity(String keyPath, byte[] password) {
+        Valid.notNull(password, "public key password is null");
         try {
             CH.addIdentity(keyPath, password);
         } catch (Exception e) {
@@ -97,9 +100,9 @@ public class SessionHolder {
     }
 
     /**
-     * 添加秘钥登陆文件
+     * 添加公钥登陆文件
      *
-     * @param keyPath 文件路径
+     * @param keyPath 公钥路径
      */
     public static void addIdentity(String keyPath) {
         try {
@@ -110,7 +113,7 @@ public class SessionHolder {
     }
 
     /**
-     * 删除加载的key
+     * 删除加载的公钥
      *
      * @param keyPath keyPath
      */
@@ -131,7 +134,7 @@ public class SessionHolder {
     }
 
     /**
-     * 删除所有加载的key
+     * 删除所有加载的公钥
      */
     public static void removeAllIdentity() {
         try {
@@ -142,7 +145,7 @@ public class SessionHolder {
     }
 
     /**
-     * 获取加载的key
+     * 获取加载的公钥
      *
      * @return keys
      */
