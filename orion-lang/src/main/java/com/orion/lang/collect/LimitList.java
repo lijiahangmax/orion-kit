@@ -44,6 +44,26 @@ public class LimitList<E> extends ArrayList<E> implements Serializable {
         this.limit = limit;
     }
 
+    public static <E> LimitList<E> of() {
+        return new LimitList<>();
+    }
+
+    public static <E> LimitList<E> of(int limit) {
+        return new LimitList<>(limit);
+    }
+
+    public static <E> LimitList<E> of(int initialCapacity, int limit) {
+        return new LimitList<>(initialCapacity, limit);
+    }
+
+    public static <E> LimitList<E> of(Collection<? extends E> c) {
+        return new LimitList<>(c);
+    }
+
+    public static <E> LimitList<E> of(Collection<? extends E> c, int limit) {
+        return new LimitList<>(c, limit);
+    }
+
     public LimitList<E> limit(int limit) {
         this.limit = limit;
         return this;

@@ -598,17 +598,29 @@ public class Dates extends BaseDates {
     }
 
     public static String ago(Date target) {
-        return ago(new Date(), target, false, false);
+        return ago(new Date(), target, true, false);
+    }
+
+    public static String ago(Date target, boolean vague) {
+        return ago(new Date(), target, vague, false);
+    }
+
+    public static String ago(Date target, boolean vague, boolean useWeek) {
+        return ago(new Date(), target, vague, useWeek);
     }
 
     public static String ago(Date source, Date target) {
-        return ago(source, target, false, false);
+        return ago(source, target, true, false);
+    }
+
+    public static String ago(Date source, Date target, boolean vague) {
+        return ago(source, target, vague, false);
     }
 
     /**
      * 获得时间的前后
      *
-     * @param source  源时间
+     * @param source  原时间
      * @param target  对比的时间
      * @param vague   是否使用模糊时间 如: 昨天/23小时前
      * @param useWeek 是否使用周 如: 1周前/8天前
