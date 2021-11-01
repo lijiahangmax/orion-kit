@@ -110,6 +110,54 @@ public class Exceptions {
 
     // -------------------- new --------------------
 
+    public static Exception exception() {
+        return new Exception();
+    }
+
+    public static Exception exception(Throwable t) {
+        return new Exception(t);
+    }
+
+    public static Exception exception(String s) {
+        return new Exception(s);
+    }
+
+    public static Exception exception(String s, Throwable t) {
+        return new Exception(s, t);
+    }
+
+    public static RuntimeException runtime() {
+        return new RuntimeException();
+    }
+
+    public static RuntimeException runtime(Throwable t) {
+        return new RuntimeException(t);
+    }
+
+    public static RuntimeException runtime(String s) {
+        return new RuntimeException(s);
+    }
+
+    public static RuntimeException runtime(String s, Throwable t) {
+        return new RuntimeException(s, t);
+    }
+
+    public static ApplicationException app() {
+        return new ApplicationException();
+    }
+
+    public static ApplicationException app(Throwable t) {
+        return new ApplicationException(t);
+    }
+
+    public static ApplicationException app(String s) {
+        return new ApplicationException(s);
+    }
+
+    public static ApplicationException app(String s, Throwable t) {
+        return new ApplicationException(s, t);
+    }
+
     public static IOException io() {
         return new IOException();
     }
@@ -176,38 +224,6 @@ public class Exceptions {
 
     public static ArrayIndexOutOfBoundsException arrayIndex(int index) {
         return new ArrayIndexOutOfBoundsException(index);
-    }
-
-    public static Exception exception() {
-        return new Exception();
-    }
-
-    public static Exception exception(Throwable t) {
-        return new Exception(t);
-    }
-
-    public static Exception exception(String s) {
-        return new Exception(s);
-    }
-
-    public static Exception exception(String s, Throwable t) {
-        return new Exception(s, t);
-    }
-
-    public static RuntimeException runtime() {
-        return new RuntimeException();
-    }
-
-    public static RuntimeException runtime(Throwable t) {
-        return new RuntimeException(t);
-    }
-
-    public static RuntimeException runtime(String s) {
-        return new RuntimeException(s);
-    }
-
-    public static RuntimeException runtime(String s, Throwable t) {
-        return new RuntimeException(s, t);
     }
 
     public static InvokeRuntimeException invoke() {
