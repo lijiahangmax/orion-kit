@@ -10,6 +10,28 @@ package com.orion.support.progress;
 public interface Progress {
 
     /**
+     * 开始
+     */
+    void start();
+
+    /**
+     * 完成
+     */
+    void finish();
+
+    /**
+     * 完成
+     *
+     * @param error 是否失败
+     */
+    void finish(boolean error);
+
+    /**
+     * 重置
+     */
+    void reset();
+
+    /**
      * 获取当前进度
      *
      * @return 当前进度

@@ -1,10 +1,5 @@
 package com.orion.support.progress;
 
-import com.orion.constant.Const;
-import com.orion.utils.Objects1;
-import com.orion.utils.Threads;
-
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
@@ -43,21 +38,6 @@ public class ByteTransferProgress implements Progress {
     protected long endTime;
 
     /**
-     * 是否计算实时速率
-     */
-    protected boolean computeRate;
-
-    /**
-     * 计算间隔
-     */
-    protected int interval;
-
-    /**
-     * 当前速度 byte
-     */
-    protected volatile long nowRate;
-
-    /**
      * 是否失败
      */
     protected volatile boolean error;
@@ -68,19 +48,9 @@ public class ByteTransferProgress implements Progress {
     protected volatile boolean done;
 
     /**
-     * 进度调度器
-     */
-    private ExecutorService rateExecutor;
-
-    /**
-     * 进度处理器
-     */
-    private Consumer<ByteTransferProgress> rateAcceptor;
-
-    /**
      * 传输完成回调
      */
-    private Consumer<ByteTransferProgress> callback;
+    protected Consumer<? super ByteTransferProgress> callback;
 
     public ByteTransferProgress(long end) {
         this(0, end);
@@ -92,81 +62,53 @@ public class ByteTransferProgress implements Progress {
         this.end = end;
     }
 
-    public ByteTransferProgress computeRate() {
-        return this.computeRate(Const.MS_S_1);
-    }
-
-    /**
-     * 开启计算实时速率
-     *
-     * @param interval 间隔
-     */
-    public ByteTransferProgress computeRate(int interval) {
-        this.computeRate = true;
-        this.interval = interval;
-        return this;
-    }
-
-    /**
-     * 进度调度器
-     *
-     * @param rateExecutor 线程池
-     * @return this
-     */
-    public ByteTransferProgress rateExecutor(ExecutorService rateExecutor) {
-        this.rateExecutor = rateExecutor;
-        return this;
-    }
-
-    /**
-     * 进度回调
-     *
-     * @param rateAcceptor acceptor
-     * @return this
-     */
-    public ByteTransferProgress rateAcceptor(Consumer<ByteTransferProgress> rateAcceptor) {
-        this.rateAcceptor = rateAcceptor;
-        return this;
-    }
-
     /**
      * 完成回调
      *
      * @param callback 回调器
      * @return this
      */
-    public ByteTransferProgress callback(Consumer<ByteTransferProgress> callback) {
+    public ByteTransferProgress callback(Consumer<? super ByteTransferProgress> callback) {
         this.callback = callback;
         return this;
     }
 
     /**
-     * 开始
+     * 设置开始
      *
-     * @param start 开始大小
+     * @param start start
      */
-    public void start(long start) {
+    public void setStart(long start) {
         this.start = start;
-        this.start();
     }
 
     /**
-     * 开始
+     * 设置结束
+     *
+     * @param end 结束
      */
+    public void setEnd(long end) {
+        this.end = end;
+    }
+
+    /**
+     * 设置当前值
+     *
+     * @param current current
+     */
+    public void setCurrent(long current) {
+        this.current = new AtomicLong(current);
+    }
+
+    @Override
     public void start() {
         this.startTime = System.currentTimeMillis();
-        if (computeRate) {
-            Threads.start(() -> {
-                while (!done) {
-                    long size = current.get();
-                    Threads.sleep(interval);
-                    this.nowRate = current.get() - size;
-                    if (rateAcceptor != null) {
-                        rateAcceptor.accept(this);
-                    }
-                }
-            }, Objects1.def(rateExecutor, Threads.CACHE_EXECUTOR));
-        }
+    }
+
+    @Override
+    public void reset() {
+        this.start = 0;
+        this.startTime = 0L;
     }
 
     /**
@@ -176,24 +118,6 @@ public class ByteTransferProgress implements Progress {
      */
     public void accept(long read) {
         current.addAndGet(read);
-    }
-
-    /**
-     * 设置当前值
-     *
-     * @param current current
-     */
-    public void current(long current) {
-        this.current = new AtomicLong(current);
-    }
-
-    /**
-     * 设置结束
-     *
-     * @param end 结束
-     */
-    public void end(long end) {
-        this.end = end;
     }
 
     /**
@@ -214,16 +138,12 @@ public class ByteTransferProgress implements Progress {
         this.endTime = endTime;
     }
 
-    /**
-     * 结束
-     */
+    @Override
     public void finish() {
         this.finish(false);
     }
 
-    /**
-     * 结束
-     */
+    @Override
     public void finish(boolean error) {
         if (done) {
             return;
@@ -254,10 +174,6 @@ public class ByteTransferProgress implements Progress {
      */
     public long usedTime() {
         return endTime - startTime;
-    }
-
-    public long getNowRate() {
-        return nowRate;
     }
 
     public long getStart() {

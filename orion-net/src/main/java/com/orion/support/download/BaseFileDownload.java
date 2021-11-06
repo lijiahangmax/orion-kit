@@ -1,6 +1,6 @@
 package com.orion.support.download;
 
-import com.orion.support.progress.ByteTransferProgress;
+import com.orion.support.progress.ByteTransferRateProgress;
 import com.orion.utils.Valid;
 import com.orion.utils.io.FileLocks;
 import com.orion.utils.io.Files1;
@@ -38,7 +38,7 @@ public abstract class BaseFileDownload implements Runnable {
     /**
      * 进度条
      */
-    protected ByteTransferProgress progress;
+    protected ByteTransferRateProgress progress;
 
     /**
      * 缓冲区大小
@@ -52,7 +52,7 @@ public abstract class BaseFileDownload implements Runnable {
         this.local = local;
         this.bufferSize = bufferSize;
         this.lock = FileLocks.getSuffixFileLock(lockSuffix, local);
-        this.progress = new ByteTransferProgress(0);
+        this.progress = new ByteTransferRateProgress(0);
     }
 
     /**
@@ -64,7 +64,7 @@ public abstract class BaseFileDownload implements Runnable {
         boolean error = false;
         try {
             long remoteSize = this.getFileSize();
-            progress.end(remoteSize);
+            progress.setEnd(remoteSize);
             if (Files1.isFile(local)) {
                 long localSize = local.length();
                 if (localSize == remoteSize) {
@@ -127,8 +127,9 @@ public abstract class BaseFileDownload implements Runnable {
      */
     protected void breakPointResume(long skip) throws IOException {
         this.initDownload(true, skip);
-        progress.current(skip);
-        progress.start(skip);
+        progress.setStart(skip);
+        progress.setCurrent(skip);
+        progress.start();
         OutputStream out = null;
         try {
             out = new BufferedOutputStream(Files1.openOutputStreamFastSafe(local, true), bufferSize);
@@ -178,7 +179,7 @@ public abstract class BaseFileDownload implements Runnable {
      */
     protected abstract void transferFinish() throws IOException;
 
-    public ByteTransferProgress getProgress() {
+    public ByteTransferRateProgress getProgress() {
         return progress;
     }
 

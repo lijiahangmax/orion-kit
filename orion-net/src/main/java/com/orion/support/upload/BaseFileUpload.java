@@ -1,7 +1,7 @@
 package com.orion.support.upload;
 
 import com.orion.constant.Const;
-import com.orion.support.progress.ByteTransferProgress;
+import com.orion.support.progress.ByteTransferRateProgress;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
 import com.orion.utils.io.FileLocks;
@@ -37,7 +37,7 @@ public abstract class BaseFileUpload implements Runnable {
     /**
      * 进度条
      */
-    protected ByteTransferProgress progress;
+    protected ByteTransferRateProgress progress;
 
     /**
      * 缓冲区大小
@@ -54,7 +54,7 @@ public abstract class BaseFileUpload implements Runnable {
         this.local = local;
         this.bufferSize = bufferSize;
         this.lock = FileLocks.getSuffixFileLock(lockSuffix, local);
-        this.progress = new ByteTransferProgress(local.length());
+        this.progress = new ByteTransferRateProgress(local.length());
     }
 
     /**
@@ -125,8 +125,9 @@ public abstract class BaseFileUpload implements Runnable {
      */
     protected void breakPointResume(long skip) throws IOException {
         this.initUpload(true, skip);
-        progress.current(skip);
-        progress.start(skip);
+        progress.setStart(skip);
+        progress.setCurrent(skip);
+        progress.start();
         RandomAccessFile access = null;
         try {
             access = Files1.openRandomAccessSafe(local, Const.ACCESS_R);
@@ -177,7 +178,7 @@ public abstract class BaseFileUpload implements Runnable {
      */
     protected abstract void transferFinish() throws IOException;
 
-    public ByteTransferProgress getProgress() {
+    public ByteTransferRateProgress getProgress() {
         return progress;
     }
 
