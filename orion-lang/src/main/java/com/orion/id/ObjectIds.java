@@ -19,7 +19,7 @@ public class ObjectIds {
     private ObjectIds() {
     }
 
-    private static final AtomicInteger NEXT_SEQ_INCR = new AtomicInteger(Randoms.randomInt());
+    private static final AtomicInteger NEXT_SEQ_INCREMENT = new AtomicInteger(Randoms.randomInt());
 
     private static final int MACHINE = Systems.getMachineCode();
     // private static final int MACHINE = Systems.getMachineCode() | Systems.getProcessCode();
@@ -66,7 +66,7 @@ public class ObjectIds {
         ByteBuffer bb = ByteBuffer.wrap(new byte[12]);
         bb.putInt((int) System.currentTimeMillis() / 1000);
         bb.putInt(MACHINE);
-        bb.putInt(NEXT_SEQ_INCR.getAndIncrement());
+        bb.putInt(NEXT_SEQ_INCREMENT.getAndIncrement());
         return bb.array();
     }
 

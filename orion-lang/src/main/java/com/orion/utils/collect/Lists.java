@@ -172,12 +172,7 @@ public class Lists extends Collections {
 
     @SafeVarargs
     public static <E> List<E> of(E... e) {
-        List<E> list = new ArrayList<>();
-        int length = Arrays1.length(e);
-        for (int i = 0; i < length; i++) {
-            list.add(e[i]);
-        }
-        return list;
+        return new ArrayList<>(Arrays.asList(e));
     }
 
     @SafeVarargs
@@ -203,21 +198,21 @@ public class Lists extends Collections {
         return list;
     }
 
-    public static <E> List<E> as(Iterator<E> iter) {
+    public static <E> List<E> as(Iterator<E> iterator) {
         List<E> list = new ArrayList<>();
-        if (iter != null) {
-            while (iter.hasNext()) {
-                list.add(iter.next());
+        if (iterator != null) {
+            while (iterator.hasNext()) {
+                list.add(iterator.next());
             }
         }
         return list;
     }
 
-    public static <E> List<E> as(Enumeration<E> iter) {
+    public static <E> List<E> as(Enumeration<E> iterator) {
         List<E> list = new ArrayList<>();
-        if (iter != null) {
-            while (iter.hasMoreElements()) {
-                list.add(iter.nextElement());
+        if (iterator != null) {
+            while (iterator.hasMoreElements()) {
+                list.add(iterator.nextElement());
             }
         }
         return list;
@@ -259,8 +254,8 @@ public class Lists extends Collections {
             for (int i = size - len - start; i > 0; i--) {
                 list.remove(len + i - 1);
             }
-            for (int i = 0; i < start; i++) {
-                list.remove(0);
+            if (start > 0) {
+                list.subList(0, start).clear();
             }
         } else {
             throw Exceptions.index("cut list error: startIndex: " + start + ", cutLength: " + len + ", needSize: " + (start + len) + ", but maxSize: " + size);
@@ -275,6 +270,7 @@ public class Lists extends Collections {
      * @param <E>  ignore
      * @return 合并后的list
      */
+    @SafeVarargs
     public static <E> List<E> merge(List<E> list, List<E>... ms) {
         if (list == null) {
             list = new ArrayList<>();
@@ -330,43 +326,31 @@ public class Lists extends Collections {
     /**
      * 查找第一个查询到的元素的位置
      *
-     * @param a   集合
-     * @param e   元素
-     * @param <E> ignore
+     * @param list 集合
+     * @param e    元素
+     * @param <E>  ignore
      * @return 位置
      */
-    public static <E> int indexOf(List<E> a, E e) {
-        int size = size(a);
-        if (size == 0) {
+    public static <E> int indexOf(List<E> list, E e) {
+        if (isEmpty(list)) {
             return -1;
         }
-        for (int i = 0; i < size; i++) {
-            if (Objects1.eq(a.get(i), e)) {
-                return i;
-            }
-        }
-        return -1;
+        return list.indexOf(e);
     }
 
     /**
      * 查找最后一个查询到的元素的位置
      *
-     * @param a   集合
-     * @param e   元素
-     * @param <E> ignore
+     * @param list 集合
+     * @param e    元素
+     * @param <E>  ignore
      * @return 位置
      */
-    public static <E> int lastIndexOf(List<E> a, E e) {
-        int size = size(a);
-        if (size == 0) {
+    public static <E> int lastIndexOf(List<E> list, E e) {
+        if (isEmpty(list)) {
             return -1;
         }
-        for (int i = size - 1; i >= 0; i--) {
-            if (Objects1.eq(a.get(i), e)) {
-                return i;
-            }
-        }
-        return -1;
+        return list.lastIndexOf(e);
     }
 
     /**
@@ -403,16 +387,14 @@ public class Lists extends Collections {
      * @param <E>  E
      */
     public static <E> void removeToSize(List<E> list, int size) {
-        int oldSize = size(list);
-        if (size >= oldSize) {
+        int beforeSize = size(list);
+        if (size >= beforeSize) {
             return;
         }
-        for (int i = size; i < oldSize; i++) {
-            list.remove(size);
-        }
+        list.subList(size, beforeSize).clear();
     }
 
-    // -------------------- getset --------------------
+    // -------------------- get set --------------------
 
     public static <E> E get(List<E> list, int i) {
         int size = size(list);
@@ -538,29 +520,24 @@ public class Lists extends Collections {
     /**
      * 拷贝集合
      *
-     * @param src  原数组
-     * @param dest 目标数组
-     * @param <T>  ignore
+     * @param src    原集合
+     * @param target 目标集合
+     * @param <T>    ignore
      */
-    public static <T> void copy(List<? extends T> src, List<? super T> dest) {
+    public static <T> void copy(List<? extends T> src, List<? super T> target) {
         int srcSize = size(src);
-        int distSize = size(dest);
-        int size;
-        if (srcSize <= distSize) {
-            size = srcSize;
-        } else {
-            size = distSize;
-        }
-        if (srcSize < 10 || (src instanceof RandomAccess && dest instanceof RandomAccess)) {
+        int distSize = size(target);
+        int size = Math.min(srcSize, distSize);
+        if (srcSize < 10 || (src instanceof RandomAccess && target instanceof RandomAccess)) {
             for (int i = 0; i < size; i++) {
-                dest.set(i, src.get(i));
+                target.set(i, src.get(i));
             }
         } else {
-            ListIterator<? super T> di = dest.listIterator();
+            ListIterator<? super T> ti = target.listIterator();
             ListIterator<? extends T> si = src.listIterator();
             for (int i = 0; i < size; i++) {
-                di.next();
-                di.set(si.next());
+                ti.next();
+                ti.set(si.next());
             }
         }
     }

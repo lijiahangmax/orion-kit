@@ -180,12 +180,7 @@ public class Sets extends Collections {
 
     @SafeVarargs
     public static <E> Set<E> of(E... e) {
-        Set<E> set = new HashSet<>();
-        int length = Arrays1.length(e);
-        for (int i = 0; i < length; i++) {
-            set.add(e[i]);
-        }
-        return set;
+        return new HashSet<>(Arrays.asList(e));
     }
 
     @SafeVarargs
@@ -211,21 +206,21 @@ public class Sets extends Collections {
         return set;
     }
 
-    public static <E> Set<E> as(Iterator<E> iter) {
+    public static <E> Set<E> as(Iterator<E> iterator) {
         Set<E> list = new LinkedHashSet<>();
-        if (iter != null) {
-            while (iter.hasNext()) {
-                list.add(iter.next());
+        if (iterator != null) {
+            while (iterator.hasNext()) {
+                list.add(iterator.next());
             }
         }
         return list;
     }
 
-    public static <E> Set<E> as(Enumeration<E> iter) {
+    public static <E> Set<E> as(Enumeration<E> iterator) {
         Set<E> list = new LinkedHashSet<>();
-        if (iter != null) {
-            while (iter.hasMoreElements()) {
-                list.add(iter.nextElement());
+        if (iterator != null) {
+            while (iterator.hasMoreElements()) {
+                list.add(iterator.nextElement());
             }
         }
         return list;
@@ -259,7 +254,7 @@ public class Sets extends Collections {
      * 从set获取元素
      *
      * @param set set
-     * @param i
+     * @param i   index
      * @param <E> ignore
      * @return 元素
      */
@@ -306,14 +301,14 @@ public class Sets extends Collections {
         if (size >= oldSize) {
             return;
         }
-        Iterator<E> iter = set.iterator();
+        Iterator<E> iterator = set.iterator();
         int d = oldSize - size;
         for (int i = 0; i < size; i++) {
-            iter.next();
+            iterator.next();
         }
         for (int i = 0; i < d; i++) {
-            iter.next();
-            iter.remove();
+            iterator.next();
+            iterator.remove();
         }
     }
 

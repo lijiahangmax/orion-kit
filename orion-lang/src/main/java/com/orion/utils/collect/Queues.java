@@ -18,7 +18,6 @@ import java.util.function.Supplier;
  * @version 1.0.0
  * @since 2020/11/6 11:38
  */
-@SuppressWarnings("ALL")
 public class Queues extends Collections {
 
     private Queues() {
@@ -78,22 +77,12 @@ public class Queues extends Collections {
 
     @SafeVarargs
     public static <E> Queue<E> of(E... e) {
-        Queue<E> q = new ConcurrentLinkedQueue<>();
-        int length = Arrays1.length(e);
-        for (int i = 0; i < length; i++) {
-            q.add(e[i]);
-        }
-        return q;
+        return new ConcurrentLinkedQueue<>(Arrays.asList(e));
     }
 
     @SafeVarargs
     public static <E> Deque<E> ofd(E... e) {
-        Deque<E> q = new ConcurrentLinkedDeque<>();
-        int length = Arrays1.length(e);
-        for (int i = 0; i < length; i++) {
-            q.add(e[i]);
-        }
-        return q;
+        return new ConcurrentLinkedDeque<>(Arrays.asList(e));
     }
 
     @SafeVarargs
@@ -142,41 +131,41 @@ public class Queues extends Collections {
         return q;
     }
 
-    public static <E> Queue<E> as(Iterator<E> iter) {
+    public static <E> Queue<E> as(Iterator<E> iterator) {
         Queue<E> q = new ConcurrentLinkedQueue<>();
-        if (iter != null) {
-            while (iter.hasNext()) {
-                q.add(iter.next());
+        if (iterator != null) {
+            while (iterator.hasNext()) {
+                q.add(iterator.next());
             }
         }
         return q;
     }
 
-    public static <E> Deque<E> asd(Iterator<E> iter) {
+    public static <E> Deque<E> asd(Iterator<E> iterator) {
         Deque<E> q = new ConcurrentLinkedDeque<>();
-        if (iter != null) {
-            while (iter.hasNext()) {
-                q.add(iter.next());
+        if (iterator != null) {
+            while (iterator.hasNext()) {
+                q.add(iterator.next());
             }
         }
         return q;
     }
 
-    public static <E> Queue<E> as(Enumeration<E> iter) {
+    public static <E> Queue<E> as(Enumeration<E> iterator) {
         Queue<E> q = new ConcurrentLinkedQueue<>();
-        if (iter != null) {
-            while (iter.hasMoreElements()) {
-                q.add(iter.nextElement());
+        if (iterator != null) {
+            while (iterator.hasMoreElements()) {
+                q.add(iterator.nextElement());
             }
         }
         return q;
     }
 
-    public static <E> Deque<E> asd(Enumeration<E> iter) {
+    public static <E> Deque<E> asd(Enumeration<E> iterator) {
         Deque<E> q = new ConcurrentLinkedDeque<>();
-        if (iter != null) {
-            while (iter.hasMoreElements()) {
-                q.add(iter.nextElement());
+        if (iterator != null) {
+            while (iterator.hasMoreElements()) {
+                q.add(iterator.nextElement());
             }
         }
         return q;

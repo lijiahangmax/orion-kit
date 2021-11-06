@@ -31,15 +31,15 @@ class Collections {
      * @param c 集合
      * @return String
      */
-    public static String join(Collection c) {
+    public static String join(Collection<?> c) {
         return join(c, ",", Strings.EMPTY, Strings.EMPTY);
     }
 
-    public static String join(Collection c, String split) {
+    public static String join(Collection<?> c, String split) {
         return join(c, split, Strings.EMPTY, Strings.EMPTY);
     }
 
-    public static String join(Collection c, String split, String open, String end) {
+    public static String join(Collection<?> c, String split, String open, String end) {
         int size = size(c);
         open = Strings.def(open);
         end = Strings.def(end);
@@ -49,7 +49,7 @@ class Collections {
         }
         StringBuilder sb = new StringBuilder();
         sb.append(open);
-        Iterator iterator = c.iterator();
+        Iterator<?> iterator = c.iterator();
         int i = 0;
         while (iterator.hasNext()) {
             sb.append(iterator.next());
@@ -66,7 +66,7 @@ class Collections {
      * @param c 集合
      * @return 长度
      */
-    public static int size(Collection c) {
+    public static int size(Collection<?> c) {
         return c == null ? 0 : c.size();
     }
 
@@ -76,7 +76,7 @@ class Collections {
      * @param c 集合
      * @return true为空
      */
-    public static boolean isEmpty(Collection c) {
+    public static boolean isEmpty(Collection<?> c) {
         return size(c) == 0;
     }
 
@@ -86,7 +86,7 @@ class Collections {
      * @param c 集合
      * @return true不为空
      */
-    public static boolean isNotEmpty(Collection c) {
+    public static boolean isNotEmpty(Collection<?> c) {
         return !isEmpty(c);
     }
 
@@ -96,11 +96,11 @@ class Collections {
      * @param cs 集合
      * @return true全为空
      */
-    public static boolean isAllEmpty(Collection... cs) {
+    public static boolean isAllEmpty(Collection<?>... cs) {
         if (cs == null) {
             return true;
         }
-        for (Collection c : cs) {
+        for (Collection<?> c : cs) {
             if (!isEmpty(c)) {
                 return false;
             }
@@ -114,11 +114,11 @@ class Collections {
      * @param cs 集合
      * @return true全不为空, 参数为空false
      */
-    public static boolean isNoneEmpty(Collection... cs) {
+    public static boolean isNoneEmpty(Collection<?>... cs) {
         if (cs == null) {
             return false;
         }
-        for (Collection c : cs) {
+        for (Collection<?> c : cs) {
             if (isEmpty(c)) {
                 return false;
             }
@@ -127,15 +127,46 @@ class Collections {
     }
 
     /**
+     * 集合是否包含元素
+     *
+     * @param c   c
+     * @param e   e
+     * @param <E> E
+     * @return 是否包含
+     */
+    public static <E> boolean contains(Collection<E> c, E e) {
+        if (isEmpty(c)) {
+            return false;
+        }
+        return c.contains(e);
+    }
+
+    /**
+     * 集合是否全部包含元素
+     *
+     * @param c   c
+     * @param e   e
+     * @param <E> E
+     * @return 是否全部包含
+     */
+    public static <E> boolean containsAll(Collection<E> c, Collection<E> e) {
+        if (isEmpty(c)) {
+            return false;
+        }
+        return c.containsAll(e);
+    }
+
+    /**
      * 去除集合中的null
      *
      * @param c 集合
      */
-    public static void compact(Collection c) {
+    public static void compact(Collection<?> c) {
         if (size(c) == 0) {
             return;
         }
         while (c.remove(null)) {
+            // ignore
         }
     }
 
@@ -145,13 +176,14 @@ class Collections {
      * @param c  集合
      * @param es 排除值 这个值可以为基本类型的元素, 但是不能是基本类型的数组
      */
-    public static void exclude(Collection c, Object... es) {
+    public static void exclude(Collection<?> c, Object... es) {
         if (size(c) == 0) {
             return;
         }
         Set<Object> e = Sets.of(es);
         for (Object o : e) {
             while (c.remove(o)) {
+                // ignore
             }
         }
     }
@@ -189,7 +221,6 @@ class Collections {
         } else if (isEmpty(c2) && !isEmpty(c1)) {
             return new HashSet<>(c1);
         }
-
         Set<E> r = new HashSet<>(c1);
         r.addAll(c2);
         return r;
@@ -236,8 +267,7 @@ class Collections {
         } else if (isEmpty(c1) && !isEmpty(c2)) {
             return new HashSet<>(c2);
         }
-
-        HashSet<E> r = new HashSet<>(c1);
+        Set<E> r = new HashSet<>(c1);
         if (diffAll) {
             HashSet<E> i = new HashSet<>(c1);
             r.addAll(c2);
