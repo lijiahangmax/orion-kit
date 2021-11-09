@@ -21,6 +21,8 @@ import java.util.Map;
  */
 public class TarCompressor extends BaseFileCompressor {
 
+    private TarArchiveOutputStream outputStream;
+
     public TarCompressor() {
         this(Const.SUFFIX_TAR);
     }
@@ -31,25 +33,35 @@ public class TarCompressor extends BaseFileCompressor {
 
     @Override
     public void doCompress() throws Exception {
-        try (TarArchiveOutputStream out = new TarArchiveOutputStream(Files1.openOutputStreamFast(new File(this.getAbsoluteCompressPath())))) {
+        try {
+            this.outputStream = new TarArchiveOutputStream(Files1.openOutputStreamFast(new File(this.getAbsoluteCompressPath())));
             // 设置压缩文件
             for (Map.Entry<String, File> fileEntity : compressFiles.entrySet()) {
-                ArchiveEntry entity = out.createArchiveEntry(fileEntity.getValue(), fileEntity.getKey());
-                out.putArchiveEntry(entity);
+                ArchiveEntry entity = outputStream.createArchiveEntry(fileEntity.getValue(), fileEntity.getKey());
+                outputStream.putArchiveEntry(entity);
                 try (InputStream in = Files1.openInputStreamFast(fileEntity.getValue())) {
-                    Streams.transfer(in, out);
+                    Streams.transfer(in, outputStream);
                 }
-                out.closeArchiveEntry();
+                outputStream.closeArchiveEntry();
+                super.notify(fileEntity.getKey());
             }
             for (Map.Entry<String, InputStream> fileEntity : compressStreams.entrySet()) {
                 TarArchiveEntry entity = new TarArchiveEntry(fileEntity.getKey());
                 entity.setSize(fileEntity.getValue().available());
-                out.putArchiveEntry(entity);
-                Streams.transfer(fileEntity.getValue(), out);
-                out.closeArchiveEntry();
+                outputStream.putArchiveEntry(entity);
+                Streams.transfer(fileEntity.getValue(), outputStream);
+                outputStream.closeArchiveEntry();
+                super.notify(fileEntity.getKey());
             }
-            out.finish();
+            outputStream.finish();
+        } finally {
+            Streams.close(outputStream);
         }
+    }
+
+    @Override
+    public TarArchiveOutputStream getCloseable() {
+        return outputStream;
     }
 
 }

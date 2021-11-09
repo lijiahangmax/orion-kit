@@ -19,6 +19,8 @@ import java.io.OutputStream;
  */
 public class TarDecompressor extends BaseFileDecompressor {
 
+    private TarArchiveInputStream inputStream;
+
     public TarDecompressor() {
         this(Const.SUFFIX_TAR);
     }
@@ -29,19 +31,27 @@ public class TarDecompressor extends BaseFileDecompressor {
 
     @Override
     public void doDecompress() throws Exception {
-        try (TarArchiveInputStream in = new TarArchiveInputStream(Files1.openInputStreamFast(decompressFile))) {
+        try {
+            this.inputStream = new TarArchiveInputStream(Files1.openInputStreamFast(decompressFile));
             ArchiveEntry entry;
-            while ((entry = in.getNextEntry()) != null) {
+            while ((entry = inputStream.getNextEntry()) != null) {
                 File file = new File(decompressTargetPath, entry.getName());
                 if (entry.isDirectory()) {
                     Files1.mkdirs(file);
                 } else {
                     try (OutputStream out = Files1.openOutputStreamFast(file)) {
-                        Streams.transfer(in, out);
+                        Streams.transfer(inputStream, out);
                     }
                 }
             }
+        } finally {
+            Streams.close(inputStream);
         }
+    }
+
+    @Override
+    public TarArchiveInputStream getCloseable() {
+        return inputStream;
     }
 
 }

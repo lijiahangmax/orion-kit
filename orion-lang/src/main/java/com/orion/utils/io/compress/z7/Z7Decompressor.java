@@ -2,6 +2,7 @@ package com.orion.utils.io.compress.z7;
 
 import com.orion.constant.Const;
 import com.orion.utils.io.Files1;
+import com.orion.utils.io.Streams;
 import com.orion.utils.io.compress.BaseFileDecompressor;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZFile;
@@ -19,6 +20,8 @@ import java.io.OutputStream;
  */
 public class Z7Decompressor extends BaseFileDecompressor {
 
+    private SevenZFile z7File;
+
     public Z7Decompressor() {
         this(Const.SUFFIX_7Z);
     }
@@ -29,18 +32,21 @@ public class Z7Decompressor extends BaseFileDecompressor {
 
     @Override
     public void doDecompress() throws Exception {
-        try (SevenZFile archive = new SevenZFile(decompressFile)) {
+        try {
+            this.z7File = new SevenZFile(decompressFile);
             ArchiveEntry entry;
-            while ((entry = archive.getNextEntry()) != null) {
+            while ((entry = z7File.getNextEntry()) != null) {
                 File file = new File(decompressTargetPath, entry.getName());
                 if (entry.isDirectory()) {
                     Files1.mkdirs(file);
                 } else {
                     try (OutputStream out = Files1.openOutputStreamFast(file)) {
-                        transfer(archive, out);
+                        transfer(z7File, out);
                     }
                 }
             }
+        } finally {
+            Streams.close(z7File);
         }
     }
 
@@ -53,6 +59,11 @@ public class Z7Decompressor extends BaseFileDecompressor {
         while ((n = archive.read(buffer)) != -1) {
             output.write(buffer, 0, n);
         }
+    }
+
+    @Override
+    public SevenZFile getCloseable() {
+        return z7File;
     }
 
 }

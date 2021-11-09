@@ -2,6 +2,7 @@ package com.orion.utils.io.compress.z7;
 
 import com.orion.constant.Const;
 import com.orion.utils.io.Files1;
+import com.orion.utils.io.Streams;
 import com.orion.utils.io.compress.BaseFileCompressor;
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile;
@@ -20,6 +21,8 @@ import java.util.Map;
  */
 public class Z7Compressor extends BaseFileCompressor {
 
+    private SevenZOutputFile z7OutputFile;
+
     public Z7Compressor() {
         this(Const.SUFFIX_7Z);
     }
@@ -30,25 +33,30 @@ public class Z7Compressor extends BaseFileCompressor {
 
     @Override
     public void doCompress() throws Exception {
-        try (SevenZOutputFile out = new SevenZOutputFile(new File(this.getAbsoluteCompressPath()))) {
+        try {
+            this.z7OutputFile = new SevenZOutputFile(new File(this.getAbsoluteCompressPath()));
             // 设置压缩文件
             for (Map.Entry<String, File> fileEntity : compressFiles.entrySet()) {
-                SevenZArchiveEntry entity = out.createArchiveEntry(fileEntity.getValue(), fileEntity.getKey());
-                out.putArchiveEntry(entity);
+                SevenZArchiveEntry entity = z7OutputFile.createArchiveEntry(fileEntity.getValue(), fileEntity.getKey());
+                z7OutputFile.putArchiveEntry(entity);
                 try (InputStream in = Files1.openInputStreamFast(fileEntity.getValue())) {
-                    transfer(in, out);
+                    transfer(in, z7OutputFile);
                 }
-                out.closeArchiveEntry();
+                z7OutputFile.closeArchiveEntry();
+                super.notify(fileEntity.getKey());
             }
             for (Map.Entry<String, InputStream> fileEntity : compressStreams.entrySet()) {
                 SevenZArchiveEntry entity = new SevenZArchiveEntry();
                 entity.setName(fileEntity.getKey());
                 entity.setSize(fileEntity.getValue().available());
-                out.putArchiveEntry(entity);
-                transfer(fileEntity.getValue(), out);
-                out.closeArchiveEntry();
+                z7OutputFile.putArchiveEntry(entity);
+                transfer(fileEntity.getValue(), z7OutputFile);
+                z7OutputFile.closeArchiveEntry();
+                super.notify(fileEntity.getKey());
             }
-            out.finish();
+            z7OutputFile.finish();
+        } finally {
+            Streams.close(z7OutputFile);
         }
     }
 
@@ -61,6 +69,11 @@ public class Z7Compressor extends BaseFileCompressor {
         while ((n = input.read(buffer)) != -1) {
             out.write(buffer, 0, n);
         }
+    }
+
+    @Override
+    public SevenZOutputFile getCloseable() {
+        return z7OutputFile;
     }
 
 }
