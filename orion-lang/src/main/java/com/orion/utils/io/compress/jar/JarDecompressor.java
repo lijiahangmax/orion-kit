@@ -21,6 +21,8 @@ import java.util.jar.JarFile;
  */
 public class JarDecompressor extends BaseFileDecompressor {
 
+    private JarFile jarFile;
+
     public JarDecompressor() {
         this(Const.SUFFIX_JAR);
     }
@@ -31,7 +33,8 @@ public class JarDecompressor extends BaseFileDecompressor {
 
     @Override
     public void doDecompress() throws Exception {
-        try (JarFile jarFile = new JarFile(decompressFile)) {
+        try {
+            this.jarFile = new JarFile(decompressFile);
             Enumeration<?> entries = jarFile.entries();
             while (entries.hasMoreElements()) {
                 JarEntry entry = (JarEntry) entries.nextElement();
@@ -45,7 +48,14 @@ public class JarDecompressor extends BaseFileDecompressor {
                     }
                 }
             }
+        } finally {
+            Streams.close(jarFile);
         }
+    }
+
+    @Override
+    public JarFile getCloseable() {
+        return jarFile;
     }
 
 }

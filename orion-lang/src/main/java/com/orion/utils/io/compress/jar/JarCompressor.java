@@ -21,6 +21,8 @@ import java.util.zip.ZipOutputStream;
  */
 public class JarCompressor extends BaseFileCompressor {
 
+    private ZipOutputStream outputStream;
+
     public JarCompressor() {
         this(Const.SUFFIX_JAR);
     }
@@ -31,22 +33,32 @@ public class JarCompressor extends BaseFileCompressor {
 
     @Override
     public void doCompress() throws Exception {
-        try (ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(Files1.openOutputStreamFast(this.getAbsoluteCompressPath())))) {
+        try {
+            this.outputStream = new ZipOutputStream(new BufferedOutputStream(Files1.openOutputStreamFast(this.getAbsoluteCompressPath())));
             // 设置压缩文件
             for (Map.Entry<String, File> fileEntity : compressFiles.entrySet()) {
                 try (InputStream in = Files1.openInputStreamFast(fileEntity.getValue())) {
-                    out.putNextEntry(new JarEntry(fileEntity.getKey()));
-                    Streams.transfer(in, out);
-                    out.closeEntry();
+                    outputStream.putNextEntry(new JarEntry(fileEntity.getKey()));
+                    Streams.transfer(in, outputStream);
+                    outputStream.closeEntry();
+                    super.notify(fileEntity.getKey());
                 }
             }
             for (Map.Entry<String, InputStream> fileEntity : compressStreams.entrySet()) {
-                out.putNextEntry(new JarEntry(fileEntity.getKey()));
-                Streams.transfer(fileEntity.getValue(), out);
-                out.closeEntry();
+                outputStream.putNextEntry(new JarEntry(fileEntity.getKey()));
+                Streams.transfer(fileEntity.getValue(), outputStream);
+                outputStream.closeEntry();
+                super.notify(fileEntity.getKey());
             }
-            out.flush();
+            outputStream.flush();
+        } finally {
+            Streams.close(outputStream);
         }
+    }
+
+    @Override
+    public ZipOutputStream getCloseable() {
+        return outputStream;
     }
 
 }

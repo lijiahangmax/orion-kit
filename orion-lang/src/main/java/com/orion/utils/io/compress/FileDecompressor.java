@@ -1,5 +1,6 @@
 package com.orion.utils.io.compress;
 
+import java.io.Closeable;
 import java.io.File;
 
 /**
@@ -73,5 +74,12 @@ public interface FileDecompressor {
      * @return 后缀
      */
     String getSuffix();
+
+    /**
+     * 获取可关闭接口
+     *
+     * @return closeable
+     */
+    Closeable getCloseable();
 
 }

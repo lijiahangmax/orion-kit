@@ -21,6 +21,8 @@ import java.util.zip.ZipFile;
  */
 public class ZipDecompressor extends BaseFileDecompressor {
 
+    private ZipFile zipFile;
+
     public ZipDecompressor() {
         this(Const.SUFFIX_ZIP);
     }
@@ -31,7 +33,8 @@ public class ZipDecompressor extends BaseFileDecompressor {
 
     @Override
     public void doDecompress() throws Exception {
-        try (ZipFile zipFile = new ZipFile(decompressFile)) {
+        try {
+            this.zipFile = new ZipFile(decompressFile);
             Enumeration<?> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = (ZipEntry) entries.nextElement();
@@ -45,7 +48,14 @@ public class ZipDecompressor extends BaseFileDecompressor {
                     }
                 }
             }
+        } finally {
+            Streams.close(zipFile);
         }
+    }
+
+    @Override
+    public ZipFile getCloseable() {
+        return zipFile;
     }
 
 }

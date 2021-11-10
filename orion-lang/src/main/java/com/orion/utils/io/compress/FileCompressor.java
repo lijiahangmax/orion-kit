@@ -1,7 +1,9 @@
 package com.orion.utils.io.compress;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.InputStream;
+import java.util.function.Consumer;
 
 /**
  * 文件压缩器
@@ -30,6 +32,38 @@ public interface FileCompressor {
      * 添加文件
      *
      * @param name name
+     * @param file file
+     */
+    void addFile(String name, String file);
+
+    /**
+     * 添加文件
+     *
+     * @param name name
+     * @param file file
+     */
+    void addFile(String name, File file);
+
+    /**
+     * 添加文件
+     *
+     * @param prefix prefix
+     * @param file   file
+     */
+    void addFilePrefix(String prefix, String file);
+
+    /**
+     * 添加文件
+     *
+     * @param prefix prefix
+     * @param file   file
+     */
+    void addFilePrefix(String prefix, File file);
+
+    /**
+     * 添加文件
+     *
+     * @param name name
      * @param bs   bs
      */
     void addFile(String name, byte[] bs);
@@ -41,6 +75,13 @@ public interface FileCompressor {
      * @param in   in
      */
     void addFile(String name, InputStream in);
+
+    /**
+     * 压缩通知
+     *
+     * @param notify notify
+     */
+    void compressNotify(Consumer<String> notify);
 
     /**
      * 进行压缩
@@ -88,5 +129,12 @@ public interface FileCompressor {
      * @return 后缀
      */
     String getSuffix();
+
+    /**
+     * 获取可关闭接口
+     *
+     * @return closeable
+     */
+    Closeable getCloseable();
 
 }
