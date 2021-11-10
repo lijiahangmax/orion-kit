@@ -86,7 +86,7 @@ public class FtpInstance implements SafeCloseable {
     public void change(String dir) {
         try {
             if (!client.changeWorkingDirectory(this.serverCharset(config.getRemoteRootDir() + dir))) {
-                mkdirs(dir);
+                this.mkdirs(dir);
                 client.changeWorkingDirectory(this.serverCharset(config.getRemoteRootDir() + dir));
             }
         } catch (Exception e) {
@@ -192,7 +192,7 @@ public class FtpInstance implements SafeCloseable {
      */
     public void deleteDir(String dir) {
         try {
-            String d = serverCharset(config.getRemoteRootDir() + dir);
+            String d = this.serverCharset(config.getRemoteRootDir() + dir);
             List<FtpFile> list = this.listFiles(dir);
             for (FtpFile s : list) {
                 client.deleteFile(this.serverCharset(Files1.getPath(config.getRemoteRootDir() + s.getPath())));
@@ -220,7 +220,7 @@ public class FtpInstance implements SafeCloseable {
                 if (d == null || Strings.EMPTY.equals(d)) {
                     continue;
                 }
-                base = serverCharset(base + SEPARATOR + d);
+                base = this.serverCharset(base + SEPARATOR + d);
                 if (!client.changeWorkingDirectory(base)) {
                     client.makeDirectory(base);
                     client.changeWorkingDirectory(base);
@@ -237,10 +237,10 @@ public class FtpInstance implements SafeCloseable {
      * @param file 文件
      */
     public void touch(String file) {
-        String filePath = serverCharset(config.getRemoteRootDir() + file);
+        String filePath = this.serverCharset(config.getRemoteRootDir() + file);
         String parentPath = Files1.getParentPath(Files1.getPath(file));
-        mkdirs(parentPath);
-        for (FtpFile s : listFiles(parentPath, false)) {
+        this.mkdirs(parentPath);
+        for (FtpFile s : this.listFiles(parentPath, false)) {
             if (Files1.getFileName(s.getPath()).endsWith(file.trim())) {
                 return;
             }
@@ -263,8 +263,8 @@ public class FtpInstance implements SafeCloseable {
         try {
             this.mkdirs(Files1.getParentPath(name));
             this.change(Files1.getParentPath(Files1.getPath(file)));
-            String target = serverCharset(config.getRemoteRootDir() + name);
-            String source = serverCharset(Files1.getFileName(file));
+            String target = this.serverCharset(config.getRemoteRootDir() + name);
+            String source = this.serverCharset(Files1.getFileName(file));
             client.rename(source, target);
         } catch (Exception e) {
             throw Exceptions.ftp(e);
@@ -425,7 +425,7 @@ public class FtpInstance implements SafeCloseable {
     }
 
     public String readLine(String file) throws IOException {
-        return readLine(file, 0);
+        return this.readLine(file, 0);
     }
 
     /**
@@ -875,7 +875,7 @@ public class FtpInstance implements SafeCloseable {
                 }
             }
         } catch (IOException e) {
-            // ignore
+            throw Exceptions.ftp(e);
         }
         return list;
     }
@@ -914,7 +914,7 @@ public class FtpInstance implements SafeCloseable {
                 }
             }
         } catch (IOException e) {
-            // ignore
+            throw Exceptions.ftp(e);
         }
         return list;
     }
@@ -1080,7 +1080,7 @@ public class FtpInstance implements SafeCloseable {
                 }
             }
         } catch (IOException e) {
-            // ignore
+            throw Exceptions.ftp(e);
         }
         return list;
     }

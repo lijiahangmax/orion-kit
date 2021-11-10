@@ -56,10 +56,12 @@ public class SftpUpload extends BaseFileUpload {
     protected long getFileSize() {
         SftpFile remoteFile = executor.getFile(remote);
         if (remoteFile == null) {
-            if (!executor.touch(remote)) {
+            try {
+                executor.touch(remote);
+                return -1;
+            } catch (Exception e) {
                 throw Exceptions.sftp("touch remote file error > " + remote);
             }
-            return -1;
         }
         return remoteFile.getSize();
     }

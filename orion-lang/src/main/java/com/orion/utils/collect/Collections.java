@@ -3,6 +3,7 @@ package com.orion.utils.collect;
 import com.orion.utils.Strings;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * 集合工具类
@@ -58,6 +59,17 @@ class Collections {
             }
         }
         return sb.append(end).toString();
+    }
+
+    /**
+     * 获取stream
+     *
+     * @param c   c
+     * @param <E> E
+     * @return stream
+     */
+    public static <E> Stream<E> stream(Collection<E> c) {
+        return isEmpty(c) ? Stream.empty() : c.stream();
     }
 
     /**
