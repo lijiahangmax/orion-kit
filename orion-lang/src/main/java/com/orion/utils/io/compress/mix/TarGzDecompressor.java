@@ -21,6 +21,8 @@ import java.io.OutputStream;
  */
 public class TarGzDecompressor extends BaseFileDecompressor {
 
+    private TarArchiveInputStream inputStream;
+
     public TarGzDecompressor() {
         this(Const.SUFFIX_TAR_GZ);
     }
@@ -32,20 +34,27 @@ public class TarGzDecompressor extends BaseFileDecompressor {
     @Override
     public void doDecompress() throws Exception {
         try (BufferedInputStream bi = new BufferedInputStream(Files1.openInputStreamFast(decompressFile));
-             GzipCompressorInputStream gzIn = new GzipCompressorInputStream(bi);
-             TarArchiveInputStream tarIn = new TarArchiveInputStream(gzIn)) {
+             GzipCompressorInputStream gzIn = new GzipCompressorInputStream(bi)) {
+            this.inputStream = new TarArchiveInputStream(gzIn);
             ArchiveEntry entry;
-            while ((entry = tarIn.getNextEntry()) != null) {
+            while ((entry = inputStream.getNextEntry()) != null) {
                 File file = new File(decompressTargetPath, entry.getName());
                 if (entry.isDirectory()) {
                     Files1.mkdirs(file);
                 } else {
                     try (OutputStream out = Files1.openOutputStreamFast(file)) {
-                        Streams.transfer(tarIn, out);
+                        Streams.transfer(inputStream, out);
                     }
                 }
             }
+        } finally {
+            Streams.close(inputStream);
         }
+    }
+
+    @Override
+    public TarArchiveInputStream getCloseable() {
+        return inputStream;
     }
 
 }

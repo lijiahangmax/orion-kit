@@ -21,6 +21,8 @@ import java.io.OutputStream;
  */
 public class TarBz2Decompressor extends BaseFileDecompressor {
 
+    private TarArchiveInputStream inputStream;
+
     public TarBz2Decompressor() {
         this(Const.SUFFIX_TAR_BZ2);
     }
@@ -32,20 +34,26 @@ public class TarBz2Decompressor extends BaseFileDecompressor {
     @Override
     public void doDecompress() throws Exception {
         try (BufferedInputStream bi = new BufferedInputStream(Files1.openInputStreamFast(decompressFile));
-             BZip2CompressorInputStream bz2In = new BZip2CompressorInputStream(bi);
-             TarArchiveInputStream tarIn = new TarArchiveInputStream(bz2In)) {
+             BZip2CompressorInputStream bz2In = new BZip2CompressorInputStream(bi)) {
+            this.inputStream = new TarArchiveInputStream(bz2In);
             ArchiveEntry entry;
-            while ((entry = tarIn.getNextEntry()) != null) {
+            while ((entry = inputStream.getNextEntry()) != null) {
                 File file = new File(decompressTargetPath, entry.getName());
                 if (entry.isDirectory()) {
                     Files1.mkdirs(file);
                 } else {
                     try (OutputStream out = Files1.openOutputStreamFast(file)) {
-                        Streams.transfer(tarIn, out);
+                        Streams.transfer(inputStream, out);
                     }
                 }
             }
+        } finally {
+            Streams.close(inputStream);
         }
     }
 
+    @Override
+    public TarArchiveInputStream getCloseable() {
+        return inputStream;
+    }
 }
