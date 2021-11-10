@@ -122,7 +122,7 @@ public abstract class BaseProcessExecutor implements Executable, SafeCloseable {
      */
     public BaseProcessExecutor terminal() {
         List<String> c = getTerminalCommand();
-        for (String s : this.command) {
+        for (String s : command) {
             c.add(s.replaceAll(Const.LF, Strings.SPACE).replaceAll(Const.CR, Strings.SPACE));
         }
         this.command = c.toArray(new String[0]);
@@ -158,10 +158,10 @@ public abstract class BaseProcessExecutor implements Executable, SafeCloseable {
      * @return this
      */
     public BaseProcessExecutor addEnv(String key, String value) {
-        if (this.addEnv == null) {
+        if (addEnv == null) {
             this.addEnv = new HashMap<>();
         }
-        this.addEnv.put(key, value);
+        addEnv.put(key, value);
         return this;
     }
 
@@ -172,10 +172,10 @@ public abstract class BaseProcessExecutor implements Executable, SafeCloseable {
      * @return this
      */
     public BaseProcessExecutor addEnv(Map<String, String> env) {
-        if (this.addEnv == null) {
+        if (addEnv == null) {
             this.addEnv = new HashMap<>();
         }
-        this.addEnv.putAll(env);
+        addEnv.putAll(env);
         return this;
     }
 
@@ -186,11 +186,11 @@ public abstract class BaseProcessExecutor implements Executable, SafeCloseable {
      * @return this
      */
     public BaseProcessExecutor removeEnv(String... keys) {
-        if (this.removeEnv == null) {
+        if (removeEnv == null) {
             this.removeEnv = new ArrayList<>();
         }
         if (keys != null) {
-            this.removeEnv.addAll(Arrays.asList(keys));
+            removeEnv.addAll(Arrays.asList(keys));
         }
         return this;
     }
@@ -202,11 +202,11 @@ public abstract class BaseProcessExecutor implements Executable, SafeCloseable {
      * @return this
      */
     public BaseProcessExecutor removeEnv(List<String> keys) {
-        if (this.removeEnv == null) {
+        if (removeEnv == null) {
             this.removeEnv = new ArrayList<>();
         }
         if (keys != null) {
-            this.removeEnv.addAll(keys);
+            removeEnv.addAll(keys);
         }
         return this;
     }
@@ -239,7 +239,7 @@ public abstract class BaseProcessExecutor implements Executable, SafeCloseable {
 
     @Override
     public String toString() {
-        return Lists.join(Lists.of(this.command), Strings.SPACE);
+        return Lists.join(Lists.of(command), Strings.SPACE);
     }
 
 }

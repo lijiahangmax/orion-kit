@@ -152,7 +152,7 @@ public class ApacheUpload extends BaseApacheRequest {
     protected void execute() {
         super.buildRequest();
         this.startDate = System.currentTimeMillis();
-        try (CloseableHttpResponse resp = client.execute(this.request)) {
+        try (CloseableHttpResponse resp = client.execute(request)) {
             this.response = new ApacheResponse(url, method, request, resp);
         } catch (IOException e) {
             throw Exceptions.httpRequest(e);

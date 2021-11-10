@@ -43,7 +43,7 @@ public class ApacheDownload {
     }
 
     public ApacheDownload client(CloseableHttpClient client) {
-        this.request.client(client);
+        request.client(client);
         return this;
     }
 

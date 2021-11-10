@@ -51,7 +51,7 @@ public class NginxExt {
      */
     public List<NginxEntry> getUpstreams() {
         List<NginxEntry> list = new ArrayList<>();
-        List<NgxEntry> upstreams = this.config.findAll(NgxConfig.BLOCK, "upstream");
+        List<NgxEntry> upstreams = config.findAll(NgxConfig.BLOCK, "upstream");
         for (NgxEntry up : upstreams) {
             NginxEntry nginxEntry = new NginxEntry()
                     .setLabelValue(parseLabelValue(up.toString()))
@@ -104,7 +104,7 @@ public class NginxExt {
      * @return 参数value
      */
     public String getParam(String key, String def) {
-        NgxParam value = this.config.findParam(key);
+        NgxParam value = config.findParam(key);
         if (value == null) {
             return def;
         }
@@ -117,7 +117,7 @@ public class NginxExt {
      * @return servers
      */
     public List<NgxBlock> getHttpServerBlocks() {
-        List<NgxEntry> servers = this.config.findAll(NgxConfig.BLOCK, "http", "server");
+        List<NgxEntry> servers = config.findAll(NgxConfig.BLOCK, "http", "server");
         if (Lists.isEmpty(servers)) {
             return new ArrayList<>();
         }
@@ -181,7 +181,7 @@ public class NginxExt {
      * @return string
      */
     public String dump() {
-        return new NgxDumper(this.config).dump();
+        return new NgxDumper(config).dump();
     }
 
     /**
@@ -192,7 +192,7 @@ public class NginxExt {
     public void dump(File file) {
         Files1.touch(file);
         try (OutputStream out = Files1.openOutputStream(file)) {
-            new NgxDumper(this.config).dump(out);
+            new NgxDumper(config).dump(out);
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         }
@@ -204,7 +204,7 @@ public class NginxExt {
      * @param out outputStream
      */
     public void dump(OutputStream out) {
-        new NgxDumper(this.config).dump(out);
+        new NgxDumper(config).dump(out);
     }
 
     /**

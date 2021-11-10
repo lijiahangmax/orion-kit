@@ -187,45 +187,45 @@ public class ProcessAsyncExecutor extends BaseProcessExecutor {
     public void exec() {
         try {
             this.pb = new ProcessBuilder(command);
-            this.env = this.pb.environment();
-            if (this.removeEnv != null) {
-                for (String key : this.removeEnv) {
-                    this.env.remove(key);
+            this.env = pb.environment();
+            if (removeEnv != null) {
+                for (String key : removeEnv) {
+                    env.remove(key);
                 }
             }
-            if (this.addEnv != null) {
-                this.env.putAll(this.addEnv);
+            if (addEnv != null) {
+                env.putAll(addEnv);
             }
-            this.pb.directory(dir == null ? null : new File(dir));
+            pb.directory(dir == null ? null : new File(dir));
             // 是否将错误流合并到输出流
-            this.pb.redirectErrorStream(this.redirectError);
-            if (this.inputFile != null) {
-                Files1.touch(this.inputFile);
-                this.pb.redirectInput(this.inputFile);
+            pb.redirectErrorStream(redirectError);
+            if (inputFile != null) {
+                Files1.touch(inputFile);
+                pb.redirectInput(inputFile);
             } else {
-                this.pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
+                pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
             }
-            if (!this.redirectError) {
-                if (this.errorFile != null) {
-                    Files1.touch(this.errorFile);
-                    if (this.errAppend) {
-                        this.pb.redirectError(ProcessBuilder.Redirect.appendTo(this.errorFile));
+            if (!redirectError) {
+                if (errorFile != null) {
+                    Files1.touch(errorFile);
+                    if (errAppend) {
+                        pb.redirectError(ProcessBuilder.Redirect.appendTo(errorFile));
                     } else {
-                        this.pb.redirectError(ProcessBuilder.Redirect.to(this.errorFile));
+                        pb.redirectError(ProcessBuilder.Redirect.to(errorFile));
                     }
                 } else {
-                    this.pb.redirectError(ProcessBuilder.Redirect.INHERIT);
+                    pb.redirectError(ProcessBuilder.Redirect.INHERIT);
                 }
             }
-            if (this.outputFile != null) {
-                Files1.touch(this.outputFile);
-                if (this.outAppend) {
-                    this.pb.redirectOutput(ProcessBuilder.Redirect.appendTo(this.outputFile));
+            if (outputFile != null) {
+                Files1.touch(outputFile);
+                if (outAppend) {
+                    pb.redirectOutput(ProcessBuilder.Redirect.appendTo(outputFile));
                 } else {
-                    this.pb.redirectOutput(ProcessBuilder.Redirect.to(this.outputFile));
+                    pb.redirectOutput(ProcessBuilder.Redirect.to(outputFile));
                 }
             } else {
-                this.pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+                pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
             }
             this.process = pb.start();
         } catch (Exception e) {
@@ -238,7 +238,7 @@ public class ProcessAsyncExecutor extends BaseProcessExecutor {
      */
     @Override
     public void close() {
-        this.process.destroy();
+        process.destroy();
     }
 
     /**
@@ -248,7 +248,7 @@ public class ProcessAsyncExecutor extends BaseProcessExecutor {
      */
     @Override
     public boolean isAlive() {
-        return this.process.isAlive();
+        return process.isAlive();
     }
 
     /**
@@ -258,8 +258,8 @@ public class ProcessAsyncExecutor extends BaseProcessExecutor {
      */
     @Override
     public int getExitCode() {
-        if (!this.process.isAlive()) {
-            return this.process.exitValue();
+        if (!process.isAlive()) {
+            return process.exitValue();
         }
         return -1;
     }

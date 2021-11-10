@@ -287,47 +287,47 @@ public class OkClientConfig implements Serializable {
 
     public OkHttpClient.Builder buildClientBuilder(boolean ssl) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
-                .callTimeout(this.callTimeout, TimeUnit.MILLISECONDS)
-                .connectTimeout(this.connectTimeout, TimeUnit.MILLISECONDS)
-                .readTimeout(this.readTimeout, TimeUnit.MILLISECONDS)
-                .writeTimeout(this.writeTimeout, TimeUnit.MILLISECONDS);
-        if (this.dispatcher != null) {
-            builder.dispatcher(this.dispatcher);
+                .callTimeout(callTimeout, TimeUnit.MILLISECONDS)
+                .connectTimeout(connectTimeout, TimeUnit.MILLISECONDS)
+                .readTimeout(readTimeout, TimeUnit.MILLISECONDS)
+                .writeTimeout(writeTimeout, TimeUnit.MILLISECONDS);
+        if (dispatcher != null) {
+            builder.dispatcher(dispatcher);
         } else {
-            if (this.dispatcherPool != null || this.maxRoute != 0 || this.maxRequest != 0) {
-                if (this.dispatcherPool != null) {
-                    this.dispatcher = new Dispatcher(this.dispatcherPool);
+            if (dispatcherPool != null || maxRoute != 0 || maxRequest != 0) {
+                if (dispatcherPool != null) {
+                    this.dispatcher = new Dispatcher(dispatcherPool);
                 } else {
                     this.dispatcher = new Dispatcher();
                 }
                 if (this.maxRoute != 0) {
-                    this.dispatcher.setMaxRequestsPerHost(this.maxRoute);
+                    dispatcher.setMaxRequestsPerHost(maxRoute);
                 }
                 if (this.maxRequest != 0) {
-                    this.dispatcher.setMaxRequests(this.maxRequest);
+                    dispatcher.setMaxRequests(maxRequest);
                 }
-                builder.dispatcher(this.dispatcher);
+                builder.dispatcher(dispatcher);
             }
         }
-        if (this.logInterceptor) {
+        if (logInterceptor) {
             builder.addInterceptor(new OkLoggerInterceptor());
         }
-        if (!Lists.isEmpty(this.interceptors)) {
+        if (!Lists.isEmpty(interceptors)) {
             interceptors.forEach(builder::addInterceptor);
         }
-        if (!Lists.isEmpty(this.networkInterceptors)) {
+        if (!Lists.isEmpty(networkInterceptors)) {
             interceptors.forEach(builder::addNetworkInterceptor);
         }
         // builder.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 8888)));
-        if (this.proxyHost != null && this.proxyPort != 0) {
-            builder.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(this.proxyHost, this.proxyPort)));
+        if (proxyHost != null && proxyPort != 0) {
+            builder.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort)));
         }
-        if (this.cookies != null) {
-            builder.cookieJar(this.cookies);
+        if (cookies != null) {
+            builder.cookieJar(cookies);
         }
         if (ssl) {
-            builder.sslSocketFactory(this.sslSocketFactory, this.trustManager)
-                    .connectionSpecs(this.connectionSpecs);
+            builder.sslSocketFactory(sslSocketFactory, trustManager)
+                    .connectionSpecs(connectionSpecs);
         }
         return builder;
     }

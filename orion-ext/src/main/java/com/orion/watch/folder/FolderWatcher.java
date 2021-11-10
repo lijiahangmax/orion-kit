@@ -121,10 +121,10 @@ public abstract class FolderWatcher implements Runnable, Watchable, Stoppable, S
         }
         try {
             WatchKey key;
-            if (Arrays1.isEmpty(this.modifiers)) {
-                key = path.register(this.watchService, kinds);
+            if (Arrays1.isEmpty(modifiers)) {
+                key = path.register(watchService, kinds);
             } else {
-                key = path.register(this.watchService, kinds, this.modifiers);
+                key = path.register(watchService, kinds, modifiers);
             }
             watchKeys.put(key, path);
             // 递归注册

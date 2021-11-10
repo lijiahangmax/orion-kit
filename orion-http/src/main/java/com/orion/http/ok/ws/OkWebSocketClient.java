@@ -152,7 +152,7 @@ public class OkWebSocketClient {
     public void send(String text) {
         if (webSocket != null) {
             if (sendMessageHandler != null) {
-                sendMessageHandler.send(this.webSocket, text);
+                sendMessageHandler.send(webSocket, text);
             }
             webSocket.send(text);
             this.sendCount++;
@@ -167,7 +167,7 @@ public class OkWebSocketClient {
     public void send(ByteString byteString) {
         if (webSocket != null) {
             if (sendMessageByteHandler != null) {
-                sendMessageByteHandler.send(this.webSocket, byteString);
+                sendMessageByteHandler.send(webSocket, byteString);
             }
             webSocket.send(byteString);
             this.sendCount++;
@@ -228,7 +228,7 @@ public class OkWebSocketClient {
     }
 
     private void initMockClient() {
-        Request request = new Request.Builder().url(this.URL).addHeader(OkWebSocketConst.CLIENT_SESSION_ID_HEADER, SESSION_ID).build();
+        Request request = new Request.Builder().url(URL).addHeader(OkWebSocketConst.CLIENT_SESSION_ID_HEADER, SESSION_ID).build();
         WebSocketListener webSocketListener = new WebSocketListener() {
 
             @Override

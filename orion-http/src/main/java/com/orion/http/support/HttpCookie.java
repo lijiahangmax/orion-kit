@@ -138,10 +138,10 @@ public class HttpCookie implements Serializable {
     }
 
     public HttpCookie addValue(String key, String value) {
-        if (this.values == null) {
+        if (values == null) {
             this.values = new MutableHashMap<>();
         }
-        this.values.put(key, value);
+        values.put(key, value);
         return this;
     }
 

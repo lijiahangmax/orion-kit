@@ -43,7 +43,7 @@ public class OkDownload {
     }
 
     public OkDownload client(OkHttpClient client) {
-        this.request.client(client);
+        request.client(client);
         return this;
     }
 
@@ -65,8 +65,8 @@ public class OkDownload {
     }
 
     public OkDownload download(OutputStream out, boolean autoClose) throws IOException {
-        this.response = this.request.await();
-        out.write(this.response.getBody());
+        this.response = request.await();
+        out.write(response.getBody());
         if (autoClose) {
             Streams.close(out);
         }

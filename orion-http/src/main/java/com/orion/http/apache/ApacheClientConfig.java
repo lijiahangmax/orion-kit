@@ -309,25 +309,25 @@ public class ApacheClientConfig implements Serializable {
 
     public HttpClientBuilder buildClientBuilder(boolean ssl) {
         RequestConfig requestConfig = RequestConfig.custom()
-                .setConnectTimeout(this.connectTimeout)
-                .setSocketTimeout(this.socketTimeout)
-                .setConnectionRequestTimeout(this.requestTimeout)
+                .setConnectTimeout(connectTimeout)
+                .setSocketTimeout(socketTimeout)
+                .setConnectionRequestTimeout(requestTimeout)
                 .build();
         HttpClientBuilder builder = HttpClients.custom()
-                .setConnectionTimeToLive(this.connTimeToLive, this.connTimeToLiveTimeUnit)
-                .setMaxConnTotal(this.maxRequest)
-                .setMaxConnPerRoute(this.maxRoute)
+                .setConnectionTimeToLive(connTimeToLive, connTimeToLiveTimeUnit)
+                .setMaxConnTotal(maxRequest)
+                .setMaxConnPerRoute(maxRoute)
                 .setDefaultRequestConfig(requestConfig);
-        if (this.connectionManager != null) {
-            builder.setConnectionManager(this.connectionManager);
+        if (connectionManager != null) {
+            builder.setConnectionManager(connectionManager);
         }
-        if (this.requestRetryHandler != null) {
-            builder.setRetryHandler(this.requestRetryHandler);
+        if (requestRetryHandler != null) {
+            builder.setRetryHandler(requestRetryHandler);
         }
-        if (this.userAgent != null) {
-            builder.setUserAgent(this.userAgent);
+        if (userAgent != null) {
+            builder.setUserAgent(userAgent);
         }
-        if (this.logInterceptor) {
+        if (logInterceptor) {
             ApacheLoggerInterceptor loggerInterceptor = new ApacheLoggerInterceptor();
             builder.addInterceptorFirst((HttpRequestInterceptor) loggerInterceptor)
                     .addInterceptorLast((HttpResponseInterceptor) loggerInterceptor);
@@ -339,15 +339,15 @@ public class ApacheClientConfig implements Serializable {
             requestInterceptors.forEach(builder::addInterceptorLast);
         }
         // builder.setProxy(new HttpHost("127.0.0.1", 8888));
-        if (this.proxyHost != null && this.proxyPort != 0) {
-            builder.setProxy(new HttpHost(this.proxyHost, this.proxyPort));
+        if (proxyHost != null && proxyPort != 0) {
+            builder.setProxy(new HttpHost(proxyHost, proxyPort));
         }
-        if (this.cookies != null) {
-            builder.setDefaultCookieStore(this.cookies);
+        if (cookies != null) {
+            builder.setDefaultCookieStore(cookies);
         }
         if (ssl) {
-            builder.setSSLContext(this.sslContext)
-                    .setSSLSocketFactory(this.sslSocketFactory);
+            builder.setSSLContext(sslContext)
+                    .setSSLSocketFactory(sslSocketFactory);
         }
         return builder;
     }

@@ -465,7 +465,7 @@ public class OkWebSocketServer {
     }
 
     public int getClientCount() {
-        return this.clients.size();
+        return clients.size();
     }
 
     /**

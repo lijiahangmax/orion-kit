@@ -306,14 +306,14 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
             this.pb = new ProcessBuilder(command);
             this.env = pb.environment();
             if (removeEnv != null) {
-                for (String key : this.removeEnv) {
+                for (String key : removeEnv) {
                     env.remove(key);
                 }
             }
             if (addEnv != null) {
-                env.putAll(this.addEnv);
+                env.putAll(addEnv);
             }
-            pb.directory(this.dir == null ? null : new File(this.dir));
+            pb.directory(dir == null ? null : new File(dir));
             if (inherit) {
                 pb.inheritIO();
             }
