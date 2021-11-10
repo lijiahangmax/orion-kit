@@ -1,7 +1,6 @@
 package com.orion.utils.io.compress.gz;
 
 import com.orion.constant.Const;
-import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
@@ -23,6 +22,8 @@ import java.io.OutputStream;
  */
 public class GzCompressor extends BaseFileCompressor {
 
+    private GzipCompressorOutputStream outputStream;
+
     /**
      * 压缩文件
      *
@@ -40,7 +41,7 @@ public class GzCompressor extends BaseFileCompressor {
     /**
      * 压缩输出流
      *
-     * @see #getAbsoluteCompressPath
+     * @see #setCompressOutputStream(OutputStream)
      */
     private OutputStream compressOutputStream;
 
@@ -68,6 +69,26 @@ public class GzCompressor extends BaseFileCompressor {
     }
 
     @Override
+    public void addFile(String name, String file) {
+        this.unsupportedOperation();
+    }
+
+    @Override
+    public void addFile(String name, File file) {
+        this.unsupportedOperation();
+    }
+
+    @Override
+    public void addFilePrefix(String prefix, String file) {
+        this.unsupportedOperation();
+    }
+
+    @Override
+    public void addFilePrefix(String prefix, File file) {
+        this.unsupportedOperation();
+    }
+
+    @Override
     public void addFile(String name, byte[] bs) {
         this.unsupportedOperation();
     }
@@ -78,6 +99,7 @@ public class GzCompressor extends BaseFileCompressor {
     }
 
     public void setCompressFile(String file) {
+        Valid.notBlank(file, "compress file is null");
         this.setCompressFile(new File(file));
     }
 
@@ -87,6 +109,7 @@ public class GzCompressor extends BaseFileCompressor {
      * @param file 压缩文件
      */
     public void setCompressFile(File file) {
+        Valid.notNull(file, "compress file is null");
         Valid.isTrue(Files1.isFile(file), "compress file must be a normal file");
         this.compressFile = file;
         this.compressEntityName = file.getName();
@@ -143,32 +166,30 @@ public class GzCompressor extends BaseFileCompressor {
         GzipParameters params = new GzipParameters();
         params.setFilename(compressEntityName);
         InputStream in = null;
-        GzipCompressorOutputStream out = null;
         try {
             if (compressOutputStream != null) {
-                out = new GzipCompressorOutputStream(compressOutputStream, params);
+                this.outputStream = new GzipCompressorOutputStream(compressOutputStream, params);
             } else {
-                out = new GzipCompressorOutputStream(Files1.openOutputStreamFast(new File(this.getAbsoluteCompressPath())), params);
+                this.outputStream = new GzipCompressorOutputStream(Files1.openOutputStreamFast(new File(this.getAbsoluteCompressPath())), params);
             }
             if (compressInputStream != null) {
                 in = compressInputStream;
             } else {
                 in = Files1.openInputStreamFast(compressFile);
             }
-            Streams.transfer(in, out);
+            Streams.transfer(in, outputStream);
+            super.notify(compressEntityName);
         } finally {
-            Streams.close(out);
+            Streams.close(outputStream);
             if (compressInputStream == null) {
                 Streams.close(in);
             }
         }
     }
 
-    /**
-     * 不支持操作异常
-     */
-    private void unsupportedOperation() {
-        throw Exceptions.unsupported("gzip compress not support operation");
+    @Override
+    public GzipCompressorOutputStream getCloseable() {
+        return outputStream;
     }
 
 }

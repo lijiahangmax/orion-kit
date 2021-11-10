@@ -22,6 +22,8 @@ import java.util.Optional;
  */
 public class Bz2Decompressor extends BaseFileDecompressor {
 
+    private BZip2CompressorInputStream inputStream;
+
     /**
      * 解压文件输入流
      */
@@ -92,13 +94,12 @@ public class Bz2Decompressor extends BaseFileDecompressor {
 
     @Override
     public void doDecompress() throws Exception {
-        BZip2CompressorInputStream in = null;
         OutputStream out = null;
         try {
             if (decompressInputStream != null) {
-                in = new BZip2CompressorInputStream(decompressInputStream);
+                this.inputStream = new BZip2CompressorInputStream(decompressInputStream);
             } else {
-                in = new BZip2CompressorInputStream(Files1.openInputStreamFast(decompressFile));
+                this.inputStream = new BZip2CompressorInputStream(Files1.openInputStreamFast(decompressFile));
             }
             if (decompressTargetFileName == null) {
                 // 配置 > file > objectId
@@ -113,9 +114,9 @@ public class Bz2Decompressor extends BaseFileDecompressor {
                 this.decompressTargetFile = new File(decompressTargetPath, decompressTargetFileName);
                 out = Files1.openOutputStream(decompressTargetFile);
             }
-            Streams.transfer(in, out);
+            Streams.transfer(inputStream, out);
         } finally {
-            Streams.close(in);
+            Streams.close(inputStream);
             if (decompressTargetOutputStream == null) {
                 Streams.close(out);
             }
@@ -124,6 +125,11 @@ public class Bz2Decompressor extends BaseFileDecompressor {
 
     public File getDecompressTargetFile() {
         return decompressTargetFile;
+    }
+
+    @Override
+    public BZip2CompressorInputStream getCloseable() {
+        return inputStream;
     }
 
 }

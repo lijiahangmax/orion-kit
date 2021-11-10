@@ -1,7 +1,7 @@
 package com.orion.utils.io.compress.bz2;
 
 import com.orion.constant.Const;
-import com.orion.utils.Exceptions;
+import com.orion.utils.Strings;
 import com.orion.utils.Valid;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
@@ -22,6 +22,8 @@ import java.io.OutputStream;
  */
 public class Bz2Compressor extends BaseFileCompressor {
 
+    private BZip2CompressorOutputStream outputStream;
+
     /**
      * 压缩文件
      */
@@ -35,7 +37,7 @@ public class Bz2Compressor extends BaseFileCompressor {
     /**
      * 压缩输出流
      *
-     * @see #getAbsoluteCompressPath
+     * @see #setCompressOutputStream(OutputStream)
      */
     private OutputStream compressOutputStream;
 
@@ -58,6 +60,26 @@ public class Bz2Compressor extends BaseFileCompressor {
     }
 
     @Override
+    public void addFile(String name, String file) {
+        this.unsupportedOperation();
+    }
+
+    @Override
+    public void addFile(String name, File file) {
+        this.unsupportedOperation();
+    }
+
+    @Override
+    public void addFilePrefix(String prefix, String file) {
+        this.unsupportedOperation();
+    }
+
+    @Override
+    public void addFilePrefix(String prefix, File file) {
+        this.unsupportedOperation();
+    }
+
+    @Override
     public void addFile(String name, byte[] bs) {
         this.unsupportedOperation();
     }
@@ -68,6 +90,7 @@ public class Bz2Compressor extends BaseFileCompressor {
     }
 
     public void setCompressFile(String file) {
+        Valid.notBlank(file, "file is null");
         this.setCompressFile(new File(file));
     }
 
@@ -77,6 +100,7 @@ public class Bz2Compressor extends BaseFileCompressor {
      * @param file 压缩文件
      */
     public void setCompressFile(File file) {
+        Valid.notNull(file, "file is null");
         Valid.isTrue(Files1.isFile(file), "compress file must be a normal file");
         this.compressFile = file;
         this.setFileName(file.getName());
@@ -113,32 +137,30 @@ public class Bz2Compressor extends BaseFileCompressor {
     @Override
     public void doCompress() throws Exception {
         InputStream in = null;
-        BZip2CompressorOutputStream out = null;
         try {
             if (compressOutputStream != null) {
-                out = new BZip2CompressorOutputStream(compressOutputStream);
+                this.outputStream = new BZip2CompressorOutputStream(compressOutputStream);
             } else {
-                out = new BZip2CompressorOutputStream(Files1.openOutputStreamFast(new File(this.getAbsoluteCompressPath())));
+                this.outputStream = new BZip2CompressorOutputStream(Files1.openOutputStreamFast(new File(this.getAbsoluteCompressPath())));
             }
             if (compressInputStream != null) {
                 in = compressInputStream;
             } else {
                 in = Files1.openInputStreamFast(compressFile);
             }
-            Streams.transfer(in, out);
+            Streams.transfer(in, outputStream);
+            super.notify(Strings.EMPTY);
         } finally {
-            Streams.close(out);
+            Streams.close(outputStream);
             if (compressInputStream == null) {
                 Streams.close(in);
             }
         }
     }
 
-    /**
-     * 不支持操作异常
-     */
-    private void unsupportedOperation() {
-        throw Exceptions.unsupported("bzip2 compress not support operation");
+    @Override
+    public BZip2CompressorOutputStream getCloseable() {
+        return outputStream;
     }
 
 }

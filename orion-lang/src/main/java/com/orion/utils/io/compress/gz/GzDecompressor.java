@@ -24,6 +24,8 @@ import java.util.Optional;
  */
 public class GzDecompressor extends BaseFileDecompressor {
 
+    private GzipCompressorInputStream inputStream;
+
     /**
      * 解压文件输入流
      */
@@ -94,15 +96,14 @@ public class GzDecompressor extends BaseFileDecompressor {
 
     @Override
     public void doDecompress() throws Exception {
-        GzipCompressorInputStream in = null;
         OutputStream out = null;
         try {
             if (decompressInputStream != null) {
-                in = new GzipCompressorInputStream(decompressInputStream);
+                this.inputStream = new GzipCompressorInputStream(decompressInputStream);
             } else {
-                in = new GzipCompressorInputStream(Files1.openInputStreamFast(decompressFile));
+                this.inputStream = new GzipCompressorInputStream(Files1.openInputStreamFast(decompressFile));
             }
-            String entityName = Optional.ofNullable(in.getMetaData())
+            String entityName = Optional.ofNullable(inputStream.getMetaData())
                     .map(GzipParameters::getFilename)
                     .orElse(null);
             if (decompressTargetFileName == null) {
@@ -118,9 +119,9 @@ public class GzDecompressor extends BaseFileDecompressor {
                 this.decompressTargetFile = new File(decompressTargetPath, decompressTargetFileName);
                 out = Files1.openOutputStream(decompressTargetFile);
             }
-            Streams.transfer(in, out);
+            Streams.transfer(inputStream, out);
         } finally {
-            Streams.close(in);
+            Streams.close(inputStream);
             if (decompressTargetOutputStream == null) {
                 Streams.close(out);
             }
@@ -133,6 +134,11 @@ public class GzDecompressor extends BaseFileDecompressor {
 
     public String getDecompressTargetFileName() {
         return decompressTargetFileName;
+    }
+
+    @Override
+    public GzipCompressorInputStream getCloseable() {
+        return inputStream;
     }
 
 }
