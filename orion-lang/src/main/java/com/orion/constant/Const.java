@@ -288,4 +288,8 @@ public abstract class Const {
 
     public static final Integer DISABLE = 2;
 
+    public static final String EMPTY_OBJECT = "{}";
+
+    public static final String EMPTY_ARRAY = "[]";
+
 }

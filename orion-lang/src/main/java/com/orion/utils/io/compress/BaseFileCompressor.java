@@ -202,7 +202,7 @@ public abstract class BaseFileCompressor implements FileCompressor {
         if (absoluteCompressPath != null) {
             return absoluteCompressPath;
         }
-        return Files1.getPath(compressPath + "/" + fileName + "." + suffix);
+        return Files1.getPath(compressPath, fileName + "." + suffix);
     }
 
     @Override

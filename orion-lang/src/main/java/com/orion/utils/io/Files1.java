@@ -1961,6 +1961,17 @@ public class Files1 {
     /**
      * 获取一个通用路径
      *
+     * @param parent parent
+     * @param path   path
+     * @return path
+     */
+    public static String getPath(String parent, String path) {
+        return getPath(parent + SEPARATOR + path);
+    }
+
+    /**
+     * 获取一个通用路径
+     *
      * @param path path
      * @return path
      */

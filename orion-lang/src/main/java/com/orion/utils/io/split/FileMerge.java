@@ -121,10 +121,10 @@ public class FileMerge implements Callable<String> {
     private String mergeFile(String dir, String fileName, List<String> blocks) {
         FileOutputStream dist = null;
         try {
-            String path = Files1.getPath(dir + "/" + fileName);
+            String path = Files1.getPath(dir, fileName);
             dist = Files1.openOutputStream(path);
             for (String block : blocks) {
-                FileInputStream in = Files1.openInputStream(Files1.getPath(dir + "/" + block));
+                FileInputStream in = Files1.openInputStream(Files1.getPath(dir, block));
                 byte[] buffer = new byte[bufferSize];
                 int read;
                 while ((read = in.read(buffer)) != -1) {
