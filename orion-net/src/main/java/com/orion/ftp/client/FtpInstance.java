@@ -195,7 +195,7 @@ public class FtpInstance implements SafeCloseable {
             String d = this.serverCharset(config.getRemoteRootDir() + dir);
             List<FtpFile> list = this.listFiles(dir);
             for (FtpFile s : list) {
-                client.deleteFile(this.serverCharset(Files1.getPath(config.getRemoteRootDir() + s.getPath())));
+                client.deleteFile(this.serverCharset(Files1.getPath(config.getRemoteRootDir(), s.getPath())));
             }
             list = this.listDirs(dir, true);
             for (FtpFile s : list) {
@@ -701,10 +701,10 @@ public class FtpInstance implements SafeCloseable {
         List<File> dirs = Files1.listDirs(localDir, child);
         List<File> files = Files1.listFiles(localDir, child);
         for (File dir : dirs) {
-            this.mkdirs(Files1.getPath(remoteDir + SEPARATOR + (dir.getAbsolutePath().substring(localDir.length()))));
+            this.mkdirs(Files1.getPath(remoteDir, dir.getAbsolutePath().substring(localDir.length())));
         }
         for (File file : files) {
-            String path = Files1.getPath(remoteDir + SEPARATOR + (file.getAbsolutePath().substring(localDir.length())));
+            String path = Files1.getPath(remoteDir, file.getAbsolutePath().substring(localDir.length()));
             this.change(Files1.getParentPath(path));
             this.uploadFile(path, file);
         }
@@ -780,16 +780,16 @@ public class FtpInstance implements SafeCloseable {
         if (!child) {
             List<FtpFile> list = this.listFiles(remoteDir, false);
             for (FtpFile s : list) {
-                this.downloadFile(s.getPath(), Files1.getPath(localDir + SEPARATOR + Files1.getFileName(s.getPath())));
+                this.downloadFile(s.getPath(), Files1.getPath(localDir, Files1.getFileName(s.getPath())));
             }
         } else {
             List<FtpFile> list = this.listDirs(remoteDir, true);
             for (FtpFile s : list) {
-                Files1.mkdirs(Files1.getPath(localDir + SEPARATOR + s.getPath().substring(remoteDir.length())));
+                Files1.mkdirs(Files1.getPath(localDir, s.getPath().substring(remoteDir.length())));
             }
             list = this.listFiles(remoteDir, true);
             for (FtpFile s : list) {
-                this.downloadFile(s.getPath(), Files1.getPath(localDir + SEPARATOR + s.getPath().substring(remoteDir.length())));
+                this.downloadFile(s.getPath(), Files1.getPath(localDir, s.getPath().substring(remoteDir.length())));
             }
         }
     }
@@ -862,7 +862,7 @@ public class FtpInstance implements SafeCloseable {
         try {
             FTPFile[] files = client.listFiles(this.serverCharset(base + path));
             for (FTPFile file : files) {
-                String t = Files1.getPath(this.serverCharset(path + SEPARATOR + file.getName()));
+                String t = this.serverCharset(Files1.getPath(path, file.getName()));
                 if (file.isFile()) {
                     list.add(new FtpFile(t, file));
                 } else if (file.isDirectory()) {
@@ -905,7 +905,7 @@ public class FtpInstance implements SafeCloseable {
         try {
             FTPFile[] files = client.listFiles(this.serverCharset(base + path));
             for (FTPFile file : files) {
-                String t = Files1.getPath(path + SEPARATOR + file.getName());
+                String t = Files1.getPath(path, file.getName());
                 if (file.isDirectory()) {
                     list.add(new FtpFile(t, file));
                     if (child) {
@@ -1064,10 +1064,10 @@ public class FtpInstance implements SafeCloseable {
         String base = config.getRemoteRootDir();
         List<FtpFile> list = new ArrayList<>();
         try {
-            FTPFile[] files = client.listFiles(this.serverCharset(Files1.getPath(base + path)));
+            FTPFile[] files = client.listFiles(this.serverCharset(Files1.getPath(base, path)));
             for (FTPFile file : files) {
                 String fn = file.getName();
-                String t = Files1.getPath(path + SEPARATOR + fn);
+                String t = Files1.getPath(path, fn);
                 boolean isDir = file.isDirectory();
                 if (!isDir || dir) {
                     FtpFile f = new FtpFile(t, file);
@@ -1147,7 +1147,7 @@ public class FtpInstance implements SafeCloseable {
      */
     public String getStatus(String path) {
         try {
-            return client.getStatus(new String(Strings.bytes(Files1.getPath(config.getRemoteRootDir() + path)), config.getRemoteFileNameCharset()));
+            return client.getStatus(new String(Strings.bytes(Files1.getPath(config.getRemoteRootDir(), path)), config.getRemoteFileNameCharset()));
         } catch (IOException e) {
             throw Exceptions.ftp(e);
         }
