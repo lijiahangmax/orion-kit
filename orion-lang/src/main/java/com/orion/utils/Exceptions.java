@@ -904,6 +904,22 @@ public class Exceptions {
         return new CodeArgumentException(code, s, t);
     }
 
+    public static WrapperException wrapper(HttpWrapper<?> wrapper) {
+        return new WrapperException(wrapper);
+    }
+
+    public static WrapperException wrapper(HttpWrapper<?> wrapper, Throwable t) {
+        return new WrapperException(wrapper, t);
+    }
+
+    public static WrapperException wrapper(HttpWrapper<?> wrapper, String s) {
+        return new WrapperException(wrapper, s);
+    }
+
+    public static WrapperException wrapper(HttpWrapper<?> wrapper, String s, Throwable t) {
+        return new WrapperException(wrapper, s, t);
+    }
+
     public static HttpWrapperException httpWrapper(HttpWrapper<?> wrapper) {
         return new HttpWrapperException(wrapper);
     }

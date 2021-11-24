@@ -598,7 +598,7 @@ public class Dates extends BaseDates {
     }
 
     public static String ago(Date target) {
-        return ago(new Date(), target, true, false);
+        return ago(new Date(), target, false, false);
     }
 
     public static String ago(Date target, boolean vague) {
@@ -610,7 +610,7 @@ public class Dates extends BaseDates {
     }
 
     public static String ago(Date source, Date target) {
-        return ago(source, target, true, false);
+        return ago(source, target, false, false);
     }
 
     public static String ago(Date source, Date target, boolean vague) {
