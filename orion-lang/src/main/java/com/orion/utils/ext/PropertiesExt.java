@@ -7,7 +7,6 @@ import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -28,52 +27,40 @@ public class PropertiesExt {
     public PropertiesExt() {
     }
 
-    public PropertiesExt(Properties properties) {
-        this.properties = properties;
+    public PropertiesExt(Map<?, ?> map) {
+        map.forEach((k, v) -> properties.put(k.toString(), v.toString()));
     }
 
     public PropertiesExt(String path) {
-        InputStream in = null;
-        try {
-            in = PropertiesExt.class.getClassLoader().getResourceAsStream(path);
-            properties.load(in);
-        } catch (IOException e) {
-            throw Exceptions.ioRuntime(e);
-        } catch (Exception e) {
-            throw Exceptions.runtime(e);
-        } finally {
-            Streams.close(in);
-        }
+        this(new File(path));
     }
 
     public PropertiesExt(File file) {
-        FileInputStream in = null;
+        this(Files1.openInputStreamSafe(file), true);
+    }
+
+    public PropertiesExt(InputStream in) {
+        this(in, false);
+    }
+
+    public PropertiesExt(InputStream in, boolean close) {
         try {
-            in = Files1.openInputStream(file);
             properties.load(in);
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         } catch (Exception e) {
             throw Exceptions.runtime(e);
         } finally {
-            Streams.close(in);
-        }
-    }
-
-    public PropertiesExt(InputStream in) {
-        try {
-            properties.load(in);
-        } catch (IOException e) {
-            throw Exceptions.ioRuntime(e);
-        } catch (Exception e) {
-            throw Exceptions.runtime(e);
+            if (close) {
+                Streams.close(in);
+            }
         }
     }
 
     /**
      * 加载系统配置项
      *
-     * @return systemPropertiesExt
+     * @return system PropertiesExt
      * @see System#clearProperty delete方法不会删除系统配置, 但是会修改当前properties对象
      * @see System#setProperty put方法不会修改系统配置, 但是会修改当前properties对象
      */
@@ -180,14 +167,14 @@ public class PropertiesExt {
      * @return this
      */
     public PropertiesExt storeSystem() {
-        for (Map.Entry<Object, Object> entry : this.properties.entrySet()) {
+        for (Map.Entry<Object, Object> entry : properties.entrySet()) {
             System.setProperty(String.valueOf(entry.getKey()), String.valueOf(entry.getValue()));
         }
         return this;
     }
 
     public void forEach(BiConsumer<Object, Object> action) {
-        this.properties.forEach(action);
+        properties.forEach(action);
     }
 
 }

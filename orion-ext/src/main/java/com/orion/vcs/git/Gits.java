@@ -1,7 +1,6 @@
 package com.orion.vcs.git;
 
 import com.orion.able.SafeCloseable;
-import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
 import com.orion.utils.io.Streams;
 import com.orion.vcs.git.info.BranchInfo;
@@ -252,7 +251,7 @@ public abstract class Gits implements SafeCloseable {
                     .map(ref -> {
                         BranchInfo info = new BranchInfo();
                         info.setId(ref.getObjectId().name());
-                        info.setName(Arrays1.last(ref.getName().split("/")));
+                        info.setName(ref.getName());
                         return info;
                     }).collect(Collectors.toList());
         } catch (Exception e) {

@@ -11,7 +11,9 @@ import com.orion.utils.Systems;
 import com.orion.utils.io.Files1;
 import com.orion.utils.net.IPs;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * ip查询地址提取器 ip2region
@@ -45,7 +47,8 @@ public class LocationRegions {
     static {
         boolean init;
         try {
-            init = Files1.resourceToFile("region.db", DB_PATH, Const.GBK);
+            InputStream source = LocationRegions.class.getClassLoader().getResourceAsStream("region.db");
+            init = Files1.resourceToFile(source, new File(DB_PATH), Const.GBK);
             searcher = new DbSearcher(new DbConfig(), DB_PATH);
         } catch (IOException e) {
             throw Exceptions.init("location region 服务初始化异常", e);

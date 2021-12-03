@@ -178,7 +178,7 @@ public class DateAgo extends Ago {
             if (after > MINUTE_STAMP) {
                 return (after / MINUTE_STAMP) + hint.minuteFuture;
             }
-            // 片刻之前
+            // 片刻之后
             return vague ? hint.moment : ((after / SECOND_STAMP) + hint.secondFuture);
         } else {
             // 现在
