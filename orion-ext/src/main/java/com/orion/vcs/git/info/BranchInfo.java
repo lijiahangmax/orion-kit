@@ -19,6 +19,11 @@ public class BranchInfo implements Serializable {
     private String id;
 
     /**
+     * remote
+     */
+    private String remote;
+
+    /**
      * 名称
      */
     private String name;
@@ -31,6 +36,14 @@ public class BranchInfo implements Serializable {
         this.id = id;
     }
 
+    public String getRemote() {
+        return remote;
+    }
+
+    public void setRemote(String remote) {
+        this.remote = remote;
+    }
+
     public String getName() {
         return name;
     }
@@ -41,7 +54,7 @@ public class BranchInfo implements Serializable {
 
     @Override
     public String toString() {
-        return id + " " + name;
+        return remote + "/" + name;
     }
 
 }

@@ -468,7 +468,7 @@ public class Files1 {
         return (long) (d * SIZE_UNIT_EFFECT[effectIndex]);
     }
 
-    public static boolean resourceToFile(String source, String file) throws IOException {
+    public static boolean resourceToFile(InputStream source, File file) throws IOException {
         return resourceToFile(source, file, null);
     }
 
@@ -481,23 +481,21 @@ public class Files1 {
      * @return 是否保存成功
      * @throws IOException exception
      */
-    public static boolean resourceToFile(String source, String path, String charset) throws IOException {
-        File file = new File(path);
-        InputStream in = Files1.class.getClassLoader().getResourceAsStream(source);
+    public static boolean resourceToFile(InputStream source, File file, String charset) throws IOException {
         boolean needInit = false;
         if (!file.exists() || !file.isFile()) {
             needInit = true;
         }
         if (!needInit) {
             try {
-                if (in != null && file.length() != in.available()) {
+                if (source != null && file.length() != source.available()) {
                     needInit = true;
                 }
             } catch (Exception e) {
                 // ignore
             }
         }
-        if (needInit && in == null) {
+        if (needInit && source == null) {
             return false;
         }
         OutputStreamWriter writer = null;
@@ -508,12 +506,12 @@ public class Files1 {
             }
             // 清空重新写入数据
             out = new FileOutputStream(file, false);
-            Streams.transfer(in, out);
+            Streams.transfer(source, out);
             out.flush();
         } catch (IOException e) {
             throw e;
         } finally {
-            Streams.close(in);
+            Streams.close(source);
             Streams.close(writer);
             Streams.close(out);
         }
@@ -642,7 +640,15 @@ public class Files1 {
     }
 
     public static void copyDir(String source, String target) {
-        copyDir(new File(source), new File(target));
+        copyDir(new File(source), new File(target), true);
+    }
+
+    public static void copyDir(File source, File target) {
+        copyDir(source, target, true);
+    }
+
+    public static void copyDir(String source, String target, boolean includeSourceDirName) {
+        copyDir(new File(source), new File(target), includeSourceDirName);
     }
 
     /**
@@ -651,20 +657,27 @@ public class Files1 {
      * @param source 源目录
      * @param target 目标目录
      */
-    public static void copyDir(File source, File target) {
+    public static void copyDir(File source, File target, boolean includeSourceDirName) {
         if (!target.exists() || !target.isDirectory()) {
             target.mkdirs();
         }
         File[] files = source.listFiles();
         String sourceName = source.getName();
-        if (files != null) {
-            for (File file : files) {
-                String path = file.getName();
-                if (file.isDirectory()) {
-                    copyDir(file, new File(target.getAbsolutePath() + SEPARATOR + sourceName + SEPARATOR + path));
-                } else {
-                    copy(file, new File(target.getAbsolutePath() + SEPARATOR + sourceName + SEPARATOR + path));
-                }
+        if (files == null) {
+            return;
+        }
+        for (File file : files) {
+            String path = file.getName();
+            File targetFile;
+            if (includeSourceDirName) {
+                targetFile = new File(target.getAbsolutePath() + SEPARATOR + sourceName + SEPARATOR + path);
+            } else {
+                targetFile = new File(target.getAbsolutePath() + SEPARATOR + path);
+            }
+            if (file.isDirectory()) {
+                copyDir(file, targetFile);
+            } else {
+                copy(file, targetFile);
             }
         }
     }
@@ -952,6 +965,9 @@ public class Files1 {
     }
 
     public static boolean delete(File file) {
+        if (!file.exists()) {
+            return true;
+        }
         if (file.isFile()) {
             return deleteFile(file);
         } else {
@@ -966,6 +982,9 @@ public class Files1 {
      * @return 是否处理成功
      */
     public static boolean delete(Path file) {
+        if (!Files.exists(file)) {
+            return true;
+        }
         if (Files.isDirectory(file)) {
             return deleteDir(file);
         } else {
@@ -978,6 +997,9 @@ public class Files1 {
     }
 
     public static boolean deleteDir(File path) {
+        if (!path.exists()) {
+            return true;
+        }
         List<File> files = listFiles(path, true, true);
         for (File f : files) {
             if (f.isDirectory()) {
@@ -996,6 +1018,9 @@ public class Files1 {
      * @return 是否处理成功
      */
     public static boolean deleteDir(Path path) {
+        if (!Files.exists(path)) {
+            return true;
+        }
         try {
             Files.list(path).forEach(f -> {
                 if (Files.isDirectory(f)) {
@@ -1016,14 +1041,13 @@ public class Files1 {
     }
 
     public static boolean deleteFile(String file) {
-        File f = new File(file);
-        if (f.isFile()) {
-            return f.delete();
-        }
-        return false;
+        return deleteFile(new File(file));
     }
 
     public static boolean deleteFile(File file) {
+        if (!file.exists()) {
+            return true;
+        }
         if (file.isFile()) {
             return file.delete();
         }
@@ -1037,6 +1061,9 @@ public class Files1 {
      * @return 是否处理成功
      */
     public static boolean deleteFile(Path file) {
+        if (!Files.exists(file)) {
+            return true;
+        }
         try {
             Files.delete(file);
             return true;

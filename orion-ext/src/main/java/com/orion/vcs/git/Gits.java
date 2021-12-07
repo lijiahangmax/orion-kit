@@ -1,7 +1,6 @@
 package com.orion.vcs.git;
 
 import com.orion.able.SafeCloseable;
-import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
 import com.orion.utils.io.Streams;
 import com.orion.vcs.git.info.BranchInfo;
@@ -119,6 +118,7 @@ public abstract class Gits implements SafeCloseable {
     public Gits checkout(String branchName) {
         try {
             git.checkout().setName(branchName)
+                    .setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.NOTRACK)
                     .setCreateBranch(false)
                     .call();
             return this;
@@ -209,21 +209,21 @@ public abstract class Gits implements SafeCloseable {
         }
     }
 
-    public Gits reset(String version) {
-        return this.reset(version, ResetCommand.ResetType.HARD);
+    public Gits reset(String commitId) {
+        return this.reset(commitId, ResetCommand.ResetType.HARD);
     }
 
     /**
      * 还原版本
      *
-     * @param version commitId
-     * @param type    类型
+     * @param commitId commitId
+     * @param type     类型
      * @return this
      */
-    public Gits reset(String version, ResetCommand.ResetType type) {
+    public Gits reset(String commitId, ResetCommand.ResetType type) {
         try {
             git.reset()
-                    .setRef(version)
+                    .setRef(commitId)
                     .setMode(type)
                     .call();
             return this;
@@ -248,11 +248,13 @@ public abstract class Gits implements SafeCloseable {
                     .setListMode(ListBranchCommand.ListMode.REMOTE)
                     .call();
             return refs.stream()
-                    .filter(r -> !r.getName().endsWith("/HEAD"))
+                    .filter(r -> r.getName().startsWith("refs/remotes"))
                     .map(ref -> {
                         BranchInfo info = new BranchInfo();
-                        info.setId(ref.getObjectId().name());
-                        info.setName(Arrays1.last(ref.getName().split("/")));
+                        String name = ref.getName().substring(13);
+                        info.setId(ref.getObjectId().getName());
+                        info.setRemote(name.substring(0, name.indexOf("/")));
+                        info.setName(name.substring(name.indexOf("/") + 1));
                         return info;
                     }).collect(Collectors.toList());
         } catch (Exception e) {
@@ -351,6 +353,34 @@ public abstract class Gits implements SafeCloseable {
     public String getBranch() {
         try {
             return git.getRepository().getBranch();
+        } catch (Exception e) {
+            throw Exceptions.vcs(e);
+        }
+    }
+
+    /**
+     * 检查ref
+     *
+     * @param name name
+     * @return ref
+     */
+    public boolean hasRef(String name) {
+        try {
+            return git.getRepository().findRef(name) != null;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * 获取ref
+     *
+     * @param name name
+     * @return ref
+     */
+    public Ref getRef(String name) {
+        try {
+            return git.getRepository().findRef(name);
         } catch (Exception e) {
             throw Exceptions.vcs(e);
         }
