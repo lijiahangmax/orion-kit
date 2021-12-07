@@ -35,17 +35,17 @@ public class DomNode implements Serializable {
         return value.getClass();
     }
 
-    public MutableHashMap getMapValue() {
+    public <V> MutableHashMap<String, V> getMapValue() {
         if (value instanceof Map) {
-            return new MutableHashMap(((Map) value));
+            return new MutableHashMap<>(((Map) value));
         } else {
             return null;
         }
     }
 
-    public MutableArrayList getListValue() {
+    public <T> MutableArrayList<T> getListValue() {
         if (value instanceof List) {
-            return new MutableArrayList(((List) value));
+            return new MutableArrayList<>(((List) value));
         } else {
             return null;
         }
@@ -55,8 +55,8 @@ public class DomNode implements Serializable {
         return value.toString();
     }
 
-    public Object getValue() {
-        return value;
+    public <T> T getValue() {
+        return (T) value;
     }
 
     public DomNode setValue(Object value) {

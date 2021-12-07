@@ -2,12 +2,12 @@ package com.orion.office.csv.core;
 
 import com.orion.able.SafeCloseable;
 import com.orion.able.SafeFlushable;
+import com.orion.constant.Const;
 import com.orion.constant.Letters;
 import com.orion.office.csv.option.CsvOption;
 import com.orion.office.csv.option.CsvWriterOption;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
-import com.orion.utils.Systems;
 import com.orion.utils.Valid;
 import com.orion.utils.io.Files1;
 import com.orion.utils.io.Streams;
@@ -217,7 +217,7 @@ public class CsvWriter implements SafeCloseable, SafeFlushable {
         if (option.isUseCustomLineDelimiter()) {
             writer.write(option.getLineDelimiter());
         } else {
-            writer.write(Systems.LINE_SEPARATOR);
+            writer.write(Const.LF);
         }
         firstColumn = true;
     }
@@ -258,7 +258,7 @@ public class CsvWriter implements SafeCloseable, SafeFlushable {
         if (option.isUseCustomLineDelimiter()) {
             writer.write(option.getLineDelimiter());
         } else {
-            writer.write(Systems.LINE_SEPARATOR);
+            writer.write(Const.LF);
         }
         firstColumn = true;
     }

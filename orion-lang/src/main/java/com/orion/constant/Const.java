@@ -34,6 +34,8 @@ public abstract class Const {
 
     public static final String ORION_GITHUB = "https://github.com/lijiahangmax";
 
+    public static final String ORION_GITEE = "https://gitee.com/lijiahangHome";
+
     public static final String ORION_BLOG = "https://blog.csdn.net/qq_41011894";
 
     // -------------------- letter --------------------
@@ -166,6 +168,10 @@ public abstract class Const {
 
     // -------------------- num --------------------
 
+    public static final int N_N_1 = -1;
+
+    public static final int N_0 = 0;
+
     public static final int N_1 = 1;
 
     public static final int N_2 = 2;
@@ -175,6 +181,14 @@ public abstract class Const {
     public static final int N_4 = 4;
 
     public static final int N_5 = 5;
+
+    public static final int N_6 = 6;
+
+    public static final int N_7 = 7;
+
+    public static final int N_8 = 8;
+
+    public static final int N_9 = 9;
 
     public static final int N_10 = 10;
 
@@ -287,6 +301,14 @@ public abstract class Const {
     public static final Integer ENABLE = 1;
 
     public static final Integer DISABLE = 2;
+
+    public static final Integer INCREMENT = 1;
+
+    public static final Integer DECREMENT = 2;
+
+    public static final Integer NOT_DELETED = 1;
+
+    public static final Integer IS_DELETED = 2;
 
     public static final String EMPTY_OBJECT = "{}";
 

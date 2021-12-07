@@ -3,13 +3,16 @@ package com.orion.location.ext;
 import com.orion.constant.Const;
 import com.orion.lang.builder.StringJoiner;
 import com.orion.location.ext.core.LocationSeeker;
+import com.orion.location.region.LocationRegions;
 import com.orion.location.region.core.Region;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Systems;
 import com.orion.utils.io.Files1;
 import com.orion.utils.net.IPs;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * 纯真ip地理位置提取器
@@ -42,7 +45,8 @@ public class LocationExt {
     static {
         boolean init;
         try {
-            init = Files1.resourceToFile("region.dat", DAT_PATH, Const.GBK);
+            InputStream source = LocationRegions.class.getClassLoader().getResourceAsStream("region.dat");
+            init = Files1.resourceToFile(source, new File(DAT_PATH), Const.GBK);
             seeker = new LocationSeeker(DAT_PATH);
         } catch (IOException e) {
             throw Exceptions.init("region ext 服务初始化异常", e);

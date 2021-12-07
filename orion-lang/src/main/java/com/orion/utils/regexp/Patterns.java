@@ -92,7 +92,7 @@ public class Patterns {
     /**
      * linux文件路径 正则
      */
-    public static final Pattern LINUX_PATH = Pattern.compile("^/([^|><?*\":/]*/)*([^|><?*\":/]*)?$");
+    public static final Pattern LINUX_PATH = Pattern.compile("^/([^><\"]*/)*([^><\"]*)?$");
 
     /**
      * 邮编
