@@ -38,11 +38,6 @@ public class SftpExecutor implements SafeCloseable {
     private static final Integer DEFAULT_PERMISSIONS = Files1.permission10to8(644);
 
     /**
-     * 分隔符
-     */
-    private static final String SEPARATOR = Const.SLASH;
-
-    /**
      * SFTP客户端
      */
     private SFTPv3Client client;
@@ -155,16 +150,14 @@ public class SftpExecutor implements SafeCloseable {
      *
      * @param path 文件绝对路径
      * @param date 更新时间
-     * @return ignore
      */
-    public boolean setModifyTime(String path, Date date) {
+    public void setModifyTime(String path, Date date) {
         try {
             SFTPv3FileAttributes attr = new SFTPv3FileAttributes();
             attr.mtime = (int) (date.getTime() / Const.MS_S_1);
             client.setstat(path, attr);
-            return true;
         } catch (Exception e) {
-            return false;
+            throw Exceptions.sftp(e);
         }
     }
 
@@ -173,16 +166,14 @@ public class SftpExecutor implements SafeCloseable {
      *
      * @param path       文件绝对路径
      * @param permission 10进制表示的 8进制权限 如: 777
-     * @return ignore
      */
-    public boolean chmod(String path, int permission) {
+    public void chmod(String path, int permission) {
         try {
             SFTPv3FileAttributes attr = new SFTPv3FileAttributes();
             attr.permissions = Files1.permission10to8(permission);
             client.setstat(path, attr);
-            return true;
         } catch (Exception e) {
-            return false;
+            throw Exceptions.sftp(e);
         }
     }
 
@@ -192,17 +183,15 @@ public class SftpExecutor implements SafeCloseable {
      * @param path 文件绝对路径
      * @param uid  uid
      * @param gid  gid
-     * @return ignore
      */
-    public boolean chown(String path, int uid, int gid) {
+    public void chown(String path, int uid, int gid) {
         try {
             SFTPv3FileAttributes attr = new SFTPv3FileAttributes();
             attr.uid = uid;
             attr.gid = gid;
             client.setstat(path, attr);
-            return true;
         } catch (Exception e) {
-            return false;
+            throw Exceptions.sftp(e);
         }
     }
 
@@ -211,14 +200,12 @@ public class SftpExecutor implements SafeCloseable {
      *
      * @param path 文件绝对路径
      * @param attr 属性
-     * @return ignore
      */
-    public boolean setFileAttribute(String path, SftpFile attr) {
+    public void setFileAttribute(String path, SftpFile attr) {
         try {
             client.setstat(path, attr.getAttrs());
-            return true;
         } catch (Exception e) {
-            return false;
+            throw Exceptions.sftp(e);
         }
     }
 
@@ -257,15 +244,13 @@ public class SftpExecutor implements SafeCloseable {
      * 清空文件, 没有则创建
      *
      * @param path 文件绝对路径
-     * @return ignore
      */
-    public boolean truncate(String path) {
+    public void truncate(String path) {
         try {
             SFTPv3FileHandle clear = client.createFileTruncate(path);
             clear.getClient().closeFile(clear);
-            return true;
         } catch (IOException e) {
-            return false;
+            throw Exceptions.sftp(e);
         }
     }
 
@@ -292,10 +277,9 @@ public class SftpExecutor implements SafeCloseable {
      * 创建文件夹
      *
      * @param path 文件夹绝对路径
-     * @return ignore
      */
-    public boolean mkdirs(String path) {
-        return this.mkdirs(path, DEFAULT_PERMISSIONS);
+    public void mkdirs(String path) {
+        this.mkdirs(path, DEFAULT_PERMISSIONS);
     }
 
     /**
@@ -303,41 +287,36 @@ public class SftpExecutor implements SafeCloseable {
      *
      * @param path        文件夹绝对路径
      * @param permissions 权限
-     * @return ignore
      */
-    public boolean mkdirs(String path, int permissions) {
+    public void mkdirs(String path, int permissions) {
         SftpFile p = this.getFile(path, false);
         if (p != null && p.isDirectory()) {
-            return true;
+            return;
         }
         List<String> parentPaths = Files1.getParentPaths(path);
         parentPaths.add(path);
-        for (int i = 1, size = parentPaths.size(); i < size; i++) {
-            String parentPath = parentPaths.get(i);
+        for (String parentPath : parentPaths) {
             SftpFile parentAttr = this.getFile(parentPath, false);
             if (parentAttr == null || !parentAttr.isDirectory()) {
                 try {
                     client.mkdir(parentPath, permissions);
-                } catch (Exception e1) {
-                    return false;
+                } catch (Exception e) {
+                    throw Exceptions.sftp(e);
                 }
             }
         }
-        return true;
     }
 
     /**
      * 删除一个空的文件夹
      *
      * @param path 文件夹绝对路径
-     * @return ignore
      */
-    public boolean rmdir(String path) {
+    public void rmdir(String path) {
         try {
             client.rmdir(path);
-            return true;
         } catch (Exception e) {
-            return false;
+            throw Exceptions.sftp(e);
         }
     }
 
@@ -345,14 +324,12 @@ public class SftpExecutor implements SafeCloseable {
      * 删除一个普通文件
      *
      * @param path 文件绝对路径
-     * @return ignore
      */
-    public boolean rmFile(String path) {
+    public void rmFile(String path) {
         try {
             client.rm(path);
-            return true;
         } catch (Exception e) {
-            return false;
+            throw Exceptions.sftp(e);
         }
     }
 
@@ -360,13 +337,12 @@ public class SftpExecutor implements SafeCloseable {
      * 递归删除文件或文件夹
      *
      * @param path 文件绝对路径
-     * @return ignore
      */
-    public boolean rm(String path) {
+    public void rm(String path) {
         try {
             SftpFile file = this.getFile(path);
             if (file == null) {
-                return true;
+                return;
             }
             if (file.isDirectory()) {
                 List<SftpFile> files = this.ll(path);
@@ -381,9 +357,8 @@ public class SftpExecutor implements SafeCloseable {
             } else {
                 client.rm(path);
             }
-            return true;
         } catch (Exception e) {
-            return false;
+            throw Exceptions.sftp(e);
         }
     }
 
@@ -391,20 +366,18 @@ public class SftpExecutor implements SafeCloseable {
      * 创建文件
      *
      * @param path 文件绝对路径
-     * @return ignore
      */
-    public boolean touch(String path) {
-        return this.touch(path, false);
+    public void touch(String path) {
+        this.touch(path, false);
     }
 
     /**
      * 创建文件 如果存在则清空
      *
      * @param path 文件绝对路径
-     * @return ignore
      */
-    public boolean touchTruncate(String path) {
-        return this.touch(path, true);
+    public void touchTruncate(String path) {
+        this.touch(path, true);
     }
 
     /**
@@ -412,24 +385,19 @@ public class SftpExecutor implements SafeCloseable {
      *
      * @param path     文件绝对路径
      * @param truncate 是否截断
-     * @return ignore
      */
-    public boolean touch(String path, boolean truncate) {
+    public void touch(String path, boolean truncate) {
         try {
-            if (this.mkdirs(Files1.getParentPath(path), DEFAULT_PERMISSIONS)) {
-                SFTPv3FileHandle handle;
-                if (truncate) {
-                    handle = client.createFileTruncate(path);
-                } else {
-                    handle = client.createFile(path);
-                }
-                handle.getClient().closeFile(handle);
-                return true;
+            this.mkdirs(Files1.getParentPath(path), DEFAULT_PERMISSIONS);
+            SFTPv3FileHandle handle;
+            if (truncate) {
+                handle = client.createFileTruncate(path);
             } else {
-                return false;
+                handle = client.createFile(path);
             }
+            handle.getClient().closeFile(handle);
         } catch (Exception e) {
-            return false;
+            throw Exceptions.sftp(e);
         }
     }
 
@@ -438,17 +406,13 @@ public class SftpExecutor implements SafeCloseable {
      *
      * @param sourceFile     被连接文件绝对路径
      * @param targetLinkFile 连接文件绝对路径
-     * @return true成功
      */
-    public boolean touchLink(String sourceFile, String targetLinkFile) {
+    public void touchLink(String sourceFile, String targetLinkFile) {
         try {
-            if (this.mkdirs(Files1.getParentPath(targetLinkFile), DEFAULT_PERMISSIONS)) {
-                client.createSymlink(targetLinkFile, sourceFile);
-                return true;
-            }
-            return false;
+            this.mkdirs(Files1.getParentPath(targetLinkFile), DEFAULT_PERMISSIONS);
+            client.createSymlink(targetLinkFile, sourceFile);
         } catch (Exception e) {
-            return false;
+            throw Exceptions.sftp(e);
         }
     }
 
@@ -457,9 +421,8 @@ public class SftpExecutor implements SafeCloseable {
      *
      * @param source 源文件
      * @param target 目标文件 绝对路径,相对路径都可以
-     * @return true成功
      */
-    public boolean mv(String source, String target) {
+    public void mv(String source, String target) {
         try {
             source = Files1.getPath(source);
             target = Files1.getPath(target);
@@ -470,9 +433,8 @@ public class SftpExecutor implements SafeCloseable {
                 // 相对路径
                 client.mv(source, Files1.normalize(Files1.getPath(source + "/../" + target)));
             }
-            return true;
         } catch (Exception e) {
-            return false;
+            throw Exceptions.sftp(e);
         }
     }
 
@@ -771,9 +733,7 @@ public class SftpExecutor implements SafeCloseable {
     private void write(String path, long fileOffset, InputStream in, StreamEntry entry, List<String> lines, int type) throws IOException {
         SFTPv3FileHandle handle = null;
         try {
-            if (!this.touch(path, type == 1)) {
-                throw Exceptions.sftp("touch file error: " + path);
-            }
+            this.touch(path, type == 1);
             if (type == 3) {
                 handle = client.openFileRWAppend(path);
             } else {
@@ -920,10 +880,10 @@ public class SftpExecutor implements SafeCloseable {
         List<File> dirs = Files1.listDirs(localDir, child);
         List<File> files = Files1.listFiles(localDir, child);
         for (File dir : dirs) {
-            this.mkdirs(Files1.getPath(remoteDir + SEPARATOR + (dir.getAbsolutePath().substring(localDir.length()))));
+            this.mkdirs(Files1.getPath(remoteDir, dir.getAbsolutePath().substring(localDir.length())));
         }
         for (File file : files) {
-            String path = Files1.getPath(remoteDir + SEPARATOR + (file.getAbsolutePath().substring(localDir.length())));
+            String path = Files1.getPath(remoteDir, file.getAbsolutePath().substring(localDir.length()));
             this.uploadFile(path, file);
         }
     }
@@ -987,16 +947,16 @@ public class SftpExecutor implements SafeCloseable {
         if (!child) {
             List<SftpFile> list = this.listFiles(remoteDir, false);
             for (SftpFile s : list) {
-                this.downloadFile(s.getPath(), Files1.getPath(localDir + SEPARATOR + Files1.getFileName(s.getPath())));
+                this.downloadFile(s.getPath(), Files1.getPath(localDir, Files1.getFileName(s.getPath())));
             }
         } else {
             List<SftpFile> list = this.listDirs(remoteDir, true);
             for (SftpFile s : list) {
-                Files1.mkdirs(Files1.getPath(localDir + SEPARATOR + s.getPath().substring(remoteDir.length())));
+                Files1.mkdirs(Files1.getPath(localDir, s.getPath().substring(remoteDir.length())));
             }
             list = this.listFiles(remoteDir, true);
             for (SftpFile s : list) {
-                this.downloadFile(s.getPath(), Files1.getPath(localDir + SEPARATOR + s.getPath().substring(remoteDir.length())));
+                this.downloadFile(s.getPath(), Files1.getPath(localDir, s.getPath().substring(remoteDir.length())));
             }
         }
     }
@@ -1050,7 +1010,7 @@ public class SftpExecutor implements SafeCloseable {
                 if (".".equals(filename) || "..".equals(filename)) {
                     continue;
                 }
-                list.add(new SftpFile(Files1.getPath(path + SEPARATOR + filename), l.longEntry, l.attributes));
+                list.add(new SftpFile(Files1.getPath(path, filename), l.longEntry, l.attributes));
             }
             return list;
         } catch (Exception e) {
@@ -1085,14 +1045,14 @@ public class SftpExecutor implements SafeCloseable {
                         list.add(l);
                     }
                     if (child) {
-                        list.addAll(this.listFiles(Files1.getPath(path + SEPARATOR + fn), true, dir));
+                        list.addAll(this.listFiles(Files1.getPath(path, fn), true, dir));
                     }
                 } else {
                     list.add(l);
                 }
             }
         } catch (Exception e) {
-            // ignore
+            throw Exceptions.sftp(e);
         }
         return list;
     }
@@ -1117,12 +1077,12 @@ public class SftpExecutor implements SafeCloseable {
                 if (l.isDirectory()) {
                     list.add(l);
                     if (child) {
-                        list.addAll(this.listDirs(Files1.getPath(path + SEPARATOR + fn), true));
+                        list.addAll(this.listDirs(Files1.getPath(path, fn), true));
                     }
                 }
             }
         } catch (Exception e) {
-            // ignore
+            throw Exceptions.sftp(e);
         }
         return list;
     }
@@ -1232,7 +1192,7 @@ public class SftpExecutor implements SafeCloseable {
                     }
                 }
                 if (isDir && child) {
-                    list.addAll(this.listFilesSearch(Files1.getPath(path + SEPARATOR + fn), filter, true, dir));
+                    list.addAll(this.listFilesSearch(Files1.getPath(path, fn), filter, true, dir));
                 }
             }
         } catch (Exception e) {

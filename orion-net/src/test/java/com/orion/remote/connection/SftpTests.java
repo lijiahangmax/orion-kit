@@ -28,31 +28,31 @@ public class SftpTests {
 
     @Before
     public void init() {
-        s = new ConnectionStore("192.168.146.230")
-                .auth("root", "admin123");
+        s = new ConnectionStore("116.62.194.246")
+                .auth("root", "Ljh@123456");
         e = s.getSftpExecutor();
     }
 
     @Test
     public void create() {
-        System.out.println(e.mkdirs("/root/1/2/3/4/5"));
-        System.out.println(e.touch("/root/a/b/c.txt"));
-        System.out.println(e.touchLink("/root/a/b/c.txt", "/root/a/b/d.txt"));
-        System.out.println(e.touch("/root/a/b/e.txt", true));
-        System.out.println(e.touch("/root/a/b/f.txt", true));
-        System.out.println(e.touch("/root/a/b/1/2/g1.txt", true));
-        System.out.println(e.touch("/root/a/b/1/2/g2.txt", true));
-        System.out.println(e.touch("/root/a/b/1/2/g3.txt", true));
-        System.out.println(e.mv("/root/a/b/1/2/g1.txt", "g11.txt"));
-        System.out.println(e.mv("/root/a/b/1/2/g2.txt", "../../g22.txt"));
-        System.out.println(e.mv("/root/a/b/1/2/g3.txt", "/root/g33.txt"));
+        e.mkdirs("/root/1/2/3/4/5");
+        e.touch("/root/a/b/c.txt");
+        e.touchLink("/root/a/b/c.txt", "/root/a/b/d.txt");
+        e.touch("/root/a/b/e.txt", true);
+        e.touch("/root/a/b/f.txt", true);
+        e.touch("/root/a/b/1/2/g1.txt", true);
+        e.touch("/root/a/b/1/2/g2.txt", true);
+        e.touch("/root/a/b/1/2/g3.txt", true);
+        e.mv("/root/a/b/1/2/g1.txt", "g11.txt");
+        e.mv("/root/a/b/1/2/g2.txt", "../../g22.txt");
+        e.mv("/root/a/b/1/2/g3.txt", "/root/g33.txt");
     }
 
     @Test
     public void rm() {
-        System.out.println(e.rmFile("/root/a/b/1/2/g1.txt"));
-        System.out.println(e.rmdir("/root/a/b/1/2"));
-        System.out.println(e.rm("/root/a/b/1"));
+        e.rmFile("/root/a/b/1/2/g1.txt");
+        e.rmdir("/root/a/b/1/2");
+        e.rm("/root/a/b/1");
     }
 
     @Test
@@ -69,8 +69,8 @@ public class SftpTests {
         System.out.println(e.getSize("/root/文本1.txt"));
         System.out.println(e.getSize("/root/文本2.txt"));
         System.out.println(e.getSize("/root/文本3.txt"));
-        System.out.println(e.truncate("/root/文本.txt"));
-        System.out.println(e.truncate("/root/文本2.txt"));
+        e.truncate("/root/文本.txt");
+        e.truncate("/root/文本2.txt");
     }
 
     @Test
