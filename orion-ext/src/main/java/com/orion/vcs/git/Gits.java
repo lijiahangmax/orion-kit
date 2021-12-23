@@ -209,6 +209,25 @@ public abstract class Gits implements SafeCloseable {
         }
     }
 
+    public Gits rebase() {
+        return rebase(RebaseCommand.Operation.CONTINUE);
+    }
+
+    /**
+     * rebase
+     *
+     * @param operation operation
+     * @return this
+     */
+    public Gits rebase(RebaseCommand.Operation operation) {
+        try {
+            git.rebase().setOperation(operation).call();
+            return this;
+        } catch (Exception e) {
+            throw Exceptions.vcs(e);
+        }
+    }
+
     public Gits reset(String commitId) {
         return this.reset(commitId, ResetCommand.ResetType.HARD);
     }
@@ -222,10 +241,7 @@ public abstract class Gits implements SafeCloseable {
      */
     public Gits reset(String commitId, ResetCommand.ResetType type) {
         try {
-            git.reset()
-                    .setRef(commitId)
-                    .setMode(type)
-                    .call();
+            git.reset().setRef(commitId).setMode(type).call();
             return this;
         } catch (Exception e) {
             throw Exceptions.vcs(e);
