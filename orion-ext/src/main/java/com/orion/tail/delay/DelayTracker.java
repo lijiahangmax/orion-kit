@@ -3,6 +3,7 @@ package com.orion.tail.delay;
 import com.orion.constant.Const;
 import com.orion.tail.handler.LineHandler;
 import com.orion.utils.Spells;
+import com.orion.utils.Strings;
 import com.orion.utils.Valid;
 import com.orion.utils.io.FileReaders;
 
@@ -43,9 +44,8 @@ public class DelayTracker extends AbstractDelayTracker {
         if (read == null || read.isEmpty()) {
             return;
         }
-        String[] lines = read.replaceAll(Const.CR_LF, Const.LF)
-                .replaceAll(Const.CR, Const.LF)
-                .split(Const.LF);
+
+        String[] lines = Strings.replaceCRLF(read).split(Const.LF);
         for (String line : lines) {
             // if (accessCount == 0 && fileOffsetMode.equals(FileOffsetMode.BYTE) && offset > 0) {
             //     line = cleanMissCode(line);

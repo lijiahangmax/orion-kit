@@ -141,7 +141,7 @@ public class SftpExecutor extends BaseExecutor {
         try {
             return channel.realpath(path);
         } catch (Exception e) {
-            if (SftpErrorMessage.NO_SUCH_FILE.getMessage().equalsIgnoreCase(e.getMessage())) {
+            if (this.isNoSuchFileError(e)) {
                 return null;
             } else {
                 throw Exceptions.sftp(e);
@@ -159,7 +159,7 @@ public class SftpExecutor extends BaseExecutor {
         try {
             return channel.readlink(path);
         } catch (Exception e) {
-            if (SftpErrorMessage.NO_SUCH_FILE.getMessage().equalsIgnoreCase(e.getMessage())) {
+            if (this.isNoSuchFileError(e)) {
                 return null;
             } else if (SftpErrorMessage.BAD_MESSAGE.getMessage().equalsIgnoreCase(e.getMessage())) {
                 return null;
@@ -196,7 +196,7 @@ public class SftpExecutor extends BaseExecutor {
             }
             return new SftpFile(path, attr);
         } catch (Exception e) {
-            if (SftpErrorMessage.NO_SUCH_FILE.getMessage().equalsIgnoreCase(e.getMessage())) {
+            if (this.isNoSuchFileError(e)) {
                 return null;
             } else {
                 throw Exceptions.sftp(e);
@@ -282,6 +282,9 @@ public class SftpExecutor extends BaseExecutor {
         try {
             this.touchTruncate(path);
         } catch (Exception e) {
+            if (this.isNoSuchFileError(e)) {
+                return;
+            }
             throw Exceptions.sftp(e);
         }
     }
@@ -343,6 +346,9 @@ public class SftpExecutor extends BaseExecutor {
         try {
             channel.rmdir(path);
         } catch (Exception e) {
+            if (this.isNoSuchFileError(e)) {
+                return;
+            }
             throw Exceptions.sftp(e);
         }
     }
@@ -356,6 +362,9 @@ public class SftpExecutor extends BaseExecutor {
         try {
             channel.rm(path);
         } catch (Exception e) {
+            if (this.isNoSuchFileError(e)) {
+                return;
+            }
             throw Exceptions.sftp(e);
         }
     }
@@ -385,6 +394,9 @@ public class SftpExecutor extends BaseExecutor {
                 channel.rm(path);
             }
         } catch (Exception e) {
+            if (this.isNoSuchFileError(e)) {
+                return;
+            }
             throw Exceptions.sftp(e);
         }
     }
@@ -1211,6 +1223,20 @@ public class SftpExecutor extends BaseExecutor {
             throw Exceptions.sftp(e);
         }
         return list;
+    }
+
+    /**
+     * 是否为未找到文件异常
+     *
+     * @param e e
+     * @return res
+     */
+    private boolean isNoSuchFileError(Exception e) {
+        String message = e.getMessage();
+        if (Strings.isEmpty(message)) {
+            return false;
+        }
+        return message.toLowerCase().contains(SftpErrorMessage.NO_SUCH_FILE.getMessage());
     }
 
     // -------------------- option --------------------

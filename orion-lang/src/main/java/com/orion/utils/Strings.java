@@ -1502,4 +1502,14 @@ public class Strings {
         return s.getBytes(Charsets.of(Systems.FILE_ENCODING));
     }
 
+    /**
+     * 替换 \r \r\n -> \n
+     *
+     * @param s s
+     * @return replace
+     */
+    public static String replaceCRLF(String s) {
+        return s.replaceAll(Const.CR_LF, Const.LF).replaceAll(Const.CR, Const.LF);
+    }
+
 }
