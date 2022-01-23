@@ -1,8 +1,9 @@
 package com.orion.lang.mutable;
 
-import com.orion.utils.Objects1;
+import com.orion.able.Mutable;
 import com.orion.utils.Strings;
 import com.orion.utils.Urls;
+import com.orion.utils.Valid;
 import com.orion.utils.Xsses;
 import com.orion.utils.codec.Base64s;
 import com.orion.utils.convert.Converts;
@@ -21,84 +22,44 @@ import java.util.Objects;
  * @version 1.0.0
  * @since 2020/3/13 14:11
  */
-public class MutableString implements CharSequence, Serializable {
+public class MutableString implements Mutable<String>, CharSequence, Serializable {
 
     private static final long serialVersionUID = 8675244107435484L;
 
-    private String s;
+    private StringBuilder builder;
 
     public MutableString() {
-        s = Strings.EMPTY;
-    }
-
-    public MutableString(Object o) {
-        this.s = Strings.str(o);
-    }
-
-    public MutableString(Object o, String def) {
-        if (o == null) {
-            this.s = def;
-        } else {
-            this.s = Strings.str(o);
-        }
+        this.builder = new StringBuilder();
     }
 
     public MutableString(String s) {
-        this.s = s;
+        Valid.notNull(s);
+        this.builder = new StringBuilder(s);
     }
 
-    public MutableString(String s, String def) {
-        this.s = Objects1.def(s, def);
+    public MutableString(StringBuilder builder) {
+        Valid.notNull(builder);
+        this.builder = builder;
+    }
+
+    public MutableString(Object o) {
+        Valid.notNull(o);
+        this.builder = new StringBuilder(Strings.str(o));
     }
 
     public MutableString of(String s) {
         return new MutableString(s);
     }
 
-    public MutableString of(String s, String def) {
-        return new MutableString(s, def);
-    }
-
-    /**
-     * 获取值
-     *
-     * @return 值
-     */
+    @Override
     public String get() {
-        return s;
+        return builder.toString();
     }
 
-    /**
-     * 获取值
-     *
-     * @param def 默认值
-     * @return 值
-     */
-    public String get(String def) {
-        return Objects1.def(s, def);
-    }
-
-    /**
-     * 设置值
-     *
-     * @param s string
-     * @return this
-     */
-    public MutableString set(String s) {
-        this.s = s;
-        return this;
-    }
-
-    /**
-     * 设置值
-     *
-     * @param s   string
-     * @param def 默认值
-     * @return this
-     */
-    public MutableString set(String s, String def) {
-        this.s = Objects1.def(s, def);
-        return this;
+    @Override
+    public void set(String s) {
+        Valid.notNull(s);
+        this.builder = new StringBuilder(s);
     }
 
     /**
@@ -107,7 +68,7 @@ public class MutableString implements CharSequence, Serializable {
      * @return true 空白
      */
     public boolean isBlank() {
-        return Strings.isBlank(s);
+        return Strings.isBlank(builder.toString());
     }
 
     /**
@@ -116,25 +77,7 @@ public class MutableString implements CharSequence, Serializable {
      * @return false 空白
      */
     public boolean isNotBlank() {
-        return Strings.isNotBlank(s);
-    }
-
-    /**
-     * 是否为null
-     *
-     * @return true null
-     */
-    public boolean isNull() {
-        return s == null;
-    }
-
-    /**
-     * 是否不为null
-     *
-     * @return false null
-     */
-    public boolean isNotNull() {
-        return s != null;
+        return Strings.isNotBlank(builder.toString());
     }
 
     /**
@@ -143,7 +86,7 @@ public class MutableString implements CharSequence, Serializable {
      * @return true 空
      */
     public boolean isEmpty() {
-        return Strings.isEmpty(s);
+        return Strings.isEmpty(builder);
     }
 
     /**
@@ -152,7 +95,7 @@ public class MutableString implements CharSequence, Serializable {
      * @return false 空
      */
     public boolean isNotEmpty() {
-        return Strings.isNotEmpty(s);
+        return Strings.isNotEmpty(builder);
     }
 
     /**
@@ -161,7 +104,7 @@ public class MutableString implements CharSequence, Serializable {
      * @return this
      */
     public MutableString trim() {
-        s = s.trim();
+        this.builder = new StringBuilder(builder.toString().trim());
         return this;
     }
 
@@ -171,7 +114,7 @@ public class MutableString implements CharSequence, Serializable {
      * @return this
      */
     public MutableString trimPunct() {
-        s = Strings.trimPunct(s);
+        this.builder = new StringBuilder(Strings.trimPunct(builder.toString()));
         return this;
     }
 
@@ -182,11 +125,9 @@ public class MutableString implements CharSequence, Serializable {
      * @return this
      */
     public MutableString concat(String... ss) {
-        StringBuilder sb = new StringBuilder(s);
-        for (String s1 : ss) {
-            sb.append(s1);
+        for (String s : ss) {
+            builder.append(s);
         }
-        s = sb.toString();
         return this;
     }
 
@@ -198,10 +139,10 @@ public class MutableString implements CharSequence, Serializable {
      */
     public MutableString concatBefore(String... ss) {
         StringBuilder sb = new StringBuilder();
-        for (String s1 : ss) {
-            sb.append(s1);
+        for (String s : ss) {
+            sb.append(s);
         }
-        s = sb.append(s).toString();
+        this.builder = sb.append(builder);
         return this;
     }
 
@@ -212,7 +153,7 @@ public class MutableString implements CharSequence, Serializable {
      * @return this
      */
     public MutableString format(Object... os) {
-        s = Strings.format(s, os);
+        this.builder = new StringBuilder(Strings.format(builder.toString(), os));
         return this;
     }
 
@@ -222,7 +163,7 @@ public class MutableString implements CharSequence, Serializable {
      * @return this
      */
     public MutableString reverse() {
-        s = new StringBuilder(s).reverse().toString();
+        this.builder = builder.reverse();
         return this;
     }
 
@@ -234,7 +175,7 @@ public class MutableString implements CharSequence, Serializable {
      * @return this
      */
     public MutableString substring(int begin, int end) {
-        s = s.substring(begin, end);
+        this.builder = new StringBuilder(builder.substring(begin, end));
         return this;
     }
 
@@ -245,7 +186,7 @@ public class MutableString implements CharSequence, Serializable {
      * @return this
      */
     public MutableString substring(int begin) {
-        s = s.substring(begin);
+        this.builder = new StringBuilder(builder.substring(begin));
         return this;
     }
 
@@ -256,7 +197,7 @@ public class MutableString implements CharSequence, Serializable {
      * @return true包含
      */
     public boolean contains(String s) {
-        return this.s.contains(s);
+        return builder.indexOf(s) > -1;
     }
 
     /**
@@ -265,36 +206,10 @@ public class MutableString implements CharSequence, Serializable {
      * @return byte
      */
     public Byte toByte() {
-        if (isEmpty()) {
+        if (this.isEmpty()) {
             return null;
         }
-        return Converts.toByte(s);
-    }
-
-    public Byte toByte(Byte def) {
-        if (isEmpty()) {
-            return def;
-        }
-        return Converts.toByte(s);
-    }
-
-    /**
-     * 转为 byte
-     *
-     * @return byte
-     */
-    public byte toByteValue() {
-        if (isEmpty()) {
-            return 0;
-        }
-        return Converts.toByte(s);
-    }
-
-    public byte toByteValue(byte def) {
-        if (isEmpty()) {
-            return def;
-        }
-        return Converts.toByte(s);
+        return Converts.toByte(builder.toString());
     }
 
     /**
@@ -303,74 +218,22 @@ public class MutableString implements CharSequence, Serializable {
      * @return s
      */
     public Short toShort() {
-        if (isEmpty()) {
+        if (this.isEmpty()) {
             return null;
         }
-        return Converts.toShort(s);
-    }
-
-    public Short toShort(Short def) {
-        if (isEmpty()) {
-            return def;
-        }
-        return Converts.toShort(s);
+        return Converts.toShort(builder.toString());
     }
 
     /**
-     * 转为 short
-     *
-     * @return s
-     */
-    public short toShortValue() {
-        if (isEmpty()) {
-            return 0;
-        }
-        return Converts.toShort(s);
-    }
-
-    public short toShortValue(short def) {
-        if (isEmpty()) {
-            return def;
-        }
-        return Converts.toShort(s);
-    }
-
-    /**
-     * 转为 Integer
+     * 转为 integer
      *
      * @return Integer
      */
-    public Integer toInt() {
-        if (isEmpty()) {
+    public Integer toInteger() {
+        if (this.isEmpty()) {
             return null;
         }
-        return Converts.toInt(s);
-    }
-
-    public Integer toInt(Integer def) {
-        if (isEmpty()) {
-            return def;
-        }
-        return Converts.toInt(s);
-    }
-
-    /**
-     * 转为 int
-     *
-     * @return int
-     */
-    public int toIntValue() {
-        if (isEmpty()) {
-            return 0;
-        }
-        return Converts.toInt(s);
-    }
-
-    public int toIntValue(int def) {
-        if (isEmpty()) {
-            return def;
-        }
-        return Converts.toInt(s);
+        return Converts.toInt(builder.toString());
     }
 
     /**
@@ -379,36 +242,10 @@ public class MutableString implements CharSequence, Serializable {
      * @return long
      */
     public Long toLong() {
-        if (isEmpty()) {
+        if (this.isEmpty()) {
             return null;
         }
-        return Converts.toLong(s);
-    }
-
-    public Long toLong(Long def) {
-        if (isEmpty()) {
-            return def;
-        }
-        return Converts.toLong(s);
-    }
-
-    /**
-     * 转为 long
-     *
-     * @return long
-     */
-    public long toLongValue() {
-        if (isEmpty()) {
-            return 0L;
-        }
-        return Converts.toLong(s);
-    }
-
-    public long toLongValue(long def) {
-        if (isEmpty()) {
-            return def;
-        }
-        return Converts.toLong(s);
+        return Converts.toLong(builder.toString());
     }
 
     /**
@@ -417,36 +254,10 @@ public class MutableString implements CharSequence, Serializable {
      * @return float
      */
     public Float toFloat() {
-        if (isEmpty()) {
+        if (this.isEmpty()) {
             return null;
         }
-        return Converts.toFloat(s);
-    }
-
-    public Float toFloat(Float def) {
-        if (isEmpty()) {
-            return def;
-        }
-        return Converts.toFloat(s);
-    }
-
-    /**
-     * 转为 float
-     *
-     * @return float
-     */
-    public float toFloatValue() {
-        if (isEmpty()) {
-            return 0f;
-        }
-        return Converts.toFloat(s);
-    }
-
-    public float toFloatValue(float def) {
-        if (isEmpty()) {
-            return def;
-        }
-        return Converts.toFloat(s);
+        return Converts.toFloat(builder.toString());
     }
 
     /**
@@ -455,36 +266,10 @@ public class MutableString implements CharSequence, Serializable {
      * @return double
      */
     public Double toDouble() {
-        if (isEmpty()) {
+        if (this.isEmpty()) {
             return null;
         }
-        return Converts.toDouble(s);
-    }
-
-    public Double toDouble(Double def) {
-        if (isEmpty()) {
-            return def;
-        }
-        return Converts.toDouble(s);
-    }
-
-    /**
-     * 转为 double
-     *
-     * @return double
-     */
-    public double toDoubleValue() {
-        if (isEmpty()) {
-            return 0.0;
-        }
-        return Converts.toDouble(s);
-    }
-
-    public double toDoubleValue(double def) {
-        if (isEmpty()) {
-            return def;
-        }
-        return Converts.toDouble(s);
+        return Converts.toDouble(builder.toString());
     }
 
     /**
@@ -493,36 +278,10 @@ public class MutableString implements CharSequence, Serializable {
      * @return boolean
      */
     public Boolean toBoolean() {
-        if (isEmpty()) {
+        if (this.isEmpty()) {
             return null;
         }
-        return Converts.toBoolean(s);
-    }
-
-    public Boolean toBoolean(Boolean def) {
-        if (isEmpty()) {
-            return def;
-        }
-        return Converts.toBoolean(s);
-    }
-
-    /**
-     * 转为 boolean
-     *
-     * @return boolean
-     */
-    public boolean toBooleanValue() {
-        if (isEmpty()) {
-            return false;
-        }
-        return Converts.toBoolean(s);
-    }
-
-    public boolean toBooleanValue(boolean def) {
-        if (isEmpty()) {
-            return def;
-        }
-        return Converts.toBoolean(s);
+        return Converts.toBoolean(builder.toString());
     }
 
     /**
@@ -530,37 +289,11 @@ public class MutableString implements CharSequence, Serializable {
      *
      * @return char
      */
-    public Character toChar() {
-        if (isEmpty()) {
+    public Character toCharacter() {
+        if (this.isEmpty()) {
             return null;
         }
-        return Converts.toChar(s);
-    }
-
-    public Character toChar(Character def) {
-        if (isEmpty()) {
-            return def;
-        }
-        return Converts.toChar(s);
-    }
-
-    /**
-     * 转为 char
-     *
-     * @return char
-     */
-    public char toCharValue() {
-        if (isEmpty()) {
-            return 0;
-        }
-        return Converts.toChar(s);
-    }
-
-    public char toCharValue(char def) {
-        if (isEmpty()) {
-            return def;
-        }
-        return Converts.toChar(s);
+        return Converts.toChar(builder.toString());
     }
 
     /**
@@ -569,55 +302,34 @@ public class MutableString implements CharSequence, Serializable {
      * @return date
      */
     public Date toDate() {
-        if (isEmpty()) {
+        if (this.isEmpty()) {
             return null;
         }
-        return Converts.toDate(s);
-    }
-
-    public Date toDate(Date def) {
-        if (isEmpty()) {
-            return def;
-        }
-        return Converts.toDate(s);
+        return Converts.toDate(builder.toString());
     }
 
     /**
-     * 转为 LocalDateTime
+     * 转为 localDateTime
      *
      * @return LocalDateTime
      */
     public LocalDateTime toLocalDateTime() {
-        if (isEmpty()) {
+        if (this.isEmpty()) {
             return null;
         }
-        return Converts.toLocalDateTime(s);
-    }
-
-    public LocalDateTime toLocalDateTime(LocalDateTime def) {
-        if (isEmpty()) {
-            return def;
-        }
-        return Converts.toLocalDateTime(s);
+        return Converts.toLocalDateTime(builder.toString());
     }
 
     /**
-     * 转为 date
+     * 转为 localDate
      *
      * @return date
      */
     public LocalDate toLocalDate() {
-        if (isEmpty()) {
+        if (this.isEmpty()) {
             return null;
         }
-        return Converts.toLocalDate(s);
-    }
-
-    public LocalDate toLocalDate(LocalDate def) {
-        if (isEmpty()) {
-            return def;
-        }
-        return Converts.toLocalDate(s);
+        return Converts.toLocalDate(builder.toString());
     }
 
     /**
@@ -626,10 +338,7 @@ public class MutableString implements CharSequence, Serializable {
      * @return stringBuilder
      */
     public StringBuilder toStringBuilder() {
-        if (isEmpty()) {
-            return new StringBuilder();
-        }
-        return new StringBuilder(s);
+        return new StringBuilder(builder);
     }
 
     /**
@@ -638,10 +347,7 @@ public class MutableString implements CharSequence, Serializable {
      * @return stringBuffer
      */
     public StringBuffer toStringBuffer() {
-        if (isEmpty()) {
-            return new StringBuffer();
-        }
-        return new StringBuffer(s);
+        return new StringBuffer(builder);
     }
 
     /**
@@ -650,7 +356,7 @@ public class MutableString implements CharSequence, Serializable {
      * @return byte[]
      */
     public byte[] toBytes() {
-        return Strings.bytes(s);
+        return Strings.bytes(builder.toString());
     }
 
     /**
@@ -660,7 +366,7 @@ public class MutableString implements CharSequence, Serializable {
      * @return byte[]
      */
     public byte[] toBytes(String charset) {
-        return Strings.bytes(s, charset);
+        return Strings.bytes(builder.toString(), charset);
     }
 
     /**
@@ -669,7 +375,7 @@ public class MutableString implements CharSequence, Serializable {
      * @return char[]
      */
     public char[] toChars() {
-        return s.toCharArray();
+        return builder.toString().toCharArray();
     }
 
     /**
@@ -678,7 +384,7 @@ public class MutableString implements CharSequence, Serializable {
      * @return string
      */
     public String toLowerString() {
-        return s.toLowerCase();
+        return builder.toString().toLowerCase();
     }
 
     /**
@@ -687,7 +393,7 @@ public class MutableString implements CharSequence, Serializable {
      * @return string
      */
     public String toUpperString() {
-        return s.toUpperCase();
+        return builder.toString().toUpperCase();
     }
 
     /**
@@ -696,7 +402,7 @@ public class MutableString implements CharSequence, Serializable {
      * @return string
      */
     public String urlEncode() {
-        return Urls.encode(s);
+        return Urls.encode(builder.toString());
     }
 
     /**
@@ -706,7 +412,7 @@ public class MutableString implements CharSequence, Serializable {
      * @return string
      */
     public String urlEncode(String charset) {
-        return Urls.encode(s, charset);
+        return Urls.encode(builder.toString(), charset);
     }
 
     /**
@@ -715,7 +421,7 @@ public class MutableString implements CharSequence, Serializable {
      * @return string
      */
     public String urlDecode() {
-        return Urls.decode(s);
+        return Urls.decode(builder.toString());
     }
 
     /**
@@ -725,7 +431,7 @@ public class MutableString implements CharSequence, Serializable {
      * @return string
      */
     public String urlDecode(String charset) {
-        return Urls.decode(s, charset);
+        return Urls.decode(builder.toString(), charset);
     }
 
     /**
@@ -734,7 +440,7 @@ public class MutableString implements CharSequence, Serializable {
      * @return 签名
      */
     public String md5() {
-        return Signatures.md5(s);
+        return Signatures.md5(builder.toString());
     }
 
     /**
@@ -744,7 +450,7 @@ public class MutableString implements CharSequence, Serializable {
      * @return 签名
      */
     public String sign(String sign) {
-        return Signatures.sign(s, sign);
+        return Signatures.sign(builder.toString(), sign);
     }
 
     /**
@@ -753,7 +459,7 @@ public class MutableString implements CharSequence, Serializable {
      * @return base64
      */
     public String encodeBase64() {
-        return Base64s.encode(s);
+        return Base64s.encode(builder.toString());
     }
 
     /**
@@ -762,7 +468,7 @@ public class MutableString implements CharSequence, Serializable {
      * @return string
      */
     public String decodeBase64() {
-        return Base64s.decode(s);
+        return Base64s.decode(builder.toString());
     }
 
     /**
@@ -771,7 +477,7 @@ public class MutableString implements CharSequence, Serializable {
      * @return string
      */
     public String cleanXss() {
-        return Xsses.clean(s);
+        return Xsses.clean(builder.toString());
     }
 
     /**
@@ -780,22 +486,22 @@ public class MutableString implements CharSequence, Serializable {
      * @return string
      */
     public String recodeXss() {
-        return Xsses.recode(s);
+        return Xsses.recode(builder.toString());
     }
 
     @Override
     public int length() {
-        return s.length();
+        return builder.length();
     }
 
     @Override
     public char charAt(int index) {
-        return s.charAt(index);
+        return builder.charAt(index);
     }
 
     @Override
     public CharSequence subSequence(int start, int end) {
-        return s.subSequence(start, end);
+        return builder.subSequence(start, end);
     }
 
     @Override
@@ -803,22 +509,17 @@ public class MutableString implements CharSequence, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MutableString that = (MutableString) o;
-        return Objects.equals(s, that.s);
+        return Objects.equals(builder, that.builder);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(s);
+        return Objects.hash(builder);
     }
 
-    /**
-     * 转为string
-     *
-     * @return string
-     */
     @Override
     public String toString() {
-        return s;
+        return builder.toString();
     }
 
 }

@@ -226,7 +226,7 @@ public class Strings {
      * @param str 待验证的字符串
      * @return 空 true
      */
-    public static boolean isEmpty(String str) {
+    public static boolean isEmpty(CharSequence str) {
         return str == null || str.length() == 0;
     }
 
@@ -236,7 +236,7 @@ public class Strings {
      * @param str 待验证的字符串
      * @return 空 false
      */
-    public static boolean isNotEmpty(String str) {
+    public static boolean isNotEmpty(CharSequence str) {
         return !isEmpty(str);
     }
 
@@ -246,13 +246,13 @@ public class Strings {
      * @param strs 待验证的一组字符串, 参数为空返回为true
      * @return 全部为空true
      */
-    public static boolean isAllEmpty(String... strs) {
+    public static boolean isAllEmpty(CharSequence... strs) {
         if (strs == null) {
             return true;
         } else if (strs.length == 0) {
             return true;
         }
-        for (String str : strs) {
+        for (CharSequence str : strs) {
             if (!isEmpty(str)) {
                 return false;
             }
@@ -266,13 +266,13 @@ public class Strings {
      * @param strs 待验证的一组字符串, 参数为空返回为false
      * @return 全部不为空true
      */
-    public static boolean isNoneEmpty(String... strs) {
+    public static boolean isNoneEmpty(CharSequence... strs) {
         if (strs == null) {
             return false;
         } else if (strs.length == 0) {
             return false;
         }
-        for (String str : strs) {
+        for (CharSequence str : strs) {
             if (isEmpty(str)) {
                 return false;
             }

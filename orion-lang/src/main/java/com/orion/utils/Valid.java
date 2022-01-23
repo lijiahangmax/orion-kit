@@ -246,6 +246,7 @@ public abstract class Valid {
         return object;
     }
 
+    @SafeVarargs
     public static <T> T in(T t, T... arr) {
         return in(t, arr, VALID_NOT_ARRAY);
     }
@@ -272,6 +273,7 @@ public abstract class Valid {
         return t;
     }
 
+    @SafeVarargs
     public static <T> T notIn(T t, T... arr) {
         return notIn(t, arr, VALID_NOT_IN_ARRAY);
     }
