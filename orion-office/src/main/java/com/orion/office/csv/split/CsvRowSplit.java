@@ -9,7 +9,7 @@ import com.orion.office.support.DestinationGenerator;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Valid;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * csv 行切分器 可以获取行数据
@@ -121,7 +121,7 @@ public class CsvRowSplit extends DestinationGenerator {
                 break;
             }
             // 读取行
-            List<String[]> rows = reader.clear().read(limit).getRows();
+            Collection<String[]> rows = reader.clear().read(limit).getRows();
             if (rows.isEmpty()) {
                 this.end = true;
                 break;

@@ -8,8 +8,8 @@ import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -173,7 +173,7 @@ public abstract class BaseCsvWriter<K, V> implements SafeCloseable, SafeFlushabl
      * @param list 行
      * @return this
      */
-    public BaseCsvWriter<K, V> addRows(List<V> list) {
+    public BaseCsvWriter<K, V> addRows(Collection<V> list) {
         list.forEach(this::addRow);
         return this;
     }
@@ -214,7 +214,7 @@ public abstract class BaseCsvWriter<K, V> implements SafeCloseable, SafeFlushabl
      * @param comments comments
      * @return this
      */
-    public BaseCsvWriter<K, V> addComments(List<String> comments) {
+    public BaseCsvWriter<K, V> addComments(Collection<String> comments) {
         comments.forEach(this::addComment);
         return this;
     }

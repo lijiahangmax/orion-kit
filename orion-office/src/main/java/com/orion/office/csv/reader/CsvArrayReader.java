@@ -6,7 +6,7 @@ import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.function.Consumer;
 
 /**
@@ -37,7 +37,7 @@ public class CsvArrayReader extends BaseCsvReader<String[]> {
         this(reader, new ArrayList<>(), null);
     }
 
-    public CsvArrayReader(CsvReader reader, List<String[]> rows) {
+    public CsvArrayReader(CsvReader reader, Collection<String[]> rows) {
         this(reader, rows, null);
     }
 
@@ -45,7 +45,7 @@ public class CsvArrayReader extends BaseCsvReader<String[]> {
         this(reader, null, consumer);
     }
 
-    protected CsvArrayReader(CsvReader reader, List<String[]> rows, Consumer<String[]> consumer) {
+    protected CsvArrayReader(CsvReader reader, Collection<String[]> rows, Consumer<String[]> consumer) {
         super(reader, rows, consumer);
     }
 

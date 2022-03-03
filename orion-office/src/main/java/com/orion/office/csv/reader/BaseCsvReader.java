@@ -6,7 +6,7 @@ import com.orion.office.csv.option.CsvReaderOption;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.function.Consumer;
 
 /**
@@ -36,7 +36,7 @@ public abstract class BaseCsvReader<T> implements SafeCloseable, Iterable<T> {
     /**
      * 读取的记录
      */
-    protected List<T> rows;
+    protected Collection<T> rows;
 
     /**
      * 读取的消费器
@@ -48,7 +48,7 @@ public abstract class BaseCsvReader<T> implements SafeCloseable, Iterable<T> {
      */
     protected boolean store;
 
-    protected BaseCsvReader(CsvReader reader, List<T> rows, Consumer<T> consumer) {
+    protected BaseCsvReader(CsvReader reader, Collection<T> rows, Consumer<T> consumer) {
         this.reader = Valid.notNull(reader, "reader is null");
         if (rows == null && consumer == null) {
             throw Exceptions.argument("rows container or row consumer one of them must not be empty");
@@ -239,7 +239,7 @@ public abstract class BaseCsvReader<T> implements SafeCloseable, Iterable<T> {
         return reader.getRawRow();
     }
 
-    public List<T> getRows() {
+    public Collection<T> getRows() {
         return rows;
     }
 

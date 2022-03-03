@@ -45,7 +45,7 @@ public class CsvMapReader<K, V> extends BaseCsvReader<MutableMap<K, V>> {
         this(reader, new ArrayList<>(), null);
     }
 
-    public CsvMapReader(CsvReader reader, List<MutableMap<K, V>> rows) {
+    public CsvMapReader(CsvReader reader, Collection<MutableMap<K, V>> rows) {
         this(reader, rows, null);
     }
 
@@ -53,7 +53,7 @@ public class CsvMapReader<K, V> extends BaseCsvReader<MutableMap<K, V>> {
         this(reader, null, consumer);
     }
 
-    protected CsvMapReader(CsvReader reader, List<MutableMap<K, V>> rows, Consumer<MutableMap<K, V>> consumer) {
+    protected CsvMapReader(CsvReader reader, Collection<MutableMap<K, V>> rows, Consumer<MutableMap<K, V>> consumer) {
         super(reader, rows, consumer);
         this.nullPutKey = true;
         this.defaultValue = new HashMap<>();

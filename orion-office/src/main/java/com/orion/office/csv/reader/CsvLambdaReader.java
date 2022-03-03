@@ -5,7 +5,7 @@ import com.orion.office.csv.core.CsvReader;
 import com.orion.utils.Valid;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.BiConsumer;
@@ -43,7 +43,7 @@ public class CsvLambdaReader<T> extends BaseCsvReader<T> {
         this(reader, new ArrayList<>(), null, supplier);
     }
 
-    public CsvLambdaReader(CsvReader reader, List<T> rows, Supplier<T> supplier) {
+    public CsvLambdaReader(CsvReader reader, Collection<T> rows, Supplier<T> supplier) {
         this(reader, rows, null, supplier);
     }
 
@@ -51,7 +51,7 @@ public class CsvLambdaReader<T> extends BaseCsvReader<T> {
         this(reader, null, consumer, supplier);
     }
 
-    protected CsvLambdaReader(CsvReader reader, List<T> rows, Consumer<T> consumer, Supplier<T> supplier) {
+    protected CsvLambdaReader(CsvReader reader, Collection<T> rows, Consumer<T> consumer, Supplier<T> supplier) {
         super(reader, rows, consumer);
         this.supplier = Valid.notNull(supplier, "supplier is null");
         this.mapping = new TreeMap<>();

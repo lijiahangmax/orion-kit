@@ -6,7 +6,7 @@ import com.orion.office.csv.reader.CsvArrayReader;
 import com.orion.office.csv.writer.CsvArrayWriter;
 import com.orion.utils.io.Streams;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * csv 行合并器
@@ -111,7 +111,7 @@ public class CsvMerge implements SafeCloseable {
             reader.skip(skipRows);
         }
         // 数据
-        List<String[]> lines;
+        Collection<String[]> lines;
         while (!(lines = reader.clear().read(bufferLine).getRows()).isEmpty()) {
             writer.addRows(lines);
         }

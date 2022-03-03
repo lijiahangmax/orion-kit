@@ -4,7 +4,7 @@ import com.orion.office.csv.core.CsvReader;
 import com.orion.utils.Strings;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.function.Consumer;
 
 /**
@@ -25,7 +25,7 @@ public class CsvRawReader extends BaseCsvReader<String> {
         this(reader, new ArrayList<>(), null);
     }
 
-    public CsvRawReader(CsvReader reader, List<String> rows) {
+    public CsvRawReader(CsvReader reader, Collection<String> rows) {
         this(reader, rows, null);
     }
 
@@ -33,7 +33,7 @@ public class CsvRawReader extends BaseCsvReader<String> {
         this(reader, null, consumer);
     }
 
-    protected CsvRawReader(CsvReader reader, List<String> rows, Consumer<String> consumer) {
+    protected CsvRawReader(CsvReader reader, Collection<String> rows, Consumer<String> consumer) {
         super(reader, rows, consumer);
         reader.getOption().setSkipRawRow(false);
     }

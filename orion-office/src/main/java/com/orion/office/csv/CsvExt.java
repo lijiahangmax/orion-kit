@@ -10,6 +10,7 @@ import com.orion.utils.io.Files1;
 import java.io.File;
 import java.io.InputStream;
 import java.io.Reader;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -89,7 +90,7 @@ public class CsvExt implements SafeCloseable {
         return new CsvArrayReader(reader);
     }
 
-    public CsvArrayReader arrayReader(List<String[]> rows) {
+    public CsvArrayReader arrayReader(Collection<String[]> rows) {
         return new CsvArrayReader(reader, rows);
     }
 
@@ -109,7 +110,7 @@ public class CsvExt implements SafeCloseable {
         return new CsvMapReader<>(reader);
     }
 
-    public <K, V> CsvMapReader<K, V> mapReader(List<MutableMap<K, V>> rows) {
+    public <K, V> CsvMapReader<K, V> mapReader(Collection<MutableMap<K, V>> rows) {
         return new CsvMapReader<>(reader, rows);
     }
 
@@ -152,7 +153,7 @@ public class CsvExt implements SafeCloseable {
         return new CsvLambdaReader<>(reader, supplier);
     }
 
-    public <T> CsvLambdaReader<T> lambdaReader(List<T> rows, Supplier<T> supplier) {
+    public <T> CsvLambdaReader<T> lambdaReader(Collection<T> rows, Supplier<T> supplier) {
         return new CsvLambdaReader<>(reader, rows, supplier);
     }
 
@@ -173,7 +174,7 @@ public class CsvExt implements SafeCloseable {
         return new CsvRawReader(reader);
     }
 
-    public CsvRawReader rawReader(List<String> rows) {
+    public CsvRawReader rawReader(Collection<String> rows) {
         return new CsvRawReader(reader, rows);
     }
 

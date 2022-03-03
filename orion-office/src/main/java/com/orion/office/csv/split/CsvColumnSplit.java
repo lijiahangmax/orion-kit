@@ -12,7 +12,7 @@ import com.orion.utils.io.Files1;
 
 import java.io.File;
 import java.io.OutputStream;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * csv 拆分一个文件 占用内存少
@@ -125,7 +125,7 @@ public class CsvColumnSplit implements SafeCloseable {
         if (!Arrays1.isEmpty(headers)) {
             writer.headers(headers);
         }
-        List<String[]> rows;
+        Collection<String[]> rows;
         // 读取行
         while (!Lists.isEmpty(rows = reader.clear().read(bufferLine).getRows())) {
             for (String[] row : rows) {

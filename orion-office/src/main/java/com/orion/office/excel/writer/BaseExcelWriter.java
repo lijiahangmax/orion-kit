@@ -589,7 +589,7 @@ public abstract class BaseExcelWriter<K, V> {
      * @param list 行
      * @return this
      */
-    public BaseExcelWriter<K, V> addRows(List<V> list) {
+    public BaseExcelWriter<K, V> addRows(Collection<V> list) {
         list.forEach(this::addRow);
         return this;
     }

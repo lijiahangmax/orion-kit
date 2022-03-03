@@ -9,7 +9,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
 import java.io.OutputStream;
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -230,7 +230,7 @@ public class ExcelExport<T> extends BaseExcelWriteable {
      * @param rows rows
      * @return this
      */
-    public ExcelExport<T> addRows(List<T> rows) {
+    public ExcelExport<T> addRows(Collection<T> rows) {
         initializer.checkInit();
         Integer rowHeight = sheetConfig.sheetOption.getRowHeight();
         for (T row : rows) {

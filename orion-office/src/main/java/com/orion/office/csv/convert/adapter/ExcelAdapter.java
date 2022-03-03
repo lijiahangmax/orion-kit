@@ -13,7 +13,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * csv -> excel 文本适配器
@@ -120,7 +120,7 @@ public class ExcelAdapter extends BaseExcelWriteable implements Adaptable<ExcelA
         }
         reader.skip(skip);
         // 数据
-        List<String[]> lines;
+        Collection<String[]> lines;
         while (!(lines = reader.clear().read(bufferLine).getRows()).isEmpty()) {
             for (String[] line : lines) {
                 Row rr = sheet.createRow(i++);
