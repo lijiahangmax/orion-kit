@@ -34,7 +34,7 @@ public abstract class Const {
 
     public static final String ORION_GITHUB = "https://github.com/lijiahangmax";
 
-    public static final String ORION_GITEE = "https://gitee.com/lijiahangHome";
+    public static final String ORION_GITEE = "https://gitee.com/lijiahangmax";
 
     public static final String ORION_BLOG = "https://blog.csdn.net/qq_41011894";
 

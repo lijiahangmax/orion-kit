@@ -203,6 +203,15 @@ public class Systems {
     }
 
     /**
+     * 获取 JVM 输入参数
+     *
+     * @return args
+     */
+    public static List<String> getJVMInputArgs() {
+        return ManagementFactory.getRuntimeMXBean().getInputArguments();
+    }
+
+    /**
      * 退出进程
      *
      * @param code exit code

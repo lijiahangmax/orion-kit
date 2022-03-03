@@ -28,7 +28,7 @@ public class Moneys {
      * @param m BigDecimal 如果有精度, 则不能超过2位, 否则会抛出异常
      * @return 大写金额
      */
-    public static synchronized String toCurrency(BigDecimal m) {
+    public static String toCurrency(BigDecimal m) {
         StringBuilder sb = new StringBuilder();
         int minus = m.signum();
         if (minus == 0) {
@@ -93,7 +93,7 @@ public class Moneys {
      * @param m 大写金额
      * @return 精度为2的BigDecimal
      */
-    public static synchronized BigDecimal toDecimal(String m) {
+    public static BigDecimal toDecimal(String m) {
         boolean negate = false;
         char[] chars = m.toCharArray();
         BigDecimal res = BigDecimal.ZERO;

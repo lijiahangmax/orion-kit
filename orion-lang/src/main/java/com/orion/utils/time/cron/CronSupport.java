@@ -66,6 +66,27 @@ public class CronSupport {
     }
 
     /**
+     * 获取下次的执行时间
+     *
+     * @param cron cron
+     * @return 执行时间
+     */
+    public static Date getNextTime(Cron cron) {
+        return cron.getNextValidTimeAfter(new Date());
+    }
+
+    /**
+     * 获取下次的执行时间
+     *
+     * @param cron cron
+     * @param date 目标时间
+     * @return 执行时间
+     */
+    public static Date getNextTime(Cron cron, Date date) {
+        return cron.getNextValidTimeAfter(date);
+    }
+
+    /**
      * 获取下几次的执行时间
      *
      * @param cron  cron

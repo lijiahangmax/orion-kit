@@ -4,6 +4,7 @@ import com.orion.exception.*;
 import com.orion.exception.argument.*;
 import com.orion.lang.wrapper.HttpWrapper;
 import com.orion.lang.wrapper.RpcWrapper;
+import com.orion.lang.wrapper.Wrapper;
 
 import javax.script.ScriptException;
 import java.io.IOException;
@@ -904,19 +905,19 @@ public class Exceptions {
         return new CodeArgumentException(code, s, t);
     }
 
-    public static WrapperException wrapper(HttpWrapper<?> wrapper) {
+    public static WrapperException wrapper(Wrapper<?> wrapper) {
         return new WrapperException(wrapper);
     }
 
-    public static WrapperException wrapper(HttpWrapper<?> wrapper, Throwable t) {
+    public static WrapperException wrapper(Wrapper<?> wrapper, Throwable t) {
         return new WrapperException(wrapper, t);
     }
 
-    public static WrapperException wrapper(HttpWrapper<?> wrapper, String s) {
+    public static WrapperException wrapper(Wrapper<?> wrapper, String s) {
         return new WrapperException(wrapper, s);
     }
 
-    public static WrapperException wrapper(HttpWrapper<?> wrapper, String s, Throwable t) {
+    public static WrapperException wrapper(Wrapper<?> wrapper, String s, Throwable t) {
         return new WrapperException(wrapper, s, t);
     }
 

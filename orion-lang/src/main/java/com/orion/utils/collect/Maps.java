@@ -12,6 +12,7 @@ import com.orion.utils.math.Numbers;
 import java.util.Collections;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -548,6 +549,21 @@ public class Maps {
             return null;
         }
         return Lists.last(m.entrySet());
+    }
+
+    /**
+     * 遍历
+     *
+     * @param m      m
+     * @param action action
+     * @param <K>    K
+     * @param <V>    V
+     */
+    public static <K, V> void forEach(Map<K, V> m, BiConsumer<? super K, ? super V> action) {
+        if (isEmpty(m)) {
+            return;
+        }
+        m.forEach(action);
     }
 
 }

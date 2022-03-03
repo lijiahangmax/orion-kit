@@ -1,11 +1,12 @@
 package com.orion.utils;
 
 import com.orion.constant.Const;
+import com.orion.utils.collect.Collections;
 import com.orion.utils.regexp.Matches;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Random;
 import java.util.StringJoiner;
@@ -646,7 +647,7 @@ public class Strings {
         return sb.toString();
     }
 
-    public static String join(List<String> list, String symbol) {
+    public static String join(Collection<String> list, String symbol) {
         return join(list, symbol, Strings.EMPTY, Strings.EMPTY);
     }
 
@@ -659,7 +660,7 @@ public class Strings {
      * @param suffix 后缀
      * @return 连接后的字符串
      */
-    public static String join(List<String> list, String symbol, String prefix, String suffix) {
+    public static String join(Collection<String> list, String symbol, String prefix, String suffix) {
         prefix = isBlank(prefix) ? Strings.EMPTY : prefix;
         suffix = isBlank(suffix) ? Strings.EMPTY : suffix;
         StringJoiner sj = new StringJoiner(symbol, prefix, suffix);
@@ -1510,6 +1511,94 @@ public class Strings {
      */
     public static String replaceCRLF(String s) {
         return s.replaceAll(Const.CR_LF, Const.LF).replaceAll(Const.CR, Const.LF);
+    }
+
+    /**
+     * 检查是否包含
+     *
+     * @param s        s
+     * @param contains contains
+     * @return 是否包含
+     */
+    public static boolean contains(String s, String contains) {
+        if (s == null || contains == null) {
+            return false;
+        }
+        return s.contains(contains);
+    }
+
+    /**
+     * 检查是否包含任意项
+     *
+     * @param s        s
+     * @param contains 包含项
+     * @return 包含
+     */
+    public static boolean containsAny(String s, Collection<String> contains) {
+        if (s == null || Collections.isEmpty(contains)) {
+            return false;
+        }
+        for (String contain : contains) {
+            if (s.contains(contain)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 检查是否包含所有项
+     *
+     * @param s        s
+     * @param contains contains
+     * @return 包含所有
+     */
+    public static boolean containsAll(String s, Collection<String> contains) {
+        if (s == null) {
+            return false;
+        }
+        if (Collections.isEmpty(contains)) {
+            return true;
+        }
+        for (String contain : contains) {
+            if (!s.contains(contain)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 检查是否不包含
+     *
+     * @param s        s
+     * @param contains contains
+     * @return 是否不包含
+     */
+    public static boolean containsNone(String s, String contains) {
+        if (s == null || contains == null) {
+            return true;
+        }
+        return !s.contains(contains);
+    }
+
+    /**
+     * 检查是否不包含
+     *
+     * @param s        s
+     * @param contains contains
+     * @return 不包含
+     */
+    public static boolean containsNone(String s, Collection<String> contains) {
+        if (s == null || Collections.isEmpty(contains)) {
+            return true;
+        }
+        for (String contain : contains) {
+            if (s.contains(contain)) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

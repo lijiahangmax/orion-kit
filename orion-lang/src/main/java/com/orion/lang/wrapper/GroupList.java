@@ -2,10 +2,7 @@ package com.orion.lang.wrapper;
 
 import com.orion.utils.Objects1;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -19,13 +16,13 @@ import java.util.function.Predicate;
  */
 public class GroupList<E> {
 
-    private List<E> list;
+    private Collection<E> list;
 
-    public GroupList(List<E> list) {
+    public GroupList(Collection<E> list) {
         this.list = list;
     }
 
-    public static <E> GroupList<E> of(List<E> list) {
+    public static <E> GroupList<E> of(Collection<E> list) {
         return new GroupList<>(list);
     }
 

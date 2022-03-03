@@ -276,6 +276,21 @@ public class IPs {
     }
 
     /**
+     * 检查 ipv4 是否在区间内
+     *
+     * @param ipStart 区间开始
+     * @param ipEnd   区间结束
+     * @param ip      ip
+     * @return 是否在区间内 ipStart <= ip <= ipEnd
+     */
+    public static boolean ipInRange(String ipStart, String ipEnd, String ip) {
+        long is = ipToLong(ipStart);
+        long ie = ipToLong(ipEnd);
+        long i = ipToLong(ip);
+        return is <= i && i <= ie;
+    }
+
+    /**
      * ipv4 > long
      *
      * @param ip ipv4

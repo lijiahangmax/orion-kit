@@ -3,6 +3,7 @@ package com.orion.utils.collect;
 import com.orion.utils.Strings;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 /**
@@ -13,7 +14,7 @@ import java.util.stream.Stream;
  * @since 2020/4/29 17:31
  */
 @SuppressWarnings("ALL")
-class Collections {
+public class Collections {
 
     Collections() {
     }
@@ -70,6 +71,20 @@ class Collections {
      */
     public static <E> Stream<E> stream(Collection<E> c) {
         return isEmpty(c) ? Stream.empty() : c.stream();
+    }
+
+    /**
+     * 遍历
+     *
+     * @param c      c
+     * @param action action
+     * @param <E>    E
+     */
+    public static <E> void forEach(Collection<E> c, Consumer<? super E> action) {
+        if (isEmpty(c)) {
+            return;
+        }
+        c.forEach(action);
     }
 
     /**
