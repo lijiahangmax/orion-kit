@@ -21,6 +21,7 @@ import org.apache.ftpserver.usermanager.impl.WritePermission;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -264,7 +265,7 @@ public class FtpServerInstance {
      * @param users users
      * @return this
      */
-    public FtpServerInstance addUsers(List<FtpUser> users) {
+    public FtpServerInstance addUsers(Collection<FtpUser> users) {
         for (FtpUser user : users) {
             User u = this.convertUser(user);
             if (serverFactory == null) {
@@ -301,7 +302,7 @@ public class FtpServerInstance {
      * @param users users
      * @return this
      */
-    public FtpServerInstance deleteUsers(List<String> users) {
+    public FtpServerInstance deleteUsers(Collection<String> users) {
         for (String user : users) {
             try {
                 userManager.delete(user);

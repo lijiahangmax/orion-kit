@@ -407,7 +407,7 @@ public class SftpExecutor extends BaseExecutor {
      * @param path 文件绝对路径
      */
     public void touch(String path) {
-        touch(path, false);
+        this.touch(path, false);
     }
 
     /**

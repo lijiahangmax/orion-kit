@@ -68,7 +68,14 @@ public abstract class Gits implements SafeCloseable {
     }
 
     /**
-     * clone
+     * clone 仓库
+     * <p>
+     * 可以使用 accessToken
+     * <p>
+     * github   username: token     password: ''
+     * github   username: ''        password: token
+     * gitee    username: username  password: token
+     * gitlab   username: oauth2    password: token  url: https://oauth2:token@url
      *
      * @param url      remoteUrl
      * @param path     本地路径

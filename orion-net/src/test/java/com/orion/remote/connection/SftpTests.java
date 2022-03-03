@@ -28,8 +28,8 @@ public class SftpTests {
 
     @Before
     public void init() {
-        s = new ConnectionStore("116.62.194.246")
-                .auth("root", "Ljh@123456");
+        s = new ConnectionStore("192.168.146.230")
+                .auth("root", "admin123");
         e = s.getSftpExecutor();
     }
 

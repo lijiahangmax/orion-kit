@@ -60,7 +60,7 @@ public class SftpUpload extends BaseFileUpload {
                 executor.touch(remote);
                 return -1;
             } catch (Exception e) {
-                throw Exceptions.sftp("touch remote file error > " + remote);
+                throw Exceptions.sftp("touch remote file error > " + remote, e);
             }
         }
         return remoteFile.getSize();
@@ -69,9 +69,9 @@ public class SftpUpload extends BaseFileUpload {
     @Override
     protected void initUpload(boolean breakPoint, long skip) throws IOException {
         if (breakPoint) {
-            out = executor.getOutputStreamAppend(remote);
+            this.out = executor.getOutputStreamAppend(remote);
         } else {
-            out = executor.getOutputStreamWriter(remote);
+            this.out = executor.getOutputStreamWriter(remote);
         }
     }
 
