@@ -21,7 +21,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Apache Http 文件上传
@@ -35,7 +35,7 @@ public class ApacheUpload extends BaseApacheRequest {
     /**
      * 文件体
      */
-    private List<HttpUploadPart> parts;
+    private Collection<HttpUploadPart> parts;
 
     /**
      * 开始时间
@@ -116,7 +116,7 @@ public class ApacheUpload extends BaseApacheRequest {
      *
      * @param parts ignore
      */
-    public ApacheUpload parts(List<HttpUploadPart> parts) {
+    public ApacheUpload parts(Collection<HttpUploadPart> parts) {
         this.parts = parts;
         return this;
     }

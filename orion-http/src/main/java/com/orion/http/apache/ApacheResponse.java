@@ -132,13 +132,13 @@ public class ApacheResponse implements Serializable {
         if (header != null) {
             return new MutableString(header.getValue());
         }
-        return new MutableString(null);
+        return new MutableString();
     }
 
     public MutableString getHeader(String key, String def) {
         Header header = response.getFirstHeader(key);
         if (header != null) {
-            return new MutableString(header.getValue(), def);
+            return new MutableString(header.getValue());
         }
         return new MutableString(def);
     }

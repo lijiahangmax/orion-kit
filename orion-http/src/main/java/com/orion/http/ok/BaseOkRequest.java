@@ -11,7 +11,7 @@ import okhttp3.*;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * OkHttp 请求基类
@@ -141,7 +141,7 @@ public abstract class BaseOkRequest extends BaseHttpRequest {
      * @param requestBuilder builder
      * @param parts          parts
      */
-    protected void setMultipartBody(Request.Builder requestBuilder, List<HttpUploadPart> parts) {
+    protected void setMultipartBody(Request.Builder requestBuilder, Collection<HttpUploadPart> parts) {
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
         if (this.formParts != null) {
             formParts.forEach(builder::addFormDataPart);

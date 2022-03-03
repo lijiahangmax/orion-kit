@@ -14,7 +14,7 @@ import com.orion.utils.collect.Lists;
 import okhttp3.*;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Collection;
 import java.util.function.Consumer;
 
 /**
@@ -29,7 +29,7 @@ public class OkAsyncUpload extends BaseOkRequest implements Asyncable<Consumer<O
     /**
      * 文件体
      */
-    private List<HttpUploadPart> parts;
+    private Collection<HttpUploadPart> parts;
 
     /**
      * 异步执行失败是否抛出异常
@@ -117,7 +117,7 @@ public class OkAsyncUpload extends BaseOkRequest implements Asyncable<Consumer<O
      * @param parts ignore
      * @return this
      */
-    public OkAsyncUpload parts(List<HttpUploadPart> parts) {
+    public OkAsyncUpload parts(Collection<HttpUploadPart> parts) {
         this.parts = parts;
         return this;
     }

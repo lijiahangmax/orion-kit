@@ -15,7 +15,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * OkHttp 上传文件
@@ -29,7 +29,7 @@ public class OkUpload extends BaseOkRequest implements Awaitable<OkResponse> {
     /**
      * 文件体
      */
-    private List<HttpUploadPart> parts;
+    private Collection<HttpUploadPart> parts;
 
     /**
      * 是否执行完毕
@@ -112,7 +112,7 @@ public class OkUpload extends BaseOkRequest implements Awaitable<OkResponse> {
      * @param parts ignore
      * @return this
      */
-    public OkUpload parts(List<HttpUploadPart> parts) {
+    public OkUpload parts(Collection<HttpUploadPart> parts) {
         this.parts = parts;
         return this;
     }

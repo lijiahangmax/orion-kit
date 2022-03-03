@@ -4,10 +4,7 @@ import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * OkHttp Cookie
@@ -42,7 +39,7 @@ public class OkCookieStore implements CookieJar {
         return this;
     }
 
-    public OkCookieStore addCookies(List<Cookie> cookies) {
+    public OkCookieStore addCookies(Collection<Cookie> cookies) {
         defaultList.addAll(cookies);
         return this;
     }
@@ -53,7 +50,7 @@ public class OkCookieStore implements CookieJar {
         return this;
     }
 
-    public OkCookieStore addCookie(String url, List<Cookie> cookies) {
+    public OkCookieStore addCookie(String url, Collection<Cookie> cookies) {
         List<Cookie> store = urlCookies.computeIfAbsent(url, k -> new ArrayList<>());
         store.addAll(cookies);
         return this;

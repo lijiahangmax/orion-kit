@@ -8,6 +8,7 @@ import com.orion.utils.Strings;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -126,7 +127,7 @@ public class MailMessage implements Serializable {
      * @param to 收件人
      * @return this
      */
-    public MailMessage to(List<String> to) {
+    public MailMessage to(Collection<String> to) {
         if (this.to == null) {
             this.to = new ArrayList<>();
         }
@@ -154,7 +155,7 @@ public class MailMessage implements Serializable {
      * @param cc 抄送人
      * @return this
      */
-    public MailMessage cc(List<String> cc) {
+    public MailMessage cc(Collection<String> cc) {
         if (this.cc == null) {
             this.cc = new ArrayList<>();
         }
@@ -182,7 +183,7 @@ public class MailMessage implements Serializable {
      * @param bcc 密抄人
      * @return this
      */
-    public MailMessage bcc(List<String> bcc) {
+    public MailMessage bcc(Collection<String> bcc) {
         if (this.bcc == null) {
             this.bcc = new ArrayList<>();
         }
@@ -248,7 +249,7 @@ public class MailMessage implements Serializable {
      * @param lines 行
      * @return this
      */
-    public MailMessage addLines(List<String> lines) {
+    public MailMessage addLines(Collection<String> lines) {
         StringBuilder sb = new StringBuilder(content == null ? Strings.EMPTY : content);
         for (String line : lines) {
             sb.append(line).append(eof());
@@ -315,7 +316,7 @@ public class MailMessage implements Serializable {
      * @param attachments 附件
      * @return this
      */
-    public MailMessage attachments(List<MailAttachment> attachments) {
+    public MailMessage attachments(Collection<MailAttachment> attachments) {
         if (this.attachments == null) {
             this.attachments = new ArrayList<>();
         }

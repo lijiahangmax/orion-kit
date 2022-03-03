@@ -64,12 +64,12 @@ public abstract class BaseHttpRequest {
     /**
      * 忽略的请求头
      */
-    protected List<String> ignoreHeaders;
+    protected Collection<String> ignoreHeaders;
 
     /**
      * cookies
      */
-    protected List<HttpCookie> cookies;
+    protected Collection<HttpCookie> cookies;
 
     /**
      * 表单参数
@@ -221,7 +221,7 @@ public abstract class BaseHttpRequest {
         return this;
     }
 
-    public BaseHttpRequest ignoreHeaders(List<String> ignoreHeaders) {
+    public BaseHttpRequest ignoreHeaders(Collection<String> ignoreHeaders) {
         if (this.ignoreHeaders == null) {
             this.ignoreHeaders = ignoreHeaders;
         } else {
@@ -238,7 +238,7 @@ public abstract class BaseHttpRequest {
         return this;
     }
 
-    public BaseHttpRequest cookies(List<HttpCookie> cookies) {
+    public BaseHttpRequest cookies(Collection<HttpCookie> cookies) {
         if (this.cookies == null) {
             this.cookies = cookies;
         } else {
@@ -360,11 +360,11 @@ public abstract class BaseHttpRequest {
         return headers;
     }
 
-    public List<String> getIgnoreHeaders() {
+    public Collection<String> getIgnoreHeaders() {
         return ignoreHeaders;
     }
 
-    public List<HttpCookie> getCookies() {
+    public Collection<HttpCookie> getCookies() {
         return cookies;
     }
 
