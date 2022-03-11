@@ -3,12 +3,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.orion.kit</groupId>
-    <version>1.0.0</version>
+    <groupId>io.github.lijiahangmax</groupId>
+    <version>1.0.1</version>
     <packaging>pom</packaging>
     <artifactId>orion-kit</artifactId>
     <name>${project.artifactId}</name>
     <description>orion dev kit</description>
+    <url>https://github.com/lijiahangmax/orion-kit</url>
 
     <modules>
         <module>orion-lang</module>
@@ -29,18 +30,19 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.charset>UTF-8</maven.compiler.charset>
-        <orion.parent.version>1.0.0</orion.parent.version>
-        <orion.lang.version>1.0.0</orion.lang.version>
-        <orion.ext.version>1.0.0</orion.ext.version>
-        <orion.office.version>1.0.0</orion.office.version>
-        <orion.log.version>1.0.0</orion.log.version>
-        <orion.http.version>1.0.0</orion.http.version>
-        <orion.net.version>1.0.0</orion.net.version>
-        <orion.web.version>1.0.0</orion.web.version>
-        <orion.redis.version>1.0.0</orion.redis.version>
-        <orion.spring.version>1.0.0</orion.spring.version>
-        <orion.generator.version>1.0.0</orion.generator.version>
-        <orion.all.version>1.0.0</orion.all.version>
+        <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+        <orion.parent.version>1.0.1</orion.parent.version>
+        <orion.lang.version>1.0.1</orion.lang.version>
+        <orion.ext.version>1.0.1</orion.ext.version>
+        <orion.office.version>1.0.1</orion.office.version>
+        <orion.log.version>1.0.1</orion.log.version>
+        <orion.http.version>1.0.1</orion.http.version>
+        <orion.net.version>1.0.1</orion.net.version>
+        <orion.web.version>1.0.1</orion.web.version>
+        <orion.redis.version>1.0.1</orion.redis.version>
+        <orion.spring.version>1.0.1</orion.spring.version>
+        <orion.generator.version>1.0.1</orion.generator.version>
+        <orion.all.version>1.0.1</orion.all.version>
         <junit.version>4.12</junit.version>
         <spring.version>4.3.10.RELEASE</spring.version>
         <spring.mvc.version>4.3.10.RELEASE</spring.mvc.version>
@@ -84,10 +86,36 @@
         <bcprov.jdk15on.version>1.56</bcprov.jdk15on.version>
     </properties>
 
+    <!-- license -->
+    <licenses>
+        <license>
+            <name>MIT</name>
+            <url>https://github.com/lijiahangmax/orion-kit/blob/master/LICENSE</url>
+        </license>
+    </licenses>
+
+    <!-- scm -->
+    <scm>
+        <connection>scm:git:git@github.com:lijiahangmax/orion-kit.git</connection>
+        <developerConnection>scm:git:git@github.com:lijiahangmax/orion-kit.git</developerConnection>
+        <url>git@github.com:lijiahangmax/orion-kit.git</url>
+    </scm>
+
+    <!-- issue -->
+    <issueManagement>
+        <system>Github Issue</system>
+        <url>https://github.com/lijiahangmax/orion-kit/issues</url>
+    </issueManagement>
+
+    <!-- developers -->
     <developers>
         <developer>
             <name>Jiahang Li</name>
             <email>li1553488@aliyun.com</email>
+            <timezone>+8</timezone>
+            <roles>
+                <role>Developer</role>
+            </roles>
         </developer>
     </developers>
 
@@ -140,66 +168,94 @@
             <!--                </executions>-->
             <!--            </plugin>-->
 
-            <!-- 源码打包插件 -->
+            <!-- 编译插件 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+
+            <!-- Javadoc -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.1.1</version>
                 <executions>
                     <execution>
-                        <id>attach-sources</id>
+                        <phase>package</phase>
                         <goals>
                             <goal>jar</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
-
-            <!-- 工程编译插件 -->
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
-                <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
-                    <encoding>${maven.compiler.charset}</encoding>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>3.1.0</version>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.0.2</version>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.1</version>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.0.2</version>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-install-plugin</artifactId>
-                <version>2.5.2</version>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.8.2</version>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>3.7.1</version>
-            </plugin>
         </plugins>
     </build>
+
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>oss</id>
+                    <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+                </snapshotRepository>
+                <repository>
+                    <id>oss</id>
+                    <url>https://s01.oss.sonatype.orgservice/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
+            <build>
+                <plugins>
+                    <!-- Source -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.2.1</version>
+                        <executions>
+                            <execution>
+                                <id>oss</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- Gpg Signature -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>oss</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.8</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>oss</serverId>
+                            <nexusUrl>https://s01.oss.sonatype.org</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

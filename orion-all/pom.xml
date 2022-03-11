@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>com.orion.kit</groupId>
+        <groupId>io.github.lijiahangmax</groupId>
         <artifactId>orion-kit</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -16,70 +16,70 @@
     <dependencies>
         <!-- lang -->
         <dependency>
-            <groupId>com.orion.kit</groupId>
+            <groupId>io.github.lijiahangmax</groupId>
             <artifactId>orion-lang</artifactId>
             <version>${orion.lang.version}</version>
         </dependency>
 
         <!-- ext -->
         <dependency>
-            <groupId>com.orion.kit</groupId>
+            <groupId>io.github.lijiahangmax</groupId>
             <artifactId>orion-ext</artifactId>
             <version>${orion.ext.version}</version>
         </dependency>
 
         <!-- log -->
         <dependency>
-            <groupId>com.orion.kit</groupId>
+            <groupId>io.github.lijiahangmax</groupId>
             <artifactId>orion-log</artifactId>
             <version>${orion.log.version}</version>
         </dependency>
 
         <!-- office -->
         <dependency>
-            <groupId>com.orion.kit</groupId>
+            <groupId>io.github.lijiahangmax</groupId>
             <artifactId>orion-office</artifactId>
             <version>${orion.office.version}</version>
         </dependency>
 
         <!-- http -->
         <dependency>
-            <groupId>com.orion.kit</groupId>
+            <groupId>io.github.lijiahangmax</groupId>
             <artifactId>orion-http</artifactId>
             <version>${orion.http.version}</version>
         </dependency>
 
         <!-- net -->
         <dependency>
-            <groupId>com.orion.kit</groupId>
+            <groupId>io.github.lijiahangmax</groupId>
             <artifactId>orion-net</artifactId>
             <version>${orion.net.version}</version>
         </dependency>
 
         <!-- web -->
         <dependency>
-            <groupId>com.orion.kit</groupId>
+            <groupId>io.github.lijiahangmax</groupId>
             <artifactId>orion-web</artifactId>
             <version>${orion.web.version}</version>
         </dependency>
 
         <!-- redis -->
         <dependency>
-            <groupId>com.orion.kit</groupId>
+            <groupId>io.github.lijiahangmax</groupId>
             <artifactId>orion-redis</artifactId>
             <version>${orion.redis.version}</version>
         </dependency>
 
         <!-- spring -->
         <dependency>
-            <groupId>com.orion.kit</groupId>
+            <groupId>io.github.lijiahangmax</groupId>
             <artifactId>orion-spring</artifactId>
             <version>${orion.spring.version}</version>
         </dependency>
 
         <!-- generator -->
         <dependency>
-            <groupId>com.orion.kit</groupId>
+            <groupId>io.github.lijiahangmax</groupId>
             <artifactId>orion-generator</artifactId>
             <version>${orion.generator.version}</version>
         </dependency>
