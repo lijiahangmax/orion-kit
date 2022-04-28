@@ -423,11 +423,11 @@ MD5签名   | Signatures.md5
 ```
 ┌─addres           地址生成器
 │
-├─bank             银行卡/信用卡生成器
+├─bank             银行卡生成器
 │
 ├─company          公司名称生成器
 │ 
-├─education        学历生成器
+├─education        学校名称生成器
 │
 ├─email            邮箱生成器
 │
