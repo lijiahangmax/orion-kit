@@ -17,7 +17,7 @@ orion-net       | 网络交互模块  SSH、SFTP、FTP, Socket的简单封装
 orion-web       | servlet模块 (忽略)
 orion-redis     | redis模块 (忽略)
 orion-spring    | spring模块 (忽略)
-orion-generator | 信息生成器模块 身份证、银行卡、地址、公司、学习、行业等假数据生成器
+orion-generator | 随机信息生成器模块包 含各式各样的随机数据生成器
 orion-all       | 全部模块聚合 包含了上述所有模块的引用
 
 <br/>
@@ -421,26 +421,36 @@ MD5签名   | Signatures.md5
 ### orion-generator 模块职能
 
 ```
-┌─addres           地址生成器
+┌─faker            随机数据生成器工具
 │
-├─bank             银行卡生成器
+├─addres           随机地址生成器
 │
-├─company          公司名称生成器
+├─email            随机邮箱生成器
+│
+├─mobile           随机手机号生成器
+│
+├─name             随机中英文名字生成器
+│
+├─industry         随机行业生成器
+│
+├─company          随机公司名称名称生成器
 │ 
-├─education        学校名称生成器
+├─education        随机学校名称生成器
 │
-├─email            邮箱生成器
-│
-├─faker            伪数据生成器工具
-│
-├─idcard           身份证生成器
-│
-├─industry         工作生成器
-│
-├─mobile           手机号生成器
-│
-├─name             中英文名字生成器
-│
-└─plate            车牌号生成器
+└─plate            随机车牌号生成器
 ```
 
+
+### 联系我
+
+<img src="https://yxythpt.oss-cn-shenzhen.aliyuncs.com/2022-03-28/files5090991341399292419.jpg" alt="联系微信" width="268px"/>
+<br/>
+
+### 支持一下
+
+<img src="https://yxythpt.oss-cn-shenzhen.aliyuncs.com/2022-04-25/files4948235556147091810.png" alt="收款码" width="540px"/>
+<br/>
+
+### License
+
+使用 [MIT](https://github.com/lijiahangmax/orion-kit/blob/main/LICENSE) 开源许可证, 请自觉遵循。  
