@@ -453,4 +453,4 @@ MD5签名   | Signatures.md5
 
 ### License
 
-使用 [MIT](https://github.com/lijiahangmax/orion-kit/blob/main/LICENSE) 开源许可证, 请自觉遵循。  
+使用 [MIT](https://github.com/lijiahangmax/orion-kit/blob/master/LICENSE) 开源许可证, 请自觉遵循。  
