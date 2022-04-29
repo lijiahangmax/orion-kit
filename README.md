@@ -4,6 +4,30 @@
 
 <br/>
 
+<p style="text-align: center">
+	<a target="_blank" href="https://search.maven.org/artifact/io.github.lijiahangmax/orion-all">
+		<img src="https://img.shields.io/maven-central/v/io.github.lijiahangmax/orion-all.svg" alt="maven"/>
+	</a>
+    <a target="_blank" href="https://www.codacy.com/gh/lijiahangmax/orion-kit/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=lijiahangmax/orion-kit&amp;utm_campaign=Badge_Grade">
+        <img src="https://app.codacy.com/project/badge/Grade/2886375d056342028ef7da0ae7b6fa26" alt="Codacy"/>
+    </a>
+    <a target="_blank" href="https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html">
+        <img src="https://img.shields.io/badge/JDK-8+-green.svg" alt="jdk8"/>
+    </a>
+    <a target="_blank" href="https://opensource.org/licenses/mit-license.php">
+        <img src="https://img.shields.io/github/license/lijiahangmax/orion-kit" alt="License"/>
+    </a>	
+	<a target="_blank" href="https://gitee.com/lijiahangmax/orion-kit/stargazers">
+		<img src="https://gitee.com/lijiahangmax/orion-kit/badge/star.svg?theme=dark" alt="star"/>
+	</a>
+	<a target="_blank" href="https://gitee.com/lijiahangmax/orion-kit/members">
+		<img src="https://gitee.com/lijiahangmax/orion-kit/badge/fork.svg?theme=dark" alt="fork"/>
+	</a>
+    <!--	<a target="_blank" href="https://github.com/lijiahangmax/orion-kit">
+		<img src="https://img.shields.io/github/stars/lijiahangmax/orion-kit.svg?style=social" alt="star"/>
+	</a> -->
+</p>
+
 ### 工程模块
 
 模块             | 数量
@@ -17,7 +41,7 @@ orion-net       | 网络交互模块  SSH、SFTP、FTP, Socket的简单封装
 orion-web       | servlet模块 (忽略)
 orion-redis     | redis模块 (忽略)
 orion-spring    | spring模块 (忽略)
-orion-generator | 随机信息生成器模块包 含各式各样的随机数据生成器
+orion-generator | 随机信息生成器模块 包含各式各样的随机数据生成器
 orion-all       | 全部模块聚合 包含了上述所有模块的引用
 
 <br/>
@@ -432,6 +456,10 @@ MD5签名   | Signatures.md5
 ├─name             随机中英文名字生成器
 │
 ├─industry         随机行业生成器
+│
+├─idcard           随机 idcard 生成器
+│
+├─bank             随机 bank 生成器
 │
 ├─company          随机公司名称名称生成器
 │ 
