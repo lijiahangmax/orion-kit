@@ -28,6 +28,8 @@
 	</a> -->
 </p>
 
+文档: https://apidoc.gitee.com/lijiahangmax/orion-kit  
+
 ### 工程模块
 
 模块             | 数量
@@ -262,10 +264,7 @@ MD5签名   | Signatures.md5
 │
 ├─nginx                    nginx 解析工具类
 │
-├─process
-│   ProcessAsyncExecutor   进程异步执行处理器
-│   ProcessAwaitExecutor   进程同步执行处理器
-│   Processes              进程工具类
+├─process                  进程工具类
 │
 ├─tail                     文件 tail 工具类
 │
@@ -434,11 +433,11 @@ MD5签名   | Signatures.md5
 │           ShellExecutor   shell 执行器
 │
 └─socket
-     Sockets                socker 工具类
+     Sockets                socket 工具类
      TcpReceive             tcp 接收器
      TcpSend                tcp 发送器
      UdpReceive             udp 接收器
-     UdpSend                upd 发送器
+     UdpSend                udp 发送器
 ```
 <br/>
 
