@@ -4,7 +4,7 @@ import com.orion.lang.collect.MutableHashSet;
 import com.orion.lang.collect.MutableLinkedHashMap;
 import com.orion.utils.Exceptions;
 import com.orion.utils.io.Files1;
-import org.ho.yaml.Yaml;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,31 +25,37 @@ import java.util.function.BiConsumer;
 @SuppressWarnings("unchecked")
 public class YmlExt {
 
+    private Yaml yaml;
+
     private MutableLinkedHashMap<String, Object> store;
 
-    public YmlExt(String path) {
-        this(new File(path));
+    public YmlExt(String yml) {
+        this.yaml = new Yaml();
+        this.store = yaml.loadAs(yml, MutableLinkedHashMap.class);
     }
 
     public YmlExt(File file) {
         try (FileInputStream in = Files1.openInputStream(file)) {
-            this.store = Yaml.loadType(in, MutableLinkedHashMap.class);
+            this.yaml = new Yaml();
+            this.store = yaml.loadAs(in, MutableLinkedHashMap.class);
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
-        } catch (Exception e) {
-            throw Exceptions.runtime(e);
         }
     }
 
     public YmlExt(InputStream in) {
-        try {
-            this.store = Yaml.loadType(in, MutableLinkedHashMap.class);
-        } catch (Exception e) {
-            throw Exceptions.runtime(e);
-        }
+        this.yaml = new Yaml();
+        this.store = yaml.loadAs(in, MutableLinkedHashMap.class);
     }
 
-    private YmlExt() {
+    /**
+     * 获取 YmlExt
+     *
+     * @param yml ymlString
+     * @return YmlExt
+     */
+    public static YmlExt load(String yml) {
+        return new YmlExt(yml);
     }
 
     /**
@@ -70,18 +76,6 @@ public class YmlExt {
      */
     public static YmlExt load(InputStream in) {
         return new YmlExt(in);
-    }
-
-    /**
-     * 获取 YmlExt
-     *
-     * @param yml ymlString
-     * @return YmlExt
-     */
-    public static YmlExt load(String yml) {
-        YmlExt ymlExt = new YmlExt();
-        ymlExt.store = Yaml.loadType(yml, MutableLinkedHashMap.class);
-        return ymlExt;
     }
 
     public MutableHashSet<String> getKeys() {
@@ -183,12 +177,16 @@ public class YmlExt {
         }
     }
 
+    public Yaml getYaml() {
+        return yaml;
+    }
+
     public MutableLinkedHashMap<String, Object> getMap() {
         return store;
     }
 
     public void forEach(BiConsumer<Object, Object> action) {
-        this.store.forEach(action);
+        store.forEach(action);
     }
 
 }

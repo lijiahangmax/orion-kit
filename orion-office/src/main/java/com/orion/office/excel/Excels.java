@@ -667,11 +667,9 @@ public class Excels {
      */
     public static void copyCellValue(Cell source, Cell target) {
         if (source == null) {
-            target.setCellType(CellType.BLANK);
             return;
         }
         CellType type = source.getCellType();
-        target.setCellType(type);
         switch (type) {
             case NUMERIC:
                 if (DateUtil.isCellDateFormatted(source)) {
@@ -693,7 +691,6 @@ public class Excels {
                 target.setCellValue(source.getBooleanCellValue());
                 break;
             default:
-                target.setCellType(CellType.BLANK);
         }
     }
 
