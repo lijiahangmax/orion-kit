@@ -53,9 +53,9 @@ public class Files1 {
 
     private static final String LINUX_SEPARATOR_REG = "/+";
 
-    private static final String[] SIZE_UNIT = {"K", "KB", "M", "MB", "MBPS", "G", "GB", "T", "TB", "B"};
+    private static final String[] SIZE_UNIT = {"K", "KB", "M", "MB", "G", "GB", "T", "TB", "B"};
 
-    private static final long[] SIZE_UNIT_EFFECT = {1000, 1024, 1000 * 1000, 1024 * 1024, 1024 * 128, 1000 * 1000 * 1000, 1024 * 1024 * 1024, 1000 * 1000 * 1000 * 1000L, 1024 * 1024 * 1024 * 1024L, 1};
+    private static final long[] SIZE_UNIT_EFFECT = {1000, 1024, 1000 * 1000, 1024 * 1024, 1000 * 1000 * 1000, 1024 * 1024 * 1024, 1000 * 1000 * 1000 * 1000L, 1024 * 1024 * 1024 * 1024L, 1};
 
     private Files1() {
     }
@@ -391,6 +391,16 @@ public class Files1 {
 
     // -------------------- file --------------------
 
+    public static long getSize(String file) {
+        return getSize(new File(file));
+    }
+
+    /**
+     * 获取文件或文件夹大小
+     *
+     * @param file 文件
+     * @return ignore
+     */
     public static long getSize(File file) {
         if (file.exists()) {
             if (file.isFile()) {
@@ -405,16 +415,6 @@ public class Files1 {
             }
         }
         return 0L;
-    }
-
-    /**
-     * 获取文件或文件夹大小
-     *
-     * @param file 文件
-     * @return ignore
-     */
-    public static long getSize(String file) {
-        return getSize(new File(file));
     }
 
     /**
@@ -442,9 +442,9 @@ public class Files1 {
     }
 
     /**
-     * 获取size
+     * 获取文件size
      *
-     * @param size 1K = 1000b  1KB = 1024b  1MBPS = 1024*128
+     * @param size 1K = 1000b  1KB = 1024b
      * @return bytes
      */
     public static long getByteSize(String size) {
