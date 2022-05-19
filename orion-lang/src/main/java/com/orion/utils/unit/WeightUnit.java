@@ -151,6 +151,10 @@ public enum WeightUnit {
         return this.toMilligram(BigDecimal.valueOf(u), DEFAULT_SCALE, DEFAULT_ROUND_MODE);
     }
 
+    public BigDecimal toMilligram(long u, int scale, RoundingMode roundingMode) {
+        return this.toMilligram(BigDecimal.valueOf(u), scale, roundingMode);
+    }
+
     public BigDecimal toMilligram(BigDecimal u) {
         return this.toMilligram(u, DEFAULT_SCALE, DEFAULT_ROUND_MODE);
     }
@@ -167,6 +171,10 @@ public enum WeightUnit {
 
     public BigDecimal toGram(long u) {
         return this.toGram(BigDecimal.valueOf(u), DEFAULT_SCALE, DEFAULT_ROUND_MODE);
+    }
+
+    public BigDecimal toGram(long u, int scale, RoundingMode roundingMode) {
+        return this.toGram(BigDecimal.valueOf(u), scale, roundingMode);
     }
 
     public BigDecimal toGram(BigDecimal u) {
@@ -187,6 +195,10 @@ public enum WeightUnit {
         return this.toKilogram(BigDecimal.valueOf(u), DEFAULT_SCALE, DEFAULT_ROUND_MODE);
     }
 
+    public BigDecimal toKilogram(long u, int scale, RoundingMode roundingMode) {
+        return this.toKilogram(BigDecimal.valueOf(u), scale, roundingMode);
+    }
+
     public BigDecimal toKilogram(BigDecimal u) {
         return this.toKilogram(u, DEFAULT_SCALE, DEFAULT_ROUND_MODE);
     }
@@ -203,6 +215,10 @@ public enum WeightUnit {
 
     public BigDecimal toTon(long u) {
         return this.toTon(BigDecimal.valueOf(u), DEFAULT_SCALE, DEFAULT_ROUND_MODE);
+    }
+
+    public BigDecimal toTon(long u, int scale, RoundingMode roundingMode) {
+        return this.toTon(BigDecimal.valueOf(u), scale, roundingMode);
     }
 
     public BigDecimal toTon(BigDecimal u) {

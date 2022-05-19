@@ -216,6 +216,10 @@ public enum LengthUnit {
         return this.toMillimetre(BigDecimal.valueOf(u), DEFAULT_SCALE, DEFAULT_ROUND_MODE);
     }
 
+    public BigDecimal toMillimetre(long u, int scale, RoundingMode roundingMode) {
+        return this.toMillimetre(BigDecimal.valueOf(u), scale, roundingMode);
+    }
+
     public BigDecimal toMillimetre(BigDecimal u) {
         return this.toMillimetre(u, DEFAULT_SCALE, DEFAULT_ROUND_MODE);
     }
@@ -232,6 +236,10 @@ public enum LengthUnit {
 
     public BigDecimal toCentimeter(long u) {
         return this.toCentimeter(BigDecimal.valueOf(u), DEFAULT_SCALE, DEFAULT_ROUND_MODE);
+    }
+
+    public BigDecimal toCentimeter(long u, int scale, RoundingMode roundingMode) {
+        return this.toCentimeter(BigDecimal.valueOf(u), scale, roundingMode);
     }
 
     public BigDecimal toCentimeter(BigDecimal u) {
@@ -252,6 +260,10 @@ public enum LengthUnit {
         return this.toDecimetre(BigDecimal.valueOf(u), DEFAULT_SCALE, DEFAULT_ROUND_MODE);
     }
 
+    public BigDecimal toDecimetre(long u, int scale, RoundingMode roundingMode) {
+        return this.toDecimetre(BigDecimal.valueOf(u), scale, roundingMode);
+    }
+
     public BigDecimal toDecimetre(BigDecimal u) {
         return this.toDecimetre(u, DEFAULT_SCALE, DEFAULT_ROUND_MODE);
     }
@@ -270,6 +282,10 @@ public enum LengthUnit {
         return this.toMetre(BigDecimal.valueOf(u), DEFAULT_SCALE, DEFAULT_ROUND_MODE);
     }
 
+    public BigDecimal toMetre(long u, int scale, RoundingMode roundingMode) {
+        return this.toMetre(BigDecimal.valueOf(u), scale, roundingMode);
+    }
+
     public BigDecimal toMetre(BigDecimal u) {
         return this.toMetre(u, DEFAULT_SCALE, DEFAULT_ROUND_MODE);
     }
@@ -286,6 +302,10 @@ public enum LengthUnit {
 
     public BigDecimal toKilometre(long u) {
         return this.toKilometre(BigDecimal.valueOf(u), DEFAULT_SCALE, DEFAULT_ROUND_MODE);
+    }
+
+    public BigDecimal toKilometre(long u, int scale, RoundingMode roundingMode) {
+        return this.toKilometre(BigDecimal.valueOf(u), scale, roundingMode);
     }
 
     public BigDecimal toKilometre(BigDecimal u) {

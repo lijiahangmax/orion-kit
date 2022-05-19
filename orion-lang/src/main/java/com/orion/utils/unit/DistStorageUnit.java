@@ -315,6 +315,10 @@ public enum DistStorageUnit {
         return this.toBit(BigDecimal.valueOf(u), DEFAULT_SCALE, DEFAULT_ROUND_MODE);
     }
 
+    public BigDecimal toBit(long u, int scale, RoundingMode roundingMode) {
+        return this.toBit(BigDecimal.valueOf(u), scale, roundingMode);
+    }
+
     public BigDecimal toBit(BigDecimal u) {
         return this.toBit(u, DEFAULT_SCALE, DEFAULT_ROUND_MODE);
     }
@@ -331,6 +335,10 @@ public enum DistStorageUnit {
 
     public BigDecimal toByte(long u) {
         return this.toByte(BigDecimal.valueOf(u), DEFAULT_SCALE, DEFAULT_ROUND_MODE);
+    }
+
+    public BigDecimal toByte(long u, int scale, RoundingMode roundingMode) {
+        return this.toByte(BigDecimal.valueOf(u), scale, roundingMode);
     }
 
     public BigDecimal toByte(BigDecimal u) {
@@ -351,6 +359,10 @@ public enum DistStorageUnit {
         return this.toKilobyte(BigDecimal.valueOf(u), DEFAULT_SCALE, DEFAULT_ROUND_MODE);
     }
 
+    public BigDecimal toKilobyte(long u, int scale, RoundingMode roundingMode) {
+        return this.toKilobyte(BigDecimal.valueOf(u), scale, roundingMode);
+    }
+
     public BigDecimal toKilobyte(BigDecimal u) {
         return this.toKilobyte(u, DEFAULT_SCALE, DEFAULT_ROUND_MODE);
     }
@@ -367,6 +379,10 @@ public enum DistStorageUnit {
 
     public BigDecimal toMegabyte(long u) {
         return this.toMegabyte(BigDecimal.valueOf(u), DEFAULT_SCALE, DEFAULT_ROUND_MODE);
+    }
+
+    public BigDecimal toMegabyte(long u, int scale, RoundingMode roundingMode) {
+        return this.toMegabyte(BigDecimal.valueOf(u), scale, roundingMode);
     }
 
     public BigDecimal toMegabyte(BigDecimal u) {
@@ -387,6 +403,10 @@ public enum DistStorageUnit {
         return this.toGigabyte(BigDecimal.valueOf(u), DEFAULT_SCALE, DEFAULT_ROUND_MODE);
     }
 
+    public BigDecimal toGigabyte(long u, int scale, RoundingMode roundingMode) {
+        return this.toGigabyte(BigDecimal.valueOf(u), scale, roundingMode);
+    }
+
     public BigDecimal toGigabyte(BigDecimal u) {
         return this.toGigabyte(u, DEFAULT_SCALE, DEFAULT_ROUND_MODE);
     }
@@ -403,6 +423,10 @@ public enum DistStorageUnit {
 
     public BigDecimal toTerabyte(long u) {
         return this.toTerabyte(BigDecimal.valueOf(u), DEFAULT_SCALE, DEFAULT_ROUND_MODE);
+    }
+
+    public BigDecimal toTerabyte(long u, int scale, RoundingMode roundingMode) {
+        return this.toTerabyte(BigDecimal.valueOf(u), scale, roundingMode);
     }
 
     public BigDecimal toTerabyte(BigDecimal u) {
