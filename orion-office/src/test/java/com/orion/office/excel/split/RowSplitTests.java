@@ -20,7 +20,7 @@ public class RowSplitTests {
     @Test
     public void rowSplit1() {
         ExcelRowSplit s = new ExcelRowSplit(sheet1, 5);
-        s.destPath("C:\\Users\\ljh15\\Desktop\\split1", "sp");
+        s.targetPath("C:\\Users\\ljh15\\Desktop\\split1", "sp");
         s.header("1", "3", "4")
                 .columns(1, 3, 4)
                 .skip(1)
@@ -31,7 +31,7 @@ public class RowSplitTests {
     @Test
     public void rowSplit2() {
         ExcelRowSplit s = new ExcelRowSplit(sheet2, 5);
-        s.destPath("C:\\Users\\ljh15\\Desktop\\split2", "sp");
+        s.targetPath("C:\\Users\\ljh15\\Desktop\\split2", "sp");
         s.header("1", "2", "3")
                 .skip(1)
                 .split()
@@ -41,7 +41,7 @@ public class RowSplitTests {
     @Test
     public void rowSplit3() {
         ExcelRowSplit s = new ExcelRowSplit(sheet2, 5);
-        s.dest("C:\\Users\\ljh15\\Desktop\\split3\\1.xlsx");
+        s.target("C:\\Users\\ljh15\\Desktop\\split3\\1.xlsx");
         s.header("1", "2", "3")
                 .skip(1)
                 .split()

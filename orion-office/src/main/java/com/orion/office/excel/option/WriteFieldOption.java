@@ -42,27 +42,24 @@ public class WriteFieldOption implements Serializable {
         return index;
     }
 
-    public WriteFieldOption setIndex(int index) {
+    public void setIndex(int index) {
         this.index = index;
-        return this;
     }
 
     public ExcelFieldType getType() {
         return type;
     }
 
-    public WriteFieldOption setType(ExcelFieldType type) {
+    public void setType(ExcelFieldType type) {
         this.type = type;
-        return this;
     }
 
     public CellOption getCellOption() {
         return cellOption;
     }
 
-    public WriteFieldOption setCellOption(CellOption cellOption) {
+    public void setCellOption(CellOption cellOption) {
         this.cellOption = cellOption;
-        return this;
     }
 
 }

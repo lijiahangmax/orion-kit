@@ -289,9 +289,8 @@ public class CsvWriter implements SafeCloseable, SafeFlushable {
         }
     }
 
-    public CsvWriter setOption(CsvWriterOption option) {
+    public void setOption(CsvWriterOption option) {
         this.option = option;
-        return this;
     }
 
     public CsvWriterOption getOption() {

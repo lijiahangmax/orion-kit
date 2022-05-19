@@ -876,9 +876,8 @@ public class CsvReader implements SafeCloseable {
         return option;
     }
 
-    public CsvReader setOption(CsvReaderOption option) {
+    public void setOption(CsvReaderOption option) {
         this.option = option;
-        return this;
     }
 
     /**

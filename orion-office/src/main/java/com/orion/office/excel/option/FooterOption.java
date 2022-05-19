@@ -39,27 +39,24 @@ public class FooterOption implements Serializable {
         return left;
     }
 
-    public FooterOption setLeft(String left) {
+    public void setLeft(String left) {
         this.left = left;
-        return this;
     }
 
     public String getCenter() {
         return center;
     }
 
-    public FooterOption setCenter(String center) {
+    public void setCenter(String center) {
         this.center = center;
-        return this;
     }
 
     public String getRight() {
         return right;
     }
 
-    public FooterOption setRight(String right) {
+    public void setRight(String right) {
         this.right = right;
-        return this;
     }
 
 }

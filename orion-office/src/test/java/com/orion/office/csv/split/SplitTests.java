@@ -16,7 +16,7 @@ public class SplitTests {
         CsvArrayReader reader = new CsvArrayReader(new CsvReader("C:\\Users\\ljh15\\Desktop\\1.csv"));
         reader.getOption().setSkipEmptyRows(false);
         CsvRowSplit split = new CsvRowSplit(reader, 5).skip(1);
-        split.destPath("C:\\Users\\ljh15\\Desktop\\split1", "sp");
+        split.targetPath("C:\\Users\\ljh15\\Desktop\\split1", "sp");
         split.split().close();
     }
 

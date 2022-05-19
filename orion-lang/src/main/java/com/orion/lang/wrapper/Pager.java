@@ -152,36 +152,33 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, Js
         return rows;
     }
 
-    public Pager<T> setRows(List<T> rows) {
+    public void setRows(List<T> rows) {
         this.rows = rows;
-        return this;
     }
 
     public int getPage() {
         return page;
     }
 
-    public Pager<T> setPage(int page) {
+    public void setPage(int page) {
         this.page = page;
         this.resetOffset();
-        return this;
     }
 
     public int getLimit() {
         return limit;
     }
 
-    public Pager<T> setLimit(int limit) {
+    public void setLimit(int limit) {
         this.limit = limit;
         this.resetOffset();
-        return this;
     }
 
     public int getPages() {
         return pages;
     }
 
-    public Pager<T> setPages(int pages) {
+    public void setPages(int pages) {
         this.pages = pages;
         this.prePage = this.page - 1;
         this.nextPage = this.page + 1;
@@ -191,60 +188,55 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, Js
         if (this.page >= this.pages) {
             this.nextPage = this.pages;
         }
-        return this;
     }
 
     public int getTotal() {
         return total;
     }
 
-    public Pager<T> setTotal(int total) {
+    public void setTotal(int total) {
         this.total = total;
         if (total != 0) {
-            return this.setPages(total % limit == 0 ? total / limit : (total / limit + 1));
+            this.setPages(total % limit == 0 ? total / limit : (total / limit + 1));
         }
-        return this;
     }
 
     public int getOffset() {
         return offset;
     }
 
-    public Pager<T> setOffset(int offset) {
+    public void setOffset(int offset) {
         this.offset = offset;
         this.sql = "LIMIT " + offset + ", " + limit;
-        return this;
     }
 
     public int getPrePage() {
         return prePage;
     }
 
-    public Pager<T> setPrePage(int prePage) {
+    public void setPrePage(int prePage) {
         this.prePage = prePage;
-        return this;
     }
 
     public int getNextPage() {
         return nextPage;
     }
 
-    public Pager<T> setNextPage(int nextPage) {
+    public void setNextPage(int nextPage) {
         this.nextPage = nextPage;
-        return this;
     }
 
     public String getSql() {
         return sql;
     }
 
-    public Pager<T> setSql(String sql) {
+    public void setSql(String sql) {
         this.sql = sql;
-        return this;
     }
 
     public Pager<T> toNextPage() {
-        return this.setPages(page + 1);
+        this.setPages(page + 1);
+        return this;
     }
 
     /**
@@ -254,7 +246,8 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, Js
      * @return this
      */
     public Pager<T> toNextPage(int nextPage) {
-        return this.setPages(page + nextPage);
+        this.setPages(page + nextPage);
+        return this;
     }
 
     /**

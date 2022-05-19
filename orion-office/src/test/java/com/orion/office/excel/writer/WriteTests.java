@@ -67,10 +67,10 @@ public class WriteTests {
 
     @Before
     public void setProperties() {
-        PropertiesOption option = new PropertiesOption()
-                .setAuthor(Const.ORION_AUTHOR)
-                .setDescription("writeTests")
-                .setKeywords("poi writer");
+        PropertiesOption option = new PropertiesOption();
+        option.setAuthor(Const.ORION_AUTHOR);
+        option.setDescription("writeTests");
+        option.setKeywords("poi writer");
         build.properties(option);
     }
 
@@ -103,12 +103,12 @@ public class WriteTests {
         style.setFont(font);
         writer.style(0, style)
                 .addRows(this.array);
-        PrintOption option = new PrintOption()
-                .setScale(50)
-                .setAutoLimit(true)
-                .setLimit(10)
-                .setRepeat(2, 5)
-                .setPaper(ExcelPaperType.A5);
+        PrintOption option = new PrintOption();
+        option.setScale(50);
+        option.setAutoLimit(true);
+        option.setLimit(10);
+        option.setRepeat(2, 5);
+        option.setPaper(ExcelPaperType.A5);
         writer.print(option)
                 .displayFormulas();
     }
@@ -143,10 +143,10 @@ public class WriteTests {
         style.setFont(font);
         writer.style(0, style)
                 .addRows(this.map);
-        HeaderOption option = new HeaderOption()
-                .setLeft("left")
-                .setCenter("中心")
-                .setRight("right");
+        HeaderOption option = new HeaderOption();
+        option.setLeft("left");
+        option.setCenter("中心");
+        option.setRight("right");
         writer.header(option)
                 .displayRowColHeadings()
                 .protect("123");
@@ -182,10 +182,10 @@ public class WriteTests {
                 .headers("id", "公式", "名称", "时间", "金钱", "隐藏")
                 .skip()
                 .addRows(this.bean);
-        FooterOption option = new FooterOption()
-                .setLeft("left")
-                .setCenter("中心")
-                .setRight("right");
+        FooterOption option = new FooterOption();
+        option.setLeft("left");
+        option.setCenter("中心");
+        option.setRight("right");
         writer.footer(option);
     }
 
@@ -218,10 +218,10 @@ public class WriteTests {
                 .headers("id", "公式", "名称", "时间", "金钱", "隐藏")
                 .skip()
                 .addRows(this.bean);
-        FooterOption option = new FooterOption()
-                .setLeft("left")
-                .setCenter("中心")
-                .setRight("right");
+        FooterOption option = new FooterOption();
+        option.setLeft("left");
+        option.setCenter("中心");
+        option.setRight("right");
         writer.footer(option);
     }
 

@@ -82,29 +82,24 @@ public class Region implements Serializable {
         return net;
     }
 
-    public Region setCountry(String country) {
+    public void setCountry(String country) {
         this.country = country;
-        return this;
     }
 
-    public Region setArea(String area) {
+    public void setArea(String area) {
         this.area = area;
-        return this;
     }
 
-    public Region setProvince(String province) {
+    public void setProvince(String province) {
         this.province = province;
-        return this;
     }
 
-    public Region setCity(String city) {
+    public void setCity(String city) {
         this.city = city;
-        return this;
     }
 
-    public Region setNet(String net) {
+    public void setNet(String net) {
         this.net = net;
-        return this;
     }
 
     @Override

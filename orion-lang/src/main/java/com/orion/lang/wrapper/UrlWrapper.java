@@ -112,36 +112,33 @@ public class UrlWrapper<T> extends CloneSupport<UrlWrapper<T>> implements Wrappe
         return this;
     }
 
-    public String getUrl() {
-        return url;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    public UrlWrapper<T> setUrl(String url) {
-        this.url = url;
-        return this;
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     public int getType() {
         return type;
     }
 
-    public UrlWrapper<T> setType(int type) {
-        this.type = type;
-        return this;
-    }
-
     public T getData() {
         return data;
     }
 
-    public UrlWrapper<T> setData(T data) {
-        this.data = data;
-        return this;
-    }
-
     @Override
     public String toString() {
-        return toLogString();
+        return this.toLogString();
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.orion.office.excel.split;
 
 import com.orion.constant.Const;
 import com.orion.office.excel.Excels;
-import com.orion.office.support.DestinationGenerator;
+import com.orion.office.support.SplitTargetGenerator;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Exceptions;
 import com.orion.utils.Valid;
@@ -19,7 +19,7 @@ import java.util.Iterator;
  * @version 1.0.0
  * @since 2020/8/21 16:01
  */
-public class ExcelRowSplit extends DestinationGenerator {
+public class ExcelRowSplit extends SplitTargetGenerator {
 
     /**
      * sheet
@@ -264,6 +264,9 @@ public class ExcelRowSplit extends DestinationGenerator {
         }
     }
 
+    /**
+     * 写入
+     */
     private void write() {
         try {
             if (password != null && !streaming) {

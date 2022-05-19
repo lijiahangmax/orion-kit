@@ -13,8 +13,7 @@ public interface Sendable<T> {
      * 发送接口
      *
      * @param msg msg
-     * @return send result
      */
-    boolean send(T msg);
+    void send(T msg);
 
 }

@@ -221,9 +221,9 @@ public class MailMessage implements Serializable {
      */
     public MailMessage addLine(String line) {
         if (content == null) {
-            content = line;
+            this.content = line;
         } else {
-            content += (line + eof());
+            this.content += (line + this.newLine());
         }
         return this;
     }
@@ -237,9 +237,9 @@ public class MailMessage implements Serializable {
     public MailMessage addLines(String... lines) {
         StringBuilder sb = new StringBuilder(content == null ? Strings.EMPTY : content);
         for (String line : lines) {
-            sb.append(line).append(eof());
+            sb.append(line).append(this.newLine());
         }
-        content = sb.toString();
+        this.content = sb.toString();
         return this;
     }
 
@@ -252,9 +252,9 @@ public class MailMessage implements Serializable {
     public MailMessage addLines(Collection<String> lines) {
         StringBuilder sb = new StringBuilder(content == null ? Strings.EMPTY : content);
         for (String line : lines) {
-            sb.append(line).append(eof());
+            sb.append(line).append(this.newLine());
         }
-        content = sb.toString();
+        this.content = sb.toString();
         return this;
     }
 
@@ -324,7 +324,12 @@ public class MailMessage implements Serializable {
         return this;
     }
 
-    private String eof() {
+    /**
+     * 新起一行
+     *
+     * @return newLine
+     */
+    private String newLine() {
         return StandardContentType.TEXT_HTML.equals(mimeType) ? Const.BR : Const.LF;
     }
 

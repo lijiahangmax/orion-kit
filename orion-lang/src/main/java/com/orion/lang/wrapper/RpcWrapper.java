@@ -225,6 +225,14 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
         }
     }
 
+    public RpcWrapper<T> addErrorMessage(String errorMsg) {
+        if (errorMessages == null) {
+            this.errorMessages = new ArrayList<>();
+        }
+        errorMessages.add(errorMsg);
+        return this;
+    }
+
     public RpcWrapper<T> code(int code) {
         this.code = code;
         return this;
@@ -241,61 +249,48 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
     }
 
     public RpcWrapper<T> trace(Object object) {
-        traceId = PRC_TRACE_PREFIX + object;
+        this.traceId = PRC_TRACE_PREFIX + object;
         return this;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
+    public void setTraceId(String traceId) {
+        this.traceId = PRC_TRACE_PREFIX + traceId;
+    }
+
+    public void setErrorMessages(List<String> errorMessages) {
+        this.errorMessages = errorMessages;
     }
 
     public int getCode() {
         return code;
     }
 
-    public RpcWrapper<T> setCode(int code) {
-        this.code = code;
-        return this;
-    }
-
     public String getMsg() {
         return msg;
-    }
-
-    public RpcWrapper<T> setMsg(String msg) {
-        this.msg = msg;
-        return this;
     }
 
     public T getData() {
         return data;
     }
 
-    public RpcWrapper<T> setData(T data) {
-        this.data = data;
-        return this;
-    }
-
     public String getTraceId() {
         return traceId;
     }
 
-    public RpcWrapper<T> setTraceId(String traceId) {
-        this.traceId = PRC_TRACE_PREFIX + traceId;
-        return this;
-    }
-
-    public RpcWrapper<T> addErrorMessage(String errorMsg) {
-        if (errorMessages == null) {
-            this.errorMessages = new ArrayList<>();
-        }
-        errorMessages.add(errorMsg);
-        return this;
-    }
-
     public List<String> getErrorMessages() {
         return errorMessages == null ? errorMessages = new ArrayList<>() : errorMessages;
-    }
-
-    public RpcWrapper<T> setErrorMessages(List<String> errorMessages) {
-        this.errorMessages = errorMessages;
-        return this;
     }
 
     @JSONField(serialize = false)
@@ -304,7 +299,7 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
     }
 
     private String createTrace() {
-        return traceId = PRC_TRACE_PREFIX + UUIds.random32();
+        return this.traceId = PRC_TRACE_PREFIX + UUIds.random32();
     }
 
     @Override
@@ -334,7 +329,7 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
         map.put("msg", msg);
         map.put("data", data);
         map.put("traceId", traceId);
-        map.put("errorMsg", errorMessages);
+        map.put("errorMessages", errorMessages);
         return map;
     }
 

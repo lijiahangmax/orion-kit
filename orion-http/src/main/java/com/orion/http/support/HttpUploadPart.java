@@ -114,59 +114,52 @@ public class HttpUploadPart {
 
     public String getFileName() {
         if (fileName == null) {
-            if (this.file != null) {
-                fileName = Files1.getFileName(file);
+            if (file != null) {
+                this.fileName = Files1.getFileName(file);
             } else {
-                fileName = UUIds.random32();
+                this.fileName = UUIds.random32();
                 if (suffix != null) {
-                    fileName += suffix;
+                    this.fileName += suffix;
                 }
             }
         }
         return fileName;
     }
 
-    public HttpUploadPart setParam(String param) {
+    public void setParam(String param) {
         this.param = param;
-        return this;
     }
 
-    public HttpUploadPart setSuffix(String suffix) {
+    public void setSuffix(String suffix) {
         this.suffix = suffix;
-        return this;
     }
 
-    public HttpUploadPart setFileName(String fileName) {
+    public void setFileName(String fileName) {
         this.fileName = fileName;
-        return this;
     }
 
-    public HttpUploadPart setContentType(String contentType) {
+    public void setContentType(String contentType) {
         this.contentType = contentType;
-        return this;
     }
 
-    public HttpUploadPart setIn(InputStream in) {
+    public void setIn(InputStream in) {
         this.in = in;
-        return this;
     }
 
-    public HttpUploadPart setFile(File file) {
+    public void setFile(File file) {
         this.file = file;
-        return this;
     }
 
-    public HttpUploadPart setBytes(byte[] bytes, int off, int len) {
+    public void setBytes(byte[] bytes, int off, int len) {
         this.bytes = bytes;
         this.off = off;
         this.len = len;
-        return this;
     }
 
-    public HttpUploadPart setBytes(byte[] bytes) {
+    public void setBytes(byte[] bytes) {
         this.bytes = bytes;
+        this.off = 0;
         this.len = bytes.length;
-        return this;
     }
 
     public String getContentType() {

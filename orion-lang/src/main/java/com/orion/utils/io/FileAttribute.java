@@ -96,9 +96,8 @@ public class FileAttribute implements Serializable {
         return path;
     }
 
-    public FileAttribute setPath(Path path) {
+    public void setPath(Path path) {
         this.path = path;
-        return this;
     }
 
     public BasicFileAttributes getAttr() {
@@ -109,90 +108,80 @@ public class FileAttribute implements Serializable {
         return fileName;
     }
 
-    public FileAttribute setFileName(String fileName) {
+    public void setFileName(String fileName) {
         this.fileName = fileName;
-        return this;
     }
 
     public String getFilePath() {
         return filePath;
     }
 
-    public FileAttribute setFilePath(String filePath) {
+    public void setFilePath(String filePath) {
         this.filePath = filePath;
-        return this;
     }
 
     public long getSize() {
         return size;
     }
 
-    public FileAttribute setSize(long size) {
+    public void setSize(long size) {
         this.size = size;
-        return this;
     }
 
     public boolean isSymbolicLink() {
         return symbolicLink;
     }
 
-    public FileAttribute setSymbolicLink(boolean symbolicLink) {
+    public void setSymbolicLink(boolean symbolicLink) {
         this.symbolicLink = symbolicLink;
-        return this;
     }
 
     public boolean isDirectory() {
         return directory;
     }
 
-    public FileAttribute setDirectory(boolean directory) {
+    public void setDirectory(boolean directory) {
         this.directory = directory;
-        return this;
     }
 
     public boolean isRegularFile() {
         return regularFile;
     }
 
-    public FileAttribute setRegularFile(boolean regularFile) {
+    public void setRegularFile(boolean regularFile) {
         this.regularFile = regularFile;
-        return this;
     }
 
     public boolean isOther() {
         return other;
     }
 
-    public FileAttribute setOther(boolean other) {
+    public void setOther(boolean other) {
         this.other = other;
-        return this;
     }
 
     public long getCreateTime() {
         return createTime;
     }
 
-    public FileAttribute setCreateTime(long createTime) {
+    public void setCreateTime(long createTime) {
         this.createTime = createTime;
-        return this;
     }
 
     public long getAccessTime() {
         return accessTime;
     }
 
-    public FileAttribute setAccessTime(long accessTime) {
+    public void setAccessTime(long accessTime) {
         this.accessTime = accessTime;
-        return this;
     }
 
     public long getModifiedTime() {
         return modifiedTime;
     }
 
-    public FileAttribute setModifiedTime(long modifiedTime) {
+    public void setModifiedTime(long modifiedTime) {
         this.modifiedTime = modifiedTime;
-        return this;
     }
 
     public File getFile() {

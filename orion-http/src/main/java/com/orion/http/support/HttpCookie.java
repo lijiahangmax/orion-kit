@@ -57,12 +57,12 @@ public class HttpCookie implements Serializable {
     private String path;
 
     /**
-     * 是否使用ssl
+     * 是否使用 ssl
      */
     private boolean secure;
 
     /**
-     * 是否为httpOnly
+     * 是否为 httpOnly
      */
     private boolean httpOnly;
 
@@ -128,15 +128,6 @@ public class HttpCookie implements Serializable {
         }
     }
 
-    public MutableHashMap<String, String> getValues() {
-        return values;
-    }
-
-    public HttpCookie setValues(MutableHashMap<String, String> values) {
-        this.values = values;
-        return this;
-    }
-
     public HttpCookie addValue(String key, String value) {
         if (values == null) {
             this.values = new MutableHashMap<>();
@@ -145,58 +136,60 @@ public class HttpCookie implements Serializable {
         return this;
     }
 
+    public MutableHashMap<String, String> getValues() {
+        return values;
+    }
+
+    public void setValues(MutableHashMap<String, String> values) {
+        this.values = values;
+    }
+
     public Date getExpires() {
         return expires;
     }
 
-    public HttpCookie setExpires(Date expires) {
+    public void setExpires(Date expires) {
         this.expires = expires;
-        return this;
     }
 
     public Integer getMaxAge() {
         return maxAge;
     }
 
-    public HttpCookie setMaxAge(Integer maxAge) {
+    public void setMaxAge(Integer maxAge) {
         this.maxAge = maxAge;
-        return this;
     }
 
     public String getDomain() {
         return domain;
     }
 
-    public HttpCookie setDomain(String domain) {
+    public void setDomain(String domain) {
         this.domain = domain;
-        return this;
     }
 
     public String getPath() {
         return path;
     }
 
-    public HttpCookie setPath(String path) {
+    public void setPath(String path) {
         this.path = path;
-        return this;
     }
 
     public boolean isSecure() {
         return secure;
     }
 
-    public HttpCookie setSecure(boolean secure) {
+    public void setSecure(boolean secure) {
         this.secure = secure;
-        return this;
     }
 
     public boolean isHttpOnly() {
         return httpOnly;
     }
 
-    public HttpCookie setHttpOnly(boolean httpOnly) {
+    public void setHttpOnly(boolean httpOnly) {
         this.httpOnly = httpOnly;
-        return this;
     }
 
     public String cookie() {

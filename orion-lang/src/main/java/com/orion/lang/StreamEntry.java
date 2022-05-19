@@ -30,36 +30,33 @@ public class StreamEntry implements Serializable {
         this.len = len;
     }
 
-    public byte[] getBytes() {
-        return bytes;
+    public void setBytes(byte[] bytes) {
+        this.bytes = bytes;
     }
 
-    public StreamEntry setBytes(byte[] bytes) {
-        this.bytes = bytes;
-        return this;
+    public void setOff(int off) {
+        this.off = off;
+    }
+
+    public void setLen(int len) {
+        this.len = len;
+    }
+
+    public byte[] getBytes() {
+        return bytes;
     }
 
     public int getOff() {
         return off;
     }
 
-    public StreamEntry setOff(int off) {
-        this.off = off;
-        return this;
-    }
-
     public int getLen() {
         return len;
     }
 
-    public StreamEntry setLen(int len) {
-        this.len = len;
-        return this;
-    }
-
     @Override
     public String toString() {
-        return "off: " + off + " len: " + len;
+        return "off: " + off + ", len: " + len;
     }
 
 }

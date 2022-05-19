@@ -150,66 +150,66 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
      *
      * @param rows 结果列表
      */
-    public DataGrid<T> setRows(List<T> rows) {
+    public void setRows(List<T> rows) {
         this.rows = rows;
         if (rows != null) {
             this.size = rows.size();
         }
-        return this;
     }
 
     public int getTotal() {
         return total;
     }
 
-    public DataGrid<T> setTotal(int total) {
+    public void setTotal(int total) {
         this.total = total;
         if (total != 0) {
             this.pages = total % limit == 0 ? total / limit : (total / limit + 1);
         }
-        return this;
     }
 
     public int getPage() {
         return page;
     }
 
-    public DataGrid<T> setPage(int page) {
+    public void setPage(int page) {
         this.page = page;
-        return this;
     }
 
     public int getLimit() {
         return limit;
     }
 
-    public DataGrid<T> setLimit(int limit) {
+    public void setLimit(int limit) {
         this.limit = limit;
-        return this.setTotal(total);
+        this.setTotal(total);
     }
 
     public int getPages() {
         return pages;
     }
 
-    public DataGrid<T> setPages(int pages) {
+    public void setPages(int pages) {
         this.pages = pages;
-        return this;
-    }
-
-    public DataGrid<T> setPages() {
-        if (total != 0) {
-            pages = total % limit == 0 ? total / limit : (total / limit + 1);
-        }
-        return this;
     }
 
     public int getSize() {
         return size;
     }
 
-    public DataGrid<T> setSize(int size) {
+    public void setSize(int size) {
         this.size = size;
+    }
+
+    /**
+     * 重新设置总页数
+     *
+     * @return this
+     */
+    public DataGrid<T> resetPages() {
+        if (total != 0) {
+            this.pages = total % limit == 0 ? total / limit : (total / limit + 1);
+        }
         return this;
     }
 

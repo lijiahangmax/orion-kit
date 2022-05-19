@@ -163,7 +163,7 @@ public class MutableString implements Mutable<String>, CharSequence, Serializabl
      * @return this
      */
     public MutableString reverse() {
-        this.builder = builder.reverse();
+        builder.reverse();
         return this;
     }
 

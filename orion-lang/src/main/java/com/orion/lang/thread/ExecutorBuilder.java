@@ -131,7 +131,7 @@ public class ExecutorBuilder implements Buildable<ThreadPoolExecutor> {
      * @return this
      */
     public ExecutorBuilder useArrayBlockingQueue(int capacity) {
-        return setWorkQueue(new ArrayBlockingQueue<>(capacity));
+        return this.setWorkQueue(new ArrayBlockingQueue<>(capacity));
     }
 
     /**
@@ -141,7 +141,7 @@ public class ExecutorBuilder implements Buildable<ThreadPoolExecutor> {
      * @return this
      */
     public ExecutorBuilder useSynchronousQueue() {
-        return setWorkQueue(new SynchronousQueue<>(false));
+        return this.setWorkQueue(new SynchronousQueue<>(false));
     }
 
     /**
@@ -152,7 +152,7 @@ public class ExecutorBuilder implements Buildable<ThreadPoolExecutor> {
      * @return this
      */
     public ExecutorBuilder useSynchronousQueue(boolean fair) {
-        return setWorkQueue(new SynchronousQueue<>(fair));
+        return this.setWorkQueue(new SynchronousQueue<>(fair));
     }
 
     /**
@@ -241,7 +241,7 @@ public class ExecutorBuilder implements Buildable<ThreadPoolExecutor> {
         if (builder.workQueue != null) {
             workQueue = builder.workQueue;
         } else {
-            // corePoolSize为0则要使用SynchronousQueue避免无限阻塞
+            // corePoolSize 为 0 则要使用 SynchronousQueue 避免无限阻塞
             workQueue = (corePoolSize <= 0) ? new SynchronousQueue<>() : new LinkedBlockingQueue<>(DEFAULT_QUEUE_CAPACITY);
         }
         ThreadFactory threadFactory = (builder.threadFactory != null) ? builder.threadFactory : Executors.defaultThreadFactory();

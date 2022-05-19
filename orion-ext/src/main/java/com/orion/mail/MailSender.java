@@ -1,6 +1,7 @@
 package com.orion.mail;
 
 import com.orion.able.Sendable;
+import com.orion.utils.Exceptions;
 import com.orion.utils.Strings;
 import com.orion.utils.Valid;
 
@@ -73,7 +74,7 @@ public class MailSender implements Sendable<MailMessage> {
      * @return this
      */
     public MailSender debug() {
-        debug = true;
+        this.debug = true;
         return this;
     }
 
@@ -85,7 +86,7 @@ public class MailSender implements Sendable<MailMessage> {
      * @return this
      */
     public MailSender auth(String serverUsername, String serverPassword) {
-        authentication = new PasswordAuthentication(serverUsername, serverPassword);
+        this.authentication = new PasswordAuthentication(serverUsername, serverPassword);
         return this;
     }
 
@@ -93,7 +94,7 @@ public class MailSender implements Sendable<MailMessage> {
      * 发件
      */
     @Override
-    public boolean send(MailMessage msg) {
+    public void send(MailMessage msg) {
         Valid.notNull(authentication, "unauthorized");
         // 会话
         Session session = Session.getDefaultInstance(props, new Authenticator() {
@@ -151,9 +152,8 @@ public class MailSender implements Sendable<MailMessage> {
             mimeMessage.setSentDate(new Date());
             // 发件
             Transport.send(mimeMessage);
-            return true;
         } catch (Exception e) {
-            return false;
+            throw Exceptions.runtime(e);
         }
     }
 

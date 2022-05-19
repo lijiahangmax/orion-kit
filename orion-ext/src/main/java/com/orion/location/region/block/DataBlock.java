@@ -30,31 +30,28 @@ public class DataBlock {
         this(cityId, region, 0);
     }
 
-    public int getCityId() {
-        return cityId;
+    public void setCityId(int cityId) {
+        this.cityId = cityId;
     }
 
-    public DataBlock setCityId(int cityId) {
-        this.cityId = cityId;
-        return this;
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public void setDataPtr(int dataPtr) {
+        this.dataPtr = dataPtr;
+    }
+
+    public int getCityId() {
+        return cityId;
     }
 
     public String getRegion() {
         return region;
     }
 
-    public DataBlock setRegion(String region) {
-        this.region = region;
-        return this;
-    }
-
     public int getDataPtr() {
         return dataPtr;
-    }
-
-    public DataBlock setDataPtr(int dataPtr) {
-        this.dataPtr = dataPtr;
-        return this;
     }
 
     @Override

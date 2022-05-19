@@ -5,7 +5,7 @@ import com.orion.office.csv.CsvExt;
 import com.orion.office.csv.core.CsvWriter;
 import com.orion.office.csv.reader.CsvArrayReader;
 import com.orion.office.csv.writer.CsvArrayWriter;
-import com.orion.office.support.DestinationGenerator;
+import com.orion.office.support.SplitTargetGenerator;
 import com.orion.utils.Arrays1;
 import com.orion.utils.Valid;
 
@@ -18,7 +18,7 @@ import java.util.Collection;
  * @version 1.0.0
  * @since 2020/9/15 10:44
  */
-public class CsvRowSplit extends DestinationGenerator {
+public class CsvRowSplit extends SplitTargetGenerator {
 
     /**
      * reader

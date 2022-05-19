@@ -36,40 +36,36 @@ public class IndexBlock {
         this.dataLen = dataLen;
     }
 
-    public long getStartIp() {
-        return startIp;
+    public void setStartIp(long startIp) {
+        this.startIp = startIp;
     }
 
-    public IndexBlock setStartIp(long startIp) {
-        this.startIp = startIp;
-        return this;
+    public void setEndIp(long endIp) {
+        this.endIp = endIp;
+    }
+
+    public void setDataPtr(int dataPtr) {
+        this.dataPtr = dataPtr;
+    }
+
+    public void setDataLen(int dataLen) {
+        this.dataLen = dataLen;
+    }
+
+    public long getStartIp() {
+        return startIp;
     }
 
     public long getEndIp() {
         return endIp;
     }
 
-    public IndexBlock setEndIp(long endIp) {
-        this.endIp = endIp;
-        return this;
-    }
-
     public int getDataPtr() {
         return dataPtr;
     }
 
-    public IndexBlock setDataPtr(int dataPtr) {
-        this.dataPtr = dataPtr;
-        return this;
-    }
-
     public int getDataLen() {
         return dataLen;
-    }
-
-    public IndexBlock setDataLen(int dataLen) {
-        this.dataLen = dataLen;
-        return this;
     }
 
     public static int getIndexBlockLength() {
@@ -82,7 +78,6 @@ public class IndexBlock {
      * @return byte[]
      */
     public byte[] getBytes() {
-
         /*
          * +------------+-----------+-----------+
          * | 4bytes     | 4bytes    | 4bytes    |

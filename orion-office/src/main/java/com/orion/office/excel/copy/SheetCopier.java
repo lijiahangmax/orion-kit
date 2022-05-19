@@ -79,7 +79,7 @@ public class SheetCopier {
      * @param column 列数
      * @return this
      */
-    public SheetCopier setColumn(int column) {
+    public SheetCopier column(int column) {
         this.column = column;
         return this;
     }

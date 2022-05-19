@@ -96,144 +96,128 @@ public class PropertiesOption implements Serializable {
         return author;
     }
 
-    public PropertiesOption setAuthor(String author) {
+    public void setAuthor(String author) {
         this.author = author;
-        return this;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public PropertiesOption setTitle(String title) {
+    public void setTitle(String title) {
         this.title = title;
-        return this;
     }
 
     public String getSubject() {
         return subject;
     }
 
-    public PropertiesOption setSubject(String subject) {
+    public void setSubject(String subject) {
         this.subject = subject;
-        return this;
     }
 
     public String getKeywords() {
         return keywords;
     }
 
-    public PropertiesOption setKeywords(String keywords) {
+    public void setKeywords(String keywords) {
         this.keywords = keywords;
-        return this;
     }
 
     public String getRevision() {
         return revision;
     }
 
-    public PropertiesOption setRevision(String revision) {
+    public void setRevision(String revision) {
         this.revision = revision;
-        return this;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public PropertiesOption setDescription(String description) {
+    public void setDescription(String description) {
         this.description = description;
-        return this;
     }
 
     public String getCategory() {
         return category;
     }
 
-    public PropertiesOption setCategory(String category) {
+    public void setCategory(String category) {
         this.category = category;
-        return this;
     }
 
     public String getCompany() {
         return company;
     }
 
-    public PropertiesOption setCompany(String company) {
+    public void setCompany(String company) {
         this.company = company;
-        return this;
     }
 
     public String getManager() {
         return manager;
     }
 
-    public PropertiesOption setManager(String manager) {
+    public void setManager(String manager) {
         this.manager = manager;
-        return this;
     }
 
     public String getApplication() {
         return application;
     }
 
-    public PropertiesOption setApplication(String application) {
+    public void setApplication(String application) {
         this.application = application;
-        return this;
     }
 
     public String getModifiedUser() {
         return modifiedUser;
     }
 
-    public PropertiesOption setModifiedUser(String modifiedUser) {
+    public void setModifiedUser(String modifiedUser) {
         this.modifiedUser = modifiedUser;
-        return this;
     }
 
     public String getContentStatus() {
         return contentStatus;
     }
 
-    public PropertiesOption setContentStatus(String contentStatus) {
+    public void setContentStatus(String contentStatus) {
         this.contentStatus = contentStatus;
-        return this;
     }
 
     public String getContentType() {
         return contentType;
     }
 
-    public PropertiesOption setContentType(String contentType) {
+    public void setContentType(String contentType) {
         this.contentType = contentType;
-        return this;
     }
 
     public String getIdentifier() {
         return identifier;
     }
 
-    public PropertiesOption setIdentifier(String identifier) {
+    public void setIdentifier(String identifier) {
         this.identifier = identifier;
-        return this;
     }
 
     public Date getCreated() {
         return created;
     }
 
-    public PropertiesOption setCreated(Date created) {
+    public void setCreated(Date created) {
         this.created = created;
-        return this;
     }
 
     public Date getModified() {
         return modified;
     }
 
-    public PropertiesOption setModified(Date modified) {
+    public void setModified(Date modified) {
         this.modified = modified;
-        return this;
     }
 
 }

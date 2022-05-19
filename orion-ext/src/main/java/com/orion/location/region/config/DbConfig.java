@@ -32,22 +32,20 @@ public class DbConfig implements Serializable {
         this(Const.BUFFER_KB_16);
     }
 
+    public void setTotalHeaderSize(int totalHeaderSize) {
+        this.totalHeaderSize = totalHeaderSize;
+    }
+
+    public void setIndexBlockSize(int dataBlockSize) {
+        this.indexBlockSize = dataBlockSize;
+    }
+
     public int getTotalHeaderSize() {
         return totalHeaderSize;
     }
 
-    public DbConfig setTotalHeaderSize(int totalHeaderSize) {
-        this.totalHeaderSize = totalHeaderSize;
-        return this;
-    }
-
     public int getIndexBlockSize() {
         return indexBlockSize;
-    }
-
-    public DbConfig setIndexBlockSize(int dataBlockSize) {
-        this.indexBlockSize = dataBlockSize;
-        return this;
     }
 
 }

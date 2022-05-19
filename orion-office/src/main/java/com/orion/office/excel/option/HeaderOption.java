@@ -39,27 +39,24 @@ public class HeaderOption implements Serializable {
         return left;
     }
 
-    public HeaderOption setLeft(String left) {
+    public void setLeft(String left) {
         this.left = left;
-        return this;
     }
 
     public String getCenter() {
         return center;
     }
 
-    public HeaderOption setCenter(String center) {
+    public void setCenter(String center) {
         this.center = center;
-        return this;
     }
 
     public String getRight() {
         return right;
     }
 
-    public HeaderOption setRight(String right) {
+    public void setRight(String right) {
         this.right = right;
-        return this;
     }
 
 }

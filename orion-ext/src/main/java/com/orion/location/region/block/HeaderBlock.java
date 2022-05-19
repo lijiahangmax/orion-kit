@@ -22,22 +22,20 @@ public class HeaderBlock {
         this.indexPtr = indexPtr;
     }
 
+    public void setIndexStartIp(long indexStartIp) {
+        this.indexStartIp = indexStartIp;
+    }
+
+    public void setIndexPtr(int indexPtr) {
+        this.indexPtr = indexPtr;
+    }
+
     public long getIndexStartIp() {
         return indexStartIp;
     }
 
-    public HeaderBlock setIndexStartIp(long indexStartIp) {
-        this.indexStartIp = indexStartIp;
-        return this;
-    }
-
     public int getIndexPtr() {
         return indexPtr;
-    }
-
-    public HeaderBlock setIndexPtr(int indexPtr) {
-        this.indexPtr = indexPtr;
-        return this;
     }
 
     /**

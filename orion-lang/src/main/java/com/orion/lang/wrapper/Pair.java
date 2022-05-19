@@ -42,9 +42,8 @@ public class Pair<K, V> extends CloneSupport<Pair<K, V>> implements Map.Entry<K,
         return new Pair<>(entry);
     }
 
-    public Pair<K, V> setKey(K key) {
+    public void setKey(K key) {
         this.key = key;
-        return this;
     }
 
     @Override

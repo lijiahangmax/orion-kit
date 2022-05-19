@@ -20,12 +20,12 @@ import java.util.List;
  * @version 1.0.0
  * @since 2021/2/22 17:24
  */
-public abstract class DestinationGenerator implements SafeCloseable {
+public abstract class SplitTargetGenerator implements SafeCloseable {
 
     /**
      * 拆分输出的流
      */
-    protected List<OutputStream> dest;
+    protected List<OutputStream> targets;
 
     /**
      * 自动生成的文件目录
@@ -45,7 +45,7 @@ public abstract class DestinationGenerator implements SafeCloseable {
     /**
      * 当前目标下标
      */
-    protected int currentDestIndex;
+    protected int currentTargetIndex;
 
     /**
      * 文件后缀
@@ -68,7 +68,7 @@ public abstract class DestinationGenerator implements SafeCloseable {
      * @param autoClose 是否自动关闭
      * @return this
      */
-    public DestinationGenerator autoClose(boolean autoClose) {
+    public SplitTargetGenerator autoClose(boolean autoClose) {
         this.autoClose = autoClose;
         return this;
     }
@@ -76,12 +76,12 @@ public abstract class DestinationGenerator implements SafeCloseable {
     /**
      * 设置拆分文件输出流
      *
-     * @param dest dest
+     * @param target target
      * @return this
      */
-    public DestinationGenerator dest(OutputStream... dest) {
-        Valid.notEmpty(dest, "dest file is empty");
-        this.dest = Lists.of(dest);
+    public SplitTargetGenerator target(OutputStream... target) {
+        Valid.notEmpty(target, "target file is empty");
+        this.targets = Lists.of(target);
         this.generatorPathDir = null;
         this.generatorBaseName = null;
         return this;
@@ -90,29 +90,29 @@ public abstract class DestinationGenerator implements SafeCloseable {
     /**
      * 设置拆分文件输出文件
      *
-     * @param dest dest
+     * @param target target
      * @return this
      */
-    public DestinationGenerator dest(File... dest) {
-        Valid.notEmpty(dest, "dest file is empty");
-        OutputStream[] streams = Arrays.stream(dest)
+    public SplitTargetGenerator target(File... target) {
+        Valid.notEmpty(target, "target file is empty");
+        OutputStream[] streams = Arrays.stream(target)
                 .map(Files1::openOutputStreamSafe)
                 .toArray(OutputStream[]::new);
-        return this.dest(streams);
+        return this.target(streams);
     }
 
     /**
      * 设置拆分文件输出文件路径
      *
-     * @param dest dest
+     * @param target target
      * @return this
      */
-    public DestinationGenerator dest(String... dest) {
-        Valid.notEmpty(dest, "dest file is empty");
-        OutputStream[] streams = Arrays.stream(dest)
+    public SplitTargetGenerator target(String... target) {
+        Valid.notEmpty(target, "target file is empty");
+        OutputStream[] streams = Arrays.stream(target)
                 .map(Files1::openOutputStreamSafe)
                 .toArray(OutputStream[]::new);
-        return this.dest(streams);
+        return this.target(streams);
     }
 
     /**
@@ -122,8 +122,8 @@ public abstract class DestinationGenerator implements SafeCloseable {
      * @param baseName 文件名称
      * @return this
      */
-    public DestinationGenerator destPath(String pathDir, String baseName) {
-        return this.destPath(pathDir, baseName, null);
+    public SplitTargetGenerator targetPath(String pathDir, String baseName) {
+        return this.targetPath(pathDir, baseName, null);
     }
 
     /**
@@ -134,10 +134,10 @@ public abstract class DestinationGenerator implements SafeCloseable {
      * @param nameSuffix 文件名称后缀
      * @return this
      */
-    public DestinationGenerator destPath(String pathDir, String baseName, String nameSuffix) {
-        Valid.notNull(pathDir, "dest path dir is null");
-        Valid.notNull(baseName, "dest file base name is null");
-        this.dest = null;
+    public SplitTargetGenerator targetPath(String pathDir, String baseName, String nameSuffix) {
+        Valid.notNull(pathDir, "target path dir is null");
+        Valid.notNull(baseName, "target file base name is null");
+        this.targets = null;
         this.generatorPathDir = pathDir;
         this.generatorBaseName = baseName;
         this.generatorNameSuffix = Strings.def(nameSuffix);
@@ -146,12 +146,12 @@ public abstract class DestinationGenerator implements SafeCloseable {
     }
 
     /**
-     * 生成OutputStream
+     * 生成 OutputStream
      *
      * @return ignore
      */
     protected OutputStream generatorOutputStream() {
-        String path = Files1.getPath(generatorPathDir + Const.SEPARATOR + generatorBaseName + generatorNameSuffix + (++currentDestIndex) + "." + suffix);
+        String path = Files1.getPath(generatorPathDir + Const.SEPARATOR + generatorBaseName + generatorNameSuffix + (++currentTargetIndex) + "." + suffix);
         Files1.touch(path);
         return Files1.openOutputStreamSafe(path);
     }
@@ -162,10 +162,10 @@ public abstract class DestinationGenerator implements SafeCloseable {
      * @return ignore
      */
     protected boolean hasNext() {
-        if (dest == null) {
+        if (targets == null) {
             return true;
         }
-        return dest.size() > currentDestIndex;
+        return targets.size() > currentTargetIndex;
     }
 
     /**
@@ -173,10 +173,10 @@ public abstract class DestinationGenerator implements SafeCloseable {
      */
     protected void next() {
         if (this.hasNext()) {
-            if (dest == null) {
+            if (targets == null) {
                 this.currentOutputStream = this.generatorOutputStream();
             } else {
-                this.currentOutputStream = dest.get(currentDestIndex++);
+                this.currentOutputStream = targets.get(currentTargetIndex++);
             }
         } else {
             this.currentOutputStream = null;
@@ -185,8 +185,8 @@ public abstract class DestinationGenerator implements SafeCloseable {
 
     @Override
     public void close() {
-        if (autoClose && dest != null) {
-            dest.forEach(Streams::close);
+        if (autoClose && targets != null) {
+            targets.forEach(Streams::close);
         }
     }
 

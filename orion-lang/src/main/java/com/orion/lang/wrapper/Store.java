@@ -34,9 +34,16 @@ public class Store<T> extends CloneSupport<Store<T>> implements Serializable {
         return value;
     }
 
-    public Store<T> set(T value) {
+    public void set(T value) {
         this.value = value;
-        return this;
+    }
+
+    public T getValue() {
+        return value;
+    }
+
+    public void setValue(T value) {
+        this.value = value;
     }
 
     /**

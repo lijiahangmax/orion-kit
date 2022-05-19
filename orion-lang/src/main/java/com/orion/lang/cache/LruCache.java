@@ -8,7 +8,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * LRU缓存
+ * LRU 缓存
  * 最先进最先淘汰
  *
  * @author Li
@@ -20,7 +20,7 @@ public class LruCache<K, V> extends LinkedHashMap<K, V> {
     /**
      * 负载因子
      */
-    private static final float DEFAULT_LOAD_FACTOR = 0.75f;
+    private static final float DEFAULT_LOAD_FACTOR = 0.75F;
 
     /**
      * 默认最大容量
@@ -124,9 +124,8 @@ public class LruCache<K, V> extends LinkedHashMap<K, V> {
         return maxCapacity;
     }
 
-    public LruCache<K, V> setMaxCapacity(int maxCapacity) {
+    public void setMaxCapacity(int maxCapacity) {
         this.maxCapacity = maxCapacity;
-        return this;
     }
 
 }

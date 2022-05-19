@@ -168,18 +168,16 @@ public class Args implements Serializable {
             return key;
         }
 
-        public Entry<K, V> setKey(K key) {
+        public void setKey(K key) {
             this.key = key;
-            return this;
         }
 
         public V getValue() {
             return value;
         }
 
-        public Entry<K, V> setValue(V value) {
+        public void setValue(V value) {
             this.value = value;
-            return this;
         }
 
         @Override
@@ -261,9 +259,8 @@ public class Args implements Serializable {
             return arg1;
         }
 
-        public One<A1> setArg1(A1 arg1) {
+        public void setArg1(A1 arg1) {
             this.arg1 = arg1;
-            return this;
         }
 
         /**
@@ -299,9 +296,8 @@ public class Args implements Serializable {
             return arg2;
         }
 
-        public Two<A1, A2> setArg2(A2 arg2) {
+        public void setArg2(A2 arg2) {
             this.arg2 = arg2;
-            return this;
         }
 
         /**
@@ -338,9 +334,8 @@ public class Args implements Serializable {
             return arg3;
         }
 
-        public Three<A1, A2, A3> setArg3(A3 arg3) {
+        public void setArg3(A3 arg3) {
             this.arg3 = arg3;
-            return this;
         }
 
         /**
@@ -378,9 +373,8 @@ public class Args implements Serializable {
             return arg4;
         }
 
-        public Four<A1, A2, A3, A4> setArg4(A4 arg4) {
+        public void setArg4(A4 arg4) {
             this.arg4 = arg4;
-            return this;
         }
 
         /**
@@ -419,9 +413,8 @@ public class Args implements Serializable {
             return arg5;
         }
 
-        public Five<A1, A2, A3, A4, A5> setArg5(A5 arg5) {
+        public void setArg5(A5 arg5) {
             this.arg5 = arg5;
-            return this;
         }
 
         /**

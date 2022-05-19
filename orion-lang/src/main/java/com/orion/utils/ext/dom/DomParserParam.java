@@ -36,36 +36,32 @@ class DomParserParam {
         return name;
     }
 
-    public DomParserParam setName(String name) {
+    public void setName(String name) {
         this.name = name;
-        return this;
     }
 
     public int getIndex() {
         return index;
     }
 
-    public DomParserParam setIndex(int index) {
+    public void setIndex(int index) {
         this.index = index;
-        return this;
     }
 
     public String getKey() {
         return key;
     }
 
-    public DomParserParam setKey(String key) {
+    public void setKey(String key) {
         this.key = key;
-        return this;
     }
 
     public String getValue() {
         return value;
     }
 
-    public DomParserParam setValue(String value) {
+    public void setValue(String value) {
         this.value = value;
-        return this;
     }
 
 }

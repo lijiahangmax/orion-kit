@@ -186,31 +186,28 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
         return this;
     }
 
-    public int getCode() {
-        return code;
+    public void setCode(int code) {
+        this.code = code;
     }
 
-    public HttpWrapper<T> setCode(int code) {
-        this.code = code;
-        return this;
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
+    public int getCode() {
+        return code;
     }
 
     public String getMsg() {
         return msg;
     }
 
-    public HttpWrapper<T> setMsg(String msg) {
-        this.msg = msg;
-        return this;
-    }
-
     public T getData() {
         return data;
-    }
-
-    public HttpWrapper<T> setData(T data) {
-        this.data = data;
-        return this;
     }
 
     /**
