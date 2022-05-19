@@ -254,6 +254,13 @@ public abstract class AbstractDelayTracker extends Tracker {
      */
     protected abstract void read() throws IOException;
 
+    /**
+     * 设置文件最后更新时间
+     */
+    public boolean setFileLastModifyTime() {
+        return tailFile.setLastModified(System.currentTimeMillis());
+    }
+
     public AbstractDelayTracker charset(String charset) {
         this.charset = charset;
         return this;

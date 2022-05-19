@@ -37,6 +37,11 @@ public class ImageIcons implements Processable<Character, BufferedImage> {
      */
     private Font font;
 
+    /**
+     * 图标是否为正方形
+     */
+    private boolean square;
+
     public ImageIcons() {
         this.size = 60;
         this.color = Colors.toColor("#3A76BE");
@@ -76,7 +81,13 @@ public class ImageIcons implements Processable<Character, BufferedImage> {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2d.setColor(color);
-        g2d.fill(new RoundRectangle2D.Float(0, 0, size, size, size, size));
+        if (square) {
+            // 正方形
+            g2d.fill(new RoundRectangle2D.Float(0, 0, size, size, 0, 0));
+        } else {
+            // 圆形
+            g2d.fill(new RoundRectangle2D.Float(0, 0, size, size, size, size));
+        }
         g2d.setColor(fontColor);
         g2d.setFont(font);
         int[] wh = Fonts.getWidthHeightPixel(g2d, font, c.toString());
@@ -118,6 +129,26 @@ public class ImageIcons implements Processable<Character, BufferedImage> {
         return this;
     }
 
+    /**
+     * 设置为正方形
+     *
+     * @return this
+     */
+    public ImageIcons square() {
+        this.square = true;
+        return this;
+    }
+
+    /**
+     * 设置为圆形
+     *
+     * @return this
+     */
+    public ImageIcons circular() {
+        this.square = false;
+        return this;
+    }
+
     public int getSize() {
         return size;
     }
@@ -132,6 +163,10 @@ public class ImageIcons implements Processable<Character, BufferedImage> {
 
     public Font getFont() {
         return font;
+    }
+
+    public boolean isSquare() {
+        return square;
     }
 
 }

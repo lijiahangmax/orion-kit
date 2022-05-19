@@ -1,6 +1,8 @@
 package com.orion.utils.io;
 
 /**
+ * 文件类型
+ *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/8/2 11:25
@@ -10,7 +12,7 @@ public enum FileType {
     /**
      * 普通文件
      */
-    NORMAL_FILE("-", "普通文件"),
+    REGULAR_FILE("-", "普通文件"),
 
     /**
      * 目录
@@ -20,7 +22,7 @@ public enum FileType {
     /**
      * 链接文件
      */
-    LINK_FILE("l", "链接文件"),
+    SYMLINK("l", "链接文件"),
 
     /**
      * 管理文件
@@ -58,6 +60,19 @@ public enum FileType {
      * 类型名称
      */
     private final String typeName;
+
+    /**
+     * 是否匹配文件类型
+     *
+     * @param entity entity
+     * @return 是否匹配
+     */
+    public boolean isMatch(String entity) {
+        if (entity == null) {
+            return false;
+        }
+        return entity.startsWith(symbol);
+    }
 
     public String getSymbol() {
         return symbol;
