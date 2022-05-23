@@ -22,7 +22,7 @@ public class Threads {
     /**
      * Threads 线程池
      */
-    private static final ExecutorService GLOBAL_EXECUTOR = ExecutorBuilder.create()
+    public static final ExecutorService GLOBAL_EXECUTOR = ExecutorBuilder.create()
             .setNamedThreadFactory("orion-global-thread-")
             .setCorePoolSize(2)
             .setMaxPoolSize(32)
