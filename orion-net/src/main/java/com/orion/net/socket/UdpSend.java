@@ -1,4 +1,4 @@
-package com.orion.socket;
+package com.orion.net.socket;
 
 import com.orion.constant.Const;
 import com.orion.utils.Exceptions;
