@@ -51,6 +51,12 @@ public class ExportInitializer<T> {
      * 预初始化
      */
     private void setup() {
+        // 解析sheet
+        SheetAnalysis sheetAnalysis = new SheetAnalysis(targetClass, sheetConfig);
+        sheetAnalysis.analysis();
+        // 解析列
+        SheetColumnAnalysis sheetColumnAnalysis = new SheetColumnAnalysis(targetClass, sheetConfig);
+        sheetColumnAnalysis.analysis();
         // 初始化sheet
         if (sheet == null) {
             if (sheetConfig.sheetOption.getName() != null) {
@@ -62,12 +68,6 @@ public class ExportInitializer<T> {
             // 改名
             workbook.setSheetName(workbook.getSheetIndex(sheet), sheetConfig.sheetOption.getName());
         }
-        // 解析sheet
-        SheetAnalysis sheetAnalysis = new SheetAnalysis(targetClass, sheetConfig);
-        sheetAnalysis.analysis();
-        // 解析列
-        SheetColumnAnalysis sheetColumnAnalysis = new SheetColumnAnalysis(targetClass, sheetConfig);
-        sheetColumnAnalysis.analysis();
         // 样式
         this.addColumnStyle();
     }

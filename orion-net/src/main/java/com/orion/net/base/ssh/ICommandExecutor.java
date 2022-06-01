@@ -69,7 +69,7 @@ public interface ICommandExecutor {
      * @return 返回码是否为 0
      */
     default boolean isSuccessExit() {
-        return ExitCode.SUCCESS.getCode().equals(this.getExitCode());
+        return ExitCode.isSuccess(this.getExitCode());
     }
 
     /**

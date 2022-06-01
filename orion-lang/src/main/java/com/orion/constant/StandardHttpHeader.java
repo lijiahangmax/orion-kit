@@ -39,11 +39,19 @@ public abstract class StandardHttpHeader {
 
     public static final String ACCEPT = "Accept";
 
+    public static final String AUTHORIZATION = "Authorization";
+
     public static final String ACCEPT_ENCODING = "Accept-Encoding";
 
     public static final String ACCEPT_LANGUAGE = "Accept-Language";
 
     public static final String TRANSFER_ENCODING = "Transfer-Encoding";
+
+    public static final String SEC_CH_UA = "sec-ch-ua";
+
+    public static final String SEC_CH_UA_MOBILE = "sec-ch-ua-mobile";
+
+    public static final String SEC_CH_UA_PLATFORM = "sec-ch-ua-platform";
 
     public static final String SEC_FETCH_SITE = "Sec-Fetch-Site";
 
@@ -61,6 +69,10 @@ public abstract class StandardHttpHeader {
 
     public static final String ACCESS_CONTROL_MAX_AGE = "Access-Control-Max-Age";
 
+    public static final String ACCESS_CONTROL_REQUEST_HEADERS = "Access-Control-Request-Headers";
+
+    public static final String ACCESS_CONTROL_EXPOSE_HEADERS = "Access-Control-Expose-Headers";
+
     public static final String X_REQUESTED_WITH = "X-Requested-With";
 
     public static final String X_FORWARDED_FOR = "X-Forwarded-For";
@@ -70,5 +82,31 @@ public abstract class StandardHttpHeader {
     public static final String WL_PROXY_CLIENT_IP = "WL-Proxy-Client-IP";
 
     public static final String X_REAL_IP = "X-Real-IP";
+
+    public static final String X_POWERED_BY = "X-Powered-By";
+
+    public static final String E_TAG = "ETag";
+
+    public static final String PRAGMA = "Pragma";
+
+    public static final String PURPOSE = "Purpose";
+
+    public static final String KEEP_ALIVE = "Keep-Alive";
+
+    public static final String VARY = "Vary";
+
+    public static final String LAST_MODIFIED = "Last-Modified";
+
+    public static final String UPGRADE_INSECURE_REQUESTS = "upgrade-insecure-requests";
+
+    public static final String X_CACHE_LOOKUP = "x-cache-lookup";
+
+    public static final String X_REQ_ID = "x-req-id";
+
+    public static final String Expires = "expires";
+
+    public static final String ACCEPT_RANGES = "accept-ranges";
+
+    public static final String AGE = "age";
 
 }

@@ -34,4 +34,14 @@ public enum ExitCode {
         return code;
     }
 
+    /**
+     * 判断是否成功执行
+     *
+     * @param exitCode exitCode
+     * @return isSuccess
+     */
+    public static boolean isSuccess(Integer exitCode) {
+        return SUCCESS.code.equals(exitCode);
+    }
+
 }

@@ -775,6 +775,38 @@ public class Exceptions {
         return new LogException(s, t);
     }
 
+    public static EnabledException enabled() {
+        return new EnabledException();
+    }
+
+    public static EnabledException enabled(Throwable t) {
+        return new EnabledException(t);
+    }
+
+    public static EnabledException enabled(String s) {
+        return new EnabledException(s);
+    }
+
+    public static EnabledException enabled(String s, Throwable t) {
+        return new EnabledException(s, t);
+    }
+
+    public static DisabledException disabled() {
+        return new DisabledException();
+    }
+
+    public static DisabledException disabled(Throwable t) {
+        return new DisabledException(t);
+    }
+
+    public static DisabledException disabled(String s) {
+        return new DisabledException(s);
+    }
+
+    public static DisabledException disabled(String s, Throwable t) {
+        return new DisabledException(s, t);
+    }
+
     public static Error error() {
         return new Error();
     }

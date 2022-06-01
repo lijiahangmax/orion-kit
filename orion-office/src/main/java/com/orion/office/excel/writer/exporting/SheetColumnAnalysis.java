@@ -64,7 +64,7 @@ public class SheetColumnAnalysis implements Analysable {
                     Annotations.getAnnotation(method, ExportIgnore.class),
                     method, null);
         }
-        // 如果将index作为排序字段则需要重新设置 fieldOptions的index 和 columnMaxIndex
+        // 如果将 index 作为排序字段则需要重新设置 fieldOptions 的 index 和 columnMaxIndex
         this.indexToSort();
     }
 

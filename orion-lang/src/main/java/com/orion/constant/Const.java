@@ -168,37 +168,45 @@ public abstract class Const {
 
     // -------------------- num --------------------
 
-    public static final int N_N_1 = -1;
+    public static final Integer N_N_1 = -1;
 
-    public static final int N_0 = 0;
+    public static final Integer N_0 = 0;
 
-    public static final int N_1 = 1;
+    public static final Integer N_1 = 1;
 
-    public static final int N_2 = 2;
+    public static final Integer N_2 = 2;
 
-    public static final int N_3 = 3;
+    public static final Integer N_3 = 3;
 
-    public static final int N_4 = 4;
+    public static final Integer N_4 = 4;
 
-    public static final int N_5 = 5;
+    public static final Integer N_5 = 5;
 
-    public static final int N_6 = 6;
+    public static final Integer N_6 = 6;
 
-    public static final int N_7 = 7;
+    public static final Integer N_7 = 7;
 
-    public static final int N_8 = 8;
+    public static final Integer N_8 = 8;
 
-    public static final int N_9 = 9;
+    public static final Integer N_9 = 9;
 
-    public static final int N_10 = 10;
+    public static final Integer N_10 = 10;
 
-    public static final int N_100 = 100;
+    public static final Integer N_100 = 100;
 
-    public static final int N_1000 = 1000;
+    public static final Integer N_1000 = 1000;
 
-    public static final int N_10000 = 10000;
+    public static final Integer N_10000 = 10000;
 
-    public static final int N_100000 = 100000;
+    public static final Integer N_100000 = 100000;
+
+    public static final Long L_N_1 = -1L;
+
+    public static final Long L_0 = 0L;
+
+    public static final Long L_1 = 1L;
+
+    public static final Double D_0 = 0D;
 
     // -------------------- suffix --------------------
 
@@ -271,6 +279,8 @@ public abstract class Const {
     public static final String FONT_MICROSOFT_ELEGANT_BLACK = "微软雅黑";
 
     // -------------------- sql --------------------
+
+    public static final String LIMIT = "LIMIT";
 
     public static final String LIMIT_1 = "LIMIT 1";
 

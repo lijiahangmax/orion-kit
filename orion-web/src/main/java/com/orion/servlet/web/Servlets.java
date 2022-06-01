@@ -1,9 +1,11 @@
 package com.orion.servlet.web;
 
+import com.orion.constant.Const;
 import com.orion.constant.StandardContentType;
 import com.orion.constant.StandardHttpHeader;
 import com.orion.lang.collect.MutableHashMap;
 import com.orion.lang.mutable.MutableString;
+import com.orion.utils.Exceptions;
 import com.orion.utils.Urls;
 import com.orion.utils.io.Streams;
 import com.orion.utils.net.IPs;
@@ -13,7 +15,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Map;
@@ -578,22 +580,7 @@ public class Servlets {
      * @throws IOException IOException
      */
     public static void transfer(HttpServletResponse response, byte[] bs, String fileName) throws IOException {
-        response.setContentType(StandardContentType.APPLICATION_STREAM);
-        response.setHeader(StandardHttpHeader.CONTENT_DISPOSITION, "attachment;filename=" + fileName);
-        Streams.transfer(Streams.toInputStream(bs), response.getOutputStream());
-    }
-
-    /**
-     * 将输入流设置到response的输出流
-     *
-     * @param response response
-     * @param bs       bs
-     * @param fileName 文件名
-     * @throws IOException IOException
-     */
-    public static void transfer(HttpServletResponse response, byte[] bs, byte[] fileName) throws IOException {
-        response.setContentType(StandardContentType.APPLICATION_STREAM);
-        response.setHeader(StandardHttpHeader.CONTENT_DISPOSITION, "attachment;filename=" + new String(fileName, StandardCharsets.ISO_8859_1));
+        setDownloadHeader(response, fileName);
         Streams.transfer(Streams.toInputStream(bs), response.getOutputStream());
     }
 
@@ -617,22 +604,7 @@ public class Servlets {
      * @throws IOException IOException
      */
     public static void transfer(HttpServletResponse response, InputStream in, String fileName) throws IOException {
-        response.setContentType(StandardContentType.APPLICATION_STREAM);
-        response.setHeader(StandardHttpHeader.CONTENT_DISPOSITION, "attachment;filename=" + fileName);
-        Streams.transfer(in, response.getOutputStream());
-    }
-
-    /**
-     * 将输入流设置到response的输出流
-     *
-     * @param response response
-     * @param in       输入流
-     * @param fileName 文件名
-     * @throws IOException IOException
-     */
-    public static void transfer(HttpServletResponse response, InputStream in, byte[] fileName) throws IOException {
-        response.setContentType(StandardContentType.APPLICATION_STREAM);
-        response.setHeader(StandardHttpHeader.CONTENT_DISPOSITION, "attachment;filename=" + new String(fileName, StandardCharsets.ISO_8859_1));
+        setDownloadHeader(response, fileName);
         Streams.transfer(in, response.getOutputStream());
     }
 
@@ -656,23 +628,24 @@ public class Servlets {
      * @throws IOException IOException
      */
     public static void transfer(HttpServletResponse response, Reader reader, String fileName) throws IOException {
-        response.setContentType(StandardContentType.APPLICATION_STREAM);
-        response.setHeader(StandardHttpHeader.CONTENT_DISPOSITION, "attachment;filename=" + fileName);
+        setDownloadHeader(response, fileName);
         Streams.transfer(reader, response.getWriter());
     }
 
     /**
-     * 将输入流设置到response的输出流
+     * 设置下载头
      *
      * @param response response
-     * @param reader   输入流
-     * @param fileName 文件名
-     * @throws IOException IOException
+     * @param fileName 文件名称
      */
-    public static void transfer(HttpServletResponse response, Reader reader, byte[] fileName) throws IOException {
+    public static void setDownloadHeader(HttpServletResponse response, String fileName) {
         response.setContentType(StandardContentType.APPLICATION_STREAM);
-        response.setHeader(StandardHttpHeader.CONTENT_DISPOSITION, "attachment;filename=" + new String(fileName, StandardCharsets.ISO_8859_1));
-        Streams.transfer(reader, response.getWriter());
+        response.setHeader(StandardHttpHeader.ACCESS_CONTROL_EXPOSE_HEADERS, StandardHttpHeader.CONTENT_DISPOSITION);
+        try {
+            response.setHeader(StandardHttpHeader.CONTENT_DISPOSITION, "attachment;filename=" + URLEncoder.encode(fileName, Const.UTF_8));
+        } catch (UnsupportedEncodingException e) {
+            throw Exceptions.unsupportedEncoding(e);
+        }
     }
 
     /**
@@ -684,7 +657,7 @@ public class Servlets {
         response.setHeader(StandardHttpHeader.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
         response.setHeader(StandardHttpHeader.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
         response.setHeader(StandardHttpHeader.ACCESS_CONTROL_ALLOW_METHODS, "GET, POST, PUT, DELETE, OPTIONS, HEAD");
-        response.setHeader(StandardHttpHeader.ACCESS_CONTROL_ALLOW_HEADERS, "Content-Type, X-Requested-With, X-PINGOTHER, Accept, Origin, Last-Modified");
+        response.setHeader(StandardHttpHeader.ACCESS_CONTROL_ALLOW_HEADERS, "Content-Type, X-Requested-With, Accept, Origin, Last-Modified");
         response.setHeader(StandardHttpHeader.ACCESS_CONTROL_MAX_AGE, "86400");
     }
 

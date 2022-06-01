@@ -10,6 +10,7 @@ import com.orion.utils.io.Streams;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * 命令执行器工具
@@ -89,6 +90,22 @@ public class CommandExecutors {
         } finally {
             Streams.close(out);
         }
+    }
+
+    /**
+     * 异步执行命令获取命令输出
+     *
+     * @param executor executor
+     * @throws IOException IOException
+     */
+    public static void syncExecCommand(BaseCommandExecutor executor, OutputStream transfer) throws IOException {
+        executor.inherit();
+        executor.sync();
+        executor.transfer(transfer);
+        if (executor instanceof ChannelConnector) {
+            ((ChannelConnector) executor).connect();
+        }
+        executor.exec();
     }
 
 }
