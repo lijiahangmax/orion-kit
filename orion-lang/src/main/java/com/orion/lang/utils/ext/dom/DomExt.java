@@ -19,18 +19,17 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2020/3/23 14:10
  */
-@SuppressWarnings("unchecked")
 public class DomExt {
 
     /**
      * XML读取
      */
-    private SAXReader reader = new SAXReader();
+    private final SAXReader reader = new SAXReader();
 
     /**
      * document
      */
-    private Document document;
+    private final Document document;
 
     public DomExt(File file) {
         try {

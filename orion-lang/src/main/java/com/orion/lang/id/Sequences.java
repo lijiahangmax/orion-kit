@@ -72,7 +72,7 @@ public class Sequences {
         this(dataCenterId, 0x000000FF & getLastAddress(), clock, 5L, randomSequence);
     }
 
-    private static Sequences idWorker;
+    private static final Sequences idWorker;
 
     static {
         idWorker = new Sequences(getLastAddress());

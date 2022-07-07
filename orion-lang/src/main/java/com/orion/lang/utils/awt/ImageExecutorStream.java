@@ -27,7 +27,7 @@ public class ImageExecutorStream {
      */
     private String format;
 
-    private Thumbnails.Builder<?> builder;
+    private final Thumbnails.Builder<?> builder;
 
     public ImageExecutorStream(String name) {
         builder = Thumbnails.of(new File(name));
@@ -397,7 +397,7 @@ public class ImageExecutorStream {
      * @return this
      */
     public ImageExecutorStream crop() {
-        builder.crop((Position) (enclosingWidth, enclosingHeight, width, height, insetLeft, insetRight, insetTop, insetBottom) -> new Point());
+        builder.crop((enclosingWidth, enclosingHeight, width, height, insetLeft, insetRight, insetTop, insetBottom) -> new Point());
         return this;
     }
 

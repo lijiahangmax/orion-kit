@@ -23,22 +23,22 @@ public class FileSplit implements Callable<String[]> {
     /**
      * 默认分割为几块 8
      */
-    private static int DEFAULT_SPLIT_BLOCK = 8;
+    private static final int DEFAULT_SPLIT_BLOCK = 8;
 
     /**
      * 文件
      */
-    private File file;
+    private final File file;
+
+    /**
+     * 块数量
+     */
+    private final int blockCount;
 
     /**
      * 块大小
      */
     private long blockSize;
-
-    /**
-     * 块数量
-     */
-    private int blockCount;
 
     /**
      * 缓冲区大小

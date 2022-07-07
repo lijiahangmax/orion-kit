@@ -20,7 +20,7 @@ public class TaskCollect {
     /**
      * 调度器
      */
-    private ExecutorService dispatch;
+    private final ExecutorService dispatch;
 
     /**
      * 结果

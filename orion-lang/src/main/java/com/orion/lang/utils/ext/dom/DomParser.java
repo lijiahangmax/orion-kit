@@ -20,15 +20,16 @@ import java.util.List;
 @SuppressWarnings("unchecked")
 class DomParser {
 
-    private Element element;
+    private final Element element;
 
-    private String formula;
+    private final String formula;
 
-    private List<DomParserParam> domParserParams = new ArrayList<>();
+    private final List<DomParserParam> domParserParams;
 
     DomParser(Element element, String formula) {
         this.element = element;
         this.formula = formula;
+        this.domParserParams = new ArrayList<>();
         this.toParams();
     }
 

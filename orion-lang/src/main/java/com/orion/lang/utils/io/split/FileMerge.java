@@ -28,17 +28,17 @@ public class FileMerge implements Callable<String> {
     /**
      * 文件夹
      */
-    private File file;
+    private final File file;
 
     /**
      * 文件块名称
      */
-    private String[] blockFile;
+    private final String[] blockFile;
 
     /**
      * 缓冲区大小
      */
-    private int bufferSize;
+    private final int bufferSize;
 
     public FileMerge(String file) {
         this(new File(file), Const.BUFFER_KB_8);

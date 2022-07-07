@@ -17,7 +17,7 @@ public class TextWrapper extends CloneSupport<TextWrapper> implements Wrapper<St
 
     private static final long serialVersionUID = 5693256198048111L;
 
-    private StringBuilder sb;
+    private final StringBuilder sb;
 
     public TextWrapper() {
         this(new StringBuilder());

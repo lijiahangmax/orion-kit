@@ -24,15 +24,15 @@ import java.util.concurrent.Callable;
  */
 public class FileEncrypt implements Callable<Boolean> {
 
-    private InputStream in;
+    private final InputStream in;
 
-    private OutputStream out;
+    private final OutputStream out;
 
-    private String password;
+    private final String password;
 
-    private int bufferSize;
+    private final int bufferSize;
 
-    private boolean autoClose;
+    private final boolean autoClose;
 
     public FileEncrypt(File file, File dest, String password) {
         this(file, dest, password, Const.BUFFER_KB_8);

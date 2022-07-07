@@ -20,7 +20,7 @@ public class OutputAppender extends OutputStream implements Iterable<OutputAppen
     /**
      * 流
      */
-    private OutputStream out;
+    private final OutputStream out;
 
     /**
      * 父节点

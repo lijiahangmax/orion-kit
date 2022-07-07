@@ -22,13 +22,13 @@ import java.util.concurrent.Callable;
  */
 public class FileDecrypt implements Callable<Boolean> {
 
-    private BufferedReader reader;
+    private final BufferedReader reader;
 
-    private OutputStream out;
+    private final OutputStream out;
 
-    private String password;
+    private final String password;
 
-    private boolean autoClose;
+    private final boolean autoClose;
 
     public FileDecrypt(File file, File dest, String password) {
         this(file, dest, password, Const.BUFFER_KB_8);

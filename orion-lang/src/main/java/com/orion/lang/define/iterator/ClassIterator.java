@@ -15,14 +15,14 @@ import java.util.Iterator;
  */
 public class ClassIterator<T> implements Iterator<Class<? super T>>, Iterable<Class<? super T>>, Serializable {
 
-    private Class<T> clazz;
+    private final Class<T> clazz;
 
     private Class<? super T> current;
 
     /**
      * 是否包含 Object.class
      */
-    private boolean includeObject;
+    private final boolean includeObject;
 
     public ClassIterator(Class<T> clazz) {
         this(clazz, false);

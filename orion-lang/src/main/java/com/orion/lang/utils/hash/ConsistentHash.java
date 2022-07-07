@@ -6,7 +6,7 @@ import java.util.TreeMap;
 import java.util.function.ToIntFunction;
 
 /**
- * 一致性Hash算法
+ * 一致性 hash 算法
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -15,9 +15,9 @@ import java.util.function.ToIntFunction;
 public class ConsistentHash<T> {
 
     /**
-     * 自定义hash算法
+     * 自定义 hash 算法
      */
-    private ToIntFunction<Object> hashFun;
+    private final ToIntFunction<Object> hashFun;
 
     /**
      * 复制的节点个数
@@ -25,7 +25,7 @@ public class ConsistentHash<T> {
     private final int numberOfReplicas;
 
     /**
-     * 一致性Hash环
+     * 一致性 hash 环
      */
     private final SortedMap<Integer, T> circle = new TreeMap<>();
 

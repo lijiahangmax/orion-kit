@@ -18,7 +18,7 @@ import java.io.InputStream;
  */
 public class ImageDrawStream implements Executable {
 
-    private Graphics2D g2d;
+    private final Graphics2D g2d;
 
     public ImageDrawStream(BufferedImage image) {
         this(image.createGraphics());

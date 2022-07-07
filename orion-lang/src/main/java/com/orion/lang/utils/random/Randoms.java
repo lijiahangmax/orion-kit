@@ -21,7 +21,9 @@ public class Randoms {
     public static final Random RANDOM = new Random();
 
     private static final String ALL = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
     private static final String LETTER = "abcdefghijkllmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
     private static final String NUMBER = "0123456789";
 
     public static Random getRandom() {
@@ -248,9 +250,9 @@ public class Randoms {
 
     public static class ArrayRandom<E> {
 
-        private E[] array;
+        private final E[] array;
         private Integer len;
-        private Random r = new Random();
+        private final Random r = new Random();
         private final Object lock = new Object();
 
         private ArrayRandom(E[] array) {
@@ -279,9 +281,9 @@ public class Randoms {
 
     public static class ListRandom<E> {
 
-        private List<E> list;
+        private final List<E> list;
         private Integer len;
-        private Random r = new Random();
+        private final Random r = new Random();
         private final Object lock = new Object();
 
         private ListRandom(List<E> list) {

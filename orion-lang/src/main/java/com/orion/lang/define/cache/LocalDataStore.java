@@ -25,7 +25,7 @@ public class LocalDataStore {
     /**
      * 本地文件
      */
-    private File localDataStoreFile;
+    private final File localDataStoreFile;
 
     /**
      * 数据容器

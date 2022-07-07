@@ -26,7 +26,7 @@ public class ParamSymmetric extends BaseSymmetric {
     /**
      * 参数规格
      */
-    private AlgorithmParameterSpec paramSpec;
+    private final AlgorithmParameterSpec paramSpec;
 
     /**
      * aad

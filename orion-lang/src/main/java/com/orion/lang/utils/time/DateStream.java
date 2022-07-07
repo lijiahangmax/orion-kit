@@ -20,7 +20,7 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
 
     private static final long serialVersionUID = -21831208940539450L;
 
-    private Calendar c;
+    private final Calendar c;
 
     public DateStream() {
         this.c = Dates.calendar();

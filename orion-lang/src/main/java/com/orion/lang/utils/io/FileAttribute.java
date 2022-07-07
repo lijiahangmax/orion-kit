@@ -33,14 +33,14 @@ public class FileAttribute implements Serializable {
     }
 
     /**
+     * attr
+     */
+    private final BasicFileAttributes attr;
+
+    /**
      * path
      */
     private Path path;
-
-    /**
-     * attr
-     */
-    private BasicFileAttributes attr;
 
     /**
      * 文件名称

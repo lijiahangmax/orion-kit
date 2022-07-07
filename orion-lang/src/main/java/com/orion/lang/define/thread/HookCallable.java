@@ -14,12 +14,12 @@ public class HookCallable<V> implements Callable<V> {
     /**
      * task
      */
-    private HookCallable<V> task;
+    private final HookCallable<V> task;
 
     /**
      * 钩子任务
      */
-    private Runnable hook;
+    private final Runnable hook;
 
     /**
      * task 异常是否执行钩子

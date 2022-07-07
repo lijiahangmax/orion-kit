@@ -11,7 +11,7 @@ public class Caesars {
 
     public static final String TABLE = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz";
 
-    private int keys;
+    private final int keys;
 
     public Caesars() {
         this(3);

@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * 有进度条的 writer
+ * 有进度回调的 writer
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -15,7 +15,7 @@ import java.io.Writer;
  */
 public class ProgressWriter extends Writer {
 
-    private Writer wrapper;
+    private final Writer wrapper;
 
     private ByteTransferProgress progress;
 

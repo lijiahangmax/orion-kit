@@ -1,7 +1,7 @@
 package com.orion.lang.define.thread;
 
 /**
- * 具有tag的Runnable
+ * 具有 tag 的 Runnable
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -9,8 +9,9 @@ package com.orion.lang.define.thread;
  */
 public class TagRunnable implements Runnable {
 
-    private Runnable r;
-    private Object tag;
+    private final Runnable r;
+
+    private final Object tag;
 
     public TagRunnable(Object tag, Runnable r) {
         this.tag = tag;

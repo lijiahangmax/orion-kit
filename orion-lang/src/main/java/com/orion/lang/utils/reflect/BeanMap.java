@@ -20,22 +20,22 @@ public class BeanMap extends MutableLinkedHashMap<String, Object> {
     /**
      * 对象
      */
-    private Object o;
+    private final Object o;
 
     /**
      * 忽略的字段
      */
-    private String[] ignoreFields;
+    private final String[] ignoreFields;
 
     /**
      * 是否添加空字段
      */
-    private boolean addNull;
+    private final boolean addNull;
 
     /**
      * keyStyle
      */
-    private VariableStyles variableStyle;
+    private final VariableStyles variableStyle;
 
     public BeanMap(Object o, String... ignoreFields) {
         this(o, null, false, ignoreFields);

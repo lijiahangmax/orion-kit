@@ -16,7 +16,7 @@ import java.util.function.Predicate;
  */
 public class GroupList<E> {
 
-    private Collection<E> list;
+    private final Collection<E> list;
 
     public GroupList(Collection<E> list) {
         this.list = list;

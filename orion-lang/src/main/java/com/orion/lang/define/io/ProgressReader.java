@@ -8,7 +8,7 @@ import java.io.Reader;
 import java.nio.CharBuffer;
 
 /**
- * 有进度条的 reader
+ * 有进度回调的 reader
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -16,7 +16,7 @@ import java.nio.CharBuffer;
  */
 public class ProgressReader extends Reader {
 
-    private Reader wrapper;
+    private final Reader wrapper;
 
     private ByteTransferProgress progress;
 

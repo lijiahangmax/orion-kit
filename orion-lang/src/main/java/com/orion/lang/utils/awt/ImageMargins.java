@@ -18,7 +18,7 @@ public class ImageMargins implements Awaitable<BufferedImage> {
     /**
      * 图片
      */
-    private BufferedImage img;
+    private final BufferedImage image;
 
     /**
      * 边距色
@@ -35,14 +35,14 @@ public class ImageMargins implements Awaitable<BufferedImage> {
      */
     private int topMargin, rightMargin, bottomMargin, leftMargin;
 
-    public ImageMargins(BufferedImage img) {
-        this.img = img;
+    public ImageMargins(BufferedImage image) {
+        this.image = image;
     }
 
     @Override
     public BufferedImage await() {
-        int width = img.getWidth();
-        int height = img.getHeight();
+        int width = image.getWidth();
+        int height = image.getHeight();
         int newWidth = width + rightMargin + leftMargin;
         int newHeight = height + topMargin + bottomMargin;
         BufferedImage s;
@@ -60,7 +60,7 @@ public class ImageMargins implements Awaitable<BufferedImage> {
             }
             g2d.fillRect(0, 0, newWidth, newHeight);
         }
-        g2d.drawImage(img, leftMargin, topMargin, width, height, null);
+        g2d.drawImage(image, leftMargin, topMargin, width, height, null);
         g2d.dispose();
         return s;
     }
@@ -203,8 +203,8 @@ public class ImageMargins implements Awaitable<BufferedImage> {
         return this;
     }
 
-    public BufferedImage getImg() {
-        return img;
+    public BufferedImage getImage() {
+        return image;
     }
 
     public Color getColor() {

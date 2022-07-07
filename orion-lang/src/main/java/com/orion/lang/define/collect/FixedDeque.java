@@ -14,7 +14,7 @@ public class FixedDeque<E> extends ConcurrentLinkedDeque<E> implements Serializa
 
     private static final long serialVersionUID = 923412312354068942L;
 
-    private int limit;
+    private final int limit;
 
     public FixedDeque(int limit) {
         if (limit == 0) {

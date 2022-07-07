@@ -15,7 +15,7 @@ import java.util.concurrent.CyclicBarrier;
  */
 public class ConcurrentCallable<V> implements Callable<V> {
 
-    private Callable<V> c;
+    private final Callable<V> c;
 
     private CyclicBarrier cb;
 

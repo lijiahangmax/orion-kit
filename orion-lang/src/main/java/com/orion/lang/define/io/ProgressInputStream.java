@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * 有进度条的 inputStream
+ * 有进度回调的 inputStream
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -15,7 +15,7 @@ import java.io.InputStream;
  */
 public class ProgressInputStream extends InputStream {
 
-    private InputStream wrapper;
+    private final InputStream wrapper;
 
     private ByteTransferProgress progress;
 

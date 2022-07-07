@@ -25,9 +25,9 @@ import java.util.function.BiConsumer;
 @SuppressWarnings("unchecked")
 public class YmlExt {
 
-    private Yaml yaml;
+    private final Yaml yaml;
 
-    private MutableLinkedHashMap<String, Object> store;
+    private final MutableLinkedHashMap<String, Object> store;
 
     public YmlExt(String yml) {
         this.yaml = new Yaml();

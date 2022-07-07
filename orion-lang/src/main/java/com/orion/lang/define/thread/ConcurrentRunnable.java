@@ -15,7 +15,7 @@ import java.util.concurrent.CyclicBarrier;
  */
 public class ConcurrentRunnable implements Runnable {
 
-    private Runnable r;
+    private final Runnable r;
 
     private CyclicBarrier cb;
 

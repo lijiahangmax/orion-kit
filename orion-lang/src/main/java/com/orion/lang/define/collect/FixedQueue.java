@@ -14,7 +14,7 @@ public class FixedQueue<E> extends ConcurrentLinkedQueue<E> implements Serializa
 
     private static final long serialVersionUID = -12908043940801293L;
 
-    private int limit;
+    private final int limit;
 
     public FixedQueue(int limit) {
         if (limit == 0) {

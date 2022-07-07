@@ -12,17 +12,17 @@ public class HookRunnable implements Runnable {
     /**
      * task
      */
-    private Runnable task;
+    private final Runnable task;
 
     /**
      * hook
      */
-    private Runnable hook;
+    private final Runnable hook;
 
     /**
      * task 异常是否执行hook
      */
-    private boolean taskErrorRunHook;
+    private final boolean taskErrorRunHook;
 
     public HookRunnable(Runnable task, Runnable hook) {
         this(task, hook, true);

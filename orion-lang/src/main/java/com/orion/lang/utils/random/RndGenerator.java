@@ -23,17 +23,17 @@ public class RndGenerator {
     /**
      * 原始种子
      */
-    private long originSeed;
+    private final long originSeed;
 
     /**
      * 生成的位数
      */
-    private int bit;
+    private final int bit;
 
     /**
      * 检测重复 正则
      */
-    private Pattern rep;
+    private final Pattern reg;
 
     public RndGenerator() {
         this((System.currentTimeMillis() >> 16 | Systems.getProcessCode()) * 32, 4);
@@ -52,12 +52,12 @@ public class RndGenerator {
         this.seed = seed;
         this.originSeed = seed;
         this.bit = bit;
-        this.rep = Pattern.compile("^1[0]{" + (bit - 1) + ",}$");
+        this.reg = Pattern.compile("^1[0]{" + (bit - 1) + ",}$");
     }
 
     public long next() {
         String bs = seed + Strings.EMPTY;
-        seed *= seed;
+        this.seed *= seed;
         String as = seed + Strings.EMPTY;
         int el = (as.length() - bs.length()) >> 1;
         char c = as.charAt(el);
@@ -67,10 +67,10 @@ public class RndGenerator {
         } else {
             ns = as.substring(el, bs.length() + el);
         }
-        seed = Long.parseLong(ns);
-        if (rep.matcher(ns).matches()) {
+        this.seed = Long.parseLong(ns);
+        if (reg.matcher(ns).matches()) {
             ns = originSeed + Strings.EMPTY;
-            seed = originSeed;
+            this.seed = originSeed;
         }
         int i = (bs.length() - bit) >> 1;
         return Long.parseLong(ns.substring(i, bit + i));

@@ -51,7 +51,7 @@ public class QRCodes extends CodeGenerator {
     public QRCodes() {
         this.format = BarcodeFormat.QR_CODE;
         this.width = 300;
-        this.height = width;
+        this.height = 300;
         this.logoWidth = 60;
         this.logoHeight = 60;
         this.wordsTopMargin = -5;
@@ -104,7 +104,7 @@ public class QRCodes extends CodeGenerator {
     /**
      * 插入logo
      *
-     * @param source
+     * @param source source
      */
     private void insertLogo(BufferedImage source) {
         int w = logo.getWidth(null);

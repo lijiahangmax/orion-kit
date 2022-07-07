@@ -20,9 +20,9 @@ import java.util.Iterator;
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class ByteArrayIterator implements Iterator<Integer>, Iterable<Integer>, SafeCloseable, Serializable {
 
-    private InputStream in;
+    private final InputStream in;
 
-    private byte[] buffer;
+    private final byte[] buffer;
 
     private int read;
 

@@ -20,7 +20,7 @@ public class WriterAppender extends Writer implements Iterable<WriterAppender> {
     /**
      * 流
      */
-    private Writer writer;
+    private final Writer writer;
 
     /**
      * 父节点

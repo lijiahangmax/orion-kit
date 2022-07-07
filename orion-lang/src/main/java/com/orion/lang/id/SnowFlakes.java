@@ -70,12 +70,12 @@ public class SnowFlakes {
     /**
      * 工作机器ID(0~31)
      */
-    private long workerId;
+    private final long workerId;
 
     /**
      * 数据中心ID(0~31)
      */
-    private long dataCenterId;
+    private final long dataCenterId;
 
     /**
      * 毫秒内序列(0~4095)
@@ -87,7 +87,7 @@ public class SnowFlakes {
      */
     private long lastTimestamp = -1L;
 
-    private static SnowFlakes idWorker;
+    private static final SnowFlakes idWorker;
 
     static {
         idWorker = new SnowFlakes(getWorkId(), getDataCenterId());
@@ -179,7 +179,7 @@ public class SnowFlakes {
     }
 
     /**
-     * 通过HostName 获取机器id
+     * 通过 hostName 获取机器id
      *
      * @return 机器id
      */

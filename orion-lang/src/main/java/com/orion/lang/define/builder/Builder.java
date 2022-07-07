@@ -24,10 +24,11 @@ public class Builder<T> implements Buildable<T> {
     /**
      * 修改器
      */
-    private List<Consumer<T>> modifiers = new ArrayList<>();
+    private final List<Consumer<T>> modifiers;
 
     public Builder(Supplier<T> instance) {
         this.initializer = instance;
+        this.modifiers = new ArrayList<>();
     }
 
     public static <T> Builder<T> of(Supplier<T> instance) {
