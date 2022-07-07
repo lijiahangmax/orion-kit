@@ -1,6 +1,6 @@
 package com.orion.http.support;
 
-import com.orion.constant.StandardContentType;
+import com.orion.lang.constant.StandardContentType;
 
 /**
  * HTTP Content-Type

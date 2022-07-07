@@ -1,7 +1,7 @@
 package com.orion.ext.tail;
 
-import com.orion.able.SafeCloseable;
-import com.orion.able.Stoppable;
+import com.orion.lang.able.SafeCloseable;
+import com.orion.lang.able.Stoppable;
 
 /**
  * 文件追踪器

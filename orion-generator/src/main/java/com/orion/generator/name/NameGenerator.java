@@ -1,9 +1,9 @@
 package com.orion.generator.name;
 
-import com.orion.lang.collect.WeightRandomMap;
-import com.orion.utils.Arrays1;
-import com.orion.utils.Strings;
-import com.orion.utils.random.Randoms;
+import com.orion.lang.define.collect.WeightRandomMap;
+import com.orion.lang.utils.Arrays1;
+import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.random.Randoms;
 
 /**
  * 中文名称生成器

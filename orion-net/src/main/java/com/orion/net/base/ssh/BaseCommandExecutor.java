@@ -1,9 +1,9 @@
 package com.orion.net.base.ssh;
 
-import com.orion.lang.thread.HookRunnable;
-import com.orion.support.Attempt;
-import com.orion.utils.Threads;
-import com.orion.utils.io.Streams;
+import com.orion.lang.define.thread.HookRunnable;
+import com.orion.lang.support.Attempt;
+import com.orion.lang.utils.Threads;
+import com.orion.lang.utils.io.Streams;
 
 import java.io.IOException;
 import java.io.InputStream;

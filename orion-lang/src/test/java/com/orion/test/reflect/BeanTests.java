@@ -1,11 +1,11 @@
 package com.orion.test.reflect;
 
-import com.orion.lang.Console;
+import com.orion.lang.define.Console;
+import com.orion.lang.utils.VariableStyles;
+import com.orion.lang.utils.reflect.BeanMap;
+import com.orion.lang.utils.reflect.BeanWrapper;
 import com.orion.test.reflect.value.Shop;
 import com.orion.test.reflect.value.User;
-import com.orion.utils.VariableStyles;
-import com.orion.utils.reflect.BeanMap;
-import com.orion.utils.reflect.BeanWrapper;
 import org.junit.Test;
 
 import java.math.BigDecimal;

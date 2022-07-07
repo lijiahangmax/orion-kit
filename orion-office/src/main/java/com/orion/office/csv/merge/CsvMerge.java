@@ -1,10 +1,10 @@
 package com.orion.office.csv.merge;
 
-import com.orion.able.SafeCloseable;
-import com.orion.constant.Const;
+import com.orion.lang.able.SafeCloseable;
+import com.orion.lang.constant.Const;
+import com.orion.lang.utils.io.Streams;
 import com.orion.office.csv.reader.CsvArrayReader;
 import com.orion.office.csv.writer.CsvArrayWriter;
-import com.orion.utils.io.Streams;
 
 import java.util.Collection;
 

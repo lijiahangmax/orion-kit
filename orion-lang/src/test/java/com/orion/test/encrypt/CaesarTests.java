@@ -1,6 +1,6 @@
 package com.orion.test.encrypt;
 
-import com.orion.utils.crypto.Caesars;
+import com.orion.lang.utils.crypto.Caesars;
 import org.junit.Test;
 
 /**

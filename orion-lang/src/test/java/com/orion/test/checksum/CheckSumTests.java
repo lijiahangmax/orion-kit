@@ -1,7 +1,7 @@
 package com.orion.test.checksum;
 
-import com.orion.utils.check.CRC16;
-import com.orion.utils.check.CRC8;
+import com.orion.lang.utils.check.CRC16;
+import com.orion.lang.utils.check.CRC8;
 import org.junit.Test;
 
 /**

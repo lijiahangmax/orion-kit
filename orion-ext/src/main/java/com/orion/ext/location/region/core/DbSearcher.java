@@ -1,10 +1,10 @@
 package com.orion.ext.location.region.core;
 
-import com.orion.constant.Const;
 import com.orion.ext.location.region.block.DataBlock;
 import com.orion.ext.location.region.block.IndexBlock;
 import com.orion.ext.location.region.config.DbConfig;
-import com.orion.utils.io.Files1;
+import com.orion.lang.constant.Const;
+import com.orion.lang.utils.io.Files1;
 
 import java.io.File;
 import java.io.IOException;

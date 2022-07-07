@@ -1,10 +1,10 @@
 package com.orion.generator.plate;
 
 import com.orion.generator.addres.AddressSupport;
-import com.orion.utils.Arrays1;
-import com.orion.utils.Strings;
-import com.orion.utils.random.Randoms;
-import com.orion.utils.regexp.Matches;
+import com.orion.lang.utils.Arrays1;
+import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.random.Randoms;
+import com.orion.lang.utils.regexp.Matches;
 
 import java.util.Collections;
 import java.util.HashMap;

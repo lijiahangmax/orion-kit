@@ -1,7 +1,7 @@
 package com.orion.office.csv.reader;
 
-import com.orion.lang.Console;
-import com.orion.lang.collect.MutableMap;
+import com.orion.lang.define.Console;
+import com.orion.lang.define.collect.MutableMap;
 import com.orion.office.csv.core.CsvReader;
 import org.junit.Test;
 

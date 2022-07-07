@@ -1,8 +1,8 @@
 package com.orion.http.useragent;
 
-import com.orion.utils.Arrays1;
-import com.orion.utils.Strings;
-import com.orion.utils.random.Randoms;
+import com.orion.lang.utils.Arrays1;
+import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.random.Randoms;
 
 /**
  * UA 生成器

@@ -1,11 +1,11 @@
 package com.orion.generator.bank;
 
 import com.orion.generator.addres.AddressSupport;
-import com.orion.lang.wrapper.Pair;
-import com.orion.utils.Arrays1;
-import com.orion.utils.Strings;
-import com.orion.utils.collect.Sets;
-import com.orion.utils.random.Randoms;
+import com.orion.lang.define.wrapper.Pair;
+import com.orion.lang.utils.Arrays1;
+import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.collect.Sets;
+import com.orion.lang.utils.random.Randoms;
 
 import java.util.Map;
 import java.util.Objects;

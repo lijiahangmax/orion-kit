@@ -1,6 +1,6 @@
 package com.orion.http.useragent;
 
-import com.orion.constant.StandardHttpHeader;
+import com.orion.lang.constant.StandardHttpHeader;
 
 /**
  * 标准 UserAgent

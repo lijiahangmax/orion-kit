@@ -1,9 +1,9 @@
 package com.orion.test.encrypt;
 
-import com.orion.lang.wrapper.Args;
-import com.orion.utils.crypto.Keys;
-import com.orion.utils.crypto.RSA;
-import com.orion.utils.crypto.enums.CipherAlgorithm;
+import com.orion.lang.define.wrapper.Args;
+import com.orion.lang.utils.crypto.Keys;
+import com.orion.lang.utils.crypto.RSA;
+import com.orion.lang.utils.crypto.enums.CipherAlgorithm;
 import org.junit.Ignore;
 import org.junit.Test;
 

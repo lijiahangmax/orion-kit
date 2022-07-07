@@ -1,12 +1,12 @@
 package com.orion.http.apache;
 
-import com.orion.able.Awaitable;
-import com.orion.constant.StandardContentType;
-import com.orion.constant.StandardHttpHeader;
 import com.orion.http.BaseHttpRequest;
 import com.orion.http.support.HttpContentType;
 import com.orion.http.support.HttpMethod;
-import com.orion.utils.Charsets;
+import com.orion.lang.able.Awaitable;
+import com.orion.lang.constant.StandardContentType;
+import com.orion.lang.constant.StandardHttpHeader;
+import com.orion.lang.utils.Charsets;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;

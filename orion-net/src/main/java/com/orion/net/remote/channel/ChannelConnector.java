@@ -2,7 +2,7 @@ package com.orion.net.remote.channel;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.Session;
-import com.orion.utils.Exceptions;
+import com.orion.lang.utils.Exceptions;
 
 /**
  * channel 连接器

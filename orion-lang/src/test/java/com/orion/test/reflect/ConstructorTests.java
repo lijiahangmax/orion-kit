@@ -1,8 +1,8 @@
 package com.orion.test.reflect;
 
-import com.orion.lang.Console;
+import com.orion.lang.define.Console;
+import com.orion.lang.utils.reflect.Constructors;
 import com.orion.test.reflect.value.Shop;
-import com.orion.utils.reflect.Constructors;
 import org.junit.Test;
 
 /**

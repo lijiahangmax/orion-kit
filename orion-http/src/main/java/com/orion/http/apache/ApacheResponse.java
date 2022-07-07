@@ -1,10 +1,10 @@
 package com.orion.http.apache;
 
 import com.orion.http.support.HttpCookie;
-import com.orion.lang.collect.MutableArrayList;
-import com.orion.lang.mutable.MutableString;
-import com.orion.utils.Strings;
-import com.orion.utils.io.Streams;
+import com.orion.lang.define.collect.MutableArrayList;
+import com.orion.lang.define.mutable.MutableString;
+import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.io.Streams;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpRequest;

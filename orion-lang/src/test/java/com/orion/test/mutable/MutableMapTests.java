@@ -1,6 +1,6 @@
 package com.orion.test.mutable;
 
-import com.orion.lang.collect.MutableHashMap;
+import com.orion.lang.define.collect.MutableHashMap;
 import org.junit.Before;
 import org.junit.Test;
 

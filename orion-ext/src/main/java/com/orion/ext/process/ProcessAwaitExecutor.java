@@ -1,11 +1,11 @@
 package com.orion.ext.process;
 
-import com.orion.constant.Letters;
-import com.orion.lang.thread.HookRunnable;
-import com.orion.utils.Exceptions;
-import com.orion.utils.Strings;
-import com.orion.utils.Threads;
-import com.orion.utils.io.Streams;
+import com.orion.lang.constant.Letters;
+import com.orion.lang.define.thread.HookRunnable;
+import com.orion.lang.utils.Exceptions;
+import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.Threads;
+import com.orion.lang.utils.io.Streams;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,11 +1,11 @@
 package com.orion.ext.tail.delay;
 
-import com.orion.constant.Const;
 import com.orion.ext.tail.handler.LineHandler;
-import com.orion.utils.Spells;
-import com.orion.utils.Strings;
-import com.orion.utils.Valid;
-import com.orion.utils.io.FileReaders;
+import com.orion.lang.constant.Const;
+import com.orion.lang.utils.Spells;
+import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.Valid;
+import com.orion.lang.utils.io.FileReaders;
 
 import java.io.File;
 import java.io.IOException;

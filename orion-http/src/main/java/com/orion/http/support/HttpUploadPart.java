@@ -1,8 +1,8 @@
 package com.orion.http.support;
 
-import com.orion.constant.StandardContentType;
-import com.orion.id.UUIds;
-import com.orion.utils.io.Files1;
+import com.orion.lang.constant.StandardContentType;
+import com.orion.lang.id.UUIds;
+import com.orion.lang.utils.io.Files1;
 
 import java.io.File;
 import java.io.InputStream;

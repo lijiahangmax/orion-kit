@@ -2,13 +2,13 @@ package com.orion.generator.idcard;
 
 import com.orion.generator.addres.AddressGenerator;
 import com.orion.generator.addres.AddressSupport;
-import com.orion.utils.Arrays1;
-import com.orion.utils.Strings;
-import com.orion.utils.identity.IdCards;
-import com.orion.utils.random.Randoms;
-import com.orion.utils.time.Birthdays;
-import com.orion.utils.time.DateStream;
-import com.orion.utils.time.Dates;
+import com.orion.lang.utils.Arrays1;
+import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.identity.IdCards;
+import com.orion.lang.utils.random.Randoms;
+import com.orion.lang.utils.time.Birthdays;
+import com.orion.lang.utils.time.DateStream;
+import com.orion.lang.utils.time.Dates;
 
 import java.util.Date;
 

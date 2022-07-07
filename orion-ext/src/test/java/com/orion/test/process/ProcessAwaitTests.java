@@ -1,11 +1,11 @@
 package com.orion.test.process;
 
-import com.orion.constant.Const;
-import com.orion.function.FunctionConst;
-import com.orion.function.impl.ReaderLineBiConsumer;
 import com.orion.ext.process.ProcessAwaitExecutor;
 import com.orion.ext.process.Processes;
-import com.orion.utils.Threads;
+import com.orion.lang.constant.Const;
+import com.orion.lang.function.FunctionConst;
+import com.orion.lang.function.impl.ReaderLineBiConsumer;
+import com.orion.lang.utils.Threads;
 import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;

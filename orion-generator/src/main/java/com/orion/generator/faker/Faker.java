@@ -16,11 +16,11 @@ import com.orion.generator.mobile.MobileGenerator;
 import com.orion.generator.name.EnglishNameGenerator;
 import com.orion.generator.name.NameGenerator;
 import com.orion.generator.plate.LicensePlateGenerator;
-import com.orion.lang.wrapper.Pair;
-import com.orion.utils.Arrays1;
-import com.orion.utils.identity.CreditCodes;
-import com.orion.utils.net.IPs;
-import com.orion.utils.random.Randoms;
+import com.orion.lang.define.wrapper.Pair;
+import com.orion.lang.utils.Arrays1;
+import com.orion.lang.utils.identity.CreditCodes;
+import com.orion.lang.utils.net.IPs;
+import com.orion.lang.utils.random.Randoms;
 
 import java.util.Arrays;
 import java.util.Comparator;

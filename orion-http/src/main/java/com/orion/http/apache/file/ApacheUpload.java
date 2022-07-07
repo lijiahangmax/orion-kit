@@ -1,6 +1,5 @@
 package com.orion.http.apache.file;
 
-import com.orion.constant.StandardContentType;
 import com.orion.http.BaseHttpRequest;
 import com.orion.http.apache.ApacheClient;
 import com.orion.http.apache.ApacheResponse;
@@ -8,10 +7,11 @@ import com.orion.http.apache.BaseApacheRequest;
 import com.orion.http.support.HttpContentType;
 import com.orion.http.support.HttpMethod;
 import com.orion.http.support.HttpUploadPart;
-import com.orion.utils.Charsets;
-import com.orion.utils.Exceptions;
-import com.orion.utils.Valid;
-import com.orion.utils.collect.Lists;
+import com.orion.lang.constant.StandardContentType;
+import com.orion.lang.utils.Charsets;
+import com.orion.lang.utils.Exceptions;
+import com.orion.lang.utils.Valid;
+import com.orion.lang.utils.collect.Lists;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.entity.ContentType;

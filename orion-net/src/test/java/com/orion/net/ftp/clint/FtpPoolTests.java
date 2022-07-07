@@ -1,10 +1,10 @@
 package com.orion.net.ftp.clint;
 
+import com.orion.lang.utils.Threads;
 import com.orion.net.ftp.client.config.FtpConfig;
 import com.orion.net.ftp.client.instance.IFtpInstance;
 import com.orion.net.ftp.client.pool.FtpClientFactory;
 import com.orion.net.ftp.client.pool.FtpClientPool;
-import com.orion.utils.Threads;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

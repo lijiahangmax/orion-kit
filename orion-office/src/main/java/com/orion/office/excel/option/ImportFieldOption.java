@@ -1,7 +1,7 @@
 package com.orion.office.excel.option;
 
+import com.orion.lang.utils.Strings;
 import com.orion.office.excel.type.ExcelReadType;
-import com.orion.utils.Strings;
 
 import java.io.Serializable;
 

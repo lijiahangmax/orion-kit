@@ -1,6 +1,6 @@
 package com.orion.http.parse;
 
-import com.orion.constant.Const;
+import com.orion.lang.constant.Const;
 
 import javax.net.ssl.SSLSocketFactory;
 import java.io.Serializable;

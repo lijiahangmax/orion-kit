@@ -1,6 +1,6 @@
 package com.orion.net.remote.channel;
 
-import com.orion.utils.Exceptions;
+import com.orion.lang.utils.Exceptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,7 +1,7 @@
 package com.orion.redis;
 
-import com.orion.constant.Const;
-import com.orion.utils.Strings;
+import com.orion.lang.constant.Const;
+import com.orion.lang.utils.Strings;
 import redis.clients.jedis.Jedis;
 
 /**

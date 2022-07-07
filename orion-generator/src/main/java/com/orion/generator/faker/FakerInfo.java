@@ -1,6 +1,6 @@
 package com.orion.generator.faker;
 
-import com.orion.utils.Strings;
+import com.orion.lang.utils.Strings;
 
 import java.io.Serializable;
 import java.util.Date;

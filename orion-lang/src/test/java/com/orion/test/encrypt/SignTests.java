@@ -1,7 +1,7 @@
 package com.orion.test.encrypt;
 
-import com.orion.utils.crypto.Signatures;
-import com.orion.utils.io.Files1;
+import com.orion.lang.utils.crypto.Signatures;
+import com.orion.lang.utils.io.Files1;
 import org.junit.Test;
 
 import java.io.File;

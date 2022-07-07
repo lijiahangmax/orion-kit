@@ -1,8 +1,8 @@
 package com.orion.test;
 
-import com.orion.utils.Threads;
-import com.orion.utils.collect.Lists;
-import com.orion.utils.random.Randoms;
+import com.orion.lang.utils.Threads;
+import com.orion.lang.utils.collect.Lists;
+import com.orion.lang.utils.random.Randoms;
 import org.junit.Test;
 
 import java.util.List;

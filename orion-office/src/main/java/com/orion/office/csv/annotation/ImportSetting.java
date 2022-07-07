@@ -1,7 +1,7 @@
 package com.orion.office.csv.annotation;
 
-import com.orion.constant.Const;
-import com.orion.constant.Letters;
+import com.orion.lang.constant.Const;
+import com.orion.lang.constant.Letters;
 import com.orion.office.csv.type.CsvEscapeMode;
 
 import java.lang.annotation.*;

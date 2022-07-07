@@ -2,10 +2,10 @@ package com.orion.office.excel.reader;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.orion.lang.utils.codec.Base64s;
 import com.orion.office.excel.annotation.ImportField;
 import com.orion.office.excel.annotation.ImportIgnore;
 import com.orion.office.excel.type.ExcelReadType;
-import com.orion.utils.codec.Base64s;
 
 import java.util.Date;
 

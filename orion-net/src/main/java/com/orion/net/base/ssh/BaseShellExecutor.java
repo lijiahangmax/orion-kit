@@ -1,8 +1,8 @@
 package com.orion.net.base.ssh;
 
-import com.orion.lang.thread.HookRunnable;
+import com.orion.lang.define.thread.HookRunnable;
+import com.orion.lang.utils.Threads;
 import com.orion.net.remote.TerminalType;
-import com.orion.utils.Threads;
 
 /**
  * shell 执行器 基类

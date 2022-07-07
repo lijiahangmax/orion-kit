@@ -1,7 +1,7 @@
 package com.orion.http.ok;
 
-import com.orion.constant.Const;
-import com.orion.utils.collect.Lists;
+import com.orion.lang.constant.Const;
+import com.orion.lang.utils.collect.Lists;
 import okhttp3.*;
 
 import javax.net.ssl.SSLSocketFactory;

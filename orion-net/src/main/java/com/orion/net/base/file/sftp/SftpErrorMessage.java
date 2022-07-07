@@ -1,6 +1,6 @@
 package com.orion.net.base.file.sftp;
 
-import com.orion.utils.Strings;
+import com.orion.lang.utils.Strings;
 
 /**
  * SFTP 错误信息

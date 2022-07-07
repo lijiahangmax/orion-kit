@@ -1,12 +1,12 @@
 package com.orion.http.ok;
 
-import com.orion.constant.StandardHttpHeader;
 import com.orion.http.BaseHttpRequest;
 import com.orion.http.support.HttpMethod;
 import com.orion.http.support.HttpUploadPart;
-import com.orion.utils.Exceptions;
-import com.orion.utils.Strings;
-import com.orion.utils.io.Streams;
+import com.orion.lang.constant.StandardHttpHeader;
+import com.orion.lang.utils.Exceptions;
+import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.io.Streams;
 import okhttp3.*;
 
 import java.io.IOException;

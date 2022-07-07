@@ -1,6 +1,6 @@
 package com.orion.test.script;
 
-import com.orion.utils.script.Bind;
+import com.orion.lang.utils.script.Bind;
 
 import java.math.BigDecimal;
 

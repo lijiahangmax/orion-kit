@@ -1,6 +1,6 @@
 package com.orion.test.type;
 
-import com.orion.utils.convert.TypeStore;
+import com.orion.lang.utils.convert.TypeStore;
 import org.junit.Test;
 
 import java.io.Serializable;

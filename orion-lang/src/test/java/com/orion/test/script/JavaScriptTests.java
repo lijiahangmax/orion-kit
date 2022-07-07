@@ -1,8 +1,8 @@
 package com.orion.test.script;
 
-import com.orion.constant.StandardContentType;
-import com.orion.utils.collect.Maps;
-import com.orion.utils.script.Scripts;
+import com.orion.lang.constant.StandardContentType;
+import com.orion.lang.utils.collect.Maps;
+import com.orion.lang.utils.script.Scripts;
 import org.junit.Test;
 
 import javax.script.ScriptEngine;

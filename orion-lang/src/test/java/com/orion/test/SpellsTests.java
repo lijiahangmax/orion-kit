@@ -1,7 +1,7 @@
 package com.orion.test;
 
-import com.orion.utils.Spells;
-import com.orion.utils.Strings;
+import com.orion.lang.utils.Spells;
+import com.orion.lang.utils.Strings;
 import org.junit.Test;
 
 /**

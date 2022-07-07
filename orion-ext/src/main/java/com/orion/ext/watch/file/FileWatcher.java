@@ -1,7 +1,7 @@
 package com.orion.ext.watch.file;
 
-import com.orion.able.Stoppable;
-import com.orion.able.Watchable;
+import com.orion.lang.able.Stoppable;
+import com.orion.lang.able.Watchable;
 
 /**
  * 文件监听器

@@ -1,6 +1,6 @@
 package com.orion.net.remote;
 
-import com.orion.utils.Valid;
+import com.orion.lang.utils.Valid;
 
 /**
  * 终端类型

@@ -1,6 +1,6 @@
 package com.orion.net.ftp.client;
 
-import com.orion.utils.Strings;
+import com.orion.lang.utils.Strings;
 import org.apache.commons.net.ftp.FTPFile;
 
 import java.io.Serializable;

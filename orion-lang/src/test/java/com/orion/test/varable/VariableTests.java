@@ -1,6 +1,6 @@
 package com.orion.test.varable;
 
-import com.orion.utils.VariableStyles;
+import com.orion.lang.utils.VariableStyles;
 import org.junit.Test;
 
 /**

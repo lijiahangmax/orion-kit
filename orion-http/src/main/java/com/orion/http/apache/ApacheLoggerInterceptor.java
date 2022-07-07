@@ -1,7 +1,7 @@
 package com.orion.http.apache;
 
-import com.orion.id.UUIds;
-import com.orion.lang.wrapper.Args;
+import com.orion.lang.define.wrapper.Args;
+import com.orion.lang.id.UUIds;
 import org.apache.http.*;
 import org.apache.http.protocol.HttpContext;
 import org.slf4j.Logger;

@@ -1,7 +1,7 @@
 package com.orion.net.socket;
 
-import com.orion.constant.Const;
-import com.orion.utils.io.Streams;
+import com.orion.lang.constant.Const;
+import com.orion.lang.utils.io.Streams;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

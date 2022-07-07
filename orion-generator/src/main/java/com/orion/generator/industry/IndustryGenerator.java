@@ -1,8 +1,8 @@
 package com.orion.generator.industry;
 
-import com.orion.lang.collect.WeightRandomMap;
-import com.orion.utils.Arrays1;
-import com.orion.utils.Strings;
+import com.orion.lang.define.collect.WeightRandomMap;
+import com.orion.lang.utils.Arrays1;
+import com.orion.lang.utils.Strings;
 
 import java.util.Collections;
 import java.util.HashMap;

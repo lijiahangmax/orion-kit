@@ -1,7 +1,7 @@
 package com.orion.net.ftp.client.instance;
 
-import com.orion.able.Destroyable;
-import com.orion.able.SafeCloseable;
+import com.orion.lang.able.Destroyable;
+import com.orion.lang.able.SafeCloseable;
 import com.orion.net.base.file.transfer.IFileTransfer;
 import com.orion.net.ftp.client.FtpFile;
 import com.orion.net.ftp.client.FtpFileFilter;

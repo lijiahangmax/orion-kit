@@ -1,8 +1,8 @@
 package com.orion.http.apache;
 
-import com.orion.constant.Const;
 import com.orion.http.useragent.StandardUserAgent;
-import com.orion.utils.collect.Lists;
+import com.orion.lang.constant.Const;
+import com.orion.lang.utils.collect.Lists;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponseInterceptor;

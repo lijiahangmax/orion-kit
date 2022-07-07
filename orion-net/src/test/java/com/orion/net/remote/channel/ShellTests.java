@@ -3,10 +3,10 @@ package com.orion.net.remote.channel;
 import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
-import com.orion.utils.Exceptions;
-import com.orion.utils.Strings;
-import com.orion.utils.Threads;
-import com.orion.utils.io.Streams;
+import com.orion.lang.utils.Exceptions;
+import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.Threads;
+import com.orion.lang.utils.io.Streams;
 
 import java.io.IOException;
 import java.io.PipedInputStream;

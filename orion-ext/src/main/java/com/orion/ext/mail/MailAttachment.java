@@ -1,10 +1,10 @@
 package com.orion.ext.mail;
 
-import com.orion.constant.Const;
-import com.orion.constant.StandardContentType;
-import com.orion.utils.Valid;
-import com.orion.utils.io.Files1;
-import com.orion.utils.io.Streams;
+import com.orion.lang.constant.Const;
+import com.orion.lang.constant.StandardContentType;
+import com.orion.lang.utils.Valid;
+import com.orion.lang.utils.io.Files1;
+import com.orion.lang.utils.io.Streams;
 
 import javax.activation.DataHandler;
 import javax.mail.internet.MimeBodyPart;

@@ -1,6 +1,6 @@
 package com.orion.test.unit;
 
-import com.orion.utils.unit.WeightUnit;
+import com.orion.lang.utils.unit.WeightUnit;
 
 /**
  * @author Jiahang Li

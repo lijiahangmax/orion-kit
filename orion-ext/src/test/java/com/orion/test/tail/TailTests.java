@@ -5,9 +5,9 @@ import com.orion.ext.tail.delay.DelayTrackerListener;
 import com.orion.ext.tail.mode.FileMinusMode;
 import com.orion.ext.tail.mode.FileNotFoundMode;
 import com.orion.ext.tail.mode.FileOffsetMode;
-import com.orion.utils.Strings;
-import com.orion.utils.Threads;
-import com.orion.utils.io.Files1;
+import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.Threads;
+import com.orion.lang.utils.io.Files1;
 import org.junit.Test;
 
 import java.io.File;

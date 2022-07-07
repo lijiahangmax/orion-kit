@@ -2,8 +2,8 @@ package com.orion.net.remote.connection.ssh;
 
 import ch.ethz.ssh2.Session;
 import ch.ethz.ssh2.StreamGobbler;
+import com.orion.lang.utils.Exceptions;
 import com.orion.net.base.ssh.BaseShellExecutor;
-import com.orion.utils.Exceptions;
 
 import java.io.IOException;
 

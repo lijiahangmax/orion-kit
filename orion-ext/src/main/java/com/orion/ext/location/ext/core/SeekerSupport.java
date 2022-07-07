@@ -1,7 +1,7 @@
 package com.orion.ext.location.ext.core;
 
-import com.orion.utils.Exceptions;
-import com.orion.utils.Strings;
+import com.orion.lang.utils.Exceptions;
+import com.orion.lang.utils.Strings;
 
 import java.io.UnsupportedEncodingException;
 

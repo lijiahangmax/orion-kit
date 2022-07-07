@@ -1,10 +1,10 @@
 package com.orion.test.id;
 
-import com.orion.id.ObjectIds;
-import com.orion.id.Sequences;
-import com.orion.id.SnowFlakes;
-import com.orion.id.UUIds;
-import com.orion.utils.Threads;
+import com.orion.lang.id.ObjectIds;
+import com.orion.lang.id.Sequences;
+import com.orion.lang.id.SnowFlakes;
+import com.orion.lang.id.UUIds;
+import com.orion.lang.utils.Threads;
 
 import java.util.concurrent.Executors;
 

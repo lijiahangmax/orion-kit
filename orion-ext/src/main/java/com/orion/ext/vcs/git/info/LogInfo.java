@@ -1,6 +1,6 @@
 package com.orion.ext.vcs.git.info;
 
-import com.orion.utils.time.Dates;
+import com.orion.lang.utils.time.Dates;
 
 import java.io.Serializable;
 import java.util.Date;

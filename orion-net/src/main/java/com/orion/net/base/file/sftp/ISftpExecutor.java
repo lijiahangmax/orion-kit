@@ -1,6 +1,6 @@
 package com.orion.net.base.file.sftp;
 
-import com.orion.able.SafeCloseable;
+import com.orion.lang.able.SafeCloseable;
 import com.orion.net.base.file.transfer.IFileTransfer;
 
 import java.io.File;

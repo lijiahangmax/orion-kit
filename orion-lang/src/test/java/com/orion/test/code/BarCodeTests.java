@@ -1,6 +1,6 @@
 package com.orion.test.code;
 
-import com.orion.utils.code.BarCodes;
+import com.orion.lang.utils.code.BarCodes;
 import org.junit.Test;
 
 import java.awt.*;

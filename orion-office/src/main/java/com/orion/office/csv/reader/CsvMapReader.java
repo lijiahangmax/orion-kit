@@ -1,8 +1,8 @@
 package com.orion.office.csv.reader;
 
-import com.orion.lang.collect.MutableHashMap;
-import com.orion.lang.collect.MutableLinkedHashMap;
-import com.orion.lang.collect.MutableMap;
+import com.orion.lang.define.collect.MutableHashMap;
+import com.orion.lang.define.collect.MutableLinkedHashMap;
+import com.orion.lang.define.collect.MutableMap;
 import com.orion.office.csv.core.CsvReader;
 
 import java.util.*;

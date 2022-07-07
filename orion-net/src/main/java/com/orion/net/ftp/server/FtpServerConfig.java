@@ -1,6 +1,6 @@
 package com.orion.net.ftp.server;
 
-import com.orion.constant.Const;
+import com.orion.lang.constant.Const;
 
 import java.io.Serializable;
 

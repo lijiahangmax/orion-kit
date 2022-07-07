@@ -1,10 +1,10 @@
 package com.orion.ext.nginx;
 
 import com.github.odiszapc.nginxparser.*;
-import com.orion.utils.Exceptions;
-import com.orion.utils.Strings;
-import com.orion.utils.collect.Lists;
-import com.orion.utils.io.Files1;
+import com.orion.lang.utils.Exceptions;
+import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.collect.Lists;
+import com.orion.lang.utils.io.Files1;
 
 import java.io.File;
 import java.io.IOException;

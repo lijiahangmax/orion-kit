@@ -1,6 +1,6 @@
 package com.orion.http.support;
 
-import com.orion.utils.Exceptions;
+import com.orion.lang.utils.Exceptions;
 
 /**
  * HTTP Method

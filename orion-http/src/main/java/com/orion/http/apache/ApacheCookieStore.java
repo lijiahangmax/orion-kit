@@ -1,6 +1,6 @@
 package com.orion.http.apache;
 
-import com.orion.constant.Const;
+import com.orion.lang.constant.Const;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.cookie.BasicClientCookie;
 

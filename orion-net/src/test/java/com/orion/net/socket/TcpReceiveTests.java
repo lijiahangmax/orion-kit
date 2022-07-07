@@ -1,6 +1,6 @@
 package com.orion.net.socket;
 
-import com.orion.utils.Threads;
+import com.orion.lang.utils.Threads;
 
 import java.util.concurrent.Executors;
 

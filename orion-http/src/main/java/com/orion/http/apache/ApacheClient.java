@@ -1,9 +1,9 @@
 package com.orion.http.apache;
 
-import com.orion.constant.StandardTlsVersion;
-import com.orion.lang.DefaultX509TrustManager;
-import com.orion.utils.Exceptions;
-import com.orion.utils.io.Streams;
+import com.orion.lang.constant.StandardTlsVersion;
+import com.orion.lang.define.DefaultX509TrustManager;
+import com.orion.lang.utils.Exceptions;
+import com.orion.lang.utils.io.Streams;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
 

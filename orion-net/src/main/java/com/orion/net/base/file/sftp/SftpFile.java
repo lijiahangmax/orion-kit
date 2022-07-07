@@ -1,7 +1,7 @@
 package com.orion.net.base.file.sftp;
 
-import com.orion.utils.io.FileType;
-import com.orion.utils.io.Files1;
+import com.orion.lang.utils.io.FileType;
+import com.orion.lang.utils.io.Files1;
 
 import java.io.Serializable;
 import java.util.Date;

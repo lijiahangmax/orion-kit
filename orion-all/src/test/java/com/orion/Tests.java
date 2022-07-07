@@ -1,6 +1,6 @@
 package com.orion;
 
-import com.orion.lang.StopWatch;
+import com.orion.lang.define.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,12 +1,12 @@
 package com.orion.http.parse;
 
-import com.orion.able.Awaitable;
-import com.orion.constant.StandardContentType;
 import com.orion.http.BaseHttpRequest;
 import com.orion.http.support.HttpCookie;
 import com.orion.http.useragent.StandardUserAgent;
-import com.orion.utils.Charsets;
-import com.orion.utils.Exceptions;
+import com.orion.lang.able.Awaitable;
+import com.orion.lang.constant.StandardContentType;
+import com.orion.lang.utils.Charsets;
+import com.orion.lang.utils.Exceptions;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 

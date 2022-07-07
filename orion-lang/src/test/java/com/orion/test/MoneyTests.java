@@ -1,7 +1,7 @@
 package com.orion.test;
 
-import com.orion.utils.Moneys;
-import com.orion.utils.random.Randoms;
+import com.orion.lang.utils.Moneys;
+import com.orion.lang.utils.random.Randoms;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

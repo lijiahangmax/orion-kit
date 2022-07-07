@@ -1,6 +1,6 @@
 package com.orion.net.socket;
 
-import com.orion.utils.Valid;
+import com.orion.lang.utils.Valid;
 
 import java.io.IOException;
 import java.net.ServerSocket;

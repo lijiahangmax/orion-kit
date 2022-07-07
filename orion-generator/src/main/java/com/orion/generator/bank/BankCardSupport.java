@@ -1,6 +1,6 @@
 package com.orion.generator.bank;
 
-import com.orion.utils.Strings;
+import com.orion.lang.utils.Strings;
 
 /**
  * 银行卡工具类

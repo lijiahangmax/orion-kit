@@ -1,6 +1,6 @@
 package com.orion.test.script;
 
-import com.orion.utils.script.Scripts;
+import com.orion.lang.utils.script.Scripts;
 import org.junit.Test;
 
 import javax.script.ScriptEngine;

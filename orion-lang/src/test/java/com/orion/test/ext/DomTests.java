@@ -1,8 +1,8 @@
 package com.orion.test.ext;
 
-import com.orion.constant.Const;
-import com.orion.utils.ext.dom.*;
-import com.orion.utils.io.FileReaders;
+import com.orion.lang.constant.Const;
+import com.orion.lang.utils.ext.dom.*;
+import com.orion.lang.utils.io.FileReaders;
 import org.junit.Before;
 import org.junit.Test;
 

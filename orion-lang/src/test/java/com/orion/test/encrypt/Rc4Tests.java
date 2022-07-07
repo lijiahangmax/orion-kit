@@ -1,6 +1,6 @@
 package com.orion.test.encrypt;
 
-import com.orion.utils.crypto.RC4;
+import com.orion.lang.utils.crypto.RC4;
 import org.junit.Test;
 
 /**

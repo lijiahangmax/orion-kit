@@ -1,11 +1,11 @@
 package com.orion.http.ok.ws;
 
-import com.orion.constant.Const;
 import com.orion.http.ok.OkClient;
 import com.orion.http.ok.ws.handler.*;
-import com.orion.id.Sequences;
-import com.orion.utils.Strings;
-import com.orion.utils.Threads;
+import com.orion.lang.constant.Const;
+import com.orion.lang.id.Sequences;
+import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.Threads;
 import okhttp3.*;
 import okio.ByteString;
 import org.slf4j.Logger;

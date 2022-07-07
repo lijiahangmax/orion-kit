@@ -1,9 +1,9 @@
 package com.orion.net.remote.channel.ssh;
 
 import com.jcraft.jsch.ChannelShell;
+import com.orion.lang.utils.Exceptions;
 import com.orion.net.base.ssh.BaseShellExecutor;
 import com.orion.net.remote.channel.ChannelConnector;
-import com.orion.utils.Exceptions;
 
 import java.io.IOException;
 

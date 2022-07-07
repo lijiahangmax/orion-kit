@@ -2,8 +2,8 @@ package com.orion.http.apache.file;
 
 import com.orion.http.apache.ApacheRequest;
 import com.orion.http.apache.ApacheResponse;
-import com.orion.utils.io.Files1;
-import com.orion.utils.io.Streams;
+import com.orion.lang.utils.io.Files1;
+import com.orion.lang.utils.io.Streams;
 import org.apache.http.impl.client.CloseableHttpClient;
 
 import java.io.File;

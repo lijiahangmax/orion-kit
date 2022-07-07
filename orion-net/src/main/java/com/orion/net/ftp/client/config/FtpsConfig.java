@@ -1,6 +1,6 @@
 package com.orion.net.ftp.client.config;
 
-import com.orion.constant.StandardTlsVersion;
+import com.orion.lang.constant.StandardTlsVersion;
 
 import javax.net.ssl.SSLSocketFactory;
 

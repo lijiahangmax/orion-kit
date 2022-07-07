@@ -1,7 +1,7 @@
 package com.orion.ext.process;
 
-import com.orion.support.Attempt;
-import com.orion.utils.io.Streams;
+import com.orion.lang.support.Attempt;
+import com.orion.lang.utils.io.Streams;
 
 import java.io.ByteArrayOutputStream;
 

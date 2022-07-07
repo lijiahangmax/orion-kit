@@ -1,7 +1,7 @@
 package com.orion.net.socket;
 
-import com.orion.utils.Strings;
-import com.orion.utils.Threads;
+import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.Threads;
 
 /**
  * @author Jiahang Li

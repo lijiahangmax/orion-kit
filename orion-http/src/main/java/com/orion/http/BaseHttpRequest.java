@@ -1,14 +1,14 @@
 package com.orion.http;
 
-import com.orion.constant.Const;
-import com.orion.constant.StandardHttpHeader;
 import com.orion.http.support.HttpContentType;
 import com.orion.http.support.HttpCookie;
 import com.orion.http.support.HttpMethod;
 import com.orion.http.useragent.StandardUserAgent;
-import com.orion.utils.Strings;
-import com.orion.utils.Urls;
-import com.orion.utils.Valid;
+import com.orion.lang.constant.Const;
+import com.orion.lang.constant.StandardHttpHeader;
+import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.Urls;
+import com.orion.lang.utils.Valid;
 
 import java.util.*;
 

@@ -1,7 +1,7 @@
 package com.orion.net.base.file.transfer;
 
-import com.orion.able.SafeCloseable;
-import com.orion.support.progress.ByteTransferRateProgress;
+import com.orion.lang.able.SafeCloseable;
+import com.orion.lang.support.progress.ByteTransferRateProgress;
 
 /**
  * 文件传输器

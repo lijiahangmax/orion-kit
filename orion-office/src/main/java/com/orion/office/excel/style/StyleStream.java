@@ -1,12 +1,12 @@
 package com.orion.office.excel.style;
 
+import com.orion.lang.utils.Colors;
+import com.orion.lang.utils.Strings;
 import com.orion.office.excel.Excels;
 import com.orion.office.excel.option.ExportFieldOption;
 import com.orion.office.excel.option.TitleOption;
 import com.orion.office.excel.type.ExcelAlignType;
 import com.orion.office.excel.type.ExcelVerticalAlignType;
-import com.orion.utils.Colors;
-import com.orion.utils.Strings;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;

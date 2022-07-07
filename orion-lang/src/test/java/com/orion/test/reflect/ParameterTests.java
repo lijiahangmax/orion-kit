@@ -1,10 +1,10 @@
 package com.orion.test.reflect;
 
+import com.orion.lang.utils.Valid;
+import com.orion.lang.utils.reflect.Constructors;
+import com.orion.lang.utils.reflect.Methods;
 import com.orion.test.reflect.value.User;
 import com.orion.test.reflect.value.UserAnno1;
-import com.orion.utils.Valid;
-import com.orion.utils.reflect.Constructors;
-import com.orion.utils.reflect.Methods;
 import org.junit.Test;
 
 import java.lang.annotation.Annotation;

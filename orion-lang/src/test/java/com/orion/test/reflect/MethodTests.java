@@ -1,8 +1,8 @@
 package com.orion.test.reflect;
 
-import com.orion.lang.Console;
+import com.orion.lang.define.Console;
+import com.orion.lang.utils.reflect.Methods;
 import com.orion.test.reflect.value.User;
-import com.orion.utils.reflect.Methods;
 import org.junit.Test;
 
 /**

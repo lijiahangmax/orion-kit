@@ -1,7 +1,7 @@
 package com.orion.net.ftp.client.pool;
 
-import com.orion.able.SafeCloseable;
-import com.orion.utils.Threads;
+import com.orion.lang.able.SafeCloseable;
+import com.orion.lang.utils.Threads;
 import org.apache.commons.net.ftp.FTPClient;
 
 import java.util.concurrent.BlockingQueue;

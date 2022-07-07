@@ -1,6 +1,6 @@
 package com.orion.test.unit;
 
-import com.orion.utils.unit.DistStorageUnit;
+import com.orion.lang.utils.unit.DistStorageUnit;
 
 /**
  * @author Jiahang Li

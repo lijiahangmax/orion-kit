@@ -1,6 +1,6 @@
 package com.orion.http.apache;
 
-import com.orion.utils.Exceptions;
+import com.orion.lang.utils.Exceptions;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.impl.client.CloseableHttpClient;
 

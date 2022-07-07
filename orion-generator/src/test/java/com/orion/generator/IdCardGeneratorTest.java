@@ -1,8 +1,8 @@
 package com.orion.generator;
 
 import com.orion.generator.idcard.IdCardGenerator;
-import com.orion.utils.Valid;
-import com.orion.utils.identity.IdCards;
+import com.orion.lang.utils.Valid;
+import com.orion.lang.utils.identity.IdCards;
 import org.junit.Test;
 
 import java.util.Arrays;

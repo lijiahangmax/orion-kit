@@ -1,9 +1,9 @@
 package com.orion.ext.mail;
 
-import com.orion.able.Sendable;
-import com.orion.utils.Exceptions;
-import com.orion.utils.Strings;
-import com.orion.utils.Valid;
+import com.orion.lang.able.Sendable;
+import com.orion.lang.utils.Exceptions;
+import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.Valid;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;

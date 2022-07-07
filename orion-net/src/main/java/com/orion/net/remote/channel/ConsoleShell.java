@@ -3,8 +3,8 @@ package com.orion.net.remote.channel;
 import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
-import com.orion.able.SafeCloseable;
-import com.orion.constant.Const;
+import com.orion.lang.able.SafeCloseable;
+import com.orion.lang.constant.Const;
 import com.orion.net.remote.TerminalType;
 
 /**

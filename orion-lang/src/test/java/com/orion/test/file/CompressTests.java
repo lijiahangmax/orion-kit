@@ -1,26 +1,26 @@
 package com.orion.test.file;
 
-import com.orion.utils.io.Files1;
-import com.orion.utils.io.compress.CompressTypeEnum;
-import com.orion.utils.io.compress.Compresses;
-import com.orion.utils.io.compress.FileCompressor;
-import com.orion.utils.io.compress.FileDecompressor;
-import com.orion.utils.io.compress.bz2.Bz2Compressor;
-import com.orion.utils.io.compress.bz2.Bz2Decompressor;
-import com.orion.utils.io.compress.gz.GzCompressor;
-import com.orion.utils.io.compress.gz.GzDecompressor;
-import com.orion.utils.io.compress.jar.JarCompressor;
-import com.orion.utils.io.compress.jar.JarDecompressor;
-import com.orion.utils.io.compress.mix.TarBz2Compressor;
-import com.orion.utils.io.compress.mix.TarBz2Decompressor;
-import com.orion.utils.io.compress.mix.TarGzCompressor;
-import com.orion.utils.io.compress.mix.TarGzDecompressor;
-import com.orion.utils.io.compress.tar.TarCompressor;
-import com.orion.utils.io.compress.tar.TarDecompressor;
-import com.orion.utils.io.compress.z7.Z7Compressor;
-import com.orion.utils.io.compress.z7.Z7Decompressor;
-import com.orion.utils.io.compress.zip.ZipCompressor;
-import com.orion.utils.io.compress.zip.ZipDecompressor;
+import com.orion.lang.utils.io.Files1;
+import com.orion.lang.utils.io.compress.CompressTypeEnum;
+import com.orion.lang.utils.io.compress.Compresses;
+import com.orion.lang.utils.io.compress.FileCompressor;
+import com.orion.lang.utils.io.compress.FileDecompressor;
+import com.orion.lang.utils.io.compress.bz2.Bz2Compressor;
+import com.orion.lang.utils.io.compress.bz2.Bz2Decompressor;
+import com.orion.lang.utils.io.compress.gz.GzCompressor;
+import com.orion.lang.utils.io.compress.gz.GzDecompressor;
+import com.orion.lang.utils.io.compress.jar.JarCompressor;
+import com.orion.lang.utils.io.compress.jar.JarDecompressor;
+import com.orion.lang.utils.io.compress.mix.TarBz2Compressor;
+import com.orion.lang.utils.io.compress.mix.TarBz2Decompressor;
+import com.orion.lang.utils.io.compress.mix.TarGzCompressor;
+import com.orion.lang.utils.io.compress.mix.TarGzDecompressor;
+import com.orion.lang.utils.io.compress.tar.TarCompressor;
+import com.orion.lang.utils.io.compress.tar.TarDecompressor;
+import com.orion.lang.utils.io.compress.z7.Z7Compressor;
+import com.orion.lang.utils.io.compress.z7.Z7Decompressor;
+import com.orion.lang.utils.io.compress.zip.ZipCompressor;
+import com.orion.lang.utils.io.compress.zip.ZipDecompressor;
 import org.junit.Test;
 
 /**

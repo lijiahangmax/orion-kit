@@ -1,6 +1,6 @@
 package com.orion.test.mutable;
 
-import com.orion.lang.mutable.MutableString;
+import com.orion.lang.define.mutable.MutableString;
 import org.junit.Test;
 
 /**

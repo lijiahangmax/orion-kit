@@ -1,7 +1,7 @@
 package com.orion.test.function;
 
-import com.orion.function.select.Branches;
-import com.orion.function.select.Selector;
+import com.orion.lang.function.select.Branches;
+import com.orion.lang.function.select.Selector;
 import org.junit.Test;
 
 /**

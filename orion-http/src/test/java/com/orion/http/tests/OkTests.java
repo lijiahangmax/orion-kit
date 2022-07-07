@@ -9,7 +9,7 @@ import com.orion.http.support.HttpCookie;
 import com.orion.http.support.HttpMethod;
 import com.orion.http.support.HttpUploadPart;
 import com.orion.http.useragent.UserAgentGenerators;
-import com.orion.utils.Threads;
+import com.orion.lang.utils.Threads;
 import org.junit.Test;
 
 import java.io.IOException;

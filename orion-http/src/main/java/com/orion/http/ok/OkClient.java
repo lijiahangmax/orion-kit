@@ -1,6 +1,6 @@
 package com.orion.http.ok;
 
-import com.orion.lang.DefaultX509TrustManager;
+import com.orion.lang.define.DefaultX509TrustManager;
 import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
 

@@ -4,7 +4,7 @@ import com.orion.generator.bank.BankCardGenerator;
 import com.orion.generator.bank.BankCardSupport;
 import com.orion.generator.bank.BankCardType;
 import com.orion.generator.bank.BankNameType;
-import com.orion.lang.wrapper.Pair;
+import com.orion.lang.define.wrapper.Pair;
 import org.junit.Test;
 
 /**

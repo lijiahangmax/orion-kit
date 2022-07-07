@@ -1,14 +1,14 @@
 package com.orion.test.encrypt;
 
-import com.orion.utils.Strings;
-import com.orion.utils.Valid;
-import com.orion.utils.crypto.AES;
-import com.orion.utils.crypto.Keys;
-import com.orion.utils.crypto.enums.CipherAlgorithm;
-import com.orion.utils.crypto.enums.WorkingMode;
-import com.orion.utils.crypto.symmetric.ParamSymmetric;
-import com.orion.utils.crypto.symmetric.SymmetricBuilder;
-import com.orion.utils.random.Randoms;
+import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.Valid;
+import com.orion.lang.utils.crypto.AES;
+import com.orion.lang.utils.crypto.Keys;
+import com.orion.lang.utils.crypto.enums.CipherAlgorithm;
+import com.orion.lang.utils.crypto.enums.WorkingMode;
+import com.orion.lang.utils.crypto.symmetric.ParamSymmetric;
+import com.orion.lang.utils.crypto.symmetric.SymmetricBuilder;
+import com.orion.lang.utils.random.Randoms;
 import org.junit.Test;
 
 import javax.crypto.SecretKey;

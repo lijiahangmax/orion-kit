@@ -1,7 +1,7 @@
 package com.orion.generator.addres;
 
-import com.orion.lang.collect.WeightRandomMap;
-import com.orion.utils.random.Randoms;
+import com.orion.lang.define.collect.WeightRandomMap;
+import com.orion.lang.utils.random.Randoms;
 
 import java.util.Collections;
 import java.util.Map;

@@ -1,6 +1,6 @@
 package com.orion.office.excel.type;
 
-import com.orion.utils.Strings;
+import com.orion.lang.utils.Strings;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 

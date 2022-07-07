@@ -1,7 +1,7 @@
 package com.orion.spring;
 
-import com.orion.lang.Console;
-import com.orion.utils.Valid;
+import com.orion.lang.define.Console;
+import com.orion.lang.utils.Valid;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;

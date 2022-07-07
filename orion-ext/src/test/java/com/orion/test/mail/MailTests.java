@@ -4,7 +4,7 @@ import com.orion.ext.mail.MailAttachment;
 import com.orion.ext.mail.MailMessage;
 import com.orion.ext.mail.MailSender;
 import com.orion.ext.mail.MailServerType;
-import com.orion.utils.io.Files1;
+import com.orion.lang.utils.io.Files1;
 import org.junit.Test;
 
 import java.io.File;

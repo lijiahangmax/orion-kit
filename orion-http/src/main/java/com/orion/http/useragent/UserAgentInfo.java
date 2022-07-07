@@ -1,6 +1,6 @@
 package com.orion.http.useragent;
 
-import com.orion.able.JsonAble;
+import com.orion.lang.able.JsonAble;
 import eu.bitwalker.useragentutils.Browser;
 import eu.bitwalker.useragentutils.OperatingSystem;
 import eu.bitwalker.useragentutils.UserAgent;

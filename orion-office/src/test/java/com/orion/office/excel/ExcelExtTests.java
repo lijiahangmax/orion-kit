@@ -1,6 +1,6 @@
 package com.orion.office.excel;
 
-import com.orion.lang.Console;
+import com.orion.lang.define.Console;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Test;
 

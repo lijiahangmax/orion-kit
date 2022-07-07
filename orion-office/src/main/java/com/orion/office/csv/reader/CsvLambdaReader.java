@@ -1,8 +1,8 @@
 package com.orion.office.csv.reader;
 
-import com.orion.lang.wrapper.Pair;
+import com.orion.lang.define.wrapper.Pair;
+import com.orion.lang.utils.Valid;
 import com.orion.office.csv.core.CsvReader;
-import com.orion.utils.Valid;
 
 import java.util.ArrayList;
 import java.util.Collection;

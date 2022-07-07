@@ -1,9 +1,9 @@
 package com.orion.ext.mail;
 
-import com.orion.constant.Const;
-import com.orion.constant.Letters;
-import com.orion.constant.StandardContentType;
-import com.orion.utils.Strings;
+import com.orion.lang.constant.Const;
+import com.orion.lang.constant.Letters;
+import com.orion.lang.constant.StandardContentType;
+import com.orion.lang.utils.Strings;
 
 import java.io.Serializable;
 import java.util.ArrayList;

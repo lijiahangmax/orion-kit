@@ -1,8 +1,8 @@
 package com.orion.ext.tail.delay;
 
-import com.orion.constant.Const;
 import com.orion.ext.tail.handler.DataHandler;
-import com.orion.utils.Valid;
+import com.orion.lang.constant.Const;
+import com.orion.lang.utils.Valid;
 
 import java.io.File;
 import java.io.IOException;

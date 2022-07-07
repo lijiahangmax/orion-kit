@@ -1,8 +1,8 @@
 package com.orion.generator.addres;
 
-import com.orion.lang.builder.StringJoiner;
-import com.orion.utils.Strings;
-import com.orion.utils.collect.Lists;
+import com.orion.lang.define.builder.StringJoiner;
+import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.collect.Lists;
 
 import java.util.List;
 import java.util.stream.Collectors;

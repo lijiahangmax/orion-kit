@@ -1,6 +1,6 @@
 package com.orion.test.encrypt;
 
-import com.orion.utils.crypto.Virginia;
+import com.orion.lang.utils.crypto.Virginia;
 import org.junit.Test;
 
 /**

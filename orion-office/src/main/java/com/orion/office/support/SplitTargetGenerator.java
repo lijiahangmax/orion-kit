@@ -1,12 +1,12 @@
 package com.orion.office.support;
 
-import com.orion.able.SafeCloseable;
-import com.orion.constant.Const;
-import com.orion.utils.Strings;
-import com.orion.utils.Valid;
-import com.orion.utils.collect.Lists;
-import com.orion.utils.io.Files1;
-import com.orion.utils.io.Streams;
+import com.orion.lang.able.SafeCloseable;
+import com.orion.lang.constant.Const;
+import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.Valid;
+import com.orion.lang.utils.collect.Lists;
+import com.orion.lang.utils.io.Files1;
+import com.orion.lang.utils.io.Streams;
 
 import java.io.File;
 import java.io.OutputStream;

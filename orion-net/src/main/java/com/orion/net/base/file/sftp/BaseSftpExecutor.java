@@ -1,11 +1,11 @@
 package com.orion.net.base.file.sftp;
 
-import com.orion.constant.Const;
-import com.orion.lang.StreamEntry;
-import com.orion.utils.Exceptions;
-import com.orion.utils.collect.Lists;
-import com.orion.utils.io.Files1;
-import com.orion.utils.io.Streams;
+import com.orion.lang.constant.Const;
+import com.orion.lang.define.StreamEntry;
+import com.orion.lang.utils.Exceptions;
+import com.orion.lang.utils.collect.Lists;
+import com.orion.lang.utils.io.Files1;
+import com.orion.lang.utils.io.Streams;
 
 import java.io.*;
 import java.util.ArrayList;

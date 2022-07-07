@@ -1,9 +1,9 @@
 package com.orion.office.excel.annotation;
 
+import com.orion.lang.utils.Strings;
 import com.orion.office.excel.type.ExcelAlignType;
 import com.orion.office.excel.type.ExcelBorderType;
 import com.orion.office.excel.type.ExcelVerticalAlignType;
-import com.orion.utils.Strings;
 
 import java.lang.annotation.*;
 

@@ -1,8 +1,8 @@
 package com.orion.net.remote.connection;
 
-import com.orion.function.impl.ReaderLineConsumer;
+import com.orion.lang.function.impl.ReaderLineConsumer;
+import com.orion.lang.utils.Threads;
 import com.orion.net.remote.connection.ssh.ShellExecutor;
-import com.orion.utils.Threads;
 
 /**
  * @author Jiahang Li

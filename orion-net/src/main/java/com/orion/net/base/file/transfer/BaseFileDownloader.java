@@ -1,10 +1,10 @@
 package com.orion.net.base.file.transfer;
 
-import com.orion.support.progress.ByteTransferRateProgress;
-import com.orion.utils.Valid;
-import com.orion.utils.io.FileLocks;
-import com.orion.utils.io.Files1;
-import com.orion.utils.io.Streams;
+import com.orion.lang.support.progress.ByteTransferRateProgress;
+import com.orion.lang.utils.Valid;
+import com.orion.lang.utils.io.FileLocks;
+import com.orion.lang.utils.io.Files1;
+import com.orion.lang.utils.io.Streams;
 
 import java.io.BufferedOutputStream;
 import java.io.File;

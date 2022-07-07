@@ -1,6 +1,6 @@
 package com.orion.test.code;
 
-import com.orion.utils.code.QRCodes;
+import com.orion.lang.utils.code.QRCodes;
 import org.junit.Test;
 
 import java.awt.*;

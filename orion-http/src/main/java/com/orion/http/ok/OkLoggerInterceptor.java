@@ -1,6 +1,6 @@
 package com.orion.http.ok;
 
-import com.orion.id.UUIds;
+import com.orion.lang.id.UUIds;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;

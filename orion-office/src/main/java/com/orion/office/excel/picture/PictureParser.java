@@ -1,8 +1,8 @@
 package com.orion.office.excel.picture;
 
-import com.orion.able.Analysable;
-import com.orion.lang.collect.MultiHashMap;
-import com.orion.utils.collect.Lists;
+import com.orion.lang.able.Analysable;
+import com.orion.lang.define.collect.MultiHashMap;
+import com.orion.lang.utils.collect.Lists;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ooxml.POIXMLDocumentPart;
 import org.apache.poi.ss.usermodel.PictureData;
