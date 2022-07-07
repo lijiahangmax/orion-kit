@@ -1,7 +1,7 @@
 package com.orion.test.location;
 
-import com.orion.location.ext.LocationExt;
-import com.orion.location.region.LocationRegions;
+import com.orion.ext.location.ext.LocationExt;
+import com.orion.ext.location.region.LocationRegions;
 
 /**
  * @author Jiahang Li

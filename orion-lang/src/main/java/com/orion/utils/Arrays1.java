@@ -32,6 +32,8 @@ public class Arrays1 {
 
     private static final int MULTIPLIER = 31;
 
+    private static final Object[] EMPTY_OBJECT_ARR = {};
+
     private Arrays1() {
     }
 
@@ -958,7 +960,7 @@ public class Arrays1 {
      * 消费对象
      *
      * @param consumer 消费函数
-     * @param e        元素
+     * @param arr        元素
      * @param <T>      对象类型
      */
     public static <T> void forEach(Consumer<T> consumer, T[] arr) {
@@ -1134,7 +1136,7 @@ public class Arrays1 {
     public static Object[] ofs(Object... arr) {
         int lengths = lengths(arr);
         if (lengths == 0) {
-            return new Object[]{};
+            return EMPTY_OBJECT_ARR;
         }
         Object[] r = new Object[lengths];
         int len = arr.length;

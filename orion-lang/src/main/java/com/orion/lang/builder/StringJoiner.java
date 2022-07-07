@@ -30,7 +30,7 @@ public class StringJoiner implements Buildable<String> {
 
     private Function<String, String> wrapper;
 
-    private List<String> modifiers;
+    private final List<String> modifiers;
 
     public StringJoiner() {
         this.modifiers = new ArrayList<>();

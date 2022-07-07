@@ -1,10 +1,10 @@
 package com.orion.test.tail;
 
-import com.orion.tail.delay.DelayTracker;
-import com.orion.tail.delay.DelayTrackerListener;
-import com.orion.tail.mode.FileMinusMode;
-import com.orion.tail.mode.FileNotFoundMode;
-import com.orion.tail.mode.FileOffsetMode;
+import com.orion.ext.tail.delay.DelayTracker;
+import com.orion.ext.tail.delay.DelayTrackerListener;
+import com.orion.ext.tail.mode.FileMinusMode;
+import com.orion.ext.tail.mode.FileNotFoundMode;
+import com.orion.ext.tail.mode.FileOffsetMode;
 import com.orion.utils.Strings;
 import com.orion.utils.Threads;
 import com.orion.utils.io.Files1;

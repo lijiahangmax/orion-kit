@@ -3,8 +3,8 @@ package com.orion.test.process;
 import com.orion.constant.Const;
 import com.orion.function.FunctionConst;
 import com.orion.function.impl.ReaderLineBiConsumer;
-import com.orion.process.ProcessAwaitExecutor;
-import com.orion.process.Processes;
+import com.orion.ext.process.ProcessAwaitExecutor;
+import com.orion.ext.process.Processes;
 import com.orion.utils.Threads;
 import org.junit.Test;
 

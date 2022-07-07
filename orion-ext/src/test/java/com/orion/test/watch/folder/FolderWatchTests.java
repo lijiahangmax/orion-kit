@@ -1,8 +1,8 @@
 package com.orion.test.watch.folder;
 
-import com.orion.watch.folder.BlockFolderWatcher;
-import com.orion.watch.folder.WatchEventKind;
-import com.orion.watch.folder.handler.DefaultWatchHandler;
+import com.orion.ext.watch.folder.BlockFolderWatcher;
+import com.orion.ext.watch.folder.WatchEventKind;
+import com.orion.ext.watch.folder.handler.DefaultWatchHandler;
 
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;

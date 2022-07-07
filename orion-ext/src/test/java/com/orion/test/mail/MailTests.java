@@ -1,9 +1,9 @@
 package com.orion.test.mail;
 
-import com.orion.mail.MailAttachment;
-import com.orion.mail.MailMessage;
-import com.orion.mail.MailSender;
-import com.orion.mail.MailServerType;
+import com.orion.ext.mail.MailAttachment;
+import com.orion.ext.mail.MailMessage;
+import com.orion.ext.mail.MailSender;
+import com.orion.ext.mail.MailServerType;
 import com.orion.utils.io.Files1;
 import org.junit.Test;
 

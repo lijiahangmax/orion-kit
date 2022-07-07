@@ -1,6 +1,6 @@
 package com.orion.test.vcs;
 
-import com.orion.vcs.git.Gits;
+import com.orion.ext.vcs.git.Gits;
 import org.junit.Before;
 import org.junit.Test;
 
