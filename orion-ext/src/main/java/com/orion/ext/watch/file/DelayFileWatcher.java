@@ -25,24 +25,24 @@ public class DelayFileWatcher extends FileWatcher {
     /**
      * 延迟时间
      */
-    private int delayMillis;
+    private final int delayMillis;
 
     /**
      * watchKeys
      */
-    private Map<File, FileAttribute> watchKeys = new LinkedHashMap<>();
+    private final Map<File, FileAttribute> watchKeys;
 
     /**
      * event
      */
-    private FileWatchEvent[] events;
+    private final FileWatchEvent[] events;
 
     /**
-     * 时间处理器
+     * 事件处理器
      */
-    private EventHandler eventHandler;
+    private final EventHandler eventHandler;
 
-    private boolean inCreateEvent;
+    private final boolean inCreateEvent;
 
     private volatile boolean run;
 
@@ -56,6 +56,7 @@ public class DelayFileWatcher extends FileWatcher {
         this.eventHandler = handler;
         this.events = Arrays1.def(events, FileWatchEvent.ALL);
         this.inCreateEvent = Arrays1.contains(this.events, FileWatchEvent.CREATE);
+        this.watchKeys = new LinkedHashMap<>();
     }
 
     /**

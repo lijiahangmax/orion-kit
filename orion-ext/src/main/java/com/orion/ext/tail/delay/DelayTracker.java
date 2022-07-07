@@ -27,7 +27,7 @@ public class DelayTracker extends AbstractDelayTracker {
     /**
      * 行处理器
      */
-    private LineHandler handler;
+    private final LineHandler handler;
 
     public DelayTracker(String tailFile, LineHandler handler) {
         this(new File(tailFile), handler);

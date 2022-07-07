@@ -53,17 +53,22 @@ public class MailMessage implements Serializable {
     /**
      * 邮件类型
      */
-    private String mimeType = StandardContentType.TEXT_PLAIN;
+    private String mimeType;
 
     /**
      * 内容编码格式
      */
-    private String contentCharset = Const.UTF_8;
+    private String contentCharset;
 
     /**
      * 附件
      */
     private List<MailAttachment> attachments;
+
+    public MailMessage() {
+        this.mimeType = StandardContentType.TEXT_PLAIN;
+        this.contentCharset = Const.UTF_8;
+    }
 
     /**
      * 消息

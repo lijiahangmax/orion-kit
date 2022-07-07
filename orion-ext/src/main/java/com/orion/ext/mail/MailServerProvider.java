@@ -12,11 +12,15 @@ import java.io.Serializable;
 public interface MailServerProvider extends Serializable {
 
     /**
+     * 获取服务主机
+     *
      * @return host
      */
     String getHost();
 
     /**
+     * 获取服务端口
+     *
      * @return port
      */
     int getPort();

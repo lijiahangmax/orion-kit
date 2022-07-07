@@ -42,7 +42,7 @@ public class LocationRegions {
     /**
      * 搜索器
      */
-    private static DbSearcher searcher;
+    private static final DbSearcher searcher;
 
     static {
         boolean init;

@@ -34,12 +34,12 @@ public class DbSearcher {
     /**
      * db配置项
      */
-    private DbConfig dbConfig;
+    private final DbConfig dbConfig;
 
     /**
      * db随机读写
      */
-    private RandomAccessFile raf;
+    private final RandomAccessFile raf;
 
     /**
      * header blocks buffer

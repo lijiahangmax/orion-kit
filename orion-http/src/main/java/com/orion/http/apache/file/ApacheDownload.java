@@ -19,7 +19,7 @@ import java.io.OutputStream;
  */
 public class ApacheDownload {
 
-    private ApacheRequest request;
+    private final ApacheRequest request;
 
     private ApacheResponse response;
 

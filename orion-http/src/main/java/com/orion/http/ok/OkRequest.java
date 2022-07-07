@@ -86,18 +86,18 @@ public class OkRequest extends BaseOkRequest implements Awaitable<OkResponse>, A
         if (!async) {
             // sync
             try (Response resp = call.execute()) {
-                response = new OkResponse(request, resp);
+                response = new OkResponse(url, tag, resp);
                 return;
             } catch (IOException e) {
                 throw Exceptions.httpRequest(e);
             }
         }
         // async
-        this.response = new OkResponse(request);
+        this.response = new OkResponse(url, tag);
         call.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response res) {
-                response.response(res);
+                response.asyncSetResponse(res);
                 asyncCallback.accept(response);
             }
 

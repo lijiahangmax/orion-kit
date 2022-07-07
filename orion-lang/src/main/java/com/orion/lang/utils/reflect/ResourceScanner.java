@@ -1,11 +1,7 @@
 package com.orion.lang.utils.reflect;
 
 import com.orion.lang.constant.Const;
-import com.orion.lang.utils.Arrays1;
-import com.orion.lang.utils.Exceptions;
-import com.orion.lang.utils.Strings;
-import com.orion.lang.utils.Urls;
-import com.orion.lang.utils.collect.Sets;
+import com.orion.lang.utils.*;
 import com.orion.lang.utils.io.Files1;
 
 import java.io.File;
@@ -27,31 +23,30 @@ import java.util.jar.JarFile;
 public class ResourceScanner {
 
     /**
-     * target resource url
+     * 加载的资源
      */
-    private Set<URL> resourcesUrl = new LinkedHashSet<>();
+    private final Set<URL> resources;
 
     /**
      * 扫描到的资源
      */
-    private Set<String> resources = new LinkedHashSet<>();
+    private final Set<String> scannedResources;
 
     /**
      * 包含的后缀
      */
-    private Set<String> includeSuffix = new HashSet<>();
+    private final Set<String> includeSuffix;
 
     /**
      * 排除的后缀 如果配置包含则不生效
      */
-    private Set<String> excludeSuffix = new HashSet<>();
-
-    /**
-     * 扫描所有资源
-     */
-    private boolean all;
+    private final Set<String> excludeSuffix;
 
     public ResourceScanner() {
+        this.resources = new LinkedHashSet<>();
+        this.scannedResources = new LinkedHashSet<>();
+        this.includeSuffix = new HashSet<>();
+        this.excludeSuffix = new HashSet<>();
     }
 
     /**
@@ -65,13 +60,39 @@ public class ResourceScanner {
     }
 
     /**
-     * 扫描所有资源
-     * 否则只扫描当前资源
+     * 设置扫描的资源
      *
+     * @param resource resource
      * @return this
      */
-    public ResourceScanner all() {
-        this.all = true;
+    public ResourceScanner addResource(URL... resource) {
+        if (Arrays1.isEmpty(resource)) {
+            return this;
+        }
+        for (URL r : resource) {
+            if (r != null) {
+                resources.add(r);
+            }
+        }
+        return this;
+    }
+
+    /**
+     * 添加资源 class
+     *
+     * @param resourceClass resourceClass
+     * @return this
+     */
+    public ResourceScanner with(Class<?> resourceClass) {
+        Valid.notNull(resourceClass, "resourceClass is null");
+        URL r1 = resourceClass.getProtectionDomain().getCodeSource().getLocation();
+        URL r2 = resourceClass.getClassLoader().getResource(Strings.EMPTY);
+        if (r1 != null) {
+            resources.add(r1);
+        }
+        if (r2 != null) {
+            resources.add(r2);
+        }
         return this;
     }
 
@@ -107,8 +128,7 @@ public class ResourceScanner {
      * @return this
      */
     public ResourceScanner scan() {
-        this.addResource();
-        for (URL resource : resourcesUrl) {
+        for (URL resource : resources) {
             String protocol = resource.getProtocol();
             if (Const.PROTOCOL_FILE.equals(protocol)) {
                 this.scanFile(resource);
@@ -120,36 +140,14 @@ public class ResourceScanner {
     }
 
     /**
-     * 添加resource
-     */
-    private void addResource() {
-        resourcesUrl.clear();
-        if (all) {
-            try {
-                resourcesUrl.addAll(Sets.as(ResourceScanner.class.getClassLoader().getResources(Strings.EMPTY)));
-            } catch (Exception e) {
-                throw Exceptions.ioRuntime(e);
-            }
-        } else {
-            URL r = ResourceScanner.class.getClassLoader().getResource(Strings.EMPTY);
-            if (r == null) {
-                r = ResourceScanner.class.getResource(Strings.EMPTY);
-            }
-            if (r != null) {
-                resourcesUrl.add(r);
-            }
-        }
-    }
-
-    /**
      * 扫描 file://*
      *
      * @param resource resource
      */
     private void scanFile(URL resource) {
         String path = Files1.getPath(Urls.decode(resource.getPath()));
-        List<File> files = Files1.listFilesFilter(path, (f, n) -> !n.endsWith(".class") && !f.isDirectory() && this.isAdd(f.getAbsolutePath()), true);
-        resources.addAll(Files1.toPaths(files));
+        List<File> files = Files1.listFilesFilter(path, (f, n) -> !n.endsWith(".class") && !f.isDirectory() && this.canAdd(f.getAbsolutePath()), true);
+        scannedResources.addAll(Files1.toPaths(files));
     }
 
     /**
@@ -169,8 +167,8 @@ public class ResourceScanner {
                 while (jarEntries.hasMoreElements()) {
                     JarEntry jarEntry = jarEntries.nextElement();
                     String jarEntryName = jarEntry.getName();
-                    if (!jarEntryName.endsWith(".class") && !jarEntryName.endsWith("/") && this.isAdd(jarEntryName)) {
-                        resources.add(jarEntryName);
+                    if (!jarEntryName.endsWith(".class") && !jarEntryName.endsWith("/") && this.canAdd(jarEntryName)) {
+                        scannedResources.add(jarEntryName);
                     }
                 }
             }
@@ -185,7 +183,7 @@ public class ResourceScanner {
      * @param path path
      * @return true添加
      */
-    private boolean isAdd(String path) {
+    private boolean canAdd(String path) {
         boolean ie = includeSuffix.isEmpty();
         if (ie && excludeSuffix.isEmpty()) {
             return true;
@@ -196,12 +194,12 @@ public class ResourceScanner {
         return excludeSuffix.stream().noneMatch(path::endsWith);
     }
 
-    public Set<URL> getResourcesUrl() {
-        return resourcesUrl;
+    public Set<URL> getResources() {
+        return resources;
     }
 
-    public Set<String> getResources() {
-        return resources;
+    public Set<String> getScannedResources() {
+        return scannedResources;
     }
 
 }

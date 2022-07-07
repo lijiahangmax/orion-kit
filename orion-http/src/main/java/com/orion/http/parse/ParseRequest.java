@@ -126,7 +126,7 @@ public class ParseRequest extends BaseHttpRequest implements Awaitable<ParseResp
     @Override
     public ParseResponse await() {
         this.execute();
-        return new ParseResponse(url, method, request, response);
+        return new ParseResponse(url, response);
     }
 
     public Connection getConnection() {

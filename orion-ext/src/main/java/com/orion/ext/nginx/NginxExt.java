@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class NginxExt {
 
-    private NgxConfig config;
+    private final NgxConfig config;
 
     public NginxExt(File file) {
         try {

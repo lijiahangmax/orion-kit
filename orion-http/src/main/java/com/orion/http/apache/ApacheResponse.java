@@ -7,7 +7,6 @@ import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.io.Streams;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 
 import java.io.IOException;
@@ -27,43 +26,27 @@ import java.util.Map;
 public class ApacheResponse implements Serializable {
 
     /**
-     * 请求
-     */
-    private HttpRequest request;
-
-    /**
      * 响应
      */
-    private HttpResponse response;
+    private final HttpResponse response;
+
+    /**
+     * url
+     */
+    private final String url;
 
     /**
      * 响应体
      */
     private byte[] body;
 
-    /**
-     * url
-     */
-    private String url;
-
-    /**
-     * method
-     */
-    private String method;
-
-    public ApacheResponse(String url, String method, HttpRequest request, HttpResponse response) throws IOException {
+    public ApacheResponse(String url, HttpResponse response) throws IOException {
         this.url = url;
-        this.method = method;
-        this.request = request;
         this.response = response;
         HttpEntity entity = response.getEntity();
         if (entity != null) {
             this.body = Streams.toByteArray(entity.getContent());
         }
-    }
-
-    public HttpRequest getRequest() {
-        return request;
     }
 
     public HttpResponse getResponse() {
@@ -100,10 +83,6 @@ public class ApacheResponse implements Serializable {
 
     public String getUrl() {
         return url;
-    }
-
-    public String getMethod() {
-        return method;
     }
 
     public String getProtocol() {

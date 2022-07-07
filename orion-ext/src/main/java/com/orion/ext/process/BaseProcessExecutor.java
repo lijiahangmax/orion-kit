@@ -21,9 +21,10 @@ public abstract class BaseProcessExecutor implements Executable, SafeCloseable {
     /**
      * 系统命令
      */
-    private static final ArrayList<String> COMMAND = new ArrayList<>();
+    private static final ArrayList<String> COMMAND;
 
     static {
+        COMMAND = new ArrayList<>();
         if (Systems.BE_WINDOWS) {
             COMMAND.add("cmd");
             COMMAND.add("/c");

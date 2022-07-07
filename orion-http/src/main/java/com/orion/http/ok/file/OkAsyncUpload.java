@@ -138,11 +138,11 @@ public class OkAsyncUpload extends BaseOkRequest implements Asyncable<Consumer<O
     protected void execute() {
         super.buildRequest();
         this.call = client.newCall(request);
-        this.response = new OkResponse(request);
+        this.response = new OkResponse(url, tag);
         this.call.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response res) {
-                response.response(res);
+                response.asyncSetResponse(res);
                 callback.accept(response);
             }
 

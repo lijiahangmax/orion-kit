@@ -33,7 +33,7 @@ public abstract class FolderWatcher implements Runnable, Watchable, Stoppable, S
 
     protected WatchEvent.Modifier[] modifiers;
 
-    protected volatile boolean close = true;
+    protected volatile boolean run;
 
     protected WatchService watchService;
 
@@ -64,39 +64,38 @@ public abstract class FolderWatcher implements Runnable, Watchable, Stoppable, S
      */
     protected void init() {
         try {
-            watchService = FileSystems.getDefault().newWatchService();
+            this.watchService = FileSystems.getDefault().newWatchService();
         } catch (IOException e) {
             throw Exceptions.watch(e);
         }
-        close = false;
     }
 
     public void registerPath(String path) {
-        registerPath(Paths.get(path), 1);
+        this.registerPath(Paths.get(path), 1);
     }
 
     public void registerPath(File path) {
-        registerPath(Paths.get(path.getAbsolutePath()), 1);
+        this.registerPath(Paths.get(path.getAbsolutePath()), 1);
     }
 
     public void registerPath(URI path) {
-        registerPath(Paths.get(path), 1);
+        this.registerPath(Paths.get(path), 1);
     }
 
     public void registerPath(Path path) {
-        registerPath(path, 1);
+        this.registerPath(path, 1);
     }
 
     public void registerPath(String path, int maxDepth) {
-        registerPath(Paths.get(path), maxDepth);
+        this.registerPath(Paths.get(path), maxDepth);
     }
 
     public void registerPath(File path, int maxDepth) {
-        registerPath(Paths.get(path.getAbsolutePath()), maxDepth);
+        this.registerPath(Paths.get(path.getAbsolutePath()), maxDepth);
     }
 
     public void registerPath(URI path, int maxDepth) {
-        registerPath(Paths.get(path), maxDepth);
+        this.registerPath(Paths.get(path), maxDepth);
     }
 
     /**
@@ -148,17 +147,18 @@ public abstract class FolderWatcher implements Runnable, Watchable, Stoppable, S
 
     @Override
     public void run() {
-        watch();
+        this.run = true;
+        this.watch();
     }
 
     @Override
     public void stop() {
-        close = false;
+        this.run = false;
     }
 
     @Override
     public void close() {
-        stop();
+        this.stop();
         Streams.close(watchService);
     }
 

@@ -15,9 +15,20 @@ import java.util.*;
  */
 public class OkCookieStore implements CookieJar {
 
-    private ArrayList<Cookie> defaultList = new ArrayList<>();
+    /**
+     * 默认的 cookie
+     */
+    private final ArrayList<Cookie> defaultList;
 
-    private Map<String, List<Cookie>> urlCookies = new HashMap<>();
+    /**
+     * 单个 url 的 cookie
+     */
+    private final Map<String, List<Cookie>> urlCookies;
+
+    public OkCookieStore() {
+        this.defaultList = new ArrayList<>();
+        this.urlCookies = new HashMap<>();
+    }
 
     @Override
     public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {

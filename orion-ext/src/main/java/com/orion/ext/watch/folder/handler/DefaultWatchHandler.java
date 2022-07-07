@@ -14,22 +14,18 @@ public class DefaultWatchHandler implements WatchHandler {
 
     @Override
     public void onOverflow(WatchEvent<?> event, Path path) {
-
     }
 
     @Override
     public void onModify(WatchEvent<?> event, Path path) {
-
     }
 
     @Override
     public void onCreate(WatchEvent<?> event, Path path) {
-
     }
 
     @Override
     public void onDelete(WatchEvent<?> event, Path path) {
-
     }
 
 }

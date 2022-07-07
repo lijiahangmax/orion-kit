@@ -29,7 +29,7 @@ public abstract class BaseHttpRequest {
     /**
      * method
      */
-    protected String method = HttpMethod.GET.method();
+    protected String method;
 
     /**
      * 请求参数
@@ -44,17 +44,17 @@ public abstract class BaseHttpRequest {
     /**
      * 请求参数是否编码
      */
-    protected boolean queryStringEncode = true;
+    protected boolean queryStringEncode;
 
     /**
      * charset
      */
-    protected String charset = Const.UTF_8;
+    protected String charset;
 
     /**
      * Content-Type GET HEAD DELETE OPTION TRACE 无效
      */
-    protected String contentType = HttpContentType.TEXT_PLAIN.getType();
+    protected String contentType;
 
     /**
      * 请求头
@@ -96,6 +96,13 @@ public abstract class BaseHttpRequest {
      */
     protected boolean ssl;
 
+    public BaseHttpRequest() {
+        this.method = HttpMethod.GET.method();
+        this.queryStringEncode = true;
+        this.charset = Const.UTF_8;
+        this.contentType = HttpContentType.TEXT_PLAIN.getType();
+    }
+
     // -------------------- line --------------------
 
     public BaseHttpRequest url(String url) {
@@ -104,7 +111,7 @@ public abstract class BaseHttpRequest {
     }
 
     /**
-     * 格式化url的参数 {}
+     * 格式化 url 的参数 {}
      *
      * @param o 参数
      * @return this
@@ -115,7 +122,7 @@ public abstract class BaseHttpRequest {
     }
 
     /**
-     * 格式化url的参数 ${?}
+     * 格式化 url 的参数 ${?}
      *
      * @param map 参数
      * @return this

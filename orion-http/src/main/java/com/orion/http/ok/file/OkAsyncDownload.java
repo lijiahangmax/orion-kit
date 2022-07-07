@@ -8,10 +8,7 @@ import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Valid;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Response;
+import okhttp3.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -138,13 +135,22 @@ public class OkAsyncDownload extends BaseOkRequest implements Asyncable<Consumer
     protected void execute() {
         super.buildRequest();
         this.call = client.newCall(request);
-        this.response = new OkResponse(request);
+        this.response = new OkResponse(url, tag);
         this.call.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response res) throws IOException {
-                response.responseDownload(res);
+                response.asyncSetResponse(res, false);
                 if (response.isOk()) {
-                    Streams.transfer(res.body().byteStream(), out);
+                    ResponseBody body = res.body();
+                    if (body != null) {
+                        try {
+                            Streams.transfer(body.byteStream(), out);
+                        } finally {
+                            if (autoClose) {
+                                Streams.close(out);
+                            }
+                        }
+                    }
                 }
                 callback.accept(response);
             }
@@ -152,6 +158,9 @@ public class OkAsyncDownload extends BaseOkRequest implements Asyncable<Consumer
             @Override
             public void onFailure(Call call, IOException e) {
                 response.error(e);
+                if (autoClose) {
+                    Streams.close(out);
+                }
                 if (asyncFailThrows) {
                     throw Exceptions.httpRequest("async ok download file on failure: " + OkAsyncDownload.super.getRequestMessage(), e);
                 }

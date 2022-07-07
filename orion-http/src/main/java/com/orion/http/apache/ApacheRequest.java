@@ -37,7 +37,7 @@ public class ApacheRequest extends BaseApacheRequest {
     protected void execute() {
         this.buildRequest();
         try (CloseableHttpResponse resp = client.execute(request)) {
-            this.response = new ApacheResponse(url, method, request, resp);
+            this.response = new ApacheResponse(url, resp);
         } catch (IOException e) {
             throw Exceptions.httpRequest(e);
         } finally {

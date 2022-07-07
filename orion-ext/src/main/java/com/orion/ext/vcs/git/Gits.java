@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  */
 public abstract class Gits implements SafeCloseable {
 
-    private Git git;
+    private final Git git;
 
     private CredentialsProvider credentialsProvider;
 

@@ -15,22 +15,18 @@ public class DefaultEventHandler implements EventHandler {
 
     @Override
     public void onAccess(File file, FileAttribute before, FileAttribute current) {
-
     }
 
     @Override
     public void onModified(File file, FileAttribute before, FileAttribute current) {
-
     }
 
     @Override
     public void onCreate(File file, FileAttribute current) {
-
     }
 
     @Override
     public void onDelete(File file, FileAttribute before) {
-
     }
 
 }

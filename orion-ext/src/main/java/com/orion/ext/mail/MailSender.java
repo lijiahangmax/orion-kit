@@ -23,7 +23,7 @@ import java.util.Properties;
  */
 public class MailSender implements Sendable<MailMessage> {
 
-    private Properties props;
+    private final Properties props;
 
     private boolean debug;
 

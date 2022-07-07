@@ -18,39 +18,27 @@ import java.io.Serializable;
 public class ParseResponse implements Serializable {
 
     /**
-     * request
-     */
-    private Connection.Request request;
-
-    /**
      * response
      */
-    private Connection.Response response;
+    private final Connection.Response response;
 
     /**
      * 响应体
      */
-    private byte[] body;
+    private final byte[] body;
 
     /**
      * url
      */
-    private String url;
-
-    /**
-     * method
-     */
-    private String method;
+    private final String url;
 
     /**
      * document
      */
     private Document document;
 
-    public ParseResponse(String url, String method, Connection.Request request, Connection.Response response) {
+    public ParseResponse(String url, Connection.Response response) {
         this.url = url;
-        this.method = method;
-        this.request = request;
         this.response = response;
         this.body = response.bodyAsBytes();
     }
@@ -81,10 +69,6 @@ public class ParseResponse implements Serializable {
         return url;
     }
 
-    public String getMethod() {
-        return method;
-    }
-
     public int getCode() {
         return response.statusCode();
     }
@@ -99,10 +83,6 @@ public class ParseResponse implements Serializable {
 
     public String getBodyString() {
         return new String(body);
-    }
-
-    public Connection.Request getRequest() {
-        return request;
     }
 
     public Connection.Response getResponse() {

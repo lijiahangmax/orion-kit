@@ -6,6 +6,8 @@ import com.orion.lang.utils.Strings;
 import java.io.UnsupportedEncodingException;
 
 /**
+ * 查询工具
+ *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/3/3 19:28

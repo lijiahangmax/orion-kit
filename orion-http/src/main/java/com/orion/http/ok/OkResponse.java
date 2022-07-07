@@ -5,7 +5,6 @@ import com.orion.lang.define.mutable.MutableString;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.Valid;
-import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
@@ -27,12 +26,17 @@ public class OkResponse implements Serializable {
     /**
      * response
      */
-    private Request request;
+    private Response response;
 
     /**
-     * response
+     * url
      */
-    private Response response;
+    private final String url;
+
+    /**
+     * tag
+     */
+    private final Object tag;
 
     /**
      * 响应体
@@ -51,30 +55,30 @@ public class OkResponse implements Serializable {
      */
     private volatile boolean done;
 
-    /**
-     * 用于异步
-     */
-    public OkResponse(Request request) {
+    public OkResponse(String url, Object tag) {
         this.done = false;
-        this.request = request;
+        this.url = url;
+        this.tag = tag;
     }
 
-    public OkResponse(Request request, Response response) {
+    public OkResponse(String url, Object tag, Response response) {
         this.done = true;
-        this.request = request;
+        this.url = url;
+        this.tag = tag;
         this.response = response;
         this.setBody();
     }
 
-    public void response(Response response) {
-        this.done = true;
-        this.response = response;
-        this.setBody();
+    public void asyncSetResponse(Response response) {
+        this.asyncSetResponse(response, true);
     }
 
-    public void responseDownload(Response response) {
+    public void asyncSetResponse(Response response, boolean setBody) {
         this.done = true;
         this.response = response;
+        if (setBody) {
+            this.setBody();
+        }
     }
 
     public void error(Exception exception) {
@@ -102,10 +106,6 @@ public class OkResponse implements Serializable {
         return new String(body);
     }
 
-    public Request getRequest() {
-        return request;
-    }
-
     public Response getResponse() {
         return response;
     }
@@ -115,15 +115,11 @@ public class OkResponse implements Serializable {
     }
 
     public String getUrl() {
-        return request.url().toString();
-    }
-
-    public String getMethod() {
-        return request.method();
+        return url;
     }
 
     public Object getTag() {
-        return request.tag();
+        return tag;
     }
 
     public String getProtocol() {
@@ -185,7 +181,7 @@ public class OkResponse implements Serializable {
      * 检查请求是否完毕
      */
     private void validDone() {
-        Valid.isTrue(done, "ok request not done");
+        Valid.isTrue(done, "ok request is not done");
     }
 
     /**

@@ -109,7 +109,6 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
 
     public ProcessAwaitExecutor(String[] command, String dir) {
         super(command, dir);
-        this.streamHandler = streamHandler;
     }
 
     /**
@@ -338,9 +337,6 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
         }
     }
 
-    /**
-     * 关闭进程
-     */
     @Override
     public void close() {
         this.close(false);

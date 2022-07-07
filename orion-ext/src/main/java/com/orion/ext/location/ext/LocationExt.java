@@ -39,7 +39,7 @@ public class LocationExt {
     /**
      * 查询器
      */
-    private static LocationSeeker seeker;
+    private static final LocationSeeker seeker;
 
     // init
     static {

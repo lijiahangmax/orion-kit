@@ -31,7 +31,7 @@ public class BlockFolderWatcher extends FolderWatcher {
 
     @Override
     public void watch() {
-        while (!close) {
+        while (run) {
             WatchKey wk;
             try {
                 wk = watchService.take();

@@ -85,7 +85,7 @@ public class EnvProperties {
 
     private static class InitializeProperties implements InitializingBean {
 
-        private String propertiesPath;
+        private final String propertiesPath;
 
         public InitializeProperties(String propertiesPath) {
             this.propertiesPath = propertiesPath;
