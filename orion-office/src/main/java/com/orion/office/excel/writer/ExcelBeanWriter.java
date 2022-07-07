@@ -23,12 +23,12 @@ import java.util.stream.Collectors;
  */
 public class ExcelBeanWriter<T> extends BaseExcelWriter<String, T> {
 
-    private Class<T> targetClass;
+    private final Class<T> targetClass;
 
     /**
      * getter
      */
-    private Map<String, Method> getters;
+    private final Map<String, Method> getters;
 
     public ExcelBeanWriter(Workbook workbook, Sheet sheet, Class<T> targetClass) {
         super(workbook, sheet);

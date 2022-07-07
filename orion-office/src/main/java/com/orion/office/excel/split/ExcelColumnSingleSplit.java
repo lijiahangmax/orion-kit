@@ -21,7 +21,7 @@ public class ExcelColumnSingleSplit extends BaseExcelWriteable {
     /**
      * source workbook
      */
-    private Workbook sourceWorkbook;
+    private final Workbook sourceWorkbook;
 
     /**
      * source sheet
@@ -46,12 +46,12 @@ public class ExcelColumnSingleSplit extends BaseExcelWriteable {
     /**
      * 列
      */
-    private int[] columns;
+    private final int[] columns;
 
     /**
      * 是否是流式读取 (样式)
      */
-    private boolean streaming;
+    private final boolean streaming;
 
     public ExcelColumnSingleSplit(Workbook sourceWorkbook, Sheet sourceSheet, int... columns) {
         super(new SXSSFWorkbook());

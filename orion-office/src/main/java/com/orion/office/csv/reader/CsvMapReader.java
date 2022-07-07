@@ -22,7 +22,7 @@ public class CsvMapReader<K, V> extends BaseCsvReader<MutableMap<K, V>> {
      * key: 列
      * value: 默认值
      */
-    private Map<K, V> defaultValue;
+    private final Map<K, V> defaultValue;
 
     /**
      * 为null是否插入kay
@@ -39,7 +39,7 @@ public class CsvMapReader<K, V> extends BaseCsvReader<MutableMap<K, V>> {
      * key: column
      * value: valueKey
      */
-    protected Map<Integer, K> mapping;
+    protected final Map<Integer, K> mapping;
 
     public CsvMapReader(CsvReader reader) {
         this(reader, new ArrayList<>(), null);

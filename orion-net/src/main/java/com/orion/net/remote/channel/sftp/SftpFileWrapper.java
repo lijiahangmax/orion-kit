@@ -17,6 +17,11 @@ import java.util.Date;
  */
 public class SftpFileWrapper extends SftpFile {
 
+    /**
+     * 文件属性
+     */
+    private final SftpATTRS attrs;
+
     protected SftpFileWrapper(String path, SftpATTRS attrs) {
         this.path = path;
         this.attrs = attrs;
@@ -28,11 +33,6 @@ public class SftpFileWrapper extends SftpFile {
         this.permission = Files1.permission8to10(attrs.getPermissions() & 0xFFF);
         this.permissionString = attrs.getPermissionsString();
     }
-
-    /**
-     * 文件属性
-     */
-    private SftpATTRS attrs;
 
     public SftpATTRS getAttrs() {
         return attrs;

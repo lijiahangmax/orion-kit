@@ -16,9 +16,9 @@ import com.orion.office.excel.option.*;
  */
 public class SheetAnalysis implements Analysable {
 
-    private Class<?> targetClass;
+    private final Class<?> targetClass;
 
-    private SheetConfig sheetConfig;
+    private final SheetConfig sheetConfig;
 
     public SheetAnalysis(Class<?> targetClass, SheetConfig sheetConfig) {
         this.targetClass = targetClass;

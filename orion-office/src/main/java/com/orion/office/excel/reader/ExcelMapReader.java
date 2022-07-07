@@ -32,7 +32,7 @@ public class ExcelMapReader<K, V> extends BaseExcelReader<K, MutableMap<K, V>> {
      * key: 列
      * value: 默认值
      */
-    private Map<K, V> defaultValue;
+    private final Map<K, V> defaultValue;
 
     /**
      * 为null是否插入kay

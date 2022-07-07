@@ -25,7 +25,7 @@ import java.util.function.Supplier;
  */
 public class CsvExt implements SafeCloseable {
 
-    private CsvReader reader;
+    private final CsvReader reader;
 
     public CsvExt(File file) {
         this(Files1.openInputStreamSafe(file), null);

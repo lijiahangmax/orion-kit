@@ -41,11 +41,11 @@ import java.util.function.Consumer;
  */
 public class ExcelBeanReader<T> extends BaseExcelReader<String, T> {
 
-    private Class<T> targetClass;
+    private final Class<T> targetClass;
 
-    private Constructor<T> constructor;
+    private final Constructor<T> constructor;
 
-    private Map<String, Method> setters;
+    private final Map<String, Method> setters;
 
     /**
      * 如果列为null是否调用setter(null)

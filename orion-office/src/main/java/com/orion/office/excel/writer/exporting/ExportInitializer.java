@@ -25,9 +25,9 @@ public class ExportInitializer<T> {
 
     protected Sheet sheet;
 
-    private Class<T> targetClass;
+    private final Class<T> targetClass;
 
-    private SheetConfig sheetConfig;
+    private final SheetConfig sheetConfig;
 
     /**
      * 当前行索引

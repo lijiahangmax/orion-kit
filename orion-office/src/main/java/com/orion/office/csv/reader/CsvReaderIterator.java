@@ -16,7 +16,7 @@ import java.util.Iterator;
  */
 public class CsvReaderIterator<T> implements SafeCloseable, Iterator<T>, Iterable<T> {
 
-    private BaseCsvReader<T> reader;
+    private final BaseCsvReader<T> reader;
 
     /**
      * 是否为第一次

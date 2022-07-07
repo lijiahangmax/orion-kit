@@ -28,17 +28,17 @@ public class ConnectionStore implements AutoCloseable {
     /**
      * 连接对象
      */
-    private Connection connection;
+    private final Connection connection;
 
     /**
      * host
      */
-    private String host;
+    private final String host;
 
     /**
      * port
      */
-    private int port;
+    private final int port;
 
     /**
      * 是否认证
@@ -48,7 +48,7 @@ public class ConnectionStore implements AutoCloseable {
     /**
      * 连接属性
      */
-    private ConnectionInfo info;
+    private final ConnectionInfo info;
 
     public ConnectionStore(String host) {
         this(host, 22, null);

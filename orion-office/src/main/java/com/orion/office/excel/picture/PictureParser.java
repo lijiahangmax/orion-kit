@@ -28,11 +28,11 @@ public class PictureParser implements Analysable {
      * k2: column
      * value: PictureData
      */
-    private MultiHashMap<Integer, Integer, PictureData> picturePosition;
+    private final MultiHashMap<Integer, Integer, PictureData> picturePosition;
 
-    private Workbook workbook;
+    private final Workbook workbook;
 
-    private Sheet sheet;
+    private final Sheet sheet;
 
     public PictureParser(Workbook workbook, Sheet sheet) {
         this.workbook = workbook;

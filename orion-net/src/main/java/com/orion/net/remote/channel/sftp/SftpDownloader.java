@@ -20,7 +20,7 @@ import java.io.InputStream;
  */
 public class SftpDownloader extends BaseFileDownloader {
 
-    private static final String LOCK_SUFFIX = "orion.sftp.download";
+    private static final String LOCK_SUFFIX = "osd";
 
     /**
      * sftp 执行器

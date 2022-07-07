@@ -31,7 +31,7 @@ import java.util.Vector;
  */
 public class SftpExecutor extends BaseSftpExecutor implements ChannelConnector {
 
-    private ChannelSftp channel;
+    private final ChannelSftp channel;
 
     public SftpExecutor(ChannelSftp channel) {
         this(channel, Const.UTF_8);

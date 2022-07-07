@@ -23,22 +23,22 @@ public class SheetCopier {
     /**
      * 源workbook
      */
-    private Workbook sourceWorkbook;
+    private final Workbook sourceWorkbook;
 
     /**
      * 目标workbook
      */
-    private Workbook targetWorkbook;
+    private final Workbook targetWorkbook;
 
     /**
      * 源sheet
      */
-    private Sheet sourceSheet;
+    private final Sheet sourceSheet;
 
     /**
      * 目标sheet
      */
-    private Sheet targetSheet;
+    private final Sheet targetSheet;
 
     /**
      * 列数

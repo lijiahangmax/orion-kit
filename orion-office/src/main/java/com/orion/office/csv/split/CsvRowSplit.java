@@ -23,12 +23,12 @@ public class CsvRowSplit extends SplitTargetGenerator {
     /**
      * reader
      */
-    private CsvArrayReader reader;
+    private final CsvArrayReader reader;
 
     /**
      * 拆分文件最大行数
      */
-    private int limit;
+    private final int limit;
 
     /**
      * 表头

@@ -25,7 +25,7 @@ public abstract class BaseCsvWriter<K, V> implements SafeCloseable, SafeFlushabl
     /**
      * writer
      */
-    protected CsvWriter writer;
+    protected final CsvWriter writer;
 
     /**
      * 是否跳过空行
@@ -35,7 +35,7 @@ public abstract class BaseCsvWriter<K, V> implements SafeCloseable, SafeFlushabl
     /**
      * 默认值
      */
-    protected Map<K, Object> defaultValue;
+    protected final Map<K, Object> defaultValue;
 
     /**
      * 数组容量

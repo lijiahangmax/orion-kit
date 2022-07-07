@@ -24,12 +24,12 @@ public class CsvAdapter implements Adaptable<CsvAdapter>, SafeCloseable {
     /**
      * sheet
      */
-    private Sheet sheet;
+    private final Sheet sheet;
 
     /**
      * CsvArrayWriter
      */
-    private CsvArrayWriter writer;
+    private final CsvArrayWriter writer;
 
     /**
      * 跳过的行数

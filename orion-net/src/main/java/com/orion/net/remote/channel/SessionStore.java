@@ -22,22 +22,22 @@ public class SessionStore implements SafeCloseable {
     /**
      * session
      */
-    private Session session;
+    private final Session session;
 
     /**
      * host
      */
-    private String host;
+    private final String host;
 
     /**
      * port
      */
-    private int port;
+    private final int port;
 
     /**
      * username
      */
-    private String username;
+    private final String username;
 
     public SessionStore(String host, String username) {
         this(host, 22, username);

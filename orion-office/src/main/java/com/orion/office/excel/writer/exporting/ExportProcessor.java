@@ -23,11 +23,11 @@ import java.lang.reflect.Method;
  */
 public class ExportProcessor<T> {
 
-    private Workbook workbook;
+    private final Workbook workbook;
 
-    private Sheet sheet;
+    private final Sheet sheet;
 
-    private SheetConfig sheetConfig;
+    private final SheetConfig sheetConfig;
 
     protected ExportProcessor(Workbook workbook, Sheet sheet, SheetConfig sheetConfig) {
         this.workbook = workbook;

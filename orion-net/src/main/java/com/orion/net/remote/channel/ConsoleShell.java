@@ -19,22 +19,22 @@ public class ConsoleShell implements SafeCloseable {
     /**
      * 主机
      */
-    private String host;
+    private final String host;
 
     /**
      * 端口
      */
-    private int port;
+    private final int port;
 
     /**
      * 用户名
      */
-    private String username;
+    private final String username;
 
     /**
      * 密码
      */
-    private String password;
+    private final String password;
 
     /**
      * session

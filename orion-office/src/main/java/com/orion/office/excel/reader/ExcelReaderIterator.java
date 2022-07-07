@@ -15,7 +15,7 @@ import java.util.Iterator;
  */
 public class ExcelReaderIterator<T> implements Iterator<T>, Iterable<T> {
 
-    private BaseExcelReader<?, T> reader;
+    private final BaseExcelReader<?, T> reader;
 
     /**
      * 是否为第一次

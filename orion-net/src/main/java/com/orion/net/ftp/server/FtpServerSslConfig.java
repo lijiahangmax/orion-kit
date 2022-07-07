@@ -12,8 +12,6 @@ import java.io.Serializable;
  */
 public class FtpServerSslConfig implements Serializable {
 
-    // 生成命令 keytool -genkey -alias jwt -keyalg RSA -keysize 1024 -keystore ftps.jks -validity 365
-
     /**
      * ssl 协议
      */

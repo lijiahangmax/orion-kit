@@ -20,9 +20,9 @@ public class UdpReceive implements AutoCloseable {
     /**
      * 端口
      */
-    private int port;
+    private final int port;
 
-    private DatagramSocket ds;
+    private final DatagramSocket ds;
 
     public UdpReceive(int port) throws IOException {
         this.port = port;

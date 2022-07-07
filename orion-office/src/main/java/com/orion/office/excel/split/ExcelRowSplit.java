@@ -29,7 +29,7 @@ public class ExcelRowSplit extends SplitTargetGenerator {
     /**
      * 拆分文件最大行数
      */
-    private int limit;
+    private final int limit;
 
     /**
      * 头部跳过行数
@@ -39,7 +39,7 @@ public class ExcelRowSplit extends SplitTargetGenerator {
     /**
      * 是否是流式读取 (样式)
      */
-    private boolean streaming;
+    private final boolean streaming;
 
     /**
      * 表头

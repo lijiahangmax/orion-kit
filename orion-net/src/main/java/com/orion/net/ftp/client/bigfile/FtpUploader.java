@@ -21,7 +21,7 @@ import java.io.OutputStream;
  */
 public class FtpUploader extends BaseFileUploader {
 
-    private static final String LOCK_SUFFIX = "orion.ftp.upload";
+    private static final String LOCK_SUFFIX = "ofu";
 
     /**
      * 实例

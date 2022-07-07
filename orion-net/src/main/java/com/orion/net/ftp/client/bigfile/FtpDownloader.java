@@ -20,7 +20,7 @@ import java.io.InputStream;
  */
 public class FtpDownloader extends BaseFileDownloader {
 
-    private static final String LOCK_SUFFIX = "orion.ftp.download";
+    private static final String LOCK_SUFFIX = "ofd";
 
     /**
      * 实例

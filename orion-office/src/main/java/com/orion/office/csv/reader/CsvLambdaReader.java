@@ -27,12 +27,12 @@ public class CsvLambdaReader<T> extends BaseCsvReader<T> {
      * key: column
      * value: convert consumer
      */
-    protected Map<Integer, Pair<Function<String, ?>, BiConsumer<T, ?>>> mapping;
+    protected final Map<Integer, Pair<Function<String, ?>, BiConsumer<T, ?>>> mapping;
 
     /**
      * supplier
      */
-    protected Supplier<T> supplier;
+    protected final Supplier<T> supplier;
 
     /**
      * 为null是否调用

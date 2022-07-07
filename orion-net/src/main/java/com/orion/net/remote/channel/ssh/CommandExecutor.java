@@ -22,12 +22,12 @@ public class CommandExecutor extends BaseCommandExecutor implements ChannelConne
     /**
      * channel
      */
-    private ChannelExec channel;
+    private final ChannelExec channel;
 
     /**
      * command
      */
-    private byte[] command;
+    private final byte[] command;
 
     public CommandExecutor(ChannelExec channel, String command) {
         this(channel, Strings.bytes(command, StandardCharsets.UTF_8));

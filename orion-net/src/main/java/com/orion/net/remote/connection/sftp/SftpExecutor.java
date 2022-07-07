@@ -44,7 +44,7 @@ public class SftpExecutor extends BaseSftpExecutor {
     /**
      * sftp 连接
      */
-    private SFTPv3Client client;
+    private final SFTPv3Client client;
 
     public SftpExecutor(SFTPv3Client client) {
         this(client, Const.UTF_8);

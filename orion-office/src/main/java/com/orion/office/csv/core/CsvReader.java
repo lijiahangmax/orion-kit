@@ -30,13 +30,13 @@ public class CsvReader implements SafeCloseable {
 
     private Reader reader;
 
-    private DataBuffer dataBuffer = new DataBuffer();
+    private final DataBuffer dataBuffer = new DataBuffer();
 
-    private ColumnBuffer columnBuffer = new ColumnBuffer();
+    private final ColumnBuffer columnBuffer = new ColumnBuffer();
 
-    private RawRecordBuffer rawBuffer = new RawRecordBuffer();
+    private final RawRecordBuffer rawBuffer = new RawRecordBuffer();
 
-    private HeadersHolder headersHolder = new HeadersHolder();
+    private final HeadersHolder headersHolder = new HeadersHolder();
 
     /**
      * 行的列数据是否合格

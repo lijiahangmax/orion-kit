@@ -33,12 +33,12 @@ import java.util.stream.Collectors;
  */
 public class CsvBeanReader<T> extends BaseCsvReader<T> {
 
-    private Class<T> targetClass;
+    private final Class<T> targetClass;
 
     private Constructor<T> constructor;
 
     /**
-     * 如果列为null是否调用setter(null)
+     * 如果列为 null 是否调用 setter(null)
      */
     private boolean nullInvoke;
 

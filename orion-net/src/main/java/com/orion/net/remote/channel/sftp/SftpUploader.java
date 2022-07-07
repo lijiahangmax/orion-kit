@@ -20,7 +20,7 @@ import java.io.OutputStream;
  */
 public class SftpUploader extends BaseFileUploader {
 
-    private static final String LOCK_SUFFIX = "orion.sftp.upload";
+    private static final String LOCK_SUFFIX = "osu";
 
     /**
      * sftp 执行器

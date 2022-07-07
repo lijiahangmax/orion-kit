@@ -18,7 +18,7 @@ public class FtpClientKeepAlive implements SafeCloseable {
     /**
      * 线程池
      */
-    private FtpClientPool pool;
+    private final FtpClientPool pool;
 
     /**
      * 心跳检测间隔

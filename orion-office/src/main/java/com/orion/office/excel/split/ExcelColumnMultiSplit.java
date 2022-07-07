@@ -27,7 +27,7 @@ public class ExcelColumnMultiSplit implements SafeCloseable {
     /**
      * source workbook
      */
-    private Workbook sourceWorkbook;
+    private final Workbook sourceWorkbook;
 
     /**
      * source sheet

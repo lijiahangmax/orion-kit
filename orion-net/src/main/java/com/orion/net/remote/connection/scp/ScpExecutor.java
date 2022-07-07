@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public class ScpExecutor {
 
-    private SCPClient client;
+    private final SCPClient client;
 
     public ScpExecutor(SCPClient client) {
         this.client = client;

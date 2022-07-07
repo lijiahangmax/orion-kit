@@ -25,7 +25,7 @@ public class FtpClientFactory {
     /**
      * FTP配置
      */
-    private FtpConfig config;
+    private final FtpConfig config;
 
     public FtpClientFactory(FtpConfig config) {
         Valid.notNull(config, "config is null");

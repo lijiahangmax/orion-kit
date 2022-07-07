@@ -19,7 +19,7 @@ public class ShellExecutor extends BaseShellExecutor {
     /**
      * 会话
      */
-    protected Session session;
+    protected final Session session;
 
     public ShellExecutor(Session session) {
         this.session = session;

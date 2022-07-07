@@ -20,12 +20,12 @@ public class PrintStream {
     /**
      * sheet
      */
-    private Sheet sheet;
+    private final Sheet sheet;
 
     /**
      * 打印设置
      */
-    private PrintSetup printSetup;
+    private final PrintSetup printSetup;
 
     public PrintStream(Sheet sheet) {
         this.sheet = sheet;

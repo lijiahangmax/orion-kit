@@ -100,7 +100,7 @@ public abstract class BaseExcelWriter<K, V> {
     /**
      * 默认值
      */
-    private Map<K, Object> defaultValue;
+    private final Map<K, Object> defaultValue;
 
     public BaseExcelWriter(Workbook workbook, Sheet sheet) {
         this.workbook = workbook;

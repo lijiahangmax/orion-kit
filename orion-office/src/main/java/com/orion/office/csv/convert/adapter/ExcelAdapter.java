@@ -27,12 +27,12 @@ public class ExcelAdapter extends BaseExcelWriteable implements Adaptable<ExcelA
     /**
      * sheet
      */
-    private Sheet sheet;
+    private final Sheet sheet;
 
     /**
      * csvStream
      */
-    private CsvArrayReader reader;
+    private final CsvArrayReader reader;
 
     /**
      * 跳过的行数

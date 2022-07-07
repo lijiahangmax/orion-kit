@@ -24,9 +24,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 public class StyleStream {
 
-    private Workbook workbook;
+    private final Workbook workbook;
 
-    private CellStyle style;
+    private final CellStyle style;
 
     public StyleStream(Workbook workbook) {
         this.workbook = workbook;

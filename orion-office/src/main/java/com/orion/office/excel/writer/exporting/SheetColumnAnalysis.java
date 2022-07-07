@@ -29,11 +29,11 @@ import java.util.TreeMap;
  */
 public class SheetColumnAnalysis implements Analysable {
 
-    private Class<?> targetClass;
+    private final Class<?> targetClass;
+
+    private final SheetConfig sheetConfig;
 
     private int columnMaxIndex;
-
-    private SheetConfig sheetConfig;
 
     protected SheetColumnAnalysis(Class<?> targetClass, SheetConfig sheetConfig) {
         this.targetClass = targetClass;

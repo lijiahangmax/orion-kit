@@ -21,7 +21,7 @@ public abstract class BaseCsvReader<T> implements SafeCloseable, Iterable<T> {
     /**
      * 读取器
      */
-    protected CsvReader reader;
+    protected final CsvReader reader;
 
     /**
      * 读取的行

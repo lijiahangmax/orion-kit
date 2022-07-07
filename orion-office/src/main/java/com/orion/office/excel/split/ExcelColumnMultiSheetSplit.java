@@ -23,7 +23,7 @@ public class ExcelColumnMultiSheetSplit extends BaseExcelWriteable {
     /**
      * source workbook
      */
-    private Workbook sourceWorkbook;
+    private final Workbook sourceWorkbook;
 
     /**
      * source sheet

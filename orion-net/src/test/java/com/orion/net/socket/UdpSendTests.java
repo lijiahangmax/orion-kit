@@ -15,7 +15,7 @@ public class UdpSendTests {
         while (true) {
             String s = Strings.randomChars(5);
             send.send(s.getBytes());
-            send.sendLF();
+            send.sendLf();
             System.out.println("send: " + s);
             Threads.sleep(1500);
         }

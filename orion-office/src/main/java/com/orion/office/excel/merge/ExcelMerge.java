@@ -18,12 +18,12 @@ public class ExcelMerge extends BaseExcelWriteable {
     /**
      * source workbook
      */
-    private Workbook sourceWorkbook;
+    private final Workbook sourceWorkbook;
 
     /**
      * source sheet
      */
-    private Sheet sourceSheet;
+    private final Sheet sourceSheet;
 
     private int rowIndex;
 

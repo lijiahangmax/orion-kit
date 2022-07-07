@@ -43,12 +43,12 @@ public class FtpClientPool implements AutoCloseable {
     /**
      * 队列
      */
-    private BlockingQueue<FTPClient> pool;
+    private final BlockingQueue<FTPClient> pool;
 
     /**
      * 连接工厂
      */
-    private FtpClientFactory factory;
+    private final FtpClientFactory factory;
 
     /**
      * 长连接心跳监听

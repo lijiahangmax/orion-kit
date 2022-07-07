@@ -31,7 +31,7 @@ import java.util.function.Supplier;
  */
 public class ExcelExt implements SafeCloseable {
 
-    private Workbook workbook;
+    private final Workbook workbook;
 
     public ExcelExt(File file) {
         this(Files1.openInputStreamSafe(file), null, false, true);

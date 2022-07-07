@@ -66,7 +66,7 @@ public class FtpServerInstance {
     /**
      * 用户
      */
-    private List<User> initUsers;
+    private final List<User> initUsers;
 
     /**
      * 监听主机

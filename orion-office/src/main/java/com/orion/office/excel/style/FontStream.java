@@ -23,9 +23,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 public class FontStream {
 
-    private Workbook workbook;
+    private final Workbook workbook;
 
-    private Font font;
+    private final Font font;
 
     public FontStream(Workbook workbook) {
         this.workbook = workbook;

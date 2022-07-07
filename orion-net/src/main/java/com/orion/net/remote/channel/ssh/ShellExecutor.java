@@ -19,7 +19,7 @@ public class ShellExecutor extends BaseShellExecutor implements ChannelConnector
     /**
      * channel
      */
-    private ChannelShell channel;
+    private final ChannelShell channel;
 
     public ShellExecutor(ChannelShell channel) {
         this.channel = channel;

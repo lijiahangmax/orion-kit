@@ -11,7 +11,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 
 /**
- * Udp Client 发送
+ * udp client 发送
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -22,16 +22,16 @@ public class UdpSend implements AutoCloseable {
     /**
      * IP
      */
-    private String host;
+    private final String host;
 
     /**
      * 端口
      */
-    private int port;
+    private final int port;
 
-    private InetAddress inetAddress;
+    private final InetAddress inetAddress;
 
-    private DatagramSocket ds;
+    private final DatagramSocket ds;
 
     public UdpSend(String host, int port) {
         this.host = host;
@@ -89,7 +89,7 @@ public class UdpSend implements AutoCloseable {
      * @return this
      * @throws IOException IOException
      */
-    public UdpSend sendLF() throws IOException {
+    public UdpSend sendLf() throws IOException {
         DatagramPacket dp = new DatagramPacket(Const.LF.getBytes(), 1, this.inetAddress, this.port);
         this.ds.send(dp);
         return this;

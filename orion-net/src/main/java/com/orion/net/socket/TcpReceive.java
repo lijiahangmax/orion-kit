@@ -25,14 +25,14 @@ import java.util.concurrent.TimeUnit;
  */
 public class TcpReceive implements AutoCloseable {
 
-    private int port;
+    private final int port;
 
-    private ServerSocket serverSocket;
+    private final ServerSocket serverSocket;
 
     /**
      * 接收的socket
      */
-    private List<Socket> receiveSocketList;
+    private final List<Socket> receiveSocketList;
 
     /**
      * 接收线程池

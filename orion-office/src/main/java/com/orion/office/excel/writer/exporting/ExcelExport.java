@@ -21,22 +21,22 @@ import java.util.Optional;
  */
 public class ExcelExport<T> extends BaseExcelWriteable {
 
-    private Sheet sheet;
+    private final Sheet sheet;
 
     /**
      * 列配置
      */
-    private SheetConfig sheetConfig;
+    private final SheetConfig sheetConfig;
 
     /**
      * 初始化器
      */
-    private ExportInitializer<T> initializer;
+    private final ExportInitializer<T> initializer;
 
     /**
      * 处理器
      */
-    private ExportProcessor<T> processor;
+    private final ExportProcessor<T> processor;
 
     /**
      * 写入行数

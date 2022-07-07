@@ -17,7 +17,7 @@ public class FtpFile implements Serializable {
 
     private static final long serialVersionUID = -8231234702679455L;
 
-    private FTPFile ftpFile;
+    private final FTPFile ftpFile;
 
     /**
      * 文件路径
@@ -78,7 +78,7 @@ public class FtpFile implements Serializable {
      * 345 group: rwx
      * 678 world: rwx
      */
-    private boolean[] permission = new boolean[9];
+    private boolean[] permission;
 
     /**
      * 权限信息
@@ -98,6 +98,7 @@ public class FtpFile implements Serializable {
         this.modifyTime = ftpFile.getTimestamp().getTime();
         this.rawListing = ftpFile.getRawListing();
         this.permissionString = rawListing.split(Strings.SPACE)[0];
+        this.permission = new boolean[9];
         this.permission[0] = ftpFile.hasPermission(0, 0);
         this.permission[1] = ftpFile.hasPermission(0, 1);
         this.permission[2] = ftpFile.hasPermission(0, 2);

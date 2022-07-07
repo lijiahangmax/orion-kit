@@ -22,17 +22,17 @@ public class CommandExecutor extends BaseCommandExecutor {
     /**
      * 会话
      */
-    protected Session session;
+    protected final Session session;
 
     /**
      * 命令
      */
-    private String command;
+    private final String command;
 
     /**
      * 命令编码
      */
-    private String commandCharset;
+    private final String commandCharset;
 
     /**
      * 是否等待命令执行, 且不包含

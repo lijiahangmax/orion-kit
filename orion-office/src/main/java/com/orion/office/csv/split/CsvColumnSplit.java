@@ -26,17 +26,17 @@ public class CsvColumnSplit implements SafeCloseable {
     /**
      * 读取流
      */
-    private CsvArrayReader reader;
+    private final CsvArrayReader reader;
+
+    /**
+     * 列
+     */
+    private final int[] columns;
 
     /**
      * 表头
      */
     private String[] headers;
-
-    /**
-     * 列
-     */
-    private int[] columns;
 
     /**
      * 流式读取缓冲区

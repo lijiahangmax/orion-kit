@@ -22,18 +22,18 @@ public class TcpSend implements AutoCloseable, Flushable {
     /**
      * host
      */
-    private String host;
+    private final String host;
 
     /**
      * 端口
      */
-    private int port;
+    private final int port;
 
-    private Socket socket;
+    private final Socket socket;
 
-    private InputStream in;
+    private final InputStream in;
 
-    private OutputStream out;
+    private final OutputStream out;
 
     public TcpSend(String host, int port) throws IOException {
         this.host = host;
@@ -86,7 +86,7 @@ public class TcpSend implements AutoCloseable, Flushable {
      * @return this
      * @throws IOException IOException
      */
-    public TcpSend sendLF() throws IOException {
+    public TcpSend sendLf() throws IOException {
         out.write(13);
         return this;
     }

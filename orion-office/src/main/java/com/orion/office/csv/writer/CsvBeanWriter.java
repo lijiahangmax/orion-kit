@@ -36,7 +36,7 @@ public class CsvBeanWriter<T> extends BaseCsvWriter<String, T> {
     /**
      * targetClass
      */
-    private Class<T> targetClass;
+    private final Class<T> targetClass;
 
     /**
      * 是否需要添加注解表头

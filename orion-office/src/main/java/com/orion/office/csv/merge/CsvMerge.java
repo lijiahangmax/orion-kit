@@ -20,7 +20,7 @@ public class CsvMerge implements SafeCloseable {
     /**
      * 输出流
      */
-    private CsvArrayWriter writer;
+    private final CsvArrayWriter writer;
 
     /**
      * 跳过合并文件的行
