@@ -21,7 +21,7 @@ public class XssFilter implements Filter {
     /**
      * 应用名称
      */
-    private String applicationContext = "/";
+    private String applicationContext;
 
     /**
      * key: 不需要过滤的 url
