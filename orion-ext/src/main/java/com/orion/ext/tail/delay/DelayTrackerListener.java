@@ -19,12 +19,12 @@ public class DelayTrackerListener extends AbstractDelayTracker {
     /**
      * 数据处理器
      */
-    private DataHandler handler;
+    private final DataHandler handler;
 
     /**
      * 缓冲区
      */
-    private byte[] buffer;
+    private final byte[] buffer;
 
     public DelayTrackerListener(String tailFile, DataHandler handler) {
         this(new File(tailFile), handler);
@@ -38,8 +38,10 @@ public class DelayTrackerListener extends AbstractDelayTracker {
 
     @Override
     protected void read() throws IOException {
-        int len = reader.read(buffer);
-        handler.read(buffer, len, this);
+        int len;
+        while ((len = reader.read(buffer)) != -1) {
+            handler.read(buffer, len, this);
+        }
     }
 
 }

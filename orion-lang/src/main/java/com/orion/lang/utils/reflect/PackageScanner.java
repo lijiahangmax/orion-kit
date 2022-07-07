@@ -29,12 +29,22 @@ public class PackageScanner {
     /**
      * 扫描到的类
      */
-    private Set<Class<?>> classes = new LinkedHashSet<>();
+    private final Set<Class<?>> classes;
 
     /**
      * 扫描的包
      */
-    private Set<String> packages = new LinkedHashSet<>();
+    private final Set<String> packages;
+
+    /**
+     * 加载的资源
+     */
+    private final Set<URL> resources;
+
+    /**
+     * 扫描类加载器
+     */
+    private ClassLoader classLoader;
 
     /**
      * 是否扫描所有包
@@ -42,22 +52,15 @@ public class PackageScanner {
     private boolean scanAll;
 
     /**
-     * target resource url
-     */
-    private URL resource;
-
-    /**
-     * 加载类
-     */
-    private Class<?> loadClass;
-
-    /**
      * 扫描指定包 如果不填扫描当前项目所有的包
      *
      * @param packages 包名 可以用.*结尾 扫描子包
      */
     public PackageScanner(String... packages) {
-        this.loadClass = PackageScanner.class;
+        this.classes = new LinkedHashSet<>();
+        this.packages = new LinkedHashSet<>();
+        this.resources = new LinkedHashSet<>();
+        this.classLoader = Classes.getCurrentClassLoader();
         if (Arrays1.isEmpty(packages)) {
             this.scanAll = true;
         } else {
@@ -76,37 +79,51 @@ public class PackageScanner {
      * @return this
      */
     public PackageScanner addPackage(String... packageName) {
-        if (!Arrays1.isEmpty(packageName)) {
-            for (String p : packageName) {
-                if (!Strings.isBlank(p)) {
-                    this.packages.add(p);
-                }
+        if (Arrays1.isEmpty(packageName)) {
+            return this;
+        }
+        for (String p : packageName) {
+            if (!Strings.isBlank(p)) {
+                packages.add(p);
             }
         }
         return this;
     }
 
     /**
-     * 手动设置扫描的资源
+     * 设置扫描的资源
      *
      * @param resource resource
      * @return this
      */
-    public PackageScanner resource(URL resource) {
-        Valid.notNull(resource, "resource is null");
-        this.resource = resource;
+    public PackageScanner addResource(URL... resource) {
+        if (Arrays1.isEmpty(resource)) {
+            return this;
+        }
+        for (URL r : resource) {
+            if (r != null) {
+                resources.add(r);
+            }
+        }
         return this;
     }
 
     /**
-     * 设置加载类
+     * 添加资源 class
      *
-     * @param loadClass loadClass
+     * @param resourceClass resourceClass
      * @return this
      */
-    public PackageScanner with(Class<?> loadClass) {
-        Valid.notNull(loadClass, "loadClass is null");
-        this.loadClass = loadClass;
+    public PackageScanner with(Class<?> resourceClass) {
+        Valid.notNull(resourceClass, "resourceClass is null");
+        URL r1 = resourceClass.getClassLoader().getResource(Strings.EMPTY);
+        URL r2 = resourceClass.getProtectionDomain().getCodeSource().getLocation();
+        if (r1 != null) {
+            resources.add(r1);
+        }
+        if (r2 != null) {
+            resources.add(r2);
+        }
         return this;
     }
 
@@ -121,70 +138,46 @@ public class PackageScanner {
     }
 
     /**
+     * 设置类加载器
+     *
+     * @param classLoader classLoader
+     * @return this
+     */
+    public PackageScanner classLoader(ClassLoader classLoader) {
+        this.classLoader = classLoader;
+        return this;
+    }
+
+    /**
      * 开始扫描
      *
      * @return this
      */
     public PackageScanner scan() {
-        if (this.resource == null) {
-            this.setResouce();
+        if (resources.isEmpty()) {
+            throw Exceptions.init("not set scan resources");
         }
-        String protocol = resource.getProtocol();
-        Set<String> classNameSet = new LinkedHashSet<>();
-        if (scanAll) {
-            if (Const.PROTOCOL_FILE.equals(protocol)) {
-                this.scanFile(Strings.EMPTY, classNameSet);
-            } else if (Const.PROTOCOL_JAR.equals(protocol)) {
-                this.scanJar(Strings.EMPTY, classNameSet);
-            }
-        } else {
-            for (String p : packages) {
+        for (URL resource : resources) {
+            String protocol = resource.getProtocol();
+            Set<String> classNameSet = new LinkedHashSet<>();
+            if (scanAll) {
                 if (Const.PROTOCOL_FILE.equals(protocol)) {
-                    this.scanFile(p, classNameSet);
+                    this.scanFile(resource, Strings.EMPTY, classNameSet);
                 } else if (Const.PROTOCOL_JAR.equals(protocol)) {
-                    this.scanJar(p, classNameSet);
+                    this.scanJar(resource, Strings.EMPTY, classNameSet);
+                }
+            } else {
+                for (String p : packages) {
+                    if (Const.PROTOCOL_FILE.equals(protocol)) {
+                        this.scanFile(resource, p, classNameSet);
+                    } else if (Const.PROTOCOL_JAR.equals(protocol)) {
+                        this.scanJar(resource, p, classNameSet);
+                    }
                 }
             }
+            this.loadClasses(classNameSet);
         }
-        this.loadClasses(classNameSet);
         return this;
-    }
-
-    // -------------------- SCAN --------------------
-
-    /**
-     * 自动设置资源
-     */
-    private void setResouce() {
-        URL r1 = loadClass.getClassLoader().getResource(Strings.EMPTY);
-        URL r2 = loadClass.getResource(Strings.EMPTY);
-        if (r1 == null && r2 == null) {
-            throw Exceptions.init("cannot find the resource");
-        }
-        if (r1 == null || r2 == null) {
-            this.resource = Objects1.def(r1, r2);
-            return;
-        }
-        // jar check
-        boolean protocol1IsJar = Const.PROTOCOL_JAR.equals(r1.getProtocol());
-        boolean protocol2IsJar = Const.PROTOCOL_JAR.equals(r2.getProtocol());
-        boolean allJar = protocol1IsJar && protocol2IsJar;
-        boolean allFile = !protocol1IsJar && !protocol2IsJar;
-        if (allJar || allFile) {
-            // short resoruce
-            if (Integer.compare(r1.toString().length(), r2.toString().length()) < 0) {
-                this.resource = r1;
-            } else {
-                this.resource = r2;
-            }
-        } else {
-            // jar / file
-            if (protocol1IsJar) {
-                this.resource = r1;
-            } else {
-                this.resource = r2;
-            }
-        }
     }
 
     // -------------------- SCAN --------------------
@@ -192,10 +185,11 @@ public class PackageScanner {
     /**
      * 扫描 file://*
      *
+     * @param resource     资源
      * @param packageName  包名
      * @param classNameSet 包名容器
      */
-    private void scanFile(String packageName, Set<String> classNameSet) {
+    private void scanFile(URL resource, String packageName, Set<String> classNameSet) {
         boolean all = packageName.endsWith(".*");
         if (all) {
             packageName = packageName.substring(0, packageName.length() - 2);
@@ -207,10 +201,11 @@ public class PackageScanner {
     /**
      * 扫描 jar://*
      *
+     * @param resource     资源
      * @param packageName  包名
      * @param classNameSet 包名容器
      */
-    private void scanJar(String packageName, Set<String> classNameSet) {
+    private void scanJar(URL resource, String packageName, Set<String> classNameSet) {
         boolean all = packageName.endsWith(".*");
         if (all) {
             packageName = packageName.substring(0, packageName.length() - 2);
@@ -300,7 +295,7 @@ public class PackageScanner {
         for (String className : classNames) {
             Class<?> c = null;
             try {
-                c = Class.forName(className, false, Classes.getCurrentClassLoader());
+                c = Class.forName(className, false, classLoader);
             } catch (ClassNotFoundException e) {
                 // ignore
             }
@@ -539,12 +534,16 @@ public class PackageScanner {
         return classes;
     }
 
-    public URL getResource() {
-        return resource;
-    }
-
     public Set<String> getPackages() {
         return packages;
+    }
+
+    public Set<URL> getResources() {
+        return resources;
+    }
+
+    public ClassLoader getClassLoader() {
+        return classLoader;
     }
 
 }

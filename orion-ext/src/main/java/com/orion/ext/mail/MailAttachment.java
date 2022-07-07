@@ -36,40 +36,43 @@ public class MailAttachment implements Serializable {
     /**
      * 类型
      */
-    private String contentType = StandardContentType.APPLICATION_STREAM;
+    private String contentType;
 
     /**
      * 编码
      */
-    private String charset = Const.UTF_8;
+    private String charset;
+
+    private boolean autoClose;
 
     public MailAttachment() {
+        this.contentType = StandardContentType.APPLICATION_STREAM;
+        this.charset = Const.UTF_8;
     }
 
     public MailAttachment(String file) {
-        Valid.notBlank(file, "attachment file path is blank");
-        this.body = Files1.openInputStreamFastSafe(file);
-        this.name = Files1.getFileName(file);
+        this(Files1.openInputStreamFastSafe(file), Files1.getFileName(file), true);
     }
 
     public MailAttachment(File file) {
-        Valid.notNull(file, "attachment file is null");
-        this.body = Files1.openInputStreamFastSafe(file);
-        this.name = file.getName();
+        this(Files1.openInputStreamFastSafe(file), file.getName(), true);
+    }
+
+    public MailAttachment(byte[] body, String name) {
+        this(Streams.toInputStream(body), name, true);
     }
 
     public MailAttachment(InputStream body, String name) {
+        this(body, name, false);
+    }
+
+    public MailAttachment(InputStream body, String name, boolean autoClose) {
+        this();
         Valid.notNull(body, "attachment body is null");
         Valid.notBlank(name, "attachment file name is blank");
         this.body = body;
         this.name = name;
-    }
-
-    public MailAttachment(byte[] body, String name) {
-        Valid.notNull(body, "attachment body is null");
-        Valid.notBlank(name, "attachment file name is blank");
-        this.body = Streams.toInputStream(body);
-        this.name = name;
+        this.autoClose = autoClose;
     }
 
     public MailAttachment name(String name) {
@@ -101,10 +104,16 @@ public class MailAttachment implements Serializable {
      * @throws Exception on convert error
      */
     public MimeBodyPart getMimeBodyPart() throws Exception {
-        MimeBodyPart attache = new MimeBodyPart();
-        attache.setDataHandler(new DataHandler(new ByteArrayDataSource(body, contentType)));
-        attache.setFileName(MimeUtility.encodeText(name, charset, null));
-        return attache;
+        try {
+            MimeBodyPart attach = new MimeBodyPart();
+            attach.setDataHandler(new DataHandler(new ByteArrayDataSource(body, contentType)));
+            attach.setFileName(MimeUtility.encodeText(name, charset, null));
+            return attach;
+        } finally {
+            if (autoClose) {
+                Streams.close(body);
+            }
+        }
     }
 
 }
