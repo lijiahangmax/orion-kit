@@ -19,12 +19,12 @@ public class NamedThreadFactory implements ThreadFactory {
     /**
      * 计数器
      */
-    private AtomicInteger counter = new AtomicInteger();
+    private final AtomicInteger counter;
 
     /**
      * 前缀
      */
-    private String prefix;
+    private final String prefix;
 
     /**
      * 类加载器
@@ -39,7 +39,7 @@ public class NamedThreadFactory implements ThreadFactory {
     /**
      * 优先级
      */
-    private int priority = 5;
+    private int priority;
 
     /**
      * 线程组
@@ -53,6 +53,8 @@ public class NamedThreadFactory implements ThreadFactory {
 
     public NamedThreadFactory(String prefix) {
         this.prefix = Strings.def(prefix);
+        this.counter = new AtomicInteger();
+        this.priority = 5;
     }
 
     public NamedThreadFactory setClassLoader(ClassLoader classLoader) {

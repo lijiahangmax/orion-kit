@@ -80,6 +80,16 @@ class BaseDates {
     }
 
     /**
+     * 时间戳毫秒转时间戳秒
+     *
+     * @param timestamp 时间戳毫秒
+     * @return 时间戳秒
+     */
+    public static long getSecondTime(long timestamp) {
+        return timestamp / SECOND_STAMP;
+    }
+
+    /**
      * 时间段
      *
      * @param hour 小时

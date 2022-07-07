@@ -1626,6 +1626,9 @@ public class Files1 {
             if (parent != null && !Files.exists(parent)) {
                 Files.createDirectories(parent);
             }
+            if (append) {
+                Files.createFile(file);
+            }
         }
         if (append) {
             return Files.newOutputStream(file, StandardOpenOption.APPEND);

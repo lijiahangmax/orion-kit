@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.lijiahangmax</groupId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <packaging>pom</packaging>
     <artifactId>orion-kit</artifactId>
     <name>${project.artifactId}</name>
@@ -31,18 +31,18 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.charset>UTF-8</maven.compiler.charset>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-        <orion.parent.version>1.0.2</orion.parent.version>
-        <orion.lang.version>1.0.2</orion.lang.version>
-        <orion.ext.version>1.0.2</orion.ext.version>
-        <orion.office.version>1.0.2</orion.office.version>
-        <orion.log.version>1.0.2</orion.log.version>
-        <orion.http.version>1.0.2</orion.http.version>
-        <orion.net.version>1.0.2</orion.net.version>
-        <orion.web.version>1.0.2</orion.web.version>
-        <orion.redis.version>1.0.2</orion.redis.version>
-        <orion.spring.version>1.0.2</orion.spring.version>
-        <orion.generator.version>1.0.2</orion.generator.version>
-        <orion.all.version>1.0.2</orion.all.version>
+        <orion.parent.version>1.0.3</orion.parent.version>
+        <orion.lang.version>1.0.3</orion.lang.version>
+        <orion.ext.version>1.0.3</orion.ext.version>
+        <orion.office.version>1.0.3</orion.office.version>
+        <orion.log.version>1.0.3</orion.log.version>
+        <orion.http.version>1.0.3</orion.http.version>
+        <orion.net.version>1.0.3</orion.net.version>
+        <orion.web.version>1.0.3</orion.web.version>
+        <orion.redis.version>1.0.3</orion.redis.version>
+        <orion.spring.version>1.0.3</orion.spring.version>
+        <orion.generator.version>1.0.3</orion.generator.version>
+        <orion.all.version>1.0.3</orion.all.version>
         <junit.version>4.13.1</junit.version>
         <spring.version>5.2.20.RELEASE</spring.version>
         <spring.mvc.version>5.2.20.RELEASE</spring.mvc.version>
@@ -76,7 +76,7 @@
         <log4j.version>2.17.1</log4j.version>
         <nginxparser.version>0.9.3</nginxparser.version>
         <ssh2.version>262</ssh2.version>
-        <jsch.version>0.1.55</jsch.version>
+        <jsch.version>0.2.1</jsch.version>
         <python.script.version>2.7.2</python.script.version>
         <lua.script.version>3.0.1</lua.script.version>
         <groovy.script.version>3.0.4</groovy.script.version>

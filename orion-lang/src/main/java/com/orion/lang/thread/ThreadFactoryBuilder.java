@@ -34,7 +34,7 @@ public class ThreadFactoryBuilder implements Buildable<ThreadFactory> {
     /**
      * 线程优先级
      */
-    private int priority = 5;
+    private int priority;
 
     /**
      * 未捕获异常处理器
@@ -45,6 +45,10 @@ public class ThreadFactoryBuilder implements Buildable<ThreadFactory> {
      * 线程组
      */
     private ThreadGroup group;
+
+    public ThreadFactoryBuilder() {
+        this.priority = 5;
+    }
 
     /**
      * 创建 ThreadFactoryBuilder
