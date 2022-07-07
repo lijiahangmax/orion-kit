@@ -26,7 +26,7 @@ public abstract class Const {
 
     public static final String ORION_DISPLAY = ".orion";
 
-    public static final String ORION_VERSION = "1.0.0";
+    public static final String ORION_VERSION = "1.0.3";
 
     public static final String ORION_AUTHOR = "Jiahang Li";
 
@@ -99,6 +99,8 @@ public abstract class Const {
     public static final int BUFFER_KB_16 = 1024 * 16;
 
     public static final int BUFFER_KB_32 = 1024 * 32;
+
+    public static final int MPB = 128;
 
     // -------------------- capacity --------------------
 
@@ -206,7 +208,11 @@ public abstract class Const {
 
     public static final Long L_1 = 1L;
 
+    public static final Double D_N_1 = -1D;
+
     public static final Double D_0 = 0D;
+
+    public static final Double D_1 = 1D;
 
     // -------------------- suffix --------------------
 
