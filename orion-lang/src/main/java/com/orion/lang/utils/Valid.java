@@ -1,5 +1,6 @@
 package com.orion.lang.utils;
 
+import com.orion.lang.able.IHttpResponse;
 import com.orion.lang.constant.Const;
 import com.orion.lang.exception.argument.InvalidArgumentException;
 
@@ -65,6 +66,7 @@ public abstract class Valid {
     private static final String VALID_LENGTH_NOT_LT = "the validated value length is not less than {}";
     private static final String VALID_LENGTH_NOT_LT_EQ = "the validated value length is not less than or equal {}";
     private static final String VALID_NOT_INSTANCE = "expected type: {}, actual: {}";
+    private static final String HTTP_REQ_NOT_OK = "http request not success. code: {}, url: {}";
 
     public Valid() {
     }
@@ -661,6 +663,15 @@ public abstract class Valid {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
         return type.cast(obj);
+    }
+
+    public static <T extends IHttpResponse> T validHttpOk(T resp) {
+        notNull(resp);
+        int code = resp.getCode();
+        if (code < 200 || code >= 300) {
+            throw Exceptions.httpRequest(Strings.format(HTTP_REQ_NOT_OK, code, resp.getUrl()));
+        }
+        return resp;
     }
 
 }

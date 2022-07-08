@@ -1,5 +1,6 @@
 package com.orion.http.parse;
 
+import com.orion.http.BaseHttpResponse;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import org.jsoup.Connection;
@@ -15,7 +16,7 @@ import java.io.Serializable;
  * @version 1.0.0
  * @since 2021/3/6 16:35
  */
-public class ParseResponse implements Serializable {
+public class ParseResponse extends BaseHttpResponse implements Serializable {
 
     /**
      * response
@@ -65,10 +66,12 @@ public class ParseResponse implements Serializable {
         return response.charset();
     }
 
+    @Override
     public String getUrl() {
         return url;
     }
 
+    @Override
     public int getCode() {
         return response.statusCode();
     }

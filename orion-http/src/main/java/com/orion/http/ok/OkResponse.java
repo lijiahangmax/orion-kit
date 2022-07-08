@@ -1,5 +1,6 @@
 package com.orion.http.ok;
 
+import com.orion.http.BaseHttpResponse;
 import com.orion.http.support.HttpCookie;
 import com.orion.lang.define.mutable.MutableString;
 import com.orion.lang.utils.Exceptions;
@@ -21,7 +22,7 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2020/4/7 23:52
  */
-public class OkResponse implements Serializable {
+public class OkResponse extends BaseHttpResponse implements Serializable {
 
     /**
      * response
@@ -86,6 +87,12 @@ public class OkResponse implements Serializable {
         this.exception = exception;
     }
 
+    @Override
+    public String getUrl() {
+        return url;
+    }
+
+    @Override
     public int getCode() {
         this.validDone();
         return response.code();
@@ -114,17 +121,8 @@ public class OkResponse implements Serializable {
         return exception;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
     public Object getTag() {
         return tag;
-    }
-
-    public String getProtocol() {
-        this.validDone();
-        return this.response.protocol().toString();
     }
 
     public Map<String, List<String>> getHeaders() {
@@ -169,12 +167,10 @@ public class OkResponse implements Serializable {
         return this.exception != null;
     }
 
-    /**
-     * @return 是否执行完成
-     */
+    @Override
     public boolean isOk() {
         this.validDone();
-        return this.getCode() >= 200 && this.getCode() < 300;
+        return super.isOk();
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.orion.http.apache;
 
+import com.orion.http.BaseHttpResponse;
 import com.orion.http.support.HttpCookie;
 import com.orion.lang.define.collect.MutableArrayList;
 import com.orion.lang.define.mutable.MutableString;
@@ -23,7 +24,7 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2020/6/12 15:08
  */
-public class ApacheResponse implements Serializable {
+public class ApacheResponse extends BaseHttpResponse implements Serializable {
 
     /**
      * 响应
@@ -53,15 +54,12 @@ public class ApacheResponse implements Serializable {
         return response;
     }
 
-    /**
-     * 请求是否成功
-     *
-     * @return true成功
-     */
-    public boolean isOk() {
-        return this.getCode() >= 200 && this.getCode() < 300;
+    @Override
+    public String getUrl() {
+        return url;
     }
 
+    @Override
     public int getCode() {
         return response.getStatusLine().getStatusCode();
     }
@@ -79,14 +77,6 @@ public class ApacheResponse implements Serializable {
             return new String(body);
         }
         return null;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public String getProtocol() {
-        return response.getStatusLine().getProtocolVersion().getProtocol();
     }
 
     public Map<String, MutableArrayList<String>> getHeaders() {
