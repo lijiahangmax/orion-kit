@@ -1,6 +1,6 @@
 package com.orion.lang.utils.io;
 
-import com.orion.lang.able.Lockable;
+import com.orion.lang.able.ILock;
 import com.orion.lang.constant.Const;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
@@ -186,7 +186,7 @@ public class FileLocks {
     /**
      * 文件管道锁
      */
-    public static class ChannelFileLock implements Lockable {
+    public static class ChannelFileLock implements ILock {
 
         private Path file;
         private FileChannel channel;
@@ -254,7 +254,7 @@ public class FileLocks {
     /**
      * 文件名称锁
      */
-    public static class NamedFileLock implements Lockable {
+    public static class NamedFileLock implements ILock {
 
         /**
          * 锁前缀

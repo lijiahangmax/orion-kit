@@ -1,7 +1,7 @@
 package com.orion.lang.define.wrapper;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.orion.lang.able.JsonAble;
+import com.orion.lang.able.IJsonObject;
 import com.orion.lang.define.iterator.ArrayIterator;
 import com.orion.lang.define.iterator.EmptyIterator;
 import com.orion.lang.define.support.CloneSupport;
@@ -24,7 +24,7 @@ import java.util.stream.Stream;
  * @version 1.0.0
  * @since 2020/10/15 17:14
  */
-public class Tuple extends CloneSupport<Tuple> implements Serializable, JsonAble, Iterable<Object> {
+public class Tuple extends CloneSupport<Tuple> implements Serializable, IJsonObject, Iterable<Object> {
 
     private static final long serialVersionUID = 228374192841290087L;
 

@@ -11,7 +11,7 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2019/8/19 20:03
  */
-public interface Mapable<K, V> {
+public interface IMapObject<K, V> {
 
     /**
      * 转为 map

@@ -24,13 +24,17 @@ public abstract class Const {
 
     public static final String ORION = "orion";
 
+    public static final String ORION_KIT = "orion-kit";
+
     public static final String ORION_DISPLAY = ".orion";
 
-    public static final String ORION_VERSION = "1.0.3";
+    public static final String ORION_KIT_VERSION = "1.0.3";
 
     public static final String ORION_AUTHOR = "Jiahang Li";
 
-    public static final String ORION_EMAIL = "li1553488@aliyun.com";
+    public static final String ORION_AUTHOR_CN = "李佳航";
+
+    public static final String ORION_EMAIL = "ljh1553488six@139.com";
 
     public static final String ORION_GITHUB = "https://github.com/lijiahangmax";
 
@@ -100,7 +104,7 @@ public abstract class Const {
 
     public static final int BUFFER_KB_32 = 1024 * 32;
 
-    public static final int MPB = 128;
+    public static final int MPB = 1024 * 128;
 
     // -------------------- capacity --------------------
 
@@ -298,9 +302,23 @@ public abstract class Const {
 
     public static final String PAGER = "pager";
 
+    // -------------------- http --------------------
+
+    public static final Integer HTTP_OK_CODE = 200;
+
+    public static final Integer HTTP_BAD_REQUEST_CODE = 400;
+
+    public static final Integer HTTP_NOT_FOUND_CODE = 404;
+
+    public static final Integer HTTP_ERROR_CODE = 500;
+
     // -------------------- others --------------------
 
     public static final String BR = "<br/>";
+
+    public static final String OK = "ok";
+
+    public static final String ERROR = "error";
 
     public static final String NULL = "null";
 

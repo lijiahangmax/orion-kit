@@ -1,6 +1,6 @@
 package com.orion.net.ftp.client.config;
 
-import com.orion.lang.able.JsonAble;
+import com.orion.lang.able.IJsonObject;
 import com.orion.lang.constant.Const;
 import com.orion.lang.utils.Charsets;
 
@@ -14,7 +14,7 @@ import java.nio.charset.Charset;
  * @version 1.0.0
  * @since 2020/3/17 16:00
  */
-public class FtpConfig implements Serializable, JsonAble {
+public class FtpConfig implements Serializable, IJsonObject {
 
     /**
      * host
@@ -241,13 +241,8 @@ public class FtpConfig implements Serializable, JsonAble {
     }
 
     @Override
-    public String toJsonString() {
-        return toJson();
-    }
-
-    @Override
     public String toString() {
-        return toJson();
+        return this.toJsonString();
     }
 
 }

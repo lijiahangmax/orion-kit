@@ -7,7 +7,7 @@ package com.orion.lang.able;
  * @version 1.0.0
  * @since 2019/8/23 10:59
  */
-public interface Arrayable<E> {
+public interface IArrayObject<E> {
 
     /**
      * 转化为数组接口

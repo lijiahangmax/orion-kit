@@ -7,7 +7,7 @@ package com.orion.lang.able;
  * @version 1.0.0
  * @since 2019/11/18 18:18
  */
-public interface Entryable<K, V> {
+public interface IEntryObject<K, V> {
 
     /**
      * 获取key

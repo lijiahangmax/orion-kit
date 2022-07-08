@@ -1,6 +1,6 @@
 package com.orion.http.useragent;
 
-import com.orion.lang.able.JsonAble;
+import com.orion.lang.able.IJsonObject;
 import eu.bitwalker.useragentutils.Browser;
 import eu.bitwalker.useragentutils.OperatingSystem;
 import eu.bitwalker.useragentutils.UserAgent;
@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @version 1.0.0
  * @since 2021/3/5 18:35
  */
-public class UserAgentInfo implements Serializable, JsonAble {
+public class UserAgentInfo implements Serializable, IJsonObject {
 
     private static final long serialVersionUID = 89873451943868422L;
 
@@ -175,11 +175,6 @@ public class UserAgentInfo implements Serializable, JsonAble {
 
     public void setSystemManufacturer(String systemManufacturer) {
         this.systemManufacturer = systemManufacturer;
-    }
-
-    @Override
-    public String toJsonString() {
-        return toJson();
     }
 
     @Override

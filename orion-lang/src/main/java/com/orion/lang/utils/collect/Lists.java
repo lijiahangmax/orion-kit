@@ -98,6 +98,10 @@ public class Lists extends Collections {
         return new MutableVector<>(c);
     }
 
+    public static <E> FixedArrayList<E> newFixedList(int limit) {
+        return new FixedArrayList<>(limit);
+    }
+
     public static <E> LimitList<E> newLimitList() {
         return new LimitList<>();
     }

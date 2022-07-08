@@ -1,11 +1,10 @@
 package com.orion.lang.define.wrapper;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.orion.lang.able.JsonAble;
+import com.orion.lang.able.IJsonObject;
 import com.orion.lang.define.iterator.EmptyIterator;
 import com.orion.lang.define.support.CloneSupport;
 import com.orion.lang.utils.collect.Lists;
-import com.orion.lang.utils.json.Jsons;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -21,7 +20,7 @@ import java.util.stream.Stream;
  * @version 1.0.0
  * @since 2019/5/30 22:52
  */
-public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, JsonAble, Iterable<T> {
+public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, IJsonObject, Iterable<T> {
 
     private static final long serialVersionUID = 6354348839019830L;
 
@@ -317,11 +316,6 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, Js
         } else {
             return rows.stream();
         }
-    }
-
-    @Override
-    public String toJsonString() {
-        return Jsons.toJsonWriteNull(this);
     }
 
     @Override

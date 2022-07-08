@@ -7,7 +7,7 @@ package com.orion.lang.able;
  * @version 1.0.0
  * @since 2020/3/20 22:19
  */
-public interface Lockable {
+public interface ILock {
 
     /**
      * 尝试锁定

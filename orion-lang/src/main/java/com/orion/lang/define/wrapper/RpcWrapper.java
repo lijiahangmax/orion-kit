@@ -1,8 +1,8 @@
 package com.orion.lang.define.wrapper;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.orion.lang.able.Logable;
-import com.orion.lang.able.Mapable;
+import com.orion.lang.able.ILogObject;
+import com.orion.lang.able.IMapObject;
 import com.orion.lang.constant.Const;
 import com.orion.lang.constant.Letters;
 import com.orion.lang.define.support.CloneSupport;
@@ -22,7 +22,7 @@ import java.util.function.Supplier;
  * @version 1.0.0
  * @since 2019/5/29 11:27
  */
-public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrapper<T>, Logable, Mapable<String, Object> {
+public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrapper<T>, ILogObject, IMapObject<String, Object> {
 
     private static final long serialVersionUID = 7940497300629314L;
 

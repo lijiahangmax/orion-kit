@@ -11,6 +11,8 @@ public interface Awaitable<T> {
 
     /**
      * 同步执行
+     *
+     * @return 执行结果
      */
     T await();
 

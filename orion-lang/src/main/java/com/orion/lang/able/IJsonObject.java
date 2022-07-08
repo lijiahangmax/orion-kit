@@ -3,27 +3,20 @@ package com.orion.lang.able;
 import com.orion.lang.utils.json.Jsons;
 
 /**
- * Json接口
+ * 对象转 json 接口
  *
  * @author Li
  * @version 1.0.0
  * @since 2019/8/15 20:34
  */
-public interface JsonAble {
+public interface IJsonObject {
 
     /**
-     * 对象转json
+     * 对象转 json
      *
-     * @return jsonString
+     * @return json
      */
-    String toJsonString();
-
-    /**
-     * 对象转json
-     *
-     * @return jsonString
-     */
-    default String toJson() {
+    default String toJsonString() {
         return Jsons.toJsonWriteNull(this);
     }
 

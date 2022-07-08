@@ -1,7 +1,6 @@
 package com.orion.lang.define.wrapper;
 
-import com.orion.lang.able.JsonAble;
-import com.orion.lang.utils.json.Jsons;
+import com.orion.lang.able.IJsonObject;
 
 import java.io.Serializable;
 
@@ -12,7 +11,7 @@ import java.io.Serializable;
  * @version 1.0.0
  * @since 2019/9/16 14:35
  */
-public interface Wrapper<T> extends Serializable, JsonAble {
+public interface Wrapper<T> extends Serializable, IJsonObject {
 
     // -------------------- HTTP --------------------
 
@@ -43,15 +42,5 @@ public interface Wrapper<T> extends Serializable, JsonAble {
     int URL_REFRESH = 2;
 
     int URL_REDIRECT = 3;
-
-    /**
-     * 获取json
-     *
-     * @return json
-     */
-    @Override
-    default String toJsonString() {
-        return Jsons.toJsonWriteNull(this);
-    }
 
 }

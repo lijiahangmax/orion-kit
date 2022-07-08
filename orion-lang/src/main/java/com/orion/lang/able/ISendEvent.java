@@ -7,7 +7,7 @@ package com.orion.lang.able;
  * @version 1.0.0
  * @since 2019/11/18 18:16
  */
-public interface Sendable<T> {
+public interface ISendEvent<T> {
 
     /**
      * 发送接口

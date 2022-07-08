@@ -1,6 +1,6 @@
 package com.orion.ext.mail;
 
-import com.orion.lang.able.Sendable;
+import com.orion.lang.able.ISendEvent;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.Valid;
@@ -21,7 +21,7 @@ import java.util.Properties;
  * @version 1.0.0
  * @since 2020/3/15 18:25
  */
-public class MailSender implements Sendable<MailMessage> {
+public class MailSender implements ISendEvent<MailMessage> {
 
     private final Properties props;
 

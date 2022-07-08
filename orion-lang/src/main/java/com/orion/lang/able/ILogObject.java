@@ -7,7 +7,7 @@ package com.orion.lang.able;
  * @version 1.0.0
  * @since 2019/8/15 20:33
  */
-public interface Logable {
+public interface ILogObject {
 
     /**
      * 转为日志

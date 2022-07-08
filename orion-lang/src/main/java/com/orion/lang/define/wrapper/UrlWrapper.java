@@ -1,7 +1,7 @@
 package com.orion.lang.define.wrapper;
 
-import com.orion.lang.able.Logable;
-import com.orion.lang.able.Mapable;
+import com.orion.lang.able.ILogObject;
+import com.orion.lang.able.IMapObject;
 import com.orion.lang.constant.Const;
 import com.orion.lang.define.support.CloneSupport;
 import com.orion.lang.utils.Strings;
@@ -18,7 +18,7 @@ import java.util.Map;
  * @see HttpWrapper<UrlWrapper>
  * @since 2019/5/30 22:52
  */
-public class UrlWrapper<T> extends CloneSupport<UrlWrapper<T>> implements Wrapper<T>, Logable, Mapable<String, Object> {
+public class UrlWrapper<T> extends CloneSupport<UrlWrapper<T>> implements Wrapper<T>, ILogObject, IMapObject<String, Object> {
 
     private static final long serialVersionUID = 4250545197688197L;
 

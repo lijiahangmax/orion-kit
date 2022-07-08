@@ -11,6 +11,8 @@ public interface Asyncable<T> {
 
     /**
      * 异步执行
+     *
+     * @param handler 异步处理器
      */
     void async(T handler);
 
