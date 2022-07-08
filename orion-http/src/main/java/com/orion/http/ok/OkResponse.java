@@ -103,11 +103,13 @@ public class OkResponse extends BaseHttpResponse implements Serializable {
         return response.message();
     }
 
+    @Override
     public byte[] getBody() {
         this.validDone();
         return body;
     }
 
+    @Override
     public String getBodyString() {
         this.validDone();
         return new String(body);

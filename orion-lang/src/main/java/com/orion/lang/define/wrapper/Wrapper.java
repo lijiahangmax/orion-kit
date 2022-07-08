@@ -15,21 +15,21 @@ public interface Wrapper<T> extends Serializable, IJsonObject {
 
     // -------------------- HTTP --------------------
 
-    int HTTP_OK_CODE = 200;
+    Integer HTTP_OK_CODE = 200;
 
     String HTTP_OK_MESSAGE = "success";
 
-    int HTTP_ERROR_CODE = 500;
+    Integer HTTP_ERROR_CODE = 500;
 
     String HTTP_ERROR_MESSAGE = "error";
 
     // -------------------- RPC --------------------
 
-    int RPC_SUCCESS_CODE = 2000;
+    Integer RPC_SUCCESS_CODE = 2000;
 
     String RPC_SUCCESS_MESSAGE = "success";
 
-    int RPC_ERROR_CODE = 5000;
+    Integer RPC_ERROR_CODE = 5000;
 
     String RPC_ERROR_MESSAGE = "error";
 

@@ -198,13 +198,17 @@ public class Stacks {
      */
     public static class StackTrace implements Serializable {
 
-        private StackTraceElement e;
+        private final StackTraceElement e;
 
-        private String className;
-        private String fileName;
-        private Integer lineNumber;
-        private String methodName;
-        private boolean nativeMethod;
+        private final String className;
+
+        private final String fileName;
+
+        private final Integer lineNumber;
+
+        private final String methodName;
+
+        private final boolean nativeMethod;
 
         private StackTrace(StackTraceElement e) {
             this.e = e;
@@ -241,11 +245,12 @@ public class Stacks {
 
         @Override
         public String toString() {
-            return e + "\n\t className ==> '" + className + '\'' +
-                    "\n\t fileName ==> '" + fileName + '\'' +
-                    "\n\t lineNumber ==> " + lineNumber +
-                    "\n\t methodName ==> '" + methodName + '\'' +
-                    "\n\t nativeMethod ==> " + nativeMethod;
+            return e +
+                    "\n     className ==> '" + className + '\'' +
+                    "\n      fileName ==> '" + fileName + '\'' +
+                    "\n    lineNumber ==> " + lineNumber +
+                    "\n    methodName ==> '" + methodName + '\'' +
+                    "\n  nativeMethod ==> " + nativeMethod;
         }
 
     }

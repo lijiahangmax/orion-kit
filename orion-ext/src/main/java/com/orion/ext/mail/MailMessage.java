@@ -378,14 +378,14 @@ public class MailMessage implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("EML-form: [");
+        StringBuilder sb = new StringBuilder("EMAIL: form: [");
         sb.append(from).append("]").append(Letters.LF);
-        sb.append("  ==> to: ").append(to == null ? "[]" : to.toString()).append(Strings.SPACE).append(Letters.LF);
+        sb.append("  ==>    to: ").append(to == null ? "[]" : to.toString()).append(Strings.SPACE).append(Letters.LF);
         if (cc != null) {
-            sb.append("  ==> cc: ").append(cc.toString()).append(Strings.SPACE).append(Letters.LF);
+            sb.append("  ==>    cc: ").append(cc).append(Strings.SPACE).append(Letters.LF);
         }
         if (bcc != null) {
-            sb.append("  ==> bcc: ").append(bcc.toString()).append(Strings.SPACE).append(Letters.LF);
+            sb.append("  ==>   bcc: ").append(bcc).append(Strings.SPACE).append(Letters.LF);
         }
         sb.append("  ==> title: [").append(title).append("] ").append(Letters.LF);
         return sb.toString();

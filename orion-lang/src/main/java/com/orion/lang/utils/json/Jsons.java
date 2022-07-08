@@ -188,6 +188,18 @@ public class Jsons {
     }
 
     /**
+     * json -> object
+     *
+     * @param json json
+     * @param ref  ref
+     * @param <T>  T
+     * @return object
+     */
+    public static <T> T toJsonObject(String json, TypeReference<T> ref) {
+        return JSON.parseObject(json, ref);
+    }
+
+    /**
      * json -> JSONArray
      *
      * @param json json

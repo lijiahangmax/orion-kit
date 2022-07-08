@@ -143,9 +143,10 @@ public class UrlWrapper<T> extends CloneSupport<UrlWrapper<T>> implements Wrappe
 
     @Override
     public String toLogString() {
-        return "UrlWrapper:\n\turl ==> " + url + "\n\t" +
-                "type ==> " + type + "\n\t" +
-                "data ==> " + Jsons.toJsonWriteNull(data);
+        return "UrlWrapper:" +
+                "\n   url ==> " + url +
+                "\n  type ==> " + type +
+                "\n  data ==> " + Jsons.toJsonWriteNull(data);
     }
 
     @Override

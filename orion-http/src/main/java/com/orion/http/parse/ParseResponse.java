@@ -80,10 +80,12 @@ public class ParseResponse extends BaseHttpResponse implements Serializable {
         return response.statusMessage();
     }
 
+    @Override
     public byte[] getBody() {
         return body;
     }
 
+    @Override
     public String getBodyString() {
         return new String(body);
     }

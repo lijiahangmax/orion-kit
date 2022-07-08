@@ -217,19 +217,20 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
      */
     @JSONField(serialize = false)
     public boolean isOk() {
-        return code == HTTP_OK_CODE;
+        return HTTP_OK_CODE.equals(code);
     }
 
     @Override
     public String toString() {
-        return toLogString();
+        return this.toLogString();
     }
 
     @Override
     public String toLogString() {
-        return "HttpWrapper:\n\tcode ==> " + code + "\n\t" +
-                "msg ==> " + msg + "\n\t" +
-                "data ==> " + Objects1.toString(data);
+        return "HttpWrapper:" +
+                "\n  code ==> " + code +
+                "\n   msg ==> " + msg +
+                "\n  data ==> " + Objects1.toString(data);
     }
 
     @Override

@@ -68,10 +68,12 @@ public class ApacheResponse extends BaseHttpResponse implements Serializable {
         return response.getStatusLine().getReasonPhrase();
     }
 
+    @Override
     public byte[] getBody() {
         return body;
     }
 
+    @Override
     public String getBodyString() {
         if (body != null) {
             return new String(body);

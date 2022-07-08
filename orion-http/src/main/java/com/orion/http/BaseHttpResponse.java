@@ -1,5 +1,7 @@
 package com.orion.http;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.orion.lang.able.IHttpResponse;
 import com.orion.lang.utils.Valid;
 
@@ -13,10 +15,36 @@ import com.orion.lang.utils.Valid;
 public abstract class BaseHttpResponse implements IHttpResponse {
 
     /**
+     * 获取 body
+     *
+     * @return body
+     */
+    public abstract byte[] getBody();
+
+    /**
+     * 获取 body string
+     *
+     * @return body string
+     */
+    public abstract String getBodyString();
+
+    /**
      * 验证是否成功
      */
     public void validOk() {
         Valid.validHttpOk(this);
+    }
+
+    /**
+     * 获取 json body
+     *
+     * @param ref ref
+     * @param <T> T
+     * @return json
+     */
+    public <T> T getJsonObjectBody(TypeReference<T> ref) {
+        this.validOk();
+        return JSON.parseObject(this.getBodyString(), ref);
     }
 
 }

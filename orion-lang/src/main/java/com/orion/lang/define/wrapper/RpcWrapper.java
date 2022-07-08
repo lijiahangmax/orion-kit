@@ -4,7 +4,6 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.orion.lang.able.ILogObject;
 import com.orion.lang.able.IMapObject;
 import com.orion.lang.constant.Const;
-import com.orion.lang.constant.Letters;
 import com.orion.lang.define.support.CloneSupport;
 import com.orion.lang.id.UUIds;
 import com.orion.lang.utils.Exceptions;
@@ -195,7 +194,7 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
      */
     @JSONField(serialize = false)
     public boolean isSuccess() {
-        return RPC_ERROR_CODE != code && Lists.isEmpty(errorMessages);
+        return !RPC_ERROR_CODE.equals(code) && Lists.isEmpty(errorMessages);
     }
 
     /**
@@ -304,20 +303,20 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
 
     @Override
     public String toString() {
-        return toLogString();
+        return this.toLogString();
     }
 
     @Override
     public String toLogString() {
-        StringBuilder builder = new StringBuilder();
-        boolean success = isSuccess();
-        builder.append("RpcWrapper:\n\tisSuccess ==> ").append(success).append(Letters.LF).append(Letters.TAB)
-                .append("traceId ==> ").append(traceId).append(Letters.LF).append(Letters.TAB)
-                .append("code ==> ").append(code).append(Letters.LF).append(Letters.TAB)
-                .append("msg ==> ").append(msg).append(Letters.LF).append(Letters.TAB)
-                .append("data ==> ").append(Jsons.toJsonWriteNull(data));
+        StringBuilder builder = new StringBuilder("RpcWrapper: ");
+        boolean success = this.isSuccess();
+        builder.append("\n  isSuccess ==> ").append(success)
+                .append("\n    traceId ==> ").append(traceId)
+                .append("\n       code ==> ").append(code)
+                .append("\n        msg ==> ").append(msg)
+                .append("\n       data ==> ").append(Jsons.toJsonWriteNull(data));
         if (!success) {
-            builder.append("errorMsg ==> ").append(errorMessages);
+            builder.append("\n   errorMsg ==> ").append(errorMessages);
         }
         return builder.toString();
     }
