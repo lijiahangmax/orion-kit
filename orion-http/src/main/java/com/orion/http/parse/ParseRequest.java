@@ -119,7 +119,7 @@ public class ParseRequest extends BaseHttpRequest implements Awaitable<ParseResp
         try {
             this.response = connection.execute();
         } catch (IOException e) {
-            throw Exceptions.httpRequest(e);
+            throw Exceptions.httpRequest(url, e);
         }
     }
 

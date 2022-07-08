@@ -669,7 +669,8 @@ public abstract class Valid {
         notNull(resp);
         int code = resp.getCode();
         if (code < 200 || code >= 300) {
-            throw Exceptions.httpRequest(Strings.format(HTTP_REQ_NOT_OK, code, resp.getUrl()));
+            String url = resp.getUrl();
+            throw Exceptions.httpRequest(url, Strings.format(HTTP_REQ_NOT_OK, code, url));
         }
         return resp;
     }

@@ -9,19 +9,28 @@ package com.orion.lang.exception;
  */
 public class HttpRequestException extends RuntimeException {
 
-    public HttpRequestException() {
+    private final String url;
+
+    public HttpRequestException(String url) {
+        this.url = url;
     }
 
-    public HttpRequestException(String message) {
+    public HttpRequestException(String url, String message) {
         super(message);
+        this.url = url;
     }
 
-    public HttpRequestException(String message, Throwable cause) {
+    public HttpRequestException(String url, String message, Throwable cause) {
         super(message, cause);
+        this.url = url;
     }
 
-    public HttpRequestException(Throwable cause) {
+    public HttpRequestException(String url, Throwable cause) {
         super(cause);
+        this.url = url;
     }
 
+    public String getUrl() {
+        return url;
+    }
 }

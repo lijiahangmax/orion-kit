@@ -507,20 +507,20 @@ public class Exceptions {
         return new SftpException(s, t);
     }
 
-    public static HttpRequestException httpRequest() {
-        return new HttpRequestException();
+    public static HttpRequestException httpRequest(String url) {
+        return new HttpRequestException(url);
     }
 
-    public static HttpRequestException httpRequest(Throwable t) {
-        return new HttpRequestException(t);
+    public static HttpRequestException httpRequest(String url, Throwable t) {
+        return new HttpRequestException(url, t);
     }
 
-    public static HttpRequestException httpRequest(String s) {
-        return new HttpRequestException(s);
+    public static HttpRequestException httpRequest(String url, String msg) {
+        return new HttpRequestException(url, msg);
     }
 
-    public static HttpRequestException httpRequest(String s, Throwable t) {
-        return new HttpRequestException(s, t);
+    public static HttpRequestException httpRequest(String url, String msg, Throwable t) {
+        return new HttpRequestException(url, msg, t);
     }
 
     public static HttpUnsupportedMethodException httpUnsupportedMethod() {

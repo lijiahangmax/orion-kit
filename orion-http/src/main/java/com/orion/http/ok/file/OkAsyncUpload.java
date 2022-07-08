@@ -150,7 +150,7 @@ public class OkAsyncUpload extends BaseOkRequest implements Asyncable<Consumer<O
             public void onFailure(Call call, IOException e) {
                 response.error(e);
                 if (asyncFailThrows) {
-                    throw Exceptions.httpRequest("async ok upload file on failure: " + OkAsyncUpload.super.getRequestMessage(), e);
+                    throw Exceptions.httpRequest(url, "async ok upload file on failure: " + OkAsyncUpload.super.getRequestMessage(), e);
                 }
                 callback.accept(response);
             }

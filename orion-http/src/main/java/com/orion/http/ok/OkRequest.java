@@ -89,7 +89,7 @@ public class OkRequest extends BaseOkRequest implements Awaitable<OkResponse>, A
                 response = new OkResponse(url, tag, resp);
                 return;
             } catch (IOException e) {
-                throw Exceptions.httpRequest(e);
+                throw Exceptions.httpRequest(url, e);
             }
         }
         // async
@@ -105,7 +105,7 @@ public class OkRequest extends BaseOkRequest implements Awaitable<OkResponse>, A
             public void onFailure(Call call, IOException e) {
                 response.error(e);
                 if (asyncFailThrows) {
-                    throw Exceptions.httpRequest("async ok request on failure: " + OkRequest.super.getRequestMessage(), e);
+                    throw Exceptions.httpRequest(url, "async ok request on failure: " + OkRequest.super.getRequestMessage(), e);
                 }
                 asyncCallback.accept(response);
             }

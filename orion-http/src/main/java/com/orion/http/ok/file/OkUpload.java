@@ -130,7 +130,7 @@ public class OkUpload extends BaseOkRequest implements Awaitable<OkResponse> {
         try (Response resp = call.execute()) {
             this.response = new OkResponse(url, tag, resp);
         } catch (IOException e) {
-            throw Exceptions.httpRequest("ok request upload file on failure: " + super.getRequestMessage(), e);
+            throw Exceptions.httpRequest(url, "ok request upload file on failure: " + super.getRequestMessage(), e);
         } finally {
             this.done = true;
             this.endDate = System.currentTimeMillis();

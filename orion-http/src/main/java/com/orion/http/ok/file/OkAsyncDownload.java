@@ -162,7 +162,7 @@ public class OkAsyncDownload extends BaseOkRequest implements Asyncable<Consumer
                     Streams.close(out);
                 }
                 if (asyncFailThrows) {
-                    throw Exceptions.httpRequest("async ok download file on failure: " + OkAsyncDownload.super.getRequestMessage(), e);
+                    throw Exceptions.httpRequest(url, "async ok download file on failure: " + OkAsyncDownload.super.getRequestMessage(), e);
                 }
                 callback.accept(response);
             }
