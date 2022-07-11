@@ -2,13 +2,9 @@ package com.orion.lang.id;
 
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.Systems;
-import com.orion.lang.utils.random.Randoms;
-
-import java.nio.ByteBuffer;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * MongoDB ID生成策略实现(线程安全)
+ * MongoDB id 生成工具
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -16,16 +12,20 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class ObjectIds {
 
+    private static final int MACHINE_CODE;
+
+    private static final ObjectIdWorker ID_WORKER;
+
     private ObjectIds() {
     }
 
-    private static final AtomicInteger NEXT_SEQ_INCREMENT = new AtomicInteger(Randoms.randomInt());
-
-    private static final int MACHINE = Systems.getMachineCode();
-    // private static final int MACHINE = Systems.getMachineCode() | Systems.getProcessCode();
+    static {
+        MACHINE_CODE = Systems.getMachineCode();
+        ID_WORKER = new ObjectIdWorker(MACHINE_CODE);
+    }
 
     /**
-     * 判断objectId是否有效
+     * 判断 objectId 是否有效
      *
      * @param s 字符串
      * @return ignore
@@ -58,49 +58,31 @@ public class ObjectIds {
     }
 
     /**
-     * 获取一个objectId
+     * 获取一个 objectId
      *
      * @return objectId
      */
     public static byte[] nextBytes() {
-        ByteBuffer bb = ByteBuffer.wrap(new byte[12]);
-        bb.putInt((int) System.currentTimeMillis() / 1000);
-        bb.putInt(MACHINE);
-        bb.putInt(NEXT_SEQ_INCREMENT.getAndIncrement());
-        return bb.array();
+        return ID_WORKER.nextBytes();
     }
 
     /**
-     * 获取一个objectId用下划线分割
+     * 获取一个 objectId (无下划线)
      *
      * @return objectId
      */
-    public static String next() {
-        return next(false);
+    public static String nextId() {
+        return ID_WORKER.nextId();
     }
 
     /**
-     * 获取一个objectId
+     * 获取一个 objectId
      *
      * @param symbol 是否包含分隔符
      * @return objectId
      */
-    public static String next(boolean symbol) {
-        byte[] array = nextBytes();
-        StringBuilder buf = new StringBuilder(symbol ? 26 : 24);
-        int t;
-        for (int i = 0; i < array.length; i++) {
-            if (symbol && i % 4 == 0 && i != 0) {
-                buf.append("-");
-            }
-            t = array[i] & 0xFF;
-            if (t < 16) {
-                buf.append('0');
-            }
-            buf.append(Integer.toHexString(t));
-
-        }
-        return buf.toString();
+    public static String nextId(boolean symbol) {
+        return ID_WORKER.nextId(symbol);
     }
 
     /**
@@ -108,8 +90,8 @@ public class ObjectIds {
      *
      * @return 机器码
      */
-    public static int getMachine() {
-        return MACHINE;
+    public static int getMachineCode() {
+        return MACHINE_CODE;
     }
 
 }

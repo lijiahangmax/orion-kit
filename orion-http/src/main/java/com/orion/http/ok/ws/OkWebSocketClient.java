@@ -121,7 +121,7 @@ public class OkWebSocketClient extends WebSocketListener {
 
     public OkWebSocketClient(String url) {
         this.url = url;
-        this.sessionId = Sequences.next() + Strings.EMPTY;
+        this.sessionId = Sequences.nextId() + Strings.EMPTY;
         this.client = OkRequests.getClient();
     }
 

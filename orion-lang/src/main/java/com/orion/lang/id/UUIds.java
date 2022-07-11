@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * uuid工具类
+ * uuid 工具类
  *
  * @author Jiahang Li
  * @version 1.0.0

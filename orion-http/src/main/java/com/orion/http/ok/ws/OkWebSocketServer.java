@@ -277,7 +277,7 @@ public class OkWebSocketServer extends WebSocketListener {
         }
         String clientSessionId = response.request().header(OkWebSocketConst.CLIENT_SESSION_ID_HEADER);
         if (clientSessionId == null) {
-            clientSessionId = (OkWebSocketConst.SERVER_TEMP_SESSION_ID + Sequences.next());
+            clientSessionId = (OkWebSocketConst.SERVER_TEMP_SESSION_ID + Sequences.nextId());
         }
         clients.put(clientSessionId, webSocket);
         LOGGER.info("WebSocketServer-连接ClientSessionId: [{}], 当前连接数量: [{}]", clientSessionId, clients.size());

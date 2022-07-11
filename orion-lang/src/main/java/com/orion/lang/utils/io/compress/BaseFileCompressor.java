@@ -72,7 +72,7 @@ public abstract class BaseFileCompressor implements FileCompressor {
         this.compressFiles = new LinkedHashMap<>();
         this.compressStreams = new LinkedHashMap<>();
         this.compressPath = Systems.TEMP_DIR;
-        this.fileName = ObjectIds.next();
+        this.fileName = ObjectIds.nextId();
         this.suffix = suffix;
     }
 

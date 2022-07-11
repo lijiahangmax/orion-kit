@@ -106,7 +106,7 @@ public class Bz2Decompressor extends BaseFileDecompressor {
                 this.decompressTargetFileName = Optional.ofNullable(decompressFile)
                         .map(File::getName)
                         .map(s -> s.substring(0, s.length() - suffix.length() - 1))
-                        .orElseGet(ObjectIds::next);
+                        .orElseGet(ObjectIds::nextId);
             }
             if (decompressTargetOutputStream != null) {
                 out = decompressTargetOutputStream;

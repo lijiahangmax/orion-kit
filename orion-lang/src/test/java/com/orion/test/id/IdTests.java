@@ -31,15 +31,15 @@ public class IdTests {
     }
 
     private static void sequence() {
-        Threads.concurrent(() -> System.out.println(Sequences.next()), 100, Executors.newCachedThreadPool());
+        Threads.concurrent(() -> System.out.println(Sequences.nextId()), 100, Executors.newCachedThreadPool());
     }
 
     private static void snowflake() {
-        Threads.concurrent(() -> System.out.println(SnowFlakes.next()), 100, Executors.newCachedThreadPool());
+        Threads.concurrent(() -> System.out.println(SnowFlakes.nextId()), 100, Executors.newCachedThreadPool());
     }
 
     private static void objectId() {
-        Threads.concurrent(() -> System.out.println(ObjectIds.next()), 100, Executors.newCachedThreadPool());
+        Threads.concurrent(() -> System.out.println(ObjectIds.nextId()), 100, Executors.newCachedThreadPool());
     }
 
     private static void uuid() {

@@ -22,7 +22,7 @@ public class SystemClock {
     private SystemClock(long period) {
         this.period = period;
         this.now = new AtomicLong(System.currentTimeMillis());
-        scheduleClockUpdating();
+        this.scheduleClockUpdating();
     }
 
     /**
@@ -43,6 +43,7 @@ public class SystemClock {
         return new Timestamp(InstanceHolder.INSTANCE.currentTimeMillis()).toString();
     }
 
+    @SuppressWarnings("ALL")
     private void scheduleClockUpdating() {
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(runnable -> {
             Thread thread = new Thread(runnable, "System Clock");
