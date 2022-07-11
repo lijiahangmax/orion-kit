@@ -22,7 +22,18 @@ import java.util.Map;
  */
 public class OkRequests {
 
+    /**
+     * 默认请求 client
+     */
+    private static OkHttpClient client;
+
     private OkRequests() {
+    }
+
+    static {
+        OkRequests.client = OkClientBuilder.create()
+                .logInterceptor()
+                .build();
     }
 
     /**
@@ -269,6 +280,14 @@ public class OkRequests {
      */
     public static OkWebSocketServer getWebSocketServer(InetAddress address, int port) {
         return new OkWebSocketServer(address, port);
+    }
+
+    public static OkHttpClient getClient() {
+        return client;
+    }
+
+    public static void setClient(OkHttpClient client) {
+        OkRequests.client = client;
     }
 
 }

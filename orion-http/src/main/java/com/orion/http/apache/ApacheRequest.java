@@ -16,16 +16,15 @@ import java.io.IOException;
 public class ApacheRequest extends BaseApacheRequest {
 
     public ApacheRequest() {
-        this.client = ApacheClient.getClient();
+        this(null, ApacheRequests.getClient());
     }
 
     public ApacheRequest(CloseableHttpClient client) {
-        this.client = client;
+        this(null, client);
     }
 
     public ApacheRequest(String url) {
-        this.url = url;
-        this.client = ApacheClient.getClient();
+        this(url, ApacheRequests.getClient());
     }
 
     public ApacheRequest(String url, CloseableHttpClient client) {
@@ -34,21 +33,15 @@ public class ApacheRequest extends BaseApacheRequest {
     }
 
     @Override
-    protected void execute() {
+    public ApacheResponse await() {
         this.buildRequest();
         try (CloseableHttpResponse resp = client.execute(request)) {
-            this.response = new ApacheResponse(url, resp);
+            return new ApacheResponse(url, resp);
         } catch (IOException e) {
             throw Exceptions.httpRequest(url, e);
         } finally {
             request.releaseConnection();
         }
-    }
-
-    @Override
-    public ApacheResponse await() {
-        this.execute();
-        return this.response;
     }
 
 }

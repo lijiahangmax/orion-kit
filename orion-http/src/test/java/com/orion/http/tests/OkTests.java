@@ -109,7 +109,6 @@ public class OkTests {
         req.method(HttpMethod.PATCH);
         req.part(new HttpUploadPart("file", "文件内容1".getBytes(), ".txt"));
         System.out.println(req.await());
-        System.out.println(req.getUseDate());
     }
 
     @Test

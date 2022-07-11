@@ -19,7 +19,7 @@ import java.io.OutputStream;
  */
 public class OkDownload {
 
-    private OkRequest request;
+    private final OkRequest request;
 
     private OkResponse response;
 

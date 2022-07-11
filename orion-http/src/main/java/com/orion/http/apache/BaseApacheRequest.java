@@ -39,11 +39,6 @@ public abstract class BaseApacheRequest extends BaseHttpRequest implements Await
     protected HttpRequestBase request;
 
     /**
-     * response
-     */
-    protected ApacheResponse response;
-
-    /**
      * client
      *
      * @param client client
@@ -51,31 +46,6 @@ public abstract class BaseApacheRequest extends BaseHttpRequest implements Await
      */
     public BaseApacheRequest client(CloseableHttpClient client) {
         this.client = client;
-        return this;
-    }
-
-    /**
-     * ssl
-     *
-     * @param ssl ssl
-     * @return this
-     */
-    public BaseApacheRequest ssl(boolean ssl) {
-        this.ssl = ssl;
-        if (ssl) {
-            this.client = ApacheClient.getSslClient();
-        }
-        return this;
-    }
-
-    /**
-     * ssl
-     *
-     * @return this
-     */
-    public BaseApacheRequest ssl() {
-        this.ssl = true;
-        this.client = ApacheClient.getSslClient();
         return this;
     }
 
@@ -154,10 +124,6 @@ public abstract class BaseApacheRequest extends BaseHttpRequest implements Await
 
     public CloseableHttpClient getClient() {
         return client;
-    }
-
-    public ApacheResponse getResponse() {
-        return response;
     }
 
 }

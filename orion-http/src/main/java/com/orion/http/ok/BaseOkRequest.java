@@ -6,6 +6,7 @@ import com.orion.http.support.HttpUploadPart;
 import com.orion.lang.constant.StandardHttpHeader;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
+import com.orion.lang.utils.Valid;
 import com.orion.lang.utils.io.Streams;
 import okhttp3.*;
 
@@ -42,11 +43,6 @@ public abstract class BaseOkRequest extends BaseHttpRequest {
      */
     protected OkHttpClient client;
 
-    /**
-     * OkHttp Response
-     */
-    protected OkResponse response;
-
     public BaseOkRequest client(OkHttpClient client) {
         this.client = client;
         return this;
@@ -58,35 +54,12 @@ public abstract class BaseOkRequest extends BaseHttpRequest {
     }
 
     /**
-     * ssl
-     *
-     * @param ssl ssl
-     * @return this
-     */
-    public BaseOkRequest ssl(boolean ssl) {
-        this.ssl = ssl;
-        if (this.ssl) {
-            this.client = OkClient.getSslClient();
-        }
-        return this;
-    }
-
-    /**
-     * ssl
-     *
-     * @return this
-     */
-    public BaseOkRequest ssl() {
-        this.ssl = true;
-        return this;
-    }
-
-    /**
      * 取消请求
      *
      * @return this
      */
     public BaseOkRequest cancel() {
+        Valid.notNull(this.call, "request not call");
         this.call.cancel();
         return this;
     }
@@ -115,7 +88,7 @@ public abstract class BaseOkRequest extends BaseHttpRequest {
         } else {
             this.setBody(requestBuilder);
         }
-        request = requestBuilder.build();
+        this.request = requestBuilder.build();
     }
 
     /**
@@ -199,10 +172,6 @@ public abstract class BaseOkRequest extends BaseHttpRequest {
 
     public OkHttpClient getClient() {
         return client;
-    }
-
-    public OkResponse getResponse() {
-        return response;
     }
 
 }

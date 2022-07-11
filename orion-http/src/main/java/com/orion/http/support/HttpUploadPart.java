@@ -28,8 +28,9 @@ public class HttpUploadPart {
 
     /**
      * 文件名称
-     * file默认文件名
-     * 其他默认uuid
+     * <p>
+     * file 默认文件名
+     * 其他默认 uuid
      */
     private String fileName;
 
@@ -45,12 +46,12 @@ public class HttpUploadPart {
     private byte[] bytes;
 
     /**
-     * HttpClient无效
+     * HttpClient 无效
      */
     private int off;
 
     /**
-     * HttpClient无效
+     * HttpClient 无效
      */
     private int len;
 

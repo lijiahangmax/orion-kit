@@ -19,6 +19,6 @@ public interface ShutdownHandler {
      *
      * @param clients webSockets
      */
-    void shutdown(Map<WebSocket, String> clients);
+    void shutdown(Map<String, WebSocket> clients);
 
 }

@@ -1,12 +1,12 @@
 package com.orion.http.ok;
 
+import com.orion.lang.able.Buildable;
 import com.orion.lang.constant.Const;
 import com.orion.lang.utils.collect.Lists;
 import okhttp3.*;
 
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.X509TrustManager;
-import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.ArrayList;
@@ -15,13 +15,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * OkHttp 配置类
+ * OkHttp 配置构建
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/4/8 10:33
  */
-public class OkClientConfig implements Serializable {
+public class OkClientBuilder implements Buildable<OkHttpClient> {
 
     /**
      * call超时时间
@@ -44,7 +44,7 @@ public class OkClientConfig implements Serializable {
     private long writeTimeout;
 
     /**
-     * 是否开启logInterceptor
+     * 是否开启 logInterceptor
      */
     private boolean logInterceptor;
 
@@ -108,7 +108,7 @@ public class OkClientConfig implements Serializable {
      */
     private List<ConnectionSpec> connectionSpecs;
 
-    public OkClientConfig() {
+    public OkClientBuilder() {
         this.connectTimeout = Const.MS_S_3;
         this.callTimeout = Const.MS_S_15;
         this.readTimeout = Const.MS_S_15;
@@ -117,28 +117,32 @@ public class OkClientConfig implements Serializable {
         this.maxRequest = 64;
     }
 
-    public OkClientConfig proxy(String host, int port) {
+    public static OkClientBuilder create() {
+        return new OkClientBuilder();
+    }
+
+    public OkClientBuilder proxy(String host, int port) {
         this.proxyHost = host;
         this.proxyPort = port;
         return this;
     }
 
-    public OkClientConfig cookies(CookieJar cookies) {
+    public OkClientBuilder cookies(CookieJar cookies) {
         this.cookies = cookies;
         return this;
     }
 
-    public OkClientConfig logInterceptor(boolean open) {
+    public OkClientBuilder logInterceptor(boolean open) {
         this.logInterceptor = open;
         return this;
     }
 
-    public OkClientConfig logInterceptor() {
+    public OkClientBuilder logInterceptor() {
         this.logInterceptor = true;
         return this;
     }
 
-    public OkClientConfig interceptor(Interceptor interceptor) {
+    public OkClientBuilder interceptor(Interceptor interceptor) {
         if (interceptors == null) {
             this.interceptors = new ArrayList<>();
         }
@@ -146,7 +150,7 @@ public class OkClientConfig implements Serializable {
         return this;
     }
 
-    public OkClientConfig networkInterceptor(Interceptor interceptor) {
+    public OkClientBuilder networkInterceptor(Interceptor interceptor) {
         if (networkInterceptors == null) {
             this.networkInterceptors = new ArrayList<>();
         }
@@ -154,57 +158,57 @@ public class OkClientConfig implements Serializable {
         return this;
     }
 
-    public OkClientConfig callTimeout(long callTimeout) {
+    public OkClientBuilder callTimeout(long callTimeout) {
         this.callTimeout = callTimeout;
         return this;
     }
 
-    public OkClientConfig connectTimeout(long connectTimeout) {
+    public OkClientBuilder connectTimeout(long connectTimeout) {
         this.connectTimeout = connectTimeout;
         return this;
     }
 
-    public OkClientConfig readTimeout(long readTimeout) {
+    public OkClientBuilder readTimeout(long readTimeout) {
         this.readTimeout = readTimeout;
         return this;
     }
 
-    public OkClientConfig writeTimeout(long writeTimeout) {
+    public OkClientBuilder writeTimeout(long writeTimeout) {
         this.writeTimeout = writeTimeout;
         return this;
     }
 
-    public OkClientConfig maxRoute(int maxRoute) {
+    public OkClientBuilder maxRoute(int maxRoute) {
         this.maxRoute = maxRoute;
         return this;
     }
 
-    public OkClientConfig maxRequest(int maxRequest) {
+    public OkClientBuilder maxRequest(int maxRequest) {
         this.maxRequest = maxRequest;
         return this;
     }
 
-    public OkClientConfig dispatcherPool(ExecutorService dispatcherPool) {
+    public OkClientBuilder dispatcherPool(ExecutorService dispatcherPool) {
         this.dispatcherPool = dispatcherPool;
         return this;
     }
 
-    public OkClientConfig dispatcher(Dispatcher dispatcher) {
+    public OkClientBuilder dispatcher(Dispatcher dispatcher) {
         this.dispatcher = dispatcher;
         return this;
     }
 
-    public OkClientConfig sslSocketFactory(SSLSocketFactory sslSocketFactory) {
+    public OkClientBuilder sslSocketFactory(SSLSocketFactory sslSocketFactory) {
         this.sslSocketFactory = sslSocketFactory;
         return this;
     }
 
-    public OkClientConfig trustManager(X509TrustManager trustManager) {
+    public OkClientBuilder trustManager(X509TrustManager trustManager) {
         this.trustManager = trustManager;
         return this;
     }
 
-    public OkClientConfig connectionSpecs(List<ConnectionSpec> connectionSpecs) {
+    public OkClientBuilder connectionSpecs(List<ConnectionSpec> connectionSpecs) {
         if (this.connectionSpecs == null) {
             this.connectionSpecs = connectionSpecs;
         } else {
@@ -213,7 +217,7 @@ public class OkClientConfig implements Serializable {
         return this;
     }
 
-    public OkClientConfig connectionSpecs(ConnectionSpec connectionSpec) {
+    public OkClientBuilder connectionSpecs(ConnectionSpec connectionSpec) {
         if (this.connectionSpecs == null) {
             this.connectionSpecs = new ArrayList<>();
         }
@@ -282,10 +286,6 @@ public class OkClientConfig implements Serializable {
     }
 
     public OkHttpClient.Builder buildClientBuilder() {
-        return buildClientBuilder(false);
-    }
-
-    public OkHttpClient.Builder buildClientBuilder(boolean ssl) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .callTimeout(callTimeout, TimeUnit.MILLISECONDS)
                 .connectTimeout(connectTimeout, TimeUnit.MILLISECONDS)
@@ -318,26 +318,24 @@ public class OkClientConfig implements Serializable {
         if (!Lists.isEmpty(networkInterceptors)) {
             interceptors.forEach(builder::addNetworkInterceptor);
         }
-        // builder.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 8888)));
         if (proxyHost != null && proxyPort != 0) {
             builder.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort)));
         }
         if (cookies != null) {
             builder.cookieJar(cookies);
         }
-        if (ssl) {
-            builder.sslSocketFactory(sslSocketFactory, trustManager)
-                    .connectionSpecs(connectionSpecs);
+        if (sslSocketFactory != null && trustManager != null) {
+            builder.sslSocketFactory(sslSocketFactory, trustManager);
+        }
+        if (connectionSpecs != null) {
+            builder.connectionSpecs(connectionSpecs);
         }
         return builder;
     }
 
-    public OkHttpClient buildClient() {
-        return this.buildClientBuilder(false).build();
-    }
-
-    public OkHttpClient buildClient(boolean ssl) {
-        return this.buildClientBuilder(ssl).build();
+    @Override
+    public OkHttpClient build() {
+        return this.buildClientBuilder().build();
     }
 
     @Override

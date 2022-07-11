@@ -2,7 +2,7 @@ package com.orion.http.ok.file;
 
 import com.orion.http.BaseHttpRequest;
 import com.orion.http.ok.BaseOkRequest;
-import com.orion.http.ok.OkClient;
+import com.orion.http.ok.OkRequests;
 import com.orion.http.ok.OkResponse;
 import com.orion.http.support.HttpContentType;
 import com.orion.http.support.HttpMethod;
@@ -36,13 +36,8 @@ public class OkAsyncUpload extends BaseOkRequest implements Asyncable<Consumer<O
      */
     private boolean asyncFailThrows;
 
-    /**
-     * 异步传输回调接口
-     */
-    private Consumer<OkResponse> callback;
-
     public OkAsyncUpload(String url) {
-        this(url, OkClient.getClient());
+        this(url, OkRequests.getClient());
     }
 
     public OkAsyncUpload(String url, OkHttpClient client) {
@@ -130,15 +125,9 @@ public class OkAsyncUpload extends BaseOkRequest implements Asyncable<Consumer<O
     @Override
     public void async(Consumer<OkResponse> callback) {
         Valid.notNull(callback, "async call back is null");
-        this.callback = callback;
-        this.execute();
-    }
-
-    @Override
-    protected void execute() {
         super.buildRequest();
         this.call = client.newCall(request);
-        this.response = new OkResponse(url, tag);
+        OkResponse response = new OkResponse(url, tag);
         this.call.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response res) {

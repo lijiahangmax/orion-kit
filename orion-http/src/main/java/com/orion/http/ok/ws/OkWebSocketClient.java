@@ -1,6 +1,6 @@
 package com.orion.http.ok.ws;
 
-import com.orion.http.ok.OkClient;
+import com.orion.http.ok.OkRequests;
 import com.orion.http.ok.ws.handler.*;
 import com.orion.lang.constant.Const;
 import com.orion.lang.id.Sequences;
@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.EOFException;
-import java.net.ConnectException;
 import java.net.SocketException;
 
 /**
@@ -22,8 +21,7 @@ import java.net.SocketException;
  * @version 1.0.0
  * @since 2020/4/9 15:58
  */
-@SuppressWarnings("ALL")
-public class OkWebSocketClient {
+public class OkWebSocketClient extends WebSocketListener {
 
     /**
      * LOG
@@ -31,34 +29,24 @@ public class OkWebSocketClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(OkWebSocketClient.class);
 
     /**
-     * wsURL
+     * url
      */
-    private final String URL;
+    private final String url;
 
     /**
      * ws id
      */
-    private final String SESSION_ID;
+    private final String sessionId;
 
     /**
      * OkHttpClient
      */
-    private final OkHttpClient CLIENT = OkClient.getClient();
+    private final OkHttpClient client;
 
     /**
      * webSocket
      */
     private WebSocket webSocket;
-
-    /**
-     * 接收数量
-     */
-    private int receiveCount;
-
-    /**
-     * 发送数量
-     */
-    private int sendCount;
 
     /**
      * 异常断开连接重试次数
@@ -68,7 +56,7 @@ public class OkWebSocketClient {
     /**
      * 当前重试次数
      */
-    private volatile int nowReconnectionTimes;
+    private int nowReconnectionTimes;
 
     /**
      * 当前连接状态 0未连接 1已连接 2重试中 3已重连
@@ -83,17 +71,17 @@ public class OkWebSocketClient {
     /**
      * 最后一次关闭码
      */
-    private int lastCloseCode;
+    private int closeCode;
 
     /**
      * 最后一次关闭信息
      */
-    private String lastCloseReason;
+    private String closeReason;
 
     /**
      * 最后一次异常信息
      */
-    private Throwable lastThrowable;
+    private Throwable throwable;
 
     /**
      * 打开连接接口
@@ -129,19 +117,25 @@ public class OkWebSocketClient {
      * 发送Byte消息接口
      */
     private SendMessageByteHandler sendMessageByteHandler;
+    private Request request;
 
     public OkWebSocketClient(String url) {
-        this.URL = url;
-        this.SESSION_ID = Sequences.next() + Strings.EMPTY;
+        this.url = url;
+        this.sessionId = Sequences.next() + Strings.EMPTY;
+        this.client = OkRequests.getClient();
     }
 
     /**
-     * 启动Client
+     * 启动 client
      */
     public void start() {
         this.connectionState = 1;
         this.errorReconnectionInterval = Const.MS_S_30;
-        this.initMockClient();
+        this.request = new Request.Builder()
+                .url(url)
+                .addHeader(OkWebSocketConst.CLIENT_SESSION_ID_HEADER, sessionId)
+                .build();
+        this.webSocket = client.newWebSocket(request, this);
     }
 
     /**
@@ -155,8 +149,15 @@ public class OkWebSocketClient {
                 sendMessageHandler.send(webSocket, text);
             }
             webSocket.send(text);
-            this.sendCount++;
         }
+    }
+
+    public void send(byte[] bs) {
+        this.send(ByteString.of(bs));
+    }
+
+    public void send(byte[] bs, int offset, int len) {
+        this.send(ByteString.of(bs, offset, len));
     }
 
     /**
@@ -170,36 +171,25 @@ public class OkWebSocketClient {
                 sendMessageByteHandler.send(webSocket, byteString);
             }
             webSocket.send(byteString);
-            this.sendCount++;
         }
     }
 
-    public void send(byte[] bs) {
-        send(ByteString.of(bs));
-    }
-
-    public void send(byte[] bs, int offset, int len) {
-        send(ByteString.of(bs, offset, len));
-    }
-
     /**
-     * 关闭client连接
+     * 关闭 client 连接
      */
     public void close() {
-        if (webSocket != null) {
-            webSocket.close(OkWebSocketConst.CLIENT_CLOSE_CODE, OkWebSocketConst.CLIENT_CLOSE_REASON);
-        }
+        this.close(OkWebSocketConst.CLIENT_CLOSE_CODE, OkWebSocketConst.CLIENT_CLOSE_REASON);
     }
 
     /**
-     * 关闭client连接
+     * 关闭 client 连接
      *
      * @param code   code
      * @param reason reason
      */
-    public void close(String reason) {
+    public void close(int code, String reason) {
         if (webSocket != null) {
-            webSocket.close(OkWebSocketConst.CLIENT_CLOSE_CODE, reason);
+            webSocket.close(code, reason);
         }
     }
 
@@ -227,89 +217,79 @@ public class OkWebSocketClient {
         return this;
     }
 
-    private void initMockClient() {
-        Request request = new Request.Builder().url(URL).addHeader(OkWebSocketConst.CLIENT_SESSION_ID_HEADER, SESSION_ID).build();
-        WebSocketListener webSocketListener = new WebSocketListener() {
-
-            @Override
-            public void onOpen(WebSocket webSocket, Response response) {
-                if (connectionState == 2) {
-                    LOGGER.warn("WebSocketClient 连接异常断开-重连成功-尝试次数 {}次", nowReconnectionTimes);
-                    nowReconnectionTimes = 0;
-                    connectionState = 3;
-                } else {
-                    LOGGER.info("WebSocketClient 已建立连接 response: [{}]", response);
-                    if (openHandler != null) {
-                        openHandler.open(webSocket, response);
-                    }
-                }
+    @Override
+    public void onOpen(WebSocket webSocket, Response response) {
+        if (connectionState == 2) {
+            LOGGER.warn("WebSocketClient 连接异常断开-重连成功-尝试次数 {}次", nowReconnectionTimes);
+            this.nowReconnectionTimes = 0;
+            this.connectionState = 3;
+        } else {
+            LOGGER.info("WebSocketClient 已建立连接 response: [{}]", response);
+            if (openHandler != null) {
+                openHandler.open(webSocket, response);
             }
+        }
+    }
 
-            @Override
-            public void onMessage(WebSocket webSocket, String text) {
-                LOGGER.info("WebSocketClient 收到Server Text信息 msg: '{}'", text);
-                if (messageHandler != null) {
-                    messageHandler.message(webSocket, text);
-                }
-                receiveCount++;
+    @Override
+    public void onMessage(WebSocket webSocket, String text) {
+        LOGGER.debug("WebSocketClient 收到Server Text信息 msg: '{}'", text);
+        if (messageHandler != null) {
+            messageHandler.message(webSocket, text);
+        }
+    }
+
+    @Override
+    public void onMessage(WebSocket webSocket, ByteString bytes) {
+        LOGGER.debug("WebSocketClient 收到Server Byte信息 size: '{}'", bytes.size());
+        if (messageByteHandler != null) {
+            messageByteHandler.message(webSocket, bytes);
+        }
+    }
+
+    @Override
+    public void onClosing(WebSocket webSocket, int code, String reason) {
+        LOGGER.info("WebSocketClient 准备关闭连接 code: {}, reason: '{}'", code, reason);
+        if (closeHandler != null) {
+            closeHandler.close(webSocket, code, reason);
+        }
+        boolean close = webSocket.close(code, reason);
+        LOGGER.info("WebSocketClient 关闭连接完成 code: {}, reason: '{}', close: {}", code, reason, close);
+    }
+
+    @Override
+    public void onClosed(WebSocket webSocket, int code, String reason) {
+        LOGGER.info("WebSocketClient 连接已关闭, code: {}, reason: '{}'", code, reason);
+        this.closeCode = code;
+        this.closeReason = reason;
+        this.connectionState = 0;
+    }
+
+    @Override
+    public void onFailure(WebSocket failWebSocket, Throwable t, Response response) {
+        if (failureHandler != null) {
+            failureHandler.failure(failWebSocket, t, response);
+        }
+        // 需要重连并且未重连
+        if ((connectionState == 1 || connectionState == 3) && nowReconnectionTimes == 0 && errorReconnectionTimes != 0) {
+            this.connectionState = 2;
+        }
+        boolean close = failWebSocket.close(OkWebSocketConst.CLIENT_FAIL_CLOSE_CODE, OkWebSocketConst.CLIENT_FAIL_CLOSE_REASON);
+        this.closeCode = OkWebSocketConst.CLIENT_FAIL_CLOSE_CODE;
+        this.closeReason = OkWebSocketConst.CLIENT_FAIL_CLOSE_REASON;
+        this.throwable = t;
+        LOGGER.error("WebSocketClient 处理连接失败 close: {}, error: {}-{}, response: {}", close, t.getClass().getName(), t.getMessage(), response);
+        if (connectionState == 2 && (t instanceof SocketException || t instanceof EOFException)) {
+            // 异常断开
+            if (nowReconnectionTimes < errorReconnectionTimes && errorReconnectionTimes - nowReconnectionTimes > 0) {
+                Threads.sleep(errorReconnectionInterval);
+                webSocket = client.newWebSocket(request, this);
+                ++nowReconnectionTimes;
+                LOGGER.warn("WebSocketClient 连接异常断开-第{}次尝试重新连接", nowReconnectionTimes);
+            } else {
+                LOGGER.warn("WebSocketClient 连接异常断开-无法重连");
             }
-
-            @Override
-            public void onMessage(WebSocket webSocket, ByteString bytes) {
-                LOGGER.info("WebSocketClient 收到Server Byte信息 size: '{}'", bytes.size());
-                if (messageByteHandler != null) {
-                    messageByteHandler.message(webSocket, bytes);
-                }
-                receiveCount++;
-            }
-
-            @Override
-            public void onClosing(WebSocket webSocket, int code, String reason) {
-                LOGGER.info("WebSocketClient 准备关闭连接 code: {}, reason: '{}'", code, reason);
-                if (closeHandler != null) {
-                    closeHandler.close(webSocket, code, reason);
-                }
-                boolean close = webSocket.close(code, reason);
-                LOGGER.info("WebSocketClient 关闭连接完成 code: {}, reason: '{}', close: {}", code, reason, close);
-            }
-
-            @Override
-            public void onClosed(WebSocket webSocket, int code, String reason) {
-                LOGGER.info("WebSocketClient 连接已关闭, code: {}, reason: '{}'", code, reason);
-                lastCloseCode = code;
-                lastCloseReason = reason;
-                connectionState = 0;
-            }
-
-            @Override
-            public void onFailure(WebSocket failWebSocket, Throwable t, Response response) {
-                if (failureHandler != null) {
-                    failureHandler.failure(failWebSocket, t, response);
-                }
-                // 需要重连并且未重连
-                if ((connectionState == 1 || connectionState == 3) && nowReconnectionTimes == 0 && errorReconnectionTimes != 0) {
-                    connectionState = 2;
-                }
-                boolean close = failWebSocket.close(OkWebSocketConst.CLIENT_FAIL_CLOSE_CODE, OkWebSocketConst.CLIENT_FAIL_CLOSE_REASON);
-                lastCloseCode = OkWebSocketConst.CLIENT_FAIL_CLOSE_CODE;
-                lastCloseReason = OkWebSocketConst.CLIENT_FAIL_CLOSE_REASON;
-                lastThrowable = t;
-                LOGGER.error("WebSocketClient 处理连接失败 close: {}, error: {}-{}, response: {}", close, t.getClass().getName(), t.getMessage(), response);
-                if (connectionState == 2 && (t instanceof SocketException || t instanceof EOFException || t instanceof ConnectException)) {
-                    // 异常断开
-                    if (nowReconnectionTimes < errorReconnectionTimes && errorReconnectionTimes - nowReconnectionTimes > 0) {
-                        Threads.sleep(errorReconnectionInterval);
-                        webSocket = CLIENT.newWebSocket(request, this);
-                        ++nowReconnectionTimes;
-                        LOGGER.warn("WebSocketClient 连接异常断开-第{}次尝试重新连接", nowReconnectionTimes);
-                    } else {
-                        LOGGER.warn("WebSocketClient 连接异常断开-无法重连");
-                    }
-                }
-            }
-
-        };
-        this.webSocket = CLIENT.newWebSocket(request, webSocketListener);
+        }
     }
 
     public OkWebSocketClient openHandler(OpenHandler openHandler) {
@@ -347,16 +327,8 @@ public class OkWebSocketClient {
         return this;
     }
 
-    public int getReceiveCount() {
-        return receiveCount;
-    }
-
-    public int getSendCount() {
-        return sendCount;
-    }
-
-    public String getURL() {
-        return URL;
+    public String getUrl() {
+        return url;
     }
 
     public WebSocket getWebSocket() {
@@ -364,7 +336,7 @@ public class OkWebSocketClient {
     }
 
     public String getSessionId() {
-        return SESSION_ID;
+        return sessionId;
     }
 
     public int getErrorReconnectionTimes() {
@@ -375,16 +347,16 @@ public class OkWebSocketClient {
         return errorReconnectionInterval;
     }
 
-    public int getLastCloseCode() {
-        return lastCloseCode;
+    public int getCloseCode() {
+        return closeCode;
     }
 
-    public String getLastCloseReason() {
-        return lastCloseReason;
+    public String getCloseReason() {
+        return closeReason;
     }
 
-    public Throwable getLastThrowable() {
-        return lastThrowable;
+    public Throwable getThrowable() {
+        return throwable;
     }
 
     public int getNowReconnectionTimes() {

@@ -28,17 +28,19 @@ public class ParseRequestConfig implements Serializable {
 
     /**
      * 连接超时时间
+     * <p>
      * 底层读取超时时间是 连接超时时间 / 2
      */
     private int timeout;
 
     /**
-     * body 大小 默认0(不限制)
+     * body 大小 默认0 (不限制)
      */
     private int maxBodySize;
 
     /**
-     * 是否忽略contentType
+     * 是否忽略 contentType
+     * <p>
      * 否则返回的 contentType 必须为 text/* application/xml application/*+xml
      */
     private boolean ignoreContentType;
@@ -63,7 +65,6 @@ public class ParseRequestConfig implements Serializable {
         this.followRedirects = true;
         this.ignoreContentType = true;
         this.ignoreError = true;
-        // this.proxy("127.0.0.1", 8888);
     }
 
     public ParseRequestConfig proxy(String host, int port) {

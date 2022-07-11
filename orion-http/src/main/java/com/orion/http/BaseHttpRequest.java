@@ -91,11 +91,6 @@ public abstract class BaseHttpRequest {
      */
     protected int bodyLen;
 
-    /**
-     * 是否使用ssl
-     */
-    protected boolean ssl;
-
     public BaseHttpRequest() {
         this.method = HttpMethod.GET.method();
         this.queryStringEncode = true;
@@ -328,11 +323,6 @@ public abstract class BaseHttpRequest {
                 || HttpMethod.TRACE.method().equals(method);
     }
 
-    /**
-     * 执行请求
-     */
-    protected abstract void execute();
-
     // -------------------- getter --------------------
 
     public String getUrl() {
@@ -389,10 +379,6 @@ public abstract class BaseHttpRequest {
 
     public int getBodyLen() {
         return bodyLen;
-    }
-
-    public boolean isSsl() {
-        return ssl;
     }
 
     @Override

@@ -17,7 +17,18 @@ import java.util.Map;
  */
 public class ApacheRequests {
 
+    /**
+     * 默认请求 client
+     */
+    private static CloseableHttpClient client;
+
     private ApacheRequests() {
+    }
+
+    static {
+        ApacheRequests.client = ApacheClientBuilder.create()
+                .logInterceptor()
+                .build();
     }
 
     /**
@@ -177,6 +188,14 @@ public class ApacheRequests {
      */
     public static ApacheUpload upload(String url, CloseableHttpClient client) {
         return new ApacheUpload(url, client);
+    }
+
+    public static CloseableHttpClient getClient() {
+        return client;
+    }
+
+    public static void setClient(CloseableHttpClient client) {
+        ApacheRequests.client = client;
     }
 
 }

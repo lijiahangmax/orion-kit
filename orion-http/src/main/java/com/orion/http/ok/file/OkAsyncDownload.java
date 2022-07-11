@@ -1,7 +1,7 @@
 package com.orion.http.ok.file;
 
 import com.orion.http.ok.BaseOkRequest;
-import com.orion.http.ok.OkClient;
+import com.orion.http.ok.OkRequests;
 import com.orion.http.ok.OkResponse;
 import com.orion.lang.able.Asyncable;
 import com.orion.lang.utils.Exceptions;
@@ -39,23 +39,8 @@ public class OkAsyncDownload extends BaseOkRequest implements Asyncable<Consumer
      */
     private boolean asyncFailThrows;
 
-    /**
-     * 异步传输回调接口
-     */
-    private Consumer<OkResponse> callback;
-
-    /**
-     * 开始时间
-     */
-    private long startTime;
-
-    /**
-     * 结束时间
-     */
-    private long endTime;
-
     public OkAsyncDownload(String url) {
-        this(url, OkClient.getClient());
+        this(url, OkRequests.getClient());
     }
 
     public OkAsyncDownload(String url, OkHttpClient client) {
@@ -127,15 +112,9 @@ public class OkAsyncDownload extends BaseOkRequest implements Asyncable<Consumer
     @Override
     public void async(Consumer<OkResponse> callback) {
         Valid.notNull(callback, "async call back is null");
-        this.callback = callback;
-        this.execute();
-    }
-
-    @Override
-    protected void execute() {
         super.buildRequest();
         this.call = client.newCall(request);
-        this.response = new OkResponse(url, tag);
+        OkResponse response = new OkResponse(url, tag);
         this.call.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response res) throws IOException {
@@ -167,18 +146,6 @@ public class OkAsyncDownload extends BaseOkRequest implements Asyncable<Consumer
                 callback.accept(response);
             }
         });
-    }
-
-    public long getStartTime() {
-        return startTime;
-    }
-
-    public long getEndTime() {
-        return endTime;
-    }
-
-    public long getUseTime() {
-        return endTime - startTime;
     }
 
 }

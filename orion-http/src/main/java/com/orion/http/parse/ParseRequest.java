@@ -34,21 +34,16 @@ public class ParseRequest extends BaseHttpRequest implements Awaitable<ParseResp
     private Connection.Request request;
 
     /**
-     * response
-     */
-    private Connection.Response response;
-
-    /**
      * 配置项
      */
     private ParseRequestConfig config;
 
     public ParseRequest() {
-        this.userAgent(StandardUserAgent.CHROME_3);
+        this(null);
     }
 
     public ParseRequest(String url) {
-        this();
+        this.userAgent(StandardUserAgent.CHROME_3);
         this.url = url;
     }
 
@@ -69,7 +64,6 @@ public class ParseRequest extends BaseHttpRequest implements Awaitable<ParseResp
         this.connection = Jsoup.connect(url)
                 .method(Connection.Method.valueOf(method));
         this.request = connection.request();
-        this.response = connection.response();
         if (headers != null) {
             headers.forEach(connection::header);
         }
@@ -114,19 +108,13 @@ public class ParseRequest extends BaseHttpRequest implements Awaitable<ParseResp
     }
 
     @Override
-    protected void execute() {
+    public ParseResponse await() {
         this.buildRequest();
         try {
-            this.response = connection.execute();
+            return new ParseResponse(url, connection.execute());
         } catch (IOException e) {
             throw Exceptions.httpRequest(url, e);
         }
-    }
-
-    @Override
-    public ParseResponse await() {
-        this.execute();
-        return new ParseResponse(url, response);
     }
 
     public Connection getConnection() {
@@ -135,10 +123,6 @@ public class ParseRequest extends BaseHttpRequest implements Awaitable<ParseResp
 
     public Connection.Request getRequest() {
         return request;
-    }
-
-    public Connection.Response getResponse() {
-        return response;
     }
 
     public ParseRequestConfig getConfig() {

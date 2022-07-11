@@ -1,6 +1,7 @@
 package com.orion.http.apache;
 
 import com.orion.http.useragent.StandardUserAgent;
+import com.orion.lang.able.Buildable;
 import com.orion.lang.constant.Const;
 import com.orion.lang.utils.collect.Lists;
 import org.apache.http.HttpHost;
@@ -16,19 +17,18 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 
 import javax.net.ssl.SSLContext;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Apache HttpClient 配置
+ * Apache HttpClient 配置构建
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/6/12 15:07
  */
-public class ApacheClientConfig implements Serializable {
+public class ApacheClientBuilder implements Buildable<CloseableHttpClient> {
 
     /**
      * 连接超时时间
@@ -46,7 +46,7 @@ public class ApacheClientConfig implements Serializable {
     private int requestTimeout;
 
     /**
-     * 是否开启logInterceptor
+     * 是否开启 logInterceptor
      */
     private boolean logInterceptor;
 
@@ -120,7 +120,7 @@ public class ApacheClientConfig implements Serializable {
      */
     private LayeredConnectionSocketFactory sslSocketFactory;
 
-    public ApacheClientConfig() {
+    public ApacheClientBuilder() {
         this.connectTimeout = Const.MS_S_3;
         this.socketTimeout = Const.MS_S_15;
         this.requestTimeout = Const.MS_S_15;
@@ -131,69 +131,73 @@ public class ApacheClientConfig implements Serializable {
         this.connTimeToLiveTimeUnit = TimeUnit.MILLISECONDS;
     }
 
-    public ApacheClientConfig proxy(String host, int port) {
+    public static ApacheClientBuilder create() {
+        return new ApacheClientBuilder();
+    }
+
+    public ApacheClientBuilder proxy(String host, int port) {
         this.proxyHost = host;
         this.proxyPort = port;
         return this;
     }
 
-    public ApacheClientConfig logInterceptor(boolean open) {
+    public ApacheClientBuilder logInterceptor(boolean open) {
         this.logInterceptor = open;
         return this;
     }
 
-    public ApacheClientConfig logInterceptor() {
+    public ApacheClientBuilder logInterceptor() {
         this.logInterceptor = true;
         return this;
     }
 
-    public ApacheClientConfig connectTimeout(int connectTimeout) {
+    public ApacheClientBuilder connectTimeout(int connectTimeout) {
         this.connectTimeout = connectTimeout;
         return this;
     }
 
-    public ApacheClientConfig socketTimeout(int socketTimeout) {
+    public ApacheClientBuilder socketTimeout(int socketTimeout) {
         this.socketTimeout = socketTimeout;
         return this;
     }
 
-    public ApacheClientConfig requestTimeout(int requestTimeout) {
+    public ApacheClientBuilder requestTimeout(int requestTimeout) {
         this.requestTimeout = requestTimeout;
         return this;
     }
 
-    public ApacheClientConfig maxRoute(int route) {
+    public ApacheClientBuilder maxRoute(int route) {
         this.maxRoute = route;
         return this;
     }
 
-    public ApacheClientConfig maxRequest(int maxRequest) {
+    public ApacheClientBuilder maxRequest(int maxRequest) {
         this.maxRequest = maxRequest;
         return this;
     }
 
-    public ApacheClientConfig connTimeToLive(long connTimeToLive) {
+    public ApacheClientBuilder connTimeToLive(long connTimeToLive) {
         this.connTimeToLive = connTimeToLive;
         return this;
     }
 
-    public ApacheClientConfig connTimeToLive(long connTimeToLive, TimeUnit connTimeToLiveTimeUnit) {
+    public ApacheClientBuilder connTimeToLive(long connTimeToLive, TimeUnit connTimeToLiveTimeUnit) {
         this.connTimeToLive = connTimeToLive;
         this.connTimeToLiveTimeUnit = connTimeToLiveTimeUnit;
         return this;
     }
 
-    public ApacheClientConfig userAgent(String userAgent) {
+    public ApacheClientBuilder userAgent(String userAgent) {
         this.userAgent = userAgent;
         return this;
     }
 
-    public ApacheClientConfig cookies(CookieStore cookies) {
+    public ApacheClientBuilder cookies(CookieStore cookies) {
         this.cookies = cookies;
         return this;
     }
 
-    public ApacheClientConfig requestInterceptor(HttpRequestInterceptor interceptor) {
+    public ApacheClientBuilder requestInterceptor(HttpRequestInterceptor interceptor) {
         if (requestInterceptors == null) {
             this.requestInterceptors = new ArrayList<>();
         }
@@ -201,7 +205,7 @@ public class ApacheClientConfig implements Serializable {
         return this;
     }
 
-    public ApacheClientConfig responseInterceptor(HttpResponseInterceptor interceptor) {
+    public ApacheClientBuilder responseInterceptor(HttpResponseInterceptor interceptor) {
         if (responseInterceptors == null) {
             this.responseInterceptors = new ArrayList<>();
         }
@@ -209,32 +213,32 @@ public class ApacheClientConfig implements Serializable {
         return this;
     }
 
-    public ApacheClientConfig connectionManager(HttpClientConnectionManager connectionManager) {
+    public ApacheClientBuilder connectionManager(HttpClientConnectionManager connectionManager) {
         this.connectionManager = connectionManager;
         return this;
     }
 
-    public ApacheClientConfig noRetry() {
+    public ApacheClientBuilder noRetry() {
         this.requestRetryHandler = ApacheClientRetryPolicy.NO_RETRY.getHandler();
         return this;
     }
 
-    public ApacheClientConfig requestRetryHandler(HttpRequestRetryHandler requestRetryHandler) {
+    public ApacheClientBuilder requestRetryHandler(HttpRequestRetryHandler requestRetryHandler) {
         this.requestRetryHandler = requestRetryHandler;
         return this;
     }
 
-    public ApacheClientConfig requestRetryHandler(ApacheClientRetryPolicy policy) {
+    public ApacheClientBuilder requestRetryHandler(ApacheClientRetryPolicy policy) {
         this.requestRetryHandler = policy.getHandler();
         return this;
     }
 
-    public ApacheClientConfig sslContext(SSLContext sslContext) {
+    public ApacheClientBuilder sslContext(SSLContext sslContext) {
         this.sslContext = sslContext;
         return this;
     }
 
-    public ApacheClientConfig sslSocketFactory(LayeredConnectionSocketFactory sslSocketFactory) {
+    public ApacheClientBuilder sslSocketFactory(LayeredConnectionSocketFactory sslSocketFactory) {
         this.sslSocketFactory = sslSocketFactory;
         return this;
     }
@@ -303,11 +307,12 @@ public class ApacheClientConfig implements Serializable {
         return sslSocketFactory;
     }
 
+    /**
+     * 构建 httpclient builder
+     *
+     * @return httpclient builder
+     */
     public HttpClientBuilder buildClientBuilder() {
-        return this.buildClientBuilder(false);
-    }
-
-    public HttpClientBuilder buildClientBuilder(boolean ssl) {
         RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectTimeout(connectTimeout)
                 .setSocketTimeout(socketTimeout)
@@ -338,26 +343,24 @@ public class ApacheClientConfig implements Serializable {
         if (!Lists.isEmpty(responseInterceptors)) {
             requestInterceptors.forEach(builder::addInterceptorLast);
         }
-        // builder.setProxy(new HttpHost("127.0.0.1", 8888));
         if (proxyHost != null && proxyPort != 0) {
             builder.setProxy(new HttpHost(proxyHost, proxyPort));
         }
         if (cookies != null) {
             builder.setDefaultCookieStore(cookies);
         }
-        if (ssl) {
-            builder.setSSLContext(sslContext)
-                    .setSSLSocketFactory(sslSocketFactory);
+        if (sslContext != null) {
+            builder.setSSLContext(sslContext);
+        }
+        if (sslSocketFactory != null) {
+            builder.setSSLSocketFactory(sslSocketFactory);
         }
         return builder;
     }
 
-    public CloseableHttpClient buildClient() {
-        return this.buildClientBuilder(false).build();
-    }
-
-    public CloseableHttpClient buildClient(boolean ssl) {
-        return this.buildClientBuilder(ssl).build();
+    @Override
+    public CloseableHttpClient build() {
+        return this.buildClientBuilder().build();
     }
 
     @Override

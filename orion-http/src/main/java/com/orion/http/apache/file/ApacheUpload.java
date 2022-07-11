@@ -1,7 +1,7 @@
 package com.orion.http.apache.file;
 
 import com.orion.http.BaseHttpRequest;
-import com.orion.http.apache.ApacheClient;
+import com.orion.http.apache.ApacheRequests;
 import com.orion.http.apache.ApacheResponse;
 import com.orion.http.apache.BaseApacheRequest;
 import com.orion.http.support.HttpContentType;
@@ -38,22 +38,12 @@ public class ApacheUpload extends BaseApacheRequest {
     private Collection<HttpUploadPart> parts;
 
     /**
-     * 开始时间
-     */
-    private long startDate;
-
-    /**
-     * 结束时间
-     */
-    private long endDate;
-
-    /**
      * 是否执行完毕
      */
     private volatile boolean done;
 
     public ApacheUpload(String url) {
-        this(url, ApacheClient.getClient());
+        this(url, ApacheRequests.getClient());
     }
 
     public ApacheUpload(String url, CloseableHttpClient client) {
@@ -149,47 +139,20 @@ public class ApacheUpload extends BaseApacheRequest {
     }
 
     @Override
-    protected void execute() {
+    public ApacheResponse await() {
         super.buildRequest();
-        this.startDate = System.currentTimeMillis();
         try (CloseableHttpResponse resp = client.execute(request)) {
-            this.response = new ApacheResponse(url, resp);
+            return new ApacheResponse(url, resp);
         } catch (IOException e) {
             throw Exceptions.httpRequest(url, e);
         } finally {
-            this.endDate = System.currentTimeMillis();
             this.done = true;
             this.request.releaseConnection();
         }
     }
 
-    @Override
-    public ApacheResponse await() {
-        this.execute();
-        return response;
-    }
-
     public boolean isDone() {
         return done;
-    }
-
-    public long getStartDate() {
-        return startDate;
-    }
-
-    public long getEndDate() {
-        return endDate;
-    }
-
-    public long getUseDate() {
-        if (startDate == 0) {
-            return 0;
-        }
-        if (endDate == 0) {
-            return System.currentTimeMillis() - startDate;
-        } else {
-            return endDate - startDate;
-        }
     }
 
 }

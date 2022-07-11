@@ -2,7 +2,7 @@ package com.orion.http.ok.file;
 
 import com.orion.http.BaseHttpRequest;
 import com.orion.http.ok.BaseOkRequest;
-import com.orion.http.ok.OkClient;
+import com.orion.http.ok.OkRequests;
 import com.orion.http.ok.OkResponse;
 import com.orion.http.support.HttpContentType;
 import com.orion.http.support.HttpMethod;
@@ -36,18 +36,8 @@ public class OkUpload extends BaseOkRequest implements Awaitable<OkResponse> {
      */
     private volatile boolean done;
 
-    /**
-     * 开始时间
-     */
-    private long startDate;
-
-    /**
-     * 结束时间
-     */
-    private long endDate;
-
     public OkUpload(String url) {
-        this(url, OkClient.getClient());
+        this(url, OkRequests.getClient());
     }
 
     public OkUpload(String url, OkHttpClient client) {
@@ -123,47 +113,20 @@ public class OkUpload extends BaseOkRequest implements Awaitable<OkResponse> {
     }
 
     @Override
-    protected void execute() {
+    public OkResponse await() {
         super.buildRequest();
-        this.startDate = System.currentTimeMillis();
         this.call = client.newCall(request);
         try (Response resp = call.execute()) {
-            this.response = new OkResponse(url, tag, resp);
+            return new OkResponse(url, tag, resp);
         } catch (IOException e) {
             throw Exceptions.httpRequest(url, "ok request upload file on failure: " + super.getRequestMessage(), e);
         } finally {
             this.done = true;
-            this.endDate = System.currentTimeMillis();
         }
-    }
-
-    @Override
-    public OkResponse await() {
-        this.execute();
-        return response;
     }
 
     public boolean isDone() {
         return done;
-    }
-
-    public long getStartDate() {
-        return startDate;
-    }
-
-    public long getEndDate() {
-        return endDate;
-    }
-
-    public long getUseDate() {
-        if (startDate == 0) {
-            return 0;
-        }
-        if (endDate == 0) {
-            return System.currentTimeMillis() - startDate;
-        } else {
-            return endDate - startDate;
-        }
     }
 
 }

@@ -38,7 +38,7 @@ public class OkRequest extends BaseOkRequest implements Awaitable<OkResponse>, A
     private Consumer<OkResponse> asyncCallback;
 
     public OkRequest() {
-        this(null, OkClient.getClient());
+        this(null, OkRequests.getClient());
     }
 
     public OkRequest(OkHttpClient client) {
@@ -46,7 +46,7 @@ public class OkRequest extends BaseOkRequest implements Awaitable<OkResponse>, A
     }
 
     public OkRequest(String url) {
-        this(url, OkClient.getClient());
+        this(url, OkRequests.getClient());
     }
 
     public OkRequest(String url, OkHttpClient client) {
@@ -67,8 +67,14 @@ public class OkRequest extends BaseOkRequest implements Awaitable<OkResponse>, A
 
     @Override
     public OkResponse await() {
-        this.execute();
-        return this.response;
+        super.buildRequest();
+        this.call = client.newCall(request);
+        // sync
+        try (Response resp = call.execute()) {
+            return new OkResponse(url, tag, resp);
+        } catch (IOException e) {
+            throw Exceptions.httpRequest(url, e);
+        }
     }
 
     @Override
@@ -76,24 +82,10 @@ public class OkRequest extends BaseOkRequest implements Awaitable<OkResponse>, A
         Valid.notNull(callback, "async call back is null");
         this.asyncCallback = callback;
         this.async = true;
-        this.execute();
-    }
-
-    @Override
-    protected void execute() {
         super.buildRequest();
         this.call = client.newCall(request);
-        if (!async) {
-            // sync
-            try (Response resp = call.execute()) {
-                response = new OkResponse(url, tag, resp);
-                return;
-            } catch (IOException e) {
-                throw Exceptions.httpRequest(url, e);
-            }
-        }
         // async
-        this.response = new OkResponse(url, tag);
+        OkResponse response = new OkResponse(url, tag);
         call.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response res) {
@@ -105,7 +97,7 @@ public class OkRequest extends BaseOkRequest implements Awaitable<OkResponse>, A
             public void onFailure(Call call, IOException e) {
                 response.error(e);
                 if (asyncFailThrows) {
-                    throw Exceptions.httpRequest(url, "async ok request on failure: " + OkRequest.super.getRequestMessage(), e);
+                    throw Exceptions.httpRequest(url, "async ok request on failure: " + getRequestMessage(), e);
                 }
                 asyncCallback.accept(response);
             }
