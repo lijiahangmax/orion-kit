@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.function.Consumer;
 
 /**
- * 基于ConcurrentHashMap实现的ConcurrentHashSet
+ * 基于 ConcurrentHashMap 实现的 ConcurrentHashSet
  *
  * @author Li
  * @version 1.0.0

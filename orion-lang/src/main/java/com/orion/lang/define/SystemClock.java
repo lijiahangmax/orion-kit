@@ -7,7 +7,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * 高并发场景下System.currentTimeMillis()的性能问题的优化
+ * 系统时钟
+ * <p>
+ * 高并发场景下 System.currentTimeMillis() 的性能问题的优化
  *
  * @author Li
  * @version 1.0.0

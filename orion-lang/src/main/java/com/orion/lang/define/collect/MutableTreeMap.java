@@ -7,7 +7,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 /**
- * 可转换的TreeMap
+ * 可转换的 TreeMap
  *
  * @author Jiahang Li
  * @version 1.0.0

@@ -1,7 +1,7 @@
 package com.orion.lang.exception.argument;
 
 /**
- * 带code的exception
+ * 带 code 的 exception
  *
  * @author Jiahang Li
  * @version 1.0.0

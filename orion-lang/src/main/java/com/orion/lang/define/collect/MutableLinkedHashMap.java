@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * 可转换的LinkedHashMap
+ * 可转换的 LinkedHashMap
  *
  * @author Jiahang Li
  * @version 1.0.0

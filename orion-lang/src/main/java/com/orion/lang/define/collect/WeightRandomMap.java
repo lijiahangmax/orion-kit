@@ -8,7 +8,7 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * 权重随机Map
+ * 权重随机 Map
  *
  * @author Jiahang Li
  * @version 1.0.0

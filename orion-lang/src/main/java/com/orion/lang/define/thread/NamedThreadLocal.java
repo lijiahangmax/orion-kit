@@ -4,7 +4,7 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
- * 带有Name的ThreadLocal
+ * 带有名称的 ThreadLocal
  *
  * @author Jiahang Li
  * @version 1.0.0

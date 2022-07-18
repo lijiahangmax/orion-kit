@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * 可转换的ArrayList
+ * 可转换的 ArrayList
  *
  * @author Jiahang Li
  * @version 1.0.0

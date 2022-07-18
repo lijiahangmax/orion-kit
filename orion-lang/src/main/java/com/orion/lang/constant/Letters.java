@@ -1,7 +1,7 @@
 package com.orion.lang.constant;
 
 /**
- * 常量 符号 char
+ * 符号常量
  *
  * @author Jiahang Li
  * @version 1.0.0

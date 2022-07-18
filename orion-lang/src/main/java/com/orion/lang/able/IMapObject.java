@@ -5,7 +5,7 @@ import com.orion.lang.utils.reflect.BeanWrapper;
 import java.util.Map;
 
 /**
- * Map转化接口
+ * Map 转化接口
  *
  * @author Li
  * @version 1.0.0

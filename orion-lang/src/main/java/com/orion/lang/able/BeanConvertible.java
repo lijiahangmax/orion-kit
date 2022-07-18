@@ -3,7 +3,7 @@ package com.orion.lang.able;
 import com.orion.lang.utils.reflect.BeanWrapper;
 
 /**
- * Bean 转化接口
+ * bean 转化接口
  *
  * @author Jiahang Li
  * @version 1.0.0

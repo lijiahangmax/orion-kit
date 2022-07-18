@@ -9,18 +9,18 @@ package com.orion.lang.define.thread;
  */
 public class TagRunnable implements Runnable {
 
-    private final Runnable r;
+    private final Runnable task;
 
     private final Object tag;
 
-    public TagRunnable(Object tag, Runnable r) {
+    public TagRunnable(Object tag, Runnable runnable) {
         this.tag = tag;
-        this.r = r;
+        this.task = runnable;
     }
 
     @Override
     public void run() {
-        r.run();
+        task.run();
     }
 
     public Object getTag() {

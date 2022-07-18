@@ -1,7 +1,7 @@
 package com.orion.lang.exception;
 
 /**
- * cron转化运行时异常
+ * cron 转化运行时异常
  *
  * @author Jiahang Li
  * @version 1.0.0

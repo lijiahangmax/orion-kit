@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 /**
- * 可转换的LinkedList
+ * 可转换的 LinkedList
  *
  * @author Jiahang Li
  * @version 1.0.0

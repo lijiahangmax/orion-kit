@@ -27,14 +27,14 @@ public class ExecutorBuilder implements Buildable<ThreadPoolExecutor> {
     private int corePoolSize;
 
     /**
-     * 最大池大小（允许同时执行的最大线程数） 默认: 核心数 * 2
+     * 最大池大小 (允许同时执行的最大线程数) 默认: 核心数 * 2
      */
-    private int maxPoolSize = Systems.PROCESS_NUM * 2;
+    private int maxPoolSize;
 
     /**
      * 线程存活时间, 即当池中线程多于初始大小时, 多出的线程保留的时长
      */
-    private long keepAliveTime = Const.MS_S_60;
+    private long keepAliveTime;
 
     /**
      * 队列, 用于存在未执行的线程
@@ -47,19 +47,33 @@ public class ExecutorBuilder implements Buildable<ThreadPoolExecutor> {
     private ThreadFactory threadFactory;
 
     /**
-     * 当线程阻塞（block）时的异常处理器, 所谓线程阻塞即线程池和等待队列已满, 无法处理线程时采取的策略
+     * 当线程阻塞 (block) 时的异常处理器, 所谓线程阻塞即线程池和等待队列已满, 无法处理线程时采取的策略
      */
     private RejectedExecutionHandler handler;
 
     /**
      * 线程执行超时后是否回收线程
      */
-    private boolean allowCoreThreadTimeOut;
+    private boolean allowCoreThreadTimeout;
 
     /**
      * 预开启所有的核心线程
      */
     private boolean preStartAllCoreThreads;
+
+    public ExecutorBuilder() {
+        this.keepAliveTime = Const.MS_S_60;
+        this.maxPoolSize = Systems.PROCESS_NUM * 2;
+    }
+
+    /**
+     * 创建 ExecutorBuilder
+     *
+     * @return this
+     */
+    public static ExecutorBuilder create() {
+        return new ExecutorBuilder();
+    }
 
     /**
      * 设置初始池大小, 默认0
@@ -73,9 +87,9 @@ public class ExecutorBuilder implements Buildable<ThreadPoolExecutor> {
     }
 
     /**
-     * 设置最大池大小（允许同时执行的最大线程数）
+     * 设置最大池大小 (允许同时执行的最大线程数)
      *
-     * @param maxPoolSize 最大池大小（允许同时执行的最大线程数）
+     * @param maxPoolSize 最大池大小 (允许同时执行的最大线程数)
      * @return this
      */
     public ExecutorBuilder setMaxPoolSize(int maxPoolSize) {
@@ -135,7 +149,7 @@ public class ExecutorBuilder implements Buildable<ThreadPoolExecutor> {
     }
 
     /**
-     * 使用 SynchronousQueue 做为等待队列 （非公平策略）
+     * 使用 SynchronousQueue 做为等待队列  (非公平策略)
      * 它将任务直接提交给线程而不保持它们当运行线程小于maxPoolSize时会创建新线程, 否则触发异常策略
      *
      * @return this
@@ -178,7 +192,7 @@ public class ExecutorBuilder implements Buildable<ThreadPoolExecutor> {
     }
 
     /**
-     * 设置当线程阻塞（block）时的异常处理器, 所谓线程阻塞即线程池和等待队列已满, 无法处理线程时采取的策略
+     * 设置当线程阻塞(block)时的异常处理器, 所谓线程阻塞即线程池和等待队列已满, 无法处理线程时采取的策略
      *
      * @param handler RejectedExecutionHandler
      * @return this
@@ -191,11 +205,11 @@ public class ExecutorBuilder implements Buildable<ThreadPoolExecutor> {
     /**
      * 设置线程执行超时后是否回收线程
      *
-     * @param allowCoreThreadTimeOut 线程执行超时后是否回收线程
+     * @param allowCoreThreadTimeout 线程执行超时后是否回收线程
      * @return this
      */
-    public ExecutorBuilder setAllowCoreThreadTimeOut(boolean allowCoreThreadTimeOut) {
-        this.allowCoreThreadTimeOut = allowCoreThreadTimeOut;
+    public ExecutorBuilder setAllowCoreThreadTimeout(boolean allowCoreThreadTimeout) {
+        this.allowCoreThreadTimeout = allowCoreThreadTimeout;
         return this;
     }
 
@@ -211,16 +225,7 @@ public class ExecutorBuilder implements Buildable<ThreadPoolExecutor> {
     }
 
     /**
-     * 创建ExecutorBuilder
-     *
-     * @return this
-     */
-    public static ExecutorBuilder create() {
-        return new ExecutorBuilder();
-    }
-
-    /**
-     * 构建ThreadPoolExecutor
+     * 构建 ThreadPoolExecutor
      */
     @Override
     public ThreadPoolExecutor build() {
@@ -228,7 +233,7 @@ public class ExecutorBuilder implements Buildable<ThreadPoolExecutor> {
     }
 
     /**
-     * 构建ThreadPoolExecutor
+     * 构建 ThreadPoolExecutor
      *
      * @param builder ExecutorBuilder
      * @return ThreadPoolExecutor
@@ -250,7 +255,7 @@ public class ExecutorBuilder implements Buildable<ThreadPoolExecutor> {
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(corePoolSize, maxPoolSize,
                 keepAliveTime, TimeUnit.MILLISECONDS,
                 workQueue, threadFactory, handler);
-        threadPoolExecutor.allowCoreThreadTimeOut(builder.allowCoreThreadTimeOut);
+        threadPoolExecutor.allowCoreThreadTimeOut(builder.allowCoreThreadTimeout);
         if (builder.preStartAllCoreThreads) {
             threadPoolExecutor.prestartAllCoreThreads();
         }

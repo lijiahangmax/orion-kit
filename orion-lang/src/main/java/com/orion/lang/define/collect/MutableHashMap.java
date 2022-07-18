@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 可转换的HashMap
+ * 可转换的 HashMap
  *
  * @author Jiahang Li
  * @version 1.0.0

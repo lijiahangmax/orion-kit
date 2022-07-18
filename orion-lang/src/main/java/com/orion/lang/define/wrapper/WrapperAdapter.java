@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Wrapper适配器
+ * Wrapper 适配器
  *
  * @author Jiahang Li
  * @version 1.0.0

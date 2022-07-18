@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 /**
- * 可转换的HashSet
+ * 可转换的 HashSet
  *
  * @author Jiahang Li
  * @version 1.0.0

@@ -9,7 +9,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
- * 空元素map
+ * 空元素 map
  *
  * @author Jiahang Li
  * @version 1.0.0

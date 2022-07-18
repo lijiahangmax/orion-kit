@@ -14,7 +14,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
- * 单元素map
+ * 单元素 map
  *
  * @author Jiahang Li
  * @version 1.0.0

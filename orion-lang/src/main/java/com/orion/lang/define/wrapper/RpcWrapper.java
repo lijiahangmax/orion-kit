@@ -15,7 +15,7 @@ import java.util.*;
 import java.util.function.Supplier;
 
 /**
- * rpc远程调用结果封装
+ * rpc 远程调用结果封装
  *
  * @author Li
  * @version 1.0.0

@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 
 /**
- * 可转换的LinkedHashSet
+ * 可转换的 LinkedHashSet
  *
  * @author Jiahang Li
  * @version 1.0.0

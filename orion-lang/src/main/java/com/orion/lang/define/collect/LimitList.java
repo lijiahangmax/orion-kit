@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * 带分页的list
+ * 带分页的 list
  *
  * @author Li
  * @version 1.0.0

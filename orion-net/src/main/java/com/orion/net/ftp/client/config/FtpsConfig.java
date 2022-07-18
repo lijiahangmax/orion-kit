@@ -26,8 +26,8 @@ public class FtpsConfig extends FtpConfig {
     /**
      * 管道保护级别
      * C-清除
-     * S-安全（仅SSL协议）
-     * E-机密（仅SSL协议）
+     * S-安全 (仅SSL协议)
+     * E-机密 (仅SSL协议)
      * P-私人
      */
     private String protect;

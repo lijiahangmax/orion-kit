@@ -8,7 +8,6 @@ import java.util.function.Predicate;
 
 /**
  * 分组集合
- * 根据getter方法
  *
  * @author Jiahang Li
  * @version 1.0.0

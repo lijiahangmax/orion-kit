@@ -28,7 +28,7 @@ public class Threads {
             .setMaxPoolSize(32)
             .setKeepAliveTime(Const.MS_S_60)
             .setWorkQueue(new LinkedBlockingQueue<>())
-            .setAllowCoreThreadTimeOut(true)
+            .setAllowCoreThreadTimeout(true)
             .build();
 
     /**
@@ -40,7 +40,7 @@ public class Threads {
             .setMaxPoolSize(Integer.MAX_VALUE)
             .setKeepAliveTime(Const.MS_S_60)
             .setWorkQueue(new SynchronousQueue<>())
-            .setAllowCoreThreadTimeOut(true)
+            .setAllowCoreThreadTimeout(true)
             .build();
 
     private Threads() {
@@ -152,7 +152,7 @@ public class Threads {
      * @return 元组
      */
     public static Tuple collect(Callable<?>... tasks) {
-        return new TaskCollect(GLOBAL_EXECUTOR)
+        return new TaskCollector(GLOBAL_EXECUTOR)
                 .tasks(tasks)
                 .collect();
     }

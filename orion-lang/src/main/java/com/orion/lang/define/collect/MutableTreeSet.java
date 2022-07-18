@@ -7,7 +7,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
- * 可转换的TreeSet
+ * 可转换的 TreeSet
  *
  * @author Jiahang Li
  * @version 1.0.0

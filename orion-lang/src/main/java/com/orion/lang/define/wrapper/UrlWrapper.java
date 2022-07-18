@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 需要对url操作的结果集
+ * 需要对 url 操作的结果集
  *
  * @author Li
  * @version 1.0.0

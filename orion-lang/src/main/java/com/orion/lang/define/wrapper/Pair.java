@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Map的Entry实现
+ * Map 的 Entry 实现
  *
  * @author Li
  * @version 1.0.0

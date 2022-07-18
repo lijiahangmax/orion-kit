@@ -642,7 +642,7 @@ public class Servlets {
         response.setContentType(StandardContentType.APPLICATION_STREAM);
         response.setHeader(StandardHttpHeader.ACCESS_CONTROL_EXPOSE_HEADERS, StandardHttpHeader.CONTENT_DISPOSITION);
         try {
-            response.setHeader(StandardHttpHeader.CONTENT_DISPOSITION, "attachment;filename=" + URLEncoder.encode(fileName, Const.UTF_8));
+            response.setHeader(StandardHttpHeader.CONTENT_DISPOSITION, "attachment; filename=" + URLEncoder.encode(fileName, Const.UTF_8));
         } catch (UnsupportedEncodingException e) {
             throw Exceptions.unsupportedEncoding(e);
         }

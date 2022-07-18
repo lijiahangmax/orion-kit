@@ -4,7 +4,7 @@ import javax.net.ssl.X509TrustManager;
 import java.security.cert.X509Certificate;
 
 /**
- * 默认X509凭证管理器
+ * 默认 X509 凭证管理器
  *
  * @author Jiahang Li
  * @version 1.0.0

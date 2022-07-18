@@ -15,7 +15,7 @@ import java.util.concurrent.Future;
  * @version 1.0.0
  * @since 2021/2/22 15:18
  */
-public class TaskCollect {
+public class TaskCollector {
 
     /**
      * 调度器
@@ -27,7 +27,7 @@ public class TaskCollect {
      */
     private Future<?>[] futures;
 
-    public TaskCollect(ExecutorService dispatch) {
+    public TaskCollector(ExecutorService dispatch) {
         Valid.notNull(dispatch, "task dispatch is null");
         this.dispatch = dispatch;
     }
@@ -38,7 +38,7 @@ public class TaskCollect {
      * @param tasks task
      * @return this
      */
-    public TaskCollect tasks(Callable<?>... tasks) {
+    public TaskCollector tasks(Callable<?>... tasks) {
         this.futures = new Future<?>[tasks.length];
         for (int i = 0; i < tasks.length; i++) {
             Callable<?> task = tasks[i];

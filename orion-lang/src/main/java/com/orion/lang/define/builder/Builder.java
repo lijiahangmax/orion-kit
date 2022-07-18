@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * 通用builder
+ * 通用 builder
  *
  * @author Jiahang Li
  * @version 1.0.0

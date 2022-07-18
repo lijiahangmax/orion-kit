@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Vector;
 
 /**
- * 可转换的Vector
+ * 可转换的 Vector
  *
  * @author Jiahang Li
  * @version 1.0.0

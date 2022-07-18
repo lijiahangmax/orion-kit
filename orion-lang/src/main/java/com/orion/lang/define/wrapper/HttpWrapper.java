@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * restful结果封装
+ * restful 结果封装
  *
  * @author Li
  * @version 1.0.0
