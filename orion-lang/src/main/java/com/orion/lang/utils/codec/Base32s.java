@@ -3,7 +3,7 @@ package com.orion.lang.utils.codec;
 import com.orion.lang.utils.Strings;
 
 /**
- * Base32工具类
+ * Base32 工具类
  *
  * @author Jiahang Li
  * @version 1.0.0

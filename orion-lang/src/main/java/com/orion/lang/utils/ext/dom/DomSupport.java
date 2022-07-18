@@ -20,7 +20,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * dom 工具类
+ * XML 工具类
  *
  * @author Jiahang Li
  * @version 1.0.0

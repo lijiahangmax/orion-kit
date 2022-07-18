@@ -11,7 +11,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * LRU 缓存
  * 最先进最先淘汰
  *
- * @author Li
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2019/8/22 20:54
  */

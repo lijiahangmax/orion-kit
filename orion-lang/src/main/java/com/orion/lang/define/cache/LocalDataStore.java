@@ -16,7 +16,7 @@ import java.util.Map;
  * 如果解析不存在的对象会为null, 但是数据存在
  * getMap 不可以用于操作元素, 如果操作注意序列化问题, 以及使用 save() 存储
  *
- * @author Li
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2019/8/22 14:41
  */

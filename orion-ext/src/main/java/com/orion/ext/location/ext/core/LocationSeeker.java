@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * ip查询器
+ * ip 查询器
  *
  * @author Jiahang Li
  * @version 1.0.0

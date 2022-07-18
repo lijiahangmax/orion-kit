@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 /**
  * 多参数工具
  *
- * @author Li
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2019/7/26 14:06
  */

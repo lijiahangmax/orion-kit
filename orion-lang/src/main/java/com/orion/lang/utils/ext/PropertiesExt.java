@@ -14,7 +14,7 @@ import java.util.Properties;
 import java.util.function.BiConsumer;
 
 /**
- * properties配置文件提取
+ * properties 配置文件提取
  *
  * @author Jiahang Li
  * @version 1.0.0

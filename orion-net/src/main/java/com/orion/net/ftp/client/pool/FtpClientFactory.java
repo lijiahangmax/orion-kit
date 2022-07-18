@@ -14,7 +14,7 @@ import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 
 /**
- * FTPClient工厂
+ * FTPClient 工厂
  *
  * @author Jiahang Li
  * @version 1.0.0

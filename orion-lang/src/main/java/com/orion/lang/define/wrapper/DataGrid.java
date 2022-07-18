@@ -15,9 +15,9 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 /**
- * DataGrid模型
+ * DataGrid 模型
  *
- * @author Li
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2019/5/30 22:52
  */

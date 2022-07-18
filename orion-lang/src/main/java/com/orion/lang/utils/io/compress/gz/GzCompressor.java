@@ -13,8 +13,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * gzip压缩器
- * gzip只能压缩单个文件
+ * gzip 压缩器
+ * gzip 只能压缩单个文件
  *
  * @author Jiahang Li
  * @version 1.0.0

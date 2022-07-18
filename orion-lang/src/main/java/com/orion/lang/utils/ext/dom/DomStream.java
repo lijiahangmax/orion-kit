@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * XML流
+ * XML 流式读取
  *
  * @author Jiahang Li
  * @version 1.0.0

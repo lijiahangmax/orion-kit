@@ -6,7 +6,7 @@ import com.orion.lang.utils.Strings;
 import java.io.ByteArrayOutputStream;
 
 /**
- * Base62工具类
+ * Base62 工具类
  *
  * @author Jiahang Li
  * @version 1.0.0

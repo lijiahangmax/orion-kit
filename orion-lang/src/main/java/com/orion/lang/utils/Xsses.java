@@ -3,9 +3,9 @@ package com.orion.lang.utils;
 import java.util.regex.Pattern;
 
 /**
- * xss工具类
+ * xss 工具类
  *
- * @author Li
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2019/9/20 17:07
  */

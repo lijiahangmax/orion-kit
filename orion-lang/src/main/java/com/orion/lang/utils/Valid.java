@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
  * 可以被拓展
  * 所抛出的异常必须为 {@link InvalidArgumentException} 或其子类
  *
- * @author Li
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2019/11/18 16:25
  */

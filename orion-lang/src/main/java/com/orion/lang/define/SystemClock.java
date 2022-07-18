@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * <p>
  * 高并发场景下 System.currentTimeMillis() 的性能问题的优化
  *
- * @author Li
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2019/07/23 17:25
  */

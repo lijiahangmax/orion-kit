@@ -28,7 +28,7 @@ public @interface ExportFont {
     int fontSize() default -1;
 
     /**
-     * 字体颜色 RGB
+     * 字体颜色 HEX
      */
     String color() default Strings.EMPTY;
 

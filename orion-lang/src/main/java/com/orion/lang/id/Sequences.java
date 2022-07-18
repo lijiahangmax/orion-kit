@@ -5,9 +5,9 @@ import com.orion.lang.utils.Exceptions;
 import java.net.InetAddress;
 
 /**
- * 分布式高效有序ID生产黑科技 (sequence)
+ * 分布式高效有序 ID 生产黑科技 (sequence)
  *
- * @author Li
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2019/07/23 19:15
  */

@@ -3,7 +3,7 @@ package com.orion.net.ftp.server;
 import java.io.Serializable;
 
 /**
- * FTP user
+ * FTP 用户信息
  *
  * @author Jiahang Li
  * @version 1.0.0

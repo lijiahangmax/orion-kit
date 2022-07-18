@@ -13,7 +13,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 /**
- * zip解压器
+ * zip 解压器
  *
  * @author Jiahang Li
  * @version 1.0.0

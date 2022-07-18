@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * cookie工具类
+ * Cookie 工具类
  *
  * @author Jiahang Li
  * @version 1.0.0

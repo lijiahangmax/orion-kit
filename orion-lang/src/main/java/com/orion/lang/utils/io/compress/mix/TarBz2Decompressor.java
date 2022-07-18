@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.OutputStream;
 
 /**
- * tar.bz2解压器
+ * tar.bz2 解压器
  *
  * @author Jiahang Li
  * @version 1.0.0

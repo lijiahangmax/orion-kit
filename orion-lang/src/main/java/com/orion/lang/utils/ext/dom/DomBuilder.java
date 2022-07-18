@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * XML构建器
+ * XML 构建器
  *
  * @author Jiahang Li
  * @version 1.0.0

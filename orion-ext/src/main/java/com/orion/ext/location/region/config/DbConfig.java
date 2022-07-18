@@ -5,7 +5,7 @@ import com.orion.lang.constant.Const;
 import java.io.Serializable;
 
 /**
- * @author li
+ * @author Jiahang Li
  */
 public class DbConfig implements Serializable {
 

@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 /**
  * rpc 远程调用结果封装
  *
- * @author Li
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2019/5/29 11:27
  */

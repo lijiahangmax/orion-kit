@@ -6,7 +6,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Murmur3 Hash算法
+ * Murmur3 Hash 算法
  * <p>
  * Murmur3 32bit
  * Murmur3 64bit

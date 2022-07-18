@@ -17,9 +17,9 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * Object工具类
+ * Object 工具类
  *
- * @author Li
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2019/9/20 17:10
  */

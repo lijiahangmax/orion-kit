@@ -12,7 +12,7 @@ import java.io.RandomAccessFile;
 import java.nio.charset.StandardCharsets;
 
 /**
- * @author li
+ * @author Jiahang Li
  */
 public class DbSearcher {
 

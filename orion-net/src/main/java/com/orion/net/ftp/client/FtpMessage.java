@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * FTP信息常量
+ * FTP 信息常量
  *
  * @author Jiahang Li
  * @version 1.0.0

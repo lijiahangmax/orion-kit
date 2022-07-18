@@ -4,7 +4,7 @@ import com.orion.lang.define.number.Number128;
 import com.orion.lang.utils.Arrays1;
 
 /**
- * hash工具类
+ * hash 工具类
  *
  * @author Jiahang Li
  * @version 1.0.0

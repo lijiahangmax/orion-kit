@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * git本地仓库基本操作
+ * git 本地仓库基本操作
  * <p>
  * checkout pull reset log branch clean
  * <p>

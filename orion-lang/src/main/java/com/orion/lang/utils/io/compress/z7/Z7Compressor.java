@@ -13,7 +13,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 /**
- * 7z压缩器
+ * 7z 压缩器
  *
  * @author Jiahang Li
  * @version 1.0.0

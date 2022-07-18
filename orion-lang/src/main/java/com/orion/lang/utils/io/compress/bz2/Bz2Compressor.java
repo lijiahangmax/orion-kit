@@ -13,8 +13,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * bzip2压缩器
- * bzip2只能压缩单个文件
+ * bzip2 压缩器
+ * bzip2 只能压缩单个文件
  *
  * @author Jiahang Li
  * @version 1.0.0

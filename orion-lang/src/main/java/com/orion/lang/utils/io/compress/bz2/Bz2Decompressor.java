@@ -14,7 +14,7 @@ import java.io.OutputStream;
 import java.util.Optional;
 
 /**
- * bzip2解压器
+ * bzip2 解压器
  *
  * @author Jiahang Li
  * @version 1.0.0

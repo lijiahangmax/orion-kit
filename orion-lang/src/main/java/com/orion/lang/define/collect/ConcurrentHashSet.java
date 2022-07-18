@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 /**
  * 基于 ConcurrentHashMap 实现的 ConcurrentHashSet
  *
- * @author Li
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2019/8/23 11:08
  */

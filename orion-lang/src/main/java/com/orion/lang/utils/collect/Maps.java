@@ -17,7 +17,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * Map工具类
+ * Map 工具类
  *
  * @author Jiahang Li
  * @version 1.0.0

@@ -1,7 +1,7 @@
 package com.orion.ext.location.region.block;
 
 /**
- * @author li
+ * @author Jiahang Li
  */
 public class DataBlock {
 

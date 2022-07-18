@@ -1,7 +1,7 @@
 package com.orion.lang.utils.ext.dom;
 
 /**
- * XML解析参数
+ * XML 解析参数
  *
  * @author Jiahang Li
  * @version 1.0.0

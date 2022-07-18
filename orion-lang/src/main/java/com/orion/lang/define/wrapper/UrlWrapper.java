@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * 需要对 url 操作的结果集
  *
- * @author Li
+ * @author Jiahang Li
  * @version 1.0.0
  * @see HttpWrapper<UrlWrapper>
  * @since 2019/5/30 22:52

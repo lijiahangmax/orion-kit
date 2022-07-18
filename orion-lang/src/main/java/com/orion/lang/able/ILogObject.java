@@ -3,7 +3,7 @@ package com.orion.lang.able;
 /**
  * 日志接口
  *
- * @author Li
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2019/8/15 20:33
  */

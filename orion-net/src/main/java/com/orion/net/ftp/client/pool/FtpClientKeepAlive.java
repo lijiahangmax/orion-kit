@@ -7,7 +7,7 @@ import org.apache.commons.net.ftp.FTPClient;
 import java.util.concurrent.BlockingQueue;
 
 /**
- * FTP监听长连接心跳
+ * FTP 监听长连接心跳
  *
  * @author Jiahang Li
  * @version 1.0.0

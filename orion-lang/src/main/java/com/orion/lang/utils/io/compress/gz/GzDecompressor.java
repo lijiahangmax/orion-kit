@@ -16,7 +16,7 @@ import java.io.OutputStream;
 import java.util.Optional;
 
 /**
- * gzip解压器
+ * gzip 解压器
  *
  * @author Jiahang Li
  * @version 1.0.0

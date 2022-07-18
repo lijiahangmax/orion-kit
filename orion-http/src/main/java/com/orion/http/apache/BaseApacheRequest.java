@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * ApacheHttp请求 基类
+ * ApacheHttp 请求 基类
  *
  * @author Jiahang Li
  * @version 1.0.0

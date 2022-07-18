@@ -13,7 +13,7 @@ import com.orion.lang.utils.Valid;
 import java.util.*;
 
 /**
- * 公共Http请求 基类
+ * 公共 Http 请求 基类
  *
  * @author Jiahang Li
  * @version 1.0.0

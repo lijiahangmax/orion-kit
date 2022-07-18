@@ -10,7 +10,8 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 
 /**
- * spring工具类
+ * spring 工具类
+ * <p>
  * 需要配置 <bean id="springHolder" class="com.orion.spring.SpringHolder$ApplicationContextAwareStore"/>
  *
  * @author Jiahang Li
@@ -20,6 +21,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 public class SpringHolder {
 
     private static ApplicationContext applicationContext;
+
     private static ConfigurableListableBeanFactory beanFactory;
 
     private SpringHolder() {

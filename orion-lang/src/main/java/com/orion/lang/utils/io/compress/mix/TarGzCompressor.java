@@ -15,7 +15,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 /**
- * tar.gz压缩器
+ * tar.gz 压缩器
  *
  * @author Jiahang Li
  * @version 1.0.0

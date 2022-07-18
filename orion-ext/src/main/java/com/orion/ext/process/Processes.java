@@ -6,7 +6,7 @@ import com.orion.lang.utils.io.Streams;
 import java.io.ByteArrayOutputStream;
 
 /**
- * process工具
+ * process runtime 工具
  *
  * @author Jiahang Li
  * @version 1.0.0

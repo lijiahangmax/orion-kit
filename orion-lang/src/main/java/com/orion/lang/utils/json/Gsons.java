@@ -8,9 +8,9 @@ import com.orion.lang.utils.Strings;
 import java.util.*;
 
 /**
- * Gson工具类
+ * Gson 工具类
  *
- * @author Li
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2019/5/29 16:11
  */

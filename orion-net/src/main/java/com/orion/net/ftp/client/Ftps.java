@@ -7,7 +7,7 @@ import com.orion.net.ftp.client.pool.FtpClientPool;
 import org.apache.commons.net.ftp.FTPClient;
 
 /**
- * FTP工具类
+ * FTP 工具类
  *
  * @author Jiahang Li
  * @version 1.0.0

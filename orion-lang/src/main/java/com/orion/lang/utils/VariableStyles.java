@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 /**
  * 变量风格枚举对象
  *
- * @author Li
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2019/9/22 21:53
  */

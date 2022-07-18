@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * FTP文件
+ * FTP 文件
  *
  * @author Jiahang Li
  * @version 1.0.0

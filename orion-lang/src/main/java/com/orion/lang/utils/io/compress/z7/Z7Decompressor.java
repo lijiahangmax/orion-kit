@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * 7z解压器
+ * 7z 解压器
  *
  * @author Jiahang Li
  * @version 1.0.0

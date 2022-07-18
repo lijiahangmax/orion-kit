@@ -3,7 +3,7 @@ package com.orion.ext.location.region.block;
 import com.orion.ext.location.region.core.RegionSupport;
 
 /**
- * @author li
+ * @author Jiahang Li
  */
 public class IndexBlock {
 

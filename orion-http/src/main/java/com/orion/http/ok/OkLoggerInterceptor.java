@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 /**
- * OkHttp log拦截器
+ * OkHttp 日志拦截器
  *
  * @author Jiahang Li
  * @version 1.0.0

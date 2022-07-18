@@ -12,9 +12,9 @@ import static com.alibaba.fastjson.serializer.SerializerFeature.PrettyFormat;
 import static com.alibaba.fastjson.serializer.SerializerFeature.WriteMapNullValue;
 
 /**
- * fastJson工具类
+ * fastJson 工具类
  *
- * @author Li
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2019/8/19 00:07
  */

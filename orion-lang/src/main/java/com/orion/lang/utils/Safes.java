@@ -3,7 +3,7 @@ package com.orion.lang.utils;
 /**
  * 脱敏工具类
  *
- * @author Li
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2019/9/10 9:45
  */

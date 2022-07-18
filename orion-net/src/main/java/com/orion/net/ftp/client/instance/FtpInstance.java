@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * FTP操作实例
+ * FTP 操作实例
  *
  * @author Jiahang Li
  * @version 1.0.0

@@ -15,7 +15,7 @@ import java.io.EOFException;
 import java.net.SocketException;
 
 /**
- * OkHttp WebSocket客户端
+ * OkHttp WebSocket 客户端
  *
  * @author Jiahang Li
  * @version 1.0.0

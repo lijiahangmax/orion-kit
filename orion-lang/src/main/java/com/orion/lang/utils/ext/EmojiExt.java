@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * 表情工具类 见: https://github.com/vdurmont/emoji-java/blob/master/EMOJIS.md
  *
- * @author Li
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2019/10/30 15:59
  */

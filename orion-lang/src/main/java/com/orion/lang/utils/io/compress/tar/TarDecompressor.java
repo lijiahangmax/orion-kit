@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.OutputStream;
 
 /**
- * tar解压器
+ * tar 解压器
  *
  * @author Jiahang Li
  * @version 1.0.0

@@ -11,7 +11,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 
 /**
- * udp client 发送
+ * UDP Client 发送
  *
  * @author Jiahang Li
  * @version 1.0.0

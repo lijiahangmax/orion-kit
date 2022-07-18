@@ -1,7 +1,7 @@
 package com.orion.ext.location.region.core;
 
 /**
- * @author li
+ * @author Jiahang Li
  */
 public class RegionSupport {
 

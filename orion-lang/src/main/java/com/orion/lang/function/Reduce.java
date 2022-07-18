@@ -3,7 +3,7 @@ package com.orion.lang.function;
 /**
  * 规约接口
  *
- * @author Li
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2019/9/9 14:13
  */

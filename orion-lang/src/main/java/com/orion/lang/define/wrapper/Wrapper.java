@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * 包装标识接口
  *
- * @author Li
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2019/9/16 14:35
  */

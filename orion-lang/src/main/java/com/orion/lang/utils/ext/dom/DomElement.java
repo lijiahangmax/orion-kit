@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * XML构建信息
+ * XML 构建信息
  *
  * @author Jiahang Li
  * @version 1.0.0

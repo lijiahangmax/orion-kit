@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * XML解析器
+ * XML 解析器
  * <p>
  * 如: bean[1] > property > list > ref[0]:name=c
  * 语法: [n] 下标  k:v 属性

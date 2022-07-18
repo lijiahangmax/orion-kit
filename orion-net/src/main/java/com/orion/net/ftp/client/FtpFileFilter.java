@@ -5,7 +5,7 @@ import com.orion.lang.utils.regexp.Matches;
 import java.util.regex.Pattern;
 
 /**
- * FTP文件过滤器
+ * FTP 文件过滤器
  *
  * @author Jiahang Li
  * @version 1.0.0

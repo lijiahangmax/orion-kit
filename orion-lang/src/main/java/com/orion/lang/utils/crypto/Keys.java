@@ -28,7 +28,7 @@ import static com.orion.lang.utils.codec.Base64s.decode;
 import static com.orion.lang.utils.codec.Base64s.encode;
 
 /**
- * key工具类
+ * key 工具类
  *
  * @author Jiahang Li
  * @version 1.0.0

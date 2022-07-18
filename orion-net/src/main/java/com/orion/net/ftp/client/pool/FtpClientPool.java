@@ -17,7 +17,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
- * FTP连接池
+ * FTP 连接池
  *
  * @author Jiahang Li
  * @version 1.0.0

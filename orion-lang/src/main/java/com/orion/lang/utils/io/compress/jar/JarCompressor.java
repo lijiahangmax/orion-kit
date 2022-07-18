@@ -13,7 +13,7 @@ import java.util.jar.JarEntry;
 import java.util.zip.ZipOutputStream;
 
 /**
- * jar压缩器
+ * jar 压缩器
  *
  * @author Jiahang Li
  * @version 1.0.0

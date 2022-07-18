@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 /**
  * 数组工具类
  *
- * @author Li
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2019/9/9 10:25
  * <p>

@@ -1,7 +1,7 @@
 package com.orion.http.ok.ws;
 
 /**
- * OkHttp WebSocket常量
+ * OkHttp WebSocket 常量
  *
  * @author Jiahang Li
  * @version 1.0.0

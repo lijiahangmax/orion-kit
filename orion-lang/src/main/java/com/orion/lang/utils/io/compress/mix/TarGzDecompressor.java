@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.OutputStream;
 
 /**
- * tar.gz解压器
+ * tar.gz 解压器
  *
  * @author Jiahang Li
  * @version 1.0.0

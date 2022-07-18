@@ -13,7 +13,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 /**
- * tar压缩器
+ * tar 压缩器
  *
  * @author Jiahang Li
  * @version 1.0.0

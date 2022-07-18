@@ -10,7 +10,7 @@ import java.net.UnknownHostException;
 /**
  * 雪花算法 id 生成工具
  *
- * @author Li
+ * @author Jiahang Li
  * @version 1.0.0
  * @since 2019/5/29 14:07
  */

@@ -24,7 +24,6 @@ public interface ISftpExecutor extends SafeCloseable {
      * 设置缓冲区大小
      *
      * @param bufferSize 缓冲区大小
-     * @return this
      */
     void bufferSize(int bufferSize);
 
@@ -33,7 +32,7 @@ public interface ISftpExecutor extends SafeCloseable {
      *
      * @param charset 编码格式
      */
-    public void charset(String charset);
+    void charset(String charset);
 
     /**
      * 检查文件是否存在
@@ -43,7 +42,7 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param path 文件绝对路径
      * @return true 存在
      */
-    public boolean isExist(String path);
+    boolean isExist(String path);
 
     /**
      * 获取文件规范路径
@@ -53,7 +52,7 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param path 文件路径
      * @return 文件绝对路径
      */
-    public String getPath(String path);
+    String getPath(String path);
 
     /**
      * 获取连接文件的源文件
@@ -64,7 +63,7 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param path 连接文件的绝对路径
      * @return 源文件的路径 null文件不是连接文件
      */
-    public String getLinkPath(String path);
+    String getLinkPath(String path);
 
     /**
      * 获取文件属性
@@ -74,7 +73,7 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param path 文件绝对路径
      * @return 属性
      */
-    public SftpFile getFile(String path);
+    SftpFile getFile(String path);
 
     /**
      * 获取文件属性
@@ -85,7 +84,7 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param followSymbolic 如果是连接文件是否返回原文件属性
      * @return 属性
      */
-    public SftpFile getFile(String path, boolean followSymbolic);
+    SftpFile getFile(String path, boolean followSymbolic);
 
     /**
      * 获取文件大小
@@ -95,7 +94,7 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param path 文件绝对路径
      * @return 文件大小
      */
-    public long getSize(String path);
+    long getSize(String path);
 
     /**
      * 设置文件属性
@@ -104,7 +103,7 @@ public interface ISftpExecutor extends SafeCloseable {
      *
      * @param attribute 文件属性
      */
-    public void setFileAttribute(SftpFile attribute);
+    void setFileAttribute(SftpFile attribute);
 
     /**
      * 设置文件修改时间
@@ -114,7 +113,7 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param path 文件绝对路径
      * @param date 修改时间
      */
-    public void setModifyTime(String path, Date date);
+    void setModifyTime(String path, Date date);
 
     /**
      * 修改文件权限
@@ -124,7 +123,7 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param file       文件绝对路径
      * @param permission 10进制表示的 8进制权限 如: 777
      */
-    public void chmod(String file, int permission);
+    void chmod(String file, int permission);
 
     /**
      * 修改文件所有人
@@ -134,7 +133,7 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param file 文件绝对路径
      * @param uid  用户id
      */
-    public void chown(String file, int uid);
+    void chown(String file, int uid);
 
     /**
      * 修改文件所有组
@@ -144,7 +143,7 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param file 文件绝对路径
      * @param gid  组id
      */
-    public void chgrp(String file, int gid);
+    void chgrp(String file, int gid);
 
     /**
      * 创建文件夹
@@ -153,7 +152,7 @@ public interface ISftpExecutor extends SafeCloseable {
      *
      * @param path 文件夹绝对路径
      */
-    public void mkdir(String path);
+    void mkdir(String path);
 
     /**
      * 创建文件夹 递归
@@ -163,7 +162,7 @@ public interface ISftpExecutor extends SafeCloseable {
      *
      * @param path 文件夹绝对路径
      */
-    public void mkdirs(String path);
+    void mkdirs(String path);
 
     /**
      * 删除一个空的文件夹
@@ -174,7 +173,7 @@ public interface ISftpExecutor extends SafeCloseable {
      *
      * @param path 绝对路径
      */
-    public void removeDir(String path);
+    void removeDir(String path);
 
     /**
      * 删除一个普通文件
@@ -184,14 +183,14 @@ public interface ISftpExecutor extends SafeCloseable {
      *
      * @param path 绝对路径
      */
-    public void removeFile(String path);
+    void removeFile(String path);
 
     /**
      * 递归删除文件或文件夹
      *
      * @param path 路径
      */
-    public void rm(String path);
+    void rm(String path);
 
     /**
      * 创建文件
@@ -200,7 +199,7 @@ public interface ISftpExecutor extends SafeCloseable {
      *
      * @param path 文件绝对路径
      */
-    public void touch(String path);
+    void touch(String path);
 
     /**
      * 创建文件 如果文件存在则截断
@@ -209,7 +208,7 @@ public interface ISftpExecutor extends SafeCloseable {
      *
      * @param path 文件绝对路径
      */
-    public void touchTruncate(String path);
+    void touchTruncate(String path);
 
     /**
      * 创建文件
@@ -219,7 +218,7 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param path     文件绝对路径
      * @param truncate 如果文件存在是否截断
      */
-    public void touch(String path, boolean truncate);
+    void touch(String path, boolean truncate);
 
     /**
      * 清空文件, 没有则创建
@@ -228,7 +227,7 @@ public interface ISftpExecutor extends SafeCloseable {
      *
      * @param path 文件绝对路径
      */
-    public void truncate(String path);
+    void truncate(String path);
 
     /**
      * 创建连接文件
@@ -239,7 +238,7 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param source 原文件绝对路径
      * @param target 连接文件绝对路径
      */
-    public void touchLink(String source, String target);
+    void touchLink(String source, String target);
 
     /**
      * 移动文件 / 改名
@@ -250,15 +249,15 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param source 原文件绝对路径
      * @param target 目标文件(绝对路径 相对路径) / 文件名称
      */
-    public void mv(String source, String target);
+    void mv(String source, String target);
 
     // -------------------- read --------------------
 
-    public int read(String path, byte[] bs) throws IOException;
+    int read(String path, byte[] bs) throws IOException;
 
-    public int read(String path, byte[] bs, int offset, int len) throws IOException;
+    int read(String path, byte[] bs, int offset, int len) throws IOException;
 
-    public int read(String path, long skip, byte[] bs) throws IOException;
+    int read(String path, long skip, byte[] bs) throws IOException;
 
     /**
      * 读取文件
@@ -273,21 +272,21 @@ public interface ISftpExecutor extends SafeCloseable {
      * @return read len
      * @throws IOException IOException
      */
-    public int read(String path, long skip, byte[] bs, int offset, int len) throws IOException;
+    int read(String path, long skip, byte[] bs, int offset, int len) throws IOException;
 
     // -------------------- transfer --------------------
 
-    public long transfer(String path, OutputStream out) throws IOException;
+    long transfer(String path, OutputStream out) throws IOException;
 
-    public long transfer(String path, OutputStream out, long skip) throws IOException;
+    long transfer(String path, OutputStream out, long skip) throws IOException;
 
-    public long transfer(String path, String file) throws IOException;
+    long transfer(String path, String file) throws IOException;
 
-    public long transfer(String path, String file, long skip) throws IOException;
+    long transfer(String path, String file, long skip) throws IOException;
 
-    public long transfer(String path, File file) throws IOException;
+    long transfer(String path, File file) throws IOException;
 
-    public long transfer(String path, File file, long skip) throws IOException;
+    long transfer(String path, File file, long skip) throws IOException;
 
     /**
      * 读取字节到输出流
@@ -301,13 +300,13 @@ public interface ISftpExecutor extends SafeCloseable {
      * @return 已读取长度
      * @throws IOException IOException
      */
-    public long transfer(String path, OutputStream out, long skip, int size) throws IOException;
+    long transfer(String path, OutputStream out, long skip, int size) throws IOException;
 
     // -------------------- write --------------------
 
-    public void write(String path, InputStream in) throws IOException;
+    void write(String path, InputStream in) throws IOException;
 
-    public void write(String path, byte[] bs) throws IOException;
+    void write(String path, byte[] bs) throws IOException;
 
     /**
      * 写入
@@ -320,9 +319,9 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param len  len
      * @throws IOException IOException
      */
-    public void write(String path, byte[] bs, int off, int len) throws IOException;
+    void write(String path, byte[] bs, int off, int len) throws IOException;
 
-    public void writeLine(String path, String line) throws IOException;
+    void writeLine(String path, String line) throws IOException;
 
     /**
      * 写入多行
@@ -333,13 +332,13 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param lines lines
      * @throws IOException IOException
      */
-    public void writeLines(String path, List<String> lines) throws IOException;
+    void writeLines(String path, List<String> lines) throws IOException;
 
     // -------------------- append --------------------
 
-    public void append(String path, InputStream in) throws IOException;
+    void append(String path, InputStream in) throws IOException;
 
-    public void append(String path, byte[] bs) throws IOException;
+    void append(String path, byte[] bs) throws IOException;
 
     /**
      * 拼接
@@ -352,9 +351,9 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param len  len
      * @throws IOException IOException
      */
-    public void append(String path, byte[] bs, int off, int len) throws IOException;
+    void append(String path, byte[] bs, int off, int len) throws IOException;
 
-    public void appendLine(String path, String line) throws IOException;
+    void appendLine(String path, String line) throws IOException;
 
     /**
      * 拼接多行
@@ -365,15 +364,15 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param lines lines
      * @throws IOException IOException
      */
-    public void appendLines(String path, List<String> lines) throws IOException;
+    void appendLines(String path, List<String> lines) throws IOException;
 
     // -------------------- upload --------------------
 
-    public void uploadFile(String remoteFile, String localFile) throws IOException;
+    void uploadFile(String remoteFile, String localFile) throws IOException;
 
-    public void uploadFile(String remoteFile, File localFile) throws IOException;
+    void uploadFile(String remoteFile, File localFile) throws IOException;
 
-    public void uploadFile(String remoteFile, InputStream in) throws IOException;
+    void uploadFile(String remoteFile, InputStream in) throws IOException;
 
     /**
      * 上传文件
@@ -387,13 +386,13 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param close      close
      * @throws IOException IOException
      */
-    public void uploadFile(String remoteFile, InputStream in, boolean close) throws IOException;
+    void uploadFile(String remoteFile, InputStream in, boolean close) throws IOException;
 
-    public void uploadDir(String remoteDir, File localDir) throws IOException;
+    void uploadDir(String remoteDir, File localDir) throws IOException;
 
-    public void uploadDir(String remoteDir, String localDir) throws IOException;
+    void uploadDir(String remoteDir, String localDir) throws IOException;
 
-    public void uploadDir(String remoteDir, File localDir, boolean child) throws IOException;
+    void uploadDir(String remoteDir, File localDir, boolean child) throws IOException;
 
     /**
      * 上传文件夹
@@ -409,13 +408,13 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param child     是否遍历上传
      * @throws IOException IOException
      */
-    public void uploadDir(String remoteDir, String localDir, boolean child) throws IOException;
+    void uploadDir(String remoteDir, String localDir, boolean child) throws IOException;
 
-    public void downloadFile(String remoteFile, String localFile) throws IOException;
+    void downloadFile(String remoteFile, String localFile) throws IOException;
 
-    public void downloadFile(String remoteFile, File localFile) throws IOException;
+    void downloadFile(String remoteFile, File localFile) throws IOException;
 
-    public void downloadFile(String remoteFile, OutputStream out) throws IOException;
+    void downloadFile(String remoteFile, OutputStream out) throws IOException;
 
     /**
      * 下载文件
@@ -425,13 +424,13 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param close      是否自动关闭
      * @throws IOException IOException
      */
-    public void downloadFile(String remoteFile, OutputStream out, boolean close) throws IOException;
+    void downloadFile(String remoteFile, OutputStream out, boolean close) throws IOException;
 
-    public void downloadDir(String remoteDir, File localDir) throws IOException;
+    void downloadDir(String remoteDir, File localDir) throws IOException;
 
-    public void downloadDir(String remoteDir, String localDir) throws IOException;
+    void downloadDir(String remoteDir, String localDir) throws IOException;
 
-    public void downloadDir(String remoteDir, File localDir, boolean child) throws IOException;
+    void downloadDir(String remoteDir, File localDir, boolean child) throws IOException;
 
     /**
      * 下载文件夹
@@ -441,11 +440,11 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param child     是否递归子文件夹下载
      * @throws IOException pending
      */
-    public void downloadDir(String remoteDir, String localDir, boolean child) throws IOException;
+    void downloadDir(String remoteDir, String localDir, boolean child) throws IOException;
 
     // -------------------- big file --------------------
 
-    public IFileTransfer upload(String remote, File local);
+    IFileTransfer upload(String remote, File local);
 
     /**
      * 获取文件上传器
@@ -454,9 +453,9 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param local  本地文件
      * @return 文件上传器
      */
-    public IFileTransfer upload(String remote, String local);
+    IFileTransfer upload(String remote, String local);
 
-    public IFileTransfer download(String remote, File local);
+    IFileTransfer download(String remote, File local);
 
     /**
      * 获取文件下载器
@@ -465,7 +464,7 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param local  本地文件
      * @return 文件下载器
      */
-    public IFileTransfer download(String remote, String local);
+    IFileTransfer download(String remote, String local);
 
     // -------------------- list --------------------
 
@@ -477,11 +476,11 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param path 文件绝对路径
      * @return 属性
      */
-    public List<SftpFile> ll(String path);
+    List<SftpFile> ll(String path);
 
-    public List<SftpFile> listFiles(String path);
+    List<SftpFile> listFiles(String path);
 
-    public List<SftpFile> listFiles(String path, boolean child);
+    List<SftpFile> listFiles(String path, boolean child);
 
     /**
      * 文件列表
@@ -493,9 +492,9 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param dir   是否添加文件夹
      * @return 文件列表
      */
-    public List<SftpFile> listFiles(String path, boolean child, boolean dir);
+    List<SftpFile> listFiles(String path, boolean child, boolean dir);
 
-    public List<SftpFile> listDirs(String path);
+    List<SftpFile> listDirs(String path);
 
     /**
      * 文件夹列表
@@ -506,11 +505,11 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param child 是否递归
      * @return 文件列表
      */
-    public List<SftpFile> listDirs(String path, boolean child);
+    List<SftpFile> listDirs(String path, boolean child);
 
-    public List<SftpFile> listFilesSuffix(String path, String suffix);
+    List<SftpFile> listFilesSuffix(String path, String suffix);
 
-    public List<SftpFile> listFilesSuffix(String path, String suffix, boolean child);
+    List<SftpFile> listFilesSuffix(String path, String suffix, boolean child);
 
     /**
      * 搜索文件 后缀
@@ -523,11 +522,11 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param dir    是否添加文件夹
      * @return 文件
      */
-    public List<SftpFile> listFilesSuffix(String path, String suffix, boolean child, boolean dir);
+    List<SftpFile> listFilesSuffix(String path, String suffix, boolean child, boolean dir);
 
-    public List<SftpFile> listFilesMatch(String path, String match);
+    List<SftpFile> listFilesMatch(String path, String match);
 
-    public List<SftpFile> listFilesMatch(String path, String match, boolean child);
+    List<SftpFile> listFilesMatch(String path, String match, boolean child);
 
     /**
      * 搜索文件 文件名包含
@@ -540,11 +539,11 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param dir   是否添加文件夹
      * @return 文件
      */
-    public List<SftpFile> listFilesMatch(String path, String match, boolean child, boolean dir);
+    List<SftpFile> listFilesMatch(String path, String match, boolean child, boolean dir);
 
-    public List<SftpFile> listFilesPattern(String path, Pattern pattern);
+    List<SftpFile> listFilesPattern(String path, Pattern pattern);
 
-    public List<SftpFile> listFilesPattern(String path, Pattern pattern, boolean child);
+    List<SftpFile> listFilesPattern(String path, Pattern pattern, boolean child);
 
     /**
      * 搜索文件 正则
@@ -557,11 +556,11 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param dir     是否添加文件夹
      * @return 文件
      */
-    public List<SftpFile> listFilesPattern(String path, Pattern pattern, boolean child, boolean dir);
+    List<SftpFile> listFilesPattern(String path, Pattern pattern, boolean child, boolean dir);
 
-    public List<SftpFile> listFilesFilter(String path, SftpFileAttributeFilter filter);
+    List<SftpFile> listFilesFilter(String path, SftpFileAttributeFilter filter);
 
-    public List<SftpFile> listFilesFilter(String path, SftpFileAttributeFilter filter, boolean child);
+    List<SftpFile> listFilesFilter(String path, SftpFileAttributeFilter filter, boolean child);
 
     /**
      * 搜索文件 过滤器
@@ -574,7 +573,7 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param dir    是否添加文件夹
      * @return 文件
      */
-    public List<SftpFile> listFilesFilter(String path, SftpFileAttributeFilter filter, boolean child, boolean dir);
+    List<SftpFile> listFilesFilter(String path, SftpFileAttributeFilter filter, boolean child, boolean dir);
 
     // -------------------- other --------------------
 
@@ -583,27 +582,27 @@ public interface ISftpExecutor extends SafeCloseable {
      *
      * @return 是否已连接
      */
-    public boolean isConnected();
+    boolean isConnected();
 
     /**
      * 获取服务端版本
      *
      * @return 服务端版本
      */
-    public int getServerVersion();
+    int getServerVersion();
 
     /**
      * 获取缓冲区大小
      *
      * @return bufferSize
      */
-    public int getBufferSize();
+    int getBufferSize();
 
     /**
      * 获取文件名编码
      *
      * @return 文件名编码
      */
-    public String getCharset();
+    String getCharset();
 
 }

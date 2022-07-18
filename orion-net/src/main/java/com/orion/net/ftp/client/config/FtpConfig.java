@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.nio.charset.Charset;
 
 /**
- * FTP连接配置类
+ * FTP 连接配置类
  *
  * @author Jiahang Li
  * @version 1.0.0

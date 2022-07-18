@@ -10,7 +10,7 @@ import org.springframework.beans.factory.InitializingBean;
 import java.util.Properties;
 
 /**
- * maven多环境配置
+ * maven 多环境配置
  *
  * @author Jiahang Li
  * @version 1.0.0

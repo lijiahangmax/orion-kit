@@ -13,7 +13,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
- * jar解压器
+ * jar 解压器
  *
  * @author Jiahang Li
  * @version 1.0.0

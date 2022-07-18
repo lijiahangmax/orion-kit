@@ -1,7 +1,7 @@
 package com.orion.lang.utils;
 
 /**
- * boolean工具类
+ * boolean 工具类
  *
  * @author Jiahang Li
  * @version 1.0.0
