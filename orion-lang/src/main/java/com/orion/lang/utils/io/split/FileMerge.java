@@ -1,7 +1,7 @@
 package com.orion.lang.utils.io.split;
 
 import com.orion.lang.constant.Const;
-import com.orion.lang.define.wrapper.Args;
+import com.orion.lang.define.wrapper.Pair;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.io.Files1;
@@ -9,7 +9,7 @@ import com.orion.lang.utils.io.Streams;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -70,9 +70,9 @@ public class FileMerge implements Callable<String> {
 
     @Override
     public String call() {
-        Args.Two<String, List<String>> fl = this.shuffleFile(blockFile);
+        Pair<String, List<String>> fl = this.shuffleFile(blockFile);
         try {
-            return this.mergeFile(file.getAbsolutePath(), fl.getArg1(), fl.getArg2());
+            return this.mergeFile(file.getAbsolutePath(), fl.getKey(), fl.getValue());
         } catch (Exception e) {
             return e.getMessage();
         }
@@ -84,7 +84,7 @@ public class FileMerge implements Callable<String> {
      * @param files 块文件
      * @return 合并文件路径, 块文件路径
      */
-    private Args.Two<String, List<String>> shuffleFile(String[] files) {
+    private Pair<String, List<String>> shuffleFile(String[] files) {
         Map<Integer, String> fm = new TreeMap<>();
         for (String file : files) {
             int l = file.lastIndexOf(".");
@@ -107,7 +107,7 @@ public class FileMerge implements Callable<String> {
             }
             fileList.add(is.getValue());
         }
-        return Args.of(filePath, fileList);
+        return Pair.of(filePath, fileList);
     }
 
     /**
@@ -119,10 +119,8 @@ public class FileMerge implements Callable<String> {
      * @return 合并问价路径
      */
     private String mergeFile(String dir, String fileName, List<String> blocks) {
-        FileOutputStream dist = null;
-        try {
-            String path = Files1.getPath(dir, fileName);
-            dist = Files1.openOutputStream(path);
+        String path = Files1.getPath(dir, fileName);
+        try (OutputStream dist = Files1.openOutputStreamFast(path)) {
             for (String block : blocks) {
                 FileInputStream in = Files1.openInputStream(Files1.getPath(dir, block));
                 byte[] buffer = new byte[bufferSize];
@@ -136,8 +134,6 @@ public class FileMerge implements Callable<String> {
             return path;
         } catch (Exception e) {
             throw Exceptions.runtime("merge error: " + e.getMessage());
-        } finally {
-            Streams.close(dist);
         }
     }
 

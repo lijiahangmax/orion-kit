@@ -66,7 +66,11 @@ public class CharConverts {
         char[] chars = str.toCharArray();
         StringBuilder sb = new StringBuilder();
         for (char c : chars) {
-            sb.append(toUnicodeChar(c, convertNumber));
+            if (convertNumber || c > 255) {
+                sb.append(toUnicodeChar(c));
+            } else {
+                sb.append(c);
+            }
         }
         return sb.toString();
     }
@@ -75,30 +79,25 @@ public class CharConverts {
      * char -> unicode
      * xx -> \\u
      *
-     * @param c             char
-     * @param convertNumber 是否转换字母和数字
+     * @param c char
      * @return unicode
      */
-    private static String toUnicodeChar(char c, boolean convertNumber) {
-        if (convertNumber || c > 255) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(UNICODE_PREFIX);
-            int code = (c >> 8);
-            String tmp = Integer.toHexString(code);
-            if (tmp.length() == 1) {
-                sb.append("0");
-            }
-            sb.append(tmp);
-            code = (c & 0xFF);
-            tmp = Integer.toHexString(code);
-            if (tmp.length() == 1) {
-                sb.append("0");
-            }
-            sb.append(tmp);
-            return sb.toString();
-        } else {
-            return Character.toString(c);
+    public static String toUnicodeChar(char c) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(UNICODE_PREFIX);
+        int code = (c >> 8);
+        String tmp = Integer.toHexString(code);
+        if (tmp.length() == 1) {
+            sb.append("0");
         }
+        sb.append(tmp);
+        code = (c & 0xFF);
+        tmp = Integer.toHexString(code);
+        if (tmp.length() == 1) {
+            sb.append("0");
+        }
+        sb.append(tmp);
+        return sb.toString();
     }
 
     /**
@@ -129,7 +128,7 @@ public class CharConverts {
      * @param str unicode
      * @return char
      */
-    private static char fromUnicodeChar(String str) {
+    public static char fromUnicodeChar(String str) {
         if (str.length() != 6) {
             throw Exceptions.argument("ascii string of a native character must be 6 character.");
         }

@@ -1,6 +1,6 @@
 package com.orion.test.encrypt;
 
-import com.orion.lang.define.wrapper.Args;
+import com.orion.lang.define.wrapper.Pair;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.crypto.Keys;
 import com.orion.lang.utils.crypto.RSA;
@@ -28,9 +28,9 @@ public class RsaTests {
     private static RSAPrivateKey privateKey = RSA.getPrivateKey(Strings.bytes(pri));
     private static RSAPublicKey publicKey1 = RSA.getPublicKey(pubFile);
     private static RSAPrivateKey privateKey1 = RSA.getPrivateKey(priFile);
-    private static Args.Two<RSAPublicKey, RSAPrivateKey> keys = RSA.generatorKeys();
-    private static Args.Two<RSAPublicKey, RSAPrivateKey> keys1 = RSA.generatorKeys(512);
-    private static Args.Two<PublicKey, PrivateKey> keys2 = Keys.getPfxKeys(new File("C:\\Users\\ljh15\\Desktop\\key\\openssl.pfx"), "123456");
+    private static Pair<RSAPublicKey, RSAPrivateKey> keys = RSA.generatorKeys();
+    private static Pair<RSAPublicKey, RSAPrivateKey> keys1 = RSA.generatorKeys(512);
+    private static Pair<PublicKey, PrivateKey> keys2 = Keys.getPfxKeys(new File("C:\\Users\\ljh15\\Desktop\\key\\openssl.pfx"), "123456");
 
     @Test
     public void ed() {
@@ -70,9 +70,9 @@ public class RsaTests {
     @Test
     public void pfx() {
         String d = "123";
-        String e = RSA.encrypt(d, keys2.getArg1());
-        String sign1 = RSA.sign(d, keys2.getArg2(), RSASignature.MD5);
-        boolean v1 = RSA.verify(d, keys2.getArg1(), sign1, RSASignature.MD5);
+        String e = RSA.encrypt(d, keys2.getKey());
+        String sign1 = RSA.sign(d, keys2.getValue(), RSASignature.MD5);
+        boolean v1 = RSA.verify(d, keys2.getKey(), sign1, RSASignature.MD5);
         System.out.println();
         System.out.println(d);
         System.out.println(e);
@@ -87,12 +87,12 @@ public class RsaTests {
         System.out.println(RSA.getPublicKey(privateKey));
         System.out.println(publicKey1);
         System.out.println(privateKey1);
-        System.out.println(keys.getArg1());
-        System.out.println(keys.getArg2());
-        System.out.println(keys1.getArg1());
-        System.out.println(keys1.getArg2());
-        System.out.println("pfx: " + keys2.getArg1());
-        System.out.println("pfx: " + keys2.getArg2());
+        System.out.println(keys.getKey());
+        System.out.println(keys.getValue());
+        System.out.println(keys1.getKey());
+        System.out.println(keys1.getValue());
+        System.out.println("pfx: " + keys2.getKey());
+        System.out.println("pfx: " + keys2.getValue());
         System.out.println(Keys.getPublicKey(publicKey));
         System.out.println(Keys.getPrivateKey(privateKey));
         System.out.println(Keys.getPublicKey(publicKey1));

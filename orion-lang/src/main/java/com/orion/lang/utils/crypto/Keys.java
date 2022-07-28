@@ -1,7 +1,7 @@
 package com.orion.lang.utils.crypto;
 
 import com.orion.lang.constant.Const;
-import com.orion.lang.define.wrapper.Args;
+import com.orion.lang.define.wrapper.Pair;
 import com.orion.lang.utils.Arrays1;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
@@ -76,15 +76,15 @@ public class Keys {
 
     // -------------------- PFX --------------------
 
-    public static Args.Two<PublicKey, PrivateKey> getPfxKeys(File file, String password) {
+    public static Pair<PublicKey, PrivateKey> getPfxKeys(File file, String password) {
         return getPfxKeys(Files1.openInputStreamSafe(file), password, true);
     }
 
-    public static Args.Two<PublicKey, PrivateKey> getPfxKeys(String file, String password) {
+    public static Pair<PublicKey, PrivateKey> getPfxKeys(String file, String password) {
         return getPfxKeys(Files1.openInputStreamSafe(file), password, true);
     }
 
-    public static Args.Two<PublicKey, PrivateKey> getPfxKeys(InputStream in, String password) {
+    public static Pair<PublicKey, PrivateKey> getPfxKeys(InputStream in, String password) {
         return getPfxKeys(in, password, false);
     }
 
@@ -96,7 +96,7 @@ public class Keys {
      * @param close    是否关闭流
      * @return PublicKey, PrivateKey
      */
-    public static Args.Two<PublicKey, PrivateKey> getPfxKeys(InputStream in, String password, boolean close) {
+    public static Pair<PublicKey, PrivateKey> getPfxKeys(InputStream in, String password, boolean close) {
         try {
             char[] ps = password == null ? null : password.toCharArray();
             KeyStore ks = KeyStore.getInstance(CryptoConst.PKCS12);
@@ -107,7 +107,7 @@ public class Keys {
                 keyAlias = aliases.nextElement();
             }
             Certificate cert = ks.getCertificate(keyAlias);
-            return Args.of(cert.getPublicKey(), (PrivateKey) ks.getKey(keyAlias, ps));
+            return Pair.of(cert.getPublicKey(), (PrivateKey) ks.getKey(keyAlias, ps));
         } catch (Exception e) {
             return null;
         } finally {

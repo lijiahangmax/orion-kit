@@ -5,6 +5,7 @@ import com.jcraft.jsch.SftpATTRS;
 import com.jcraft.jsch.SftpException;
 import com.orion.lang.constant.Const;
 import com.orion.lang.define.StreamEntry;
+import com.orion.lang.utils.Charsets;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.io.Files1;
@@ -50,7 +51,7 @@ public class SftpExecutor extends BaseSftpExecutor implements ChannelConnector {
     @Override
     public void charset(String charset) {
         try {
-            channel.setFilenameEncoding(charset);
+            channel.setFilenameEncoding(Charsets.of(charset));
             this.charset = charset;
         } catch (Exception e) {
             throw Exceptions.sftp("set sftp charset error", e);

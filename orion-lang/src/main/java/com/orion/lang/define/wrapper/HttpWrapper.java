@@ -6,7 +6,6 @@ import com.orion.lang.able.IMapObject;
 import com.orion.lang.constant.Const;
 import com.orion.lang.define.support.CloneSupport;
 import com.orion.lang.utils.Objects1;
-import com.orion.lang.utils.Strings;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,10 +52,6 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
         this(code, msg, null);
     }
 
-    public HttpWrapper(int code, T data) {
-        this(code, HTTP_OK_MESSAGE, data);
-    }
-
     public HttpWrapper(int code, String msg, T data) {
         this.code = code;
         this.msg = msg;
@@ -93,20 +88,8 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
         return new HttpWrapper<>(code, msg);
     }
 
-    public static <T> HttpWrapper<T> of(int code, String msg, Object... args) {
-        return new HttpWrapper<>(code, Strings.format(msg, args));
-    }
-
     public static <T> HttpWrapper<T> of(int code, String msg, T data) {
         return new HttpWrapper<>(code, msg, data);
-    }
-
-    public static <T> HttpWrapper<T> of(int code, T data) {
-        return new HttpWrapper<>(code, data);
-    }
-
-    public static <T> HttpWrapper<T> of(T data, int code, String msg, Object... args) {
-        return new HttpWrapper<>(code, Strings.format(msg, args), data);
     }
 
     /**
@@ -116,24 +99,8 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
         return new HttpWrapper<>(HTTP_OK_CODE, HTTP_OK_MESSAGE);
     }
 
-    public static <T> HttpWrapper<T> ok(String msg) {
-        return new HttpWrapper<>(HTTP_OK_CODE, msg);
-    }
-
-    public static <T> HttpWrapper<T> ok(String msg, Object... args) {
-        return new HttpWrapper<>(HTTP_OK_CODE, Strings.format(msg, args));
-    }
-
     public static <T> HttpWrapper<T> ok(T data) {
         return new HttpWrapper<>(HTTP_OK_CODE, HTTP_OK_MESSAGE, data);
-    }
-
-    public static <T> HttpWrapper<T> ok(String msg, T data) {
-        return new HttpWrapper<>(HTTP_OK_CODE, msg, data);
-    }
-
-    public static <T> HttpWrapper<T> ok(T data, String msg, Object... args) {
-        return new HttpWrapper<>(HTTP_OK_CODE, Strings.format(msg, args), data);
     }
 
     /**
@@ -143,24 +110,8 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
         return new HttpWrapper<>(HTTP_ERROR_CODE, HTTP_ERROR_MESSAGE);
     }
 
-    public static <T> HttpWrapper<T> error(String msg) {
-        return new HttpWrapper<>(HTTP_ERROR_CODE, msg);
-    }
-
-    public static <T> HttpWrapper<T> error(String msg, Object... args) {
-        return new HttpWrapper<>(HTTP_ERROR_CODE, Strings.format(msg, args));
-    }
-
     public static <T> HttpWrapper<T> error(T data) {
         return new HttpWrapper<>(HTTP_ERROR_CODE, HTTP_ERROR_MESSAGE, data);
-    }
-
-    public static <T> HttpWrapper<T> error(String msg, T data) {
-        return new HttpWrapper<>(HTTP_ERROR_CODE, msg, data);
-    }
-
-    public static <T> HttpWrapper<T> error(T data, String msg, Object... args) {
-        return new HttpWrapper<>(HTTP_ERROR_CODE, Strings.format(msg, args), data);
     }
 
     public static <T> HttpWrapper<T> error(Throwable t) {

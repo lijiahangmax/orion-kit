@@ -2,7 +2,6 @@ package com.orion.lang.utils.collect;
 
 import com.orion.lang.constant.Const;
 import com.orion.lang.define.collect.*;
-import com.orion.lang.define.wrapper.Args;
 import com.orion.lang.define.wrapper.Pair;
 import com.orion.lang.utils.Arrays1;
 import com.orion.lang.utils.Strings;
@@ -284,19 +283,6 @@ public class Maps {
             } else {
                 map.put(keys[i], null);
             }
-        }
-        return map;
-    }
-
-    @SafeVarargs
-    public static <K, V> Map<K, V> of(Args.Entry<K, V>... entries) {
-        int len = Arrays1.length(entries);
-        if (len == 0) {
-            return new HashMap<>(Const.CAPACITY_16);
-        }
-        Map<K, V> map = new HashMap<>(getNoCapacitySize(len));
-        for (int i = 0; i < len; i++) {
-            map.put(entries[i].getKey(), entries[i].getValue());
         }
         return map;
     }

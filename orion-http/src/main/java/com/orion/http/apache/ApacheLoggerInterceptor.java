@@ -1,6 +1,6 @@
 package com.orion.http.apache;
 
-import com.orion.lang.define.wrapper.Args;
+import com.orion.lang.define.wrapper.Tuple;
 import com.orion.lang.id.UUIds;
 import org.apache.http.*;
 import org.apache.http.protocol.HttpContext;
@@ -21,9 +21,9 @@ public class ApacheLoggerInterceptor implements HttpRequestInterceptor, HttpResp
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(ApacheLoggerInterceptor.class);
 
-    private static final ThreadLocal<Args.Four<String, String, Long, String>> HOLDER = new ThreadLocal<>();
+    private static final ThreadLocal<Tuple> HOLDER = new ThreadLocal<>();
 
-    private static final String DEF = "Apache-HTTP-Request ";
+    private static final String DEF = "HTTP-Request ";
 
     private String suffix;
 
@@ -42,18 +42,19 @@ public class ApacheLoggerInterceptor implements HttpRequestInterceptor, HttpResp
         String method = request.getMethod();
         String uri = request.getUri();
         String traceId = UUIds.random32();
-        HOLDER.set(Args.of(method, uri, start, traceId));
+        HOLDER.set(Tuple.of(method, uri, start, traceId));
         LOGGER.info(suffix + "START method: [{}], url: [{}], start: [{}], traceId: [{}]", method, uri, start, traceId);
     }
 
     @Override
     public void process(HttpResponse httpResponse, HttpContext httpContext) {
         long end = System.currentTimeMillis();
-        Args.Four<String, String, Long, String> p = HOLDER.get();
+        Tuple tuple = HOLDER.get();
         HOLDER.remove();
         StatusLine response = httpResponse.getStatusLine();
         int code = response.getStatusCode();
-        LOGGER.info(suffix + "END [use: {}ms], code: {}, success: {}, method: [{}], url: [{}], traceId: [{}]", end - p.getArg3(), code, code >= 200 && code < 400, p.getArg1(), p.getArg2(), p.getArg4());
+        LOGGER.info(suffix + "END [use: {}ms], code: {}, method: [{}], url: [{}], traceId: [{}]",
+                end - (Long) tuple.get(2), code, tuple.get(0), tuple.get(1), tuple.get(3));
     }
 
     public String getSuffix() {

@@ -1,6 +1,6 @@
 package com.orion.lang.utils.crypto;
 
-import com.orion.lang.define.wrapper.Args;
+import com.orion.lang.define.wrapper.Pair;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.crypto.enums.CipherAlgorithm;
@@ -312,7 +312,7 @@ public class RSA {
      *
      * @return PublicKey PrivateKey
      */
-    public static Args.Two<RSAPublicKey, RSAPrivateKey> generatorKeys() {
+    public static Pair<RSAPublicKey, RSAPrivateKey> generatorKeys() {
         return generatorKeys(CryptoConst.RSA_KEY_LENGTH);
     }
 
@@ -322,12 +322,12 @@ public class RSA {
      * @param length 512 ~ 16384
      * @return PublicKey PrivateKey
      */
-    public static Args.Two<RSAPublicKey, RSAPrivateKey> generatorKeys(int length) {
+    public static Pair<RSAPublicKey, RSAPrivateKey> generatorKeys(int length) {
         try {
             KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance(CryptoConst.RSA);
             keyPairGen.initialize(length, new SecureRandom());
             KeyPair keyPair = keyPairGen.generateKeyPair();
-            return Args.of(((RSAPublicKey) keyPair.getPublic()), ((RSAPrivateKey) keyPair.getPrivate()));
+            return Pair.of(((RSAPublicKey) keyPair.getPublic()), ((RSAPrivateKey) keyPair.getPrivate()));
         } catch (Exception e) {
             throw Exceptions.runtime(e);
         }
