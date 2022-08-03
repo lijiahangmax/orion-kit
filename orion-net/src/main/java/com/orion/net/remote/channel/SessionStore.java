@@ -24,34 +24,8 @@ public class SessionStore implements SafeCloseable {
      */
     private final Session session;
 
-    /**
-     * host
-     */
-    private final String host;
-
-    /**
-     * port
-     */
-    private final int port;
-
-    /**
-     * username
-     */
-    private final String username;
-
-    public SessionStore(String host, String username) {
-        this(host, 22, username);
-    }
-
-    public SessionStore(String host, int port, String username) {
-        this.host = host;
-        this.port = port;
-        this.username = username;
-        try {
-            this.session = SessionHolder.CH.getSession(username, host, port);
-        } catch (Exception e) {
-            throw Exceptions.connection(e);
-        }
+    public SessionStore(Session session) {
+        this.session = session;
     }
 
     /**
@@ -309,15 +283,15 @@ public class SessionStore implements SafeCloseable {
     }
 
     public String getHost() {
-        return host;
+        return session.getHost();
     }
 
     public int getPort() {
-        return port;
+        return session.getPort();
     }
 
     public String getUsername() {
-        return username;
+        return session.getUserName();
     }
 
     @Override

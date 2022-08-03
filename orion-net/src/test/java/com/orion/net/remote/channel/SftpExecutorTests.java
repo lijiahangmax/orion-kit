@@ -29,7 +29,7 @@ public class SftpExecutorTests {
     @Before
     public void before() {
         SessionHolder.setLogger(SessionLogger.ERROR);
-        this.e = SessionHolder.getSession("192.168.146.230", "root")
+        this.e = SessionHolder.HOLDER.getSession("192.168.146.230", "root")
                 .password("admin123")
                 .timeout(20000)
                 .connect(20000)

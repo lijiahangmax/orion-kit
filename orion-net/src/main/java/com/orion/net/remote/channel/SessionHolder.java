@@ -22,13 +22,24 @@ import java.util.Vector;
  */
 public class SessionHolder {
 
-    private SessionHolder() {
+    public static final SessionHolder HOLDER;
+
+    public static final int DEFAULT_SSH_PORT = 22;
+
+    public final JSch ch;
+
+    public SessionHolder(JSch ch) {
+        Valid.notNull(ch, "jsch is null");
+        this.ch = ch;
     }
 
-    public static final JSch CH = new JSch();
-
     static {
+        HOLDER = new SessionHolder(new JSch());
         JSch.setConfig("StrictHostKeyChecking", "no");
+    }
+
+    public static SessionHolder getHolder() {
+        return HOLDER;
     }
 
     /**
@@ -75,10 +86,10 @@ public class SessionHolder {
      * @param keyPath  公钥路径
      * @param password 公钥密码
      */
-    public static void addIdentity(String keyPath, String password) {
+    public void addIdentity(String keyPath, String password) {
         Valid.notNull(password, "public key password is null");
         try {
-            CH.addIdentity(keyPath, password);
+            ch.addIdentity(keyPath, password);
         } catch (Exception e) {
             throw Exceptions.runtime("add identity error " + e.getMessage());
         }
@@ -90,10 +101,10 @@ public class SessionHolder {
      * @param keyPath  公钥路径
      * @param password 公钥密码
      */
-    public static void addIdentity(String keyPath, byte[] password) {
+    public void addIdentity(String keyPath, byte[] password) {
         Valid.notNull(password, "public key password is null");
         try {
-            CH.addIdentity(keyPath, password);
+            ch.addIdentity(keyPath, password);
         } catch (Exception e) {
             throw Exceptions.runtime("add identity error " + e.getMessage());
         }
@@ -104,9 +115,9 @@ public class SessionHolder {
      *
      * @param keyPath 公钥路径
      */
-    public static void addIdentity(String keyPath) {
+    public void addIdentity(String keyPath) {
         try {
-            CH.addIdentity(keyPath);
+            ch.addIdentity(keyPath);
         } catch (Exception e) {
             throw Exceptions.runtime("add identity error " + e.getMessage());
         }
@@ -117,14 +128,14 @@ public class SessionHolder {
      *
      * @param keyPath keyPath
      */
-    public static void removeIdentity(String keyPath) {
-        Vector<?> identities = CH.getIdentityRepository().getIdentities();
+    public void removeIdentity(String keyPath) {
+        Vector<?> identities = ch.getIdentityRepository().getIdentities();
         for (Object identity : identities) {
             if (identity instanceof Identity) {
                 String key = ((Identity) identity).getName();
                 if (Files1.getPath(key).equals(Files1.getPath(keyPath))) {
                     try {
-                        CH.removeIdentity((Identity) identity);
+                        ch.removeIdentity((Identity) identity);
                     } catch (Exception e) {
                         throw Exceptions.runtime("remove identity error " + e.getMessage());
                     }
@@ -136,9 +147,9 @@ public class SessionHolder {
     /**
      * 删除所有加载的公钥
      */
-    public static void removeAllIdentity() {
+    public void removeAllIdentity() {
         try {
-            CH.removeAllIdentity();
+            ch.removeAllIdentity();
         } catch (JSchException e) {
             throw Exceptions.runtime("remove all identity error " + e.getMessage());
         }
@@ -149,9 +160,9 @@ public class SessionHolder {
      *
      * @return keys
      */
-    public static List<String> getLoadKeys() {
+    public List<String> getLoadKeys() {
         List<String> keys = new ArrayList<>();
-        Vector<?> identities = CH.getIdentityRepository().getIdentities();
+        Vector<?> identities = ch.getIdentityRepository().getIdentities();
         for (Object identity : identities) {
             if (identity instanceof Identity) {
                 keys.add(Files1.getPath(((Identity) identity).getName()));
@@ -165,9 +176,9 @@ public class SessionHolder {
      *
      * @param filePath 文件路径
      */
-    public static void setKnownHosts(String filePath) {
+    public void setKnownHosts(String filePath) {
         try {
-            CH.setKnownHosts(filePath);
+            ch.setKnownHosts(filePath);
         } catch (Exception e) {
             throw Exceptions.runtime("set unknown hosts error " + e.getMessage());
         }
@@ -178,9 +189,9 @@ public class SessionHolder {
      *
      * @param inputStream 文件流
      */
-    public static void setKnownHosts(InputStream inputStream) {
+    public void setKnownHosts(InputStream inputStream) {
         try {
-            CH.setKnownHosts(inputStream);
+            ch.setKnownHosts(inputStream);
         } catch (Exception e) {
             throw Exceptions.runtime("set unknown hosts error " + e.getMessage());
         }
@@ -193,8 +204,8 @@ public class SessionHolder {
      * @param host     主机
      * @return SessionStore
      */
-    public static SessionStore getSession(String host, String username) {
-        return new SessionStore(host, username);
+    public SessionStore getSession(String host, String username) {
+        return this.getSession(host, DEFAULT_SSH_PORT, username);
     }
 
     /**
@@ -205,8 +216,12 @@ public class SessionHolder {
      * @param port     端口
      * @return SessionStore
      */
-    public static SessionStore getSession(String host, int port, String username) {
-        return new SessionStore(host, port, username);
+    public SessionStore getSession(String host, int port, String username) {
+        try {
+            return new SessionStore(ch.getSession(username, host, port));
+        } catch (Exception e) {
+            throw Exceptions.connection(e);
+        }
     }
 
 }

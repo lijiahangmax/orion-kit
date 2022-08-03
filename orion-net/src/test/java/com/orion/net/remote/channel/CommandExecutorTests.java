@@ -20,7 +20,7 @@ public class CommandExecutorTests {
 
     @Before
     public void init() {
-        this.s = SessionHolder.getSession("192.168.146.230", "root")
+        this.s = SessionHolder.HOLDER.getSession("192.168.146.230", "root")
                 .password("admin123")
                 .timeout(20000)
                 .connect(20000);

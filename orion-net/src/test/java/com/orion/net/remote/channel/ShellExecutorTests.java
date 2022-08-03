@@ -13,7 +13,7 @@ public class ShellExecutorTests {
 
     public static void main(String[] args) {
         SessionHolder.setLogger(SessionLogger.INFO);
-        ShellExecutor e = SessionHolder.getSession("192.168.146.230", "root")
+        ShellExecutor e = SessionHolder.HOLDER.getSession("192.168.146.230", "root")
                 .password("admin123")
                 // ShellExecutor e = SessionHolder.getSession("192.168.146.230", "root")
                 //         .setPassword("admin123")
