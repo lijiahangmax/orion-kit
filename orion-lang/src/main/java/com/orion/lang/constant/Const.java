@@ -28,7 +28,7 @@ public abstract class Const {
 
     public static final String ORION_DISPLAY = ".orion";
 
-    public static final String ORION_KIT_VERSION = "1.0.3";
+    public static final String ORION_KIT_VERSION = "1.0.4";
 
     public static final String ORION_AUTHOR = "Jiahang Li";
 
