@@ -104,7 +104,7 @@ public abstract class Const {
 
     public static final int BUFFER_KB_32 = 1024 * 32;
 
-    public static final int MPB = 1024 * 128;
+    public static final int MBP = 1024 * 128;
 
     // -------------------- capacity --------------------
 
