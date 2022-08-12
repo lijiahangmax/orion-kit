@@ -104,13 +104,13 @@ public class SessionStore implements SafeCloseable {
         return this;
     }
 
-    public SessionStore socket4Proxy(String host, int port) {
+    public SessionStore sock4Proxy(String host, int port) {
         session.setProxy(new ProxySOCKS4(host, port));
         return this;
     }
 
     /**
-     * 设置socket4代理
+     * 设置sock4代理
      *
      * @param host     主机
      * @param port     端口
@@ -118,7 +118,7 @@ public class SessionStore implements SafeCloseable {
      * @param password 密码
      * @return this
      */
-    public SessionStore socket4Proxy(String host, int port, String username, String password) {
+    public SessionStore sock4Proxy(String host, int port, String username, String password) {
         ProxySOCKS4 proxy = new ProxySOCKS4(host, port);
         if (!Strings.isBlank(username)) {
             proxy.setUserPasswd(username, password);
@@ -127,13 +127,13 @@ public class SessionStore implements SafeCloseable {
         return this;
     }
 
-    public SessionStore socket5Proxy(String host, int port) {
+    public SessionStore sock5Proxy(String host, int port) {
         session.setProxy(new ProxySOCKS5(host, port));
         return this;
     }
 
     /**
-     * 设置socket5代理
+     * 设置sock5代理
      *
      * @param host     主机
      * @param port     端口
@@ -141,7 +141,7 @@ public class SessionStore implements SafeCloseable {
      * @param password 密码
      * @return this
      */
-    public SessionStore socket5Proxy(String host, int port, String username, String password) {
+    public SessionStore sock5Proxy(String host, int port, String username, String password) {
         ProxySOCKS5 proxy = new ProxySOCKS5(host, port);
         if (!Strings.isBlank(username)) {
             proxy.setUserPasswd(username, password);
