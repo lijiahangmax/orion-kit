@@ -123,18 +123,11 @@ public class SftpExecutor extends BaseSftpExecutor implements ChannelConnector {
 
     @Override
     public long getSize(String path) {
-        try {
-            SftpFile file = this.getFile(path, false);
-            if (file == null) {
-                return -1;
-            }
-            return file.getSize();
-        } catch (Exception e) {
-            if (SftpErrorMessage.NO_SUCH_FILE.isCause(e)) {
-                return -1;
-            }
-            throw Exceptions.sftp(e);
+        SftpFile file = this.getFile(path, false);
+        if (file == null) {
+            return -1;
         }
+        return file.getSize();
     }
 
     @Override
