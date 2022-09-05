@@ -2,6 +2,8 @@ package com.orion.lang.utils;
 
 import com.orion.lang.able.IHttpResponse;
 import com.orion.lang.constant.Const;
+import com.orion.lang.define.wrapper.HttpWrapper;
+import com.orion.lang.define.wrapper.RpcWrapper;
 import com.orion.lang.exception.argument.InvalidArgumentException;
 
 import java.math.BigDecimal;
@@ -66,6 +68,8 @@ public abstract class Valid {
     private static final String VALID_LENGTH_NOT_LT = "the validated value length is not less than {}";
     private static final String VALID_LENGTH_NOT_LT_EQ = "the validated value length is not less than or equal {}";
     private static final String VALID_NOT_INSTANCE = "expected type: {}, actual: {}";
+    private static final String HTTP_WRAPPER_NOT_OK = "http wrapper not ok. code: {}, message: {}";
+    private static final String RPC_WRAPPER_NOT_SUCCESS = "rpc wrapper not success. code: {}, message: {}";
     private static final String HTTP_REQ_NOT_OK = "http request not success. code: {}, url: {}";
 
     public Valid() {
@@ -663,6 +667,18 @@ public abstract class Valid {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
         return type.cast(obj);
+    }
+
+    public static <T> T validWrapper(HttpWrapper<T> wrapper) {
+        notNull(wrapper);
+        isTrue(wrapper.isOk(), HTTP_WRAPPER_NOT_OK, wrapper.getCode(), wrapper.getMsg());
+        return wrapper.getData();
+    }
+
+    public static <T> T validWrapper(RpcWrapper<T> wrapper) {
+        notNull(wrapper);
+        isTrue(wrapper.isSuccess(), RPC_WRAPPER_NOT_SUCCESS, wrapper.getCode(), wrapper.getMsg());
+        return wrapper.getData();
     }
 
     public static <T extends IHttpResponse> T validHttpOk(T resp) {

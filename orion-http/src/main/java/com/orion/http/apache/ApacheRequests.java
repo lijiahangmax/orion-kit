@@ -48,7 +48,7 @@ public class ApacheRequests {
      * @param params params
      * @return response
      */
-    public static ApacheResponse get(String url, Map<String, String> params) {
+    public static ApacheResponse get(String url, Map<String, ?> params) {
         ApacheRequest request = new ApacheRequest(url);
         request.queryParams(params);
         return request.await();

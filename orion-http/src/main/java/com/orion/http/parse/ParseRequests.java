@@ -34,7 +34,7 @@ public class ParseRequests {
      * @param params params
      * @return response
      */
-    public static ParseResponse get(String url, Map<String, String> params) {
+    public static ParseResponse get(String url, Map<String, ?> params) {
         ParseRequest request = new ParseRequest(url);
         request.queryParams(params);
         return request.await();

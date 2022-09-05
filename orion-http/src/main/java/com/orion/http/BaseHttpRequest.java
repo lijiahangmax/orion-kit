@@ -34,7 +34,7 @@ public abstract class BaseHttpRequest {
     /**
      * 请求参数
      */
-    protected Map<String, String> queryParams;
+    protected Map<String, Object> queryParams;
 
     /**
      * 请求参数
@@ -137,7 +137,7 @@ public abstract class BaseHttpRequest {
         return this;
     }
 
-    public BaseHttpRequest queryParam(String key, String value) {
+    public BaseHttpRequest queryParam(String key, Object value) {
         if (this.queryParams == null) {
             this.queryParams = new LinkedHashMap<>();
         }
@@ -145,12 +145,11 @@ public abstract class BaseHttpRequest {
         return this;
     }
 
-    public BaseHttpRequest queryParams(Map<String, String> queryParams) {
+    public BaseHttpRequest queryParams(Map<String, ?> queryParams) {
         if (this.queryParams == null) {
-            this.queryParams = queryParams;
-        } else {
-            this.queryParams.putAll(queryParams);
+            this.queryParams = new LinkedHashMap<>();
         }
+        this.queryParams.putAll(queryParams);
         return this;
     }
 
@@ -333,7 +332,7 @@ public abstract class BaseHttpRequest {
         return method;
     }
 
-    public Map<String, String> getQueryParams() {
+    public Map<String, Object> getQueryParams() {
         return queryParams;
     }
 

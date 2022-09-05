@@ -53,7 +53,7 @@ public class OkRequests {
      * @param params params
      * @return response
      */
-    public static OkResponse get(String url, Map<String, String> params) {
+    public static OkResponse get(String url, Map<String, ?> params) {
         OkRequest request = new OkRequest(url);
         request.queryParams(params);
         return request.await();

@@ -42,19 +42,6 @@
             <version>${dom4j.version}</version>
         </dependency>
 
-        <!-- nginx-parser -->
-        <dependency>
-            <groupId>com.github.odiszapc</groupId>
-            <artifactId>nginxparser</artifactId>
-            <version>${nginxparser.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.antlr</groupId>
-                    <artifactId>antlr4-runtime</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
         <!-- git -->
         <dependency>
             <groupId>org.eclipse.jgit</groupId>

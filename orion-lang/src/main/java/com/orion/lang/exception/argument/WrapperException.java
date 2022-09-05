@@ -13,7 +13,7 @@ import com.orion.lang.utils.Valid;
  */
 public class WrapperException extends InvalidArgumentException {
 
-    private Wrapper<?> wrapper;
+    private final Wrapper<?> wrapper;
 
     public WrapperException(Wrapper<?> wrapper) {
         Valid.notNull(wrapper, "wrapper is null");
