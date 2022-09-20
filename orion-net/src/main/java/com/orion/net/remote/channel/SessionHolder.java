@@ -28,6 +28,10 @@ public class SessionHolder {
 
     public final JSch ch;
 
+    public SessionHolder() {
+        this(new JSch());
+    }
+
     public SessionHolder(JSch ch) {
         Valid.notNull(ch, "jsch is null");
         this.ch = ch;
@@ -45,9 +49,9 @@ public class SessionHolder {
     /**
      * 设置日志等级
      */
-    public static void setLogger(SessionLogger logger) {
+    public void setLogger(SessionLogger logger) {
         int loggerLevel = logger.getLevel();
-        JSch.setLogger(new Logger() {
+        ch.setInstanceLogger(new Logger() {
             @Override
             public boolean isEnabled(int level) {
                 return loggerLevel <= level;
@@ -58,26 +62,6 @@ public class SessionHolder {
                 SessionLogger.log(level, message);
             }
         });
-    }
-
-    /**
-     * 获取配置信息
-     *
-     * @param key key
-     * @return value
-     */
-    public static String getConfig(String key) {
-        return JSch.getConfig(key);
-    }
-
-    /**
-     * 设置配置信息
-     *
-     * @param key   key
-     * @param value value
-     */
-    public static void setConfig(String key, String value) {
-        JSch.setConfig(key, value);
     }
 
     /**

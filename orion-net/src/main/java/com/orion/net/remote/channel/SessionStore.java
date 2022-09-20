@@ -173,6 +173,26 @@ public class SessionStore implements SafeCloseable {
     }
 
     /**
+     * 获取配置信息
+     *
+     * @param key key
+     * @return value
+     */
+    public String getConfig(String key) {
+        return session.getConfig(key);
+    }
+
+    /**
+     * 设置配置信息
+     *
+     * @param key   key
+     * @param value value
+     */
+    public void setConfig(String key, String value) {
+        session.setConfig(key, value);
+    }
+
+    /**
      * 建立连接
      *
      * @return this

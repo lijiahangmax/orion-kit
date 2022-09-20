@@ -29,7 +29,7 @@ public class CommandTests {
 
     @Test
     public void ls() {
-        SessionHolder.setLogger(SessionLogger.ERROR);
+        SessionHolder.HOLDER.setLogger(SessionLogger.ERROR);
         CommandExecutor e = c.getCommandExecutor("ls -la /root");
         e.callback(exe -> {
             System.out.println("end....");
@@ -45,7 +45,7 @@ public class CommandTests {
 
     @Test
     public void echo() {
-        SessionHolder.setLogger(SessionLogger.INFO);
+        SessionHolder.HOLDER.setLogger(SessionLogger.INFO);
         CommandExecutor e = c.getCommandExecutor("echo $PATH");
         e.inherit();
         e.streamHandler(ReaderLineConsumer.getDefaultPrint());
