@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.lijiahangmax</groupId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <packaging>pom</packaging>
     <artifactId>orion-kit</artifactId>
     <name>${project.artifactId}</name>
@@ -31,18 +31,18 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.charset>UTF-8</maven.compiler.charset>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-        <orion.parent.version>1.0.4</orion.parent.version>
-        <orion.lang.version>1.0.4</orion.lang.version>
-        <orion.ext.version>1.0.4</orion.ext.version>
-        <orion.office.version>1.0.4</orion.office.version>
-        <orion.log.version>1.0.4</orion.log.version>
-        <orion.http.version>1.0.4</orion.http.version>
-        <orion.net.version>1.0.4</orion.net.version>
-        <orion.web.version>1.0.4</orion.web.version>
-        <orion.redis.version>1.0.4</orion.redis.version>
-        <orion.spring.version>1.0.4</orion.spring.version>
-        <orion.generator.version>1.0.4</orion.generator.version>
-        <orion.all.version>1.0.4</orion.all.version>
+        <orion.parent.version>1.0.5</orion.parent.version>
+        <orion.lang.version>1.0.5</orion.lang.version>
+        <orion.ext.version>1.0.5</orion.ext.version>
+        <orion.office.version>1.0.5</orion.office.version>
+        <orion.log.version>1.0.5</orion.log.version>
+        <orion.http.version>1.0.5</orion.http.version>
+        <orion.net.version>1.0.5</orion.net.version>
+        <orion.web.version>1.0.5</orion.web.version>
+        <orion.redis.version>1.0.5</orion.redis.version>
+        <orion.spring.version>1.0.5</orion.spring.version>
+        <orion.generator.version>1.0.5</orion.generator.version>
+        <orion.all.version>1.0.5</orion.all.version>
         <junit.version>4.13.1</junit.version>
         <spring.version>5.2.20.RELEASE</spring.version>
         <spring.mvc.version>5.2.20.RELEASE</spring.mvc.version>
