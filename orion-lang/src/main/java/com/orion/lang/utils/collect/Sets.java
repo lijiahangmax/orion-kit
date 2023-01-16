@@ -312,4 +312,16 @@ public class Sets extends Collections {
         }
     }
 
+    /**
+     * set 分片
+     *
+     * @param set  set
+     * @param size size
+     * @param <E>  E
+     * @return partition set
+     */
+    public static <E> Set<Set<E>> partition(Set<E> set, int size) {
+        return new PartitionSet<>(set, size);
+    }
+
 }

@@ -398,6 +398,18 @@ public class Lists extends Collections {
         list.subList(size, beforeSize).clear();
     }
 
+    /**
+     * list 分片
+     *
+     * @param list list
+     * @param size size
+     * @param <E>  E
+     * @return partition list
+     */
+    public static <E> List<List<E>> partition(List<E> list, int size) {
+        return new PartitionList<>(list, size);
+    }
+
     // -------------------- get set --------------------
 
     public static <E> E get(List<E> list, int i) {
