@@ -75,7 +75,7 @@
         <log4j.slf4j.version>1.6.6</log4j.slf4j.version>
         <log4j.version>2.17.1</log4j.version>
         <ssh2.version>262</ssh2.version>
-        <jsch.version>0.2.4</jsch.version>
+        <jsch.version>0.2.7</jsch.version>
         <python.script.version>2.7.2</python.script.version>
         <lua.script.version>3.0.1</lua.script.version>
         <groovy.script.version>3.0.4</groovy.script.version>

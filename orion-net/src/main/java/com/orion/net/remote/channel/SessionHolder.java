@@ -39,7 +39,11 @@ public class SessionHolder {
 
     static {
         HOLDER = new SessionHolder(new JSch());
+        // 不检查秘钥
         JSch.setConfig("StrictHostKeyChecking", "no");
+        // add RSA/SHA1 key support
+        JSch.setConfig("server_host_key", JSch.getConfig("server_host_key") + ",ssh-rsa");
+        JSch.setConfig("PubkeyAcceptedAlgorithms", JSch.getConfig("PubkeyAcceptedAlgorithms") + ",ssh-rsa");
     }
 
     public static SessionHolder getHolder() {
