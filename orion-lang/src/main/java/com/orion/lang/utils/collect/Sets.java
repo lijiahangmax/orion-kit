@@ -324,4 +324,16 @@ public class Sets extends Collections {
         return new PartitionSet<>(set, size);
     }
 
+    /**
+     * 集合去重 -> set
+     *
+     * @param c         c
+     * @param keyGetter keyGetter
+     * @param <E>       E
+     * @return distinct set
+     */
+    public static <E> Set<E> distinct(Collection<E> c, Function<E, ?> keyGetter) {
+        return new HashSet<>(Collections.distinct(c, keyGetter));
+    }
+
 }
