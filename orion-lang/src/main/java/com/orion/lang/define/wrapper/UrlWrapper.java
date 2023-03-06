@@ -3,6 +3,7 @@ package com.orion.lang.define.wrapper;
 import com.orion.lang.able.ILogObject;
 import com.orion.lang.able.IMapObject;
 import com.orion.lang.constant.Const;
+import com.orion.lang.constant.KitConfig;
 import com.orion.lang.define.support.CloneSupport;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.json.Jsons;
@@ -21,6 +22,14 @@ import java.util.Map;
 public class UrlWrapper<T> extends CloneSupport<UrlWrapper<T>> implements Wrapper<T>, ILogObject, IMapObject<String, Object> {
 
     private static final long serialVersionUID = 4250545197688197L;
+
+    // -------------------- URL --------------------
+
+    public static final Integer URL_NO_OPERATION = KitConfig.get(WrapperConfig.URL_NO_OPERATION);
+
+    public static final Integer URL_REFRESH = KitConfig.get(WrapperConfig.URL_REFRESH);
+
+    public static final Integer URL_REDIRECT = KitConfig.get(WrapperConfig.URL_REDIRECT);
 
     /**
      * url

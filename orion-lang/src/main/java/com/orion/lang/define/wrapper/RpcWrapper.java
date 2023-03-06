@@ -4,6 +4,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.orion.lang.able.ILogObject;
 import com.orion.lang.able.IMapObject;
 import com.orion.lang.constant.Const;
+import com.orion.lang.constant.KitConfig;
 import com.orion.lang.define.support.CloneSupport;
 import com.orion.lang.id.UUIds;
 import com.orion.lang.utils.Exceptions;
@@ -24,6 +25,16 @@ import java.util.function.Supplier;
 public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrapper<T>, ILogObject, IMapObject<String, Object> {
 
     private static final long serialVersionUID = 7940497300629314L;
+
+    public static final Integer RPC_SUCCESS_CODE = KitConfig.get(WrapperConfig.RPC_SUCCESS_CODE);
+
+    public static final String RPC_SUCCESS_MESSAGE = KitConfig.get(WrapperConfig.RPC_SUCCESS_MESSAGE);
+
+    public static final Integer RPC_ERROR_CODE = KitConfig.get(WrapperConfig.RPC_ERROR_CODE);
+
+    public static final String RPC_ERROR_MESSAGE = KitConfig.get(WrapperConfig.RPC_ERROR_MESSAGE);
+
+    public static final String PRC_TRACE_PREFIX = KitConfig.get(WrapperConfig.PRC_TRACE_PREFIX);
 
     /**
      * 状态码

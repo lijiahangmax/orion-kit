@@ -1,5 +1,6 @@
 package com.orion.lang.constant;
 
+import com.orion.lang.define.wrapper.PageConfig;
 import com.orion.lang.define.wrapper.WrapperConfig;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.lang.utils.reflect.Classes;
@@ -20,16 +21,28 @@ public class KitConfig {
     static {
         // 加载 wrapper 配置项
         Classes.loadClass(WrapperConfig.class.getName());
+        // 加载分页配置项
+        Classes.loadClass(PageConfig.class.getName());
     }
 
     /**
-     * 设置配置
+     * 覆盖配置 (会覆盖) 一般用于重写配置
      *
      * @param key key
      * @param v   value
      */
-    public static void put(String key, Object v) {
+    public static void override(String key, Object v) {
         CONFIG.put(key, v);
+    }
+
+    /**
+     * 设置配置 (不会覆盖) 一般用于默认配置
+     *
+     * @param key key
+     * @param v   value
+     */
+    public static void init(String key, Object v) {
+        CONFIG.putIfAbsent(key, v);
     }
 
     /**

@@ -37,26 +37,26 @@ public class WrapperConfig {
 
     // http wrapper
     static {
-        KitConfig.put(HTTP_OK_CODE, 200);
-        KitConfig.put(HTTP_OK_MESSAGE, "success");
-        KitConfig.put(HTTP_ERROR_CODE, 500);
-        KitConfig.put(HTTP_ERROR_MESSAGE, "error");
+        KitConfig.init(HTTP_OK_CODE, 200);
+        KitConfig.init(HTTP_OK_MESSAGE, "success");
+        KitConfig.init(HTTP_ERROR_CODE, 500);
+        KitConfig.init(HTTP_ERROR_MESSAGE, "error");
     }
 
     // rpc wrapper
     static {
-        KitConfig.put(RPC_SUCCESS_CODE, 2000);
-        KitConfig.put(RPC_SUCCESS_MESSAGE, "success");
-        KitConfig.put(RPC_ERROR_CODE, 5000);
-        KitConfig.put(RPC_ERROR_MESSAGE, "error");
-        KitConfig.put(PRC_TRACE_PREFIX, "PRC-TRACE-");
+        KitConfig.init(RPC_SUCCESS_CODE, 2000);
+        KitConfig.init(RPC_SUCCESS_MESSAGE, "success");
+        KitConfig.init(RPC_ERROR_CODE, 5000);
+        KitConfig.init(RPC_ERROR_MESSAGE, "error");
+        KitConfig.init(PRC_TRACE_PREFIX, "PRC-TRACE-");
     }
 
     // url wrapper
     static {
-        KitConfig.put(URL_NO_OPERATION, 1);
-        KitConfig.put(URL_REFRESH, 2);
-        KitConfig.put(URL_REDIRECT, 3);
+        KitConfig.init(URL_NO_OPERATION, 1);
+        KitConfig.init(URL_REFRESH, 2);
+        KitConfig.init(URL_REDIRECT, 3);
     }
 
 }
