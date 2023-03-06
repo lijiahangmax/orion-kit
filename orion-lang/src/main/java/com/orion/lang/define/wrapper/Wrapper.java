@@ -1,6 +1,7 @@
 package com.orion.lang.define.wrapper;
 
 import com.orion.lang.able.IJsonObject;
+import com.orion.lang.constant.KitConfig;
 
 import java.io.Serializable;
 
@@ -15,32 +16,32 @@ public interface Wrapper<T> extends Serializable, IJsonObject {
 
     // -------------------- HTTP --------------------
 
-    Integer HTTP_OK_CODE = 200;
+    Integer HTTP_OK_CODE = KitConfig.get(WrapperConfig.HTTP_OK_CODE);
 
-    String HTTP_OK_MESSAGE = "success";
+    String HTTP_OK_MESSAGE = KitConfig.get(WrapperConfig.HTTP_OK_MESSAGE);
 
-    Integer HTTP_ERROR_CODE = 500;
+    Integer HTTP_ERROR_CODE = KitConfig.get(WrapperConfig.HTTP_ERROR_CODE);
 
-    String HTTP_ERROR_MESSAGE = "error";
+    String HTTP_ERROR_MESSAGE = KitConfig.get(WrapperConfig.HTTP_ERROR_MESSAGE);
 
     // -------------------- RPC --------------------
 
-    Integer RPC_SUCCESS_CODE = 2000;
+    Integer RPC_SUCCESS_CODE = KitConfig.get(WrapperConfig.RPC_SUCCESS_CODE);
 
-    String RPC_SUCCESS_MESSAGE = "success";
+    String RPC_SUCCESS_MESSAGE = KitConfig.get(WrapperConfig.RPC_SUCCESS_MESSAGE);
 
-    Integer RPC_ERROR_CODE = 5000;
+    Integer RPC_ERROR_CODE = KitConfig.get(WrapperConfig.RPC_ERROR_CODE);
 
-    String RPC_ERROR_MESSAGE = "error";
+    String RPC_ERROR_MESSAGE = KitConfig.get(WrapperConfig.RPC_ERROR_MESSAGE);
 
-    String PRC_TRACE_PREFIX = "PRC-TRACE-ID-";
+    String PRC_TRACE_PREFIX = KitConfig.get(WrapperConfig.PRC_TRACE_PREFIX);
 
     // -------------------- URL --------------------
 
-    int URL_NO_OPERATION = 1;
+    int URL_NO_OPERATION = KitConfig.get(WrapperConfig.URL_NO_OPERATION);
 
-    int URL_REFRESH = 2;
+    int URL_REFRESH = KitConfig.get(WrapperConfig.URL_REFRESH);
 
-    int URL_REDIRECT = 3;
+    int URL_REDIRECT = KitConfig.get(WrapperConfig.URL_REDIRECT);
 
 }
