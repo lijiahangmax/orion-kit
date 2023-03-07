@@ -1,5 +1,8 @@
 package com.orion.ext.location;
 
+import com.orion.ext.KitExtConfiguration;
+import com.orion.lang.constant.KitConfig;
+
 /**
  * 地址常量
  *
@@ -14,7 +17,6 @@ public class LocationConst {
 
     public static final String CZ88_NET = "CZ88.NET";
 
-    public static final String UNKNOWN = "未知";
-
+    public static final String UNKNOWN = KitConfig.get(KitExtConfiguration.CONFIG.LOCATION_UNKNOWN);
 
 }

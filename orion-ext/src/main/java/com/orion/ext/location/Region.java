@@ -11,8 +11,6 @@ import java.io.Serializable;
  */
 public class Region implements Serializable {
 
-    private static final String UNKNOWN = "未知";
-
     /**
      * 国家
      */
@@ -39,19 +37,19 @@ public class Region implements Serializable {
     private String net;
 
     public Region() {
-        this.country = UNKNOWN;
-        this.area = UNKNOWN;
-        this.province = UNKNOWN;
-        this.city = UNKNOWN;
-        this.net = UNKNOWN;
+        this.country = LocationConst.UNKNOWN;
+        this.area = LocationConst.UNKNOWN;
+        this.province = LocationConst.UNKNOWN;
+        this.city = LocationConst.UNKNOWN;
+        this.net = LocationConst.UNKNOWN;
     }
 
     public Region(String country, String province, String city) {
         this.country = country;
-        this.area = UNKNOWN;
+        this.area = LocationConst.UNKNOWN;
         this.province = province;
         this.city = city;
-        this.net = UNKNOWN;
+        this.net = LocationConst.UNKNOWN;
     }
 
     public Region(String country, String area, String province, String city, String net) {

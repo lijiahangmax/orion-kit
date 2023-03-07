@@ -131,7 +131,7 @@ public class DbSearcher {
      * @throws IOException ignore
      */
     public DataBlock memorySearch(String ip) throws IOException {
-        return memorySearch(RegionSupport.ip2long(ip));
+        return this.memorySearch(RegionSupport.ip2long(ip));
     }
 
     /**
@@ -284,7 +284,7 @@ public class DbSearcher {
      * @throws IOException ignore
      */
     public DataBlock btreeSearch(String ip) throws IOException {
-        return btreeSearch(RegionSupport.ip2long(ip));
+        return this.btreeSearch(RegionSupport.ip2long(ip));
     }
 
     /**
@@ -348,7 +348,7 @@ public class DbSearcher {
      * @throws IOException ignore
      */
     public DataBlock binarySearch(String ip) throws IOException {
-        return binarySearch(RegionSupport.ip2long(ip));
+        return this.binarySearch(RegionSupport.ip2long(ip));
     }
 
     /**

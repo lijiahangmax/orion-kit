@@ -25,7 +25,7 @@ import java.io.InputStream;
  */
 public class LocationRegions {
 
-    private static final String UNKNOWN = "未知|未知|未知|未知|未知";
+    private static final String UNKNOWN = new Region().toString();
 
     private LocationRegions() {
     }
