@@ -1,15 +1,15 @@
-package com.orion.lang.define.wrapper;
+package com.orion.lang;
 
 import com.orion.lang.constant.KitConfig;
 
 /**
- * wrapper 配置项
+ * orion-lang 配置初始化器
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/3/6 17:08
+ * @since 2023/3/6 18:26
  */
-public class WrapperConfig {
+public final class KitLangConfiguration {
 
     public static final String HTTP_OK_CODE = "http.wrapper.ok.code";
 
@@ -35,6 +35,12 @@ public class WrapperConfig {
 
     public static final String URL_REDIRECT = "url.wrapper.redirect";
 
+    public static final String PAGE_REQUEST_DEFAULT_LIMIT = "page.request.default.limit";
+
+    public static final String PAGER_DEFAULT_LIMIT = "pager.default.limit";
+
+    public static final String DATA_GRID_DEFAULT_LIMIT = "data.grid.default.limit";
+
     // http wrapper
     static {
         KitConfig.init(HTTP_OK_CODE, 200);
@@ -57,6 +63,13 @@ public class WrapperConfig {
         KitConfig.init(URL_NO_OPERATION, 1);
         KitConfig.init(URL_REFRESH, 2);
         KitConfig.init(URL_REDIRECT, 3);
+    }
+
+    // pager
+    static {
+        KitConfig.init(PAGE_REQUEST_DEFAULT_LIMIT, 10);
+        KitConfig.override(PAGER_DEFAULT_LIMIT, 10);
+        KitConfig.override(DATA_GRID_DEFAULT_LIMIT, 10);
     }
 
 }

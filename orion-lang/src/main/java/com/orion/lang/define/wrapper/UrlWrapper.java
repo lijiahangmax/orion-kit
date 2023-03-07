@@ -1,5 +1,6 @@
 package com.orion.lang.define.wrapper;
 
+import com.orion.lang.KitLangConfiguration;
 import com.orion.lang.able.ILogObject;
 import com.orion.lang.able.IMapObject;
 import com.orion.lang.constant.Const;
@@ -25,11 +26,11 @@ public class UrlWrapper<T> extends CloneSupport<UrlWrapper<T>> implements Wrappe
 
     // -------------------- URL --------------------
 
-    public static final Integer URL_NO_OPERATION = KitConfig.get(WrapperConfig.URL_NO_OPERATION);
+    public static final Integer URL_NO_OPERATION = KitConfig.get(KitLangConfiguration.URL_NO_OPERATION);
 
-    public static final Integer URL_REFRESH = KitConfig.get(WrapperConfig.URL_REFRESH);
+    public static final Integer URL_REFRESH = KitConfig.get(KitLangConfiguration.URL_REFRESH);
 
-    public static final Integer URL_REDIRECT = KitConfig.get(WrapperConfig.URL_REDIRECT);
+    public static final Integer URL_REDIRECT = KitConfig.get(KitLangConfiguration.URL_REDIRECT);
 
     /**
      * url

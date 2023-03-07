@@ -1,7 +1,9 @@
 package com.orion.lang.define.wrapper;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.orion.lang.KitLangConfiguration;
 import com.orion.lang.able.IJsonObject;
+import com.orion.lang.constant.KitConfig;
 import com.orion.lang.define.iterator.EmptyIterator;
 import com.orion.lang.define.support.CloneSupport;
 import com.orion.lang.utils.collect.Lists;
@@ -23,6 +25,8 @@ import java.util.stream.Stream;
 public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, IJsonObject, Iterable<T> {
 
     private static final long serialVersionUID = 6354348839019830L;
+
+    private static final int DEFAULT_LIMIT = KitConfig.get(KitLangConfiguration.PAGER_DEFAULT_LIMIT);
 
     /*
         <sql id="Base_Pager_Offset">
@@ -84,11 +88,11 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, IJ
     private String sql;
 
     public Pager() {
-        this(1, 10);
+        this(1, DEFAULT_LIMIT);
     }
 
     public Pager(int page) {
-        this(page, 10);
+        this(page, DEFAULT_LIMIT);
     }
 
     public Pager(PageRequest request) {
@@ -110,11 +114,11 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, IJ
     }
 
     public static <T> Pager<T> of() {
-        return new Pager<>(1, 10);
+        return new Pager<>(1, DEFAULT_LIMIT);
     }
 
     public static <T> Pager<T> of(int page) {
-        return new Pager<>(page, 10);
+        return new Pager<>(page, DEFAULT_LIMIT);
     }
 
     public static <T> Pager<T> of(int page, int limit) {

@@ -1,7 +1,6 @@
 package com.orion.lang.constant;
 
-import com.orion.lang.define.wrapper.PageConfig;
-import com.orion.lang.define.wrapper.WrapperConfig;
+import com.orion.lang.KitLangConfiguration;
 import com.orion.lang.utils.collect.Maps;
 import com.orion.lang.utils.reflect.Classes;
 
@@ -19,10 +18,8 @@ public class KitConfig {
     private static final Map<String, Object> CONFIG = Maps.newMap();
 
     static {
-        // 加载 wrapper 配置项
-        Classes.loadClass(WrapperConfig.class.getName());
-        // 加载分页配置项
-        Classes.loadClass(PageConfig.class.getName());
+        // 加载 orion-lang 配置项
+        Classes.loadClass(KitLangConfiguration.class.getName());
     }
 
     /**
