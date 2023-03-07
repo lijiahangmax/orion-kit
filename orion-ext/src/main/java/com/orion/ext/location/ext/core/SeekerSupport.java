@@ -18,7 +18,7 @@ public class SeekerSupport {
     }
 
     /**
-     * 从ip的字符串形式得到字节数组形式
+     * 从 ip 的字符串形式得到字节数组形式
      *
      * @param ip 字符串形式的ip
      * @return 字节数组形式的ip

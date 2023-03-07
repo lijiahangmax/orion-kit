@@ -1,12 +1,13 @@
 package com.orion.ext.location.region;
 
+import com.orion.ext.location.Region;
 import com.orion.ext.location.region.block.DataBlock;
 import com.orion.ext.location.region.config.DbConfig;
 import com.orion.ext.location.region.core.DbSearcher;
-import com.orion.ext.location.region.core.Region;
 import com.orion.lang.constant.Const;
 import com.orion.lang.define.builder.StringJoiner;
 import com.orion.lang.utils.Exceptions;
+import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.Systems;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.net.IPs;
@@ -42,14 +43,14 @@ public class LocationRegions {
     /**
      * 搜索器
      */
-    private static final DbSearcher searcher;
+    private static final DbSearcher SEARCHER;
 
     static {
         boolean init;
         try {
             InputStream source = LocationRegions.class.getClassLoader().getResourceAsStream("region.db");
             init = Files1.resourceToFile(source, new File(DB_PATH), Const.GBK);
-            searcher = new DbSearcher(new DbConfig(), DB_PATH);
+            SEARCHER = new DbSearcher(new DbConfig(), DB_PATH);
         } catch (IOException e) {
             throw Exceptions.init("location region 服务初始化异常", e);
         }
@@ -109,14 +110,14 @@ public class LocationRegions {
             DataBlock dataBlock;
             switch (algorithm) {
                 case DbSearcher.BINARY_ALGORITHM:
-                    dataBlock = searcher.binarySearch(ip);
+                    dataBlock = SEARCHER.binarySearch(ip);
                     break;
                 case DbSearcher.MEMORY_ALGORITHM:
-                    dataBlock = searcher.memorySearch(ip);
+                    dataBlock = SEARCHER.memorySearch(ip);
                     break;
                 case DbSearcher.BTREE_ALGORITHM:
                 default:
-                    dataBlock = searcher.btreeSearch(ip);
+                    dataBlock = SEARCHER.btreeSearch(ip);
             }
             if (dataBlock != null) {
                 return dataBlock.getRegion();
@@ -124,7 +125,7 @@ public class LocationRegions {
                 return UNKNOWN;
             }
         } catch (Exception e) {
-            return null;
+            throw Exceptions.runtime(Strings.format("address query error ip: {}, algorithm: {}", ip, algorithm), e);
         }
     }
 

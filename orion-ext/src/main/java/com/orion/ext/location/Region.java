@@ -1,4 +1,4 @@
-package com.orion.ext.location.region.core;
+package com.orion.ext.location;
 
 import java.io.Serializable;
 
