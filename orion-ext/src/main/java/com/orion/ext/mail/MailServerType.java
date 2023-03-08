@@ -1,5 +1,8 @@
 package com.orion.ext.mail;
 
+import com.orion.ext.KitExtConfiguration;
+import com.orion.lang.constant.KitConfig;
+
 /**
  * SMTP 邮件服务器类型
  *
@@ -22,11 +25,21 @@ public enum MailServerType implements MailServerProvider {
     /**
      * 移动
      */
-    YD139("smtp.139.com", 465);
+    YD139("smtp.139.com", 465),
+
+    /**
+     * 自定义
+     *
+     * @see com.orion.ext.KitExtConfiguration#MAIL_CUSTOMER_HOST
+     * @see com.orion.ext.KitExtConfiguration#MAIL_CUSTOMER_PORT
+     */
+    CUSTOMER(KitConfig.get(KitExtConfiguration.CONFIG.MAIL_CUSTOMER_HOST),
+            KitConfig.get(KitExtConfiguration.CONFIG.MAIL_CUSTOMER_PORT)),
+    ;
 
     private final String host;
 
-    private final int port;
+    private final Integer port;
 
     MailServerType(String host, int port) {
         this.host = host;

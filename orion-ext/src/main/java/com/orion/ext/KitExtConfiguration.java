@@ -1,6 +1,7 @@
 package com.orion.ext;
 
 import com.orion.lang.constant.KitConfig;
+import com.orion.lang.utils.Strings;
 
 /**
  * orion-ext 配置初始化器
@@ -21,6 +22,11 @@ public final class KitExtConfiguration {
 
     static {
         KitConfig.init(CONFIG.LOCATION_UNKNOWN, "未知");
+        KitConfig.init(CONFIG.MAIL_CUSTOMER_HOST, Strings.EMPTY);
+        KitConfig.init(CONFIG.MAIL_CUSTOMER_PORT, 465);
+    }
+
+    private KitExtConfiguration() {
     }
 
 }
