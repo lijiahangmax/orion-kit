@@ -5,6 +5,7 @@ import com.orion.http.support.HttpCookie;
 import com.orion.http.support.HttpMethod;
 import com.orion.http.useragent.StandardUserAgent;
 import com.orion.lang.constant.Const;
+import com.orion.lang.constant.KitConfig;
 import com.orion.lang.constant.StandardHttpHeader;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.Urls;
@@ -20,6 +21,8 @@ import java.util.*;
  * @since 2021/3/5 16:50
  */
 public abstract class BaseHttpRequest {
+
+    protected static final String DEFAULT_USERAGENT = KitConfig.get(KitHttpConfiguration.CONFIG.HTTP_DEFAULT_USERAGENT);
 
     /**
      * url

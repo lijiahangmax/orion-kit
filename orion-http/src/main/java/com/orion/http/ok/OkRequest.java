@@ -1,6 +1,5 @@
 package com.orion.http.ok;
 
-import com.orion.http.useragent.StandardUserAgent;
 import com.orion.lang.able.Asyncable;
 import com.orion.lang.able.Awaitable;
 import com.orion.lang.utils.Exceptions;
@@ -52,7 +51,7 @@ public class OkRequest extends BaseOkRequest implements Awaitable<OkResponse>, A
     public OkRequest(String url, OkHttpClient client) {
         this.url = url;
         this.client = client;
-        this.userAgent(StandardUserAgent.CHROME_3);
+        this.userAgent(DEFAULT_USERAGENT);
     }
 
     public OkRequest asyncFailThrows(boolean asyncFailThrows) {
