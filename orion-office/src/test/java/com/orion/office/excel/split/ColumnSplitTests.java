@@ -12,10 +12,10 @@ import org.junit.Test;
  */
 public class ColumnSplitTests {
 
-    private Workbook w1 = Excels.openWorkbook("C:\\Users\\ljh15\\Desktop\\2.xlsx");
-    private Workbook w2 = Excels.openStreamingWorkbook("C:\\Users\\ljh15\\Desktop\\2.xlsx");
-    private Sheet sheet1 = w1.getSheetAt(2);
-    private Sheet sheet2 = w2.getSheetAt(2);
+    private final Workbook w1 = Excels.openWorkbook("C:\\Users\\lijiahang\\Desktop\\2.xlsx");
+    private final Workbook w2 = Excels.openStreamingWorkbook("C:\\Users\\lijiahang\\Desktop\\2.xlsx");
+    private final Sheet sheet1 = w1.getSheetAt(2);
+    private final Sheet sheet2 = w2.getSheetAt(2);
 
     @Test
     public void single1() {
@@ -23,7 +23,7 @@ public class ColumnSplitTests {
                 .skip(3)
                 .header("1", "0", "2")
                 .split()
-                .write("C:\\Users\\ljh15\\Desktop\\3.xlsx")
+                .write("C:\\Users\\lijiahang\\Desktop\\3.xlsx")
                 .close();
     }
 
@@ -32,7 +32,7 @@ public class ColumnSplitTests {
         new ExcelColumnSingleSplit(w2, sheet2, 1, 0, 2)
                 .header("11", "00", "22")
                 .split()
-                .write("C:\\Users\\ljh15\\Desktop\\3.xlsx")
+                .write("C:\\Users\\lijiahang\\Desktop\\3.xlsx")
                 .close();
     }
 
@@ -43,7 +43,7 @@ public class ColumnSplitTests {
                 .split(2, 1, 0)
                 .split(new int[]{0, 2, 3}, new String[]{"xx1", "xx2", "xx3"})
                 .split(new int[]{0, 2, 3, 4}, "123")
-                .write("C:\\Users\\ljh15\\Desktop\\4.xlsx")
+                .write("C:\\Users\\lijiahang\\Desktop\\4.xlsx")
                 .close();
     }
 
@@ -53,16 +53,16 @@ public class ColumnSplitTests {
                 .split(2, 1, 0)
                 .split(new int[]{0, 2, 3}, new String[]{"xx1", "xx2", "xx3"})
                 .split(new int[]{0, 2, 3, 4}, "123")
-                .write("C:\\Users\\ljh15\\Desktop\\5.xlsx")
+                .write("C:\\Users\\lijiahang\\Desktop\\5.xlsx")
                 .close();
     }
 
     @Test
     public void multi1() {
         new ExcelColumnMultiSplit(w1, "bean")
-                .split(new int[]{2, 1, 0}, "C:\\Users\\ljh15\\Desktop\\split\\1.xlsx")
-                .split(new int[]{0, 2, 3}, new String[]{"xx1", "xx2", "xx3"}, "C:\\Users\\ljh15\\Desktop\\split\\2.xlsx")
-                .split(new int[]{0, 2, 3, 4}, "123", "C:\\Users\\ljh15\\Desktop\\split\\3.xlsx")
+                .split(new int[]{2, 1, 0}, "C:\\Users\\lijiahang\\Desktop\\split\\1.xlsx")
+                .split(new int[]{0, 2, 3}, new String[]{"xx1", "xx2", "xx3"}, "C:\\Users\\lijiahang\\Desktop\\split\\2.xlsx")
+                .split(new int[]{0, 2, 3, 4}, "123", "C:\\Users\\lijiahang\\Desktop\\split\\3.xlsx")
                 .close();
     }
 
@@ -70,8 +70,8 @@ public class ColumnSplitTests {
     public void multi2() {
         new ExcelColumnMultiSplit(w1, "bean")
                 .skip(3)
-                .split(new int[]{2, 1, 0}, "C:\\Users\\ljh15\\Desktop\\split\\1.xlsx")
-                .split(new int[]{0, 2, 3}, new String[]{"xx1", "xx2", "xx3"}, "C:\\Users\\ljh15\\Desktop\\split\\2.xlsx")
+                .split(new int[]{2, 1, 0}, "C:\\Users\\lijiahang\\Desktop\\split\\1.xlsx")
+                .split(new int[]{0, 2, 3}, new String[]{"xx1", "xx2", "xx3"}, "C:\\Users\\lijiahang\\Desktop\\split\\2.xlsx")
                 .split(new int[]{0, 2, 3, 4}, "123", System.out)
                 .close();
     }

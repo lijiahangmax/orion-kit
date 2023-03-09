@@ -12,10 +12,10 @@ import org.junit.Test;
  */
 public class RowSplitTests {
 
-    private Workbook w1 = Excels.openWorkbook("C:\\Users\\lijiahang\\Desktop\\2.xlsx");
-    private Workbook w2 = Excels.openStreamingWorkbook("C:\\Users\\lijiahang\\Desktop\\2.xlsx");
-    private Sheet sheet1 = w1.getSheetAt(2);
-    private Sheet sheet2 = w2.getSheetAt(2);
+    private final Workbook w1 = Excels.openWorkbook("C:\\Users\\lijiahang\\Desktop\\2.xlsx");
+    private final Workbook w2 = Excels.openStreamingWorkbook("C:\\Users\\lijiahang\\Desktop\\2.xlsx");
+    private final Sheet sheet1 = w1.getSheetAt(2);
+    private final Sheet sheet2 = w2.getSheetAt(2);
 
     @Test
     public void rowSplit1() {
@@ -31,7 +31,7 @@ public class RowSplitTests {
     @Test
     public void rowSplit2() {
         ExcelRowSplit s = new ExcelRowSplit(sheet2, 5);
-        s.targetPath("C:\\Users\\ljh15\\Desktop\\split2", "sp");
+        s.targetPath("C:\\Users\\lijiahang\\Desktop\\split2", "sp");
         s.header("1", "2", "3")
                 .skip(1)
                 .split()
@@ -41,7 +41,7 @@ public class RowSplitTests {
     @Test
     public void rowSplit3() {
         ExcelRowSplit s = new ExcelRowSplit(sheet2, 5);
-        s.target("C:\\Users\\ljh15\\Desktop\\split3\\1.xlsx");
+        s.target("C:\\Users\\lijiahang\\Desktop\\split3\\1.xlsx");
         s.header("1", "2", "3")
                 .skip(1)
                 .split()

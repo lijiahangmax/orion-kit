@@ -238,7 +238,7 @@ public class ExcelRowSplit extends SplitTargetGenerator {
     }
 
     /**
-     * 设置下一个workbook
+     * 设置下一个 workbook
      */
     private void nextWorkbook() {
         this.currentIndex = 0;
@@ -272,6 +272,9 @@ public class ExcelRowSplit extends SplitTargetGenerator {
             if (password != null && !streaming) {
                 currentSheet.protectSheet(password);
             }
+            // 设置默认属性
+            Excels.setDefaultProperties(currentWorkbook);
+            // 写入
             currentWorkbook.write(currentOutputStream);
             Streams.close(currentWorkbook);
             if (super.autoClose) {
