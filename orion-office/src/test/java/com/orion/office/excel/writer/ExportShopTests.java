@@ -1,12 +1,19 @@
 package com.orion.office.excel.writer;
 
+import com.orion.lang.function.select.Branches;
+import com.orion.lang.function.select.Selector;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.codec.Base64s;
 import com.orion.lang.utils.identity.CreditCodes;
 import com.orion.lang.utils.io.FileReaders;
 import com.orion.lang.utils.random.Randoms;
 import com.orion.lang.utils.time.Dates;
+import com.orion.office.excel.Excels;
 import com.orion.office.excel.writer.exporting.ExcelExport;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.junit.Test;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -21,7 +28,8 @@ import java.util.stream.IntStream;
  */
 public class ExportShopTests {
 
-    public static void main(String[] args) {
+    @Test
+    public void export1() {
         List<ExportShop> shopList = IntStream.rangeClosed(1, 15).mapToObj(i -> {
             ExportShop shop = new ExportShop();
             shop.setShopId(10000L + i);
@@ -45,6 +53,40 @@ public class ExportShopTests {
                 .skipNullRows(false)
                 .addRows(shopList)
                 .write("C:\\Users\\lijiahang\\Desktop\\1.xlsx")
+                .close();
+    }
+
+    @Test
+    public void export2() {
+        List<ExportShop> shopList = IntStream.rangeClosed(1, 15).mapToObj(i -> {
+            ExportShop shop = new ExportShop();
+            shop.setShopId(10000L + i);
+            shop.setShopName(Strings.randomChars(5));
+            shop.setCreateDate(Dates.date(System.currentTimeMillis() + Randoms.randomLong(10000000)));
+            shop.setBusinessCode(CreditCodes.random());
+            shop.setBusinessFile("C:/Users/ljh15/Desktop/export/index.html");
+            shop.setMargin(BigDecimal.valueOf(Randoms.randomDouble(0, 10)));
+            return shop;
+        }).collect(Collectors.toList());
+
+        ExcelExport<ExportShop> exporter = new ExcelExport<>(ExportShop.class)
+                .init();
+        // 获取列样式的克隆对象
+        XSSFCellStyle redStyle = (XSSFCellStyle) exporter.cloneCellStyle(0);
+        redStyle.setFillPattern(FillPatternType.forInt(FillPatternType.SOLID_FOREGROUND.getCode()));
+        redStyle.setFillForegroundColor(Excels.getColor("#a60300"));
+        XSSFCellStyle blueStyle = (XSSFCellStyle) exporter.cloneCellStyle(0);
+        blueStyle.setFillPattern(FillPatternType.forInt(FillPatternType.SOLID_FOREGROUND.getCode()));
+        blueStyle.setFillForegroundColor(Excels.getColor("#0b00a6"));
+        // 设置样式选择器
+        exporter.getSheetConfig().setColumnStyle(0, s -> {
+            return Selector.<ExportShop, CellStyle>of(s)
+                    .test(Branches.<ExportShop>when(v -> v.getShopId() % 3 == 0).then(redStyle))
+                    .test(Branches.<ExportShop>when(v -> v.getShopId() % 4 == 0).then(blueStyle));
+        });
+
+        exporter.addRows(shopList)
+                .write("C:\\Users\\lijiahang\\Desktop\\1-1.xlsx")
                 .close();
     }
 

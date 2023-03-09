@@ -1,5 +1,6 @@
 package com.orion.office.excel.writer.exporting;
 
+import com.orion.lang.function.select.Selector;
 import com.orion.office.excel.Excels;
 import com.orion.office.excel.option.ExportFieldOption;
 import com.orion.office.excel.option.ExportSheetOption;
@@ -8,6 +9,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Function;
 
 /**
  * 列配置持有者
@@ -16,7 +18,7 @@ import java.util.TreeMap;
  * @version 1.0.0
  * @since 2021/8/30 17:16
  */
-public class SheetConfig implements Serializable {
+public class SheetConfig<T> implements Serializable {
 
     /**
      * 2003版本 调色板自定义颜色索引(可能会覆盖预设颜色), 最大只能有 64-32个自定义颜色
@@ -43,6 +45,13 @@ public class SheetConfig implements Serializable {
     protected Map<Integer, CellStyle> headerStyles;
 
     /**
+     * 列样式选择器
+     * <p>
+     * 有选择到的将会覆盖原有样式
+     */
+    protected Map<Integer, Function<T, Selector<T, CellStyle>>> columnStyleSelector;
+
+    /**
      * 列配置
      * key: index
      * value: option
@@ -56,6 +65,7 @@ public class SheetConfig implements Serializable {
         this.sheetOption = new ExportSheetOption();
         this.columnStyles = new TreeMap<>();
         this.headerStyles = new TreeMap<>();
+        this.columnStyleSelector = new TreeMap<>();
         this.fieldOptions = new TreeMap<>();
     }
 
@@ -65,7 +75,7 @@ public class SheetConfig implements Serializable {
      * @param column 列
      * @return this
      */
-    public SheetConfig cleanStyle(int column) {
+    public SheetConfig<T> cleanStyle(int column) {
         initializer.checkInit();
         columnStyles.remove(column);
         headerStyles.remove(column);
@@ -82,7 +92,7 @@ public class SheetConfig implements Serializable {
      * @param column 列
      * @return this
      */
-    public SheetConfig cleanHeaderStyle(int column) {
+    public SheetConfig<T> cleanHeaderStyle(int column) {
         initializer.checkInit();
         headerStyles.remove(column);
         return this;
@@ -94,7 +104,7 @@ public class SheetConfig implements Serializable {
      * @param column 列
      * @return this
      */
-    public SheetConfig cleanColumnStyle(int column) {
+    public SheetConfig<T> cleanColumnStyle(int column) {
         initializer.checkInit();
         columnStyles.remove(column);
         return this;
@@ -105,7 +115,7 @@ public class SheetConfig implements Serializable {
      *
      * @return this
      */
-    public SheetConfig headUseColumnStyle() {
+    public SheetConfig<T> headUseColumnStyle() {
         initializer.checkInit();
         fieldOptions.forEach((k, v) -> headerStyles.put(k, initializer.parseStyle(k, false, v)));
         return this;
@@ -117,7 +127,7 @@ public class SheetConfig implements Serializable {
      * @param column column
      * @return this
      */
-    public SheetConfig headUseColumnStyle(int column) {
+    public SheetConfig<T> headUseColumnStyle(int column) {
         initializer.checkInit();
         headerStyles.put(column, initializer.parseStyle(column, false, fieldOptions.get(column)));
         return this;
@@ -128,7 +138,7 @@ public class SheetConfig implements Serializable {
      *
      * @return this
      */
-    public SheetConfig columnUseHeadStyle() {
+    public SheetConfig<T> columnUseHeadStyle() {
         initializer.checkInit();
         fieldOptions.forEach((k, v) -> columnStyles.put(k, initializer.parseStyle(k, true, v)));
         return this;
@@ -140,7 +150,7 @@ public class SheetConfig implements Serializable {
      * @param column column
      * @return this
      */
-    public SheetConfig columnUseHeadStyle(int column) {
+    public SheetConfig<T> columnUseHeadStyle(int column) {
         initializer.checkInit();
         columnStyles.put(column, initializer.parseStyle(column, true, fieldOptions.get(column)));
         return this;
@@ -153,7 +163,7 @@ public class SheetConfig implements Serializable {
      * @param style  样式
      * @return this
      */
-    public SheetConfig setStyle(int column, CellStyle style) {
+    public SheetConfig<T> setStyle(int column, CellStyle style) {
         initializer.checkInit();
         headerStyles.put(column, style);
         columnStyles.put(column, style);
@@ -167,7 +177,7 @@ public class SheetConfig implements Serializable {
      * @param style  样式
      * @return this
      */
-    public SheetConfig setHeaderStyle(int column, CellStyle style) {
+    public SheetConfig<T> setHeaderStyle(int column, CellStyle style) {
         initializer.checkInit();
         headerStyles.put(column, style);
         return this;
@@ -180,7 +190,7 @@ public class SheetConfig implements Serializable {
      * @param style  样式
      * @return this
      */
-    public SheetConfig setColumnStyle(int column, CellStyle style) {
+    public SheetConfig<T> setColumnStyle(int column, CellStyle style) {
         initializer.checkInit();
         columnStyles.put(column, style);
         return this;
@@ -193,7 +203,7 @@ public class SheetConfig implements Serializable {
      * @param option 样式
      * @return this
      */
-    public SheetConfig setStyle(int column, ExportFieldOption option) {
+    public SheetConfig<T> setStyle(int column, ExportFieldOption option) {
         initializer.checkInit();
         if (option == null) {
             return this;
@@ -210,7 +220,7 @@ public class SheetConfig implements Serializable {
      * @param option 样式
      * @return this
      */
-    public SheetConfig setHeaderStyle(int column, ExportFieldOption option) {
+    public SheetConfig<T> setHeaderStyle(int column, ExportFieldOption option) {
         initializer.checkInit();
         if (option == null) {
             return this;
@@ -226,12 +236,24 @@ public class SheetConfig implements Serializable {
      * @param option 样式
      * @return this
      */
-    public SheetConfig setColumnStyle(int column, ExportFieldOption option) {
+    public SheetConfig<T> setColumnStyle(int column, ExportFieldOption option) {
         initializer.checkInit();
         if (option == null) {
             return this;
         }
         columnStyles.put(column, initializer.parseStyle(column, true, option));
+        return this;
+    }
+
+    /**
+     * 设置数据样式选择器
+     *
+     * @param column   column
+     * @param selector selector
+     * @return this
+     */
+    public SheetConfig<T> setColumnStyle(int column, Function<T, Selector<T, CellStyle>> selector) {
+        columnStyleSelector.put(column, selector);
         return this;
     }
 
@@ -248,6 +270,11 @@ public class SheetConfig implements Serializable {
     public Map<Integer, CellStyle> getHeaderStyles() {
         initializer.checkInit();
         return headerStyles;
+    }
+
+    public Map<Integer, Function<T, Selector<T, CellStyle>>> getColumnStyleSelector() {
+        initializer.checkInit();
+        return columnStyleSelector;
     }
 
     public Map<Integer, ExportFieldOption> getFieldOptions() {

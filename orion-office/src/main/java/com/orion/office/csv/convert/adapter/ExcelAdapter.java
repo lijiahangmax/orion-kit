@@ -10,7 +10,6 @@ import com.orion.office.excel.writer.BaseExcelWriteable;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.util.Collection;
@@ -139,10 +138,6 @@ public class ExcelAdapter extends BaseExcelWriteable implements Adaptable<ExcelA
     @Override
     public void close() {
         Streams.close(workbook);
-    }
-
-    public Workbook getWorkbook() {
-        return workbook;
     }
 
     public Sheet getSheet() {

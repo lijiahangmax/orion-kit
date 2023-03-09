@@ -26,7 +26,7 @@ public class ExcelExport<T> extends BaseExcelWriteable {
     /**
      * 列配置
      */
-    private final SheetConfig sheetConfig;
+    private final SheetConfig<T> sheetConfig;
 
     /**
      * 初始化器
@@ -58,7 +58,7 @@ public class ExcelExport<T> extends BaseExcelWriteable {
     public ExcelExport(Class<T> targetClass, Workbook workbook, Sheet sheet) {
         super(workbook);
         Valid.notNull(targetClass, "target class is null");
-        this.sheetConfig = new SheetConfig();
+        this.sheetConfig = new SheetConfig<>();
         this.initializer = new ExportInitializer<>(workbook, sheet, targetClass, sheetConfig);
         this.sheetConfig.initializer = initializer;
         this.processor = new ExportProcessor<>(workbook, initializer.sheet, sheetConfig);
@@ -270,6 +270,22 @@ public class ExcelExport<T> extends BaseExcelWriteable {
     }
 
     /**
+     * 复制列样式 用于样式修改
+     *
+     * @param column column
+     * @return 单元格样式
+     */
+    public CellStyle cloneCellStyle(int column) {
+        CellStyle style = workbook.createCellStyle();
+        // 获取列样式并且复制
+        CellStyle columnStyle = sheetConfig.getColumnStyles().get(column);
+        if (columnStyle != null) {
+            style.cloneStyleFrom(columnStyle);
+        }
+        return style;
+    }
+
+    /**
      * 获取一个字体 用于样式修改
      *
      * @return 字体
@@ -291,7 +307,7 @@ public class ExcelExport<T> extends BaseExcelWriteable {
         return sheet;
     }
 
-    public SheetConfig getSheetConfig() {
+    public SheetConfig<T> getSheetConfig() {
         return sheetConfig;
     }
 

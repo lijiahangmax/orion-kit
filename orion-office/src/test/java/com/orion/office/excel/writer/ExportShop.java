@@ -14,7 +14,7 @@ import java.util.Date;
  * @version 1.0.0
  * @since 2020/12/30 9:44
  */
-@ExportMeta(author = "lijiahang", manager = "kk", category = "门店")
+@ExportMeta(author = "MPV", manager = "kk", category = "门店")
 @ExportSheet(name = "门店信息", filterHeader = true, freezeHeader = true, titleHeight = 30, rowHeight = 60, columnWidth = 20, headerUseColumnStyle = false, indexToSort = true)
 @ExportTitle(title = "用户门店信息导出", useRow = 2, font = @ExportFont(fontSize = 22, fontName = "仿宋"))
 public class ExportShop {

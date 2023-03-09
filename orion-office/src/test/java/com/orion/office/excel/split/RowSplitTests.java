@@ -12,15 +12,15 @@ import org.junit.Test;
  */
 public class RowSplitTests {
 
-    private Workbook w1 = Excels.openWorkbook("C:\\Users\\ljh15\\Desktop\\2.xlsx");
-    private Workbook w2 = Excels.openStreamingWorkbook("C:\\Users\\ljh15\\Desktop\\2.xlsx");
+    private Workbook w1 = Excels.openWorkbook("C:\\Users\\lijiahang\\Desktop\\2.xlsx");
+    private Workbook w2 = Excels.openStreamingWorkbook("C:\\Users\\lijiahang\\Desktop\\2.xlsx");
     private Sheet sheet1 = w1.getSheetAt(2);
     private Sheet sheet2 = w2.getSheetAt(2);
 
     @Test
     public void rowSplit1() {
         ExcelRowSplit s = new ExcelRowSplit(sheet1, 5);
-        s.targetPath("C:\\Users\\ljh15\\Desktop\\split1", "sp");
+        s.targetPath("C:\\Users\\lijiahang\\Desktop\\split1", "sp");
         s.header("1", "3", "4")
                 .columns(1, 3, 4)
                 .skip(1)

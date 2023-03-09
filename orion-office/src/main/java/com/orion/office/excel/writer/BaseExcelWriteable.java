@@ -57,6 +57,9 @@ public class BaseExcelWriteable implements SafeCloseable {
     }
 
     protected BaseExcelWriteable write(OutputStream out, String password, boolean close) {
+        // 设置默认属性
+        Excels.setDefaultProperties(workbook);
+        // 写入
         Excels.write(workbook, out, password, close);
         return this;
     }

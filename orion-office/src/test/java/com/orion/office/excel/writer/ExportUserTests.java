@@ -27,7 +27,7 @@ public class ExportUserTests {
             ExportUser e = new ExportUser();
             e.setId((long) (10000 + i));
             e.setName(Strings.randomChars(40));
-            e.setDate(Dates.date(System.currentTimeMillis() + (i * 10000)));
+            e.setDate(Dates.date(System.currentTimeMillis() + (i * 10000L)));
             e.setCompute("A" + i);
             e.setAge(Randoms.randomInt(14, 50));
             String realName = Strings.randomChars(3);

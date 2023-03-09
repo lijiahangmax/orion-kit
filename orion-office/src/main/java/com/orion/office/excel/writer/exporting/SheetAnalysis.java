@@ -1,11 +1,9 @@
 package com.orion.office.excel.writer.exporting;
 
 import com.orion.lang.able.Analysable;
-import com.orion.lang.constant.KitConfig;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.reflect.Annotations;
-import com.orion.office.KitOfficeConfiguration;
 import com.orion.office.excel.annotation.*;
 import com.orion.office.excel.option.*;
 
@@ -16,13 +14,13 @@ import com.orion.office.excel.option.*;
  * @version 1.0.0
  * @since 2020/12/29 17:49
  */
-public class SheetAnalysis implements Analysable {
+public class SheetAnalysis<T> implements Analysable {
 
-    private final Class<?> targetClass;
+    private final Class<T> targetClass;
 
-    private final SheetConfig sheetConfig;
+    private final SheetConfig<T> sheetConfig;
 
-    public SheetAnalysis(Class<?> targetClass, SheetConfig sheetConfig) {
+    public SheetAnalysis(Class<T> targetClass, SheetConfig<T> sheetConfig) {
         this.targetClass = targetClass;
         this.sheetConfig = sheetConfig;
     }
@@ -266,8 +264,6 @@ public class SheetAnalysis implements Analysable {
     private void analysisProperties() {
         // 默认值
         PropertiesOption propertiesOption = new PropertiesOption();
-        propertiesOption.setAuthor(KitConfig.get(KitOfficeConfiguration.CONFIG.EXCEL_DEFAULT_AUTHOR));
-        propertiesOption.setApplication(KitConfig.get(KitOfficeConfiguration.CONFIG.EXCEL_DEFAULT_APPLICATION));
         sheetConfig.sheetOption.setPropertiesOption(propertiesOption);
         // 读取注解
         ExportMeta meta = Annotations.getAnnotation(targetClass, ExportMeta.class);
