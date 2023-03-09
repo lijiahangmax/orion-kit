@@ -1,6 +1,9 @@
 package com.orion.office.excel.writer;
 
 import com.orion.lang.constant.Const;
+import com.orion.lang.function.select.Branches;
+import com.orion.lang.function.select.Selector;
+import com.orion.lang.utils.Colors;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.random.Randoms;
 import com.orion.lang.utils.time.Dates;
@@ -12,6 +15,8 @@ import com.orion.office.excel.type.ExcelFieldType;
 import com.orion.office.excel.type.ExcelPaperType;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.xssf.usermodel.XSSFColor;
+import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,36 +35,36 @@ import java.util.stream.IntStream;
  */
 public class WriteTests {
 
-    private ExcelWriterBuilder build = new ExcelWriterBuilder();
+    private final ExcelWriterBuilder build = new ExcelWriterBuilder();
 
-    private List<Object[]> array = IntStream.rangeClosed(1, 50).mapToObj(i -> {
+    private final List<Object[]> array = IntStream.rangeClosed(1, 50).mapToObj(i -> {
         Object[] array = new Object[6];
         array[0] = 1000 + i;
         array[1] = "   " + Strings.randomChars(3) + "  ";
         array[2] = Strings.format("ABS({})", i);
-        array[3] = Dates.date(System.currentTimeMillis() + i * 100000);
+        array[3] = Dates.date(System.currentTimeMillis() + i * 100000L);
         array[4] = Randoms.randomDouble(1000000, 9000000);
         array[5] = "disable";
         return array;
     }).collect(Collectors.toList());
 
-    private List<Map<String, Object>> map = IntStream.rangeClosed(1, 50).mapToObj(i -> {
+    private final List<Map<String, Object>> map = IntStream.rangeClosed(1, 50).mapToObj(i -> {
         Map<String, Object> m = new HashMap<>();
         m.put("id", 1000 + i);
         m.put("name", "   " + Strings.randomChars(3) + "  ");
         m.put("formula", Strings.format("ABS({})", i));
-        m.put("date", Dates.date(System.currentTimeMillis() + i * 100000));
+        m.put("date", Dates.date(System.currentTimeMillis() + i * 100000L));
         m.put("balance", Randoms.randomDouble(1000000, 9000000));
         m.put("hidden", "disable");
         return m;
     }).collect(Collectors.toList());
 
-    private List<WriteUser> bean = IntStream.rangeClosed(1, 50).mapToObj(i -> {
+    private final List<WriteUser> bean = IntStream.rangeClosed(1, 50).mapToObj(i -> {
         WriteUser user = new WriteUser();
         user.setId(1000L + i);
         user.setName("   " + Strings.randomChars(3) + "  ");
         user.setFormula(Strings.format("ABS({})", i));
-        user.setDate(Dates.date(System.currentTimeMillis() + i * 100000));
+        user.setDate(Dates.date(System.currentTimeMillis() + i * 100000L));
         user.setBalance(BigDecimal.valueOf(Randoms.randomDouble(1000000, 9000000)));
         user.setDisable("disable");
         return user;
@@ -93,7 +98,6 @@ public class WriteTests {
                 .headers("id", "公式", "名称", "时间", "金钱", "隐藏")
                 .freeze(3)
                 .filter(2)
-                .hidden(5)
                 .trim()
                 .headerUseRowStyle()
                 .skip();
@@ -132,7 +136,6 @@ public class WriteTests {
                 .headers("id", "公式", "名称", "时间", "金钱", "隐藏")
                 .freeze(3)
                 .filter(2)
-                .hidden(5)
                 .trim()
                 .columnUseDefaultStyle()
                 .headerUseRowStyle()
@@ -170,7 +173,6 @@ public class WriteTests {
                 .title("测试 bean 1", 2)
                 .freeze(3)
                 .filter(2)
-                .hidden(5)
                 .selected()
                 .headerUseRowStyle();
         CellStyle style = writer.createCellStyle();
@@ -226,16 +228,57 @@ public class WriteTests {
     }
 
     @Test
+    public void lambdaTest2StyleSelector() {
+        ExcelLambdaWriter<WriteUser> writer = build.createLambdaWriter("lambda2select");
+        writer.option(0, WriteUser::getId, ExcelFieldType.NUMBER)
+                .option(1, WriteUser::getName)
+                .option(2, WriteUser::getBalance, ExcelFieldType.DECIMAL_FORMAT, "#,###$")
+                .width(12)
+                .width(3, 20)
+                .titleHeight(15)
+                .headerHeight(30)
+                .rowHeight(20)
+                .title("测试 lambda 2", 2)
+                .freeze(3)
+                .filter(2)
+                .headerUseRowStyle();
+        // 红色
+        CellStyle redStyle = writer.createCellStyle();
+        XSSFFont redFont = (XSSFFont) writer.createFont();
+        redFont.setColor(new XSSFColor(Colors.toRgb("#a6000b"), null));
+        redStyle.setFont(redFont);
+        // 蓝色
+        CellStyle blueStyle = writer.createCellStyle();
+        XSSFFont blueFont = (XSSFFont) writer.createFont();
+        blueFont.setColor(new XSSFColor(Colors.toRgb("#0212a6"), null));
+        blueStyle.setFont(blueFont);
+        // 设置颜色过滤器
+        writer.style(0, user -> {
+            return Selector.<WriteUser, CellStyle>of(user)
+                    .test(Branches.<WriteUser>when(u -> u.getId() % 2 == 0).then(redStyle))
+                    .test(Branches.<WriteUser>when(u -> u.getId() % 2 != 0).then(blueStyle));
+        });
+        writer.style(2, user -> {
+            return Selector.<WriteUser, CellStyle>of(user)
+                    .test(Branches.<WriteUser>when(u -> u.getBalance().intValue() % 2 == 0).then(redStyle));
+        });
+
+        writer.headers("id", "名称", "余额")
+                .addRows(this.bean);
+    }
+
+    @Test
     public void allTest() {
         this.arrayTests1();
         this.mapTests1();
         this.beanTest1();
         this.lambdaTest1();
+        this.lambdaTest2StyleSelector();
     }
 
     @After
     public void write() {
-        build.write("C:\\Users\\ljh15\\Desktop\\2.xlsx");
+        build.write("C:\\Users\\lijiahang\\Desktop\\2.xlsx");
     }
 
 }

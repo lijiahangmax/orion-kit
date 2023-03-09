@@ -1,5 +1,6 @@
 package com.orion.office.excel.writer;
 
+import com.orion.lang.function.select.Selector;
 import com.orion.lang.utils.Arrays1;
 import com.orion.lang.utils.Objects1;
 import com.orion.lang.utils.Valid;
@@ -13,6 +14,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * excel sheet 写入器 基类
@@ -98,6 +100,13 @@ public abstract class BaseExcelWriter<K, V> {
     protected Map<Integer, CellStyle> columnStyles;
 
     /**
+     * 数据样式选择器
+     * <p>
+     * 有选择到的将会覆盖原有样式
+     */
+    protected Map<Integer, Function<V, Selector<V, CellStyle>>> columnStyleSelector;
+
+    /**
      * 默认值
      */
     private final Map<K, Object> defaultValue;
@@ -109,6 +118,7 @@ public abstract class BaseExcelWriter<K, V> {
         this.options = new LinkedHashMap<>();
         this.headerStyles = new TreeMap<>();
         this.columnStyles = new TreeMap<>();
+        this.columnStyleSelector = new TreeMap<>();
         this.defaultValue = new HashMap<>();
     }
 
@@ -345,6 +355,18 @@ public abstract class BaseExcelWriter<K, V> {
         if (columnUseDefaultStyle) {
             sheet.setDefaultColumnStyle(column, style);
         }
+        return this;
+    }
+
+    /**
+     * 设置列样式选择器
+     *
+     * @param column   column
+     * @param selector selector
+     * @return this
+     */
+    public BaseExcelWriter<K, V> style(int column, Function<V, Selector<V, CellStyle>> selector) {
+        columnStyleSelector.put(column, selector);
         return this;
     }
 
@@ -619,10 +641,15 @@ public abstract class BaseExcelWriter<K, V> {
             // 单元格
             int columnIndex = option.getIndex();
             Cell cell = r.createCell(columnIndex);
-            CellStyle style = columnStyles.get(columnIndex);
-            if (style != null) {
-                cell.setCellStyle(style);
+            // 设置样式
+            CellStyle cellStyle = Optional.ofNullable(columnStyleSelector.get(columnIndex))
+                    .map(s -> s.apply(row))
+                    .map(s -> s.orElse(null))
+                    .orElse(columnStyles.get(columnIndex));
+            if (cellStyle != null) {
+                cell.setCellStyle(cellStyle);
             }
+            // 设置值
             Object value = Objects1.def(this.getValue(row, k), () -> defaultValue.get(k));
             if (trim && value instanceof String) {
                 value = ((String) value).trim();
