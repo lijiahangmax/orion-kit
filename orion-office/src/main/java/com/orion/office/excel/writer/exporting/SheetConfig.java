@@ -59,10 +59,6 @@ public class SheetConfig implements Serializable {
         this.fieldOptions = new TreeMap<>();
     }
 
-    protected void setInitializer(ExportInitializer<?> initializer) {
-        this.initializer = initializer;
-    }
-
     /**
      * 清空列样式 不包括已设置过的
      *

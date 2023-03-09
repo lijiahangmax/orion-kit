@@ -60,7 +60,7 @@ public class ExcelExport<T> extends BaseExcelWriteable {
         Valid.notNull(targetClass, "target class is null");
         this.sheetConfig = new SheetConfig();
         this.initializer = new ExportInitializer<>(workbook, sheet, targetClass, sheetConfig);
-        sheetConfig.setInitializer(initializer);
+        this.sheetConfig.initializer = initializer;
         this.processor = new ExportProcessor<>(workbook, initializer.sheet, sheetConfig);
         this.sheet = initializer.sheet;
     }

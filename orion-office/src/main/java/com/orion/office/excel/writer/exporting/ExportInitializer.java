@@ -97,7 +97,9 @@ public class ExportInitializer<T> {
         // 表头
         this.addDefaultHeader();
         // 打印
-        this.addPrintSetup();
+        this.setPrintOption();
+        // 属性
+        this.setPropertiesOption();
     }
 
     /**
@@ -303,14 +305,23 @@ public class ExportInitializer<T> {
     }
 
     /**
-     * 添加打印参数
+     * 设置打印参数
      */
-    private void addPrintSetup() {
+    private void setPrintOption() {
         PrintOption printOption = sheetConfig.sheetOption.getPrintOption();
-        if (printOption == null) {
-            return;
+        if (printOption != null) {
+            Excels.parsePrint(sheet, printOption);
         }
-        Excels.parsePrint(sheet, printOption);
+    }
+
+    /**
+     * 设置属性参数
+     */
+    private void setPropertiesOption() {
+        PropertiesOption propertiesOption = sheetConfig.sheetOption.getPropertiesOption();
+        if (propertiesOption != null) {
+            Excels.setProperties(workbook, propertiesOption);
+        }
     }
 
     /**

@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
@@ -57,28 +58,41 @@ public class Objects1 {
     }
 
     /**
-     * 如果对象不为null调用function
+     * 如果对象不为 null 调用 function
      *
      * @param o 对象
      * @param f function
      * @return 如果对象不为空调用function
      */
     public static <T, R> R map(T o, Function<T, R> f) {
-        if (!isNull(o) && !isNull(f)) {
+        if (!isNull(o)) {
             return f.apply(o);
         }
         return null;
     }
 
     /**
-     * 如果对象不为null调用consumer
+     * 如果对象不为 null 调用 acceptor
      *
-     * @param o 对象
-     * @param c consumer
+     * @param o        o
+     * @param acceptor acceptor
      */
-    public static <T> void accept(T o, Consumer<T> c) {
-        if (!isNull(o) && !isNull(c)) {
-            c.accept(o);
+    public static <T> void ifNotNull(T o, Consumer<T> acceptor) {
+        if (!isNull(o)) {
+            acceptor.accept(o);
+        }
+    }
+
+    /**
+     * 如果对象为真调用 acceptor
+     *
+     * @param o        o
+     * @param tester   tester
+     * @param acceptor acceptor
+     */
+    public static <T> void ifTrue(T o, Predicate<T> tester, Consumer<T> acceptor) {
+        if (tester.test(o)) {
+            acceptor.accept(o);
         }
     }
 
