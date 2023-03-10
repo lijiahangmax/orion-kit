@@ -1,6 +1,6 @@
 package com.orion.ext;
 
-import com.orion.lang.constant.KitConfig;
+import com.orion.lang.config.KitConfig;
 import com.orion.lang.utils.Strings;
 
 /**

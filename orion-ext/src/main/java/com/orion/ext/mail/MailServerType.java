@@ -1,7 +1,7 @@
 package com.orion.ext.mail;
 
 import com.orion.ext.KitExtConfiguration;
-import com.orion.lang.constant.KitConfig;
+import com.orion.lang.config.KitConfig;
 
 /**
  * SMTP 邮件服务器类型

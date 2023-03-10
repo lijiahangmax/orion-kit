@@ -1,8 +1,6 @@
-package com.orion.lang.constant;
+package com.orion.lang.config;
 
-import com.orion.lang.KitLangConfiguration;
 import com.orion.lang.utils.collect.Maps;
-import com.orion.lang.utils.reflect.Classes;
 
 import java.util.Map;
 
@@ -16,11 +14,6 @@ import java.util.Map;
 public class KitConfig {
 
     private static final Map<String, Object> CONFIG = Maps.newMap();
-
-    static {
-        // 加载 orion-lang 配置项
-        Classes.loadClass(KitLangConfiguration.class.getName());
-    }
 
     /**
      * 覆盖配置 (会覆盖) 一般用于重写配置
@@ -51,6 +44,15 @@ public class KitConfig {
      */
     public static <T> T get(String key) {
         return (T) CONFIG.get(key);
+    }
+
+    /**
+     * 删除配置
+     *
+     * @param key key
+     */
+    public static void remove(String key) {
+        CONFIG.remove(key);
     }
 
     /**

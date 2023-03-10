@@ -1,7 +1,7 @@
 package com.orion.office;
 
+import com.orion.lang.config.KitConfig;
 import com.orion.lang.constant.Const;
-import com.orion.lang.constant.KitConfig;
 
 /**
  * orion-office 配置初始化器

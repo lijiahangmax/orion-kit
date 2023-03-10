@@ -1,7 +1,7 @@
 package com.orion.ext.location;
 
 import com.orion.ext.KitExtConfiguration;
-import com.orion.lang.constant.KitConfig;
+import com.orion.lang.config.KitConfig;
 
 /**
  * 地址常量
