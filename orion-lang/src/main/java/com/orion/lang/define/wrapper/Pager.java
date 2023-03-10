@@ -3,7 +3,7 @@ package com.orion.lang.define.wrapper;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.orion.lang.KitLangConfiguration;
 import com.orion.lang.able.IJsonObject;
-import com.orion.lang.constant.KitConfig;
+import com.orion.lang.config.KitConfig;
 import com.orion.lang.define.iterator.EmptyIterator;
 import com.orion.lang.define.support.CloneSupport;
 import com.orion.lang.utils.collect.Lists;
@@ -26,7 +26,7 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, IJ
 
     private static final long serialVersionUID = 6354348839019830L;
 
-    private static final int DEFAULT_LIMIT = KitConfig.get(KitLangConfiguration.PAGER_DEFAULT_LIMIT);
+    private static final int DEFAULT_LIMIT = KitConfig.get(KitLangConfiguration.CONFIG.PAGER_DEFAULT_LIMIT);
 
     /*
         <sql id="Base_Pager_Offset">

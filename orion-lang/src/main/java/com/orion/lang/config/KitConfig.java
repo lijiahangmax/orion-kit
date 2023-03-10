@@ -6,6 +6,8 @@ import java.util.Map;
 
 /**
  * orion-kit 配置项
+ * <p>
+ * 用于 kit 底层默认封装的配置覆盖
  *
  * @author Jiahang Li
  * @version 1.0.0

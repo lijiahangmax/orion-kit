@@ -1,7 +1,7 @@
 package com.orion.lang.define.wrapper;
 
 import com.orion.lang.KitLangConfiguration;
-import com.orion.lang.constant.KitConfig;
+import com.orion.lang.config.KitConfig;
 
 import java.io.Serializable;
 
@@ -16,7 +16,7 @@ public class PageRequest implements Serializable {
 
     private static final long serialVersionUID = -773462378602349895L;
 
-    private static final int DEFAULT_LIMIT = KitConfig.get(KitLangConfiguration.PAGE_REQUEST_DEFAULT_LIMIT);
+    private static final int DEFAULT_LIMIT = KitConfig.get(KitLangConfiguration.CONFIG.PAGE_REQUEST_DEFAULT_LIMIT);
 
     /**
      * 页码

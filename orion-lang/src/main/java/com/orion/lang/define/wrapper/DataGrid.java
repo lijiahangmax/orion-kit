@@ -3,7 +3,7 @@ package com.orion.lang.define.wrapper;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.orion.lang.KitLangConfiguration;
 import com.orion.lang.able.IJsonObject;
-import com.orion.lang.constant.KitConfig;
+import com.orion.lang.config.KitConfig;
 import com.orion.lang.define.iterator.EmptyIterator;
 import com.orion.lang.define.support.CloneSupport;
 import com.orion.lang.utils.collect.Lists;
@@ -27,7 +27,7 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
 
     private static final long serialVersionUID = 3787662930250625L;
 
-    private static final int DEFAULT_LIMIT = KitConfig.get(KitLangConfiguration.DATA_GRID_DEFAULT_LIMIT);
+    private static final int DEFAULT_LIMIT = KitConfig.get(KitLangConfiguration.CONFIG.DATA_GRID_DEFAULT_LIMIT);
 
     /**
      * 页码

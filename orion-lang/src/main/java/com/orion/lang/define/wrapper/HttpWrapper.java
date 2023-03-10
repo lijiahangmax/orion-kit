@@ -4,8 +4,8 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.orion.lang.KitLangConfiguration;
 import com.orion.lang.able.ILogObject;
 import com.orion.lang.able.IMapObject;
+import com.orion.lang.config.KitConfig;
 import com.orion.lang.constant.Const;
-import com.orion.lang.constant.KitConfig;
 import com.orion.lang.define.support.CloneSupport;
 import com.orion.lang.utils.Objects1;
 import com.orion.lang.utils.Strings;
@@ -27,13 +27,13 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
 
     // -------------------- HTTP --------------------
 
-    public static final Integer HTTP_OK_CODE = KitConfig.get(KitLangConfiguration.HTTP_OK_CODE);
+    public static final Integer HTTP_OK_CODE = KitConfig.get(KitLangConfiguration.CONFIG.HTTP_OK_CODE);
 
-    public static final String HTTP_OK_MESSAGE = KitConfig.get(KitLangConfiguration.HTTP_OK_MESSAGE);
+    public static final String HTTP_OK_MESSAGE = KitConfig.get(KitLangConfiguration.CONFIG.HTTP_OK_MESSAGE);
 
-    public static final Integer HTTP_ERROR_CODE = KitConfig.get(KitLangConfiguration.HTTP_ERROR_CODE);
+    public static final Integer HTTP_ERROR_CODE = KitConfig.get(KitLangConfiguration.CONFIG.HTTP_ERROR_CODE);
 
-    public static final String HTTP_ERROR_MESSAGE = KitConfig.get(KitLangConfiguration.HTTP_ERROR_MESSAGE);
+    public static final String HTTP_ERROR_MESSAGE = KitConfig.get(KitLangConfiguration.CONFIG.HTTP_ERROR_MESSAGE);
 
     /**
      * 状态码
