@@ -37,8 +37,8 @@ public class CommandTests {
             System.out.println(e.isSuccessExit());
             e.close();
         });
-        e.streamHandler(ReaderLineConsumer.getDefaultPrint());
-        e.errorStreamHandler(ReaderLineConsumer.getDefaultPrint());
+        e.streamHandler(ReaderLineConsumer.printer());
+        e.errorStreamHandler(ReaderLineConsumer.printer());
         e.exec();
         Threads.sleep(3000);
     }
@@ -48,7 +48,7 @@ public class CommandTests {
         SessionHolder.HOLDER.setLogger(SessionLogger.INFO);
         CommandExecutor e = c.getCommandExecutor("echo $PATH");
         e.inherit();
-        e.streamHandler(ReaderLineConsumer.getDefaultPrint());
+        e.streamHandler(ReaderLineConsumer.printer());
         e.callback(exe -> {
             System.out.println("结束....");
             System.out.println(e.getExitCode());

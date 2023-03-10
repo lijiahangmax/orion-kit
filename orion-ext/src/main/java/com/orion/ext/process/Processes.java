@@ -46,7 +46,7 @@ public class Processes {
             if (redirectError) {
                 executor.redirectError();
             }
-            executor.streamHandler((p, i) -> Attempt.uncheck(Streams::transfer, i, out))
+            executor.streamHandler(i -> Attempt.uncheck(Streams::transfer, i, out))
                     .waitFor()
                     .sync()
                     .terminal()
@@ -87,7 +87,7 @@ public class Processes {
             if (redirectError) {
                 executor.redirectError();
             }
-            executor.streamHandler((p, i) -> Attempt.uncheck(Streams::transfer, i, out))
+            executor.streamHandler(i -> Attempt.uncheck(Streams::transfer, i, out))
                     .waitFor()
                     .sync()
                     .dir(dir)

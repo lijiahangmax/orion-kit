@@ -3,8 +3,7 @@ package com.orion.test.process;
 import com.orion.ext.process.ProcessAwaitExecutor;
 import com.orion.ext.process.Processes;
 import com.orion.lang.constant.Const;
-import com.orion.lang.function.FunctionConst;
-import com.orion.lang.function.impl.ReaderLineBiConsumer;
+import com.orion.lang.function.impl.ReaderLineConsumer;
 import com.orion.lang.utils.Threads;
 import org.junit.Test;
 
@@ -22,23 +21,23 @@ public class ProcessAwaitTests {
     }
 
     public static void echo() {
-        new ProcessAwaitExecutor("echo %JAVA_HOME%")
-                .streamHandler(ReaderLineBiConsumer.getDefaultPrint2())
-                .callback(e -> {
+        ProcessAwaitExecutor executor = new ProcessAwaitExecutor("echo %JAVA_HOME%");
+        executor.streamHandler(ReaderLineConsumer.printer())
+                .callback(() -> {
                     System.out.println("end");
-                    e.close();
+                    executor.close();
                 })
                 .terminal()
                 .exec();
     }
 
     public static void sql() {
-        ProcessAwaitExecutor exec = new ProcessAwaitExecutor("mysql -u root -padmin123")
-                .streamHandler(ReaderLineBiConsumer.getDefaultPrint2())
-                .callback(e -> {
-                    System.out.println("end");
-                    e.close();
-                });
+        ProcessAwaitExecutor exec = new ProcessAwaitExecutor("mysql -u root -padmin123");
+        exec.streamHandler(ReaderLineConsumer.printer(Const.GBK));
+        exec.callback(() -> {
+            System.out.println("end");
+            exec.close();
+        });
         exec.terminal()
                 .redirectError()
                 .exec();
@@ -49,28 +48,32 @@ public class ProcessAwaitTests {
     }
 
     public static void bat() {
-        new ProcessAwaitExecutor("C:\\Users\\ljh15\\Desktop\\1.bat")
-                .streamHandler(ReaderLineBiConsumer.getDefaultPrint2())
+        ProcessAwaitExecutor exec = new ProcessAwaitExecutor("C:\\Users\\lijiahang\\Desktop\\1.bat");
+        exec.streamHandler(ReaderLineConsumer.printer())
+                .callback(() -> {
+                    System.out.println("end");
+                    exec.close();
+                })
                 .exec();
     }
 
     public static void ping() {
-        ProcessAwaitExecutor e = new ProcessAwaitExecutor("ping www.baidu.com -n 100")
-                .streamHandler(new ReaderLineBiConsumer().charset(Const.GBK).lineConsumer(FunctionConst.PRINT_2_BI_CONSUMER));
-        e.callback(ex -> {
+        ProcessAwaitExecutor e = new ProcessAwaitExecutor("ping www.baidu.com -n 100");
+        e.streamHandler(ReaderLineConsumer.printer(Const.GBK));
+        e.callback(() -> {
             System.out.println("end");
         });
         e.terminal();
         e.exec();
-        Threads.sleep(2000);
+        Threads.sleep(5000);
         e.close();
     }
 
     public static void gcWrong() {
         // 关闭的是cmd.exe 而不是 jstat, 则jstat子进程还是在运行中
-        ProcessAwaitExecutor e = new ProcessAwaitExecutor("jstat -gc 12600 500")
-                .streamHandler(new ReaderLineBiConsumer().charset(Const.GBK).lineConsumer(FunctionConst.PRINT_2_BI_CONSUMER));
-        e.callback(ex -> {
+        ProcessAwaitExecutor e = new ProcessAwaitExecutor("jstat -gc 13484 500")
+                .streamHandler(ReaderLineConsumer.printer(Const.GBK));
+        e.callback(() -> {
             System.out.println("end");
         });
         e.terminal();
@@ -81,12 +84,12 @@ public class ProcessAwaitTests {
 
     public static void gcRight() {
         // 在文件夹运行 关闭的是jstat
-        ProcessAwaitExecutor e = new ProcessAwaitExecutor(new String[]{"jstat", "-gc", "12600", "500"})
-                .streamHandler(new ReaderLineBiConsumer().charset(Const.GBK).lineConsumer(FunctionConst.PRINT_2_BI_CONSUMER));
-        e.callback(ex -> {
+        ProcessAwaitExecutor e = new ProcessAwaitExecutor(new String[]{"jstat", "-gc", "13484", "500"})
+                .streamHandler(ReaderLineConsumer.printer(Const.GBK));
+        e.callback(() -> {
             System.out.println("end");
         });
-        e.dir("A:\\Work\\jdk1.8\\bin");
+        e.dir("D:\\JDK1.8\\bin");
         e.redirectError();
         e.exec();
         Threads.sleep(5000);
@@ -105,7 +108,7 @@ public class ProcessAwaitTests {
 
     @Test
     public void testResult3() throws UnsupportedEncodingException {
-        System.out.println(new String(Processes.getOutputResultWithDir(true, "A:\\Work\\jdk1.8\\bin", "jps", "-lv"), Const.GBK));
+        System.out.println(new String(Processes.getOutputResultWithDir(true, "D:\\JDK1.8\\bin", "jps", "-lv"), Const.GBK));
     }
 
     @Test

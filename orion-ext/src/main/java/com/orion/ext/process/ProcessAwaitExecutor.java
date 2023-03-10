@@ -13,7 +13,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -63,17 +62,17 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
     /**
      * 流处理器
      */
-    private BiConsumer<ProcessAwaitExecutor, InputStream> streamHandler;
+    private Consumer<InputStream> streamHandler;
 
     /**
      * 流处理器
      */
-    private BiConsumer<ProcessAwaitExecutor, InputStream> errorStreamHandler;
+    private Consumer<InputStream> errorStreamHandler;
 
     /**
      * 执行完毕回调
      */
-    protected Consumer<? super ProcessAwaitExecutor> callback;
+    protected Runnable callback;
 
     /**
      * pool
@@ -159,7 +158,7 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
      * @param streamHandler 标准输出流处理器
      * @return this
      */
-    public ProcessAwaitExecutor streamHandler(BiConsumer<ProcessAwaitExecutor, InputStream> streamHandler) {
+    public ProcessAwaitExecutor streamHandler(Consumer<InputStream> streamHandler) {
         this.streamHandler = streamHandler;
         return this;
     }
@@ -170,7 +169,7 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
      * @param errorStreamHandler 错误输出流处理器
      * @return this
      */
-    public ProcessAwaitExecutor errorStreamHandler(BiConsumer<ProcessAwaitExecutor, InputStream> errorStreamHandler) {
+    public ProcessAwaitExecutor errorStreamHandler(Consumer<InputStream> errorStreamHandler) {
         this.errorStreamHandler = errorStreamHandler;
         return this;
     }
@@ -192,7 +191,7 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
      * @param callback 回调方法
      * @return this
      */
-    public ProcessAwaitExecutor callback(Consumer<ProcessAwaitExecutor> callback) {
+    public ProcessAwaitExecutor callback(Runnable callback) {
         this.callback = callback;
         return this;
     }
@@ -403,24 +402,24 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
     private void listenerInputAndError() {
         if (!sync) {
             Runnable runnable = new HookRunnable(() -> {
-                streamHandler.accept(this, inputStream);
+                streamHandler.accept(inputStream);
                 if (errorStreamHandler != null && !redirectError) {
-                    errorStreamHandler.accept(this, errorStream);
+                    errorStreamHandler.accept(errorStream);
                 }
             }, () -> {
                 this.done = true;
                 if (callback != null) {
-                    callback.accept(this);
+                    callback.run();
                 }
             }, true);
             Threads.start(runnable, scheduler);
         } else {
             try {
-                streamHandler.accept(this, inputStream);
+                streamHandler.accept(inputStream);
             } finally {
                 this.done = true;
                 if (callback != null) {
-                    callback.accept(this);
+                    callback.run();
                 }
             }
         }
