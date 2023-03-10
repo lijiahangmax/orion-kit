@@ -1,7 +1,7 @@
 package com.orion.http;
 
 import com.orion.http.useragent.StandardUserAgent;
-import com.orion.lang.constant.KitConfig;
+import com.orion.lang.config.KitConfig;
 
 /**
  * orion-http 配置初始化器

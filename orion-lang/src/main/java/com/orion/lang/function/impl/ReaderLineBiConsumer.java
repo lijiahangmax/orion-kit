@@ -20,9 +20,9 @@ import java.util.function.BiConsumer;
  */
 public class ReaderLineBiConsumer<T> implements BiConsumer<T, InputStream> {
 
-    private static ReaderLineBiConsumer<?> DEFAULT_PRINT_1 = new ReaderLineBiConsumer<>(FunctionConst.getPrint1BiConsumer());
-    private static ReaderLineBiConsumer<?> DEFAULT_PRINT_2 = new ReaderLineBiConsumer<>(FunctionConst.getPrint2BiConsumer());
-    private static ReaderLineBiConsumer<?> DEFAULT_PRINT = new ReaderLineBiConsumer<>(FunctionConst.getPrintBiConsumer());
+    private static final ReaderLineBiConsumer<?> DEFAULT_PRINT_1 = new ReaderLineBiConsumer<>(FunctionConst.getPrint1BiConsumer());
+    private static final ReaderLineBiConsumer<?> DEFAULT_PRINT_2 = new ReaderLineBiConsumer<>(FunctionConst.getPrint2BiConsumer());
+    private static final ReaderLineBiConsumer<?> DEFAULT_PRINT = new ReaderLineBiConsumer<>(FunctionConst.getPrintBiConsumer());
 
     /**
      * 编码格式

@@ -2,8 +2,8 @@ package com.orion.http.apache;
 
 import com.orion.http.KitHttpConfiguration;
 import com.orion.lang.able.Buildable;
+import com.orion.lang.config.KitConfig;
 import com.orion.lang.constant.Const;
-import com.orion.lang.constant.KitConfig;
 import com.orion.lang.utils.collect.Lists;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequestInterceptor;

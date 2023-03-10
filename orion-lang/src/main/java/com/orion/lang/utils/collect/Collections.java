@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 @SuppressWarnings("ALL")
 public class Collections {
 
-    Collections() {
+    protected Collections() {
     }
 
     public static <E> Collection<E> newSynchronizedCollection(Collection<E> c) {

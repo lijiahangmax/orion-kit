@@ -65,7 +65,7 @@ public class Types {
 
     public static Type getParameterType(Method method, int index) {
         Type[] types = method.getGenericParameterTypes();
-        if (types != null && types.length > index) {
+        if (types.length > index) {
             return types[index];
         }
         return null;

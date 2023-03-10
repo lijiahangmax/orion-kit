@@ -115,11 +115,6 @@ public class OkWebSocketServer extends WebSocketListener {
         this.clients = new ConcurrentHashMap<>();
     }
 
-    public static void main(String[] args) throws IOException {
-        OkWebSocketServer s = new OkWebSocketServer(9999);
-        s.start();
-    }
-
     /**
      * 启动server
      *
