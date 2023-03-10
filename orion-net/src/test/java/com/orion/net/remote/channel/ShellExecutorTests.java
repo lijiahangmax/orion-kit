@@ -21,7 +21,7 @@ public class ShellExecutorTests {
                 .connect(20000)
                 .getShellExecutor();
         e.streamHandler(ReaderLineConsumer.printer());
-        e.callback(exe -> System.out.println("end...."));
+        e.callback(() -> System.out.println("end...."));
         e.connect(20000);
         e.exec();
         e.write("ps -ef | grep java\n");

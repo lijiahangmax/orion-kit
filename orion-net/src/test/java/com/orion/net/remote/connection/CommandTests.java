@@ -31,7 +31,7 @@ public class CommandTests {
     public void ls() {
         SessionHolder.HOLDER.setLogger(SessionLogger.ERROR);
         CommandExecutor e = c.getCommandExecutor("ls -la /root");
-        e.callback(exe -> {
+        e.callback(() -> {
             System.out.println("end....");
             System.out.println(e.getExitCode());
             System.out.println(e.isSuccessExit());
@@ -49,7 +49,7 @@ public class CommandTests {
         CommandExecutor e = c.getCommandExecutor("echo $PATH");
         e.inherit();
         e.streamHandler(ReaderLineConsumer.printer());
-        e.callback(exe -> {
+        e.callback(() -> {
             System.out.println("结束....");
             System.out.println(e.getExitCode());
             e.close();

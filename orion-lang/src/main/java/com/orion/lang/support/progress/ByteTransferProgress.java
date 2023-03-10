@@ -1,7 +1,6 @@
 package com.orion.lang.support.progress;
 
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Consumer;
 
 /**
  * 数据传输进度条
@@ -50,7 +49,7 @@ public class ByteTransferProgress implements Progress {
     /**
      * 传输完成回调
      */
-    protected Consumer<? super ByteTransferProgress> callback;
+    protected Runnable callback;
 
     public ByteTransferProgress(long end) {
         this(0, end);
@@ -68,7 +67,7 @@ public class ByteTransferProgress implements Progress {
      * @param callback 回调器
      * @return this
      */
-    public ByteTransferProgress callback(Consumer<? super ByteTransferProgress> callback) {
+    public ByteTransferProgress callback(Runnable callback) {
         this.callback = callback;
         return this;
     }
@@ -152,7 +151,7 @@ public class ByteTransferProgress implements Progress {
         this.done = true;
         this.error = error;
         if (callback != null) {
-            callback.accept(this);
+            callback.run();
         }
     }
 
