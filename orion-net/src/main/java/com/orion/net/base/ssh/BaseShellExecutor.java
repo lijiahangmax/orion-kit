@@ -80,7 +80,7 @@ public abstract class BaseShellExecutor extends BaseRemoteExecutor implements IS
         }, () -> {
             this.done = true;
             if (callback != null) {
-                callback.accept(this);
+                callback.run();
             }
         }, true);
         Threads.start(runnable, scheduler);

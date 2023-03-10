@@ -2,11 +2,12 @@ package com.orion.lang.function.impl;
 
 import com.orion.lang.constant.Const;
 import com.orion.lang.define.Console;
-import com.orion.lang.function.FunctionConst;
+import com.orion.lang.function.Functions;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Valid;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.function.Consumer;
@@ -36,7 +37,7 @@ public class ReaderLineConsumer implements Consumer<InputStream> {
     private Consumer<String> lineConsumer;
 
     public ReaderLineConsumer() {
-        this(FunctionConst.getEmptyConsumer());
+        this(Functions.emptyConsumer());
     }
 
     public ReaderLineConsumer(Consumer<String> lineConsumer) {
@@ -89,6 +90,10 @@ public class ReaderLineConsumer implements Consumer<InputStream> {
             String line;
             while ((line = reader.readLine()) != null) {
                 lineConsumer.accept(line);
+            }
+        } catch (IOException e) {
+            if (!Const.STREAM_CLOSE.equals(e.getMessage())) {
+                throw Exceptions.ioRuntime(e);
             }
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);

@@ -83,7 +83,7 @@ public abstract class BaseCommandExecutor extends BaseRemoteExecutor implements 
         }, () -> {
             this.done = true;
             if (callback != null) {
-                callback.accept(this);
+                callback.run();
             }
         }, true);
         if (sync) {

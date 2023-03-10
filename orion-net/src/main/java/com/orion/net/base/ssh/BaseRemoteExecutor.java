@@ -37,7 +37,7 @@ public abstract class BaseRemoteExecutor implements IRemoteExecutor {
     /**
      * 执行完毕回调
      */
-    protected Consumer<? super IRemoteExecutor> callback;
+    protected Runnable callback;
 
     /**
      * 是否已运行
@@ -60,7 +60,7 @@ public abstract class BaseRemoteExecutor implements IRemoteExecutor {
     }
 
     @Override
-    public void callback(Consumer<? super IRemoteExecutor> callback) {
+    public void callback(Runnable callback) {
         this.callback = callback;
     }
 

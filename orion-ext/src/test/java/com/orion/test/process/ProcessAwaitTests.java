@@ -17,7 +17,7 @@ import java.io.UnsupportedEncodingException;
 public class ProcessAwaitTests {
 
     public static void main(String[] args) {
-        gcRight();
+        ping();
     }
 
     public static void echo() {

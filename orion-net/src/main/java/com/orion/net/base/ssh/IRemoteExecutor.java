@@ -32,7 +32,7 @@ public interface IRemoteExecutor extends Executable, SafeCloseable {
      *
      * @param callback 回调方法
      */
-    void callback(Consumer<? super IRemoteExecutor> callback);
+    void callback(Runnable callback);
 
     /**
      * 传输标准输出流到指定输出流
