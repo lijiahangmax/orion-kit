@@ -1,6 +1,8 @@
 package com.orion.lang.utils.reflect;
 
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 
 /**
  * 反射 字节码工具类
@@ -88,6 +90,18 @@ public class ByteCodes {
 
     /**
      * 获取基本类型字母
+     * <p>
+     * V	    void
+     * Z	    boolean
+     * B	    byte
+     * C	    char
+     * S	    short
+     * I	    int
+     * J	    long
+     * F	    float
+     * D	    double
+     * [	    以[开头 配合其他的特殊字符表示对应数据类型的数组 几个[表示几维数组
+     * L全类名;	引用类型	以L开头 ;结尾 中间是引用类型的全类名用 /替换.
      *
      * @param type type
      * @return letter
@@ -113,6 +127,49 @@ public class ByteCodes {
             return "D";
         }
         throw new IllegalStateException("type: " + type.getCanonicalName() + " is not a primitive type");
+    }
+
+    /**
+     * 检查基本类型泛型数组
+     *
+     * @param genericArrayType 泛型数组类型
+     * @return type
+     */
+    public static Type checkPrimitiveArray(GenericArrayType genericArrayType) {
+        Type clz = genericArrayType;
+        Type genericComponentType = genericArrayType.getGenericComponentType();
+        String prefix = "[";
+        while (genericComponentType instanceof GenericArrayType) {
+            genericComponentType = ((GenericArrayType) genericComponentType).getGenericComponentType();
+            prefix += prefix;
+        }
+        if (genericComponentType instanceof Class<?>) {
+            Class<?> ck = (Class<?>) genericComponentType;
+            if (ck.isPrimitive()) {
+                try {
+                    if (ck == boolean.class) {
+                        clz = Class.forName(prefix + "Z");
+                    } else if (ck == char.class) {
+                        clz = Class.forName(prefix + "C");
+                    } else if (ck == byte.class) {
+                        clz = Class.forName(prefix + "B");
+                    } else if (ck == short.class) {
+                        clz = Class.forName(prefix + "S");
+                    } else if (ck == int.class) {
+                        clz = Class.forName(prefix + "I");
+                    } else if (ck == long.class) {
+                        clz = Class.forName(prefix + "J");
+                    } else if (ck == float.class) {
+                        clz = Class.forName(prefix + "F");
+                    } else if (ck == double.class) {
+                        clz = Class.forName(prefix + "D");
+                    }
+                } catch (ClassNotFoundException e) {
+                    // ignore
+                }
+            }
+        }
+        return clz;
     }
 
 }
