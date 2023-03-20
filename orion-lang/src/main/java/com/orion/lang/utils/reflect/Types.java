@@ -5,7 +5,10 @@ import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Maps;
 
-import java.lang.reflect.*;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
 import java.util.Map;
 
 /**
@@ -15,10 +18,62 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2020/12/7 18:12
  */
-// @SuppressWarnings("ALL")
 public class Types {
 
     private Types() {
+    }
+
+    /**
+     * 获取类型的泛型类型
+     * <p>
+     * 如果有返回数组
+     * 如果没有返回 null
+     *
+     * @param type 类型
+     * @return 泛型数组
+     */
+    public static Class<?>[] getTypeParameterizedTypes(Type type) {
+        if (type instanceof ParameterizedType) {
+            Type[] arguments = ((ParameterizedType) type).getActualTypeArguments();
+            int argumentsLength = arguments.length;
+            Class<?>[] classes = new Class[argumentsLength];
+            for (int i = 0; i < argumentsLength; i++) {
+                Type argument = arguments[i];
+                if (argument instanceof ParameterizedType) {
+                    classes[i] = ((Class<?>) ((ParameterizedType) argument).getRawType());
+                } else if (argument instanceof Class) {
+                    classes[i] = (Class<?>) argument;
+                } else {
+                    classes[i] = Object.class;
+                }
+            }
+            return classes;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 类型装换为泛型类型
+     *
+     * @param type type
+     * @return ParameterizedType
+     */
+    public static ParameterizedType toParameterizedType(Type type) {
+        if (type instanceof ParameterizedType) {
+            return (ParameterizedType) type;
+        } else if (type instanceof Class) {
+            Class<?> clazz = (Class<?>) type;
+            Type genericSuper = clazz.getGenericSuperclass();
+            if (genericSuper == null || Object.class.equals(genericSuper)) {
+                final Type[] genericInterfaces = clazz.getGenericInterfaces();
+                if (Arrays1.isNotEmpty(genericInterfaces)) {
+                    genericSuper = genericInterfaces[0];
+                }
+            }
+            return toParameterizedType(genericSuper);
+        }
+        return null;
     }
 
     /**
@@ -35,9 +90,9 @@ public class Types {
      * 获取 type 对应的原始 class
      *
      * @param type type
-     * @return 原始class
+     * @return 原始 class
      */
-    public static Class<?> getClass(Type type) {
+    public static Class<?> getTypeRawClass(Type type) {
         if (type != null) {
             if (type instanceof Class) {
                 return (Class<?>) type;
@@ -48,43 +103,11 @@ public class Types {
             } else if (type instanceof WildcardType) {
                 final Type[] upperBounds = ((WildcardType) type).getUpperBounds();
                 if (upperBounds.length == 1) {
-                    return getClass(upperBounds[0]);
+                    return getTypeRawClass(upperBounds[0]);
                 }
             }
         }
         return null;
-    }
-
-    public static Type getType(Field field) {
-        return field == null ? null : field.getGenericType();
-    }
-
-    public static Class<?> getClass(Field field) {
-        return field == null ? null : field.getType();
-    }
-
-    public static Type getParameterType(Method method, int index) {
-        Type[] types = method.getGenericParameterTypes();
-        if (types.length > index) {
-            return types[index];
-        }
-        return null;
-    }
-
-    public static Class<?> getParameterClass(Method method, int index) {
-        Class<?>[] classes = method.getParameterTypes();
-        if (classes.length > index) {
-            return classes[index];
-        }
-        return null;
-    }
-
-    public static Type getReturnType(Method method) {
-        return method == null ? null : method.getGenericReturnType();
-    }
-
-    public static Class<?> getReturnClass(Method method) {
-        return method == null ? null : method.getReturnType();
     }
 
     public static Type getTypeArgument(Type type) {
@@ -99,35 +122,40 @@ public class Types {
         return null;
     }
 
+    /**
+     * 获取类型参数
+     *
+     * @param type type
+     * @return type
+     */
     public static Type[] getTypeArguments(Type type) {
-        if (type == null) {
+        // 获取参数类型
+        ParameterizedType pt = toParameterizedType(type);
+        if (pt == null) {
             return null;
         }
-        ParameterizedType parameterizedType = toParameterizedType(type);
-        return parameterizedType == null ? null : parameterizedType.getActualTypeArguments();
+        return pt.getActualTypeArguments();
     }
 
-    public static ParameterizedType toParameterizedType(Type type) {
-        ParameterizedType result = null;
-        if (type instanceof ParameterizedType) {
-            result = (ParameterizedType) type;
-        } else if (type instanceof Class) {
-            Class<?> clazz = (Class<?>) type;
-            Type genericSuper = clazz.getGenericSuperclass();
-            if (genericSuper == null || Object.class.equals(genericSuper)) {
-                final Type[] genericInterfaces = clazz.getGenericInterfaces();
-                if (Arrays1.isNotEmpty(genericInterfaces)) {
-                    genericSuper = genericInterfaces[0];
-                }
-            }
-            result = toParameterizedType(genericSuper);
+    public static Type getActualType(Type actualType, Class<?> typeDefineClass, Type typeVariable) {
+        Type[] types = getActualTypes(actualType, typeDefineClass, typeVariable);
+        if (Arrays1.isNotEmpty(types)) {
+            return types[0];
         }
-        return result;
+        return null;
     }
 
+    /**
+     * 获取实际泛型类型
+     *
+     * @param actualType      实际类型 ArrayList
+     * @param typeDefineClass 父类类型 List
+     * @param typeVariables   参数类型 String
+     * @return 泛型类型
+     */
     public static Type[] getActualTypes(Type actualType, Class<?> typeDefineClass, Type... typeVariables) {
-        if (!typeDefineClass.isAssignableFrom(getClass(actualType))) {
-            throw Exceptions.argument(Strings.format("Parameter {} must be assignable from {}", typeDefineClass, actualType));
+        if (!typeDefineClass.isAssignableFrom(getTypeRawClass(actualType))) {
+            throw Exceptions.argument(Strings.format("parameter {} must be assignable from {}", typeDefineClass, actualType));
         }
         TypeVariable<?>[] typeVars = typeDefineClass.getTypeParameters();
         if (Arrays1.isEmpty(typeVars)) {
@@ -144,14 +172,6 @@ public class Types {
             result[i] = typeVariables[i] instanceof TypeVariable ? tableMap.get(typeVariables[i]) : typeVariables[i];
         }
         return result;
-    }
-
-    public static Type getActualType(Type actualType, Class<?> typeDefineClass, Type typeVariable) {
-        Type[] types = getActualTypes(actualType, typeDefineClass, typeVariable);
-        if (Arrays1.isNotEmpty(types)) {
-            return types[0];
-        }
-        return null;
     }
 
 }

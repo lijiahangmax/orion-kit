@@ -13,6 +13,8 @@ import java.util.Map;
 
 /**
  * 反射 泛型工具类
+ * <p>
+ * 非泛型类型返回 null 而非 Object
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -26,6 +28,21 @@ public class Generics {
     // -------------------- field --------------------
 
     /**
+     * 获取字段泛型
+     *
+     * @param field        field
+     * @param genericIndex generic type genericIndex
+     * @return 泛型类型 没有则返回 null
+     */
+    public static Class<?> getFieldGenericType(Field field, int genericIndex) {
+        Class<?>[] types = Types.getTypeParameterizedTypes(field.getGenericType());
+        if (types == null) {
+            return null;
+        }
+        return Valid.validIndex(types, genericIndex);
+    }
+
+    /**
      * 获取字段泛型列表
      *
      * @param field field
@@ -35,20 +52,23 @@ public class Generics {
         return Types.getTypeParameterizedTypes(field.getGenericType());
     }
 
-    /**
-     * 获取字段泛型列表
-     *
-     * @param clazz     clazz
-     * @param fieldName fieldName
-     * @return 泛型类型列表 没有则返回 null
-     */
-    public static Class<?>[] getFieldGenericTypes(Class<?> clazz, String fieldName) {
-        Field field = Fields.getAccessibleField(clazz, fieldName);
-        Valid.notNull(field, "not found field [" + fieldName + "] in " + clazz);
-        return Types.getTypeParameterizedTypes(field.getGenericType());
-    }
-
     // -------------------- method parameter --------------------
+
+    /**
+     * 获取方法参数泛型
+     *
+     * @param method         method
+     * @param parameterIndex parameterIndex
+     * @param genericIndex   genericIndex
+     * @return 泛型类型 没有则返回 null
+     */
+    public static Class<?> getMethodParameterGenericType(Method method, int parameterIndex, int genericIndex) {
+        Class<?>[] types = Types.getTypeParameterizedTypes(method.getGenericParameterTypes()[parameterIndex]);
+        if (types == null) {
+            return null;
+        }
+        return Valid.validIndex(types, genericIndex);
+    }
 
     /**
      * 获取方法参数泛型列表
@@ -76,6 +96,21 @@ public class Generics {
     // -------------------- method return --------------------
 
     /**
+     * 获取字段泛型
+     *
+     * @param method       method
+     * @param genericIndex genericIndex
+     * @return 泛型类型 没有则返回 null
+     */
+    public static Class<?> getMethodReturnGenericType(Method method, int genericIndex) {
+        Class<?>[] types = Types.getTypeParameterizedTypes(method.getGenericReturnType());
+        if (types == null) {
+            return null;
+        }
+        return Valid.validIndex(types, genericIndex);
+    }
+
+    /**
      * 获取字段泛型列表
      *
      * @param method method
@@ -88,7 +123,22 @@ public class Generics {
     // -------------------- class --------------------
 
     /**
-     * 获取类型泛型
+     * 获取类类型泛型
+     *
+     * @param ref          ref
+     * @param genericIndex genericIndex
+     * @return 泛型类型 没有则返回 null
+     */
+    public static Class<?> getClassGenericType(TypeReference<?> ref, int genericIndex) {
+        Class<?>[] types = Types.getTypeParameterizedTypes(ref.getType());
+        if (types == null) {
+            return null;
+        }
+        return Valid.validIndex(types, genericIndex);
+    }
+
+    /**
+     * 获取类类型泛型列表
      *
      * @param ref ref
      * @return 泛型类型列表 没有则返回 null
@@ -98,6 +148,21 @@ public class Generics {
     }
 
     // -------------------- super class --------------------
+
+    /**
+     * 获取父类泛型
+     *
+     * @param clazz        clazz
+     * @param genericIndex genericIndex
+     * @return 泛型类型 没有则返回 null
+     */
+    public static Class<?> getSuperClassGenericType(Class<?> clazz, int genericIndex) {
+        Class<?>[] types = Types.getTypeParameterizedTypes(clazz.getGenericSuperclass());
+        if (types == null) {
+            return null;
+        }
+        return Valid.validIndex(types, genericIndex);
+    }
 
     /**
      * 获取父类泛型列表
@@ -110,6 +175,22 @@ public class Generics {
     }
 
     // -------------------- interface --------------------
+
+    /**
+     * 获取接口泛型
+     *
+     * @param clazz          clazz
+     * @param interfaceClass 接口类型
+     * @param genericIndex   genericIndex
+     * @return 泛型类型 没有则返回 null
+     */
+    public static Class<?> getInterfaceGenericType(Class<?> clazz, Class<?> interfaceClass, int genericIndex) {
+        Class<?>[] types = getInterfaceGenericTypes(clazz, interfaceClass);
+        if (types == null) {
+            return null;
+        }
+        return Valid.validIndex(types, genericIndex);
+    }
 
     /**
      * 获取接口泛型列表
