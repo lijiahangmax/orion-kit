@@ -654,10 +654,19 @@ public class Files1 {
     /**
      * 复制目录
      *
-     * @param source 源目录
-     * @param target 目标目录
+     * @param source               源目录
+     * @param target               目标目录
+     * @param includeSourceDirName 是否包含源文件名称
      */
     public static void copyDir(File source, File target, boolean includeSourceDirName) {
+        if (includeSourceDirName) {
+            doCopyDir(source, new File(target, source.getName()));
+        } else {
+            doCopyDir(source, target);
+        }
+    }
+
+    private static void doCopyDir(File source, File target) {
         if (!target.exists() || !target.isDirectory()) {
             target.mkdirs();
         }
@@ -667,15 +676,9 @@ public class Files1 {
             return;
         }
         for (File file : files) {
-            String path = file.getName();
-            File targetFile;
-            if (includeSourceDirName) {
-                targetFile = new File(target.getAbsolutePath() + SEPARATOR + sourceName + SEPARATOR + path);
-            } else {
-                targetFile = new File(target.getAbsolutePath() + SEPARATOR + path);
-            }
+            File targetFile = new File(target.getAbsolutePath() + SEPARATOR + file.getName());
             if (file.isDirectory()) {
-                copyDir(file, targetFile);
+                doCopyDir(file, targetFile);
             } else {
                 copy(file, targetFile);
             }
