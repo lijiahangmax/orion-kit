@@ -21,13 +21,13 @@ import java.util.Optional;
  */
 public class ExportInitializer<T> {
 
-    protected Workbook workbook;
+    protected final Workbook workbook;
 
     protected Sheet sheet;
 
     private final Class<T> targetClass;
 
-    private final SheetConfig sheetConfig;
+    private final SheetConfig<T> sheetConfig;
 
     /**
      * 当前行索引
@@ -39,7 +39,7 @@ public class ExportInitializer<T> {
      */
     private boolean init;
 
-    protected ExportInitializer(Workbook workbook, Sheet sheet, Class<T> targetClass, SheetConfig sheetConfig) {
+    protected ExportInitializer(Workbook workbook, Sheet sheet, Class<T> targetClass, SheetConfig<T> sheetConfig) {
         this.workbook = workbook;
         this.targetClass = targetClass;
         this.sheetConfig = sheetConfig;
@@ -52,10 +52,10 @@ public class ExportInitializer<T> {
      */
     private void setup() {
         // 解析sheet
-        SheetAnalysis sheetAnalysis = new SheetAnalysis(targetClass, sheetConfig);
+        SheetAnalysis<T> sheetAnalysis = new SheetAnalysis<>(targetClass, sheetConfig);
         sheetAnalysis.analysis();
         // 解析列
-        SheetColumnAnalysis sheetColumnAnalysis = new SheetColumnAnalysis(targetClass, sheetConfig);
+        SheetColumnAnalysis<T> sheetColumnAnalysis = new SheetColumnAnalysis<>(targetClass, sheetConfig);
         sheetColumnAnalysis.analysis();
         // 初始化sheet
         if (sheet == null) {
@@ -97,7 +97,9 @@ public class ExportInitializer<T> {
         // 表头
         this.addDefaultHeader();
         // 打印
-        this.addPrintSetup();
+        this.setPrintOption();
+        // 属性
+        this.setPropertiesOption();
     }
 
     /**
@@ -265,9 +267,7 @@ public class ExportInitializer<T> {
         // 初始化表头数据
         Integer size = Sets.max(sheetConfig.fieldOptions.keySet());
         String[] header = new String[size + 1];
-        sheetConfig.fieldOptions.forEach((k, v) -> {
-            header[k] = v.getHeader();
-        });
+        sheetConfig.fieldOptions.forEach((k, v) -> header[k] = v.getHeader());
         if (Strings.isAllEmpty(header)) {
             return;
         }
@@ -303,14 +303,23 @@ public class ExportInitializer<T> {
     }
 
     /**
-     * 添加打印参数
+     * 设置打印参数
      */
-    private void addPrintSetup() {
+    private void setPrintOption() {
         PrintOption printOption = sheetConfig.sheetOption.getPrintOption();
-        if (printOption == null) {
-            return;
+        if (printOption != null) {
+            Excels.parsePrint(sheet, printOption);
         }
-        Excels.parsePrint(sheet, printOption);
+    }
+
+    /**
+     * 设置属性参数
+     */
+    private void setPropertiesOption() {
+        PropertiesOption propertiesOption = sheetConfig.sheetOption.getPropertiesOption();
+        if (propertiesOption != null) {
+            Excels.setProperties(workbook, propertiesOption);
+        }
     }
 
     /**

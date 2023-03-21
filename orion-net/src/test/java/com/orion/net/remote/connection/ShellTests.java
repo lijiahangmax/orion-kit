@@ -16,7 +16,7 @@ public class ShellTests {
         ConnectionStore store = new ConnectionStore("192.168.146.230")
                 .auth("root", "admin123");
         ShellExecutor e = store.getShellExecutor();
-        e.streamHandler(ReaderLineConsumer.getDefaultPrint());
+        e.streamHandler(ReaderLineConsumer.printer());
         e.exec();
         e.write("ps -ef | grep java\n");
         e.write("ps -ef | grep ssh\n");

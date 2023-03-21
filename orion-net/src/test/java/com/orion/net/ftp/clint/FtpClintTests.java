@@ -299,7 +299,7 @@ public class FtpClintTests {
                 .rateAcceptor(pr -> {
                     System.out.println(pr.getProgress() * 100 + "% " + pr.getNowRate() / 1024 + "kb/s");
                 })
-                .callback(pr -> {
+                .callback(() -> {
                     System.out.println("done");
                     System.exit(0);
                 });
@@ -319,7 +319,7 @@ public class FtpClintTests {
                 .rateAcceptor(pr -> {
                     System.out.println(pr.getProgress() * 100 + "% " + pr.getNowRate() / 1024 + "kb/s");
                 })
-                .callback(pr -> {
+                .callback(() -> {
                     System.out.println("done");
                     System.out.println(Files1.md5(local));
                     System.exit(1000);

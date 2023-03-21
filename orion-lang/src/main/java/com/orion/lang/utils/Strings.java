@@ -162,6 +162,34 @@ public class Strings {
     }
 
     /**
+     * 非空执行
+     *
+     * @param s        s
+     * @param acceptor acceptor
+     */
+    public static void ifNotBlank(String s, Consumer<String> acceptor) {
+        Valid.notNull(acceptor, "acceptor is null");
+        if (isBlank(s)) {
+            return;
+        }
+        acceptor.accept(s);
+    }
+
+    /**
+     * 非空执行
+     *
+     * @param s        s
+     * @param acceptor acceptor
+     */
+    public static void ifNotEmpty(String s, Consumer<String> acceptor) {
+        Valid.notNull(acceptor, "acceptor is null");
+        if (isEmpty(s)) {
+            return;
+        }
+        acceptor.accept(s);
+    }
+
+    /**
      * 检查是否为空
      *
      * @param str 待验证的字符串

@@ -1,7 +1,8 @@
 package com.orion.http.apache;
 
-import com.orion.http.useragent.StandardUserAgent;
+import com.orion.http.KitHttpConfiguration;
 import com.orion.lang.able.Buildable;
+import com.orion.lang.config.KitConfig;
 import com.orion.lang.constant.Const;
 import com.orion.lang.utils.collect.Lists;
 import org.apache.http.HttpHost;
@@ -124,7 +125,7 @@ public class ApacheClientBuilder implements Buildable<CloseableHttpClient> {
         this.connectTimeout = Const.MS_S_3;
         this.socketTimeout = Const.MS_S_15;
         this.requestTimeout = Const.MS_S_15;
-        this.userAgent = StandardUserAgent.CHROME_3;
+        this.userAgent = KitConfig.get(KitHttpConfiguration.CONFIG.HTTP_DEFAULT_USERAGENT);
         this.maxRoute = 12;
         this.maxRequest = 64;
         this.connTimeToLive = -1;

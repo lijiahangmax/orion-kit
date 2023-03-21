@@ -1,6 +1,7 @@
 package com.orion.ext.location.ext.core;
 
-import com.orion.ext.location.region.core.Region;
+import com.orion.ext.location.LocationConst;
+import com.orion.ext.location.Region;
 import com.orion.lang.constant.Const;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
@@ -51,8 +52,11 @@ public class LocationSeeker {
     private long ipBegin, ipEnd;
 
     private IpLocation loc;
+
     private byte[] buf;
+
     private byte[] b4;
+
     private byte[] b3;
 
     public LocationSeeker(String file) {
@@ -64,37 +68,37 @@ public class LocationSeeker {
     }
 
     public LocationSeeker(RandomAccessFile accessFile) {
-        ipCache = new HashMap<>();
-        loc = new LocationSeeker.IpLocation();
-        buf = new byte[100];
-        b4 = new byte[4];
-        b3 = new byte[3];
-        ipFile = accessFile;
+        this.ipCache = new HashMap<>();
+        this.loc = new IpLocation();
+        this.buf = new byte[100];
+        this.b4 = new byte[4];
+        this.b3 = new byte[3];
+        this.ipFile = accessFile;
         if (ipFile != null) {
             // 读取文件头信息
             try {
-                ipBegin = readLong4(0);
-                ipEnd = readLong4(4);
+                this.ipBegin = readLong4(0);
+                this.ipEnd = readLong4(4);
                 if (ipBegin == -1 || ipEnd == -1) {
                     ipFile.close();
-                    ipFile = null;
+                    this.ipFile = null;
                 }
             } catch (IOException e) {
-                ipFile = null;
+                this.ipFile = null;
             }
         }
     }
 
     /**
-     * 给定一个地点的不完全名字, 得到一系列包含s子串的IP范围记录
+     * 给定一个地点的不完全名字 得到一系列包含s子串的ip范围记录
      *
      * @param s 地点子串
-     * @return 包含IpEntry类型的List
+     * @return list
      */
     public List<IpEntry> getIPEntries(String s) {
         List<IpEntry> ret = new ArrayList<>();
         try {
-            // 映射IP信息文件到内存中
+            // 映射ip信息文件到内存中
             if (mbb == null) {
                 FileChannel fc = ipFile.getChannel();
                 mbb = fc.map(FileChannel.MapMode.READ_ONLY, 0, ipFile.length());
@@ -129,10 +133,10 @@ public class LocationSeeker {
     }
 
     /**
-     * 给定一个地点的不完全名字, 得到一系列包含s子串的IP范围记录
+     * 给定一个地点的不完全名字 得到一系列包含s子串的ip范围记录
      *
      * @param s 地点子串
-     * @return 包含IpEntry类型的List
+     * @return list
      */
     public List<IpEntry> getIPEntries1(String s) {
         List<IpEntry> ret = new ArrayList<>();
@@ -142,7 +146,7 @@ public class LocationSeeker {
             long temp = readLong3(offset);
             // 如果temp不等于-1, 读取IP的地点信息
             if (temp != -1) {
-                IpLocation loc = getIpLocation(temp);
+                IpLocation loc = this.getIpLocation(temp);
                 // 判断是否这个地点里面包含了s子串, 如果包含了, 添加这个记录到List中, 如果没有, 继续
                 if (loc.country.indexOf(s) != -1 || loc.area.indexOf(s) != -1) {
                     IpEntry entry = new IpEntry();
@@ -163,78 +167,76 @@ public class LocationSeeker {
     }
 
     /**
-     * 根据IP得到国家
+     * 根据 ip 得到国家
+     *
+     * @param ip ip
+     * @return 国家
+     */
+    public String getCountry(String ip) {
+        return this.getCountry(SeekerSupport.getIpByteArrayFromString(ip));
+    }
+
+    /**
+     * 根据 ip 得到国家
      *
      * @param ip ip
      * @return 国家
      */
     public String getCountry(byte[] ip) {
-        // 保存ip, 转换ip字节数组为字符串形式
+        // 保存ip 转换ip字节数组为字符串形式
         String ipStr = SeekerSupport.getIpStringFromBytes(ip);
-        // 先检查cache中是否已经包含有这个ip的结果, 没有再搜索文件
+        // 先检查缓存中是否已经包含有这个ip的结果 没有再搜索文件
         if (ipCache.containsKey(ipStr)) {
             return ipCache.get(ipStr).country;
         } else {
-            IpLocation loc = getIpLocation(ip);
+            IpLocation loc = this.getIpLocation(ip);
             ipCache.put(ipStr, loc.copy());
             return loc.country;
         }
     }
 
     /**
-     * 根据IP得到国家
+     * 根据 ip 得到地区
      *
      * @param ip ip
-     * @return 国家
+     * @return 地区
      */
-    public String getCountry(String ip) {
-        return getCountry(SeekerSupport.getIpByteArrayFromString(ip));
+    public String getArea(String ip) {
+        return this.getArea(SeekerSupport.getIpByteArrayFromString(ip));
     }
 
     /**
-     * 根据IP得到地区
+     * 根据 ip 得到地区
      *
      * @param ip ip
      * @return 地区
      */
     public String getArea(byte[] ip) {
-        // 保存ip, 转换ip字节数组为字符串形式
+        // 保存ip 转换ip字节数组为字符串形式
         String ipStr = SeekerSupport.getIpStringFromBytes(ip);
-        // 先检查cache中是否已经包含有这个ip的结果, 没有再搜索文件
+        // 先检查缓存中是否已经包含有这个ip的结果 没有再搜索文件
         if (ipCache.containsKey(ipStr)) {
             return ipCache.get(ipStr).area;
         } else {
-            IpLocation loc = getIpLocation(ip);
+            IpLocation loc = this.getIpLocation(ip);
             ipCache.put(ipStr, loc.copy());
             return loc.area;
         }
     }
 
     /**
-     * 根据IP得到地区
-     *
-     * @param ip ip
-     * @return 地区
-     */
-    public String getArea(String ip) {
-        return getArea(SeekerSupport.getIpByteArrayFromString(ip));
-    }
-
-    /**
-     * 获取ip的地址
+     * 获取 ip 的地址
      *
      * @param ip ip
      * @return 国家 地区
      */
     public String getAddress(String ip) {
-        String country = " CZ88.NET".equals(getCountry(ip)) ? Strings.EMPTY : getCountry(ip);
-        String area = " CZ88.NET".equals(getArea(ip)) ? Strings.EMPTY : getArea(ip);
-        String address = country + Strings.SPACE + area;
+        String address = this.getCountry(ip) + Strings.SPACE + this.getArea(ip);
         return address.trim();
     }
 
     /**
-     * 获取全部ip地址集合列表
+     * 获取全部 ip 地址集合列表
      *
      * @return ignore
      */
@@ -254,37 +256,39 @@ public class LocationSeeker {
     }
 
     /**
-     * 根据ip搜索ip信息文件, 得到IpLocation结构, 所搜索的ip参数从类成员ip中得到
+     * 根据 ip 搜索 ip 信息文件
      *
-     * @param ip 要查询的IP
-     * @return IpLocation结构
+     * @param ip ip
+     * @return IpLocation
      */
     public IpLocation getIpLocation(String ip) {
-        return getIpLocation(SeekerSupport.getIpByteArrayFromString(ip));
+        return this.getIpLocation(SeekerSupport.getIpByteArrayFromString(ip));
     }
 
     /**
-     * 根据ip搜索ip信息文件, 得到IpLocation结构, 所搜索的ip参数从类成员ip中得到
+     * 根据 ip 搜索 ip 信息文件
+     * 所搜索的 ip 参数从类成员 ip 中得到
      *
-     * @param ip 要查询的IP
-     * @return IpLocation结构
+     * @param ip ip
+     * @return IpLocation
      */
     public IpLocation getIpLocation(byte[] ip) {
         IpLocation info = null;
         long offset = locateIP(ip);
         if (offset != -1) {
-            info = getIpLocation(offset);
+            info = this.getIpLocation(offset);
         }
         if (info == null) {
             info = new IpLocation();
-            info.country = "未知";
-            info.area = "未知";
+            info.country = LocationConst.UNKNOWN;
+            info.area = LocationConst.UNKNOWN;
         }
         return info;
     }
 
     /**
-     * 解析ip地址, 返回该ip地址对应的国家省份信息
+     * 解析 ip 地址
+     * 返回该 ip 地址对应的国家省份信息
      *
      * @param ip ipv4
      * @return ignore
@@ -389,7 +393,7 @@ public class LocationSeeker {
     // private
 
     /**
-     * 从内存映射文件的offset位置开始的3个字节读取一个int
+     * 从内存映射文件的 offset 位置开始的3个字节读取一个 int
      */
     private int readInt3(int offset) {
         mbb.position(offset);
@@ -397,16 +401,17 @@ public class LocationSeeker {
     }
 
     /**
-     * 从内存映射文件的当前位置开始的3个字节读取一个int
+     * 从内存映射文件的当前位置开始的3个字节读取一个 int
      */
     private int readInt3() {
         return mbb.getInt() & 0x00FFFFFF;
     }
 
     /**
-     * 从offset位置读取4个字节为一个long, 因为java为big-endian格式, 所以没办法 用了这么一个函数来做转换
+     * 从 offset 位置读取4个字节为一个 long
+     * 因为 java 为 big-endian 格式  所以没办法 用了这么一个函数来做转换
      *
-     * @return 读取的long值, 返回-1表示读取文件失败
+     * @return 读取的 long 值 返回-1 表示读取文件失败
      */
     private long readLong4(long offset) {
         long ret = 0;
@@ -423,7 +428,7 @@ public class LocationSeeker {
     }
 
     /**
-     * 从offset位置读取3个字节为一个long
+     * 从 offset 位置读取3个字节为一个 long
      *
      * @return ong
      */
@@ -442,7 +447,7 @@ public class LocationSeeker {
     }
 
     /**
-     * 从当前位置读取3个字节转换成long
+     * 从当前位置读取3个字节转换成 long
      *
      * @return long
      */
@@ -460,7 +465,7 @@ public class LocationSeeker {
     }
 
     /**
-     * 从offset位置读取四个字节的ip地址放入ip数组中
+     * 从offset 位置读取四个字节的 ip 地址放入 ip 数组中
      */
     private void readIP(long offset, byte[] ip) {
         try {
@@ -478,7 +483,7 @@ public class LocationSeeker {
     }
 
     /**
-     * 从offset位置读取四个字节的ip地址放入ip数组中
+     * 从 offset 位置读取四个字节的 ip 地址放入 ip 数组中
      */
     private void readIP(int offset, byte[] ip) {
         mbb.position(offset);
@@ -492,11 +497,11 @@ public class LocationSeeker {
     }
 
     /**
-     * 把类成员ip和beginIp比较
+     * 把类成员 ip 和 beginIp 比较
      *
      * @param ip      要查询的IP
      * @param beginIp 和被查询IP相比较的IP
-     * @return 相等返回0, ip大于beginIp则返回1, 小于返回-1
+     * @return 相等返回0, ip > beginIp 则返回1 小于返回-1
      */
     private int compareIP(byte[] ip, byte[] beginIp) {
         for (int i = 0; i < 4; i++) {
@@ -509,9 +514,9 @@ public class LocationSeeker {
     }
 
     /**
-     * 把两个byte当作无符号数进行比较
+     * 把两个 byte 当作无符号数进行比较
      *
-     * @return 若b1大于b2则返回1, 相等返回0, 小于返回-1
+     * @return 若 b1 大于 b2 则返回1 相等返回0 小于返回-1
      */
     private int compareByte(byte b1, byte b2) {
         // 比较是否大于
@@ -526,10 +531,10 @@ public class LocationSeeker {
     }
 
     /**
-     * 这个方法将根据ip的内容, 定位到包含这个ip国家地区的记录处, 返回一个绝对偏移 方法使用二分法查找
+     * 这个方法将根据 ip 的内容, 定位到包含这个ip国家地区的记录处 返回一个绝对偏移 方法使用二分法查找
      *
-     * @param ip 要查询的IP
-     * @return 结束IP的偏移, 没找到返回-1
+     * @param ip 要查询的 IP
+     * @return 结束 IP 的偏移 没找到返回-1
      */
     private long locateIP(byte[] ip) {
         long m = 0;
@@ -573,7 +578,7 @@ public class LocationSeeker {
     }
 
     /**
-     * 得到begin偏移和end偏移中间位置记录的偏移
+     * 得到 begin 偏移和 end 偏移中间位置记录的偏移
      */
     private long getMiddleOffset(long begin, long end) {
         long records = (end - begin) / IP_RECORD_LENGTH;
@@ -585,7 +590,7 @@ public class LocationSeeker {
     }
 
     /**
-     * 给定一个ip国家地区记录的偏移, 返回一个IpLocation结构
+     * 给定一个 ip 国家地区记录的偏移 返回一个 IpLocation 结构
      */
     private IpLocation getIpLocation(long offset) {
         try {
@@ -623,7 +628,7 @@ public class LocationSeeker {
     }
 
     /**
-     * 给定一个ip国家地区记录的偏移, 返回一个IpLocation结构
+     * 给定一个 ip 国家地区记录的偏移 返回一个 IpLocation 结构
      */
     private IpLocation getIpLocation(int offset) {
         // 跳过4字节ip
@@ -632,31 +637,31 @@ public class LocationSeeker {
         byte b = mbb.get();
         if (b == AREA_FOLLOWED) {
             // 读取国家偏移
-            int countryOffset = readInt3();
+            int countryOffset = this.readInt3();
             // 跳转至偏移处
             mbb.position(countryOffset);
-            // 再检查一次标志字节, 因为这个时候这个地方仍然可能是个重定向
+            // 再检查一次标志字节 因为这个时候这个地方仍然可能是个重定向
             b = mbb.get();
             if (b == NO_AREA) {
-                loc.country = readString(readInt3());
+                loc.country = this.readString(readInt3());
                 mbb.position(countryOffset + 4);
             } else {
-                loc.country = readString(countryOffset);
+                loc.country = this.readString(countryOffset);
             }
             // 读取地区标志
-            loc.area = readArea(mbb.position());
+            loc.area = this.readArea(mbb.position());
         } else if (b == NO_AREA) {
-            loc.country = readString(readInt3());
-            loc.area = readArea(offset + 8);
+            loc.country = this.readString(readInt3());
+            loc.area = this.readArea(offset + 8);
         } else {
-            loc.country = readString(mbb.position() - 1);
-            loc.area = readArea(mbb.position());
+            loc.country = this.readString(mbb.position() - 1);
+            loc.area = this.readArea(mbb.position());
         }
         return loc;
     }
 
     /**
-     * 从offset偏移开始解析后面的字节, 读出一个地区名
+     * 从 offset 偏移开始解析后面的字节 读出一个地区名
      *
      * @return 地区名字符串
      */
@@ -666,17 +671,17 @@ public class LocationSeeker {
         if (b == 0x01 || b == 0x02) {
             long areaOffset = readLong3(offset + 1);
             if (areaOffset == 0) {
-                return "未知";
+                return LocationConst.UNKNOWN;
             } else {
-                return readString(areaOffset);
+                return this.readString(areaOffset);
             }
         } else {
-            return readString(offset);
+            return this.readString(offset);
         }
     }
 
     /**
-     * 从offset偏移开始解析后面的字节, 读出一个地区名
+     * 从 offset 偏移开始解析后面的字节 读出一个地区名
      *
      * @return 地区名字符串
      */
@@ -684,19 +689,19 @@ public class LocationSeeker {
         mbb.position(offset);
         byte b = mbb.get();
         if (b == 0x01 || b == 0x02) {
-            int areaOffset = readInt3();
+            int areaOffset = this.readInt3();
             if (areaOffset == 0) {
-                return "未知";
+                return LocationConst.UNKNOWN;
             } else {
-                return readString(areaOffset);
+                return this.readString(areaOffset);
             }
         } else {
-            return readString(offset);
+            return this.readString(offset);
         }
     }
 
     /**
-     * 从offset偏移处读取一个以0结束的字符串
+     * 从 offset 偏移处读取一个以 0 结束的字符串
      *
      * @return 读取的字符串
      */
@@ -716,7 +721,7 @@ public class LocationSeeker {
     }
 
     /**
-     * 从内存映射文件的offset位置得到一个0结尾字符串
+     * 从内存映射文件的 offset 位置得到一个 0 结尾字符串
      */
     private String readString(int offset) {
         try {
@@ -734,31 +739,7 @@ public class LocationSeeker {
     }
 
     /**
-     * ip所在的国家和地区
-     */
-    public class IpLocation {
-        private String country;
-        private String area;
-
-        private IpLocation() {
-            country = area = Strings.EMPTY;
-        }
-
-        private IpLocation copy() {
-            IpLocation ret = new IpLocation();
-            ret.country = country;
-            ret.area = area;
-            return ret;
-        }
-
-        @Override
-        public String toString() {
-            return country + Strings.SPACE + area;
-        }
-    }
-
-    /**
-     * IP的范围 国家, 区域, 起始IP, 结束IP
+     * IP的范围 国家 区域 起始IP 结束IP
      */
     public static class IpEntry {
 

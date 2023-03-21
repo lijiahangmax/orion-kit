@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * 表情工具类 见: https://github.com/vdurmont/emoji-java/blob/master/EMOJIS.md
+ * 表情工具类 https://github.com/vdurmont/emoji-java/blob/master/EMOJIS.md
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -18,7 +18,7 @@ import java.util.Set;
 public class EmojiExt {
 
     /**
-     * 判断是否是表情的Unicode符
+     * 判断是否是表情的 unicode 符
      *
      * @param str s
      * @return true 是
@@ -47,7 +47,7 @@ public class EmojiExt {
     }
 
     /**
-     * 通过 Unicode 获取表情
+     * 通过 unicode 获取表情
      *
      * @param unicode 字符
      * @return 表情
@@ -57,7 +57,7 @@ public class EmojiExt {
     }
 
     /**
-     * 通过别名获取Emoji
+     * 通过别名获取 emoji
      *
      * @param alias 别名 dog...
      * @return 表情, 如果找不到返回null
@@ -113,7 +113,7 @@ public class EmojiExt {
     }
 
     /**
-     * 将字符串中的 Unicode 表情转换为别名表现形式 用 ":" 拼接到首尾
+     * 将字符串中的 unicode 表情转换为别名表现形式 用 ":" 拼接到首尾
      * e.g. 😄 -> :smile:
      * <p>
      * 如果有FitzpatrickAction设置为FitzpatrickAction#PARSE 则别名后会拼接 "|" 并拼接fitzpatrick类型
@@ -144,7 +144,7 @@ public class EmojiExt {
     }
 
     /**
-     * 转义 Unicode 为 HTML 16进制
+     * 转义 unicode 为 html 16进制
      * e.g. 👦🏿 -> &amp;#x1f466;
      *
      * @param str 包含表情的字符串
@@ -155,7 +155,7 @@ public class EmojiExt {
     }
 
     /**
-     * 转义 Unicode 为 HTML 16进制
+     * 转义 unicode 为 html 16进制
      *
      * @param str    包含表情的字符串
      * @param action 类型
@@ -166,7 +166,7 @@ public class EmojiExt {
     }
 
     /**
-     * 转义 Unicode 为 HTML 10进制
+     * 转义 unicode 为 html 10进制
      * e.g. 👦🏿 -> &amp;#128102;
      *
      * @param str 包含表情的字符串
@@ -177,7 +177,7 @@ public class EmojiExt {
     }
 
     /**
-     * 转义 Unicode 为 HTML 10进制
+     * 转义 unicode 为 html 10进制
      *
      * @param str    包含表情的字符串
      * @param action 类型
@@ -188,7 +188,7 @@ public class EmojiExt {
     }
 
     /**
-     * 去除字符串中所有的表情 Unicode 字符
+     * 去除字符串中所有的表情 unicode 字符
      *
      * @param str 去除替换的字符串
      * @return 去除后的字符串
@@ -198,7 +198,7 @@ public class EmojiExt {
     }
 
     /**
-     * 去除字符串中的表情 Unicode 字符, 跳过包含的表情
+     * 去除字符串中的表情 unicode 字符, 跳过包含的表情
      *
      * @param str  需要去除的字符串
      * @param skip 需要跳过的表情
@@ -209,7 +209,7 @@ public class EmojiExt {
     }
 
     /**
-     * 去除字符串中的表情 Unicode 字符
+     * 去除字符串中的表情 unicode 字符
      *
      * @param str    需要去除的字符串
      * @param remove 需要去除的表情
@@ -220,7 +220,7 @@ public class EmojiExt {
     }
 
     /**
-     * 提取字符串中所有的表情 Unicode
+     * 提取字符串中所有的表情 unicode
      *
      * @param str 包含表情的字符串
      * @return 表情列表

@@ -26,6 +26,7 @@ public class StandardUserAgent {
     public static final String CHROME_1 = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36";
     public static final String CHROME_2 = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11";
     public static final String CHROME_3 = "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.133 Safari/534.16";
+    public static final String CHROME_4 = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36";
     public static final String IE_6 = " Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)";
     public static final String IE_7 = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)";
     public static final String IE_8 = "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0; Trident/4.0)";
@@ -47,26 +48,26 @@ public class StandardUserAgent {
 
     public static final String[] PC = {OPERA_1, OPERA_2, OPERA_3,
             FIREFOX_1, FIREFOX_2, SAFARI_1, SAFARI_2,
-            CHROME_1, CHROME_2, CHROME_3,
+            CHROME_1, CHROME_2, CHROME_3, CHROME_4,
             IE_6, IE_7, IE_8, IE_9, IE_10};
 
     public static final String[] PC_NO_IE = {OPERA_1, OPERA_2, OPERA_3,
             FIREFOX_1, FIREFOX_2, SAFARI_1, SAFARI_2,
-            CHROME_1, CHROME_2, CHROME_3};
+            CHROME_1, CHROME_2, CHROME_3, CHROME_4};
 
     public static final String[] MOBILE = {IPHONE_1, IPHONE_2, IPAD_1, IPAD_2,
             ANDROID_1, ANDROID_2, ANDROID_3, ANDROID_4};
 
     public static final String[] ALL = {OPERA_1, OPERA_2, OPERA_3,
             FIREFOX_1, FIREFOX_2, SAFARI_1, SAFARI_2,
-            CHROME_1, CHROME_2, CHROME_3,
+            CHROME_1, CHROME_2, CHROME_3, CHROME_4,
             IE_6, IE_7, IE_8, IE_9, IE_10,
             IPHONE_1, IPHONE_2, IPAD_1, IPAD_2,
             ANDROID_1, ANDROID_2, ANDROID_3, ANDROID_4};
 
     public static final String[] ALL_NO_IE = {OPERA_1, OPERA_2, OPERA_3,
             FIREFOX_1, FIREFOX_2, SAFARI_1, SAFARI_2,
-            CHROME_1, CHROME_2, CHROME_3,
+            CHROME_1, CHROME_2, CHROME_3, CHROME_4,
             IPHONE_1, IPHONE_2, IPAD_1, IPAD_2,
             ANDROID_1, ANDROID_2, ANDROID_3, ANDROID_4};
 

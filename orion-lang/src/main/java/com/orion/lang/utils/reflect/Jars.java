@@ -28,7 +28,7 @@ public class Jars {
     }
 
     /**
-     * 获取target目录URL
+     * 获取 target 目录 URL
      *
      * @return targetUrl / thisJar
      */
@@ -41,7 +41,7 @@ public class Jars {
     }
 
     /**
-     * 获取当前jar文件, 如果不是jar环境返回null
+     * 获取当前jar文件, 如果不是jar环境返回 null
      *
      * @return 当前 jarFile
      */

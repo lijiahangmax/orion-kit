@@ -1,5 +1,8 @@
 package com.orion.lang.utils;
 
+import com.orion.lang.KitLangConfiguration;
+import com.orion.lang.config.KitConfig;
+
 import java.util.regex.Pattern;
 
 /**
@@ -11,11 +14,11 @@ import java.util.regex.Pattern;
  */
 public class Xsses {
 
-    private static final Pattern SCRIPT_PATTERN = Pattern.compile("<[\\s]*?script[^>]*?>[\\s\\S]*?<[\\s]*?\\/[\\s]*?script[\\s]*?>", Pattern.CASE_INSENSITIVE);
+    private static final Pattern SCRIPT_PATTERN = KitConfig.get(KitLangConfiguration.CONFIG.XSS_SCRIPT_PATTERN);
 
-    private static final Pattern STYLE_PATTERN = Pattern.compile("<[\\s]*?style[^>]*?>[\\s\\S]*?<[\\s]*?\\/[\\s]*?style[\\s]*?>", Pattern.CASE_INSENSITIVE);
+    private static final Pattern STYLE_PATTERN = KitConfig.get(KitLangConfiguration.CONFIG.XSS_STYLE_PATTERN);
 
-    private static final Pattern HTML_TAG_PATTERN = Pattern.compile("<[^>]+>", Pattern.CASE_INSENSITIVE);
+    private static final Pattern HTML_TAG_PATTERN = KitConfig.get(KitLangConfiguration.CONFIG.XSS_HTML_TAG_PATTERN);
 
     private Xsses() {
     }
@@ -30,12 +33,18 @@ public class Xsses {
         if (Strings.isBlank(s)) {
             return s;
         }
-        // 过滤script标签
-        s = SCRIPT_PATTERN.matcher(s).replaceAll(Strings.EMPTY);
-        // 过滤style标签
-        s = STYLE_PATTERN.matcher(s).replaceAll(Strings.EMPTY);
-        // 过滤html标签
-        // s = HTML_TAG_PATTERN.matcher(s).replaceAll(Strings.EMPTY);
+        // 过滤 script 标签
+        if (SCRIPT_PATTERN != null) {
+            s = SCRIPT_PATTERN.matcher(s).replaceAll(Strings.EMPTY);
+        }
+        // 过滤 style 标签
+        if (STYLE_PATTERN != null) {
+            s = STYLE_PATTERN.matcher(s).replaceAll(Strings.EMPTY);
+        }
+        // 过滤 html 标签
+        if (HTML_TAG_PATTERN != null) {
+            s = HTML_TAG_PATTERN.matcher(s).replaceAll(Strings.EMPTY);
+        }
 
         // 过滤特殊字符
         s = s.replaceAll("&", "&amp;");

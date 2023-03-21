@@ -20,8 +20,8 @@ public class ShellExecutorTests {
                 .timeout(20000)
                 .connect(20000)
                 .getShellExecutor();
-        e.streamHandler(ReaderLineConsumer.getDefaultPrint());
-        e.callback(exe -> System.out.println("end...."));
+        e.streamHandler(ReaderLineConsumer.printer());
+        e.callback(() -> System.out.println("end...."));
         e.connect(20000);
         e.exec();
         e.write("ps -ef | grep java\n");

@@ -138,6 +138,11 @@ public class ExportSheetOption implements Serializable {
     private PrintOption printOption;
 
     /**
+     * 属性
+     */
+    private PropertiesOption propertiesOption;
+
+    /**
      * 标题和表头所占用的行数
      */
     private int titleAndHeaderLastRowIndex;
@@ -358,6 +363,14 @@ public class ExportSheetOption implements Serializable {
 
     public void setPrintOption(PrintOption printOption) {
         this.printOption = printOption;
+    }
+
+    public PropertiesOption getPropertiesOption() {
+        return propertiesOption;
+    }
+
+    public void setPropertiesOption(PropertiesOption propertiesOption) {
+        this.propertiesOption = propertiesOption;
     }
 
     public int getTitleAndHeaderLastRowIndex() {

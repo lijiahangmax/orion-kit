@@ -1,7 +1,9 @@
 package com.orion.lang.define.wrapper;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.orion.lang.KitLangConfiguration;
 import com.orion.lang.able.IJsonObject;
+import com.orion.lang.config.KitConfig;
 import com.orion.lang.define.iterator.EmptyIterator;
 import com.orion.lang.define.support.CloneSupport;
 import com.orion.lang.utils.collect.Lists;
@@ -24,6 +26,8 @@ import java.util.stream.Stream;
 public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializable, IJsonObject, Iterable<T> {
 
     private static final long serialVersionUID = 3787662930250625L;
+
+    private static final int DEFAULT_LIMIT = KitConfig.get(KitLangConfiguration.CONFIG.DATA_GRID_DEFAULT_LIMIT);
 
     /**
      * 页码
@@ -70,7 +74,7 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
 
     public DataGrid(List<T> rows, int total) {
         this.page = 1;
-        this.limit = 10;
+        this.limit = DEFAULT_LIMIT;
         this.rows = rows;
         this.size = Lists.size(this.rows);
         this.total = total;

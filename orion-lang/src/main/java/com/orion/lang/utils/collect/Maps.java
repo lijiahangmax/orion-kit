@@ -552,4 +552,16 @@ public class Maps {
         m.forEach(action);
     }
 
+    /**
+     * map 分片
+     *
+     * @param map  map
+     * @param size size
+     * @param <E>  E
+     * @return partition map
+     */
+    public static <K, V> Set<Map<K, V>> partition(Map<K, V> map, int size) {
+        return new PartitionMap<>(map, size);
+    }
+
 }

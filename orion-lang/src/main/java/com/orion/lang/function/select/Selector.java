@@ -18,7 +18,7 @@ public class Selector<P, R> {
     /**
      * 参数
      */
-    private P param;
+    private final P param;
 
     /**
      * 是否命中

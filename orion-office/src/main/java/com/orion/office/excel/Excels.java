@@ -3,6 +3,7 @@ package com.orion.office.excel;
 import com.monitorjbl.xlsx.StreamingReader;
 import com.monitorjbl.xlsx.impl.StreamingSheet;
 import com.monitorjbl.xlsx.impl.StreamingWorkbook;
+import com.orion.lang.config.KitConfig;
 import com.orion.lang.constant.Const;
 import com.orion.lang.utils.*;
 import com.orion.lang.utils.convert.Converts;
@@ -12,6 +13,7 @@ import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
 import com.orion.lang.utils.math.BigDecimals;
 import com.orion.lang.utils.time.Dates;
+import com.orion.office.KitOfficeConfiguration;
 import com.orion.office.excel.copy.SheetCopier;
 import com.orion.office.excel.option.*;
 import com.orion.office.excel.picture.PictureParser;
@@ -65,6 +67,12 @@ public class Excels {
     private static final int BUFFER_LINE = Const.N_100;
 
     private static final int BUFFER_SIZE = Const.BUFFER_KB_8;
+
+    private static final String POI_DEFAULT_AUTHOR = "Apache POI";
+
+    private static final String KIT_DEFAULT_AUTHOR = KitConfig.get(KitOfficeConfiguration.CONFIG.EXCEL_DEFAULT_AUTHOR);
+
+    private static final String KIT_DEFAULT_APPLICATION = KitConfig.get(KitOfficeConfiguration.CONFIG.EXCEL_DEFAULT_APPLICATION);
 
     /**
      * 获取列对应的数值
@@ -740,6 +748,16 @@ public class Excels {
     }
 
     /**
+     * 获取颜色
+     *
+     * @param rgb rgb
+     * @return xssf color
+     */
+    public static XSSFColor getColor(String rgb) {
+        return new XSSFColor(Colors.toRgb(rgb), null);
+    }
+
+    /**
      * 调色板 主要用与 HSSFColor
      *
      * @param index index
@@ -1014,43 +1032,68 @@ public class Excels {
             }
             SummaryInformation i = ((HSSFWorkbook) workbook).getSummaryInformation();
             DocumentSummaryInformation di = ((HSSFWorkbook) workbook).getDocumentSummaryInformation();
-            Optional.ofNullable(option.getAuthor()).ifPresent(i::setAuthor);
-            Optional.ofNullable(option.getTitle()).ifPresent(i::setTitle);
-            Optional.ofNullable(option.getSubject()).ifPresent(i::setSubject);
-            Optional.ofNullable(option.getKeywords()).ifPresent(i::setKeywords);
+            Strings.ifNotBlank(option.getAuthor(), i::setAuthor);
+            Strings.ifNotBlank(option.getTitle(), i::setTitle);
+            Strings.ifNotBlank(option.getSubject(), i::setSubject);
+            Strings.ifNotBlank(option.getKeywords(), i::setKeywords);
             // revision
-            Optional.ofNullable(option.getDescription()).ifPresent(i::setComments);
-            Optional.ofNullable(option.getCategory()).ifPresent(di::setCategory);
-            Optional.ofNullable(option.getModifiedUser()).ifPresent(i::setLastAuthor);
-            Optional.ofNullable(option.getContentType()).ifPresent(di::setContentType);
-            Optional.ofNullable(option.getContentStatus()).ifPresent(di::setContentStatus);
+            Strings.ifNotBlank(option.getDescription(), i::setComments);
+            Strings.ifNotBlank(option.getModifiedUser(), i::setLastAuthor);
+            Strings.ifNotBlank(option.getCategory(), di::setCategory);
+            Strings.ifNotBlank(option.getContentType(), di::setContentType);
+            Strings.ifNotBlank(option.getContentStatus(), di::setContentStatus);
             // identifier
-            Optional.ofNullable(option.getCreated()).ifPresent(i::setCreateDateTime);
-            Optional.ofNullable(option.getModified()).ifPresent(m -> i.setEditTime(m.getTime()));
-            Optional.ofNullable(option.getManager()).ifPresent(di::setManager);
-            Optional.ofNullable(option.getCompany()).ifPresent(di::setCompany);
-            Optional.ofNullable(option.getApplication()).ifPresent(i::setApplicationName);
+            Strings.ifNotBlank(option.getManager(), di::setManager);
+            Strings.ifNotBlank(option.getCompany(), di::setCompany);
+            Strings.ifNotBlank(option.getApplication(), i::setApplicationName);
+            Objects1.ifNotNull(option.getCreated(), i::setCreateDateTime);
+            Objects1.ifNotNull(option.getModified(), m -> i.setEditTime(m.getTime()));
         } else if (workbook instanceof XSSFWorkbook) {
             POIXMLProperties.CoreProperties p = ((XSSFWorkbook) workbook).getProperties().getCoreProperties();
             CTProperties cp = ((XSSFWorkbook) workbook).getProperties().getExtendedProperties().getUnderlyingProperties();
-            p.setCreator(option.getAuthor());
-            p.setTitle(option.getTitle());
-            p.setSubjectProperty(option.getSubject());
-            p.setKeywords(option.getKeywords());
-            p.setRevision(option.getRevision());
-            p.setDescription(option.getDescription());
-            p.setCategory(option.getCategory());
-            p.setLastModifiedByUser(option.getModifiedUser());
-            p.setContentType(option.getContentType());
-            p.setContentStatus(option.getContentStatus());
-            p.setIdentifier(option.getIdentifier());
-            p.setCreated(Optional.ofNullable(option.getCreated()));
-            p.setModified(Optional.ofNullable(option.getModified()));
-            cp.setManager(option.getManager());
-            cp.setCompany(option.getCompany());
-            cp.setApplication(option.getApplication());
+            Strings.ifNotBlank(option.getAuthor(), p::setCreator);
+            Strings.ifNotBlank(option.getTitle(), p::setTitle);
+            Strings.ifNotBlank(option.getSubject(), p::setSubjectProperty);
+            Strings.ifNotBlank(option.getKeywords(), p::setKeywords);
+            Strings.ifNotBlank(option.getRevision(), p::setRevision);
+            Strings.ifNotBlank(option.getCategory(), p::setCategory);
+            Strings.ifNotBlank(option.getModifiedUser(), p::setLastModifiedByUser);
+            Strings.ifNotBlank(option.getContentType(), p::setContentType);
+            Strings.ifNotBlank(option.getContentStatus(), p::setContentStatus);
+            Strings.ifNotBlank(option.getIdentifier(), p::setIdentifier);
+            Objects1.ifNotNull(option.getCreated(), c -> p.setCreated(Optional.of(c)));
+            Objects1.ifNotNull(option.getModified(), c -> p.setModified(Optional.of(c)));
+            Strings.ifNotBlank(option.getManager(), cp::setManager);
+            Strings.ifNotBlank(option.getCompany(), cp::setCompany);
+            Strings.ifNotBlank(option.getApplication(), cp::setApplication);
         } else if (workbook instanceof SXSSFWorkbook) {
             setProperties(((SXSSFWorkbook) workbook).getXSSFWorkbook(), option);
+        }
+    }
+
+    /**
+     * 设置默认配置属性
+     *
+     * @param workbook workbook
+     */
+    public static void setDefaultProperties(Workbook workbook) {
+        try {
+            // 设置默认属性
+            PropertiesOption properties = Excels.getProperties(workbook);
+            String author = properties.getAuthor();
+            String application = properties.getApplication();
+            // 默认作者
+            if (Strings.isBlank(author) || POI_DEFAULT_AUTHOR.equals(author)) {
+                properties.setAuthor(KIT_DEFAULT_AUTHOR);
+            }
+            // 默认应用
+            if (Strings.isBlank(application) || POI_DEFAULT_AUTHOR.equals(application)) {
+                properties.setApplication(KIT_DEFAULT_APPLICATION);
+            }
+            // 设置属性
+            Excels.setProperties(workbook, properties);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

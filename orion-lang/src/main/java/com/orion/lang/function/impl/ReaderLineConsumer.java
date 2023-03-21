@@ -1,11 +1,13 @@
 package com.orion.lang.function.impl;
 
 import com.orion.lang.constant.Const;
-import com.orion.lang.function.FunctionConst;
+import com.orion.lang.define.Console;
+import com.orion.lang.function.Functions;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Valid;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.function.Consumer;
@@ -18,8 +20,6 @@ import java.util.function.Consumer;
  * @since 2021/2/20 21:43
  */
 public class ReaderLineConsumer implements Consumer<InputStream> {
-
-    private static final ReaderLineConsumer DEFAULT_PRINT = new ReaderLineConsumer(FunctionConst.getPrintConsumer());
 
     /**
      * 编码格式
@@ -37,7 +37,7 @@ public class ReaderLineConsumer implements Consumer<InputStream> {
     private Consumer<String> lineConsumer;
 
     public ReaderLineConsumer() {
-        this(FunctionConst.getEmptyConsumer());
+        this(Functions.emptyConsumer());
     }
 
     public ReaderLineConsumer(Consumer<String> lineConsumer) {
@@ -69,13 +69,18 @@ public class ReaderLineConsumer implements Consumer<InputStream> {
         return this;
     }
 
+    public static ReaderLineConsumer printer() {
+        return printer(Const.UTF_8);
+    }
+
     /**
      * 获取实现打印的 ReaderLineConsumer
      *
+     * @param charset charset
      * @return ReaderLineConsumer
      */
-    public static ReaderLineConsumer getDefaultPrint() {
-        return DEFAULT_PRINT;
+    public static ReaderLineConsumer printer(String charset) {
+        return new ReaderLineConsumer(Console::trace).charset(charset);
     }
 
     @Override
@@ -85,6 +90,10 @@ public class ReaderLineConsumer implements Consumer<InputStream> {
             String line;
             while ((line = reader.readLine()) != null) {
                 lineConsumer.accept(line);
+            }
+        } catch (IOException e) {
+            if (!Const.STREAM_CLOSE.equals(e.getMessage())) {
+                throw Exceptions.ioRuntime(e);
             }
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);

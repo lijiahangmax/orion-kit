@@ -14,13 +14,13 @@ import com.orion.office.excel.option.*;
  * @version 1.0.0
  * @since 2020/12/29 17:49
  */
-public class SheetAnalysis implements Analysable {
+public class SheetAnalysis<T> implements Analysable {
 
-    private final Class<?> targetClass;
+    private final Class<T> targetClass;
 
-    private final SheetConfig sheetConfig;
+    private final SheetConfig<T> sheetConfig;
 
-    public SheetAnalysis(Class<?> targetClass, SheetConfig sheetConfig) {
+    public SheetAnalysis(Class<T> targetClass, SheetConfig<T> sheetConfig) {
         this.targetClass = targetClass;
         this.sheetConfig = sheetConfig;
     }
@@ -37,6 +37,8 @@ public class SheetAnalysis implements Analysable {
         this.analysisFooter();
         // 打印
         this.analysisPrint();
+        // 属性
+        this.analysisProperties();
     }
 
     /**
@@ -252,6 +254,36 @@ public class SheetAnalysis implements Analysable {
             printOption.setRepeat(repeat);
         }
         sheetConfig.sheetOption.setPrintOption(printOption);
+    }
+
+    /**
+     * 解析属性
+     *
+     * @see ExportMeta
+     */
+    private void analysisProperties() {
+        // 默认值
+        PropertiesOption propertiesOption = new PropertiesOption();
+        sheetConfig.sheetOption.setPropertiesOption(propertiesOption);
+        // 读取注解
+        ExportMeta meta = Annotations.getAnnotation(targetClass, ExportMeta.class);
+        if (meta == null) {
+            return;
+        }
+        Strings.ifNotBlank(meta.author(), propertiesOption::setAuthor);
+        Strings.ifNotBlank(meta.title(), propertiesOption::setTitle);
+        Strings.ifNotBlank(meta.subject(), propertiesOption::setSubject);
+        Strings.ifNotBlank(meta.keywords(), propertiesOption::setKeywords);
+        Strings.ifNotBlank(meta.revision(), propertiesOption::setRevision);
+        Strings.ifNotBlank(meta.description(), propertiesOption::setDescription);
+        Strings.ifNotBlank(meta.category(), propertiesOption::setCategory);
+        Strings.ifNotBlank(meta.company(), propertiesOption::setCompany);
+        Strings.ifNotBlank(meta.manager(), propertiesOption::setManager);
+        Strings.ifNotBlank(meta.application(), propertiesOption::setApplication);
+        Strings.ifNotBlank(meta.modifiedUser(), propertiesOption::setModifiedUser);
+        Strings.ifNotBlank(meta.contentStatus(), propertiesOption::setContentStatus);
+        Strings.ifNotBlank(meta.contentType(), propertiesOption::setContentType);
+        Strings.ifNotBlank(meta.identifier(), propertiesOption::setIdentifier);
     }
 
 }

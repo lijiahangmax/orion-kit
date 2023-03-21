@@ -13,6 +13,7 @@ import org.apache.poi.ss.usermodel.*;
 
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.util.Optional;
 
 /**
  * export 单元格处理器
@@ -27,9 +28,9 @@ public class ExportProcessor<T> {
 
     private final Sheet sheet;
 
-    private final SheetConfig sheetConfig;
+    private final SheetConfig<T> sheetConfig;
 
-    protected ExportProcessor(Workbook workbook, Sheet sheet, SheetConfig sheetConfig) {
+    protected ExportProcessor(Workbook workbook, Sheet sheet, SheetConfig<T> sheetConfig) {
         this.workbook = workbook;
         this.sheetConfig = sheetConfig;
         this.sheet = sheet;
@@ -44,7 +45,11 @@ public class ExportProcessor<T> {
      * @param row         row
      */
     protected void setCellValue(Cell cell, int rowIndex, int columnIndex, T row, ExportFieldOption option) {
-        CellStyle style = sheetConfig.columnStyles.get(columnIndex);
+        // 设置样式
+        CellStyle style = Optional.ofNullable(sheetConfig.columnStyleSelector.get(columnIndex))
+                .map(s -> s.apply(row))
+                .map(s -> s.orElse(null))
+                .orElse(sheetConfig.columnStyles.get(columnIndex));
         if (style != null) {
             cell.setCellStyle(style);
         }

@@ -136,6 +136,9 @@ public abstract class BaseSymmetric {
                 break;
             }
         }
+        if (f == bytes.length) {
+            return bytes;
+        }
         byte[] res = new byte[f];
         System.arraycopy(bytes, 0, res, 0, f);
         return res;

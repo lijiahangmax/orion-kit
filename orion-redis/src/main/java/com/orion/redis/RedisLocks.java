@@ -13,18 +13,15 @@ import redis.clients.jedis.Jedis;
  */
 public class RedisLocks {
 
-    private static Jedis redisTemplate;
-
-    private RedisLocks() {
-    }
+    private final Jedis jedis;
 
     /**
      * 默认锁过期时间
      */
     private static final long EXPIRED = Const.MS_S_5;
 
-    public static void setClient(Jedis redisTemplate) {
-        RedisLocks.redisTemplate = redisTemplate;
+    public RedisLocks(Jedis jedis) {
+        this.jedis = jedis;
     }
 
     /**
@@ -34,8 +31,8 @@ public class RedisLocks {
      * @param lock 锁名称
      * @return 锁的值 0没抢到锁
      */
-    public static long tryLock(String lock) {
-        return tryLock(lock, EXPIRED);
+    public long tryLock(String lock) {
+        return this.tryLock(lock, EXPIRED);
     }
 
     /**
@@ -45,16 +42,16 @@ public class RedisLocks {
      * @param expired 锁过期时间
      * @return 锁的值 0没抢到锁
      */
-    public static long tryLock(String lock, long expired) {
+    public long tryLock(String lock, long expired) {
         try {
             long lockValue = System.currentTimeMillis() + expired;
-            Long r = redisTemplate.setnx(lock, String.valueOf(lockValue));
+            Long r = jedis.setnx(lock, String.valueOf(lockValue));
             if (r == 1) {
                 return lockValue;
             } else {
-                long oldLockValue = Long.parseLong(redisTemplate.get(lock));
+                long oldLockValue = Long.parseLong(jedis.get(lock));
                 if (oldLockValue < System.currentTimeMillis()) {
-                    String getOldLockValue = redisTemplate.getSet(lock, String.valueOf(lockValue));
+                    String getOldLockValue = jedis.getSet(lock, String.valueOf(lockValue));
                     if (!Strings.isBlank(getOldLockValue) && Long.valueOf(getOldLockValue).equals(oldLockValue)) {
                         return lockValue;
                     } else {
@@ -76,13 +73,13 @@ public class RedisLocks {
      * @param lockName  锁名称
      * @param lockValue 锁的值
      */
-    public static void unLock(String lockName, Long lockValue) {
+    public void unLock(String lockName, Long lockValue) {
         try {
             // 先获取锁
-            String currentLockValue = redisTemplate.get(lockName);
+            String currentLockValue = jedis.get(lockName);
             if (!Strings.isBlank(currentLockValue) && lockValue.equals(Long.valueOf(currentLockValue))) {
                 // 删除key
-                redisTemplate.del(lockName);
+                jedis.del(lockName);
             }
         } catch (Exception e) {
             // ignore

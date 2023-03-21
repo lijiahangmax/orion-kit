@@ -47,7 +47,7 @@ public class ConsistentHash<T> {
         this.hashFun = hashFun;
         // 初始化节点
         for (T node : nodes) {
-            add(node);
+            this.add(node);
         }
     }
 

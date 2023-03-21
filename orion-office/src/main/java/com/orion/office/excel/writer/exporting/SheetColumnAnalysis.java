@@ -27,15 +27,15 @@ import java.util.TreeMap;
  * @version 1.0.0
  * @since 2020/12/29 18:05
  */
-public class SheetColumnAnalysis implements Analysable {
+public class SheetColumnAnalysis<T> implements Analysable {
 
-    private final Class<?> targetClass;
+    private final Class<T> targetClass;
 
-    private final SheetConfig sheetConfig;
+    private final SheetConfig<T> sheetConfig;
 
     private int columnMaxIndex;
 
-    protected SheetColumnAnalysis(Class<?> targetClass, SheetConfig sheetConfig) {
+    protected SheetColumnAnalysis(Class<T> targetClass, SheetConfig<T> sheetConfig) {
         this.targetClass = targetClass;
         this.sheetConfig = sheetConfig;
     }

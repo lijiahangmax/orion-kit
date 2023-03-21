@@ -37,7 +37,7 @@ public class JarClassLoader extends URLClassLoader {
     }
 
     /**
-     * 加载jar 到 classPath
+     * 加载 jar 到 classPath
      *
      * @param file file
      * @return JarClassLoader
@@ -49,7 +49,7 @@ public class JarClassLoader extends URLClassLoader {
     }
 
     /**
-     * 加载jar 到 SystemClassLoader
+     * 加载 jar 到 SystemClassLoader
      *
      * @param file file
      * @return SystemClassLoader
@@ -61,7 +61,7 @@ public class JarClassLoader extends URLClassLoader {
     }
 
     /**
-     * 加载jar 到 classLoader
+     * 加载 jar 到 classLoader
      *
      * @param loader 加载器
      * @param file   file
@@ -78,14 +78,14 @@ public class JarClassLoader extends URLClassLoader {
     }
 
     /**
-     * 加载 jar文件
+     * 加载 jar 文件
      *
      * @param file file
      * @return this
      */
     public JarClassLoader addJar(String file) {
         Valid.notBlank(file, "file path is empty");
-        return addJar(new File(file));
+        return this.addJar(new File(file));
     }
 
     /**

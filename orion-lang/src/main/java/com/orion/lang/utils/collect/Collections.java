@@ -4,6 +4,7 @@ import com.orion.lang.utils.Strings;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -16,7 +17,7 @@ import java.util.stream.Stream;
 @SuppressWarnings("ALL")
 public class Collections {
 
-    Collections() {
+    protected Collections() {
     }
 
     public static <E> Collection<E> newSynchronizedCollection(Collection<E> c) {
@@ -450,6 +451,22 @@ public class Collections {
                 return e;
             }
         }
+    }
+
+    /**
+     * 集合去重
+     *
+     * @param c         c
+     * @param keyGetter keyGetter
+     * @param <E>       E
+     * @return distinct collection
+     */
+    public static <E> Collection<E> distinct(Collection<E> c, Function<E, ?> keyGetter) {
+        Map<Object, E> map = new HashMap<>(16);
+        for (E e : c) {
+            map.put(keyGetter.apply(e), e);
+        }
+        return map.values();
     }
 
 }

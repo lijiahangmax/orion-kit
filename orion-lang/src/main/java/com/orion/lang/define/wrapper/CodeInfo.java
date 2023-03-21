@@ -27,4 +27,26 @@ public interface CodeInfo extends Serializable {
      */
     String message();
 
+    /**
+     * 转为 httpWrapper
+     *
+     * @param <T> T
+     * @return HttpWrapper
+     * @see HttpWrapper
+     */
+    default <T> HttpWrapper<T> toHttpWrapper() {
+        return HttpWrapper.of(this);
+    }
+
+    /**
+     * 转为 rpcWrapper
+     *
+     * @param <T> T
+     * @return RpcWrapper
+     * @see RpcWrapper
+     */
+    default <T> RpcWrapper<T> toRpcWrapper() {
+        return RpcWrapper.of(this);
+    }
+
 }

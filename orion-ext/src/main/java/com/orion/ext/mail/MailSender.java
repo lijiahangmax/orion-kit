@@ -34,7 +34,7 @@ public class MailSender implements ISendEvent<MailMessage> {
     }
 
     public MailSender(String serverHost, int serverPort) {
-        props = new Properties();
+        this.props = new Properties();
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.host", serverHost);
@@ -69,7 +69,7 @@ public class MailSender implements ISendEvent<MailMessage> {
     }
 
     /**
-     * 开启debug
+     * 开启 debug
      *
      * @return this
      */
@@ -95,7 +95,7 @@ public class MailSender implements ISendEvent<MailMessage> {
      */
     @Override
     public void send(MailMessage msg) {
-        Valid.notNull(authentication, "unauthorized");
+        Valid.notNull(authentication, "sender service unauthorized");
         // 会话
         Session session = Session.getDefaultInstance(props, new Authenticator() {
             @Override

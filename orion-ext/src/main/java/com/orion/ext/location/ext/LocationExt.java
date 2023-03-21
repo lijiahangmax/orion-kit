@@ -1,11 +1,13 @@
 package com.orion.ext.location.ext;
 
+import com.orion.ext.location.Region;
+import com.orion.ext.location.ext.core.IpLocation;
 import com.orion.ext.location.ext.core.LocationSeeker;
 import com.orion.ext.location.region.LocationRegions;
-import com.orion.ext.location.region.core.Region;
 import com.orion.lang.constant.Const;
 import com.orion.lang.define.builder.StringJoiner;
 import com.orion.lang.utils.Exceptions;
+import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.Systems;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.net.IPs;
@@ -39,7 +41,7 @@ public class LocationExt {
     /**
      * 查询器
      */
-    private static final LocationSeeker seeker;
+    private static final LocationSeeker SEEKER;
 
     // init
     static {
@@ -47,26 +49,26 @@ public class LocationExt {
         try {
             InputStream source = LocationRegions.class.getClassLoader().getResourceAsStream("region.dat");
             init = Files1.resourceToFile(source, new File(DAT_PATH), Const.GBK);
-            seeker = new LocationSeeker(DAT_PATH);
+            SEEKER = new LocationSeeker(DAT_PATH);
         } catch (IOException e) {
-            throw Exceptions.init("region ext 服务初始化异常", e);
+            throw Exceptions.init("region ext init error", e);
         }
         if (!init) {
-            throw Exceptions.init("region ext 服务初始化失败");
+            throw Exceptions.init("region ext init error");
         }
     }
 
     /**
-     * 获取seeker实例
+     * 获取 seeker 实例
      *
      * @return 实例
      */
     public static LocationSeeker getSeeker() {
-        return seeker;
+        return SEEKER;
     }
 
     /**
-     * 获取ip信息
+     * 获取国家
      *
      * @param ip ip
      * @return ignore
@@ -76,14 +78,14 @@ public class LocationExt {
             return null;
         }
         try {
-            return seeker.getCountry(ip);
+            return SEEKER.getCountry(ip);
         } catch (Exception e) {
-            return null;
+            throw Exceptions.runtime(Strings.format("country query error ip: {}", ip), e);
         }
     }
 
     /**
-     * 获取ip信息
+     * 获取地址
      *
      * @param ip ip
      * @return ignore
@@ -93,14 +95,14 @@ public class LocationExt {
             return null;
         }
         try {
-            return seeker.getAddress(ip);
+            return SEEKER.getAddress(ip);
         } catch (Exception e) {
-            return null;
+            throw Exceptions.runtime(Strings.format("address query error ip: {}", ip), e);
         }
     }
 
     /**
-     * 获取ip信息
+     * 获取地区
      *
      * @param ip ip
      * @return ignore
@@ -110,31 +112,31 @@ public class LocationExt {
             return null;
         }
         try {
-            return seeker.getArea(ip);
+            return SEEKER.getArea(ip);
         } catch (Exception e) {
-            return null;
+            throw Exceptions.runtime(Strings.format("area query error ip: {}", ip), e);
         }
     }
 
     /**
-     * 获取ip信息
+     * 获取地址
      *
      * @param ip ip
      * @return ignore
      */
-    public static LocationSeeker.IpLocation getIpLocation(String ip) {
+    public static IpLocation getIpLocation(String ip) {
         if (!IPs.isIpv4(ip)) {
             return null;
         }
         try {
-            return seeker.getIpLocation(ip);
+            return SEEKER.getIpLocation(ip);
         } catch (Exception e) {
-            return null;
+            throw Exceptions.runtime(Strings.format("location query error ip: {}", ip), e);
         }
     }
 
     /**
-     * 获取ip信息
+     * 获取位置
      *
      * @param ip ip
      * @return ignore
@@ -144,9 +146,9 @@ public class LocationExt {
             return null;
         }
         try {
-            return seeker.getRegion(ip);
+            return SEEKER.getRegion(ip);
         } catch (Exception e) {
-            return null;
+            throw Exceptions.runtime(Strings.format("region query error ip: {}", ip), e);
         }
     }
 

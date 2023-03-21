@@ -312,4 +312,28 @@ public class Sets extends Collections {
         }
     }
 
+    /**
+     * set 分片
+     *
+     * @param set  set
+     * @param size size
+     * @param <E>  E
+     * @return partition set
+     */
+    public static <E> Set<Set<E>> partition(Set<E> set, int size) {
+        return new PartitionSet<>(set, size);
+    }
+
+    /**
+     * 集合去重 -> set
+     *
+     * @param c         c
+     * @param keyGetter keyGetter
+     * @param <E>       E
+     * @return distinct set
+     */
+    public static <E> Set<E> distinct(Collection<E> c, Function<E, ?> keyGetter) {
+        return new HashSet<>(Collections.distinct(c, keyGetter));
+    }
+
 }

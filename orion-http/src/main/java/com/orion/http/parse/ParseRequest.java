@@ -2,7 +2,6 @@ package com.orion.http.parse;
 
 import com.orion.http.BaseHttpRequest;
 import com.orion.http.support.HttpCookie;
-import com.orion.http.useragent.StandardUserAgent;
 import com.orion.lang.able.Awaitable;
 import com.orion.lang.constant.StandardContentType;
 import com.orion.lang.utils.Charsets;
@@ -43,7 +42,7 @@ public class ParseRequest extends BaseHttpRequest implements Awaitable<ParseResp
     }
 
     public ParseRequest(String url) {
-        this.userAgent(StandardUserAgent.CHROME_3);
+        this.userAgent(DEFAULT_USERAGENT);
         this.url = url;
     }
 

@@ -17,7 +17,7 @@ import java.util.function.Supplier;
  */
 public class Branches<P> {
 
-    private Predicate<P> tester;
+    private final Predicate<P> tester;
 
     public Branches(Predicate<P> tester) {
         this.tester = tester;

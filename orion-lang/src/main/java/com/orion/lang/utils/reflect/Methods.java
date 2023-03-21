@@ -31,19 +31,10 @@ import static java.util.stream.Collectors.toMap;
 @SuppressWarnings("ALL")
 public class Methods {
 
-    /**
-     * set方法前缀
-     */
     protected static final String SETTER_PREFIX = "set";
 
-    /**
-     * get方法前缀
-     */
     protected static final String GETTER_PREFIX = "get";
 
-    /**
-     * boolean get方法前缀
-     */
     protected static final String BOOLEAN_GETTER_PREFIX = "is";
 
     private static final Map<Class<?>, List<Method>> CLASS_SET_METHOD_CACHE = new ConcurrentReferenceHashMap<>(Const.CAPACITY_16, ConcurrentReferenceHashMap.ReferenceType.SOFT);
@@ -56,7 +47,7 @@ public class Methods {
     // -------------------- cache start --------------------
 
     /**
-     * 获取getter方法
+     * 获取 getter 方法
      *
      * @param clazz class
      * @param field field
@@ -83,7 +74,7 @@ public class Methods {
     }
 
     /**
-     * 获取setter方法
+     * 获取 setter 方法
      *
      * @param clazz class
      * @param field field
@@ -104,7 +95,7 @@ public class Methods {
     }
 
     /**
-     * 获取所有getter方法
+     * 获取所有 getter 方法
      *
      * @param clazz class
      * @return method
@@ -118,7 +109,7 @@ public class Methods {
     }
 
     /**
-     * 获取所有setter方法
+     * 获取所有 setter 方法
      *
      * @param clazz class
      * @return method
@@ -134,7 +125,7 @@ public class Methods {
     // -------------------- cache end --------------------
 
     /**
-     * 通过字段获取getter方法
+     * 通过字段获取 getter 方法
      *
      * @param field field
      * @return getter方法
@@ -144,7 +135,7 @@ public class Methods {
     }
 
     /**
-     * 通过字段名称获取getter方法
+     * 通过字段名称获取 getter 方法
      *
      * @param fieldName fieldName
      * @return getter方法
@@ -157,7 +148,7 @@ public class Methods {
     }
 
     /**
-     * 通过字段名称获取getter方法
+     * 通过字段名称获取 getter 方法
      *
      * @param fieldName      fieldName
      * @param isBooleanClass 是否为 Boolean.TYPE
@@ -171,7 +162,7 @@ public class Methods {
     }
 
     /**
-     * 通过字段获取setter方法
+     * 通过字段获取 setter 方法
      *
      * @param field field
      * @return setter方法
@@ -181,7 +172,7 @@ public class Methods {
     }
 
     /**
-     * 通过字段名称获取setter方法
+     * 通过字段名称获取 setter 方法
      *
      * @param fieldName fieldName
      * @return setter方法
@@ -194,7 +185,7 @@ public class Methods {
     }
 
     /**
-     * 通过方法获取所有的getter方法
+     * 通过方法获取所有的 getter 方法
      *
      * @param clazz class
      * @return getter方法
@@ -218,7 +209,7 @@ public class Methods {
     }
 
     /**
-     * 通过方法获取所有的setter方法
+     * 通过方法获取所有的 setter 方法
      *
      * @param clazz class
      * @return setter方法
@@ -237,7 +228,7 @@ public class Methods {
     }
 
     /**
-     * 通过字段获取所有的getter方法
+     * 通过字段获取所有的 getter 方法
      *
      * @param clazz class
      * @return getter方法
@@ -266,7 +257,7 @@ public class Methods {
     }
 
     /**
-     * 通过字段获取所有的setter方法
+     * 通过字段获取所有的 setter 方法
      *
      * @param clazz class
      * @return setter方法
@@ -287,7 +278,7 @@ public class Methods {
     }
 
     /**
-     * 通过字段获取getter方法
+     * 通过字段获取 getter 方法
      *
      * @param clazz class
      * @param field field
@@ -309,7 +300,7 @@ public class Methods {
     }
 
     /**
-     * 通过字段名称获取getter方法
+     * 通过字段名称获取 getter 方法
      *
      * @param clazz     class
      * @param fieldName fieldName
@@ -328,7 +319,7 @@ public class Methods {
     }
 
     /**
-     * 通过字段名称获取setter方法
+     * 通过字段名称获取 setter 方法
      *
      * @param clazz class
      * @param field field
@@ -340,7 +331,7 @@ public class Methods {
     }
 
     /**
-     * 通过字段获取setter方法
+     * 通过字段获取 setter 方法
      *
      * @param clazz     class
      * @param fieldName field
@@ -356,7 +347,7 @@ public class Methods {
     }
 
     /**
-     * 获取对象匹配方法名和参数类型的DeclaredMethod, 并强制设置为可访问, 可以获取基本类型的方法
+     * 获取对象匹配方法名和参数类型的 DeclaredMethod 并强制设置为可访问 可以获取基本类型的方法
      *
      * @param clazz          class
      * @param methodName     方法名
@@ -378,7 +369,7 @@ public class Methods {
     }
 
     /**
-     * 获取对象匹配方法名和参数长度的第一个DeclaredMethod, 并强制设置为可访问, 可以获取基本类型的方法
+     * 获取对象匹配方法名和参数长度的第一个 DeclaredMethod 并强制设置为可访问 可以获取基本类型的方法
      *
      * @param clazz      class
      * @param methodName 方法名称
@@ -400,7 +391,7 @@ public class Methods {
     }
 
     /**
-     * 获取对象匹配方法名的第一个DeclaredMethod, 并强制设置为可访问, 可以获取基本类型的方法
+     * 获取对象匹配方法名的第一个 DeclaredMethod 并强制设置为可访问 可以获取基本类型的方法
      *
      * @param clazz      class
      * @param methodName 方法名称
@@ -420,7 +411,7 @@ public class Methods {
     }
 
     /**
-     * 获取对象匹配方法名和参数长度的DeclaredMethod, 并强制设置为可访问, 可以获取基本类型的方法
+     * 获取对象匹配方法名和参数长度的DeclaredMethod 并强制设置为可访问 可以获取基本类型的方法
      *
      * @param clazz      class
      * @param methodName 方法名称
@@ -443,7 +434,7 @@ public class Methods {
     }
 
     /**
-     * 获取对象匹配方法名的DeclaredMethod, 并强制设置为可访问
+     * 获取对象匹配方法名的 DeclaredMethod 并强制设置为可访问
      *
      * @param clazz      class
      * @param methodName 方法名称
@@ -510,7 +501,7 @@ public class Methods {
     }
 
     /**
-     * 获取所有static的方法
+     * 获取所有 static 的方法
      *
      * @param clazz 类
      * @return static方法
@@ -524,7 +515,7 @@ public class Methods {
     }
 
     /**
-     * 调用field的getter方法
+     * 调用 field 的 getter 方法
      *
      * @param obj       对象
      * @param fieldName 字段名称
@@ -547,7 +538,7 @@ public class Methods {
     }
 
     /**
-     * 调用setter方法 不支持基本类型
+     * 调用 setter 方法 不支持基本类型
      *
      * @param obj       对象
      * @param fieldName 字段名称
@@ -559,7 +550,8 @@ public class Methods {
     }
 
     /**
-     * 调用setter方法, 多级调用需要手动拼接set 不支持基本类型
+     * 调用 setter 方法
+     * 多级调用需要手动拼接 set 不支持基本类型
      *
      * @param obj                   对象
      * @param fieldSetterMethodName 字段名称
@@ -587,7 +579,7 @@ public class Methods {
     }
 
     /**
-     * 调用setter方法 类型推断调用 支持基本数据类型
+     * 调用 setter 方法 类型推断调用 支持基本数据类型
      *
      * @param obj       对象
      * @param fieldName 字段名称
@@ -599,7 +591,7 @@ public class Methods {
     }
 
     /**
-     * 调用setter方法 类型推断调用 支持基本数据类型
+     * 调用 setter 方法 类型推断调用 支持基本数据类型
      *
      * @param obj    对象
      * @param method method
@@ -702,7 +694,7 @@ public class Methods {
     }
 
     /**
-     * 直接调用对象方法, 会进行参数推断, 支持基本数据类型
+     * 直接调用对象方法 会进行参数推断 支持基本数据类型
      *
      * @param obj    对象
      * @param method 方法
@@ -720,7 +712,7 @@ public class Methods {
     }
 
     /**
-     * 直接调用对象方法, 会进行参数推断, 支持基本数据类型
+     * 直接调用对象方法 会进行参数推断 支持基本数据类型
      *
      * @param obj        对象
      * @param methodName 方法名称

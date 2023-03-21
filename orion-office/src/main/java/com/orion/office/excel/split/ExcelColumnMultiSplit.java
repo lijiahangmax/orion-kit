@@ -148,6 +148,9 @@ public class ExcelColumnMultiSplit implements SafeCloseable {
         if (!Strings.isBlank(password)) {
             targetSheet.protectSheet(password);
         }
+        // 设置默认属性
+        Excels.setDefaultProperties(targetWorkbook);
+        // 写入
         Excels.write(targetWorkbook, out);
         Streams.close(targetWorkbook);
         if (close) {

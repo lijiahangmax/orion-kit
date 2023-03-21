@@ -398,6 +398,31 @@ public class Lists extends Collections {
         list.subList(size, beforeSize).clear();
     }
 
+    /**
+     * list 分片
+     *
+     * @param list list
+     * @param size size
+     * @param <E>  E
+     * @return partition list
+     */
+    public static <E> List<List<E>> partition(List<E> list, int size) {
+        return new PartitionList<>(list, size);
+    }
+
+
+    /**
+     * 集合去重 -> list
+     *
+     * @param c         c
+     * @param keyGetter keyGetter
+     * @param <E>       E
+     * @return distinct list
+     */
+    public static <E> List<E> distinct(Collection<E> c, Function<E, ?> keyGetter) {
+        return new ArrayList<>(Collections.distinct(c, keyGetter));
+    }
+
     // -------------------- get set --------------------
 
     public static <E> E get(List<E> list, int i) {
