@@ -2,7 +2,8 @@ package com.orion.net.ftp.client.instance;
 
 import com.orion.lang.able.Destroyable;
 import com.orion.lang.able.SafeCloseable;
-import com.orion.net.base.file.transfer.IFileTransfer;
+import com.orion.net.base.file.transfer.IFileDownloader;
+import com.orion.net.base.file.transfer.IFileUploader;
 import com.orion.net.ftp.client.FtpFile;
 import com.orion.net.ftp.client.FtpFileFilter;
 import com.orion.net.ftp.client.config.FtpConfig;
@@ -499,7 +500,7 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
 
     // -------------------- big file --------------------
 
-    IFileTransfer upload(String remote, String local);
+    IFileUploader upload(String remote, String local);
 
     /**
      * 获取大文件上传器
@@ -508,9 +509,9 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
      * @param local  本地文件
      * @return FtpUpload
      */
-    IFileTransfer upload(String remote, File local);
+    IFileUploader upload(String remote, File local);
 
-    IFileTransfer download(String remote, String local);
+    IFileDownloader download(String remote, String local);
 
     /**
      * 获取大文件下载器
@@ -519,7 +520,7 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
      * @param local  本地文件
      * @return FtpDownload
      */
-    IFileTransfer download(String remote, File local);
+    IFileDownloader download(String remote, File local);
 
     // -------------------- list --------------------
 

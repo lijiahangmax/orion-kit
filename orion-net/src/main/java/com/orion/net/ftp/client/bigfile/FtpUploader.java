@@ -55,7 +55,7 @@ public class FtpUploader extends BaseFileUploader {
     }
 
     @Override
-    protected long getFileSize() {
+    protected long getRemoteFileSize() {
         FtpFile remoteFile = instance.getFile(remote);
         if (remoteFile == null) {
             return -1;

@@ -59,7 +59,7 @@ public class SftpUploader extends BaseFileUploader {
     }
 
     @Override
-    protected long getFileSize() {
+    protected long getRemoteFileSize() {
         SftpFile remoteFile = executor.getFile(remote);
         if (remoteFile == null) {
             try {

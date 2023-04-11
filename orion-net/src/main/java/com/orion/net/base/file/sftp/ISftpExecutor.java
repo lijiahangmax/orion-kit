@@ -1,7 +1,8 @@
 package com.orion.net.base.file.sftp;
 
 import com.orion.lang.able.SafeCloseable;
-import com.orion.net.base.file.transfer.IFileTransfer;
+import com.orion.net.base.file.transfer.IFileDownloader;
+import com.orion.net.base.file.transfer.IFileUploader;
 
 import java.io.File;
 import java.io.IOException;
@@ -444,7 +445,7 @@ public interface ISftpExecutor extends SafeCloseable {
 
     // -------------------- big file --------------------
 
-    IFileTransfer upload(String remote, File local);
+    IFileUploader upload(String remote, File local);
 
     /**
      * 获取文件上传器
@@ -453,9 +454,9 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param local  本地文件
      * @return 文件上传器
      */
-    IFileTransfer upload(String remote, String local);
+    IFileUploader upload(String remote, String local);
 
-    IFileTransfer download(String remote, File local);
+    IFileDownloader download(String remote, File local);
 
     /**
      * 获取文件下载器
@@ -464,7 +465,7 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param local  本地文件
      * @return 文件下载器
      */
-    IFileTransfer download(String remote, String local);
+    IFileDownloader download(String remote, String local);
 
     // -------------------- list --------------------
 

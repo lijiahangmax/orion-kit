@@ -8,7 +8,8 @@ import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
 import com.orion.lang.utils.time.Dates;
 import com.orion.net.base.file.sftp.SftpFile;
-import com.orion.net.base.file.transfer.IFileTransfer;
+import com.orion.net.base.file.transfer.IFileDownloader;
+import com.orion.net.base.file.transfer.IFileUploader;
 import com.orion.net.remote.channel.sftp.SftpExecutor;
 import org.junit.After;
 import org.junit.Before;
@@ -361,7 +362,7 @@ public class SftpExecutorTests {
         String local = "C:\\Users\\ljh15\\Desktop\\cp.zip";
         System.out.println(Files1.md5(local));
 
-        IFileTransfer u = e.upload("/root/test/cp.zip", local);
+        IFileUploader u = e.upload("/root/test/cp.zip", local);
         u.getProgress()
                 .computeRate()
                 .rateAcceptor(pr -> {
@@ -379,7 +380,7 @@ public class SftpExecutorTests {
     public void testBigDownload() {
         String local = "C:\\Users\\ljh15\\Desktop\\cp1.zip";
 
-        IFileTransfer u = e.download("/root/test/cp.zip", local);
+        IFileDownloader u = e.download("/root/test/cp.zip", local);
         u.getProgress()
                 .computeRate()
                 .rateAcceptor(pr -> {

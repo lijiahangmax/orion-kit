@@ -18,7 +18,7 @@ import java.io.OutputStream;
  * @version 1.0.0
  * @since 2021/3/14 13:30
  */
-public abstract class BaseFileDownloader implements IFileTransfer {
+public abstract class BaseFileDownloader implements IFileDownloader {
 
     /**
      * 远程文件

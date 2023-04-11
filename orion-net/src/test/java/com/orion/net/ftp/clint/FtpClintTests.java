@@ -6,7 +6,8 @@ import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
 import com.orion.lang.utils.time.Dates;
-import com.orion.net.base.file.transfer.IFileTransfer;
+import com.orion.net.base.file.transfer.IFileDownloader;
+import com.orion.net.base.file.transfer.IFileUploader;
 import com.orion.net.ftp.client.config.FtpConfig;
 import com.orion.net.ftp.client.instance.IFtpInstance;
 import com.orion.net.ftp.client.pool.FtpClientFactory;
@@ -293,7 +294,7 @@ public class FtpClintTests {
         String local = "C:\\Users\\ljh15\\Desktop\\cp.zip";
         System.out.println(Files1.md5(local));
 
-        IFileTransfer u = e.upload("/root/test/cp.zip", local);
+        IFileUploader u = e.upload("/root/test/cp.zip", local);
         u.getProgress()
                 .computeRate()
                 .rateAcceptor(pr -> {
@@ -313,7 +314,7 @@ public class FtpClintTests {
     public void testBigDownload() {
         String local = "C:\\Users\\ljh15\\Desktop\\cp1.zip";
 
-        IFileTransfer u = e.download("/root/test/cp.zip", local);
+        IFileDownloader u = e.download("/root/test/cp.zip", local);
         u.getProgress()
                 .computeRate()
                 .rateAcceptor(pr -> {

@@ -17,32 +17,42 @@ import java.io.*;
  * @version 1.0.0
  * @since 2021/3/14 00:07
  */
-public abstract class BaseFileUploader implements IFileTransfer {
+public abstract class BaseFileUploader implements IFileUploader {
 
     /**
      * 远程文件
      */
-    protected String remote;
+    protected final String remote;
 
     /**
      * 本地文件
      */
-    protected File local;
+    protected final File local;
 
     /**
      * 文件锁
      */
-    protected FileLocks.NamedFileLock lock;
+    protected final FileLocks.NamedFileLock lock;
 
     /**
      * 进度条
      */
-    protected ByteTransferRateProgress progress;
+    protected final ByteTransferRateProgress progress;
 
     /**
      * 缓冲区大小
      */
     protected int bufferSize;
+
+    /**
+     * 是否强制覆盖上传 (不检测文件锁定/不检测文件大小/不走断点续传)
+     */
+    protected boolean forceOverride;
+
+    /**
+     * 远程文件大小 缓存
+     */
+    protected Long remoteFileLength;
 
     protected BaseFileUploader(String remote, File local, String lockSuffix, int bufferSize) {
         Valid.notEmpty(remote, "remote file is empty");
@@ -57,6 +67,25 @@ public abstract class BaseFileUploader implements IFileTransfer {
         this.progress = new ByteTransferRateProgress(local.length());
     }
 
+    @Override
+    public void forceOverride(boolean forceOverride) {
+        this.forceOverride = forceOverride;
+    }
+
+    @Override
+    public long getRemoteFileLength() throws IOException {
+        if (remoteFileLength != null) {
+            return remoteFileLength;
+        }
+        return this.remoteFileLength = this.getRemoteFileSize();
+    }
+
+    @Override
+    public boolean checkRemoteFilePresentSizeEqual() throws IOException {
+        long remoteLength = this.getRemoteFileLength();
+        return remoteLength == -1 || remoteLength == local.length();
+    }
+
     /**
      * 开始上传
      *
@@ -65,7 +94,13 @@ public abstract class BaseFileUploader implements IFileTransfer {
     protected void startUpload() throws IOException {
         boolean error = false;
         try {
-            long remoteSize = this.getFileSize();
+            // 强制上传
+            if (forceOverride) {
+                this.upload();
+                return;
+            }
+            // 检测文件大小
+            long remoteSize = this.getRemoteFileLength();
             if (remoteSize == -1) {
                 // 远程文件为空 直接上传
                 this.upload();
@@ -151,7 +186,7 @@ public abstract class BaseFileUploader implements IFileTransfer {
      * @return fileSize 文件不存在则返回 -1
      * @throws IOException IOException
      */
-    protected abstract long getFileSize() throws IOException;
+    protected abstract long getRemoteFileSize() throws IOException;
 
     /**
      * 准开始上传
