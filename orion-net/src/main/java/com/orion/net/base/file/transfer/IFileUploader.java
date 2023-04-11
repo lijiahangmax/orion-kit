@@ -19,6 +19,13 @@ public interface IFileUploader extends IFileTransfer {
     void forceOverride(boolean forceOverride);
 
     /**
+     * 文件大小相同则覆盖上传
+     *
+     * @param fileSizeEqualOverride fileSizeEqualOverride
+     */
+    void fileSizeEqualOverride(boolean fileSizeEqualOverride);
+
+    /**
      * 获取远程文件大小
      *
      * @return fileSize 文件不存在则返回 -1

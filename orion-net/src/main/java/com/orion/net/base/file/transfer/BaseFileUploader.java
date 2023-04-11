@@ -50,6 +50,11 @@ public abstract class BaseFileUploader implements IFileUploader {
     protected boolean forceOverride;
 
     /**
+     * 文件大小相同则覆盖上传
+     */
+    protected boolean fileSizeEqualOverride;
+
+    /**
      * 远程文件大小 缓存
      */
     protected Long remoteFileLength;
@@ -73,10 +78,16 @@ public abstract class BaseFileUploader implements IFileUploader {
     }
 
     @Override
+    public void fileSizeEqualOverride(boolean fileSizeEqualOverride) {
+        this.fileSizeEqualOverride = fileSizeEqualOverride;
+    }
+
+    @Override
     public long getRemoteFileLength() throws IOException {
         if (remoteFileLength != null) {
             return remoteFileLength;
         }
+        // 获取远程文件大小
         return this.remoteFileLength = this.getRemoteFileSize();
     }
 
@@ -94,7 +105,7 @@ public abstract class BaseFileUploader implements IFileUploader {
     protected void startUpload() throws IOException {
         boolean error = false;
         try {
-            // 强制上传
+            // 强制覆盖上传
             if (forceOverride) {
                 this.upload();
                 return;
@@ -106,17 +117,25 @@ public abstract class BaseFileUploader implements IFileUploader {
                 this.upload();
             } else {
                 if (remoteSize == local.length()) {
-                    lock.unLock();
-                    progress.startTime(System.currentTimeMillis());
-                    this.transferFinish();
-                    return;
-                }
-                if (lock.isLocked()) {
-                    // 被锁定 继续上传
-                    this.breakPointResume(remoteSize);
+                    // 文件大小一样 检测是否覆盖上传
+                    if (fileSizeEqualOverride) {
+                        // 如果设置文件大小一致覆盖 则重新上传
+                        this.upload();
+                    } else {
+                        // 认为是文件相同(大文件节约性能) 则跳过
+                        lock.unLock();
+                        progress.startTime(System.currentTimeMillis());
+                        this.transferFinish();
+                    }
                 } else {
-                    // 没被锁定 重新上传
-                    this.upload();
+                    // 文件大小不一样 检测是否断点续传
+                    if (lock.isLocked()) {
+                        // 被锁定 继续上传
+                        this.breakPointResume(remoteSize);
+                    } else {
+                        // 没被锁定 重新上传
+                        this.upload();
+                    }
                 }
             }
         } catch (Exception e) {
