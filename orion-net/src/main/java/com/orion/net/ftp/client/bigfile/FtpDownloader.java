@@ -54,7 +54,7 @@ public class FtpDownloader extends BaseFileDownloader {
     }
 
     @Override
-    protected long getFileSize() {
+    protected long getRemoteFileSize() {
         FtpFile remoteFile = instance.getFile(remote);
         if (remoteFile == null) {
             throw Exceptions.notFound("not found download remote file");

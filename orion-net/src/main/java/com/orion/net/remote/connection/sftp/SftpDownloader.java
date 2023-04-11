@@ -59,7 +59,7 @@ public class SftpDownloader extends BaseFileDownloader {
     }
 
     @Override
-    protected long getFileSize() {
+    protected long getRemoteFileSize() {
         SftpFile remoteFile = executor.getFile(remote);
         if (remoteFile == null) {
             throw Exceptions.notFound("not found download remote file");

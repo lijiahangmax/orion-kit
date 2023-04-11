@@ -23,27 +23,42 @@ public abstract class BaseFileDownloader implements IFileDownloader {
     /**
      * 远程文件
      */
-    protected String remote;
+    protected final String remote;
 
     /**
      * 本地文件
      */
-    protected File local;
+    protected final File local;
 
     /**
      * 文件锁
      */
-    protected FileLocks.NamedFileLock lock;
+    protected final FileLocks.NamedFileLock lock;
 
     /**
      * 进度条
      */
-    protected ByteTransferRateProgress progress;
+    protected final ByteTransferRateProgress progress;
 
     /**
      * 缓冲区大小
      */
     protected int bufferSize;
+
+    /**
+     * 是否强制覆盖下载 (不检测文件锁定/不检测文件大小/不走断点续传)
+     */
+    protected boolean forceOverride;
+
+    /**
+     * 文件大小相同则覆盖下载
+     */
+    protected boolean fileSizeEqualOverride;
+
+    /**
+     * 远程文件大小 缓存
+     */
+    protected Long remoteFileLength;
 
     public BaseFileDownloader(String remote, File local, String lockSuffix, int bufferSize) {
         Valid.notEmpty(remote, "download remote file is empty");
@@ -55,6 +70,31 @@ public abstract class BaseFileDownloader implements IFileDownloader {
         this.progress = new ByteTransferRateProgress(0);
     }
 
+    @Override
+    public void forceOverride(boolean forceOverride) {
+        this.forceOverride = forceOverride;
+    }
+
+    @Override
+    public void fileSizeEqualOverride(boolean fileSizeEqualOverride) {
+        this.fileSizeEqualOverride = fileSizeEqualOverride;
+    }
+
+    @Override
+    public long getRemoteFileLength() throws IOException {
+        if (remoteFileLength != null) {
+            return remoteFileLength;
+        }
+        // 获取远程文件大小
+        return this.remoteFileLength = this.getRemoteFileSize();
+    }
+
+    @Override
+    public boolean checkRemoteFilePresentSizeEqual() throws IOException {
+        long remoteLength = this.getRemoteFileLength();
+        return remoteLength == -1 || remoteLength == local.length();
+    }
+
     /**
      * 开始下载
      *
@@ -63,23 +103,38 @@ public abstract class BaseFileDownloader implements IFileDownloader {
     protected void startDownload() throws IOException {
         boolean error = false;
         try {
-            long remoteSize = this.getFileSize();
+            // 获取远程文件大小
+            long remoteSize = this.getRemoteFileLength();
+            // 设置进度条终点
             progress.setEnd(remoteSize);
+            // 强制覆盖下载
+            if (forceOverride) {
+                Files1.touch(local);
+                this.download();
+                return;
+            }
             if (Files1.isFile(local)) {
                 long localSize = local.length();
                 if (localSize == remoteSize) {
-                    // 跳过
-                    lock.unLock();
-                    progress.startTime(System.currentTimeMillis());
-                    this.transferFinish();
-                    return;
-                }
-                if (lock.isLocked()) {
-                    // 被锁定 继续下载
-                    this.breakPointResume(localSize);
+                    // 文件大小一样 检测是否覆盖下载
+                    if (fileSizeEqualOverride) {
+                        // 如果设置文件大小一致覆盖 则重新下载
+                        this.download();
+                    } else {
+                        // 认为是文件相同(大文件节约性能) 则跳过
+                        lock.unLock();
+                        progress.startTime(System.currentTimeMillis());
+                        this.transferFinish();
+                    }
                 } else {
-                    // 没被锁定 重新下载
-                    this.download();
+                    // 文件大小不一样 检测是否断点续传
+                    if (lock.isLocked()) {
+                        // 被锁定 继续下载
+                        this.breakPointResume(localSize);
+                    } else {
+                        // 没被锁定 重新下载
+                        this.download();
+                    }
                 }
             } else {
                 // 直接下载
@@ -147,12 +202,12 @@ public abstract class BaseFileDownloader implements IFileDownloader {
     }
 
     /**
-     * 获取文件大小
+     * 获取远程文件大小
      *
      * @return fileSize 文件不存在则返回-1
      * @throws IOException IOException
      */
-    protected abstract long getFileSize() throws IOException;
+    protected abstract long getRemoteFileSize() throws IOException;
 
     /**
      * 准开始下载
