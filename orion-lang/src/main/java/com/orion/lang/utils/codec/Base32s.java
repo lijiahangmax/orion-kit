@@ -11,9 +11,6 @@ import com.orion.lang.utils.Strings;
  */
 public class Base32s {
 
-    private Base32s() {
-    }
-
     private static final char[] CHARS = {
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
             'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
@@ -33,6 +30,9 @@ public class Base32s {
             0x0F, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, // 'p', 'q', 'r', 's', 't', 'u', 'v', 'w'
             0x17, 0x18, 0x19, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF  // 'x', 'y', 'z', '{', '|', '}', '~', 'DEL'
     };
+
+    private Base32s() {
+    }
 
     /**
      * 编码

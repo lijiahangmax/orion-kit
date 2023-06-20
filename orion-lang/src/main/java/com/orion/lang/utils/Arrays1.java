@@ -743,7 +743,7 @@ public class Arrays1 {
         if (isEmpty(es)) {
             return arr;
         }
-        int num = excludeSwap(arr, len, i -> {
+        int num = excludeSwaps(arr, len, i -> {
             for (Object e : es) {
                 if (Objects1.eq(i, e)) {
                     return true;
@@ -761,7 +761,7 @@ public class Arrays1 {
         if (len == 0) {
             return generator.apply(0);
         }
-        int num = excludeSwap(arr, len, (Predicate<Object>) p);
+        int num = excludeSwaps(arr, len, p);
         T[] na = generator.apply(len - num);
         System.arraycopy(arr, 0, na, 0, len - num);
         return na;
@@ -960,7 +960,7 @@ public class Arrays1 {
      * 消费对象
      *
      * @param consumer 消费函数
-     * @param arr        元素
+     * @param arr      元素
      * @param <T>      对象类型
      */
     public static <T> void forEach(Consumer<T> consumer, T[] arr) {

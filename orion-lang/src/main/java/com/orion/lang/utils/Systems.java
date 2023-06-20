@@ -19,9 +19,6 @@ import java.util.*;
  */
 public class Systems {
 
-    private Systems() {
-    }
-
     /**
      * 行分隔符 windows: \r\n unix: \n
      */
@@ -111,6 +108,9 @@ public class Systems {
      * 随机 seed
      */
     public static final int SEED;
+
+    private Systems() {
+    }
 
     static {
         LINE_SEPARATOR = getProperty("line.separator", Const.LF);
@@ -207,7 +207,7 @@ public class Systems {
      *
      * @return args
      */
-    public static List<String> getJVMInputArgs() {
+    public static List<String> getJvmInputArgs() {
         return ManagementFactory.getRuntimeMXBean().getInputArguments();
     }
 

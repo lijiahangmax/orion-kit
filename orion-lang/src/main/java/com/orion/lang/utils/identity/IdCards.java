@@ -36,9 +36,6 @@ import java.util.Objects;
  */
 public class IdCards {
 
-    private IdCards() {
-    }
-
     /**
      * 第二代 中国公民身份证号码长度
      */
@@ -53,6 +50,9 @@ public class IdCards {
      * 省市代码表
      */
     private static final Map<String, String> CITY_CODES = new HashMap<>();
+
+    private IdCards() {
+    }
 
     static {
         CITY_CODES.put("11", "北京");

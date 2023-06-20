@@ -27,11 +27,11 @@ public enum AddressType {
 
     ;
 
+    private final String[] suffix;
+
     AddressType(String[] suffix) {
         this.suffix = suffix;
     }
-
-    private final String[] suffix;
 
     public String[] getSuffix() {
         return suffix;

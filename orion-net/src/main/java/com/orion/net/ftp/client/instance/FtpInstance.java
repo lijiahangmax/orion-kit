@@ -167,7 +167,6 @@ public class FtpInstance extends BaseFtpInstance {
     @Override
     public void removeDir(String dir) {
         try {
-            String d = this.serverCharset(config.getRemoteRootDir() + dir);
             List<FtpFile> list = this.listFiles(dir, false, true);
             for (FtpFile s : list) {
                 String path = s.getPath();

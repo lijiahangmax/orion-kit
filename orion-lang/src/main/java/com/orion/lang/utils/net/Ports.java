@@ -20,13 +20,13 @@ import java.util.List;
  */
 public class Ports {
 
-    private Ports() {
-    }
-
     /**
      * 默认建立连接超时时间
      */
     private static int timeout = Const.MS_S_3;
+
+    private Ports() {
+    }
 
     /**
      * 获取一个空闲的本地端口

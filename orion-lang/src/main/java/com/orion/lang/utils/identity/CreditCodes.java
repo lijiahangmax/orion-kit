@@ -21,14 +21,14 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CreditCodes {
 
-    private CreditCodes() {
-    }
-
     private static final int[] WEIGHT = {1, 3, 9, 27, 19, 26, 16, 17, 20, 29, 25, 13, 8, 24, 10, 30, 28};
 
     private static final char[] BASE_CODE_ARRAY = "0123456789ABCDEFGHJKLMNPQRTUWXY".toCharArray();
 
     private static final Map<Character, Integer> CODE_INDEX_MAP;
+
+    private CreditCodes() {
+    }
 
     static {
         CODE_INDEX_MAP = new ConcurrentHashMap<>();

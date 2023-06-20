@@ -17,11 +17,11 @@ public class SingletonIterator<E> implements Iterator<E>, Iterable<E> {
 
     private final E element;
 
+    private boolean hasNext = true;
+
     public SingletonIterator(E element) {
         this.element = element;
     }
-
-    private boolean hasNext = true;
 
     @Override
     public boolean hasNext() {

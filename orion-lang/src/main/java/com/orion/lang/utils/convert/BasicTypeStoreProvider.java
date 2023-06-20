@@ -26,28 +26,6 @@ public class BasicTypeStoreProvider implements Serializable {
 
     private final TypeStore store;
 
-    public BasicTypeStoreProvider() {
-        this(TypeStore.STORE);
-    }
-
-    public BasicTypeStoreProvider(TypeStore store) {
-        this.store = store;
-        this.loadNumber();
-        this.loadNumberExt();
-        this.loadBoolean();
-        this.loadChar();
-        this.loadString();
-        this.loadByteArray();
-        this.loadShortArray();
-        this.loadIntArray();
-        this.loadLongArray();
-        this.loadFloatArray();
-        this.loadDoubleArray();
-        this.loadBooleanArray();
-        this.loadCharArray();
-        this.loadStringArray();
-    }
-
     // -------------------- base --------------------
     private final static Conversion TO_BYTE = Converts::toByte;
     private final static Conversion TO_SHORT = Converts::toShort;
@@ -74,6 +52,28 @@ public class BasicTypeStoreProvider implements Serializable {
     private final static Conversion TO_DATE = Converts::toDate;
     private final static Conversion TO_LOCAL_DATE_TIME = Dates8::localDateTime;
     private final static Conversion TO_LOCAL_DATE = Dates8::localDate;
+
+    public BasicTypeStoreProvider() {
+        this(TypeStore.STORE);
+    }
+
+    public BasicTypeStoreProvider(TypeStore store) {
+        this.store = store;
+        this.loadNumber();
+        this.loadNumberExt();
+        this.loadBoolean();
+        this.loadChar();
+        this.loadString();
+        this.loadByteArray();
+        this.loadShortArray();
+        this.loadIntArray();
+        this.loadLongArray();
+        this.loadFloatArray();
+        this.loadDoubleArray();
+        this.loadBooleanArray();
+        this.loadCharArray();
+        this.loadStringArray();
+    }
 
     private void loadNumber() {
         store.register(Number.class, Byte.class, TO_BYTE);

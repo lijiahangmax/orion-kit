@@ -49,11 +49,11 @@ public enum PaddingMode {
      */
     ZERO_PADDING("NoPadding");
 
+    private final String mode;
+
     PaddingMode(String mode) {
         this.mode = mode;
     }
-
-    private final String mode;
 
     public String getMode() {
         return mode;

@@ -44,11 +44,11 @@ public enum HashDigest {
      */
     SHA512("SHA-512");
 
+    private final String digest;
+
     HashDigest(String digest) {
         this.digest = digest;
     }
-
-    private final String digest;
 
     public String getDigest() {
         return digest;

@@ -215,11 +215,11 @@ public class Maps {
     }
 
     public static <K, V> Map<K, V> unmodified(Map<? extends K, ? extends V> c) {
-        return java.util.Collections.unmodifiableMap(c);
+        return Collections.unmodifiableMap(c);
     }
 
     public static <K, V> SortedMap<K, V> unmodified(SortedMap<K, ? extends V> c) {
-        return java.util.Collections.unmodifiableSortedMap(c);
+        return Collections.unmodifiableSortedMap(c);
     }
 
     public static <K, V> Map<K, V> singleton(K k, V v) {

@@ -18,18 +18,9 @@ import java.util.UUID;
  */
 public class UUIds {
 
-    private UUIds() {
-    }
-
     private final static String STR_BASE = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private final static char[] DIGITS = STR_BASE.toCharArray();
     private final static Map<Character, Integer> DIGIT_MAP = new HashMap<>();
-
-    static {
-        for (int i = 0; i < DIGITS.length; i++) {
-            DIGIT_MAP.put(DIGITS[i], i);
-        }
-    }
 
     /**
      * 支持的最小进制数
@@ -40,6 +31,15 @@ public class UUIds {
      * 支持的最大进制数
      */
     private static final int MAX_RADIX = DIGITS.length;
+
+    private UUIds() {
+    }
+
+    static {
+        for (int i = 0; i < DIGITS.length; i++) {
+            DIGIT_MAP.put(DIGITS[i], i);
+        }
+    }
 
     /**
      * 获取36位UUID

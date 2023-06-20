@@ -14,9 +14,6 @@ import java.util.Arrays;
  */
 public class CityHash {
 
-    private CityHash() {
-    }
-
     // Some primes between 2^63 and 2^64 for various uses.
     private static final long K_0 = 0xC3A5C85C97CB3127L;
     private static final long K_1 = 0xB492B66FBE98F273L;
@@ -26,6 +23,9 @@ public class CityHash {
     // Magic numbers for 32-bit hashing.  Copied from Murmur3.
     private static final int C_1 = 0xCC9E2D51;
     private static final int C_2 = 0x1B873593;
+
+    private CityHash() {
+    }
 
     /**
      * 计算32位City Hash值

@@ -71,11 +71,11 @@ public enum TerminalType {
      */
     SCO_ANSI("scoansi");
 
+    private final String type;
+
     TerminalType(String type) {
         this.type = type;
     }
-
-    private final String type;
 
     public String getType() {
         return type;
