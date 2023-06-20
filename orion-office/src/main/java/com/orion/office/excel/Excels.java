@@ -61,9 +61,6 @@ import java.util.Optional;
 @SuppressWarnings("unused")
 public class Excels {
 
-    private Excels() {
-    }
-
     private static final int BUFFER_LINE = Const.N_100;
 
     private static final int BUFFER_SIZE = Const.BUFFER_KB_8;
@@ -73,6 +70,9 @@ public class Excels {
     private static final String KIT_DEFAULT_AUTHOR = KitConfig.get(KitOfficeConfiguration.CONFIG.EXCEL_DEFAULT_AUTHOR);
 
     private static final String KIT_DEFAULT_APPLICATION = KitConfig.get(KitOfficeConfiguration.CONFIG.EXCEL_DEFAULT_APPLICATION);
+
+    private Excels() {
+    }
 
     /**
      * 获取列对应的数值

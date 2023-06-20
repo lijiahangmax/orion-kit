@@ -15,9 +15,6 @@ import java.util.regex.Pattern;
  */
 public class Patterns {
 
-    private Patterns() {
-    }
-
     private static final SoftCache<String, Pattern> CACHE = new SoftCache<>();
 
     /**
@@ -184,6 +181,9 @@ public class Patterns {
      * 密码 8到20位置 (数字 大写字母 小写字母 符号) 都要满足
      */
     public static final Pattern PASSWORD_3 = KitConfig.get(KitLangConfiguration.CONFIG.PATTERN_PASSWORD_3);
+
+    private Patterns() {
+    }
 
     /**
      * 获取正则对象

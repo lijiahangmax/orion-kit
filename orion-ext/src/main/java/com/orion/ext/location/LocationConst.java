@@ -12,11 +12,11 @@ import com.orion.lang.config.KitConfig;
  */
 public class LocationConst {
 
-    private LocationConst() {
-    }
-
     public static final String CZ88_NET = "CZ88.NET";
 
     public static final String UNKNOWN = KitConfig.get(KitExtConfiguration.CONFIG.LOCATION_UNKNOWN);
+
+    private LocationConst() {
+    }
 
 }
