@@ -19,14 +19,14 @@ import java.util.Map;
  */
 public class CookiesExt {
 
-    private CookiesExt() {
-    }
-
     public static final int SESSION = -1;
     public static final int NO_SAVE = 0;
     public static final int ONE_HOUR = 3600;
     public static final int ONE_DAY = 3600 * 24;
     public static final int ONE_WEEK = 3600 * 24 * 7;
+
+    private CookiesExt() {
+    }
 
     /**
      * 获取cookie

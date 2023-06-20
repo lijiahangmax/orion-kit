@@ -91,11 +91,11 @@ public enum ExcelPaperType {
      */
     DL(PrintSetup.ENVELOPE_DL_PAPERSIZE);
 
+    private final int code;
+
     ExcelPaperType(int code) {
         this.code = code;
     }
-
-    private final int code;
 
     public int getCode() {
         return code;

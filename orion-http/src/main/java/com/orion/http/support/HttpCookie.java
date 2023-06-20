@@ -193,11 +193,11 @@ public class HttpCookie implements Serializable {
     }
 
     public String cookie() {
-        return COOKIE + ": " + this.toString();
+        return COOKIE + ": " + this;
     }
 
-    private String setCookie() {
-        return SET_COOKIE + ": " + this.toString();
+    public String setCookie() {
+        return SET_COOKIE + ": " + this;
     }
 
     @Override
