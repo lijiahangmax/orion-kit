@@ -671,7 +671,6 @@ public class Files1 {
             target.mkdirs();
         }
         File[] files = source.listFiles();
-        String sourceName = source.getName();
         if (files == null) {
             return;
         }

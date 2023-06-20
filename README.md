@@ -50,7 +50,7 @@ orion-all       | 全部模块聚合 包含了上述所有模块的引用
 
 ### 如何使用
 ``` pom.xml
-# 当前最新版本 1.0.5
+# 当前最新版本 1.0.6
 <dependency>
     <groupId>io.github.lijiahangmax</groupId>
     <artifactId>模块名称</artifactId>
@@ -61,7 +61,7 @@ orion-all       | 全部模块聚合 包含了上述所有模块的引用
 <dependency>
     <groupId>io.github.lijiahangmax</groupId>
     <artifactId>orion-all</artifactId>
-    <version>1.0.5</version>
+    <version>1.0.6</version>
 </dependency>
 ```
 

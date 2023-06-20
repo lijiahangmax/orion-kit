@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.lijiahangmax</groupId>
-    <version>1.0.5</version>
+    <version>1.0.6</version>
     <packaging>pom</packaging>
     <artifactId>orion-kit</artifactId>
     <name>${project.artifactId}</name>
@@ -31,18 +31,18 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.charset>UTF-8</maven.compiler.charset>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-        <orion.parent.version>1.0.5</orion.parent.version>
-        <orion.lang.version>1.0.5</orion.lang.version>
-        <orion.ext.version>1.0.5</orion.ext.version>
-        <orion.office.version>1.0.5</orion.office.version>
-        <orion.log.version>1.0.5</orion.log.version>
-        <orion.http.version>1.0.5</orion.http.version>
-        <orion.net.version>1.0.5</orion.net.version>
-        <orion.web.version>1.0.5</orion.web.version>
-        <orion.redis.version>1.0.5</orion.redis.version>
-        <orion.spring.version>1.0.5</orion.spring.version>
-        <orion.generator.version>1.0.5</orion.generator.version>
-        <orion.all.version>1.0.5</orion.all.version>
+        <orion.parent.version>1.0.6</orion.parent.version>
+        <orion.lang.version>1.0.6</orion.lang.version>
+        <orion.ext.version>1.0.6</orion.ext.version>
+        <orion.office.version>1.0.6</orion.office.version>
+        <orion.log.version>1.0.6</orion.log.version>
+        <orion.http.version>1.0.6</orion.http.version>
+        <orion.net.version>1.0.6</orion.net.version>
+        <orion.web.version>1.0.6</orion.web.version>
+        <orion.redis.version>1.0.6</orion.redis.version>
+        <orion.spring.version>1.0.6</orion.spring.version>
+        <orion.generator.version>1.0.6</orion.generator.version>
+        <orion.all.version>1.0.6</orion.all.version>
         <junit.version>4.13.1</junit.version>
         <spring.version>5.2.20.RELEASE</spring.version>
         <spring.mvc.version>5.2.20.RELEASE</spring.mvc.version>
@@ -57,7 +57,6 @@
         <apache.compress.version>1.21</apache.compress.version>
         <org.tukaani.version>1.8</org.tukaani.version>
         <apache.net.version>3.3</apache.net.version>
-        <apache.upload.version>[1.3.3,)</apache.upload.version>
         <apache.ftp.server.version>1.1.1</apache.ftp.server.version>
         <mail.version>1.4.7</mail.version>
         <pinyin4j.version>2.5.1</pinyin4j.version>

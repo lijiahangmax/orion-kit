@@ -7,14 +7,14 @@ package com.orion.lang.constant;
  * @version 1.0.0
  * @since 2021/2/8 11:05
  */
-public abstract class Const {
+public interface Const {
 
     // -------------------- array --------------------
 
     /**
      * 英文字母 数组
      */
-    public static final String[] LETTERS = new String[]{
+    String[] LETTERS = new String[]{
             "A", "B", "C", "D", "E", "F", "G",
             "H", "I", "J", "K", "L", "M", "N",
             "O", "P", "Q", "R", "S", "T", "U",
@@ -22,330 +22,330 @@ public abstract class Const {
 
     // -------------------- project --------------------
 
-    public static final String ORION = "orion";
+    String ORION = "orion";
 
-    public static final String ORION_KIT = "orion-kit";
+    String ORION_KIT = "orion-kit";
 
-    public static final String ORION_DISPLAY = ".orion";
+    String ORION_DISPLAY = ".orion";
 
-    public static final String ORION_KIT_VERSION = "1.0.5";
+    String ORION_KIT_VERSION = "1.0.6";
 
-    public static final String ORION_AUTHOR = "Jiahang Li";
+    String ORION_AUTHOR = "Jiahang Li";
 
-    public static final String ORION_AUTHOR_CN = "李佳航";
+    String ORION_AUTHOR_CN = "李佳航";
 
-    public static final String ORION_EMAIL = "ljh1553488six@139.com";
+    String ORION_EMAIL = "ljh1553488six@139.com";
 
-    public static final String ORION_GITHUB = "https://github.com/lijiahangmax";
+    String ORION_GITHUB = "https://github.com/lijiahangmax";
 
-    public static final String ORION_GITEE = "https://gitee.com/lijiahangmax";
+    String ORION_GITEE = "https://gitee.com/lijiahangmax";
 
-    public static final String ORION_BLOG = "https://blog.csdn.net/qq_41011894";
+    String ORION_BLOG = "https://blog.csdn.net/qq_41011894";
 
     // -------------------- letter --------------------
 
-    public static final String CR = "\r";
+    String CR = "\r";
 
-    public static final String LF = "\n";
+    String LF = "\n";
 
-    public static final String CR_LF = "\r\n";
+    String CR_LF = "\r\n";
 
-    public static final String TAB = "\t";
+    String TAB = "\t";
 
-    public static final String DOT = ".";
+    String DOT = ".";
 
-    public static final String POUND = "#";
+    String POUND = "#";
 
-    public static final String DOLLAR = "$";
+    String DOLLAR = "$";
 
-    public static final String DASHED = "-";
+    String DASHED = "-";
 
-    public static final String SLASH = "/";
+    String SLASH = "/";
 
-    public static final String BACKSLASH = "\\";
+    String BACKSLASH = "\\";
 
-    public static final String EMPTY = "";
+    String EMPTY = "";
 
-    public static final String SPACE = " ";
+    String SPACE = " ";
 
-    public static final String SPACE_2 = "  ";
+    String SPACE_2 = "  ";
 
-    public static final String SPACE_4 = "    ";
+    String SPACE_4 = "    ";
 
-    public static final String OMIT = "...";
+    String OMIT = "...";
 
     // -------------------- charset --------------------
 
-    public static final String ASCII = "US-ASCII";
+    String ASCII = "US-ASCII";
 
-    public static final String GBK = "GBK";
+    String GBK = "GBK";
 
-    public static final String GB_2312 = "GB2312";
+    String GB_2312 = "GB2312";
 
-    public static final String UTF_8 = "UTF-8";
+    String UTF_8 = "UTF-8";
 
-    public static final String UTF_16BE = "UTF-16BE";
+    String UTF_16BE = "UTF-16BE";
 
-    public static final String UTF_16LE = "UTF-16LE";
+    String UTF_16LE = "UTF-16LE";
 
-    public static final String ISO_8859_1 = "ISO-8859-1";
+    String ISO_8859_1 = "ISO-8859-1";
 
     // -------------------- buffer size --------------------
 
-    public static final int BUFFER_KB_1 = 1024;
+    int BUFFER_KB_1 = 1024;
 
-    public static final int BUFFER_KB_2 = 1024 * 2;
+    int BUFFER_KB_2 = 1024 * 2;
 
-    public static final int BUFFER_KB_4 = 1024 * 4;
+    int BUFFER_KB_4 = 1024 * 4;
 
-    public static final int BUFFER_KB_8 = 1024 * 8;
+    int BUFFER_KB_8 = 1024 * 8;
 
-    public static final int BUFFER_KB_16 = 1024 * 16;
+    int BUFFER_KB_16 = 1024 * 16;
 
-    public static final int BUFFER_KB_32 = 1024 * 32;
+    int BUFFER_KB_32 = 1024 * 32;
 
-    public static final int MBP = 1024 * 128;
+    int MBP = 1024 * 128;
 
     // -------------------- capacity --------------------
 
-    public static final int CAPACITY_1 = 1;
+    int CAPACITY_1 = 1;
 
-    public static final int CAPACITY_2 = 2;
+    int CAPACITY_2 = 2;
 
-    public static final int CAPACITY_4 = 4;
+    int CAPACITY_4 = 4;
 
-    public static final int CAPACITY_8 = 8;
+    int CAPACITY_8 = 8;
 
-    public static final int CAPACITY_16 = 16;
+    int CAPACITY_16 = 16;
 
-    public static final int CAPACITY_32 = 32;
+    int CAPACITY_32 = 32;
 
-    public static final int CAPACITY_64 = 64;
+    int CAPACITY_64 = 64;
 
-    public static final int CAPACITY_128 = 128;
+    int CAPACITY_128 = 128;
 
-    public static final int CAPACITY_256 = 256;
+    int CAPACITY_256 = 256;
 
-    public static final int CAPACITY_512 = 512;
+    int CAPACITY_512 = 512;
 
-    public static final int CAPACITY_1024 = 1024;
+    int CAPACITY_1024 = 1024;
 
     // -------------------- ms --------------------
 
-    public static final int MS_100 = 100;
+    int MS_100 = 100;
 
-    public static final int MS_300 = 300;
+    int MS_300 = 300;
 
-    public static final int MS_500 = 500;
+    int MS_500 = 500;
 
-    public static final int MS_S_1 = 1000;
+    int MS_S_1 = 1000;
 
-    public static final int MS_S_2 = 1000 * 2;
+    int MS_S_2 = 1000 * 2;
 
-    public static final int MS_S_3 = 1000 * 3;
+    int MS_S_3 = 1000 * 3;
 
-    public static final int MS_S_5 = 1000 * 5;
+    int MS_S_5 = 1000 * 5;
 
-    public static final int MS_S_10 = 1000 * 10;
+    int MS_S_10 = 1000 * 10;
 
-    public static final int MS_S_15 = 1000 * 15;
+    int MS_S_15 = 1000 * 15;
 
-    public static final int MS_S_30 = 1000 * 30;
+    int MS_S_30 = 1000 * 30;
 
-    public static final int MS_S_60 = 1000 * 60;
+    int MS_S_60 = 1000 * 60;
 
     // -------------------- file path --------------------
 
-    public static final String ROOT = SLASH;
+    String ROOT = SLASH;
 
-    public static final String SEPARATOR = SLASH;
+    String SEPARATOR = SLASH;
 
     // -------------------- io --------------------
 
-    public static final String STREAM_CLOSE = "Stream closed";
+    String STREAM_CLOSE = "Stream closed";
 
-    public static final String ACCESS_R = "r";
+    String ACCESS_R = "r";
 
-    public static final String ACCESS_RW = "rw";
+    String ACCESS_RW = "rw";
 
-    public static final String ACCESS_RWS = "rws";
+    String ACCESS_RWS = "rws";
 
-    public static final String ACCESS_RWD = "rwd";
+    String ACCESS_RWD = "rwd";
 
     // -------------------- num --------------------
 
-    public static final Integer N_N_1 = -1;
+    Integer N_N_1 = -1;
 
-    public static final Integer N_0 = 0;
+    Integer N_0 = 0;
 
-    public static final Integer N_1 = 1;
+    Integer N_1 = 1;
 
-    public static final Integer N_2 = 2;
+    Integer N_2 = 2;
 
-    public static final Integer N_3 = 3;
+    Integer N_3 = 3;
 
-    public static final Integer N_4 = 4;
+    Integer N_4 = 4;
 
-    public static final Integer N_5 = 5;
+    Integer N_5 = 5;
 
-    public static final Integer N_6 = 6;
+    Integer N_6 = 6;
 
-    public static final Integer N_7 = 7;
+    Integer N_7 = 7;
 
-    public static final Integer N_8 = 8;
+    Integer N_8 = 8;
 
-    public static final Integer N_9 = 9;
+    Integer N_9 = 9;
 
-    public static final Integer N_10 = 10;
+    Integer N_10 = 10;
 
-    public static final Integer N_100 = 100;
+    Integer N_100 = 100;
 
-    public static final Integer N_1000 = 1000;
+    Integer N_1000 = 1000;
 
-    public static final Integer N_10000 = 10000;
+    Integer N_10000 = 10000;
 
-    public static final Integer N_100000 = 100000;
+    Integer N_100000 = 100000;
 
-    public static final Long L_N_1 = -1L;
+    Long L_N_1 = -1L;
 
-    public static final Long L_0 = 0L;
+    Long L_0 = 0L;
 
-    public static final Long L_1 = 1L;
+    Long L_1 = 1L;
 
-    public static final Double D_N_1 = -1D;
+    Double D_N_1 = -1D;
 
-    public static final Double D_0 = 0D;
+    Double D_0 = 0D;
 
-    public static final Double D_1 = 1D;
+    Double D_1 = 1D;
 
     // -------------------- suffix --------------------
 
-    public static final String SUFFIX_CSV = "csv";
+    String SUFFIX_CSV = "csv";
 
-    public static final String SUFFIX_XLS = "xls";
+    String SUFFIX_XLS = "xls";
 
-    public static final String SUFFIX_XLSX = "xlsx";
+    String SUFFIX_XLSX = "xlsx";
 
-    public static final String SUFFIX_DOC = "doc";
+    String SUFFIX_DOC = "doc";
 
-    public static final String SUFFIX_DOCX = "docx";
+    String SUFFIX_DOCX = "docx";
 
-    public static final String SUFFIX_PDF = "pdf";
+    String SUFFIX_PDF = "pdf";
 
-    public static final String SUFFIX_JAVA = "java";
+    String SUFFIX_JAVA = "java";
 
-    public static final String SUFFIX_CLASS = "class";
+    String SUFFIX_CLASS = "class";
 
-    public static final String SUFFIX_PNG = "png";
+    String SUFFIX_PNG = "png";
 
-    public static final String SUFFIX_JAR = "jar";
+    String SUFFIX_JAR = "jar";
 
-    public static final String SUFFIX_WAR = "war";
+    String SUFFIX_WAR = "war";
 
-    public static final String SUFFIX_ZIP = "zip";
+    String SUFFIX_ZIP = "zip";
 
-    public static final String SUFFIX_7Z = "7z";
+    String SUFFIX_7Z = "7z";
 
-    public static final String SUFFIX_TAR = "tar";
+    String SUFFIX_TAR = "tar";
 
-    public static final String SUFFIX_GZ = "gz";
+    String SUFFIX_GZ = "gz";
 
-    public static final String SUFFIX_BZ2 = "bz2";
+    String SUFFIX_BZ2 = "bz2";
 
-    public static final String SUFFIX_TAR_GZ = "tar.gz";
+    String SUFFIX_TAR_GZ = "tar.gz";
 
-    public static final String SUFFIX_TAR_BZ2 = "tar.bz2";
+    String SUFFIX_TAR_BZ2 = "tar.bz2";
 
-    public static final String SUFFIX_LOG = "log";
+    String SUFFIX_LOG = "log";
 
-    public static final String SUFFIX_XML = "xml";
+    String SUFFIX_XML = "xml";
 
-    public static final String SUFFIX_JSON = "json";
+    String SUFFIX_JSON = "json";
 
-    public static final String SUFFIX_YML = "yml";
+    String SUFFIX_YML = "yml";
 
-    public static final String SUFFIX_TXT = "txt";
+    String SUFFIX_TXT = "txt";
 
-    public static final String SUFFIX_PROPERTIES = "properties";
+    String SUFFIX_PROPERTIES = "properties";
 
-    public static final String SUFFIX_FILE = "file";
+    String SUFFIX_FILE = "file";
 
     // -------------------- protocol --------------------
 
-    public static final String PROTOCOL_HTTP = "http";
+    String PROTOCOL_HTTP = "http";
 
-    public static final String PROTOCOL_HTTPS = "https";
+    String PROTOCOL_HTTPS = "https";
 
-    public static final String PROTOCOL_FTP = "ftp";
+    String PROTOCOL_FTP = "ftp";
 
-    public static final String PROTOCOL_FILE = "file";
+    String PROTOCOL_FILE = "file";
 
-    public static final String PROTOCOL_JAR = "jar";
+    String PROTOCOL_JAR = "jar";
 
-    public static final String PROTOCOL_SSH = "ssh";
+    String PROTOCOL_SSH = "ssh";
 
     // -------------------- font --------------------
 
-    public static final String FONT_MICROSOFT_ELEGANT_BLACK = "微软雅黑";
+    String FONT_MICROSOFT_ELEGANT_BLACK = "微软雅黑";
 
     // -------------------- sql --------------------
 
-    public static final String LIMIT = "LIMIT";
+    String LIMIT = "LIMIT";
 
-    public static final String LIMIT_1 = "LIMIT 1";
+    String LIMIT_1 = "LIMIT 1";
 
-    public static final String ENTITY = "entity";
+    String ENTITY = "entity";
 
-    public static final String UPDATE = "update";
+    String UPDATE = "update";
 
-    public static final String LIST = "list";
+    String LIST = "list";
 
-    public static final String PAGER = "pager";
+    String PAGER = "pager";
 
     // -------------------- http --------------------
 
-    public static final Integer HTTP_OK_CODE = 200;
+    Integer HTTP_OK_CODE = 200;
 
-    public static final Integer HTTP_BAD_REQUEST_CODE = 400;
+    Integer HTTP_BAD_REQUEST_CODE = 400;
 
-    public static final Integer HTTP_NOT_FOUND_CODE = 404;
+    Integer HTTP_NOT_FOUND_CODE = 404;
 
-    public static final Integer HTTP_ERROR_CODE = 500;
+    Integer HTTP_ERROR_CODE = 500;
 
     // -------------------- others --------------------
 
-    public static final String BR = "<br/>";
+    String BR = "<br/>";
 
-    public static final String OK = "ok";
+    String OK = "ok";
 
-    public static final String ERROR = "error";
+    String ERROR = "error";
 
-    public static final String NULL = "null";
+    String NULL = "null";
 
-    public static final String UNKNOWN = "unknown";
+    String UNKNOWN = "unknown";
 
-    public static final String DEFAULT = "default";
+    String DEFAULT = "default";
 
-    public static final String LOCALHOST = "localhost";
+    String LOCALHOST = "localhost";
 
-    public static final String LOCALHOST_IP_V4 = "127.0.0.1";
+    String LOCALHOST_IP_V4 = "127.0.0.1";
 
-    public static final String LOCALHOST_IP_V6 = "0:0:0:0:0:0:0:1";
+    String LOCALHOST_IP_V6 = "0:0:0:0:0:0:0:1";
 
-    public static final Integer ENABLE = 1;
+    Integer ENABLE = 1;
 
-    public static final Integer DISABLE = 2;
+    Integer DISABLE = 2;
 
-    public static final Integer INCREMENT = 1;
+    Integer INCREMENT = 1;
 
-    public static final Integer DECREMENT = 2;
+    Integer DECREMENT = 2;
 
-    public static final Integer NOT_DELETED = 1;
+    Integer NOT_DELETED = 1;
 
-    public static final Integer IS_DELETED = 2;
+    Integer IS_DELETED = 2;
 
-    public static final String EMPTY_OBJECT = "{}";
+    String EMPTY_OBJECT = "{}";
 
-    public static final String EMPTY_ARRAY = "[]";
+    String EMPTY_ARRAY = "[]";
 
 }
