@@ -25,8 +25,10 @@ import java.io.InputStream;
  */
 public class LocationExt {
 
-    private LocationExt() {
-    }
+    /**
+     * 查询器
+     */
+    private static final LocationSeeker SEEKER;
 
     /**
      * dat文件
@@ -38,10 +40,9 @@ public class LocationExt {
             .with(".region.dat")
             .build();
 
-    /**
-     * 查询器
-     */
-    private static final LocationSeeker SEEKER;
+
+    private LocationExt() {
+    }
 
     // init
     static {

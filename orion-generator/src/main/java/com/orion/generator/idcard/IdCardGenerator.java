@@ -21,21 +21,17 @@ import java.util.Date;
  */
 public class IdCardGenerator {
 
-    private static final int[] MAN_GENDER_CODE, WOMAN_GENDER_CODE;
+    private static final int[] MAN_GENDER_CODE = new int[]{1, 3, 5, 7, 9};
 
-    private static final int AGE_MIN, AGE_MAX;
+    private static final int[] WOMAN_GENDER_CODE = new int[]{0, 2, 4, 6, 8};
 
-    private static final String PSB;
+    private static final int AGE_MIN = 18;
+
+    private static final int AGE_MAX = 50;
+
+    private static final String PSB = "公安局";
 
     private IdCardGenerator() {
-    }
-
-    static {
-        MAN_GENDER_CODE = new int[]{1, 3, 5, 7, 9};
-        WOMAN_GENDER_CODE = new int[]{0, 2, 4, 6, 8};
-        AGE_MIN = 18;
-        AGE_MAX = 50;
-        PSB = "公安局";
     }
 
     /**

@@ -92,8 +92,7 @@ public class ImageIcons implements Processable<Character, BufferedImage> {
         g2d.setFont(font);
         int[] wh = Fonts.getWidthHeightPixel(g2d, font, c.toString());
         int width = wh[0], height = wh[1];
-        int x, y;
-        x = (size - width) / 2;
+        int x = (size - width) / 2, y;
         if (Chars.isAscii(c)) {
             y = (size - height) / 2 + height;
         } else {

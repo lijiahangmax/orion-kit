@@ -63,11 +63,11 @@ public enum SecretKeySpecMode {
 
     ;
 
+    private final String mode;
+
     SecretKeySpecMode(String mode) {
         this.mode = mode;
     }
-
-    private final String mode;
 
     public String getMode() {
         return mode;

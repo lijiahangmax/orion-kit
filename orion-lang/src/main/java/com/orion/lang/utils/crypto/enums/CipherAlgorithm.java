@@ -58,11 +58,11 @@ public enum CipherAlgorithm {
         Security.addProvider(new BouncyCastleProvider());
     }
 
+    private final String mode;
+
     CipherAlgorithm(String model) {
         this.mode = model;
     }
-
-    private final String mode;
 
     public String getMode() {
         return mode;

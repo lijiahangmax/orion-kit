@@ -118,8 +118,10 @@ public class UUIds {
         }
         boolean negative = false;
         Integer digit;
-        int i = 0, len = s.length();
-        long result = 0, limit = -Long.MAX_VALUE, multmin;
+        int i = 0;
+        int len = s.length();
+        long result = 0;
+        long limit = -Long.MAX_VALUE;
         if (len <= 0) {
             throw swap(s);
         }
@@ -136,7 +138,7 @@ public class UUIds {
             }
             i++;
         }
-        multmin = limit / radix;
+        long multmin = limit / radix;
         while (i < len) {
             digit = DIGIT_MAP.get(s.charAt(i++));
             if (digit == null || digit < 0 || result < multmin) {

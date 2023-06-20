@@ -46,11 +46,6 @@ public enum FileType {
 
     ;
 
-    FileType(String symbol, String typeName) {
-        this.symbol = symbol;
-        this.typeName = typeName;
-    }
-
     /**
      * 标识符
      */
@@ -60,6 +55,11 @@ public enum FileType {
      * 类型名称
      */
     private final String typeName;
+
+    FileType(String symbol, String typeName) {
+        this.symbol = symbol;
+        this.typeName = typeName;
+    }
 
     /**
      * 是否匹配文件类型

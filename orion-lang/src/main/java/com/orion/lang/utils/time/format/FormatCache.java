@@ -21,12 +21,12 @@ import java.util.concurrent.ConcurrentMap;
  */
 abstract class FormatCache<F extends Format> {
 
-    protected FormatCache() {
-    }
-
     private final ConcurrentMap<Tuple, F> INSTANCE_CACHE = new ConcurrentHashMap<>(7);
 
     private static final ConcurrentMap<Tuple, String> DATE_TIME_PATTERN_CACHE = new ConcurrentHashMap<>(7);
+
+    protected FormatCache() {
+    }
 
     /**
      * 获取默认时区的实例

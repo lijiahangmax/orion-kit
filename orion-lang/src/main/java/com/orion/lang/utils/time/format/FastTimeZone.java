@@ -9,12 +9,12 @@ import java.util.regex.Pattern;
  */
 public class FastTimeZone {
 
-    private FastTimeZone() {
-    }
-
     private static final Pattern GMT_PATTERN = Pattern.compile("^(?:(?i)GMT)?([+-])?(\\d\\d?)?(:?(\\d\\d?))?$");
 
     private static final TimeZone GREENWICH = new GmtTimeZone(false, 0, 0);
+
+    private FastTimeZone() {
+    }
 
     public static TimeZone getGmtTimeZone() {
         return GREENWICH;

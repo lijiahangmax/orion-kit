@@ -36,14 +36,10 @@ import java.util.Optional;
  */
 public class Faker {
 
+    private static final int AGE_MIN = 18;
+    private static final int AGE_MAX = 50;
+
     private Faker() {
-    }
-
-    private static final int AGE_MIN, AGE_MAX;
-
-    static {
-        AGE_MIN = 18;
-        AGE_MAX = 50;
     }
 
     /**

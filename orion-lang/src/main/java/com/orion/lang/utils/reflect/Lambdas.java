@@ -33,7 +33,7 @@ public class Lambdas {
     public static SerializedLambda getSerializedLambda(Serializable serial) {
         try {
             Method method = serial.getClass().getDeclaredMethod(WRITE_REPLACE);
-            method.setAccessible(Boolean.TRUE);
+            method.setAccessible(true);
             return (SerializedLambda) method.invoke(serial);
         } catch (Exception e) {
             throw new RuntimeException(e);
