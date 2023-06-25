@@ -7,7 +7,7 @@ package com.orion.lang.constant;
  * @version 1.0.0
  * @since 2021/2/8 11:05
  */
-public interface Const {
+public interface Const extends OrionConst {
 
     // -------------------- array --------------------
 
@@ -19,28 +19,6 @@ public interface Const {
             "H", "I", "J", "K", "L", "M", "N",
             "O", "P", "Q", "R", "S", "T", "U",
             "V", "W", "X", "Y", "Z"};
-
-    // -------------------- project --------------------
-
-    String ORION = "orion";
-
-    String ORION_KIT = "orion-kit";
-
-    String ORION_DISPLAY = ".orion";
-
-    String ORION_KIT_VERSION = "1.0.6";
-
-    String ORION_AUTHOR = "Jiahang Li";
-
-    String ORION_AUTHOR_CN = "李佳航";
-
-    String ORION_EMAIL = "ljh1553488six@139.com";
-
-    String ORION_GITHUB = "https://github.com/lijiahangmax";
-
-    String ORION_GITEE = "https://gitee.com/lijiahangmax";
-
-    String ORION_BLOG = "https://blog.csdn.net/qq_41011894";
 
     // -------------------- letter --------------------
 
@@ -314,13 +292,21 @@ public interface Const {
 
     // -------------------- others --------------------
 
+    String BEARER = "Bearer";
+
     String BR = "<br/>";
 
     String OK = "ok";
 
+    String SUCCESS = "success";
+
     String ERROR = "error";
 
+    String FAILED = "failed";
+
     String NULL = "null";
+
+    String TIMEOUT = "timeout";
 
     String UNKNOWN = "unknown";
 

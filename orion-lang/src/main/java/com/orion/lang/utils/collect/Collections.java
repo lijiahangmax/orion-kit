@@ -57,7 +57,7 @@ public class Collections {
         while (iterator.hasNext()) {
             sb.append(iterator.next());
             if (++i != size) {
-                sb.append(split).append(Strings.SPACE);
+                sb.append(split);
             }
         }
         return sb.append(end).toString();
