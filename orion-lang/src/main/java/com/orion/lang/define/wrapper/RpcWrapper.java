@@ -271,7 +271,7 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
 
     @JSONField(serialize = false)
     public String getErrorMessageString() {
-        return errorMessages == null ? Strings.EMPTY : Lists.join(errorMessages, ",");
+        return errorMessages == null ? Strings.EMPTY : Lists.join(errorMessages, Const.COMMA);
     }
 
     private String createTrace() {

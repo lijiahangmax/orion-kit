@@ -31,6 +31,15 @@ public class Servlets {
 
     private static final String USER_AGENT = StandardHttpHeader.USER_AGENT;
 
+    /**
+     * 远程地址请求头
+     */
+    private static final String[] REMOTE_ADDR_HEADERS = {
+            StandardHttpHeader.X_FORWARDED_FOR,
+            StandardHttpHeader.PROXY_CLIENT_IP,
+            StandardHttpHeader.WL_PROXY_CLIENT_IP,
+            StandardHttpHeader.X_REAL_IP};
+
     private Servlets() {
     }
 
@@ -130,7 +139,7 @@ public class Servlets {
     }
 
     /**
-     * 通过httpServletRequest获取ip
+     * 通过 httpServletRequest 获取 ip
      *
      * @param request request
      * @return IP地址 可能为null
@@ -139,24 +148,28 @@ public class Servlets {
         if (request == null) {
             return null;
         }
-        String ip;
-        ip = IPs.checkIp(request.getHeader(StandardHttpHeader.X_FORWARDED_FOR));
-        if (ip != null) {
-            return ip;
+        for (String remoteAddrHeader : REMOTE_ADDR_HEADERS) {
+            String addr = checkRemoteAddr(request.getHeader(remoteAddrHeader));
+            if (addr != null) {
+                return addr;
+            }
         }
-        ip = IPs.checkIp(request.getHeader(StandardHttpHeader.PROXY_CLIENT_IP));
-        if (ip != null) {
-            return ip;
+        return checkRemoteAddr(request.getRemoteAddr());
+    }
+
+    /**
+     * 检查请求头中的 remoteAddr 是否合法
+     *
+     * @param headerValue headerValue
+     * @return ip
+     */
+    private static String checkRemoteAddr(String headerValue) {
+        if (headerValue == null) {
+            return null;
         }
-        ip = IPs.checkIp(request.getHeader(StandardHttpHeader.WL_PROXY_CLIENT_IP));
-        if (ip != null) {
-            return ip;
-        }
-        ip = IPs.checkIp(request.getHeader(StandardHttpHeader.X_REAL_IP));
-        if (ip != null) {
-            return ip;
-        }
-        return IPs.checkIp(request.getRemoteAddr());
+        // 防止多个ip时无法正常获取
+        headerValue = headerValue.split(Const.COMMA)[0];
+        return IPs.checkIp(headerValue);
     }
 
     /**

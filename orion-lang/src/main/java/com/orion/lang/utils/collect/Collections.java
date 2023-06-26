@@ -1,5 +1,6 @@
 package com.orion.lang.utils.collect;
 
+import com.orion.lang.constant.Const;
 import com.orion.lang.utils.Strings;
 
 import java.util.*;
@@ -35,29 +36,28 @@ public class Collections {
      * @return String
      */
     public static String join(Collection<?> c) {
-        return join(c, ",", Strings.EMPTY, Strings.EMPTY);
+        return join(c, Const.COMMA, Const.EMPTY, Const.EMPTY);
     }
 
-    public static String join(Collection<?> c, String split) {
-        return join(c, split, Strings.EMPTY, Strings.EMPTY);
+    public static String join(Collection<?> c, String delimiter) {
+        return join(c, delimiter, Const.EMPTY, Const.EMPTY);
     }
 
-    public static String join(Collection<?> c, String split, String open, String end) {
+    public static String join(Collection<?> c, String delimiter, String open, String end) {
         int size = size(c);
         open = Strings.def(open);
         end = Strings.def(end);
-        split = Strings.def(split);
+        delimiter = Strings.def(delimiter);
         if (size == 0) {
             return open + end;
         }
-        StringBuilder sb = new StringBuilder();
-        sb.append(open);
+        StringBuilder sb = new StringBuilder(open);
         Iterator<?> iterator = c.iterator();
         int i = 0;
         while (iterator.hasNext()) {
             sb.append(iterator.next());
             if (++i != size) {
-                sb.append(split);
+                sb.append(delimiter);
             }
         }
         return sb.append(end).toString();

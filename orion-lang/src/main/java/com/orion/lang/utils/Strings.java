@@ -656,42 +656,42 @@ public class Strings {
     /**
      * 连接字符串
      *
-     * @param strs   连接字符串
-     * @param symbol symbol
+     * @param strs      连接字符串
+     * @param delimiter delimiter
      * @return ignore
      */
-    public static String joinSymbol(String symbol, String... strs) {
+    public static String joinWith(String delimiter, String... strs) {
         if (Arrays1.length(strs) == 0) {
             return Strings.EMPTY;
         }
-        if (isBlank(symbol)) {
-            symbol = Strings.EMPTY;
+        if (isBlank(delimiter)) {
+            delimiter = Strings.EMPTY;
         }
         StringBuilder sb = newBuilder();
         for (String str : strs) {
-            sb.append(str).append(symbol);
+            sb.append(str).append(delimiter);
         }
-        sb.deleteCharAt(sb.length() - symbol.length());
+        sb.deleteCharAt(sb.length() - delimiter.length());
         return sb.toString();
     }
 
-    public static String join(Collection<String> list, String symbol) {
-        return join(list, symbol, Strings.EMPTY, Strings.EMPTY);
+    public static String join(Collection<String> list, String delimiter) {
+        return join(list, delimiter, Strings.EMPTY, Strings.EMPTY);
     }
 
     /**
      * 连接字符串
      *
-     * @param list   连接字符串
-     * @param symbol symbol
-     * @param prefix 前缀
-     * @param suffix 后缀
+     * @param list      连接字符串
+     * @param delimiter delimiter
+     * @param prefix    前缀
+     * @param suffix    后缀
      * @return 连接后的字符串
      */
-    public static String join(Collection<String> list, String symbol, String prefix, String suffix) {
+    public static String join(Collection<String> list, String delimiter, String prefix, String suffix) {
         prefix = isBlank(prefix) ? Strings.EMPTY : prefix;
         suffix = isBlank(suffix) ? Strings.EMPTY : suffix;
-        StringJoiner sj = new StringJoiner(symbol, prefix, suffix);
+        StringJoiner sj = new StringJoiner(delimiter, prefix, suffix);
         list.forEach(sj::add);
         return sj.toString();
     }

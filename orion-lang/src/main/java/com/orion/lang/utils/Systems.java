@@ -119,12 +119,12 @@ public class Systems {
         BE_WINDOWS = Const.BACKSLASH.equals(File.separator);
         USER_NAME = getProperty("user.name", Const.UNKNOWN);
         FILE_ENCODING = getProperty("file.encoding", Const.UTF_8);
-        HOME_DIR = getProperty("user.home", Const.ROOT);
-        USER_DIR = getProperty("user.dir", Const.ROOT);
-        TEMP_DIR = getProperty("java.io.tmpdir", Const.ROOT);
+        HOME_DIR = getProperty("user.home", Const.ROOT_PATH);
+        USER_DIR = getProperty("user.dir", Const.ROOT_PATH);
+        TEMP_DIR = getProperty("java.io.tmpdir", Const.ROOT_PATH);
         OS_NAME = getProperty("os.name", Const.UNKNOWN);
         OS_VERSION = getProperty("os.version", Const.UNKNOWN);
-        JAVA_HOME = getProperty("java.home", Const.ROOT);
+        JAVA_HOME = getProperty("java.home", Const.ROOT_PATH);
         if (BE_WINDOWS) {
             HOST_NAME = getEnv("COMPUTERNAME");
         } else {

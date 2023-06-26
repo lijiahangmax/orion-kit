@@ -1,5 +1,6 @@
 package com.orion.web.servlet.wrapper;
 
+import com.orion.lang.constant.Const;
 import com.orion.lang.utils.Xsses;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +31,7 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
     public XssHttpServletRequestWrapper(HttpServletRequest servletRequest, String fields) {
         super(servletRequest);
         this.ignoreFields = new HashSet<>();
-        String[] fieldArr = fields.split(",");
+        String[] fieldArr = fields.split(Const.COMMA);
         for (String f : fieldArr) {
             ignoreFields.add(f.trim());
         }

@@ -21,6 +21,14 @@ public interface StandardHttpHeader {
 
     String CONTENT_DISPOSITION = "Content-Disposition";
 
+    String CONTENT_ENCODING = "Content-Encoding";
+
+    String CONTENT_LOCATION = "Content-Location";
+
+    String CONTENT_RANGE = "Content-Range";
+
+    String ALLOW = "Allow";
+
     String USER_AGENT = "User-Agent";
 
     String ORIGIN = "Origin";
@@ -31,19 +39,29 @@ public interface StandardHttpHeader {
 
     String SERVER = "Server";
 
+    String LAST_MODIFIED = "Last-Modified";
+
     String CACHE_CONTROL = "Cache-Control";
 
     String COOKIE = "Cookie";
 
     String SET_COOKIE = "Set-Cookie";
 
-    String ACCEPT = "Accept";
+    String SET_COOKIE2 = "Set-Cookie2";
 
     String AUTHORIZATION = "Authorization";
+
+    String ACCEPT = "Accept";
 
     String ACCEPT_ENCODING = "Accept-Encoding";
 
     String ACCEPT_LANGUAGE = "Accept-Language";
+
+    String ACCEPT_CHARSET = "Accept-Charset";
+
+    String ACCEPT_PATCH = "Accept-Patch";
+
+    String ACCEPT_RANGES = "accept-ranges";
 
     String TRANSFER_ENCODING = "Transfer-Encoding";
 
@@ -59,6 +77,8 @@ public interface StandardHttpHeader {
 
     String SEC_FETCH_DEST = "Sec-Fetch-Dest";
 
+    String SEC_WEB_SOCKET_PROTOCOL = "Sec-WebSocket-Protocol";
+
     String ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
 
     String ACCESS_CONTROL_ALLOW_CREDENTIALS = "Access-Control-Allow-Credentials";
@@ -73,6 +93,8 @@ public interface StandardHttpHeader {
 
     String ACCESS_CONTROL_EXPOSE_HEADERS = "Access-Control-Expose-Headers";
 
+    String ACCESS_CONTROL_REQUEST_METHOD = "Access-Control-Request-Method";
+
     String X_REQUESTED_WITH = "X-Requested-With";
 
     String X_FORWARDED_FOR = "X-Forwarded-For";
@@ -85,6 +107,16 @@ public interface StandardHttpHeader {
 
     String X_POWERED_BY = "X-Powered-By";
 
+    String MAX_FORWARDS = "Max-Forwards";
+
+    String PROXY_AUTHENTICATE = "Proxy-Authenticate";
+
+    String PROXY_AUTHORIZATION = "Proxy-Authorization";
+
+    String X_CACHE_LOOKUP = "x-cache-lookup";
+
+    String X_REQ_ID = "x-req-id";
+
     String E_TAG = "ETag";
 
     String PRAGMA = "Pragma";
@@ -95,18 +127,46 @@ public interface StandardHttpHeader {
 
     String VARY = "Vary";
 
-    String LAST_MODIFIED = "Last-Modified";
+    String UPGRADE = "Upgrade";
 
     String UPGRADE_INSECURE_REQUESTS = "upgrade-insecure-requests";
 
-    String X_CACHE_LOOKUP = "x-cache-lookup";
-
-    String X_REQ_ID = "x-req-id";
-
-    String Expires = "expires";
-
-    String ACCEPT_RANGES = "accept-ranges";
+    String EXPIRES = "expires";
 
     String AGE = "age";
+
+    String RANGE = "Range";
+
+    String ETAG = "ETag";
+
+    String EXPECT = "Expect";
+
+    String FROM = "From";
+
+    String LINK = "Link";
+
+    String LOCATION = "Location";
+
+    String RETRY_AFTER = "Retry-After";
+
+    String TE = "TE";
+
+    String TRAILER = "Trailer";
+
+    String VIA = "Via";
+
+    String WARNING = "Warning";
+
+    String IF_MATCH = "If-Match";
+
+    String IF_MODIFIED_SINCE = "If-Modified-Since";
+
+    String IF_NONE_MATCH = "If-None-Match";
+
+    String IF_RANGE = "If-Range";
+
+    String IF_UNMODIFIED_SINCE = "If-Unmodified-Since";
+
+    String WWW_AUTHENTICATE = "WWW-Authenticate";
 
 }

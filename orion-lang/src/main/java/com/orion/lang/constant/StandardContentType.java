@@ -2,6 +2,8 @@ package com.orion.lang.constant;
 
 /**
  * 标准 ContentType
+ * <p>
+ * type/subtype;key=value
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -10,6 +12,11 @@ package com.orion.lang.constant;
 public interface StandardContentType {
 
     String CONTENT_TYPE = StandardHttpHeader.CONTENT_TYPE;
+
+    /**
+     *
+     */
+    String ALL = "*/*";
 
     // -------------------- text --------------------
 
@@ -27,6 +34,10 @@ public interface StandardContentType {
      * xml 格式
      */
     String TEXT_XML = "text/xml";
+
+    String TEXT_EVENT_STREAM = "text/event-stream";
+
+    String TEXT_MARKDOWN = "text/markdown";
 
     // -------------------- image --------------------
 
@@ -58,6 +69,11 @@ public interface StandardContentType {
     String APPLICATION_JSON = "application/json";
 
     /**
+     * json 数据格式
+     */
+    String APPLICATION_JSON_UTF8 = "application/json;charset=UTF-8";
+
+    /**
      * pdf 格式
      */
     String APPLICATION_PDF = "application/pdf";
@@ -82,16 +98,36 @@ public interface StandardContentType {
      */
     String APPLICATION_STREAM = "application/octet-stream";
 
-    // -------------------- form --------------------
-
     /**
      * form表单
      */
     String APPLICATION_FORM = "application/x-www-form-urlencoded";
 
+    String APPLICATION_ATOM_XML = "application/atom+xml";
+
+    String APPLICATION_XHTML_XML = "application/xhtml+xml";
+
+    String APPLICATION_CBOR = "application/cbor";
+
+    String APPLICATION_GRAPHQL = "application/graphql+json";
+
+    String APPLICATION_PROBLEM_JSON = "application/problem+json";
+
+    String APPLICATION_PROBLEM_XML = "application/problem+xml";
+
+    String APPLICATION_RSS_XML = "application/rss+xml";
+
+    String APPLICATION_NDJSON = "application/x-ndjson";
+
+    // -------------------- multipart --------------------
+
     /**
-     * form表单上传文件
+     * form 表单上传文件
      */
     String MULTIPART_FORM = "multipart/form-data";
+
+    String MULTIPART_MIXED = "multipart/mixed";
+
+    String MULTIPART_RELATED = "multipart/related";
 
 }

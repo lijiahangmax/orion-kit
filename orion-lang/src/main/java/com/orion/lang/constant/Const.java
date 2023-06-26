@@ -32,6 +32,8 @@ public interface Const extends OrionConst {
 
     String DOT = ".";
 
+    String DOT_2 = "..";
+
     String POUND = "#";
 
     String DOLLAR = "$";
@@ -41,6 +43,18 @@ public interface Const extends OrionConst {
     String SLASH = "/";
 
     String BACKSLASH = "\\";
+
+    String QUOTE = "\"";
+
+    String SINGLE_QUOTE = "'";
+
+    String UNDERLINE = "_";
+
+    String COLON = ":";
+
+    String COMMA = ",";
+
+    String AMP = "&";
 
     String EMPTY = "";
 
@@ -134,7 +148,7 @@ public interface Const extends OrionConst {
 
     // -------------------- file path --------------------
 
-    String ROOT = SLASH;
+    String ROOT_PATH = SLASH;
 
     String SEPARATOR = SLASH;
 
@@ -294,6 +308,8 @@ public interface Const extends OrionConst {
 
     String BEARER = "Bearer";
 
+    String BASIC = "Basic";
+
     String BR = "<br/>";
 
     String OK = "ok";
@@ -305,6 +321,10 @@ public interface Const extends OrionConst {
     String FAILED = "failed";
 
     String NULL = "null";
+
+    String ROOT = "root";
+
+    String ADMIN = "admin";
 
     String TIMEOUT = "timeout";
 

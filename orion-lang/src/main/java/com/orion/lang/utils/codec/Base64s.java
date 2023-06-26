@@ -131,7 +131,7 @@ public class Base64s {
     public static byte[] img64Decode(String s) {
         // int i = s.indexOf("base64");
         // return decode(Strings.bytes(s.substring(i + 7)));
-        String[] b = s.split(",");
+        String[] b = s.split(Const.COMMA);
         return decode(Strings.bytes(b[b.length - 1]));
     }
 
@@ -142,7 +142,7 @@ public class Base64s {
      * @return 图片类型
      */
     public static String img64Type(String s) {
-        String[] b = s.split(",");
+        String[] b = s.split(Const.COMMA);
         if (b.length == 0) {
             return Strings.EMPTY;
         }
