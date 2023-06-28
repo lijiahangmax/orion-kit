@@ -267,27 +267,22 @@ public class Lists extends Collections {
     }
 
     /**
-     * 合并list
+     * 合并 list
      *
-     * @param list 合并到的list
-     * @param ms   需要合并的list
-     * @param <E>  ignore
-     * @return 合并后的list
+     * @param source 合并到的 list
+     * @param ms     需要合并的 list
+     * @param <E>    ignore
      */
     @SafeVarargs
-    public static <E> List<E> merge(List<E> list, List<E>... ms) {
-        if (list == null) {
-            list = new ArrayList<>();
-        }
+    public static <E> void merge(List<E> source, List<E>... ms) {
         if (ms == null) {
-            return list;
+            return;
         }
         for (List<E> m : ms) {
             if (m != null) {
-                list.addAll(m);
+                source.addAll(m);
             }
         }
-        return list;
     }
 
     /**

@@ -318,26 +318,44 @@ public class Maps {
     }
 
     /**
-     * 合并map
+     * 合并 map
+     * 如果对象是 map 将会再次合并
      *
-     * @param map 合并到的map
-     * @param ms  需要合并的map
-     * @param <K> ignore
-     * @param <V> ignore
-     * @return 合并后的map
+     * @param sourceMap sourceMap
+     * @param addMap    addMap
+     * @param <K>       K
+     * @param <V>       V
+     */
+    public static <K, V> void combine(Map<K, V> sourceMap, Map<K, V> addMap) {
+        addMap.forEach((k, v) -> {
+            V sourceValue = sourceMap.get(k);
+            // 都为 map 则再次合并
+            if (sourceValue instanceof Map && v instanceof Map) {
+                combine((Map<K, V>) sourceValue, (Map<K, V>) v);
+            } else {
+                sourceMap.put(k, v);
+            }
+        });
+    }
+
+    /**
+     * 合并 map
+     * <p>
+     * 将会覆盖 sourceMap
+     *
+     * @param sourceMap 合并到的 map
+     * @param ms        需要合并的 map
+     * @param <K>       ignore
+     * @param <V>       ignore
      */
     @SafeVarargs
-    public static <K, V> Map<K, V> merge(Map<K, V> map, Map<K, V>... ms) {
-        if (map == null) {
-            map = new HashMap<>(Const.CAPACITY_16);
-        }
+    public static <K, V> void merge(Map<K, V> sourceMap, Map<K, V>... ms) {
         if (ms == null) {
-            return map;
+            return;
         }
         for (Map<K, V> m : ms) {
-            map.putAll(m);
+            sourceMap.putAll(m);
         }
-        return map;
     }
 
     /**

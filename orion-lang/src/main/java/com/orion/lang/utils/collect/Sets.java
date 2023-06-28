@@ -229,25 +229,20 @@ public class Sets extends Collections {
     /**
      * 合并set
      *
-     * @param set 合并到的set
-     * @param ms  需要合并的set
-     * @param <E> ignore
-     * @return 合并后的set
+     * @param source 合并到的 set
+     * @param ms     需要合并的 set
+     * @param <E>    ignore
      */
     @SafeVarargs
-    public static <E> Set<E> merge(Set<E> set, Set<E>... ms) {
-        if (set == null) {
-            set = new HashSet<>();
-        }
+    public static <E> void merge(Set<E> source, Set<E>... ms) {
         if (ms == null) {
-            return set;
+            return;
         }
         for (Set<E> m : ms) {
             if (m != null) {
-                set.addAll(m);
+                source.addAll(m);
             }
         }
-        return set;
     }
 
     /**
