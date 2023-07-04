@@ -41,6 +41,8 @@ public interface Letters {
 
     char AMP = '&';
 
+    char AT = '@';
+
     char NULL = '\0';
 
     char BACKSPACE = '\b';

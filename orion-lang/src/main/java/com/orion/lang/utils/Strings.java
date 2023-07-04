@@ -1081,6 +1081,9 @@ public class Strings {
         if (num <= 0) {
             return Strings.EMPTY;
         }
+        if (num == 1) {
+            return str;
+        }
         StringBuilder s = new StringBuilder();
         for (int i = 0; i < num; i++) {
             s.append(str);
@@ -1116,9 +1119,12 @@ public class Strings {
     public static char[] repeatArr(String str, int num) {
         int length = Strings.length(str);
         if (num <= 0) {
-            num = 1;
+            return new char[0];
         }
         char[] chars = str.toCharArray();
+        if (num == 1) {
+            return chars;
+        }
         char[] arr = new char[length * num];
         for (int i = 0; i < num; i++) {
             System.arraycopy(chars, 0, arr, i * length, length);

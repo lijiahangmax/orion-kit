@@ -115,13 +115,23 @@ class BaseDates {
     }
 
     /**
+     * 时间是否已过期
+     *
+     * @param time time
+     * @return 是否过期
+     */
+    public static boolean isExpired(long time) {
+        return time < System.currentTimeMillis();
+    }
+
+    /**
      * 判断时间是否在未来
      *
-     * @param date date
+     * @param time time
      * @return true 在未来
      */
-    public static boolean inFuture(long date) {
-        return date > System.currentTimeMillis();
+    public static boolean inFuture(long time) {
+        return time > System.currentTimeMillis();
     }
 
     public static String interval(long ms) {

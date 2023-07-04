@@ -233,6 +233,24 @@ public class Files1 {
         }
     }
 
+    public static boolean exists(String file) {
+        return new File(file).exists();
+    }
+
+    public static boolean exists(File file) {
+        return file.exists();
+    }
+
+    /**
+     * 文件是否存在
+     *
+     * @param file 文件
+     * @return 是否存在
+     */
+    public static boolean exists(Path file) {
+        return Files.exists(file);
+    }
+
     public static boolean isFile(String file) {
         return isFile(new File(file));
     }

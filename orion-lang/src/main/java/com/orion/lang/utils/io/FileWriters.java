@@ -637,6 +637,30 @@ public class FileWriters {
         writeFast(file, bs, off, len, false);
     }
 
+    public static void writeFast(String file, InputStream in) {
+        writeFast(Paths.get(file), in, false, false);
+    }
+
+    public static void writeFast(File file, InputStream in) {
+        writeFast(Paths.get(file.getAbsolutePath()), in, false, false);
+    }
+
+    public static void writeFast(Path file, InputStream in) {
+        writeFast(file, in, false, false);
+    }
+
+    public static void writeFast(String file, InputStream in, boolean autoClose) {
+        writeFast(Paths.get(file), in, autoClose, false);
+    }
+
+    public static void writeFast(File file, InputStream in, boolean autoClose) {
+        writeFast(Paths.get(file.getAbsolutePath()), in, autoClose, false);
+    }
+
+    public static void writeFast(Path file, InputStream in, boolean autoClose) {
+        writeFast(file, in, autoClose, false);
+    }
+
     public static void appendFast(String file, byte[] bs) {
         writeFast(Paths.get(file), bs, 0, bs.length, true);
     }
@@ -669,6 +693,30 @@ public class FileWriters {
         writeFast(file, bs, off, len, true);
     }
 
+    public static void appendFast(String file, InputStream in) {
+        writeFast(Paths.get(file), in, false, true);
+    }
+
+    public static void appendFast(File file, InputStream in) {
+        writeFast(Paths.get(file.getAbsolutePath()), in, false, true);
+    }
+
+    public static void appendFast(Path file, InputStream in) {
+        writeFast(file, in, false, true);
+    }
+
+    public static void appendFast(String file, InputStream in, boolean autoClose) {
+        writeFast(Paths.get(file), in, autoClose, true);
+    }
+
+    public static void appendFast(File file, InputStream in, boolean autoClose) {
+        writeFast(Paths.get(file.getAbsolutePath()), in, autoClose, true);
+    }
+
+    public static void appendFast(Path file, InputStream in, boolean autoClose) {
+        writeFast(file, in, autoClose, true);
+    }
+
     /**
      * 写入/拼接
      *
@@ -683,6 +731,24 @@ public class FileWriters {
             StreamWriters.write(out, bs, off, len);
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
+        }
+    }
+
+    /**
+     * 写入/拼接
+     *
+     * @param file      file
+     * @param in        in
+     * @param autoClose autoClose input
+     * @param append    append
+     */
+    private static void writeFast(Path file, InputStream in, boolean autoClose, boolean append) {
+        try (OutputStream out = openOutputStreamFast(file, append)) {
+            Streams.transfer(in, out);
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime(e);
+        } finally {
+            close(in, autoClose);
         }
     }
 

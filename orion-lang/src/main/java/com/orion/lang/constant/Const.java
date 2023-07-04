@@ -56,6 +56,8 @@ public interface Const extends OrionConst {
 
     String AMP = "&";
 
+    String AT = "@";
+
     String EMPTY = "";
 
     String SPACE = " ";
@@ -310,8 +312,6 @@ public interface Const extends OrionConst {
 
     String BASIC = "Basic";
 
-    String BR = "<br/>";
-
     String OK = "ok";
 
     String SUCCESS = "success";
@@ -323,6 +323,8 @@ public interface Const extends OrionConst {
     String NULL = "null";
 
     String ROOT = "root";
+
+    String TOKEN = "token";
 
     String ADMIN = "admin";
 
@@ -353,5 +355,21 @@ public interface Const extends OrionConst {
     String EMPTY_OBJECT = "{}";
 
     String EMPTY_ARRAY = "[]";
+
+    // -------------------- others --------------------
+
+    String BR = "<br/>";
+
+    String HTML_NBSP = "&nbsp;";
+
+    String HTML_AMP = "&amp;";
+
+    String HTML_QUOTE = "&quot;";
+
+    String HTML_APOS = "&apos;";
+
+    String HTML_LT = "&lt;";
+
+    String HTML_GT = "&gt;";
 
 }
