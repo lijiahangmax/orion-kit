@@ -1,10 +1,12 @@
 package com.orion.web.servlet.web;
 
+import com.alibaba.fastjson.JSON;
 import com.orion.lang.constant.Const;
 import com.orion.lang.constant.StandardContentType;
 import com.orion.lang.constant.StandardHttpHeader;
 import com.orion.lang.define.collect.MutableHashMap;
 import com.orion.lang.define.mutable.MutableString;
+import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Urls;
 import com.orion.lang.utils.io.Streams;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Map;
@@ -593,7 +596,7 @@ public class Servlets {
      * @throws IOException IOException
      */
     public static void transfer(HttpServletResponse response, byte[] bs, String fileName) throws IOException {
-        setDownloadHeader(response, fileName);
+        setAttachmentHeader(response, fileName);
         Streams.transfer(Streams.toInputStream(bs), response.getOutputStream());
     }
 
@@ -617,7 +620,7 @@ public class Servlets {
      * @throws IOException IOException
      */
     public static void transfer(HttpServletResponse response, InputStream in, String fileName) throws IOException {
-        setDownloadHeader(response, fileName);
+        setAttachmentHeader(response, fileName);
         Streams.transfer(in, response.getOutputStream());
     }
 
@@ -641,17 +644,17 @@ public class Servlets {
      * @throws IOException IOException
      */
     public static void transfer(HttpServletResponse response, Reader reader, String fileName) throws IOException {
-        setDownloadHeader(response, fileName);
+        setAttachmentHeader(response, fileName);
         Streams.transfer(reader, response.getWriter());
     }
 
     /**
-     * 设置下载头
+     * 设置附件头
      *
      * @param response response
      * @param fileName 文件名称
      */
-    public static void setDownloadHeader(HttpServletResponse response, String fileName) {
+    public static void setAttachmentHeader(HttpServletResponse response, String fileName) {
         response.setContentType(StandardContentType.APPLICATION_STREAM);
         response.setHeader(StandardHttpHeader.ACCESS_CONTROL_EXPOSE_HEADERS, StandardHttpHeader.CONTENT_DISPOSITION);
         try {
@@ -659,6 +662,30 @@ public class Servlets {
         } catch (UnsupportedEncodingException e) {
             throw Exceptions.unsupportedEncoding(e);
         }
+    }
+
+    /**
+     * 写入 json
+     *
+     * @param response response
+     * @param o        object
+     * @throws IOException IOException
+     */
+    public static void writeJson(HttpServletResponse response, Object o) throws IOException {
+        response.setContentType(StandardContentType.APPLICATION_JSON_UTF8);
+        Servlets.transfer(response, JSON.toJSONBytes(o));
+    }
+
+    /**
+     * 写入 httpWrapper
+     *
+     * @param response response
+     * @param wrapper  wrapper
+     * @throws IOException IOException
+     */
+    public static void writeHttpWrapper(HttpServletResponse response, HttpWrapper<?> wrapper) throws IOException {
+        response.setContentType(StandardContentType.APPLICATION_JSON_UTF8);
+        transfer(response, wrapper.toJsonString().getBytes(StandardCharsets.UTF_8));
     }
 
     /**

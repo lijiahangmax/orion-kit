@@ -9,9 +9,37 @@ package com.orion.lang.constant;
  */
 public interface StandardHttpHeader {
 
+    // -------------------- request context --------------------
+
     String HOST = "Host";
 
+    String FROM = "From";
+
+    String REFERER = "Referer";
+
+    String USER_AGENT = "User-Agent";
+
+    String DATE = "Date";
+
+    String LINK = "Link";
+
+    String UPGRADE = "Upgrade";
+
+    String REFERRER_POLICY = "Referrer-Policy";
+
+    // -------------------- response context --------------------
+
+    String ALLOW = "Allow";
+
+    String SERVER = "Server";
+
+    // -------------------- connection management --------------------
+
     String CONNECTION = "Connection";
+
+    String KEEP_ALIVE = "Keep-Alive";
+
+    // -------------------- content --------------------
 
     String CONTENT_TYPE = "Content-Type";
 
@@ -19,37 +47,13 @@ public interface StandardHttpHeader {
 
     String CONTENT_LANGUAGE = "Content-Language";
 
-    String CONTENT_DISPOSITION = "Content-Disposition";
-
     String CONTENT_ENCODING = "Content-Encoding";
 
     String CONTENT_LOCATION = "Content-Location";
 
-    String CONTENT_RANGE = "Content-Range";
+    String CONTENT_DISPOSITION = "Content-Disposition";
 
-    String ALLOW = "Allow";
-
-    String USER_AGENT = "User-Agent";
-
-    String ORIGIN = "Origin";
-
-    String REFERER = "Referer";
-
-    String DATE = "Date";
-
-    String SERVER = "Server";
-
-    String LAST_MODIFIED = "Last-Modified";
-
-    String CACHE_CONTROL = "Cache-Control";
-
-    String COOKIE = "Cookie";
-
-    String SET_COOKIE = "Set-Cookie";
-
-    String SET_COOKIE2 = "Set-Cookie2";
-
-    String AUTHORIZATION = "Authorization";
+    // -------------------- content negotiation --------------------
 
     String ACCEPT = "Accept";
 
@@ -61,23 +65,55 @@ public interface StandardHttpHeader {
 
     String ACCEPT_PATCH = "Accept-Patch";
 
-    String ACCEPT_RANGES = "accept-ranges";
+    // -------------------- control --------------------
 
-    String TRANSFER_ENCODING = "Transfer-Encoding";
+    String EXPECT = "Expect";
 
-    String SEC_CH_UA = "sec-ch-ua";
+    String MAX_FORWARDS = "Max-Forwards";
 
-    String SEC_CH_UA_MOBILE = "sec-ch-ua-mobile";
+    // -------------------- cookie --------------------
 
-    String SEC_CH_UA_PLATFORM = "sec-ch-ua-platform";
+    String COOKIE = "Cookie";
 
-    String SEC_FETCH_SITE = "Sec-Fetch-Site";
+    String SET_COOKIE = "Set-Cookie";
 
-    String SEC_FETCH_MODE = "Sec-Fetch-Mode";
+    String SET_COOKIE2 = "Set-Cookie2";
 
-    String SEC_FETCH_DEST = "Sec-Fetch-Dest";
+    // -------------------- cache --------------------
 
-    String SEC_WEB_SOCKET_PROTOCOL = "Sec-WebSocket-Protocol";
+    String AGE = "Age";
+
+    String EXPIRES = "Expires";
+
+    String PRAGMA = "Pragma";
+
+    String CACHE_CONTROL = "Cache-Control";
+
+    String CLEAR_SITE_DATA = "Clear-Site-Data";
+
+    String WARNING = "Warning";
+
+    String X_CACHE_LOOKUP = "X-Cache-Lookup";
+
+    // -------------------- authentication --------------------
+
+    String AUTHORIZATION = "Authorization";
+
+    String WWW_AUTHENTICATE = "WWW-Authenticate";
+
+    String PROXY_AUTHENTICATE = "Proxy-Authenticate";
+
+    String PROXY_AUTHORIZATION = "Proxy-Authorization";
+
+    // -------------------- redirect --------------------
+
+    String LOCATION = "Location";
+
+    String REFRESH = "Refresh";
+
+    // -------------------- cors --------------------
+
+    String ORIGIN = "Origin";
 
     String ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
 
@@ -89,84 +125,208 @@ public interface StandardHttpHeader {
 
     String ACCESS_CONTROL_MAX_AGE = "Access-Control-Max-Age";
 
+    String ACCESS_CONTROL_REQUEST_METHOD = "Access-Control-Request-Method";
+
     String ACCESS_CONTROL_REQUEST_HEADERS = "Access-Control-Request-Headers";
 
     String ACCESS_CONTROL_EXPOSE_HEADERS = "Access-Control-Expose-Headers";
 
-    String ACCESS_CONTROL_REQUEST_METHOD = "Access-Control-Request-Method";
+    String TIMING_ALLOW_ORIGIN = "Timing-Allow-Origin";
 
-    String X_REQUESTED_WITH = "X-Requested-With";
+    // -------------------- proxy --------------------
+
+    String VIA = "Via";
+
+    String FORWARDED = "Forwarded";
 
     String X_FORWARDED_FOR = "X-Forwarded-For";
+
+    String X_FORWARDED_HOST = "X-Forwarded-Host";
+
+    String X_FORWARDED_PROTO = "X-Forwarded-Proto";
+
+    String X_REAL_IP = "X-Real-IP";
 
     String PROXY_CLIENT_IP = "Proxy-Client-IP";
 
     String WL_PROXY_CLIENT_IP = "WL-Proxy-Client-IP";
 
-    String X_REAL_IP = "X-Real-IP";
+    // -------------------- conditional --------------------
 
-    String X_POWERED_BY = "X-Powered-By";
+    String IF_MATCH = "If-Match";
 
-    String MAX_FORWARDS = "Max-Forwards";
+    String IF_NONE_MATCH = "If-None-Match";
 
-    String PROXY_AUTHENTICATE = "Proxy-Authenticate";
+    String IF_MODIFIED_SINCE = "If-Modified-Since";
 
-    String PROXY_AUTHORIZATION = "Proxy-Authorization";
-
-    String X_CACHE_LOOKUP = "x-cache-lookup";
-
-    String X_REQ_ID = "x-req-id";
-
-    String E_TAG = "ETag";
-
-    String PRAGMA = "Pragma";
-
-    String PURPOSE = "Purpose";
-
-    String KEEP_ALIVE = "Keep-Alive";
-
-    String VARY = "Vary";
-
-    String UPGRADE = "Upgrade";
-
-    String UPGRADE_INSECURE_REQUESTS = "upgrade-insecure-requests";
-
-    String EXPIRES = "expires";
-
-    String AGE = "age";
-
-    String RANGE = "Range";
+    String IF_UNMODIFIED_SINCE = "If-Unmodified-Since";
 
     String ETAG = "ETag";
 
-    String EXPECT = "Expect";
+    String LAST_MODIFIED = "Last-Modified";
 
-    String FROM = "From";
+    String VARY = "Vary";
 
-    String LINK = "Link";
+    // -------------------- request range --------------------
 
-    String LOCATION = "Location";
+    String ACCEPT_RANGES = "Accept-Ranges";
 
-    String RETRY_AFTER = "Retry-After";
+    String RANGE = "Range";
+
+    String IF_RANGE = "If-Range";
+
+    String CONTENT_RANGE = "Content-Range";
+
+    // -------------------- transfer encoding --------------------
+
+    String TRANSFER_ENCODING = "Transfer-Encoding";
 
     String TE = "TE";
 
     String TRAILER = "Trailer";
 
-    String VIA = "Via";
+    // -------------------- security --------------------
 
-    String WARNING = "Warning";
+    String EXPECT_CT = "Expect-CT";
 
-    String IF_MATCH = "If-Match";
+    String CROSS_ORIGIN_EMBEDDER_POLICY = "Cross-Origin-Embedder-Policy";
 
-    String IF_MODIFIED_SINCE = "If-Modified-Since";
+    String CROSS_ORIGIN_OPENER_POLICY = "Cross-Origin-Opener-Policy";
 
-    String IF_NONE_MATCH = "If-None-Match";
+    String CROSS_ORIGIN_RESOURCE_POLICY = "Cross-Origin-Resource-Policy";
 
-    String IF_RANGE = "If-Range";
+    String CONTENT_SECURITY_POLICY = "Content-Security-Policy";
 
-    String IF_UNMODIFIED_SINCE = "If-Unmodified-Since";
+    String CONTENT_SECURITY_POLICY_REPORT_ONLY = "Content-Security-Policy-Report-Only";
 
-    String WWW_AUTHENTICATE = "WWW-Authenticate";
+    String ORIGIN_ISOLATION = "Origin-Isolation";
+
+    String PERMISSIONS_POLICY = "Permissions-Policy";
+
+    String STRICT_TRANSPORT_SECURITY = "Strict-Transport-Security";
+
+    String UPGRADE_INSECURE_REQUESTS = "Upgrade-Insecure-Requests";
+
+    String X_CONTENT_TYPE_OPTIONS = "X-Content-Type-Options";
+
+    String X_DOWNLOAD_OPTIONS = "X-Download-Options";
+
+    String X_FRAME_OPTIONS = "X-Frame-Options";
+
+    String X_PERMITTED_CROSS_DOMAIN_POLICIES = "X-Permitted-Cross-Domain-Policies";
+
+    String X_POWERED_BY = "X-Powered-By";
+
+    String X_XSS_PROTECTION = "X-XSS-Protection";
+
+    // -------------------- fetch meta --------------------
+
+    String SEC_FETCH_SITE = "Sec-Fetch-Site";
+
+    String SEC_FETCH_MODE = "Sec-Fetch-Mode";
+
+    String SEC_FETCH_USER = "Sec-Fetch-User";
+
+    String SEC_FETCH_DEST = "Sec-Fetch-Dest";
+
+    String SERVICE_WORKER_NAVIGATION_PRELOAD = "Service-Worker-Navigation-Preload";
+
+    // -------------------- server event --------------------
+
+    String LAST_EVENT_ID = "Last-Event-ID";
+
+    String NEL = "NEL";
+
+    String PING_FROM = "Ping-From";
+
+    String PING_TO = "Ping-To";
+
+    String REPORT_TO = "Report-To";
+
+    String PURPOSE = "Purpose";
+
+    // -------------------- client hint --------------------
+
+    String ACCEPT_CH = "Accept-CH";
+
+    String CRITICAL_CH = "Critical-CH";
+
+    String SEC_CH_UA = "Sec-CH-UA";
+
+    String SEC_CH_UA_ARCH = "Sec-CH-UA-Arch";
+
+    String SEC_CH_UA_BITNESS = "Sec-CH-UA-Bitness";
+
+    String SEC_CH_UA_FULL_VERSION_LIST = "Sec-CH-UA-Full-Version-List";
+
+    String SEC_CH_UA_MOBILE = "Sec-CH-UA-Mobile";
+
+    String SEC_CH_UA_MODEL = "Sec-CH-UA-Model";
+
+    String SEC_CH_UA_PLATFORM = "Sec-CH-UA-Platform";
+
+    String SEC_CH_UA_PLATFORM_VERSION = "Sec-CH-UA-Platform-Version";
+
+    String SEC_CH_PREFERS_REDUCED_MOTION = "Sec-CH-Prefers-Reduced-Motion";
+
+    String DOWNLINK = "Downlink";
+
+    String ECT = "ECT";
+
+    String RTT = "RTT";
+
+    String SAVE_DATA = "Save-Data";
+
+    // -------------------- web socket --------------------
+
+    String SEC_WEBSOCKET_KEY = "Sec-WebSocket-Key";
+
+    String SEC_WEBSOCKET_ACCEPT = "Sec-WebSocket-Accept";
+
+    String SEC_WEBSOCKET_PROTOCOL = "Sec-WebSocket-Protocol";
+
+    String SEC_WEBSOCKET_VERSION = "Sec-WebSocket-Version";
+
+    String SEC_WEBSOCKET_EXTENSIONS = "Sec-WebSocket-Extensions";
+
+    // -------------------- others --------------------
+
+    String ACCEPT_PUSH_POLICY = "Accept-Push-Policy";
+
+    String ACCEPT_SIGNATURE = "Accept-Signature";
+
+    String ALT_SVC = "Alt-Svc";
+
+    String EARLY_DATA = "Early-Data";
+
+    String LARGE_ALLOCATION = "Large-Allocation";
+
+    String PUSH_POLICY = "Push-Policy";
+
+    String RETRY_AFTER = "Retry-After";
+
+    String SIGNATURE = "Signature";
+
+    String SIGNED_HEADERS = "Signed-Headers";
+
+    String SERVER_TIMING = "Server-Timing";
+
+    String SERVICE_WORKER_ALLOWED = "Service-Worker-Allowed";
+
+    String SOURCE_MAP = "SourceMap";
+
+    String X_DNS_PREFETCH_CONTROL = "X-DNS-Prefetch-Control";
+
+    String X_FIREFOX_SPDY = "X-Firefox-Spdy";
+
+    String X_PINGBACK = "X-Pingback";
+
+    String X_REQUESTED_WITH = "X-Requested-With";
+
+    String X_REQ_ID = "X-Req-ID";
+
+    String X_ROBOTS_TAG = "X-Robots-Tag";
+
+    String X_UA_COMPATIBLE = "X-UA-Compatible";
 
 }

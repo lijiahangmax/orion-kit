@@ -340,18 +340,6 @@ public interface Const extends OrionConst {
 
     String LOCALHOST_IP_V6 = "0:0:0:0:0:0:0:1";
 
-    Integer ENABLE = 1;
-
-    Integer DISABLE = 2;
-
-    Integer INCREMENT = 1;
-
-    Integer DECREMENT = 2;
-
-    Integer NOT_DELETED = 1;
-
-    Integer IS_DELETED = 2;
-
     String EMPTY_OBJECT = "{}";
 
     String EMPTY_ARRAY = "[]";

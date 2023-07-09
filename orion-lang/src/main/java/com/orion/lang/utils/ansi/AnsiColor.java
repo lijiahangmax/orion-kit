@@ -3,7 +3,7 @@ package com.orion.lang.utils.ansi;
 /**
  * ANSI 高亮颜色转义码
  * <p>
- * \u001B = \x1b = 27 = esc
+ * \u001B = \x1b = 27 = ESC
  * <p>
  * 基本8色   基本高对比色  xterm 256 色
  * 30 ~ 37  90 ~ 97     0 ~ 256
@@ -32,7 +32,7 @@ package com.orion.lang.utils.ansi;
  * @version 1.0.0
  * @since 2023/6/20 10:51
  */
-public enum AnsiCode {
+public enum AnsiColor {
 
     /**
      * 黑色
@@ -218,7 +218,7 @@ public enum AnsiCode {
      */
     public static final String SUFFIX = (char) 27 + "[0m";
 
-    AnsiCode(int code) {
+    AnsiColor(int code) {
         this.code = code;
         this.prefix = getPrefix(code);
     }
@@ -229,7 +229,7 @@ public enum AnsiCode {
      * @param s s
      * @return s
      */
-    public String stain(String s) {
+    public String color(String s) {
         return prefix + s + SUFFIX;
     }
 
@@ -251,7 +251,7 @@ public enum AnsiCode {
      * @param code code
      * @return s
      */
-    public static String getStain(String s, int code) {
+    public static String getColor(String s, int code) {
         return getPrefix(code) + s + SUFFIX;
     }
 
