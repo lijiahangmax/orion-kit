@@ -31,4 +31,12 @@ public class MutableConcurrentHashMap<K, V> extends ConcurrentHashMap<K, V> impl
         super(m);
     }
 
+    public static <K, V> MutableConcurrentHashMap<K, V> create() {
+        return new MutableConcurrentHashMap<>();
+    }
+
+    public static <K, V> MutableConcurrentHashMap<K, V> create(Map<? extends K, ? extends V> m) {
+        return new MutableConcurrentHashMap<>(m);
+    }
+
 }

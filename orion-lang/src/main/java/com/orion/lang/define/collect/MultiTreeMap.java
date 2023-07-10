@@ -33,6 +33,18 @@ public class MultiTreeMap<E, K, V> extends TreeMap<E, TreeMap<K, V>>
         this.keyComparator = keyComparator;
     }
 
+    public static <E, K, V> MultiTreeMap<E, K, V> create() {
+        return new MultiTreeMap<>();
+    }
+
+    public static <E, K, V> MultiTreeMap<E, K, V> create(Comparator<? super E> comparator) {
+        return new MultiTreeMap<>(comparator);
+    }
+
+    public static <E, K, V> MultiTreeMap<E, K, V> create(Comparator<? super E> comparator, Comparator<? super K> keyComparator) {
+        return new MultiTreeMap<>(comparator, keyComparator);
+    }
+
     /**
      * 设置 key 比较器
      *

@@ -31,4 +31,12 @@ public class MutableLinkedHashSet<E> extends LinkedHashSet<E> implements Mutable
         super(initialCapacity);
     }
 
+    public static <E> MutableLinkedHashSet<E> create() {
+        return new MutableLinkedHashSet<>();
+    }
+
+    public static <E> MutableLinkedHashSet<E> create(Collection<? extends E> c) {
+        return new MutableLinkedHashSet<>(c);
+    }
+
 }

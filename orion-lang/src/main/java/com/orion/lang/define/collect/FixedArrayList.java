@@ -27,6 +27,10 @@ public class FixedArrayList<E> extends ArrayList<E> {
         this.maxSize = Valid.gt(maxSize, Const.N_0);
     }
 
+    public static <E> FixedArrayList<E> create(int maxSize) {
+        return new FixedArrayList<>(maxSize);
+    }
+
     @Override
     public boolean add(E e) {
         this.removeIfFull(1);

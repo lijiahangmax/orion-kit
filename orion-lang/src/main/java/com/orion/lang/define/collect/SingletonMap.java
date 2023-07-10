@@ -39,6 +39,10 @@ public class SingletonMap<K, V> extends AbstractMap<K, V> implements Serializabl
         v = value;
     }
 
+    public static <K, V> SingletonMap<K, V> create(K key, V value) {
+        return new SingletonMap<>(key, value);
+    }
+
     @Override
     public int size() {
         return 1;

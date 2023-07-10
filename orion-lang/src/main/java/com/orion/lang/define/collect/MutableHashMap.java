@@ -31,4 +31,12 @@ public class MutableHashMap<K, V> extends HashMap<K, V> implements MutableMap<K,
         super(m);
     }
 
+    public static <K, V> MutableHashMap<K, V> create() {
+        return new MutableHashMap<>();
+    }
+
+    public static <K, V> MutableHashMap<K, V> create(Map<? extends K, ? extends V> m) {
+        return new MutableHashMap<>(m);
+    }
+
 }

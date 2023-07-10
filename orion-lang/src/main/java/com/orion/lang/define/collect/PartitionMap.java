@@ -31,6 +31,10 @@ public class PartitionMap<K, V> extends AbstractSet<Map<K, V>> implements Iterat
         this.totalSize = map.size();
     }
 
+    public static <K, V> PartitionMap<K, V> create(Map<K, V> map, int size) {
+        return new PartitionMap<>(map, size);
+    }
+
     @Override
     public int size() {
         return (totalSize + size - 1) / size;

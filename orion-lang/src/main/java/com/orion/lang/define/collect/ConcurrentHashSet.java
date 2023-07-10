@@ -48,6 +48,18 @@ public class ConcurrentHashSet<E> extends AbstractSet<E> implements Serializable
         }
     }
 
+    public static <E> ConcurrentHashSet<E> create() {
+        return new ConcurrentHashSet<>();
+    }
+
+    public static <E> ConcurrentHashSet<E> create(Map<? extends E, ?> m) {
+        return new ConcurrentHashSet<>(m);
+    }
+
+    public static <E> ConcurrentHashSet<E> create(Collection<? extends E> s) {
+        return new ConcurrentHashSet<>(s);
+    }
+
     @Override
     public Iterator<E> iterator() {
         return store.keySet().iterator();

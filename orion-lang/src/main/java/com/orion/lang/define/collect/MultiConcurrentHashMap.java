@@ -35,6 +35,10 @@ public class MultiConcurrentHashMap<E, K, V> extends ConcurrentHashMap<E, Concur
         this.keyInitialCapacity = keyInitialCapacity;
     }
 
+    public static <E, K, V> MultiConcurrentHashMap<E, K, V> create() {
+        return new MultiConcurrentHashMap<>();
+    }
+
     /**
      * 设置 key 初始化空间
      *

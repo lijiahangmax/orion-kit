@@ -1,5 +1,8 @@
 package com.orion.lang.define.collect;
 
+import com.orion.lang.constant.Const;
+import com.orion.lang.utils.Valid;
+
 import java.io.Serializable;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
@@ -14,34 +17,41 @@ public class FixedDeque<E> extends ConcurrentLinkedDeque<E> implements Serializa
 
     private static final long serialVersionUID = 923412312354068942L;
 
-    private final int limit;
+    private final int maxSize;
 
-    public FixedDeque(int limit) {
-        if (limit == 0) {
-            this.limit = 10;
-        } else {
-            this.limit = limit;
-        }
+    public FixedDeque(int maxSize) {
+        this.maxSize = Valid.gt(maxSize, Const.N_0);
+    }
+
+    public static <E> FixedDeque<E> create(int maxSize) {
+        return new FixedDeque<>(maxSize);
     }
 
     @Override
     public boolean offerFirst(E s) {
-        if (full()) {
-            pollLast();
+        if (this.isFull()) {
+            // 尾位出
+            this.pollLast();
         }
         return super.offerFirst(s);
     }
 
     @Override
     public boolean offerLast(E s) {
-        if (full()) {
-            pollFirst();
+        if (this.isFull()) {
+            // 首位出
+            this.pollFirst();
         }
         return super.offerLast(s);
     }
 
-    public boolean full() {
-        return size() > limit;
+    /**
+     * 队列是否已满
+     *
+     * @return 是否已满
+     */
+    public boolean isFull() {
+        return this.size() >= maxSize;
     }
 
 }

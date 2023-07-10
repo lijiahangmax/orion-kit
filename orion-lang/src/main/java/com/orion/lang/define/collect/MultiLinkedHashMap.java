@@ -35,22 +35,30 @@ public class MultiLinkedHashMap<E, K, V> extends LinkedHashMap<E, LinkedHashMap<
     private boolean keyAccessOrder;
 
     public MultiLinkedHashMap() {
-        super(Const.CAPACITY_16);
+        this(Const.CAPACITY_16, DEFAULT_LOAD_FACTOR, false);
     }
 
-    public MultiLinkedHashMap(int elementInitialCapacity) {
-        this(elementInitialCapacity, DEFAULT_LOAD_FACTOR, false);
+    public MultiLinkedHashMap(int initialCapacity) {
+        this(initialCapacity, DEFAULT_LOAD_FACTOR, false);
     }
 
-    public MultiLinkedHashMap(int elementInitialCapacity, float loadFactor) {
-        this(elementInitialCapacity, loadFactor, false);
+    public MultiLinkedHashMap(int initialCapacity, float loadFactor) {
+        this(initialCapacity, loadFactor, false);
     }
 
-    public MultiLinkedHashMap(int elementInitialCapacity, float loadFactor, boolean accessOrder) {
-        super(elementInitialCapacity, loadFactor, accessOrder);
-        this.keyInitialCapacity = Const.CAPACITY_16;
-        this.keyLoadFactor = DEFAULT_LOAD_FACTOR;
-        this.keyAccessOrder = false;
+    public MultiLinkedHashMap(int initialCapacity, float loadFactor, boolean accessOrder) {
+        super(initialCapacity, loadFactor, accessOrder);
+        this.keyInitialCapacity = initialCapacity;
+        this.keyLoadFactor = loadFactor;
+        this.keyAccessOrder = accessOrder;
+    }
+
+    public static <E, K, V> MultiLinkedHashMap<E, K, V> create() {
+        return new MultiLinkedHashMap<>();
+    }
+
+    public static <E, K, V> MultiLinkedHashMap<E, K, V> create(int initialCapacity, float loadFactor, boolean accessOrder) {
+        return new MultiLinkedHashMap<>(initialCapacity, loadFactor, accessOrder);
     }
 
     public void keyCapacity(int keyInitialCapacity) {

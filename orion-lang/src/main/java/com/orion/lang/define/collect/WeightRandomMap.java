@@ -20,10 +20,6 @@ public class WeightRandomMap<T> extends TreeMap<Double, T> implements Serializab
 
     private final Random RANDOM = ThreadLocalRandom.current();
 
-    public static <T> WeightRandomMap<T> create() {
-        return new WeightRandomMap<>();
-    }
-
     public WeightRandomMap() {
     }
 
@@ -41,6 +37,10 @@ public class WeightRandomMap<T> extends TreeMap<Double, T> implements Serializab
                 this.put(e.getKey(), e.getValue());
             }
         }
+    }
+
+    public static <T> WeightRandomMap<T> create() {
+        return new WeightRandomMap<>();
     }
 
     @Override

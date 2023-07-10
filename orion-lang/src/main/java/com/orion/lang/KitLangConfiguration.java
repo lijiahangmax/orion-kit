@@ -15,6 +15,8 @@ public final class KitLangConfiguration {
 
     public static final KitLangConfiguration CONFIG = new KitLangConfiguration();
 
+    public final String LIMIT_LIST_DEFAULT_LIMIT = "limit.list.default.limit";
+
     public final String HTTP_OK_CODE = "http.wrapper.ok.code";
 
     public final String HTTP_OK_MESSAGE = "http.wrapper.ok.message";
@@ -117,6 +119,13 @@ public final class KitLangConfiguration {
 
     public final String PATTERN_PASSWORD_3 = "pattern.password.3";
 
+    private KitLangConfiguration() {
+    }
+
+    static {
+        KitConfig.init(CONFIG.LIMIT_LIST_DEFAULT_LIMIT, 10);
+    }
+
     // http wrapper
     static {
         KitConfig.init(CONFIG.HTTP_OK_CODE, 200);
@@ -193,9 +202,6 @@ public final class KitLangConfiguration {
         KitConfig.init(CONFIG.PATTERN_PASSWORD_1, Pattern.compile("^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,20}$"));
         KitConfig.init(CONFIG.PATTERN_PASSWORD_2, Pattern.compile("^(?![0-9]+$)(?![a-z]+$)(?![A-Z]+$)(?!([^(0-9a-zA-Z)])+$).{8,20}$"));
         KitConfig.init(CONFIG.PATTERN_PASSWORD_3, Pattern.compile("^(?=.*\\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*_=+/\\-?]).{8,20}$"));
-    }
-
-    private KitLangConfiguration() {
     }
 
 }

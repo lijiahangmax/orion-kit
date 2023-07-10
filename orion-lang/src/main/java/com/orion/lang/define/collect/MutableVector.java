@@ -31,4 +31,12 @@ public class MutableVector<E> extends Vector<E> implements MutableList<E>, Seria
         super(initialCapacity, capacityIncrement);
     }
 
+    public static <E> MutableVector<E> create() {
+        return new MutableVector<>();
+    }
+
+    public static <E> MutableVector<E> create(Collection<? extends E> c) {
+        return new MutableVector<>(c);
+    }
+
 }

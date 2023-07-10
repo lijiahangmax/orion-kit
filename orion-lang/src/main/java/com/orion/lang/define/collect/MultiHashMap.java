@@ -35,6 +35,10 @@ public class MultiHashMap<E, K, V> extends HashMap<E, HashMap<K, V>>
         this.keyInitialCapacity = keyInitialCapacity;
     }
 
+    public static <E, K, V> MultiHashMap<E, K, V> create() {
+        return new MultiHashMap<>();
+    }
+
     /**
      * 设置 key 初始化空间
      *

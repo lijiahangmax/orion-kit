@@ -27,4 +27,12 @@ public class MutableArrayList<E> extends ArrayList<E> implements MutableList<E>,
         super(c);
     }
 
+    public static <E> MutableArrayList<E> create() {
+        return new MutableArrayList<>();
+    }
+
+    public static <E> MutableArrayList<E> create(Collection<? extends E> c) {
+        return new MutableArrayList<>(c);
+    }
+
 }

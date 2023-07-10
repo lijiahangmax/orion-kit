@@ -23,4 +23,12 @@ public class MutableLinkedList<E> extends LinkedList<E> implements MutableList<E
         super(c);
     }
 
+    public static <E> MutableLinkedList<E> create() {
+        return new MutableLinkedList<>();
+    }
+
+    public static <E> MutableLinkedList<E> create(Collection<? extends E> c) {
+        return new MutableLinkedList<>(c);
+    }
+
 }
