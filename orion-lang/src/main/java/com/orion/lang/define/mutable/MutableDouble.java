@@ -30,6 +30,14 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
         this.value = Double.parseDouble(value);
     }
 
+    public static MutableDouble create() {
+        return new MutableDouble();
+    }
+
+    public static MutableDouble of(double value) {
+        return new MutableDouble(value);
+    }
+
     @Override
     public Double get() {
         return this.value;

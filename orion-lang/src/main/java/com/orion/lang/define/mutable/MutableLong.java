@@ -30,6 +30,14 @@ public class MutableLong extends Number implements Comparable<MutableLong>, Muta
         this.value = Long.parseLong(value);
     }
 
+    public static MutableLong create() {
+        return new MutableLong();
+    }
+
+    public static MutableLong of(long value) {
+        return new MutableLong(value);
+    }
+
     @Override
     public Long get() {
         return this.value;

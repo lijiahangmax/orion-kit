@@ -12,27 +12,27 @@ import java.util.HashMap;
  * @version 1.0.0
  * @since 2020/10/19 16:56
  */
-public class MultiHashMap<E, K, V> extends HashMap<E, HashMap<K, V>>
-        implements MultiMap<E, K, V, HashMap<K, V>>, Serializable {
+public class MultiHashMap<K, V, E> extends HashMap<K, HashMap<V, E>>
+        implements MultiMap<K, V, E, HashMap<V, E>>, Serializable {
 
     private static final long serialVersionUID = 4834450551128977L;
 
     /**
-     * key 初始化空间
+     * value 初始化空间
      */
-    private int keyInitialCapacity;
+    private int valueInitialCapacity;
 
     public MultiHashMap() {
         this(Const.CAPACITY_16, Const.CAPACITY_16);
     }
 
-    public MultiHashMap(int elementInitialCapacity) {
-        this(elementInitialCapacity, Const.CAPACITY_16);
+    public MultiHashMap(int initialCapacity) {
+        this(initialCapacity, initialCapacity);
     }
 
-    public MultiHashMap(int elementInitialCapacity, int keyInitialCapacity) {
-        super(elementInitialCapacity);
-        this.keyInitialCapacity = keyInitialCapacity;
+    public MultiHashMap(int keyInitialCapacity, int valueInitialCapacity) {
+        super(keyInitialCapacity);
+        this.valueInitialCapacity = valueInitialCapacity;
     }
 
     public static <E, K, V> MultiHashMap<E, K, V> create() {
@@ -40,17 +40,17 @@ public class MultiHashMap<E, K, V> extends HashMap<E, HashMap<K, V>>
     }
 
     /**
-     * 设置 key 初始化空间
+     * 设置 value 初始化空间
      *
-     * @param keyInitialCapacity key 初始化空间
+     * @param valueInitialCapacity value 初始化空间
      */
-    public void keyInitialCapacity(int keyInitialCapacity) {
-        this.keyInitialCapacity = keyInitialCapacity;
+    public void valueInitialCapacity(int valueInitialCapacity) {
+        this.valueInitialCapacity = valueInitialCapacity;
     }
 
     @Override
-    public HashMap<K, V> computeSpace(E e) {
-        return super.computeIfAbsent(e, k -> new HashMap<K, V>(keyInitialCapacity));
+    public HashMap<V, E> computeSpace(K e) {
+        return super.computeIfAbsent(e, k -> new HashMap<V, E>(valueInitialCapacity));
     }
 
 }

@@ -30,6 +30,14 @@ public class MutableByte extends Number implements Comparable<MutableByte>, Muta
         this.value = Byte.parseByte(value);
     }
 
+    public static MutableByte create() {
+        return new MutableByte();
+    }
+
+    public static MutableByte of(byte value) {
+        return new MutableByte(value);
+    }
+
     @Override
     public Byte get() {
         return this.value;

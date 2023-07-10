@@ -24,8 +24,12 @@ public class MutableBoolean implements Mutable<Boolean>, Serializable, Comparabl
         this.value = value;
     }
 
-    public MutableBoolean(Boolean value) {
-        this.value = value;
+    public static MutableBoolean create() {
+        return new MutableBoolean();
+    }
+
+    public static MutableBoolean of(boolean value) {
+        return new MutableBoolean(value);
     }
 
     @Override
