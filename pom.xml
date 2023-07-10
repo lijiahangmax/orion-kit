@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.lijiahangmax</groupId>
-    <version>1.0.6</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
     <artifactId>orion-kit</artifactId>
     <name>${project.artifactId}</name>
@@ -26,23 +26,12 @@
     </modules>
 
     <properties>
+        <revision>1.0.6</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.charset>UTF-8</maven.compiler.charset>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-        <orion.parent.version>1.0.6</orion.parent.version>
-        <orion.lang.version>1.0.6</orion.lang.version>
-        <orion.ext.version>1.0.6</orion.ext.version>
-        <orion.office.version>1.0.6</orion.office.version>
-        <orion.log.version>1.0.6</orion.log.version>
-        <orion.http.version>1.0.6</orion.http.version>
-        <orion.net.version>1.0.6</orion.net.version>
-        <orion.web.version>1.0.6</orion.web.version>
-        <orion.redis.version>1.0.6</orion.redis.version>
-        <orion.spring.version>1.0.6</orion.spring.version>
-        <orion.generator.version>1.0.6</orion.generator.version>
-        <orion.all.version>1.0.6</orion.all.version>
         <junit.version>4.13.1</junit.version>
         <spring.version>5.2.20.RELEASE</spring.version>
         <spring.mvc.version>5.2.20.RELEASE</spring.mvc.version>

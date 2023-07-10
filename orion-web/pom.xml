@@ -4,28 +4,28 @@
     <parent>
         <groupId>io.github.lijiahangmax</groupId>
         <artifactId>orion-kit</artifactId>
-        <version>1.0.6</version>
+        <version>${revision}</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
     <artifactId>orion-web</artifactId>
     <name>${project.artifactId}</name>
-    <description>orion web (servlet... )</description>
+    <description>orion web (servlet...)</description>
 
     <dependencies>
         <!-- lang -->
         <dependency>
             <groupId>io.github.lijiahangmax</groupId>
             <artifactId>orion-lang</artifactId>
-            <version>${orion.lang.version}</version>
+            <version>${revision}</version>
         </dependency>
 
         <!-- log -->
         <dependency>
             <groupId>io.github.lijiahangmax</groupId>
             <artifactId>orion-log</artifactId>
-            <version>${orion.log.version}</version>
+            <version>${revision}</version>
         </dependency>
 
         <!-- servlet -->
