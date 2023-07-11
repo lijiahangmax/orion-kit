@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.github.lijiahangmax</groupId>
         <artifactId>orion-kit</artifactId>
-        <version>${revision}</version>
+        <version>1.0.6</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -18,70 +18,70 @@
         <dependency>
             <groupId>io.github.lijiahangmax</groupId>
             <artifactId>orion-lang</artifactId>
-            <version>${revision}</version>
+            <version>${orion.kit.version}</version>
         </dependency>
 
         <!-- ext -->
         <dependency>
             <groupId>io.github.lijiahangmax</groupId>
             <artifactId>orion-ext</artifactId>
-            <version>${revision}</version>
+            <version>${orion.kit.version}</version>
         </dependency>
 
         <!-- log -->
         <dependency>
             <groupId>io.github.lijiahangmax</groupId>
             <artifactId>orion-log</artifactId>
-            <version>${revision}</version>
+            <version>${orion.kit.version}</version>
         </dependency>
 
         <!-- office -->
         <dependency>
             <groupId>io.github.lijiahangmax</groupId>
             <artifactId>orion-office</artifactId>
-            <version>${revision}</version>
+            <version>${orion.kit.version}</version>
         </dependency>
 
         <!-- http -->
         <dependency>
             <groupId>io.github.lijiahangmax</groupId>
             <artifactId>orion-http</artifactId>
-            <version>${revision}</version>
+            <version>${orion.kit.version}</version>
         </dependency>
 
         <!-- net -->
         <dependency>
             <groupId>io.github.lijiahangmax</groupId>
             <artifactId>orion-net</artifactId>
-            <version>${revision}</version>
+            <version>${orion.kit.version}</version>
         </dependency>
 
         <!-- web -->
         <dependency>
             <groupId>io.github.lijiahangmax</groupId>
             <artifactId>orion-web</artifactId>
-            <version>${revision}</version>
+            <version>${orion.kit.version}</version>
         </dependency>
 
         <!-- redis -->
         <dependency>
             <groupId>io.github.lijiahangmax</groupId>
             <artifactId>orion-redis</artifactId>
-            <version>${revision}</version>
+            <version>${orion.kit.version}</version>
         </dependency>
 
         <!-- spring -->
         <dependency>
             <groupId>io.github.lijiahangmax</groupId>
             <artifactId>orion-spring</artifactId>
-            <version>${revision}</version>
+            <version>${orion.kit.version}</version>
         </dependency>
 
         <!-- generator -->
         <dependency>
             <groupId>io.github.lijiahangmax</groupId>
             <artifactId>orion-generator</artifactId>
-            <version>${revision}</version>
+            <version>${orion.kit.version}</version>
         </dependency>
     </dependencies>
 
