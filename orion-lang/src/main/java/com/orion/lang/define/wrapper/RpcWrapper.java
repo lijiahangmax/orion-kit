@@ -1,6 +1,7 @@
 package com.orion.lang.define.wrapper;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.orion.lang.KitLangConfiguration;
 import com.orion.lang.able.ILogObject;
 import com.orion.lang.able.IMapObject;
@@ -170,6 +171,7 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
      * 检查是否成功
      */
     @JSONField(serialize = false)
+    @JsonIgnore
     public boolean isSuccess() {
         return !RPC_ERROR_CODE.equals(code) && Lists.isEmpty(errorMessages);
     }
@@ -270,6 +272,7 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
     }
 
     @JSONField(serialize = false)
+    @JsonIgnore
     public String getErrorMessageString() {
         return errorMessages == null ? Strings.EMPTY : Lists.join(errorMessages, Const.COMMA);
     }
