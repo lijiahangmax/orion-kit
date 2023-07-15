@@ -3,8 +3,6 @@ package com.orion.lang.define.wrapper;
 import com.orion.lang.KitLangConfiguration;
 import com.orion.lang.config.KitConfig;
 
-import java.io.Serializable;
-
 /**
  * 分页公共请求
  *
@@ -12,7 +10,7 @@ import java.io.Serializable;
  * @version 1.0.0
  * @since 2021/4/3 21:55
  */
-public class PageRequest implements Serializable {
+public class PageRequest implements IPageRequest {
 
     private static final long serialVersionUID = -773462378602349895L;
 
@@ -53,18 +51,22 @@ public class PageRequest implements Serializable {
         return new PageRequest(page, limit);
     }
 
+    @Override
     public int getPage() {
         return page;
     }
 
+    @Override
     public void setPage(int page) {
         this.page = page;
     }
 
+    @Override
     public int getLimit() {
         return limit;
     }
 
+    @Override
     public void setLimit(int limit) {
         this.limit = limit;
     }

@@ -179,25 +179,13 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
     /**
      * 失败抛出异常
      */
-    public void errorThrows() {
-        this.errorThrows(null, (Object[]) null);
-    }
-
-    public void errorThrows(String msg) {
-        this.errorThrows(msg, (Object[]) null);
-    }
-
-    public void errorThrows(String msg, Object... args) {
+    public void checkIsError() {
         if (!isSuccess()) {
-            if (msg == null) {
-                throw Exceptions.rpcWrapper(this);
-            } else {
-                throw Exceptions.rpcWrapper(this, Strings.format(msg, args));
-            }
+            throw Exceptions.rpcWrapper(this);
         }
     }
 
-    public void errorThrows(Supplier<? extends RuntimeException> e) {
+    public void checkIsError(Supplier<? extends RuntimeException> e) {
         if (!isSuccess()) {
             throw e.get();
         }
@@ -283,7 +271,7 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
 
     @Override
     public String toString() {
-        return this.toLogString();
+        return this.toJsonString();
     }
 
     @Override

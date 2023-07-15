@@ -16,14 +16,6 @@ public class RpcWrapperException extends WrapperException {
         super(wrapper);
     }
 
-    public RpcWrapperException(RpcWrapper<?> wrapper, String message) {
-        super(wrapper, message);
-    }
-
-    public RpcWrapperException(RpcWrapper<?> wrapper, String message, Throwable cause) {
-        super(wrapper, message, cause);
-    }
-
     public RpcWrapperException(RpcWrapper<?> wrapper, Throwable cause) {
         super(wrapper, cause);
     }

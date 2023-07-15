@@ -16,14 +16,6 @@ public class HttpWrapperException extends WrapperException {
         super(wrapper);
     }
 
-    public HttpWrapperException(HttpWrapper<?> wrapper, String message) {
-        super(wrapper, message);
-    }
-
-    public HttpWrapperException(HttpWrapper<?> wrapper, String message, Throwable cause) {
-        super(wrapper, message, cause);
-    }
-
     public HttpWrapperException(HttpWrapper<?> wrapper, Throwable cause) {
         super(wrapper, cause);
     }

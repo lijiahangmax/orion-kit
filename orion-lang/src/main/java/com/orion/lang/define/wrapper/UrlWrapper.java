@@ -148,7 +148,7 @@ public class UrlWrapper<T> extends CloneSupport<UrlWrapper<T>> implements Wrappe
 
     @Override
     public String toString() {
-        return this.toLogString();
+        return this.toJsonString();
     }
 
     @Override

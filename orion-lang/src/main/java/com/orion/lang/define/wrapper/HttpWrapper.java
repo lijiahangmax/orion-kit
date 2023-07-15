@@ -204,7 +204,7 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
 
     @Override
     public String toString() {
-        return this.toLogString();
+        return this.toJsonString();
     }
 
     @Override
