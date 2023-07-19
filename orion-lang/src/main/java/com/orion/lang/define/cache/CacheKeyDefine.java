@@ -1,5 +1,6 @@
 package com.orion.lang.define.cache;
 
+import com.orion.lang.constant.Const;
 import com.orion.lang.utils.Strings;
 
 import java.util.Map;
@@ -29,6 +30,11 @@ public class CacheKeyDefine {
     private final String desc;
 
     /**
+     * 数据类型
+     */
+    private final Class<?> type;
+
+    /**
      * 超时时间
      */
     private long timeout;
@@ -38,17 +44,26 @@ public class CacheKeyDefine {
      */
     private TimeUnit unit;
 
-    public CacheKeyDefine(String key, String desc) {
-        this(key, desc, DEFAULT_TIMEOUT, DEFAULT_UNIT);
+    public CacheKeyDefine(String key) {
+        this(key, Strings.EMPTY, null, DEFAULT_TIMEOUT, DEFAULT_UNIT);
     }
 
-    public CacheKeyDefine(String key, String desc, long timeout) {
-        this(key, desc, timeout, DEFAULT_UNIT);
+    public CacheKeyDefine(String key, long timeout) {
+        this(key, Strings.EMPTY, null, timeout, DEFAULT_UNIT);
     }
 
-    public CacheKeyDefine(String key, String desc, long timeout, TimeUnit unit) {
+    public CacheKeyDefine(String key, Class<?> type) {
+        this(key, Strings.EMPTY, type, DEFAULT_TIMEOUT, DEFAULT_UNIT);
+    }
+
+    public CacheKeyDefine(String key, Class<?> type, long timeout) {
+        this(key, Strings.EMPTY, type, timeout, DEFAULT_UNIT);
+    }
+
+    public CacheKeyDefine(String key, String desc, Class<?> type, long timeout, TimeUnit unit) {
         this.key = key;
         this.desc = desc;
+        this.type = type;
         this.timeout = timeout;
         this.unit = unit;
     }
@@ -81,6 +96,10 @@ public class CacheKeyDefine {
         return desc;
     }
 
+    public Class<?> getType() {
+        return type;
+    }
+
     public long getTimeout() {
         return timeout;
     }
@@ -99,6 +118,6 @@ public class CacheKeyDefine {
 
     @Override
     public String toString() {
-        return key + " (" + desc + ") timeout: " + timeout + unit.name();
+        return key + " (" + desc + ") [" + type.getSimpleName() + "] timeout: " + timeout + Const.SPACE + unit.name();
     }
 }

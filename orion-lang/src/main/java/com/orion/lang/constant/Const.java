@@ -308,6 +308,8 @@ public interface Const extends OrionConst {
 
     // -------------------- others --------------------
 
+    String ID = "id";
+
     String BEARER = "Bearer";
 
     String BASIC = "Basic";

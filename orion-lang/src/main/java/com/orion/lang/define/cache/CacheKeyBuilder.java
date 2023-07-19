@@ -24,6 +24,11 @@ public class CacheKeyBuilder implements Buildable<CacheKeyDefine> {
     private String desc;
 
     /**
+     * 数据类型
+     */
+    private Class<?> type;
+
+    /**
      * 超时时间
      */
     private long timeout;
@@ -65,6 +70,17 @@ public class CacheKeyBuilder implements Buildable<CacheKeyDefine> {
     }
 
     /**
+     * 设置数据类型
+     *
+     * @param type type
+     * @return this
+     */
+    public CacheKeyBuilder type(Class<?> type) {
+        this.type = type;
+        return this;
+    }
+
+    /**
      * 设置超时时间
      *
      * @param timeout timeout
@@ -101,7 +117,7 @@ public class CacheKeyBuilder implements Buildable<CacheKeyDefine> {
 
     @Override
     public CacheKeyDefine build() {
-        return new CacheKeyDefine(key, desc, timeout, unit);
+        return new CacheKeyDefine(key, desc, type, timeout, unit);
     }
 
 }
