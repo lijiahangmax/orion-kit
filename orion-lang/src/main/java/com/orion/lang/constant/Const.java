@@ -58,6 +58,8 @@ public interface Const extends OrionConst {
 
     String AT = "@";
 
+    String ASTERISK = "*";
+
     String EMPTY = "";
 
     String SPACE = " ";

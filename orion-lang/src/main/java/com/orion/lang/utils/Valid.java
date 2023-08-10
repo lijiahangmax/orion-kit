@@ -80,7 +80,7 @@ public abstract class Valid {
     }
 
     public static void eq(Object o1, Object o2, String message, Object... values) {
-        notNull(o1);
+        notNull(o1, message, values);
         if (!Objects1.eq(o1, o2)) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
@@ -91,7 +91,7 @@ public abstract class Valid {
     }
 
     public static void neq(Object o1, Object o2, String message, Object... values) {
-        notNull(o1);
+        notNull(o1, message, values);
         if (Objects1.eq(o1, o2)) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
@@ -102,8 +102,8 @@ public abstract class Valid {
     }
 
     public static <T extends Comparable<T>> void compare(T t1, T t2, String message, Object... values) {
-        notNull(t1);
-        notNull(t2);
+        notNull(t1, message, values);
+        notNull(t2, message, values);
         if (t1.compareTo(t2) != 0) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
@@ -114,8 +114,8 @@ public abstract class Valid {
     }
 
     public static <T extends Comparable<T>> void notCompare(T t1, T t2, String message, Object... values) {
-        notNull(t1);
-        notNull(t2);
+        notNull(t1, message, values);
+        notNull(t2, message, values);
         if (t1.compareTo(t2) == 0) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
@@ -126,7 +126,7 @@ public abstract class Valid {
     }
 
     public static <T> void compare(T t1, T t2, Comparator<T> comparator, String message, Object... values) {
-        Valid.notNull(comparator);
+        Valid.notNull(comparator, message, values);
         if (comparator.compare(t1, t2) != 0) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
@@ -137,7 +137,7 @@ public abstract class Valid {
     }
 
     public static <T> void notCompare(T t1, T t2, Comparator<T> comparator, String message, Object... values) {
-        Valid.notNull(comparator);
+        Valid.notNull(comparator, message, values);
         if (comparator.compare(t1, t2) == 0) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
@@ -148,8 +148,8 @@ public abstract class Valid {
     }
 
     public static <T extends Comparable<T>> T lt(T value, T refer, String message, Object... values) {
-        notNull(value);
-        notNull(refer);
+        notNull(value, message, values);
+        notNull(refer, message, values);
         if (value.compareTo(refer) >= 0) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
@@ -161,8 +161,8 @@ public abstract class Valid {
     }
 
     public static <T extends Comparable<T>> T lte(T value, T refer, String message, Object... values) {
-        notNull(value);
-        notNull(refer);
+        notNull(value, message, values);
+        notNull(refer, message, values);
         if (value.compareTo(refer) > 0) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
@@ -174,8 +174,8 @@ public abstract class Valid {
     }
 
     public static <T extends Comparable<T>> T gt(T value, T refer, String message, Object... values) {
-        notNull(value);
-        notNull(refer);
+        notNull(value, message, values);
+        notNull(refer, message, values);
         if (value.compareTo(refer) <= 0) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
@@ -187,8 +187,8 @@ public abstract class Valid {
     }
 
     public static <T extends Comparable<T>> T gte(T value, T refer, String message, Object... values) {
-        notNull(value);
-        notNull(refer);
+        notNull(value, message, values);
+        notNull(refer, message, values);
         if (value.compareTo(refer) < 0) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
@@ -200,7 +200,7 @@ public abstract class Valid {
     }
 
     public static boolean isTrue(BooleanSupplier s, String message, Object... values) {
-        notNull(s);
+        notNull(s, message, values);
         if (!s.getAsBoolean()) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
@@ -223,7 +223,7 @@ public abstract class Valid {
     }
 
     public static boolean isFalse(BooleanSupplier s, String message, Object... values) {
-        notNull(s);
+        notNull(s, message, values);
         if (s.getAsBoolean()) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
@@ -258,8 +258,8 @@ public abstract class Valid {
     }
 
     public static <T> T in(T t, T[] arr, String message, Object... values) {
-        notNull(t);
-        notEmpty(arr);
+        notNull(t, message, values);
+        notEmpty(arr, message, values);
         if (!Arrays1.contains(arr, t)) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
@@ -271,8 +271,8 @@ public abstract class Valid {
     }
 
     public static <T> T in(T t, Collection<? extends T> c, String message, Object... values) {
-        notNull(t);
-        notEmpty(c);
+        notNull(t, message, values);
+        notEmpty(c, message, values);
         if (!c.contains(t)) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
@@ -285,8 +285,8 @@ public abstract class Valid {
     }
 
     public static <T> T notIn(T t, T[] arr, String message, Object... values) {
-        notNull(t);
-        notEmpty(arr);
+        notNull(t, message, values);
+        notEmpty(arr, message, values);
         if (Arrays1.contains(arr, t)) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
@@ -298,8 +298,8 @@ public abstract class Valid {
     }
 
     public static <T> T notIn(T t, Collection<? extends T> c, String message, Object... values) {
-        notNull(t);
-        notEmpty(c);
+        notNull(t, message, values);
+        notEmpty(c, message, values);
         if (c.contains(t)) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
@@ -411,7 +411,7 @@ public abstract class Valid {
     }
 
     public static <T> T validIndex(T[] array, int index, String message, Object... values) {
-        notNull(array);
+        notNull(array, message, values);
         if (index < 0 || index >= array.length) {
             throw Exceptions.indexArgument(Strings.format(message, values));
         }
@@ -423,7 +423,7 @@ public abstract class Valid {
     }
 
     public static <T extends Collection<?>> void validIndex(T collection, int index, String message, Object... values) {
-        notNull(collection);
+        notNull(collection, message, values);
         if (index < 0 || index >= collection.size()) {
             throw Exceptions.indexArgument(Strings.format(message, values));
         }
@@ -434,7 +434,7 @@ public abstract class Valid {
     }
 
     public static <T> T[] noNullElements(T[] array, String message, Object... values) {
-        notNull(array);
+        notNull(array, message, values);
         for (T t : array) {
             if (t == null) {
                 throw Exceptions.invalidArgument(Strings.format(message, values));
@@ -448,7 +448,7 @@ public abstract class Valid {
     }
 
     public static <T extends Iterable<?>> T noNullElements(T iterable, String message, Object... values) {
-        notNull(iterable);
+        notNull(iterable, message, values);
         int i = 0;
         for (Iterator<?> it = iterable.iterator(); it.hasNext(); i++) {
             if (it.next() == null) {
@@ -518,7 +518,7 @@ public abstract class Valid {
     }
 
     public static BigDecimal notZero(BigDecimal value, String message, Object... values) {
-        notNull(value);
+        notNull(value, message, values);
         notCompare(BigDecimal.ZERO, value, message, values);
         return value;
     }
@@ -528,7 +528,7 @@ public abstract class Valid {
     }
 
     public static BigInteger notZero(BigInteger value, String message, Object... values) {
-        notNull(value);
+        notNull(value, message, values);
         notCompare(BigInteger.ZERO, value, message, values);
         return value;
     }
@@ -560,9 +560,9 @@ public abstract class Valid {
     }
 
     public static <T extends Comparable<T>> T inRange(T value, T start, T end, String message, Object... values) {
-        notNull(value);
-        notNull(start);
-        notNull(end);
+        notNull(value, message, values);
+        notNull(start, message, values);
+        notNull(end, message, values);
         if (!Compares.inRange(value, start, end)) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
@@ -574,9 +574,9 @@ public abstract class Valid {
     }
 
     public static <T extends Comparable<T>> T notInRange(T value, T start, T end, String message, Object... values) {
-        notNull(value);
-        notNull(start);
-        notNull(end);
+        notNull(value, message, values);
+        notNull(start, message, values);
+        notNull(end, message, values);
         if (Compares.inRange(value, start, end)) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
@@ -588,7 +588,7 @@ public abstract class Valid {
     }
 
     public static String validLength(String s, int length, String message, Object... values) {
-        notNull(s);
+        notNull(s, message, values);
         if (s.length() != length) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
@@ -600,7 +600,7 @@ public abstract class Valid {
     }
 
     public static String validLengthIn(String s, int start, int end, String message, Object... values) {
-        notNull(s);
+        notNull(s, message, values);
         if (!Compares.inRange(s.length(), start, end)) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
@@ -612,7 +612,7 @@ public abstract class Valid {
     }
 
     public static String validLengthGt(String s, int length, String message, Object... values) {
-        notNull(s);
+        notNull(s, message, values);
         if (s.length() <= length) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
@@ -624,7 +624,7 @@ public abstract class Valid {
     }
 
     public static String validLengthGte(String s, int length, String message, Object... values) {
-        notNull(s);
+        notNull(s, message, values);
         if (s.length() < length) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
@@ -636,7 +636,7 @@ public abstract class Valid {
     }
 
     public static String validLengthLt(String s, int length, String message, Object... values) {
-        notNull(s);
+        notNull(s, message, values);
         if (s.length() >= length) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
@@ -648,7 +648,7 @@ public abstract class Valid {
     }
 
     public static String validLengthLte(String s, int length, String message, Object... values) {
-        notNull(s);
+        notNull(s, message, values);
         if (s.length() > length) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }

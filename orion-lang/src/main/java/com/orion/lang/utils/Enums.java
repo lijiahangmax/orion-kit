@@ -1,5 +1,6 @@
 package com.orion.lang.utils;
 
+import com.orion.lang.define.collect.MultiLinkedHashMap;
 import com.orion.lang.utils.reflect.Fields;
 
 import java.lang.reflect.Field;
@@ -237,6 +238,48 @@ public class Enums {
             map.put(e.name(), Fields.getFieldValue(e, fieldName));
         }
         return map;
+    }
+
+    /**
+     * 获取枚举的属性集合
+     *
+     * @param enumClass enumClass
+     * @return list
+     */
+    public static List<Map<String, Object>> getFieldValueList(Class<? extends Enum<?>> enumClass) {
+        // 获取枚举
+        Enum<?>[] constants = enumClass.getEnumConstants();
+        // 获取字段
+        List<String> fields = Enums.getFields(enumClass);
+        List<Map<String, Object>> enumValues = new ArrayList<>();
+        for (Enum<?> e : constants) {
+            Map<String, Object> values = new HashMap<>();
+            for (String field : fields) {
+                values.put(field, Fields.getFieldValue(e, field));
+            }
+            enumValues.add(values);
+        }
+        return enumValues;
+    }
+
+    /**
+     * 获取枚举的属性集合
+     *
+     * @param enumClass enumClass
+     * @return map
+     */
+    public static MultiLinkedHashMap<String, String, Object> getFieldValueMap(Class<? extends Enum<?>> enumClass) {
+        // 获取枚举
+        Enum<?>[] constants = enumClass.getEnumConstants();
+        // 获取字段
+        List<String> fields = Enums.getFields(enumClass);
+        MultiLinkedHashMap<String, String, Object> result = MultiLinkedHashMap.create();
+        for (Enum<?> e : constants) {
+            for (String field : fields) {
+                result.put(e.name(), field, Fields.getFieldValue(e, field));
+            }
+        }
+        return result;
     }
 
 }

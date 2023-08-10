@@ -43,6 +43,8 @@ public interface Letters {
 
     char AT = '@';
 
+    char ASTERISK = '*';
+
     char NULL = '\0';
 
     char BACKSPACE = '\b';

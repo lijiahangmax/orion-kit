@@ -1156,15 +1156,6 @@ public class Strings {
     }
 
     /**
-     * 生成一串字符
-     *
-     * @return 字符
-     */
-    public static String lorem() {
-        return "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque aut doloremque ea eveniet sint sit voluptas! Ab accusantium aperiam, earum eos id impedit, laboriosam necessitatibus nobis non sint vel voluptates?";
-    }
-
-    /**
      * 跳过字符串开头
      *
      * @param str  字符串
