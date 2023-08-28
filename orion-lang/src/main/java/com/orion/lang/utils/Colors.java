@@ -15,10 +15,10 @@ public class Colors {
     }
 
     /**
-     * Color > #
+     * Color > HEX
      *
-     * @param color Color
-     * @return #
+     * @param color color
+     * @return HEX
      */
     public static String toHex(Color color) {
         String r, g, b;
@@ -40,73 +40,61 @@ public class Colors {
     }
 
     /**
-     * # > RGB
+     * HEX > RGB
      *
-     * @param c Hex
+     * @param hex Hex
      * @return RGB
      */
-    public static byte[] toRgb(String c) {
-        if (c == null) {
+    public static int[] toRgbColor(String hex) {
+        if (hex == null) {
             return null;
         }
         try {
-            int length = c.length();
+            int length = hex.length();
             if (length == 4) {
-                char c1 = c.charAt(1);
-                char c2 = c.charAt(2);
-                char c3 = c.charAt(3);
-                c = "#" + c1 + c1 + c2 + c2 + c3 + c3;
+                char c1 = hex.charAt(1);
+                char c2 = hex.charAt(2);
+                char c3 = hex.charAt(3);
+                hex = "#" + c1 + c1 + c2 + c2 + c3 + c3;
             }
-            String str1 = c.substring(1, 3);
-            String str2 = c.substring(3, 5);
-            String str3 = c.substring(5, 7);
+            String str1 = hex.substring(1, 3);
+            String str2 = hex.substring(3, 5);
+            String str3 = hex.substring(5, 7);
             int red = Integer.parseInt(str1, 16);
             int green = Integer.parseInt(str2, 16);
             int blue = Integer.parseInt(str3, 16);
-            return new byte[]{(byte) red, (byte) green, (byte) blue};
+            return new int[]{red, green, blue};
         } catch (Exception e) {
             return null;
         }
     }
 
     /**
-     * # > RGB
+     * HEX > RGB
      *
-     * @param color Color
+     * @param hex Hex
      * @return RGB
      */
-    public static byte[] toRgb(Color color) {
-        return new byte[]{(byte) color.getRed(), (byte) color.getGreen(), (byte) color.getBlue()};
+    public static byte[] toRgb(String hex) {
+        int[] color = toRgbColor(hex);
+        if (color == null) {
+            return null;
+        }
+        return new byte[]{(byte) color[0], (byte) color[1], (byte) color[2]};
     }
 
     /**
-     * # > Color
+     * HEX > Color
      *
-     * @param c #
+     * @param hex HEX
      * @return Color
      */
-    public static Color toColor(String c) {
-        if (c == null) {
+    public static Color toColor(String hex) {
+        int[] rgb = toRgbColor(hex);
+        if (rgb == null) {
             return null;
         }
-        try {
-            int length = c.length();
-            if (length == 4) {
-                char c1 = c.charAt(1);
-                char c2 = c.charAt(2);
-                char c3 = c.charAt(3);
-                c = "#" + c1 + c1 + c2 + c2 + c3 + c3;
-            }
-            String str1 = c.substring(1, 3);
-            String str2 = c.substring(3, 5);
-            String str3 = c.substring(5, 7);
-            int red = Integer.parseInt(str1, 16);
-            int green = Integer.parseInt(str2, 16);
-            int blue = Integer.parseInt(str3, 16);
-            return new Color(red, green, blue);
-        } catch (Exception e) {
-            return null;
-        }
+        return toColor(rgb);
     }
 
     /**
@@ -126,7 +114,7 @@ public class Colors {
      * @return Color
      */
     public static Color toColor(int[] bs) {
-        return toColor((byte) bs[0], (byte) bs[1], (byte) bs[2]);
+        return toColor(bs[0], bs[1], bs[2]);
     }
 
     /**
@@ -138,18 +126,6 @@ public class Colors {
      * @return Color
      */
     public static Color toColor(int r, int g, int b) {
-        return toColor((byte) r, (byte) g, (byte) b);
-    }
-
-    /**
-     * RGB > Color
-     *
-     * @param r R
-     * @param g G
-     * @param b B
-     * @return Color
-     */
-    public static Color toColor(byte r, byte g, byte b) {
         return new Color(r, g, b);
     }
 
