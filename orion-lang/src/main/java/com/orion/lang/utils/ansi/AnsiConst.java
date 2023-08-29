@@ -9,42 +9,76 @@ package com.orion.lang.utils.ansi;
  */
 public interface AnsiConst {
 
-   String CSI_PREFIX = "\033[";
+    String CSI_PREFIX = "\033[";
 
-   String SGR_SUFFIX = "m";
+    String SGR_SUFFIX = "m";
 
-   String JOIN = ";";
+    String CSI_RESET = CSI_PREFIX + 0 + SGR_SUFFIX;
 
-   int RESET = 1;
+    String JOIN = ";";
 
-   byte EXTENDED_FG = 38;
+    // -------------------- color --------------------
 
-   byte EXTENDED_BG = 48;
+    byte COLOR_FG = 38;
 
-   byte EXTENDED_BIT8 = 5;
+    byte COLOR_BG = 48;
 
-   byte EXTENDED_BIT24 = 2;
+    byte COLOR_BIT8 = 5;
 
-   String CURSOR_TOP = "A";
+    byte COLOR_BIT24 = 2;
 
-   String CURSOR_BOTTOM = "B";
+    // -------------------- cursor --------------------
 
-   String CURSOR_RIGHT = "C";
+    String CURSOR_UP = "A";
 
-   String CURSOR_LEFT = "D";
+    String CURSOR_DOWN = "B";
 
-   String CURSOR_NEXT_LINE = "E";
+    String CURSOR_RIGHT = "C";
 
-   String CURSOR_PREV_LINE = "F";
+    String CURSOR_LEFT = "D";
 
-   String CURSOR_COLUMN = "G";
+    String CURSOR_NEXT_LINE = "E";
 
-   String CURSOR_MOVE = "H";
+    String CURSOR_PREV_LINE = "F";
 
-   String CURSOR_MARK = "s";
+    String CURSOR_COLUMN = "G";
 
-   String CURSOR_RESUME = "u";
+    String CURSOR_MOVE = "H";
 
-   String CURSOR_REPORT = "6n";
+    String CURSOR_FORWARD_TAB = "I";
+
+    String CURSOR_BACKWARD_TAB = "Z";
+
+    String CURSOR_MARK = "s";
+
+    String CURSOR_RESUME = "u";
+
+    String CURSOR_REPORT = "6n";
+
+    // -------------------- erase --------------------
+
+    String ERASE_DISPLAY_END = "0J";
+
+    String ERASE_DISPLAY_START = "1J";
+
+    String ERASE_DISPLAY_ALL = "2J";
+
+    String ERASE_LINE_END = "0K";
+
+    String ERASE_LINE_START = "1K";
+
+    String ERASE_LINE_ALL = "2K";
+
+    String ERASE_CHARACTER = "X";
+
+    // -------------------- scroll --------------------
+
+    String SCROLL_UP = "S";
+
+    String SCROLL_DOWN = "T";
+
+    String SCROLL_RIGHT = " A";
+
+    String SCROLL_LEFT = " @";
 
 }

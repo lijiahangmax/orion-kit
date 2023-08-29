@@ -30,7 +30,7 @@ public class AnsiBit8Color extends AnsiBitColor {
      * @return color
      */
     public static AnsiColor foreground(int color) {
-        return new AnsiBit8Color(color(EXTENDED_FG, EXTENDED_BIT8, color));
+        return new AnsiBit8Color(color(COLOR_FG, COLOR_BIT8, color));
     }
 
     /**
@@ -40,7 +40,7 @@ public class AnsiBit8Color extends AnsiBitColor {
      * @return color
      */
     public static AnsiColor background(int color) {
-        return new AnsiBit8Color(color(EXTENDED_BG, EXTENDED_BIT8, color));
+        return new AnsiBit8Color(color(COLOR_BG, COLOR_BIT8, color));
     }
 
 }

@@ -29,15 +29,15 @@ public class AnsiBit24Color extends AnsiBitColor {
      * @return color
      */
     public static AnsiColor foreground(int r, int g, int b) {
-        return new AnsiBit24Color(color(EXTENDED_FG, EXTENDED_BIT24, r, g, b));
+        return new AnsiBit24Color(color(COLOR_FG, COLOR_BIT24, r, g, b));
     }
 
     public static AnsiColor foreground(int[] rgb) {
-        return new AnsiBit24Color(color(EXTENDED_FG, EXTENDED_BIT24, rgb));
+        return new AnsiBit24Color(color(COLOR_FG, COLOR_BIT24, rgb));
     }
 
     public static AnsiColor foreground(String hex) {
-        return new AnsiBit24Color(color(EXTENDED_FG, EXTENDED_BIT24, Colors.toRgbColor(hex)));
+        return new AnsiBit24Color(color(COLOR_FG, COLOR_BIT24, Colors.toRgbColor(hex)));
     }
 
     /**
@@ -49,15 +49,15 @@ public class AnsiBit24Color extends AnsiBitColor {
      * @return color
      */
     public static AnsiColor background(int r, int g, int b) {
-        return new AnsiBit24Color(color(EXTENDED_BG, EXTENDED_BIT24, r, g, b));
+        return new AnsiBit24Color(color(COLOR_BG, COLOR_BIT24, r, g, b));
     }
 
     public static AnsiColor background(int[] rgb) {
-        return new AnsiBit24Color(color(EXTENDED_BG, EXTENDED_BIT24, rgb));
+        return new AnsiBit24Color(color(COLOR_BG, COLOR_BIT24, rgb));
     }
 
     public static AnsiColor background(String hex) {
-        return new AnsiBit24Color(color(EXTENDED_BG, EXTENDED_BIT24, Colors.toRgbColor(hex)));
+        return new AnsiBit24Color(color(COLOR_BG, COLOR_BIT24, Colors.toRgbColor(hex)));
     }
 
 }

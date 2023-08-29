@@ -17,13 +17,8 @@ public class AnsiCursor implements AnsiElement {
         this.code = code;
     }
 
-    /**
-     * 向上移动 1 行
-     *
-     * @return cursor
-     */
-    public static AnsiCursor top() {
-        return new AnsiCursor(CURSOR_TOP);
+    public static AnsiCursor up() {
+        return new AnsiCursor(CURSOR_UP);
     }
 
     /**
@@ -32,17 +27,12 @@ public class AnsiCursor implements AnsiElement {
      * @param line line
      * @return cursor
      */
-    public static AnsiCursor top(int line) {
-        return new AnsiCursor(line + CURSOR_TOP);
+    public static AnsiCursor up(int line) {
+        return new AnsiCursor(line + CURSOR_UP);
     }
 
-    /**
-     * 向下移动 1 行
-     *
-     * @return cursor
-     */
-    public static AnsiCursor bottom() {
-        return new AnsiCursor(CURSOR_BOTTOM);
+    public static AnsiCursor down() {
+        return new AnsiCursor(CURSOR_DOWN);
     }
 
     /**
@@ -51,15 +41,10 @@ public class AnsiCursor implements AnsiElement {
      * @param line line
      * @return cursor
      */
-    public static AnsiCursor bottom(int line) {
-        return new AnsiCursor(line + CURSOR_BOTTOM);
+    public static AnsiCursor down(int line) {
+        return new AnsiCursor(line + CURSOR_DOWN);
     }
 
-    /**
-     * 向右移动 1 列
-     *
-     * @return cursor
-     */
     public static AnsiCursor right() {
         return new AnsiCursor(CURSOR_RIGHT);
     }
@@ -74,11 +59,6 @@ public class AnsiCursor implements AnsiElement {
         return new AnsiCursor(line + CURSOR_RIGHT);
     }
 
-    /**
-     * 向左移动 1 列
-     *
-     * @return cursor
-     */
     public static AnsiCursor left() {
         return new AnsiCursor(CURSOR_LEFT);
     }
@@ -93,11 +73,6 @@ public class AnsiCursor implements AnsiElement {
         return new AnsiCursor(line + CURSOR_LEFT);
     }
 
-    /**
-     * 将光标移动到下 1 行的开头
-     *
-     * @return cursor
-     */
     public static AnsiCursor next() {
         return new AnsiCursor(CURSOR_NEXT_LINE);
     }
@@ -112,11 +87,6 @@ public class AnsiCursor implements AnsiElement {
         return new AnsiCursor(line + CURSOR_NEXT_LINE);
     }
 
-    /**
-     * 将光标移动到上 1 行的开头
-     *
-     * @return cursor
-     */
     public static AnsiCursor prev() {
         return new AnsiCursor(CURSOR_PREV_LINE);
     }
@@ -131,11 +101,6 @@ public class AnsiCursor implements AnsiElement {
         return new AnsiCursor(line + CURSOR_PREV_LINE);
     }
 
-    /**
-     * 将光标移动到第 1 列
-     *
-     * @return cursor
-     */
     public static AnsiCursor column() {
         return new AnsiCursor(CURSOR_COLUMN);
     }
@@ -150,23 +115,51 @@ public class AnsiCursor implements AnsiElement {
         return new AnsiCursor(column + CURSOR_COLUMN);
     }
 
-    /**
-     * 将光标移动到第 1 行 1 列
-     *
-     * @return cursor
-     */
-    public static AnsiCursor reset() {
-        return new AnsiCursor(CURSOR_MOVE);
+    public static AnsiCursor forwardTab() {
+        return new AnsiCursor(CURSOR_FORWARD_TAB);
     }
 
     /**
-     * 将光标移动到第 N 列
+     * 将光标后移 N TAB
+     *
+     * @param tab tab
+     * @return cursor
+     */
+    public static AnsiCursor forwardTab(int tab) {
+        return new AnsiCursor(tab + CURSOR_FORWARD_TAB);
+    }
+
+    public static AnsiCursor backwardTab() {
+        return new AnsiCursor(CURSOR_BACKWARD_TAB);
+    }
+
+    /**
+     * 将光标前移 N TAB
+     *
+     * @param tab tab
+     * @return cursor
+     */
+    public static AnsiCursor backwardTab(int tab) {
+        return new AnsiCursor(tab + CURSOR_BACKWARD_TAB);
+    }
+
+    /**
+     * 将光标移动到第 N 行
      *
      * @param line line
      * @return cursor
      */
     public static AnsiCursor line(int line) {
-        return new AnsiCursor(line + JOIN + RESET + CURSOR_MOVE);
+        return new AnsiCursor(line + JOIN + CURSOR_MOVE);
+    }
+
+    /**
+     * 将光标移动到第 首行首列
+     *
+     * @return cursor
+     */
+    public static AnsiCursor reset() {
+        return new AnsiCursor(JOIN + CURSOR_MOVE);
     }
 
     /**
