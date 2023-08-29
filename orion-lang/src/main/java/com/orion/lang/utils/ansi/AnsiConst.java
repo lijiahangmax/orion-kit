@@ -9,6 +9,8 @@ package com.orion.lang.utils.ansi;
  */
 public interface AnsiConst {
 
+    String ESC = "\033";
+
     String CSI_PREFIX = "\033[";
 
     String SGR_SUFFIX = "m";
@@ -26,6 +28,22 @@ public interface AnsiConst {
     byte COLOR_BIT8 = 5;
 
     byte COLOR_BIT24 = 2;
+
+    // -------------------- char --------------------
+
+    String INSERT_LINE = "L";
+
+    String DELETE_LINE = "M";
+
+    String INSERT_COLUMNS = "'}";
+
+    String DELETE_COLUMNS = "'~";
+
+    String INSERT_BLANK_CHARS = "@";
+
+    String DELETE_CHARS = "P";
+
+    String REPEAT_CHAR = "b";
 
     // -------------------- cursor --------------------
 

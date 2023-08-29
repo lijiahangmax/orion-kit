@@ -1,4 +1,6 @@
-package com.orion.lang.utils.ansi;
+package com.orion.lang.utils.ansi.cursor;
+
+import com.orion.lang.utils.ansi.AnsiElement;
 
 import static com.orion.lang.utils.ansi.AnsiConst.*;
 
