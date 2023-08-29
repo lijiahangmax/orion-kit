@@ -2,7 +2,7 @@ package com.orion.lang.utils.ansi.style.color;
 
 import com.orion.lang.utils.Valid;
 
-import static com.orion.lang.utils.ansi.AnsiConst.JOIN;
+import static com.orion.lang.utils.ansi.AnsiConst.*;
 
 /**
  * ANSI bit 颜色
@@ -43,8 +43,13 @@ public abstract class AnsiBitColor implements AnsiColor {
     }
 
     @Override
-    public String toString() {
+    public String getCode() {
         return code;
+    }
+
+    @Override
+    public String toString() {
+        return CSI_PREFIX + code + SGR_SUFFIX;
     }
 
 }

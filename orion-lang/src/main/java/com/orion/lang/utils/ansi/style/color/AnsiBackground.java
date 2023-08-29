@@ -2,6 +2,9 @@ package com.orion.lang.utils.ansi.style.color;
 
 import com.orion.lang.constant.Const;
 
+import static com.orion.lang.utils.ansi.AnsiConst.CSI_PREFIX;
+import static com.orion.lang.utils.ansi.AnsiConst.SGR_SUFFIX;
+
 /**
  * ANSI 背景色
  *
@@ -110,8 +113,13 @@ public enum AnsiBackground implements AnsiColor {
     }
 
     @Override
-    public String toString() {
+    public String getCode() {
         return code + Const.EMPTY;
+    }
+
+    @Override
+    public String toString() {
+        return CSI_PREFIX + code + SGR_SUFFIX;
     }
 
 }

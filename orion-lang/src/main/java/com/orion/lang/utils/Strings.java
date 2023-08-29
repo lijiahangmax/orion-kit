@@ -12,6 +12,8 @@ import java.util.Random;
 import java.util.StringJoiner;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * String 工具类
@@ -829,10 +831,7 @@ public class Strings {
      * @return str
      */
     public static String format(String str, Map<?, ?> map) {
-        for (Map.Entry<?, ?> entry : map.entrySet()) {
-            str = str.replaceAll("\\$\\{" + entry.getKey() + "}", Objects1.toString(entry.getValue()));
-        }
-        return str;
+        return format(str, "\\$", map);
     }
 
     /**
@@ -844,7 +843,11 @@ public class Strings {
      */
     public static String format(String str, String comment, Map<?, ?> map) {
         for (Map.Entry<?, ?> entry : map.entrySet()) {
-            str = str.replaceAll(comment + "\\{" + entry.getKey() + "}", Objects1.toString(entry.getValue()));
+            Pattern p = Pattern.compile(comment + "\\{" + entry.getKey() + "}");
+            Matcher matcher = p.matcher(str);
+            if (matcher.find()) {
+                str = matcher.replaceAll(Objects1.toString(entry.getValue()));
+            }
         }
         return str;
     }

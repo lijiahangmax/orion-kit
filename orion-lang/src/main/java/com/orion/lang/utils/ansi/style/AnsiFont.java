@@ -1,9 +1,9 @@
 package com.orion.lang.utils.ansi.style;
 
 import com.orion.lang.constant.Const;
-import com.orion.lang.utils.ansi.style.color.AnsiBackground;
-import com.orion.lang.utils.ansi.style.color.AnsiForeground;
-import com.orion.lang.utils.awt.Clipboards;
+
+import static com.orion.lang.utils.ansi.AnsiConst.CSI_PREFIX;
+import static com.orion.lang.utils.ansi.AnsiConst.SGR_SUFFIX;
 
 /**
  * ANIS 字体
@@ -118,16 +118,13 @@ public enum AnsiFont implements AnsiStyle {
     }
 
     @Override
-    public String toString() {
+    public String getCode() {
         return code + Const.EMPTY;
     }
 
-    public static void main(String[] args) {
-        String s = AnsiFont.FAINT
-                .and(AnsiBackground.BLUE)
-                .and(AnsiForeground.BRIGHT_RED)
-                .toString();
-        Clipboards.setString(s);
+    @Override
+    public String toString() {
+        return CSI_PREFIX + code + SGR_SUFFIX;
     }
 
 }

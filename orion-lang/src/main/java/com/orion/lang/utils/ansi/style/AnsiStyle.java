@@ -25,4 +25,11 @@ public interface AnsiStyle extends AnsiElement {
         }
     }
 
+    /**
+     * 获取 SGR Code
+     *
+     * @return SGR Code
+     */
+    String getCode();
+
 }

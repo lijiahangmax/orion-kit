@@ -41,8 +41,13 @@ public class AnsiStyleChain implements AnsiStyle {
     }
 
     @Override
+    public String getCode() {
+        return Lists.join(Lists.map(styles, AnsiStyle::getCode), JOIN);
+    }
+
+    @Override
     public String toString() {
-        return CSI_PREFIX + Lists.join(styles, JOIN) + SGR_SUFFIX;
+        return CSI_PREFIX + this.getCode() + SGR_SUFFIX;
     }
 
 }
