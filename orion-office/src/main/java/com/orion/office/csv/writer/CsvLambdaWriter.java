@@ -37,6 +37,26 @@ public class CsvLambdaWriter<T> extends BaseCsvWriter<Function<T, ?>, T> {
         super(writer);
     }
 
+    public static <T> CsvLambdaWriter<T> create(String file) {
+        return new CsvLambdaWriter<>(file);
+    }
+
+    public static <T> CsvLambdaWriter<T> create(File file) {
+        return new CsvLambdaWriter<>(file);
+    }
+
+    public static <T> CsvLambdaWriter<T> create(OutputStream out) {
+        return new CsvLambdaWriter<>(out);
+    }
+
+    public static <T> CsvLambdaWriter<T> create(Writer writer) {
+        return new CsvLambdaWriter<>(writer);
+    }
+
+    public static <T> CsvLambdaWriter<T> create(CsvWriter writer) {
+        return new CsvLambdaWriter<>(writer);
+    }
+
     @Override
     protected String[] parseRow(T row) {
         String[] store = super.capacityStore();

@@ -75,7 +75,7 @@ public class CsvBeanReader<T> extends BaseCsvReader<T> {
     }
 
     /**
-     * 如果列为null是否调用setter(null)
+     * 如果列为 null 是否调用 setter(null)
      *
      * @return this
      */

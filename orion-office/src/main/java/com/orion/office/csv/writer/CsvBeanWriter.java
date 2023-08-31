@@ -44,7 +44,7 @@ public class CsvBeanWriter<T> extends BaseCsvWriter<String, T> {
     private boolean addHeader;
 
     /**
-     * 是否将index作为排序字段
+     * 是否将 index 作为排序字段
      */
     private boolean indexToSort;
 
@@ -80,6 +80,26 @@ public class CsvBeanWriter<T> extends BaseCsvWriter<String, T> {
         this.headers = new TreeMap<>();
         this.parseClass();
         this.parseField();
+    }
+
+    public static <T> CsvBeanWriter<T> create(String file, Class<T> targetClass) {
+        return new CsvBeanWriter<>(file, targetClass);
+    }
+
+    public static <T> CsvBeanWriter<T> create(File file, Class<T> targetClass) {
+        return new CsvBeanWriter<>(file, targetClass);
+    }
+
+    public static <T> CsvBeanWriter<T> create(OutputStream out, Class<T> targetClass) {
+        return new CsvBeanWriter<>(out, targetClass);
+    }
+
+    public static <T> CsvBeanWriter<T> create(Writer writer, Class<T> targetClass) {
+        return new CsvBeanWriter<>(writer, targetClass);
+    }
+
+    public static <T> CsvBeanWriter<T> create(CsvWriter writer, Class<T> targetClass) {
+        return new CsvBeanWriter<>(writer, targetClass);
     }
 
     @Override

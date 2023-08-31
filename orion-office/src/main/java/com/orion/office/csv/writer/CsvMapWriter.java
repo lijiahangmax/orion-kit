@@ -37,6 +37,26 @@ public class CsvMapWriter<K, V> extends BaseCsvWriter<K, Map<K, V>> {
         super(writer);
     }
 
+    public static <K, V> CsvMapWriter<K, V> create(String file) {
+        return new CsvMapWriter<K, V>(file);
+    }
+
+    public static <K, V> CsvMapWriter<K, V> create(File file) {
+        return new CsvMapWriter<K, V>(file);
+    }
+
+    public static <K, V> CsvMapWriter<K, V> create(OutputStream out) {
+        return new CsvMapWriter<K, V>(out);
+    }
+
+    public static <K, V> CsvMapWriter<K, V> create(Writer writer) {
+        return new CsvMapWriter<K, V>(writer);
+    }
+
+    public static <K, V> CsvMapWriter<K, V> create(CsvWriter writer) {
+        return new CsvMapWriter<K, V>(writer);
+    }
+
     @Override
     protected String[] parseRow(Map<K, V> row) {
         String[] store = super.capacityStore();

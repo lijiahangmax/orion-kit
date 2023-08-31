@@ -35,7 +35,7 @@ public class ExcelMapReader<K, V> extends BaseExcelReader<K, MutableMap<K, V>> {
     private final Map<K, V> defaultValue;
 
     /**
-     * 为null是否插入kay
+     * 为 null 是否插入 kay
      */
     private boolean nullPutKey;
 
@@ -48,20 +48,32 @@ public class ExcelMapReader<K, V> extends BaseExcelReader<K, MutableMap<K, V>> {
         this(workbook, sheet, new ArrayList<>(), null);
     }
 
-    public ExcelMapReader(Workbook workbook, Sheet sheet, List<MutableMap<K, V>> rows) {
-        this(workbook, sheet, rows, null);
+    public ExcelMapReader(Workbook workbook, Sheet sheet, List<MutableMap<K, V>> store) {
+        this(workbook, sheet, store, null);
     }
 
     public ExcelMapReader(Workbook workbook, Sheet sheet, Consumer<MutableMap<K, V>> consumer) {
         this(workbook, sheet, null, consumer);
     }
 
-    private ExcelMapReader(Workbook workbook, Sheet sheet, List<MutableMap<K, V>> rows, Consumer<MutableMap<K, V>> consumer) {
-        super(workbook, sheet, rows, consumer);
+    private ExcelMapReader(Workbook workbook, Sheet sheet, List<MutableMap<K, V>> store, Consumer<MutableMap<K, V>> consumer) {
+        super(workbook, sheet, store, consumer);
         this.init = false;
         this.nullPutKey = true;
         this.options = new HashMap<>();
         this.defaultValue = new HashMap<>();
+    }
+
+    public static <K, V> ExcelMapReader<K, V> create(Workbook workbook, Sheet sheet) {
+        return new ExcelMapReader<>(workbook, sheet);
+    }
+
+    public static <K, V> ExcelMapReader<K, V> create(Workbook workbook, Sheet sheet, List<MutableMap<K, V>> store) {
+        return new ExcelMapReader<>(workbook, sheet, store);
+    }
+
+    public static <K, V> ExcelMapReader<K, V> create(Workbook workbook, Sheet sheet, Consumer<MutableMap<K, V>> consumer) {
+        return new ExcelMapReader<>(workbook, sheet, consumer);
     }
 
     public ExcelMapReader<K, V> option(K key, ImportFieldOption option) {

@@ -38,7 +38,7 @@ public class BaseExcelWriteable implements SafeCloseable {
 
     public BaseExcelWriteable write(OutputStream out) {
         Valid.notNull(out, "stream is null");
-        return this.write(out, null, true);
+        return this.write(out, null, false);
     }
 
     public BaseExcelWriteable write(String file, String password) {

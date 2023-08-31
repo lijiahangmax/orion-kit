@@ -45,12 +45,12 @@ public class ExcelLambdaReader<T> extends BaseExcelReader<Pair<Function<?, ?>, B
     protected Supplier<T> supplier;
 
     /**
-     * 为null是否调用
+     * 为 null 是否调用
      */
     protected boolean nullInvoke;
 
     /**
-     * 如果行为null是否添加一个新的实例对象
+     * 如果行为 null 是否添加一个新的实例对象
      */
     private boolean nullAddEmptyBean;
 
@@ -66,15 +66,27 @@ public class ExcelLambdaReader<T> extends BaseExcelReader<Pair<Function<?, ?>, B
         this(workbook, sheet, null, consumer, supplier);
     }
 
-    protected ExcelLambdaReader(Workbook workbook, Sheet sheet, List<T> rows, Consumer<T> consumer, Supplier<T> supplier) {
-        super(workbook, sheet, rows, consumer);
+    protected ExcelLambdaReader(Workbook workbook, Sheet sheet, List<T> store, Consumer<T> consumer, Supplier<T> supplier) {
+        super(workbook, sheet, store, consumer);
         this.supplier = Valid.notNull(supplier, "supplier is null");
         this.options = new HashMap<>();
         this.init = false;
     }
 
+    public static <T> ExcelLambdaReader<T> create(Workbook workbook, Sheet sheet, Supplier<T> supplier) {
+        return new ExcelLambdaReader<>(workbook, sheet, supplier);
+    }
+
+    public static <T> ExcelLambdaReader<T> create(Workbook workbook, Sheet sheet, List<T> store, Supplier<T> supplier) {
+        return new ExcelLambdaReader<>(workbook, sheet, store, supplier);
+    }
+
+    public static <T> ExcelLambdaReader<T> create(Workbook workbook, Sheet sheet, Consumer<T> consumer, Supplier<T> supplier) {
+        return new ExcelLambdaReader<>(workbook, sheet, consumer, supplier);
+    }
+
     /**
-     * 如果列为null是否调用function consumer
+     * 如果列为 null 是否调用 function consumer
      *
      * @return this
      */
@@ -84,7 +96,7 @@ public class ExcelLambdaReader<T> extends BaseExcelReader<Pair<Function<?, ?>, B
     }
 
     /**
-     * 如果行为null是否添加实例对象
+     * 如果行为 null 是否添加实例对象
      *
      * @return this
      */
