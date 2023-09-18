@@ -5,6 +5,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Logger;
 import com.orion.lang.utils.Exceptions;
+import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.Valid;
 import com.orion.lang.utils.io.Files1;
 
@@ -22,8 +23,6 @@ import java.util.Vector;
  */
 public class SessionHolder {
 
-    public static final SessionHolder HOLDER;
-
     public static final int DEFAULT_SSH_PORT = 22;
 
     public final JSch ch;
@@ -38,16 +37,20 @@ public class SessionHolder {
     }
 
     static {
-        HOLDER = new SessionHolder(new JSch());
-        // 不检查秘钥
+        // 不检查私钥
         JSch.setConfig("StrictHostKeyChecking", "no");
         // add RSA/SHA1 key support
         JSch.setConfig("server_host_key", JSch.getConfig("server_host_key") + ",ssh-rsa");
         JSch.setConfig("PubkeyAcceptedAlgorithms", JSch.getConfig("PubkeyAcceptedAlgorithms") + ",ssh-rsa");
     }
 
-    public static SessionHolder getHolder() {
-        return HOLDER;
+    /**
+     * 创建
+     *
+     * @return SessionHolder
+     */
+    public static SessionHolder create() {
+        return new SessionHolder();
     }
 
     /**
@@ -69,59 +72,96 @@ public class SessionHolder {
     }
 
     /**
-     * 添加公钥登陆文件
+     * 添加私钥认证 - 文件
      *
-     * @param keyPath  公钥路径
-     * @param password 公钥密码
+     * @param privateKeyPath 私钥路径
      */
-    public void addIdentity(String keyPath, String password) {
-        Valid.notNull(password, "public key password is null");
+    public void addIdentity(String privateKeyPath) {
+        this.addIdentity(privateKeyPath, null, null);
+    }
+
+    /**
+     * 添加私钥认证 - 文件
+     *
+     * @param privateKeyPath 私钥路径
+     * @param password       私钥密码
+     */
+    public void addIdentity(String privateKeyPath, String password) {
+        this.addIdentity(privateKeyPath, null, password);
+    }
+
+    /**
+     * 添加私钥认证 - 文件
+     *
+     * @param privateKeyPath 私钥路径
+     * @param publicKeyPath  公钥路径
+     * @param password       私钥密码
+     */
+    public void addIdentity(String privateKeyPath, String publicKeyPath, String password) {
+        Valid.notNull(privateKeyPath, "private key is null");
         try {
-            ch.addIdentity(keyPath, password);
+            ch.addIdentity(privateKeyPath,
+                    publicKeyPath,
+                    password == null ? null : Strings.bytes(password));
         } catch (Exception e) {
-            throw Exceptions.runtime("add identity error " + e.getMessage());
+            throw Exceptions.runtime("add identity error " + e.getMessage(), e);
         }
     }
 
     /**
-     * 添加公钥登陆文件
+     * 添加私钥认证 - 文本
      *
-     * @param keyPath  公钥路径
-     * @param password 公钥密码
+     * @param keyName        名称
+     * @param privateKeyPath 私钥文本
      */
-    public void addIdentity(String keyPath, byte[] password) {
-        Valid.notNull(password, "public key password is null");
+    public void addIdentityValue(String keyName, String privateKeyValue) {
+        this.addIdentityValue(keyName, privateKeyValue, null, null);
+    }
+
+    /**
+     * 添加私钥认证 - 文本
+     *
+     * @param keyName        名称
+     * @param privateKeyPath 私钥文本
+     * @param password       私钥密码
+     */
+    public void addIdentityValue(String keyName, String privateKeyValue, String password) {
+        this.addIdentityValue(keyName, privateKeyValue, null, password);
+    }
+
+    /**
+     * 添加私钥认证 - 文本
+     *
+     * @param keyName        名称
+     * @param privateKeyPath 私钥文本
+     * @param publicKeyPath  公钥文本
+     * @param password       私钥密码
+     */
+    public void addIdentityValue(String keyName, String privateKeyValue, String publicKeyValue, String password) {
+        Valid.notNull(keyName, "key name is null");
+        Valid.notNull(privateKeyValue, "private key is null");
         try {
-            ch.addIdentity(keyPath, password);
+            ch.addIdentity(keyName,
+                    Strings.bytes(privateKeyValue),
+                    publicKeyValue == null ? null : Strings.bytes(publicKeyValue),
+                    password == null ? null : Strings.bytes(password));
         } catch (Exception e) {
-            throw Exceptions.runtime("add identity error " + e.getMessage());
+            throw Exceptions.runtime("add identity error " + e.getMessage(), e);
         }
     }
 
     /**
-     * 添加公钥登陆文件
+     * 删除加载的秘钥
      *
-     * @param keyPath 公钥路径
+     * @param key key
      */
-    public void addIdentity(String keyPath) {
-        try {
-            ch.addIdentity(keyPath);
-        } catch (Exception e) {
-            throw Exceptions.runtime("add identity error " + e.getMessage());
-        }
-    }
-
-    /**
-     * 删除加载的公钥
-     *
-     * @param keyPath keyPath
-     */
-    public void removeIdentity(String keyPath) {
+    public void removeIdentity(String key) {
         Vector<?> identities = ch.getIdentityRepository().getIdentities();
         for (Object identity : identities) {
             if (identity instanceof Identity) {
-                String key = ((Identity) identity).getName();
-                if (Files1.getPath(key).equals(Files1.getPath(keyPath))) {
+                String keyName = ((Identity) identity).getName();
+                if (keyName.equals(key) ||
+                        Files1.getPath(keyName).equals(Files1.getPath(key))) {
                     try {
                         ch.removeIdentity((Identity) identity);
                     } catch (Exception e) {
@@ -133,7 +173,7 @@ public class SessionHolder {
     }
 
     /**
-     * 删除所有加载的公钥
+     * 删除所有加载的秘钥
      */
     public void removeAllIdentity() {
         try {
@@ -144,7 +184,7 @@ public class SessionHolder {
     }
 
     /**
-     * 获取加载的公钥
+     * 获取加载的秘钥
      *
      * @return keys
      */

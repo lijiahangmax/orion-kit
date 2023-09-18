@@ -462,7 +462,7 @@ public class Collections {
      * @return distinct collection
      */
     public static <E> Collection<E> distinct(Collection<E> c, Function<E, ?> keyGetter) {
-        Map<Object, E> map = new HashMap<>(16);
+        Map<Object, E> map = new LinkedHashMap<>(16);
         for (E e : c) {
             map.put(keyGetter.apply(e), e);
         }

@@ -16,11 +16,14 @@ import java.io.IOException;
  */
 public class CommandExecutorTests {
 
+    private SessionHolder h;
+
     private SessionStore s;
 
     @Before
     public void init() {
-        this.s = SessionHolder.HOLDER.getSession("192.168.146.230", "root")
+        this.h = SessionHolder.create();
+        this.s = h.getSession("192.168.146.230", "root")
                 .password("admin123")
                 .timeout(20000)
                 .connect(20000);
@@ -28,7 +31,7 @@ public class CommandExecutorTests {
 
     @Test
     public void ls() {
-        SessionHolder.HOLDER.setLogger(SessionLogger.ERROR);
+        h.setLogger(SessionLogger.ERROR);
         CommandExecutor e = s.getCommandExecutor("ls -la /root");
         e.callback(() -> {
             System.out.println("end....");
@@ -45,7 +48,7 @@ public class CommandExecutorTests {
 
     @Test
     public void echo() {
-        SessionHolder.HOLDER.setLogger(SessionLogger.INFO);
+        h.setLogger(SessionLogger.INFO);
         CommandExecutor e = s.getCommandExecutor("echo $PATH");
         e.inherit();
         e.streamHandler(ReaderLineConsumer.printer());

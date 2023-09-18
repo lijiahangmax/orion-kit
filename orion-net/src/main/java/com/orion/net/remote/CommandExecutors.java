@@ -50,7 +50,8 @@ public class CommandExecutors {
      * @throws IOException IOException
      */
     public static String getCommandOutputResult(String host, int port, String username, String password, String command) throws IOException {
-        try (SessionStore session = SessionHolder.HOLDER.getSession(host, port, username)
+        try (SessionStore session = SessionHolder.create()
+                .getSession(host, port, username)
                 .password(password)
                 .connect();
              CommandExecutor executor = session.getCommandExecutor(command)) {

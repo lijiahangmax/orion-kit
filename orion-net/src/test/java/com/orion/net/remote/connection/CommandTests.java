@@ -3,8 +3,6 @@ package com.orion.net.remote.connection;
 import com.orion.lang.function.impl.ReaderLineConsumer;
 import com.orion.lang.utils.Threads;
 import com.orion.net.remote.CommandExecutors;
-import com.orion.net.remote.channel.SessionHolder;
-import com.orion.net.remote.channel.SessionLogger;
 import com.orion.net.remote.connection.ssh.CommandExecutor;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +27,6 @@ public class CommandTests {
 
     @Test
     public void ls() {
-        SessionHolder.HOLDER.setLogger(SessionLogger.ERROR);
         CommandExecutor e = c.getCommandExecutor("ls -la /root");
         e.callback(() -> {
             System.out.println("end....");
@@ -45,7 +42,6 @@ public class CommandTests {
 
     @Test
     public void echo() {
-        SessionHolder.HOLDER.setLogger(SessionLogger.INFO);
         CommandExecutor e = c.getCommandExecutor("echo $PATH");
         e.inherit();
         e.streamHandler(ReaderLineConsumer.printer());

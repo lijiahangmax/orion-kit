@@ -25,12 +25,15 @@ import java.util.regex.Pattern;
  */
 public class SftpExecutorTests {
 
+    private SessionHolder h;
+
     private SftpExecutor e;
 
     @Before
     public void before() {
-        SessionHolder.HOLDER.setLogger(SessionLogger.ERROR);
-        this.e = SessionHolder.HOLDER.getSession("192.168.146.230", "root")
+        this.h = SessionHolder.create();
+        h.setLogger(SessionLogger.ERROR);
+        this.e = h.getSession("192.168.146.230", "root")
                 .password("admin123")
                 .timeout(20000)
                 .connect(20000)
