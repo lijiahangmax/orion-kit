@@ -74,7 +74,7 @@ public class ParamSymmetric extends BaseSymmetric {
             }
             return this.clearZeroPadding(cipher.doFinal(decode(text)));
         } catch (Exception e) {
-            throw Exceptions.encrypt("decrypt data error", e);
+            throw Exceptions.decrypt("decrypt data error", e);
         }
     }
 
