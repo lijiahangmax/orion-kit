@@ -51,81 +51,81 @@ public class Queues extends Collections {
 
     // -------------------- function --------------------
 
-    public static <E> Queue<E> def(Queue<E> q) {
-        return q == null ? new ConcurrentLinkedQueue<>() : q;
+    public static <E> Queue<E> def(Queue<E> queue) {
+        return queue == null ? new ConcurrentLinkedQueue<>() : queue;
     }
 
-    public static <E> Deque<E> def(Deque<E> d) {
-        return d == null ? new ConcurrentLinkedDeque<>() : d;
+    public static <E> Deque<E> def(Deque<E> queue) {
+        return queue == null ? new ConcurrentLinkedDeque<>() : queue;
     }
 
-    public static <E> Queue<E> def(Queue<E> q, Queue<E> def) {
-        return q == null ? def : q;
+    public static <E> Queue<E> def(Queue<E> queue, Queue<E> def) {
+        return queue == null ? def : queue;
     }
 
-    public static <E> Deque<E> def(Deque<E> d, Deque<E> def) {
-        return d == null ? def : d;
+    public static <E> Deque<E> def(Deque<E> queue, Deque<E> def) {
+        return queue == null ? def : queue;
     }
 
-    public static <E> Queue<E> def(Queue<E> q, Supplier<Queue<E>> def) {
-        return q == null ? def.get() : q;
+    public static <E> Queue<E> def(Queue<E> queue, Supplier<Queue<E>> def) {
+        return queue == null ? def.get() : queue;
     }
 
-    public static <E> Deque<E> def(Deque<E> d, Supplier<Deque<E>> def) {
-        return d == null ? def.get() : d;
-    }
-
-    @SafeVarargs
-    public static <E> Queue<E> of(E... e) {
-        return new ConcurrentLinkedQueue<>(Arrays.asList(e));
+    public static <E> Deque<E> def(Deque<E> queue, Supplier<Deque<E>> def) {
+        return queue == null ? def.get() : queue;
     }
 
     @SafeVarargs
-    public static <E> Deque<E> ofd(E... e) {
-        return new ConcurrentLinkedDeque<>(Arrays.asList(e));
+    public static <E> Queue<E> of(E... values) {
+        return new ConcurrentLinkedQueue<>(Arrays.asList(values));
     }
 
     @SafeVarargs
-    public static <E, V> Queue<E> of(Function<V, E> f, V... e) {
-        Valid.notNull(f, "convert function is null");
+    public static <E> Deque<E> ofd(E... values) {
+        return new ConcurrentLinkedDeque<>(Arrays.asList(values));
+    }
+
+    @SafeVarargs
+    public static <E, V> Queue<E> of(Function<V, E> mapper, V... values) {
+        Valid.notNull(mapper, "convert function is null");
         Queue<E> q = new ConcurrentLinkedQueue<>();
-        int length = Arrays1.length(e);
+        int length = Arrays1.length(values);
         for (int i = 0; i < length; i++) {
-            q.add(f.apply(e[i]));
+            q.add(mapper.apply(values[i]));
         }
         return q;
     }
 
     @SafeVarargs
-    public static <E, V> Deque<E> ofd(Function<V, E> f, V... e) {
-        Valid.notNull(f, "convert function is null");
+    public static <E, V> Deque<E> ofd(Function<V, E> mapper, V... e) {
+        Valid.notNull(mapper, "convert function is null");
         Deque<E> q = new ConcurrentLinkedDeque<>();
         int length = Arrays1.length(e);
         for (int i = 0; i < length; i++) {
-            q.add(f.apply(e[i]));
+            q.add(mapper.apply(e[i]));
         }
         return q;
     }
 
-    public static <E, V> Queue<E> map(Queue<V> l, Function<V, E> f) {
-        Valid.notNull(f, "convert function is null");
+    public static <E, V> Queue<E> map(Queue<V> queue, Function<V, E> mapper) {
+        Valid.notNull(mapper, "convert function is null");
         Queue<E> q = new ConcurrentLinkedQueue<>();
-        if (isEmpty(l)) {
+        if (isEmpty(queue)) {
             return q;
         }
-        for (V v : l) {
-            q.add(f.apply(v));
+        for (V v : queue) {
+            q.add(mapper.apply(v));
         }
         return q;
     }
 
-    public static <E, V> Deque<E> map(Deque<V> l, Function<V, E> f) {
+    public static <E, V> Deque<E> map(Deque<V> queue, Function<V, E> f) {
         Valid.notNull(f, "convert function is null");
         Deque<E> q = new ConcurrentLinkedDeque<>();
-        if (isEmpty(l)) {
+        if (isEmpty(queue)) {
             return q;
         }
-        for (V v : l) {
+        for (V v : queue) {
             q.add(f.apply(v));
         }
         return q;
