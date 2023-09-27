@@ -4,6 +4,7 @@ import com.orion.lang.define.support.CloneSupport;
 import com.orion.lang.utils.Strings;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -51,6 +52,29 @@ public class Ref<T> extends CloneSupport<Ref<T>> implements Serializable {
      */
     public Optional<T> optional() {
         return Optional.ofNullable(value);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return value == null;
+        }
+        if (getClass() != o.getClass()) {
+            // unref
+            return Objects.equals(value, o);
+        } else {
+            // ref
+            Ref<?> ref = (Ref<?>) o;
+            return Objects.equals(value, ref.value);
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 
     @Override
