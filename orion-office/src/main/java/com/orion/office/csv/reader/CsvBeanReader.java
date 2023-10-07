@@ -113,7 +113,7 @@ public class CsvBeanReader<T> extends BaseCsvReader<T> {
                 return;
             }
             Object value = this.get(row, k);
-            // 执行setter
+            // 调用 setter
             if (value != null) {
                 try {
                     Methods.invokeSetterInfer(t, setter, value);

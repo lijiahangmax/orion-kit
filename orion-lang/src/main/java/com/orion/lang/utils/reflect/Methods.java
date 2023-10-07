@@ -58,15 +58,17 @@ public class Methods {
         if (methods == null) {
             return null;
         }
-        String methodName1 = GETTER_PREFIX + Strings.firstUpper(field);
+        // 使用 get 前缀
+        String methodName = getGetterMethodNameByField(field, false);
         for (Method method : methods) {
-            if (method.getParameterCount() == 0 && method.getName().equals(methodName1)) {
+            if (method.getParameterCount() == 0 && method.getName().equals(methodName)) {
                 return method;
             }
         }
-        String methodName2 = BOOLEAN_GETTER_PREFIX + Strings.firstUpper(field);
+        // 使用 is 前缀
+        methodName = getGetterMethodNameByField(field, true);
         for (Method method : methods) {
-            if (method.getParameterCount() == 0 && method.getName().equals(methodName2)) {
+            if (method.getParameterCount() == 0 && method.getName().equals(methodName)) {
                 return method;
             }
         }
@@ -85,7 +87,7 @@ public class Methods {
         if (methods == null) {
             return null;
         }
-        String methodName = SETTER_PREFIX + Strings.firstUpper(field);
+        String methodName = getSetterMethodNameByField(field);
         for (Method method : methods) {
             if (method.getParameterCount() == 1 && method.getName().equals(methodName)) {
                 return method;
@@ -131,7 +133,7 @@ public class Methods {
      * @return getter方法
      */
     public static String getGetterMethodNameByField(Field field) {
-        return getGetterMethodNameByFieldName(field.getName(), field.getType().equals(Boolean.TYPE));
+        return getGetterMethodNameByField(field.getName(), field.getType().equals(Boolean.TYPE));
     }
 
     /**
@@ -140,11 +142,8 @@ public class Methods {
      * @param fieldName fieldName
      * @return getter方法
      */
-    public static String getGetterMethodNameByFieldName(String fieldName) {
-        if (Strings.isBlank(fieldName)) {
-            return null;
-        }
-        return GETTER_PREFIX + Strings.firstUpper(fieldName.trim());
+    public static String getGetterMethodNameByField(String fieldName) {
+        return getGetterMethodNameByField(fieldName, false);
     }
 
     /**
@@ -154,11 +153,17 @@ public class Methods {
      * @param isBooleanClass 是否为 Boolean.TYPE
      * @return getter方法
      */
-    public static String getGetterMethodNameByFieldName(String fieldName, boolean isBooleanClass) {
+    public static String getGetterMethodNameByField(String fieldName, boolean isBooleanClass) {
         if (Strings.isBlank(fieldName)) {
             return null;
         }
-        return (isBooleanClass ? BOOLEAN_GETTER_PREFIX : GETTER_PREFIX) + Strings.firstUpper(fieldName.trim());
+        if (fieldName.length() > 2
+                && Character.isLowerCase(fieldName.charAt(0))
+                && Character.isUpperCase(fieldName.charAt(1))) {
+            return (isBooleanClass ? BOOLEAN_GETTER_PREFIX : GETTER_PREFIX) + fieldName;
+        } else {
+            return (isBooleanClass ? BOOLEAN_GETTER_PREFIX : GETTER_PREFIX) + Strings.firstUpper(fieldName);
+        }
     }
 
     /**
@@ -168,7 +173,7 @@ public class Methods {
      * @return setter方法
      */
     public static String getSetterMethodNameByField(Field field) {
-        return SETTER_PREFIX + Strings.firstUpper(field.getName());
+        return getSetterMethodNameByField(field.getName());
     }
 
     /**
@@ -177,11 +182,17 @@ public class Methods {
      * @param fieldName fieldName
      * @return setter方法
      */
-    public static String getSetterMethodNameByFieldName(String fieldName) {
+    public static String getSetterMethodNameByField(String fieldName) {
         if (Strings.isBlank(fieldName)) {
             return null;
         }
-        return SETTER_PREFIX + Strings.firstUpper(fieldName.trim());
+        if (fieldName.length() > 2
+                && Character.isLowerCase(fieldName.charAt(0))
+                && Character.isUpperCase(fieldName.charAt(1))) {
+            return SETTER_PREFIX + fieldName;
+        } else {
+            return SETTER_PREFIX + Strings.firstUpper(fieldName);
+        }
     }
 
     /**
@@ -234,26 +245,12 @@ public class Methods {
      * @return getter方法
      */
     public static List<Method> getGetterMethodsByField(Class<?> clazz) {
-        List<Method> list = new ArrayList<>();
-        List<Field> fields = Fields.getFields(clazz);
-        for (Field field : fields) {
-            if (!Modifier.isStatic(field.getModifiers())) {
-                Method method;
-                if (field.getType().equals(Boolean.TYPE)) {
-                    String fieldName = Strings.firstUpper(field.getName());
-                    method = getAccessibleMethod(clazz, BOOLEAN_GETTER_PREFIX + fieldName, 0);
-                    if (method == null) {
-                        method = getAccessibleMethod(clazz, GETTER_PREFIX + fieldName, 0);
-                    }
-                } else {
-                    method = getAccessibleMethod(clazz, GETTER_PREFIX + Strings.firstUpper(field.getName()), 0);
-                }
-                if (method != null) {
-                    list.add(method);
-                }
-            }
-        }
-        return list;
+        return Fields.getFields(clazz)
+                .stream()
+                .filter(field -> !Modifier.isStatic(field.getModifiers()))
+                .map(field -> getGetterMethodByField(clazz, field))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -263,18 +260,12 @@ public class Methods {
      * @return setter方法
      */
     public static List<Method> getSetterMethodsByField(Class<?> clazz) {
-        List<Method> list = new ArrayList<>();
-        List<Field> fields = Fields.getFields(clazz);
-        for (Field field : fields) {
-            if (!Modifier.isStatic(field.getModifiers())) {
-                String methodName = SETTER_PREFIX + Strings.firstUpper(field.getName());
-                Method method = getAccessibleMethod(clazz, methodName, field.getType());
-                if (method != null) {
-                    list.add(method);
-                }
-            }
-        }
-        return list;
+        return Fields.getFields(clazz)
+                .stream()
+                .filter(field -> !Modifier.isStatic(field.getModifiers()))
+                .map(field -> getSetterMethodByField(clazz, field))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -285,18 +276,7 @@ public class Methods {
      * @return get方法
      */
     public static Method getGetterMethodByField(Class<?> clazz, Field field) {
-        Method method;
-        if (field.getType().equals(Boolean.TYPE)) {
-            String fieldName = Strings.firstUpper(field.getName());
-            method = getAccessibleMethod(clazz, BOOLEAN_GETTER_PREFIX + fieldName, 0);
-            if (method == null) {
-                method = getAccessibleMethod(clazz, GETTER_PREFIX + fieldName, 0);
-            }
-        } else {
-            String methodName = GETTER_PREFIX + Strings.firstUpper(field.getName());
-            method = getAccessibleMethod(clazz, methodName, 0);
-        }
-        return method;
+        return getGetterMethodByField(clazz, field.getName());
     }
 
     /**
@@ -306,14 +286,13 @@ public class Methods {
      * @param fieldName fieldName
      * @return getter方法
      */
-    public static Method getGetterMethodByFieldName(Class<?> clazz, String fieldName) {
+    public static Method getGetterMethodByField(Class<?> clazz, String fieldName) {
         if (Strings.isBlank(fieldName)) {
             return null;
         }
-        fieldName = Strings.firstUpper(fieldName.trim());
-        Method method = getAccessibleMethod(clazz, GETTER_PREFIX + fieldName, 0);
+        Method method = getAccessibleMethod(clazz, getGetterMethodNameByField(fieldName, false), 0);
         if (method == null) {
-            method = getAccessibleMethod(clazz, BOOLEAN_GETTER_PREFIX + fieldName, 0);
+            method = getAccessibleMethod(clazz, getGetterMethodNameByField(fieldName, true), 0);
         }
         return method;
     }
@@ -326,8 +305,7 @@ public class Methods {
      * @return setter方法
      */
     public static Method getSetterMethodByField(Class<?> clazz, Field field) {
-        String methodName = SETTER_PREFIX + Strings.firstUpper(field.getName());
-        return getAccessibleMethod(clazz, methodName, field.getType());
+        return getSetterMethodByField(clazz, field.getName());
     }
 
     /**
@@ -337,13 +315,11 @@ public class Methods {
      * @param fieldName field
      * @return setter方法
      */
-    public static Method getSetterMethodByFieldName(Class<?> clazz, String fieldName) {
+    public static Method getSetterMethodByField(Class<?> clazz, String fieldName) {
         if (Strings.isBlank(fieldName)) {
             return null;
         }
-        fieldName = fieldName.trim();
-        String methodName = SETTER_PREFIX + Strings.firstUpper(fieldName);
-        return getAccessibleMethod(clazz, methodName, 1);
+        return getAccessibleMethod(clazz, getSetterMethodNameByField(fieldName), 1);
     }
 
     /**
@@ -411,7 +387,7 @@ public class Methods {
     }
 
     /**
-     * 获取对象匹配方法名和参数长度的DeclaredMethod 并强制设置为可访问 可以获取基本类型的方法
+     * 获取对象匹配方法名和参数长度的 DeclaredMethod 并强制设置为可访问 可以获取基本类型的方法
      *
      * @param clazz      class
      * @param methodName 方法名称
@@ -508,8 +484,7 @@ public class Methods {
      */
     public static List<Method> getStaticMethods(Class<?> clazz) {
         Valid.notNull(clazz, "class is null");
-        Method[] methods = clazz.getDeclaredMethods();
-        return Arrays.stream(methods)
+        return Arrays.stream(clazz.getDeclaredMethods())
                 .filter(m -> Modifier.isStatic(m.getModifiers()))
                 .collect(Collectors.toList());
     }
@@ -526,14 +501,53 @@ public class Methods {
         Valid.notNull(obj, "invoke object is null");
         Valid.notBlank(fieldName, "invoke getter field is null");
         try {
-            Field field = Fields.getAccessibleField(obj.getClass(), fieldName);
-            if (field == null || !field.getType().equals(Boolean.TYPE)) {
-                return invokeMethod(obj, GETTER_PREFIX + Strings.firstUpper(fieldName), null, (Object[]) null);
-            } else {
-                return invokeMethod(obj, BOOLEAN_GETTER_PREFIX + Strings.firstUpper(fieldName), null, (Object[]) null);
-            }
+            Method method = getGetterMethodByField(obj.getClass(), fieldName);
+            return invokeMethod(obj, method);
         } catch (Exception e) {
             throw Exceptions.invoke(Strings.format("invoke field: {} setter method error {}", fieldName, e.getMessage()), e);
+        }
+    }
+
+    /**
+     * 调用 setter 方法
+     * 参数是可变参数所以不支持基本类型
+     *
+     * @param obj    对象
+     * @param fields 字段名称
+     * @param values ignore
+     * @param <E>    属性类型
+     */
+    @SafeVarargs
+    public static <E> void invokeSetterChain(Object obj, String fields, E... values) {
+        Valid.notNull(obj, "invoke object is null");
+        Valid.notBlank(fields, "invoke Setter Method is null");
+        String[] names = fields.split("\\.");
+        if (names.length != Arrays1.length(values)) {
+            throw Exceptions.argument("setting method and parameter length are inconsistent");
+        }
+        for (int i = 0; i < names.length; i++) {
+            invokeSetter(obj, names[i], values[i]);
+        }
+    }
+
+    /**
+     * 调用 setter 方法 类型推断调用 支持基本数据类型
+     *
+     * @param obj    对象
+     * @param fields 字段名称
+     * @param values ignore
+     * @param <E>    属性类型
+     */
+    @SafeVarargs
+    public static <E> void invokeSetterChainInfer(Object obj, String fields, E... values) {
+        Valid.notNull(obj, "invoke object is null");
+        Valid.notBlank(fields, "invoke Setter Method is null");
+        String[] names = fields.split("\\.");
+        if (names.length != Arrays1.length(values)) {
+            throw Exceptions.argument("setting method and parameter length are inconsistent");
+        }
+        for (int i = 0; i < names.length; i++) {
+            invokeSetterInfer(obj, names[i], values[i]);
         }
     }
 
@@ -545,37 +559,8 @@ public class Methods {
      * @param value     ignore
      * @param <E>       属性类型
      */
-    public static <E, R> R invokeSetter(Object obj, String fieldName, E value) {
-        return (R) invokeMethod(obj, SETTER_PREFIX + Strings.firstUpper(fieldName), new Class[]{value.getClass()}, new Object[]{value});
-    }
-
-    /**
-     * 调用 setter 方法
-     * 多级调用需要手动拼接 set 不支持基本类型
-     *
-     * @param obj                   对象
-     * @param fieldSetterMethodName 字段名称
-     * @param values                ignore
-     * @param <E>                   属性类型
-     */
-    @SafeVarargs
-    public static <E, R> R invokeSetter(Object obj, String fieldSetterMethodName, E... values) {
-        Valid.notNull(obj, "invoke object is null");
-        Valid.notBlank(fieldSetterMethodName, "invoke Setter Method is null");
-        String[] names = fieldSetterMethodName.split("\\.");
-        if (names.length != Arrays1.length(values)) {
-            throw Exceptions.argument("setting method and parameter length are inconsistent");
-        }
-        if (names.length == 1) {
-            return (R) invokeMethod(obj, SETTER_PREFIX + Strings.firstUpper(names[0]), new Class[]{values[0].getClass()}, new Object[]{values[0]});
-        } else {
-            for (int i = 0; i < names.length - 1; i++) {
-                E value = values[i];
-                invokeMethod(obj, names[i], value == null ? null : new Class[]{value.getClass()}, value == null ? null : new Object[]{values[i]});
-            }
-            int end = names.length - 1;
-            return (R) invokeMethod(obj, names[end], values[end] == null ? null : new Class[]{values[end].getClass()}, values[end] == null ? null : new Object[]{values[end]});
-        }
+    public static <E> void invokeSetter(Object obj, String fieldName, E value) {
+        invokeMethod(obj, getSetterMethodByField(obj.getClass(), fieldName), value);
     }
 
     /**
@@ -586,8 +571,8 @@ public class Methods {
      * @param value     ignore
      * @param <E>       属性类型
      */
-    public static <E, R> R invokeSetterInfer(Object obj, String fieldName, E value) {
-        return invokeMethodInfer(obj, SETTER_PREFIX + Strings.firstUpper(fieldName), new Object[]{value});
+    public static <E> void invokeSetterInfer(Object obj, String fieldName, E value) {
+        invokeMethodInfer(obj, getSetterMethodByField(obj.getClass(), fieldName), value);
     }
 
     /**
@@ -598,8 +583,8 @@ public class Methods {
      * @param value  ignore
      * @param <E>    属性类型
      */
-    public static <E, R> R invokeSetterInfer(Object obj, Method method, E value) {
-        return invokeMethodInfer(obj, method, new Object[]{value});
+    public static <E> void invokeSetterInfer(Object obj, Method method, E value) {
+        invokeMethodInfer(obj, method, value);
     }
 
     /**
@@ -619,11 +604,7 @@ public class Methods {
         if (method == null) {
             throw Exceptions.invoke(Strings.format("method {} not found in class {}", methodName, obj.getClass()));
         }
-        try {
-            return (E) method.invoke(obj, args);
-        } catch (Exception e) {
-            throw Exceptions.invoke(Strings.format("invoke method error: {}, class: {}, args: {}", methodName, obj.getClass(), Arrays.toString(args)), e);
-        }
+        return invokeMethod(obj, method, args);
     }
 
     /**
@@ -666,11 +647,7 @@ public class Methods {
         if (method == null) {
             throw Exceptions.invoke(Strings.format("invoke method error: {} not found in class {}", methodName, obj.getClass().getName()));
         }
-        try {
-            return (E) method.invoke(obj, args);
-        } catch (Exception e) {
-            throw Exceptions.invoke(Strings.format("invoke method error: {}, class: {}, args: {}", methodName, obj.getClass().getName(), Arrays.toString(args)), e);
-        }
+        return invokeMethod(obj, method, args);
     }
 
     /**
@@ -696,24 +673,6 @@ public class Methods {
     /**
      * 直接调用对象方法 会进行参数推断 支持基本数据类型
      *
-     * @param obj    对象
-     * @param method 方法
-     * @param args   参数列表
-     * @param <E>    返回值类型
-     * @return 对象
-     */
-    public static <E> E invokeMethodInfer(Object obj, Method method, Object... args) {
-        Valid.notNull(obj, "invoke object is null");
-        Valid.notNull(method, "invoke method is null");
-        if (Arrays1.isEmpty(args)) {
-            return invokeMethod(obj, method, (Object[]) null);
-        }
-        return TypeInfer.invokeInfer(obj, Lists.singleton(method), args);
-    }
-
-    /**
-     * 直接调用对象方法 会进行参数推断 支持基本数据类型
-     *
      * @param obj        对象
      * @param methodName 方法名称
      * @param args       参数列表
@@ -729,6 +688,24 @@ public class Methods {
         int len = Arrays1.length(args);
         List<Method> methods = Methods.getAccessibleMethods(obj.getClass(), methodName, len);
         return TypeInfer.invokeInfer(obj, methods, args);
+    }
+
+    /**
+     * 直接调用对象方法 会进行参数推断 支持基本数据类型
+     *
+     * @param obj    对象
+     * @param method 方法
+     * @param args   参数列表
+     * @param <E>    返回值类型
+     * @return 对象
+     */
+    public static <E> E invokeMethodInfer(Object obj, Method method, Object... args) {
+        Valid.notNull(obj, "invoke object is null");
+        Valid.notNull(method, "invoke method is null");
+        if (Arrays1.isEmpty(args)) {
+            return invokeMethod(obj, method, (Object[]) null);
+        }
+        return TypeInfer.invokeInfer(obj, Lists.singleton(method), args);
     }
 
 }

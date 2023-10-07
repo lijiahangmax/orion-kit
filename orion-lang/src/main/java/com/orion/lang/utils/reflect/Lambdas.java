@@ -93,7 +93,7 @@ public class Lambdas {
      * @return fieldName
      */
     public static String getFieldName(SerializedLambda lambda) {
-        return Fields.getFieldNameByMethodName(lambda.getImplMethodName());
+        return Fields.getFieldNameByMethod(lambda.getImplMethodName());
     }
 
     /**
@@ -106,7 +106,7 @@ public class Lambdas {
         // 获取 class
         Class<?> clazz = getImplClass(lambda);
         // 字段名称
-        String fieldName = Fields.getFieldNameByMethodName(lambda.getImplMethodName());
+        String fieldName = Fields.getFieldNameByMethod(lambda.getImplMethodName());
         // 获取字段
         return Fields.getAccessibleField(clazz, fieldName);
     }

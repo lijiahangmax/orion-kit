@@ -29,7 +29,7 @@ public class Annotations {
     // -------------------- class --------------------
 
     /**
-     * 通过类型 获取class上的注解
+     * 通过类型 获取 class 上的注解
      *
      * @param clazz      class
      * @param annotation 注解class
@@ -41,7 +41,7 @@ public class Annotations {
     }
 
     /**
-     * 通过类型 获取class上的所有注解
+     * 通过类型 获取 class 上的所有注解
      *
      * @param clazz      class
      * @param annotation 注解class
@@ -54,7 +54,7 @@ public class Annotations {
     }
 
     /**
-     * 通过类型 获取class上的注解
+     * 通过类型 获取 class 上的注解
      *
      * @param clazz      class
      * @param annotation 注解class
@@ -72,7 +72,7 @@ public class Annotations {
     }
 
     /**
-     * 获取class上的注解
+     * 获取 class 上的注解
      *
      * @param clazz class
      * @return 注解list
@@ -82,7 +82,7 @@ public class Annotations {
     }
 
     /**
-     * 获取class上的注解
+     * 获取 class 上的注解
      *
      * @param clazz class
      * @param index 注解索引
@@ -100,7 +100,7 @@ public class Annotations {
     // -------------------- constructor --------------------
 
     /**
-     * 通过类型 获取constructor上的注解
+     * 通过类型 获取 constructor 上的注解
      *
      * @param constructor constructor
      * @param annotation  注解class
@@ -112,7 +112,7 @@ public class Annotations {
     }
 
     /**
-     * 获取constructor上的注解
+     * 获取 constructor 上的注解
      *
      * @param constructor constructor
      * @return 注解list
@@ -122,7 +122,7 @@ public class Annotations {
     }
 
     /**
-     * 获取constructor上的注解
+     * 获取 constructor 上的注解
      *
      * @param constructor constructor
      * @param index       注解索引
@@ -140,7 +140,7 @@ public class Annotations {
     // -------------------- field --------------------
 
     /**
-     * 通过类型 获取field上的注解
+     * 通过类型 获取 field 上的注解
      *
      * @param field      field
      * @param annotation 注解class
@@ -152,7 +152,7 @@ public class Annotations {
     }
 
     /**
-     * 获取field上的注解
+     * 获取 field 上的注解
      *
      * @param field field
      * @return 注解list
@@ -162,7 +162,7 @@ public class Annotations {
     }
 
     /**
-     * 获取field上的注解
+     * 获取 field 上的注解
      *
      * @param field field
      * @param index 注解索引
@@ -180,7 +180,7 @@ public class Annotations {
     // -------------------- method --------------------
 
     /**
-     * 通过类型 获取method上的注解
+     * 通过类型 获取 method 上的注解
      *
      * @param method     method
      * @param annotation 注解class
@@ -192,7 +192,7 @@ public class Annotations {
     }
 
     /**
-     * 获取method上的注解
+     * 获取 method 上的注解
      *
      * @param method method
      * @return 注解list
@@ -202,7 +202,7 @@ public class Annotations {
     }
 
     /**
-     * 获取method上的注解
+     * 获取 method 上的注解
      *
      * @param method method
      * @param index  注解索引
@@ -451,7 +451,7 @@ public class Annotations {
     }
 
     /**
-     * 获取注解对应的value
+     * 获取注解对应的 value
      *
      * @param annotated 注解
      * @param <A>       A
@@ -506,9 +506,9 @@ public class Annotations {
     }
 
     /**
-     * 获取注解value的默认值
+     * 获取注解 value 的默认值
      *
-     * @param annotated 注解\
+     * @param annotated 注解
      * @param <A>       A
      * @param <E>       E
      * @return 属性默认值
@@ -531,7 +531,7 @@ public class Annotations {
     }
 
     /**
-     * 获取注解value的默认值
+     * 获取注解 value 的默认值
      *
      * @param annotatedClass 注解类
      * @param <E>            E
@@ -621,7 +621,7 @@ public class Annotations {
     }
 
     /**
-     * 获取注解getter方法
+     * 获取注解 getter 方法
      *
      * @param targetClass    targetClass
      * @param annotatedClass annotatedClass
@@ -633,7 +633,7 @@ public class Annotations {
     }
 
     /**
-     * 获取注解getter方法
+     * 获取注解 getter 方法
      *
      * @param targetClass    targetClass
      * @param annotatedClass annotatedClass
@@ -652,7 +652,7 @@ public class Annotations {
     }
 
     /**
-     * 获取注解setter方法
+     * 获取注解 setter 方法
      *
      * @param targetClass    targetClass
      * @param annotatedClass annotatedClass
@@ -664,7 +664,7 @@ public class Annotations {
     }
 
     /**
-     * 获取注解setter方法
+     * 获取注解 setter 方法
      *
      * @param targetClass    targetClass
      * @param annotatedClass annotatedClass
@@ -702,7 +702,7 @@ public class Annotations {
     }
 
     /**
-     * 获取注解getter方法 合并field
+     * 获取注解 getter 方法 合并 field
      *
      * @param targetClass    targetClass
      * @param annotatedClass annotatedClass
@@ -714,7 +714,7 @@ public class Annotations {
     }
 
     /**
-     * 获取注解getter方法 合并field
+     * 获取注解 getter 方法 合并 field
      *
      * @param targetClass    targetClass
      * @param annotatedClass annotatedClass
@@ -727,7 +727,7 @@ public class Annotations {
     }
 
     /**
-     * 获取注解setter方法 合并field
+     * 获取注解 setter 方法 合并 field
      *
      * @param targetClass    targetClass
      * @param annotatedClass annotatedClass
@@ -739,7 +739,7 @@ public class Annotations {
     }
 
     /**
-     * 获取注解setter方法 合并field
+     * 获取注解 setter 方法 合并 field
      *
      * @param targetClass    targetClass
      * @param annotatedClass annotatedClass
@@ -752,11 +752,11 @@ public class Annotations {
     }
 
     /**
-     * 获取注解方法 合并field
+     * 获取注解方法 合并 field
      *
      * @param targetClass    targetClass
      * @param annotatedClass annotatedClass
-     * @param isGetter       是否是getter
+     * @param isGetter       是否是 getter
      * @param byCache        是否使用缓存
      * @param <T>            T
      * @return map

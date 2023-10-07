@@ -174,7 +174,7 @@ public class ExcelBeanReader<T> extends BaseExcelReader<String, T> {
                 if (trim && value instanceof String) {
                     value = ((String) value).trim();
                 }
-                // 调用setter
+                // 调用 setter
                 try {
                     Methods.invokeSetterInfer(t, setter, value);
                 } catch (Exception e) {
