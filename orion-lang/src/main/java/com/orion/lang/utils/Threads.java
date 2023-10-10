@@ -23,24 +23,24 @@ public class Threads {
      * Threads 线程池
      */
     public static final ExecutorService GLOBAL_EXECUTOR = ExecutorBuilder.create()
-            .setNamedThreadFactory("orion-global-thread-")
-            .setCorePoolSize(2)
-            .setMaxPoolSize(32)
-            .setKeepAliveTime(Const.MS_S_60)
-            .setWorkQueue(new LinkedBlockingQueue<>())
-            .setAllowCoreThreadTimeout(true)
+            .namedThreadFactory("orion-global-thread-")
+            .corePoolSize(2)
+            .maxPoolSize(32)
+            .keepAliveTime(Const.MS_S_60)
+            .workQueue(new LinkedBlockingQueue<>())
+            .allowCoreThreadTimeout(true)
             .build();
 
     /**
      * 全局线程池
      */
     public static final ExecutorService CACHE_EXECUTOR = ExecutorBuilder.create()
-            .setNamedThreadFactory("orion-cache-thread-")
-            .setCorePoolSize(1)
-            .setMaxPoolSize(Integer.MAX_VALUE)
-            .setKeepAliveTime(Const.MS_S_60)
-            .setWorkQueue(new SynchronousQueue<>())
-            .setAllowCoreThreadTimeout(true)
+            .namedThreadFactory("orion-cache-thread-")
+            .corePoolSize(1)
+            .maxPoolSize(Integer.MAX_VALUE)
+            .keepAliveTime(Const.MS_S_60)
+            .workQueue(new SynchronousQueue<>())
+            .allowCoreThreadTimeout(true)
             .build();
 
     private Threads() {

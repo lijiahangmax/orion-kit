@@ -128,7 +128,7 @@ public class CsvBeanReader<T> extends BaseCsvReader<T> {
     }
 
     /**
-     * 解析class
+     * 解析 class
      */
     protected void parseClass() {
         this.constructor = Valid.notNull(Constructors.getDefaultConstructor(targetClass), "target class not found default constructor");
@@ -156,7 +156,7 @@ public class CsvBeanReader<T> extends BaseCsvReader<T> {
     }
 
     /**
-     * 解析field
+     * 解析 field
      */
     protected void parseField() {
         // 注解field
