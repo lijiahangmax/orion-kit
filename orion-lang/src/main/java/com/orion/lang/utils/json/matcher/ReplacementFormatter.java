@@ -38,14 +38,6 @@ public class ReplacementFormatter {
         this.noMatchStrategy = NoMatchStrategy.EMPTY;
     }
 
-    public static ReplacementFormatter create() {
-        return new ReplacementFormatter("${", "}");
-    }
-
-    public static ReplacementFormatter create(String perfix, String suffix) {
-        return new ReplacementFormatter(perfix, suffix);
-    }
-
     /**
      * 创建正则
      *

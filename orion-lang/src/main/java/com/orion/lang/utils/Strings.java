@@ -867,7 +867,7 @@ public class Strings {
     /**
      * 格式化字符串 replacement{}
      * <p>
-     * 这里多层数据结构就会有问题 可以使用 {@link com.orion.lang.utils.json.matcher.ReplacementFormatter}
+     * 这里多层数据结构就会有问题 可以使用 {@link com.orion.lang.utils.json.matcher.ReplacementFormatters}
      *
      * @param str 字符串
      * @param map replacement{key} = value
