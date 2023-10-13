@@ -276,9 +276,9 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
 
     @Override
     public String toLogString() {
-        StringBuilder builder = new StringBuilder("RpcWrapper: ");
         boolean success = this.isSuccess();
-        builder.append("\n  isSuccess ==> ").append(success)
+        StringBuilder builder = new StringBuilder("RpcWrapper: ")
+                .append("\n  isSuccess ==> ").append(success)
                 .append("\n    traceId ==> ").append(traceId)
                 .append("\n       code ==> ").append(code)
                 .append("\n        msg ==> ").append(msg)
