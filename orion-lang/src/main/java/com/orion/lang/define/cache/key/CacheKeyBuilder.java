@@ -1,6 +1,8 @@
-package com.orion.lang.define.cache;
+package com.orion.lang.define.cache.key;
 
 import com.orion.lang.able.Buildable;
+import com.orion.lang.define.cache.key.struct.CacheStruct;
+import com.orion.lang.define.cache.key.struct.RedisCacheStruct;
 
 import java.util.concurrent.TimeUnit;
 
@@ -29,6 +31,11 @@ public class CacheKeyBuilder implements Buildable<CacheKeyDefine> {
     private Class<?> type;
 
     /**
+     * 数据结构
+     */
+    private CacheStruct struct;
+
+    /**
      * 超时时间
      */
     private long timeout;
@@ -39,6 +46,7 @@ public class CacheKeyBuilder implements Buildable<CacheKeyDefine> {
     private TimeUnit unit;
 
     public CacheKeyBuilder() {
+        this.struct = RedisCacheStruct.STRING;
         this.timeout = CacheKeyDefine.DEFAULT_TIMEOUT;
         this.unit = CacheKeyDefine.DEFAULT_UNIT;
     }
@@ -81,6 +89,17 @@ public class CacheKeyBuilder implements Buildable<CacheKeyDefine> {
     }
 
     /**
+     * 设置数据结构
+     *
+     * @param struct struct
+     * @return this
+     */
+    public CacheKeyBuilder struct(CacheStruct struct) {
+        this.struct = struct;
+        return this;
+    }
+
+    /**
      * 设置超时时间
      *
      * @param timeout timeout
@@ -117,7 +136,7 @@ public class CacheKeyBuilder implements Buildable<CacheKeyDefine> {
 
     @Override
     public CacheKeyDefine build() {
-        return new CacheKeyDefine(key, desc, type, timeout, unit);
+        return new CacheKeyDefine(key, desc, type, struct, timeout, unit);
     }
 
 }

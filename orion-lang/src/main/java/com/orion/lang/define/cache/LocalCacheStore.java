@@ -7,6 +7,7 @@ import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2019/8/22 14:41
  */
-public class LocalDataStore {
+public class LocalCacheStore {
 
     /**
      * 本地文件
@@ -35,13 +36,13 @@ public class LocalDataStore {
     /**
      * 默认store
      */
-    public static final LocalDataStore STORE = new LocalDataStore();
+    public static final LocalCacheStore STORE = new LocalCacheStore();
 
-    public LocalDataStore() {
+    public LocalCacheStore() {
         this(new File(Files1.getPath(System.getProperty("user.dir") + "/data/dataStore.map")));
     }
 
-    public LocalDataStore(File file) {
+    public LocalCacheStore(File file) {
         this.localDataStoreFile = file;
         this.init();
     }
@@ -54,10 +55,10 @@ public class LocalDataStore {
         Files1.touch(localDataStoreFile);
         ObjectInputStream in = null;
         try {
-            in = new ObjectInputStream(new FileInputStream(localDataStoreFile));
-            localStore = (Map<Object, Object>) in.readObject();
+            in = new ObjectInputStream(Files.newInputStream(localDataStoreFile.toPath()));
+            this.localStore = (Map<Object, Object>) in.readObject();
         } catch (Exception e) {
-            localStore = new HashMap<>(Const.CAPACITY_8);
+            this.localStore = new HashMap<>(Const.CAPACITY_8);
         } finally {
             Streams.close(in);
         }
@@ -148,7 +149,7 @@ public class LocalDataStore {
             this.forceClean();
             ObjectOutputStream out = null;
             try {
-                out = new ObjectOutputStream(new FileOutputStream(localDataStoreFile));
+                out = new ObjectOutputStream(Files.newOutputStream(localDataStoreFile.toPath()));
                 out.writeObject(localStore);
                 out.writeObject(null);
             } catch (Exception e) {

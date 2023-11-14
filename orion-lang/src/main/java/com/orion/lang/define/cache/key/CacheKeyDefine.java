@@ -1,8 +1,11 @@
-package com.orion.lang.define.cache;
+package com.orion.lang.define.cache.key;
 
 import com.orion.lang.constant.Const;
+import com.orion.lang.define.cache.key.struct.CacheStruct;
+import com.orion.lang.define.cache.key.struct.RedisCacheStruct;
 import com.orion.lang.utils.Strings;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -13,14 +16,14 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0.0
  * @since 2023/7/10 11:12
  */
-public class CacheKeyDefine {
+public class CacheKeyDefine implements Serializable {
 
     protected static final long DEFAULT_TIMEOUT = 0L;
 
     protected static final TimeUnit DEFAULT_UNIT = TimeUnit.MILLISECONDS;
 
     /**
-     * 缓存key
+     * 缓存 key
      */
     private final String key;
 
@@ -33,6 +36,10 @@ public class CacheKeyDefine {
      * 数据类型
      */
     private final Class<?> type;
+    /**
+     * 数据结构
+     */
+    private final CacheStruct struct;
 
     /**
      * 超时时间
@@ -45,25 +52,14 @@ public class CacheKeyDefine {
     private TimeUnit unit;
 
     public CacheKeyDefine(String key) {
-        this(key, Strings.EMPTY, null, DEFAULT_TIMEOUT, DEFAULT_UNIT);
+        this(key, Strings.EMPTY, null, RedisCacheStruct.STRING, DEFAULT_TIMEOUT, DEFAULT_UNIT);
     }
 
-    public CacheKeyDefine(String key, long timeout) {
-        this(key, Strings.EMPTY, null, timeout, DEFAULT_UNIT);
-    }
-
-    public CacheKeyDefine(String key, Class<?> type) {
-        this(key, Strings.EMPTY, type, DEFAULT_TIMEOUT, DEFAULT_UNIT);
-    }
-
-    public CacheKeyDefine(String key, Class<?> type, long timeout) {
-        this(key, Strings.EMPTY, type, timeout, DEFAULT_UNIT);
-    }
-
-    public CacheKeyDefine(String key, String desc, Class<?> type, long timeout, TimeUnit unit) {
+    public CacheKeyDefine(String key, String desc, Class<?> type, CacheStruct struct, long timeout, TimeUnit unit) {
         this.key = key;
         this.desc = desc;
         this.type = type;
+        this.struct = struct;
         this.timeout = timeout;
         this.unit = unit;
     }
@@ -100,6 +96,10 @@ public class CacheKeyDefine {
         return type;
     }
 
+    public CacheStruct getStruct() {
+        return struct;
+    }
+
     public long getTimeout() {
         return timeout;
     }
@@ -118,6 +118,6 @@ public class CacheKeyDefine {
 
     @Override
     public String toString() {
-        return key + " (" + desc + ") [" + type.getSimpleName() + "] timeout: " + timeout + Const.SPACE + unit.name();
+        return struct + Const.EMPTY + key + " (" + desc + ") [" + type.getSimpleName() + "] timeout: " + timeout + Const.SPACE + unit.name();
     }
 }
