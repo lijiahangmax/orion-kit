@@ -1,15 +1,15 @@
-package com.orion.net.ftp.clint;
+package com.orion.net.host;
 
 import com.alibaba.fastjson.JSON;
+import com.orion.lang.constant.Const;
 import com.orion.lang.utils.Threads;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
 import com.orion.lang.utils.time.Dates;
-import com.orion.net.ftp.client.FtpFileFilter;
-import com.orion.net.ftp.client.config.FtpConfig;
-import com.orion.net.ftp.client.instance.IFtpInstance;
-import com.orion.net.ftp.client.pool.FtpClientFactory;
+import com.orion.net.host.sftp.SftpExecutor;
+import com.orion.net.host.sftp.SftpFile;
+import com.orion.net.host.sftp.SftpFileFilter;
 import com.orion.net.specification.transfer.IFileDownloader;
 import com.orion.net.specification.transfer.IFileUploader;
 import org.junit.After;
@@ -17,23 +17,35 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.regex.Pattern;
 
 /**
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2021/3/11 11:36
+ * @since 2020/10/7 20:36
  */
-public class FtpClintTests {
+public class SftpExecutorTests {
 
-    private IFtpInstance e;
+    private SessionHolder h;
+
+    private SftpExecutor e;
 
     @Before
-    public void init() {
-        FtpConfig config = new FtpConfig("127.0.0.1").auth("user", "123");
-        FtpClientFactory f = new FtpClientFactory(config);
-        this.e = f.createInstance();
+    public void before() {
+        this.h = SessionHolder.create();
+        h.setLogger(SessionLogger.ERROR);
+        this.e = h.getSession("192.168.146.230", "root")
+                .password("admin123")
+                .timeout(20000)
+                .connect(20000)
+                .getSftpExecutor();
+        e.connect(20000);
+        e.charset(Const.UTF_8);
+    }
+
+    @After
+    public void after() {
+        e.disconnect();
     }
 
     @Test
@@ -46,43 +58,82 @@ public class FtpClintTests {
     @Test
     public void testSize() {
         System.out.println(e.getSize("/root"));
-        System.out.println(e.getSize("/root/bbb/ccc/cct.txt"));
+        System.out.println(e.getSize("/root/bug.txt"));
     }
 
     @Test
     public void testExist() {
-        e.change("/a/a");
-        System.out.println(e.isExist("/"));
         System.out.println(e.isExist("/root"));
         System.out.println(e.isExist("/root/bug.txt"));
-        System.out.println(e.isExist("/root/bbb/ccc/cct.txt"));
+        System.out.println(e.isExist("/root/aaa/bug.txt"));
+        System.out.println(e.isExist("/bug.txt"));
     }
 
     @Test
-    public void testModify() {
+    public void testGetPath() {
+        System.out.println(e.getPath("/root/bug.txt"));
+        System.out.println(e.getPath("/root/aaa/bug.txt"));
+        System.out.println(e.getPath("/bug.txt"));
+    }
+
+    @Test
+    public void testModifyPermission() {
         String path = "/root/test/1.txt";
         e.touch(path);
-        System.out.println(e.getWorkDirectory());
-        System.out.println(Dates.format(new Date(e.getModifyTime(path))));
+        System.out.println(JSON.toJSONString(e.getFile(path)));
+        e.changeMode(path, 111);
+        System.out.println(JSON.toJSONString(e.getFile(path)));
+        e.changeGroup(path, 1);
+        System.out.println(JSON.toJSONString(e.getFile(path)));
+        e.changeGroup(path, 2);
+        System.out.println(JSON.toJSONString(e.getFile(path)));
+        e.changeOwner(path, 1);
+        System.out.println(JSON.toJSONString(e.getFile(path)));
+        e.changeOwner(path, 2);
+        System.out.println(JSON.toJSONString(e.getFile(path)));
+    }
+
+    @Test
+    public void testModifyAttr() {
+        String path = "/root/test/21.txt";
+        e.touch(path);
+        SftpFile file = e.getFile(path);
+        System.out.println(JSON.toJSONStringWithDateFormat(file, Dates.YMD_HMS));
+        file.setSize(200);
+        file.setGid(2);
+        file.setUid(2);
+        file.setPermission(777);
+        file.setAccessTime(Dates.build(2020, 1, 1, 1, 1, 1));
+        file.setModifyTime(Dates.build(2020, 1, 1, 1, 1, 1));
+        e.setFileAttribute(file);
+        System.out.println(JSON.toJSONStringWithDateFormat(e.getFile(path), Dates.YMD_HMS));
         e.setModifyTime(path, Dates.build(2020, 2, 2, 2, 2, 2));
-        System.out.println(Dates.format(new Date(e.getModifyTime(path))));
+        System.out.println(JSON.toJSONStringWithDateFormat(e.getFile(path), Dates.YMD_HMS));
     }
 
     @Test
     public void testTouch() {
-        e.touch("/root/test24/1.txt");
-        e.touch("/root/test24/2.txt");
-        e.touch("/root/test24/3.txt");
-        e.touch("/root/test24/3.txt");
+        e.touch("/root/test1/t/4/1.txt");
+        e.touch("/root/test1/t/4/2.txt");
+        e.touch("/root/test1/t/4/3.txt");
+        e.touch("/root/test1/t/4/3.txt");
+        // err
+        e.touch("/root/test1/t/4");
+    }
+
+    @Test
+    public void testTruncate() {
+        e.truncate("/root/test/x1.txt");
+        e.truncate("/root/test/xx/xx/x1.txt");
+        // err
+        e.truncate("/root/test/xx/xx");
     }
 
     @Test
     public void testMkdir() {
         e.makeDirectories("/root/test22/t/4/5");
         e.makeDirectories("/root/test22/t/4/5");
-        e.makeDirectories("/root/test22/t/4/6");
-        e.makeDirectories("/root/test22/t/4/7");
-        e.makeDirectories("/root/test22/t/4/8");
+        e.makeDirectory("/root/test22/t/4/6");
     }
 
     @Test
@@ -90,39 +141,56 @@ public class FtpClintTests {
         e.touch("/root/test1x/1.txt");
         e.touch("/root/test2x/1.txt");
         e.touch("/root/test2x/2.txt");
-        e.touch("/root/test2x/d/1.txt");
-        e.removeFile("/root/test2x/1.txt");
+        e.removeFile("/root/test1x/1.txt");
         e.removeDir("/root/test1x");
-        e.rm("/root/test2x");
+        e.remove("/root/test2x");
     }
 
     @Test
     public void testMove() {
-        String path1 = "/root/test1x/1/1.txt";
-        String path2 = "/root/test2x/1/2.txt";
-        String path3 = "/root/test2x/1/3.txt";
-        String path4 = "/root/4.txt";
+        String path1 = "/root/test1x/1/2/3/4/5/1.txt";
+        String path2 = "/root/test2x/1/2/3/4/5/2.txt";
+        String path3 = "/root/test2x/1/2/3/4/5/3.txt";
         e.touch(path1);
         System.out.println(JSON.toJSONString(e.getFile(path1)));
         e.move(path1, path2);
         System.out.println(JSON.toJSONString(e.getFile(path2)));
         e.move(path2, "3.txt");
         System.out.println(JSON.toJSONString(e.getFile(path3)));
-        e.move(path3, "../../4.txt");
-        System.out.println(JSON.toJSONString(e.getFile(path4)));
+    }
+
+    @Test
+    public void testLink() {
+        String path1 = "/root/test1/1.txt";
+        String path2 = "/root/test1/x/2.txt";
+        String path3 = "/root/test1/x/3.txt";
+        e.touch(path1);
+        e.touchHardLink(path1, path2);
+        e.touchSymLink(path1, path3);
+        System.out.println(JSON.toJSONString(e.getFile(path1, true)));
+        System.out.println(JSON.toJSONString(e.getFile(path1, false)));
+        System.out.println(JSON.toJSONString(e.getFile(path2, true)));
+        System.out.println(JSON.toJSONString(e.getFile(path2, false)));
+        System.out.println(JSON.toJSONString(e.getFile(path3, true)));
+        System.out.println(JSON.toJSONString(e.getFile(path3, false)));
+        System.out.println(e.getLinkPath(path1));
+        System.out.println(e.getLinkPath(path2));
+        System.out.println(e.getLinkPath(path3));
     }
 
     @Test
     public void testList() {
+        System.out.println(e.list("/root"));
+        System.out.println("---------");
         System.out.println(e.listFiles("/root", false));
         System.out.println("---------");
-        System.out.println(e.listFilesFilter("/root", FtpFileFilter.suffix(".txt"), false));
+        System.out.println(e.listFilesFilter("/root", SftpFileFilter.suffix(".txt"), false));
         System.out.println("---------");
-        System.out.println(e.listFilesFilter("/root", FtpFileFilter.contains("4."), false));
+        System.out.println(e.listFilesFilter("/root", SftpFileFilter.contains("tmp"), false));
         System.out.println("---------");
-        System.out.println(e.listFilesFilter("/root", FtpFileFilter.matches(Pattern.compile(".*\\.txt")), false));
+        System.out.println(e.listFilesFilter("/root", SftpFileFilter.matches(Pattern.compile(".*\\.txt")), false));
         System.out.println("---------");
-        System.out.println(e.listFilesFilter("/root", s -> s.getSize() > 20, false));
+        System.out.println(e.listFilesFilter("/root", s -> s.getSize() > 100000, false));
         System.out.println("---------");
         System.out.println(e.listDirs("/root", false));
     }
@@ -214,6 +282,8 @@ public class FtpClintTests {
     @Test
     public void testWrite() throws IOException {
         String path = "/root/write/1.txt";
+        e.truncate(path);
+
         e.write(path, "111".getBytes());
         e.transfer(path, System.out);
         Threads.sleep(500);
@@ -232,20 +302,21 @@ public class FtpClintTests {
     @Test
     public void testWriteLine() throws IOException {
         String path = "/root/write/1.txt";
+        e.truncate(path);
 
-        e.writeLine(path, "111");
+        e.write(path, "111");
         e.transfer(path, System.out);
         Threads.sleep(500);
 
         System.out.println("----");
-        e.writeLines(path, Lists.of("111", "我是", "333", "444"));
+        e.write(path, String.join("\n", Lists.of("111", "我是", "333", "444")));
         e.transfer(path, System.out);
         Threads.sleep(500);
     }
 
     @Test
     public void testAppend() throws IOException {
-        String path = "/root/write/12.txt";
+        String path = "/root/write/1.txt";
         e.truncate(path);
 
         e.append(path, "111".getBytes());
@@ -268,12 +339,12 @@ public class FtpClintTests {
         String path = "/root/write/1.txt";
         e.truncate(path);
 
-        e.appendLine(path, "111");
+        e.append(path, "111");
         e.transfer(path, System.out);
         Threads.sleep(500);
 
         System.out.println("----");
-        e.appendLines(path, Lists.of("111", "我是", "333", "444"));
+        e.append(path, String.join("\n", Lists.of("111", "我是", "333", "444")));
         e.transfer(path, System.out);
         Threads.sleep(500);
     }
@@ -306,8 +377,6 @@ public class FtpClintTests {
                     System.exit(0);
                 });
         new Thread(u).start();
-        // Threads.sleep(2000L);
-        // u.abort();
         Threads.sleep(30000000L);
     }
 
@@ -327,14 +396,7 @@ public class FtpClintTests {
                     System.exit(1000);
                 });
         new Thread(u).start();
-        // Threads.sleep(2000L);
-        // u.abort();
         Threads.sleep(30000000L);
-    }
-
-    @After
-    public void destroy() {
-        e.close();
     }
 
 }

@@ -42,13 +42,6 @@
             <version>${apache.ftp.server.version}</version>
         </dependency>
 
-        <!-- ssh2 -->
-        <dependency>
-            <groupId>ch.ethz.ganymed</groupId>
-            <artifactId>ganymed-ssh2</artifactId>
-            <version>${ssh2.version}</version>
-        </dependency>
-
         <!-- jsch -->
         <dependency>
             <groupId>com.github.mwiede</groupId>

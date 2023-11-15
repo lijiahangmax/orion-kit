@@ -7,12 +7,12 @@ import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
 import com.orion.lang.utils.time.Dates;
-import com.orion.net.ftp.client.FileFilter;
 import com.orion.net.ftp.client.FtpFile;
-import com.orion.net.ftp.client.bigfile.FtpDownloader;
-import com.orion.net.ftp.client.bigfile.FtpUploader;
+import com.orion.net.ftp.client.FtpFileFilter;
 import com.orion.net.ftp.client.config.FtpConfig;
 import com.orion.net.ftp.client.pool.FtpClientPool;
+import com.orion.net.ftp.client.transfer.FtpDownloader;
+import com.orion.net.ftp.client.transfer.FtpUploader;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 
@@ -566,7 +566,7 @@ public class FtpInstance extends BaseFtpInstance {
     // -------------------- list --------------------
 
     @Override
-    public List<FtpFile> listFilesFilter(String path, FileFilter filter, boolean child, boolean dir) {
+    public List<FtpFile> listFilesFilter(String path, FtpFileFilter filter, boolean child, boolean dir) {
         String base = config.getRemoteRootDir();
         List<FtpFile> list = new ArrayList<>();
         try {

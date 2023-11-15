@@ -2,12 +2,12 @@ package com.orion.net.ftp.client.instance;
 
 import com.orion.lang.able.Destroyable;
 import com.orion.lang.able.SafeCloseable;
-import com.orion.net.base.sftp.transfer.IFileDownloader;
-import com.orion.net.base.sftp.transfer.IFileUploader;
-import com.orion.net.ftp.client.FileFilter;
 import com.orion.net.ftp.client.FtpFile;
+import com.orion.net.ftp.client.FtpFileFilter;
 import com.orion.net.ftp.client.config.FtpConfig;
 import com.orion.net.ftp.client.pool.FtpClientPool;
+import com.orion.net.specification.transfer.IFileDownloader;
+import com.orion.net.specification.transfer.IFileUploader;
 import org.apache.commons.net.ftp.FTPClient;
 
 import java.io.File;
@@ -558,15 +558,15 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
      */
     List<FtpFile> listDirs(String path, boolean child);
 
-    List<FtpFile> listFilesFilter(FileFilter filter);
+    List<FtpFile> listFilesFilter(FtpFileFilter filter);
 
-    List<FtpFile> listFilesFilter(FileFilter filter, boolean child);
+    List<FtpFile> listFilesFilter(FtpFileFilter filter, boolean child);
 
-    List<FtpFile> listFilesFilter(FileFilter filter, boolean child, boolean dir);
+    List<FtpFile> listFilesFilter(FtpFileFilter filter, boolean child, boolean dir);
 
-    List<FtpFile> listFilesFilter(String path, FileFilter filter);
+    List<FtpFile> listFilesFilter(String path, FtpFileFilter filter);
 
-    List<FtpFile> listFilesFilter(String path, FileFilter filter, boolean child);
+    List<FtpFile> listFilesFilter(String path, FtpFileFilter filter, boolean child);
 
     /**
      * 列出目录下的文件
@@ -577,7 +577,7 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
      * @param dir    是否添加文件夹
      * @return 文件
      */
-    List<FtpFile> listFilesFilter(String path, FileFilter filter, boolean child, boolean dir);
+    List<FtpFile> listFilesFilter(String path, FtpFileFilter filter, boolean child, boolean dir);
 
     // -------------------- option --------------------
 

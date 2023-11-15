@@ -6,8 +6,8 @@ import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.io.Files1;
-import com.orion.net.ftp.client.FileFilter;
 import com.orion.net.ftp.client.FtpFile;
+import com.orion.net.ftp.client.FtpFileFilter;
 import com.orion.net.ftp.client.FtpMessage;
 import com.orion.net.ftp.client.Ftps;
 import com.orion.net.ftp.client.config.FtpConfig;
@@ -404,27 +404,27 @@ public abstract class BaseFtpInstance implements IFtpInstance {
     }
 
     @Override
-    public List<FtpFile> listFilesFilter(FileFilter filter) {
+    public List<FtpFile> listFilesFilter(FtpFileFilter filter) {
         return this.listFilesFilter(Strings.EMPTY, filter, false, false);
     }
 
     @Override
-    public List<FtpFile> listFilesFilter(FileFilter filter, boolean child) {
+    public List<FtpFile> listFilesFilter(FtpFileFilter filter, boolean child) {
         return this.listFilesFilter(Strings.EMPTY, filter, child, false);
     }
 
     @Override
-    public List<FtpFile> listFilesFilter(FileFilter filter, boolean child, boolean dir) {
+    public List<FtpFile> listFilesFilter(FtpFileFilter filter, boolean child, boolean dir) {
         return this.listFilesFilter(Strings.EMPTY, filter, child, dir);
     }
 
     @Override
-    public List<FtpFile> listFilesFilter(String path, FileFilter filter) {
+    public List<FtpFile> listFilesFilter(String path, FtpFileFilter filter) {
         return this.listFilesFilter(path, filter, false, false);
     }
 
     @Override
-    public List<FtpFile> listFilesFilter(String path, FileFilter filter, boolean child) {
+    public List<FtpFile> listFilesFilter(String path, FtpFileFilter filter, boolean child) {
         return this.listFilesFilter(path, filter, child, false);
     }
 
