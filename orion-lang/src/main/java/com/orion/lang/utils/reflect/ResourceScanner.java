@@ -146,7 +146,11 @@ public class ResourceScanner {
      */
     private void scanFile(URL resource) {
         String path = Files1.getPath(Urls.decode(resource.getPath()));
-        List<File> files = Files1.listFilesFilter(path, (f, n) -> !n.endsWith(".class") && !f.isDirectory() && this.canAdd(f.getAbsolutePath()), true);
+        List<File> files = Files1.listFilesFilter(path,
+                f -> !f.getName().endsWith(".class")
+                        && !f.isDirectory()
+                        && this.canAdd(f.getAbsolutePath()),
+                true);
         scannedResources.addAll(Files1.toPaths(files));
     }
 

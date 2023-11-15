@@ -2,6 +2,7 @@ package com.orion.net.ftp.client;
 
 import com.orion.lang.utils.regexp.Matches;
 
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 /**
@@ -12,33 +13,25 @@ import java.util.regex.Pattern;
  * @since 2021/3/12 9:50
  */
 @FunctionalInterface
-public interface FtpFileFilter {
-
-    /**
-     * accept
-     *
-     * @param ftpFile file
-     * @return 是否通过
-     */
-    boolean accept(FtpFile ftpFile);
+public interface FileFilter extends Predicate<FtpFile> {
 
     /**
      * 后缀过滤器
      *
      * @param suffix 后缀
-     * @return FtpFileFilter
+     * @return filter
      */
-    static FtpFileFilter suffix(String suffix) {
+    static FileFilter suffix(String suffix) {
         return a -> a.getName().toLowerCase().endsWith(suffix.toLowerCase());
     }
 
     /**
-     * 文件名过滤器
+     * 包含过滤器
      *
      * @param name 文件名
-     * @return FtpFileFilter
+     * @return filter
      */
-    static FtpFileFilter match(String name) {
+    static FileFilter contains(String name) {
         return a -> a.getName().toLowerCase().contains(name.toLowerCase());
     }
 
@@ -46,9 +39,9 @@ public interface FtpFileFilter {
      * 正则过滤器
      *
      * @param pattern pattern
-     * @return FtpFileFilter
+     * @return filter
      */
-    static FtpFileFilter pattern(Pattern pattern) {
+    static FileFilter matches(Pattern pattern) {
         return a -> Matches.test(a.getName(), pattern);
     }
 

@@ -1,4 +1,4 @@
-package com.orion.net.base.file.transfer;
+package com.orion.net.base.sftp.transfer;
 
 import com.orion.lang.able.SafeCloseable;
 import com.orion.lang.support.progress.ByteTransferRateProgress;

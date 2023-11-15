@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * 文件工具类
@@ -47,7 +46,7 @@ public class Files1 {
 
     public static final String WINDOWS_SEPARATOR = "\\";
 
-    private static final String WINDOWS_SEPARATOR_REPLICE = Matcher.quoteReplacement(WINDOWS_SEPARATOR);
+    private static final String WINDOWS_SEPARATOR_REPLACE = Matcher.quoteReplacement(WINDOWS_SEPARATOR);
 
     private static final String WINDOWS_SEPARATOR_REG = "\\\\+";
 
@@ -166,8 +165,8 @@ public class Files1 {
     /**
      * 设置文件是否可读
      *
-     * @param file 文件
-     * @param exec 设置文件是否可读
+     * @param file     文件
+     * @param readable 设置文件是否可读
      * @return 是否执行成功
      */
     public static boolean setReadable(Path file, boolean readable) {
@@ -203,8 +202,8 @@ public class Files1 {
     /**
      * 设置文件是否可写
      *
-     * @param file 文件
-     * @param exec 设置文件是否可写
+     * @param file     文件
+     * @param writable 设置文件是否可写
      * @return 是否执行成功
      */
     public static boolean setWritable(Path file, boolean writable) {
@@ -494,16 +493,13 @@ public class Files1 {
      * 将资源文件保存到本地
      *
      * @param source  资源
-     * @param path    path
+     * @param file    file
      * @param charset 编码
      * @return 是否保存成功
      * @throws IOException exception
      */
     public static boolean resourceToFile(InputStream source, File file, String charset) throws IOException {
-        boolean needInit = false;
-        if (!file.exists() || !file.isFile()) {
-            needInit = true;
-        }
+        boolean needInit = !file.exists() || !file.isFile();
         if (!needInit) {
             try {
                 if (source != null && file.length() != source.available()) {
@@ -1186,6 +1182,10 @@ public class Files1 {
             long length = r.length();
             if (length == 0) {
                 return Const.LF;
+            } else if (length == 1) {
+                if (r.read() == Letters.CR) {
+                    return Const.CR;
+                }
             } else if (length >= 2) {
                 r.seek(length - 2);
                 byte[] bs = new byte[2];
@@ -1193,11 +1193,6 @@ public class Files1 {
                 if (bs[0] == Letters.CR && bs[1] == Letters.LF) {
                     return Const.CR_LF;
                 } else if (bs[1] == Letters.CR) {
-                    return Const.CR;
-                }
-            } else if (length == 1) {
-                r.seek(length - 1);
-                if (r.read() == Letters.CR) {
                     return Const.CR;
                 }
             }
@@ -1224,6 +1219,14 @@ public class Files1 {
             long length = r.length();
             if (length == 0) {
                 return Const.LF;
+            } else if (length == 1) {
+                r.seek(0);
+                int read = r.read();
+                if (read == Letters.CR) {
+                    return Const.CR;
+                } else if (read == Letters.LF) {
+                    return Const.LF;
+                }
             } else if (length >= 2) {
                 r.seek(length - 2);
                 byte[] bs = new byte[2];
@@ -1233,14 +1236,6 @@ public class Files1 {
                 } else if (bs[1] == Letters.CR) {
                     return Const.CR;
                 } else if (bs[1] == Letters.LF) {
-                    return Const.LF;
-                }
-            } else if (length == 1) {
-                r.seek(length - 1);
-                int read = r.read();
-                if (read == Letters.CR) {
-                    return Const.CR;
-                } else if (read == Letters.LF) {
                     return Const.LF;
                 }
             }
@@ -1857,7 +1852,7 @@ public class Files1 {
     public static String replacePath(String path) {
         // windows下
         if (WINDOWS_SEPARATOR.equals(File.separator)) {
-            path = path.replaceAll(LINUX_SEPARATOR_REG, WINDOWS_SEPARATOR_REPLICE);
+            path = path.replaceAll(LINUX_SEPARATOR_REG, WINDOWS_SEPARATOR_REPLACE);
             if (WINDOWS_SEPARATOR.equals(path.substring(0, 1))) {
                 path = path.substring(1);
             }
@@ -2036,7 +2031,7 @@ public class Files1 {
      * @return window路径
      */
     public static String getWindowsPath(String path) {
-        return path.replaceAll(WINDOWS_SEPARATOR_REG, WINDOWS_SEPARATOR_REPLICE).replaceAll(LINUX_SEPARATOR_REG, WINDOWS_SEPARATOR_REPLICE);
+        return path.replaceAll(WINDOWS_SEPARATOR_REG, WINDOWS_SEPARATOR_REPLACE).replaceAll(LINUX_SEPARATOR_REG, WINDOWS_SEPARATOR_REPLACE);
     }
 
     /**
@@ -2096,14 +2091,11 @@ public class Files1 {
      */
     public static boolean isNormalize(String path) {
         String[] ps = getPath(path).split(SEPARATOR);
-        for (int i = 0; i < ps.length; i++) {
-            String s = ps[i];
+        for (String s : ps) {
             if (".".equals(s)) {
                 return false;
             } else if ("..".equals(s)) {
                 return false;
-            } else {
-                continue;
             }
         }
         return true;
@@ -2497,105 +2489,6 @@ public class Files1 {
         return list;
     }
 
-    public static List<File> listFilesSuffix(String dirPath, String suffix) {
-        return listFilesSuffix(new File(dirPath), suffix, false, false);
-    }
-
-    public static List<File> listFilesSuffix(String dirPath, String suffix, boolean child) {
-        return listFilesSuffix(new File(dirPath), suffix, child, false);
-    }
-
-    public static List<File> listFilesSuffix(String dirPath, String suffix, boolean child, boolean dir) {
-        return listFilesSuffix(new File(dirPath), suffix, child, dir);
-    }
-
-    public static List<File> listFilesSuffix(File dirPath, String suffix) {
-        return listFilesSuffix(dirPath, suffix, false, false);
-    }
-
-    public static List<File> listFilesSuffix(File dirPath, String suffix, boolean child) {
-        return listFilesSuffix(dirPath, suffix, child, false);
-    }
-
-    /**
-     * 搜索文件 后缀
-     *
-     * @param dirPath 文件夹
-     * @param suffix  后缀
-     * @param child   是否递归子文件夹
-     * @param dir     是否包含文件夹
-     * @return 文件
-     */
-    public static List<File> listFilesSuffix(File dirPath, String suffix, boolean child, boolean dir) {
-        return listFilesSearch(dirPath, FileFilter.suffix(suffix), child, dir);
-    }
-
-    public static List<File> listFilesMatch(String dirPath, String name) {
-        return listFilesMatch(new File(dirPath), name, false, false);
-    }
-
-    public static List<File> listFilesMatch(String dirPath, String name, boolean child) {
-        return listFilesMatch(new File(dirPath), name, child, false);
-    }
-
-    public static List<File> listFilesMatch(String dirPath, String name, boolean child, boolean dir) {
-        return listFilesMatch(new File(dirPath), name, child, dir);
-    }
-
-    public static List<File> listFilesMatch(File dirPath, String name) {
-        return listFilesMatch(dirPath, name, false, false);
-    }
-
-    public static List<File> listFilesMatch(File dirPath, String name, boolean child) {
-        return listFilesMatch(dirPath, name, child, false);
-    }
-
-    /**
-     * 搜索文件 文件名
-     *
-     * @param dirPath 文件夹
-     * @param name    搜索
-     * @param child   是否递归子文件夹
-     * @param dir     是否包含文件夹
-     * @return 文件
-     */
-    public static List<File> listFilesMatch(File dirPath, String name, boolean child, boolean dir) {
-        return listFilesSearch(dirPath, FileFilter.match(name), child, dir);
-    }
-
-    public static List<File> listFilesPattern(String dirPath, Pattern pattern) {
-        return listFilesPattern(new File(dirPath), pattern, false, false);
-    }
-
-    public static List<File> listFilesPattern(String dirPath, Pattern pattern, boolean child) {
-        return listFilesPattern(new File(dirPath), pattern, child, false);
-    }
-
-    public static List<File> listFilesPattern(String dirPath, Pattern pattern, boolean child, boolean dir) {
-        return listFilesPattern(new File(dirPath), pattern, child, dir);
-    }
-
-    public static List<File> listFilesPattern(File dirPath, Pattern pattern) {
-        return listFilesPattern(dirPath, pattern, false, false);
-    }
-
-    public static List<File> listFilesPattern(File dirPath, Pattern pattern, boolean child) {
-        return listFilesPattern(dirPath, pattern, child, false);
-    }
-
-    /**
-     * 搜索文件 正则
-     *
-     * @param dirPath 文件夹
-     * @param pattern 正则
-     * @param child   是否递归子文件夹
-     * @param dir     是否包含文件夹
-     * @return 文件
-     */
-    public static List<File> listFilesPattern(File dirPath, Pattern pattern, boolean child, boolean dir) {
-        return listFilesSearch(dirPath, FileFilter.pattern(pattern), child, dir);
-    }
-
     public static List<File> listFilesFilter(String dirPath, FileFilter filter) {
         return listFilesFilter(new File(dirPath), filter, false, false);
     }
@@ -2617,19 +2510,6 @@ public class Files1 {
     }
 
     /**
-     * 搜索文件 过滤器
-     *
-     * @param dirPath 文件夹
-     * @param filter  过滤器
-     * @param child   是否递归子文件夹
-     * @param dir     是否包含文件夹
-     * @return 文件
-     */
-    public static List<File> listFilesFilter(File dirPath, FileFilter filter, boolean child, boolean dir) {
-        return listFilesSearch(dirPath, filter, child, dir);
-    }
-
-    /**
      * 搜索文件
      *
      * @param dirPath 文件夹
@@ -2638,19 +2518,19 @@ public class Files1 {
      * @param dir     是否包含文件夹
      * @return 文件
      */
-    private static List<File> listFilesSearch(File dirPath, FileFilter filter, boolean child, boolean dir) {
+    public static List<File> listFilesFilter(File dirPath, FileFilter filter, boolean child, boolean dir) {
         List<File> list = new ArrayList<>();
         File[] files = dirPath.listFiles();
         if (files != null) {
             for (File file : files) {
                 boolean isDir = file.isDirectory();
                 if (!isDir || dir) {
-                    if (filter.accept(file, file.getName())) {
+                    if (filter.test(file)) {
                         list.add(file);
                     }
                 }
                 if (isDir && child) {
-                    list.addAll(listFilesSearch(file, filter, true, dir));
+                    list.addAll(listFilesFilter(file, filter, true, dir));
                 }
             }
         }

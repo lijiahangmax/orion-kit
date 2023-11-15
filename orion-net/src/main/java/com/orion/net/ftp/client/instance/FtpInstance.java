@@ -7,8 +7,8 @@ import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
 import com.orion.lang.utils.time.Dates;
+import com.orion.net.ftp.client.FileFilter;
 import com.orion.net.ftp.client.FtpFile;
-import com.orion.net.ftp.client.FtpFileFilter;
 import com.orion.net.ftp.client.bigfile.FtpDownloader;
 import com.orion.net.ftp.client.bigfile.FtpUploader;
 import com.orion.net.ftp.client.config.FtpConfig;
@@ -52,7 +52,7 @@ public class FtpInstance extends BaseFtpInstance {
     public void change(String dir) {
         try {
             if (!client.changeWorkingDirectory(this.serverCharset(config.getRemoteRootDir() + dir))) {
-                this.mkdirs(dir);
+                this.makeDirectories(dir);
                 client.changeWorkingDirectory(this.serverCharset(config.getRemoteRootDir() + dir));
             }
         } catch (Exception e) {
@@ -185,7 +185,7 @@ public class FtpInstance extends BaseFtpInstance {
     }
 
     @Override
-    public void mkdirs(String dir) {
+    public void makeDirectories(String dir) {
         try {
             String[] dirs = Files1.getPath(dir).split(SEPARATOR);
             String base = config.getRemoteRootDir();
@@ -209,7 +209,7 @@ public class FtpInstance extends BaseFtpInstance {
         String fileName = Files1.getFileName(file);
         String filePath = this.serverCharset(config.getRemoteRootDir() + file);
         String parentPath = Files1.getParentPath(Files1.getPath(file));
-        this.mkdirs(parentPath);
+        this.makeDirectories(parentPath);
         for (FtpFile s : this.listFiles(parentPath, false)) {
             if (Files1.getFileName(s.getPath()).equals(fileName)) {
                 return;
@@ -224,7 +224,7 @@ public class FtpInstance extends BaseFtpInstance {
     }
 
     @Override
-    public void mv(String source, String target) {
+    public void move(String source, String target) {
         source = Files1.getPath(source);
         target = Files1.getPath(target);
         try {
@@ -236,7 +236,7 @@ public class FtpInstance extends BaseFtpInstance {
                 target = Files1.normalize(Files1.getPath(source + "/../" + target));
             }
             this.change(Files1.getParentPath(source));
-            this.mkdirs(Files1.getParentPath(target));
+            this.makeDirectories(Files1.getParentPath(target));
             client.rename(source, target);
         } catch (Exception e) {
             throw Exceptions.ftp(e);
@@ -271,7 +271,7 @@ public class FtpInstance extends BaseFtpInstance {
 
     @Override
     public OutputStream openOutputStream(String file, boolean append) throws IOException {
-        this.mkdirs(Files1.getParentPath(file));
+        this.makeDirectories(Files1.getParentPath(file));
         try {
             if (append) {
                 return client.appendFileStream(this.serverCharset(config.getRemoteRootDir() + file));
@@ -285,7 +285,7 @@ public class FtpInstance extends BaseFtpInstance {
 
     @Override
     public void readFromFile(String file, OutputStream out) throws IOException {
-        this.mkdirs(Files1.getParentPath(file));
+        this.makeDirectories(Files1.getParentPath(file));
         try {
             client.retrieveFile(this.serverCharset(config.getRemoteRootDir() + file), out);
         } catch (Exception e) {
@@ -295,7 +295,7 @@ public class FtpInstance extends BaseFtpInstance {
 
     @Override
     public void appendToFile(String file, InputStream in) throws IOException {
-        this.mkdirs(Files1.getParentPath(file));
+        this.makeDirectories(Files1.getParentPath(file));
         try {
             client.appendFile(this.serverCharset(config.getRemoteRootDir() + file), in);
         } catch (Exception e) {
@@ -305,7 +305,7 @@ public class FtpInstance extends BaseFtpInstance {
 
     @Override
     public void writeToFile(String file, InputStream in) throws IOException {
-        this.mkdirs(Files1.getParentPath(file));
+        this.makeDirectories(Files1.getParentPath(file));
         try {
             client.storeFile(this.serverCharset(config.getRemoteRootDir() + file), in);
         } catch (Exception e) {
@@ -472,7 +472,7 @@ public class FtpInstance extends BaseFtpInstance {
         BufferedInputStream buffer = null;
         try {
             String parentPath = Files1.getParentPath(remoteFile);
-            this.mkdirs(parentPath);
+            this.makeDirectories(parentPath);
             client.storeFile(this.serverCharset(config.getRemoteRootDir() + remoteFile), buffer = new BufferedInputStream(in));
         } finally {
             if (close) {
@@ -488,7 +488,7 @@ public class FtpInstance extends BaseFtpInstance {
         List<File> dirs = Files1.listDirs(localDir, child);
         List<File> files = Files1.listFiles(localDir, child);
         for (File dir : dirs) {
-            this.mkdirs(Files1.getPath(remoteDir, dir.getAbsolutePath().substring(localDir.length())));
+            this.makeDirectories(Files1.getPath(remoteDir, dir.getAbsolutePath().substring(localDir.length())));
         }
         for (File file : files) {
             String path = Files1.getPath(remoteDir, file.getAbsolutePath().substring(localDir.length()));
@@ -566,7 +566,7 @@ public class FtpInstance extends BaseFtpInstance {
     // -------------------- list --------------------
 
     @Override
-    protected List<FtpFile> listFilesSearch(String path, FtpFileFilter filter, boolean child, boolean dir) {
+    public List<FtpFile> listFilesFilter(String path, FileFilter filter, boolean child, boolean dir) {
         String base = config.getRemoteRootDir();
         List<FtpFile> list = new ArrayList<>();
         try {
@@ -577,12 +577,12 @@ public class FtpInstance extends BaseFtpInstance {
                 boolean isDir = file.isDirectory();
                 if (!isDir || dir) {
                     FtpFile f = new FtpFile(t, file);
-                    if (filter.accept(f)) {
+                    if (filter.test(f)) {
                         list.add(f);
                     }
                 }
                 if (isDir && child) {
-                    list.addAll(this.listFilesSearch(t + SEPARATOR, filter, true, dir));
+                    list.addAll(this.listFilesFilter(t + SEPARATOR, filter, true, dir));
                 }
             }
         } catch (IOException e) {

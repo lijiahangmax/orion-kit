@@ -2,7 +2,6 @@ package com.orion.lang.define.cache.key;
 
 import com.orion.lang.able.Buildable;
 import com.orion.lang.define.cache.key.struct.CacheStruct;
-import com.orion.lang.define.cache.key.struct.RedisCacheStruct;
 
 import java.util.concurrent.TimeUnit;
 
@@ -46,7 +45,7 @@ public class CacheKeyBuilder implements Buildable<CacheKeyDefine> {
     private TimeUnit unit;
 
     public CacheKeyBuilder() {
-        this.struct = RedisCacheStruct.STRING;
+        this.struct = CacheKeyDefine.DEFAULT_STRUCT;
         this.timeout = CacheKeyDefine.DEFAULT_TIMEOUT;
         this.unit = CacheKeyDefine.DEFAULT_UNIT;
     }

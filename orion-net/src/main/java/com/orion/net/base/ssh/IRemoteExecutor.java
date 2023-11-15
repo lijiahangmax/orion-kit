@@ -117,6 +117,8 @@ public interface IRemoteExecutor extends Executable, SafeCloseable {
 
     /**
      * 退出 键入 exit ?
+     *
+     * @param code code
      */
     default void exit(int code) {
         this.write(Strings.bytes("exit " + code + Const.LF));

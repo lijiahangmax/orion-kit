@@ -6,8 +6,8 @@ import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.io.Files1;
+import com.orion.net.ftp.client.FileFilter;
 import com.orion.net.ftp.client.FtpFile;
-import com.orion.net.ftp.client.FtpFileFilter;
 import com.orion.net.ftp.client.FtpMessage;
 import com.orion.net.ftp.client.Ftps;
 import com.orion.net.ftp.client.config.FtpConfig;
@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * ftp 操作实例 基类
@@ -405,135 +404,29 @@ public abstract class BaseFtpInstance implements IFtpInstance {
     }
 
     @Override
-    public List<FtpFile> listFilesSuffix(String suffix) {
-        return this.listFilesSuffix(Strings.EMPTY, suffix, false, false);
-    }
-
-    @Override
-    public List<FtpFile> listFilesSuffix(String suffix, boolean child) {
-        return this.listFilesSuffix(Strings.EMPTY, suffix, child, false);
-    }
-
-    @Override
-    public List<FtpFile> listFilesSuffix(String suffix, boolean child, boolean dir) {
-        return this.listFilesSuffix(Strings.EMPTY, suffix, child, dir);
-    }
-
-    @Override
-    public List<FtpFile> listFilesSuffix(String path, String suffix) {
-        return this.listFilesSuffix(path, suffix, false, false);
-    }
-
-    @Override
-    public List<FtpFile> listFilesSuffix(String path, String suffix, boolean child) {
-        return this.listFilesSuffix(path, suffix, child, false);
-    }
-
-    @Override
-    public List<FtpFile> listFilesSuffix(String path, String suffix, boolean child, boolean dir) {
-        return this.listFilesSearch(path, FtpFileFilter.suffix(suffix), child, dir);
-    }
-
-    @Override
-    public List<FtpFile> listFilesMatch(String match) {
-        return this.listFilesMatch(Strings.EMPTY, match, false, false);
-    }
-
-    @Override
-    public List<FtpFile> listFilesMatch(String match, boolean child) {
-        return this.listFilesMatch(Strings.EMPTY, match, child, false);
-    }
-
-    @Override
-    public List<FtpFile> listFilesMatch(String match, boolean child, boolean dir) {
-        return this.listFilesMatch(Strings.EMPTY, match, child, dir);
-    }
-
-    @Override
-    public List<FtpFile> listFilesMatch(String path, String match) {
-        return this.listFilesMatch(path, match, false, false);
-    }
-
-    @Override
-    public List<FtpFile> listFilesMatch(String path, String match, boolean child) {
-        return this.listFilesMatch(path, match, child, false);
-    }
-
-    @Override
-    public List<FtpFile> listFilesMatch(String path, String match, boolean child, boolean dir) {
-        return this.listFilesSearch(path, FtpFileFilter.match(match), child, dir);
-    }
-
-    @Override
-    public List<FtpFile> listFilesPattern(Pattern pattern) {
-        return this.listFilesPattern(Strings.EMPTY, pattern, false, false);
-    }
-
-    @Override
-    public List<FtpFile> listFilesPattern(Pattern pattern, boolean child) {
-        return this.listFilesPattern(Strings.EMPTY, pattern, child, false);
-    }
-
-    @Override
-    public List<FtpFile> listFilesPattern(Pattern pattern, boolean child, boolean dir) {
-        return this.listFilesPattern(Strings.EMPTY, pattern, child, dir);
-    }
-
-    @Override
-    public List<FtpFile> listFilesPattern(String path, Pattern pattern) {
-        return this.listFilesPattern(path, pattern, false, false);
-    }
-
-    @Override
-    public List<FtpFile> listFilesPattern(String path, Pattern pattern, boolean child) {
-        return this.listFilesPattern(path, pattern, child, false);
-    }
-
-    @Override
-    public List<FtpFile> listFilesPattern(String path, Pattern pattern, boolean child, boolean dir) {
-        return this.listFilesSearch(path, FtpFileFilter.pattern(pattern), child, dir);
-    }
-
-    @Override
-    public List<FtpFile> listFilesFilter(FtpFileFilter filter) {
+    public List<FtpFile> listFilesFilter(FileFilter filter) {
         return this.listFilesFilter(Strings.EMPTY, filter, false, false);
     }
 
     @Override
-    public List<FtpFile> listFilesFilter(FtpFileFilter filter, boolean child) {
+    public List<FtpFile> listFilesFilter(FileFilter filter, boolean child) {
         return this.listFilesFilter(Strings.EMPTY, filter, child, false);
     }
 
     @Override
-    public List<FtpFile> listFilesFilter(FtpFileFilter filter, boolean child, boolean dir) {
+    public List<FtpFile> listFilesFilter(FileFilter filter, boolean child, boolean dir) {
         return this.listFilesFilter(Strings.EMPTY, filter, child, dir);
     }
 
     @Override
-    public List<FtpFile> listFilesFilter(String path, FtpFileFilter filter) {
+    public List<FtpFile> listFilesFilter(String path, FileFilter filter) {
         return this.listFilesFilter(path, filter, false, false);
     }
 
     @Override
-    public List<FtpFile> listFilesFilter(String path, FtpFileFilter filter, boolean child) {
+    public List<FtpFile> listFilesFilter(String path, FileFilter filter, boolean child) {
         return this.listFilesFilter(path, filter, child, false);
     }
-
-    @Override
-    public List<FtpFile> listFilesFilter(String path, FtpFileFilter filter, boolean child, boolean dir) {
-        return this.listFilesSearch(path, filter, child, dir);
-    }
-
-    /**
-     * 文件列表搜索
-     *
-     * @param path   列表
-     * @param filter 过滤器
-     * @param child  是否递归子文件夹
-     * @param dir    是否添加文件夹
-     * @return 匹配的列表
-     */
-    protected abstract List<FtpFile> listFilesSearch(String path, FtpFileFilter filter, boolean child, boolean dir);
 
     // -------------------- option --------------------
 

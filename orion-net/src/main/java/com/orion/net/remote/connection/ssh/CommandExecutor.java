@@ -9,6 +9,7 @@ import com.orion.net.base.ssh.BaseCommandExecutor;
 
 import java.io.IOException;
 import java.io.SequenceInputStream;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 抽象命令执行器
@@ -35,7 +36,8 @@ public class CommandExecutor extends BaseCommandExecutor {
     private final String commandCharset;
 
     /**
-     * 是否等待命令执行, 且不包含
+     * 是否等待命令执行
+     * <p>
      * 1. 连接关闭
      * 2. 输出数据传送完毕
      * 3. 进程状态为退出
@@ -46,7 +48,7 @@ public class CommandExecutor extends BaseCommandExecutor {
     /**
      * 等待命令执行超时时间
      */
-    private long waitTime;
+    private long timeout;
 
     public CommandExecutor(Session session, String command) {
         this(session, command, Const.UTF_8);
@@ -74,7 +76,10 @@ public class CommandExecutor extends BaseCommandExecutor {
      * 等待命令执行完毕
      */
     public void waitFor() {
-        this.waitFor = ChannelCondition.CLOSED | ChannelCondition.EOF | ChannelCondition.EXIT_STATUS;
+        this.waitFor = ChannelCondition.TIMEOUT
+                | ChannelCondition.CLOSED
+                | ChannelCondition.EOF
+                | ChannelCondition.EXIT_STATUS;
     }
 
     /**
@@ -86,25 +91,12 @@ public class CommandExecutor extends BaseCommandExecutor {
         this.waitFor = type;
     }
 
-    /**
-     * 等待命令执行完毕
-     *
-     * @param type    等待类型
-     * @param timeout 超时时间
-     */
-    public void waitFor(int type, long timeout) {
-        this.waitFor = type;
-        this.waitTime = timeout;
-    }
-
-    /**
-     * 命令超时时间
-     *
-     * @param timeout 超时时间
-     */
-    public void timeout(long timeout) {
-        this.waitFor = ChannelCondition.CLOSED | ChannelCondition.EOF | ChannelCondition.EXIT_STATUS;
-        this.waitTime = timeout;
+    @Override
+    public void timeout(long timeout, TimeUnit unit) {
+        this.timeout = unit.toMillis(timeout);
+        if (this.waitFor == 0) {
+            this.waitFor();
+        }
     }
 
     @Override
@@ -136,7 +128,7 @@ public class CommandExecutor extends BaseCommandExecutor {
         // wait
         try {
             if (waitFor != 0) {
-                session.waitForCondition(waitFor, waitTime);
+                session.waitForCondition(waitFor, timeout);
                 this.done = true;
             }
         } catch (IOException e) {
@@ -164,8 +156,8 @@ public class CommandExecutor extends BaseCommandExecutor {
         return waitFor;
     }
 
-    public long getWaitTime() {
-        return waitTime;
+    public long getTimeout() {
+        return timeout;
     }
 
     public Session getSession() {
@@ -174,7 +166,7 @@ public class CommandExecutor extends BaseCommandExecutor {
 
     @Override
     public String toString() {
-        return "[" + command + "]";
+        return command;
     }
 
 }

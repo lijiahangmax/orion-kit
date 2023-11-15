@@ -3,6 +3,7 @@ package com.orion.lang.function;
 import com.orion.lang.utils.regexp.Matches;
 
 import java.io.File;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 /**
@@ -13,45 +14,36 @@ import java.util.regex.Pattern;
  * @since 2021/3/10 10:07
  */
 @FunctionalInterface
-public interface FileFilter {
-
-    /**
-     * 过滤
-     *
-     * @param file 文件对象
-     * @param name 文件名称
-     * @return 是否保留
-     */
-    boolean accept(File file, String name);
+public interface FileFilter extends Predicate<File> {
 
     /**
      * 后缀过滤器
      *
      * @param suffix 后缀
-     * @return FileFilter
+     * @return filter
      */
     static FileFilter suffix(String suffix) {
-        return (f, n) -> n.toLowerCase().endsWith(suffix.toLowerCase());
+        return f -> f.getName().toLowerCase().endsWith(suffix.toLowerCase());
     }
 
     /**
-     * 文件名过滤器
+     * 包含过滤器
      *
      * @param name 文件名
-     * @return FileFilter
+     * @return filter
      */
-    static FileFilter match(String name) {
-        return (f, n) -> n.toLowerCase().contains(name.toLowerCase());
+    static FileFilter contains(String name) {
+        return f -> f.getName().toLowerCase().contains(name.toLowerCase());
     }
 
     /**
      * 正则过滤器
      *
      * @param pattern pattern
-     * @return FileFilter
+     * @return filter
      */
-    static FileFilter pattern(Pattern pattern) {
-        return (f, n) -> Matches.test(n, pattern);
+    static FileFilter matches(Pattern pattern) {
+        return f -> Matches.test(f.getName(), pattern);
     }
 
 }

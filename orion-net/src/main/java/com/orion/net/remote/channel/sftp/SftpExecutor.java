@@ -10,9 +10,9 @@ import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
-import com.orion.net.base.file.sftp.BaseSftpExecutor;
-import com.orion.net.base.file.sftp.SftpErrorMessage;
-import com.orion.net.base.file.sftp.SftpFile;
+import com.orion.net.base.sftp.BaseSftpExecutor;
+import com.orion.net.base.sftp.SftpErrorMessage;
+import com.orion.net.base.sftp.SftpFile;
 import com.orion.net.remote.channel.ChannelConnector;
 
 import java.io.*;
@@ -149,7 +149,7 @@ public class SftpExecutor extends BaseSftpExecutor implements ChannelConnector {
     }
 
     @Override
-    public void chmod(String file, int permission) {
+    public void changeMode(String file, int permission) {
         try {
             channel.chmod(Files1.permission10to8(permission), file);
         } catch (Exception e) {
@@ -158,7 +158,7 @@ public class SftpExecutor extends BaseSftpExecutor implements ChannelConnector {
     }
 
     @Override
-    public void chown(String file, int uid) {
+    public void changeOwner(String file, int uid) {
         try {
             channel.chown(uid, file);
         } catch (Exception e) {
@@ -167,7 +167,7 @@ public class SftpExecutor extends BaseSftpExecutor implements ChannelConnector {
     }
 
     @Override
-    public void chgrp(String file, int gid) {
+    public void changeGroup(String file, int gid) {
         try {
             channel.chgrp(gid, file);
         } catch (Exception e) {
@@ -176,7 +176,7 @@ public class SftpExecutor extends BaseSftpExecutor implements ChannelConnector {
     }
 
     @Override
-    public void mkdir(String path) {
+    public void makeDirectory(String path) {
         try {
             channel.mkdir(path);
         } catch (SftpException e) {
@@ -292,7 +292,7 @@ public class SftpExecutor extends BaseSftpExecutor implements ChannelConnector {
         try {
             // 检查是否需要创建目标文件目录
             if (!this.isSameParentPath(source, target)) {
-                this.mkdirs(Files1.getParentPath(target));
+                this.makeDirectories(Files1.getParentPath(target));
             }
             if (hard) {
                 channel.hardlink(source, target);
@@ -355,7 +355,7 @@ public class SftpExecutor extends BaseSftpExecutor implements ChannelConnector {
      */
     public OutputStream openOutputStream(String path, int mode) throws IOException {
         try {
-            this.mkdirs(Files1.getParentPath(path));
+            this.makeDirectories(Files1.getParentPath(path));
             return channel.put(path, mode);
         } catch (Exception e) {
             throw Exceptions.io("could open file output stream " + path, e);
@@ -562,7 +562,7 @@ public class SftpExecutor extends BaseSftpExecutor implements ChannelConnector {
     // -------------------- list --------------------
 
     @Override
-    public List<SftpFile> ll(String path) {
+    public List<SftpFile> list(String path) {
         List<SftpFile> list = new ArrayList<>();
         try {
             Vector<?> files = channel.ls(path);

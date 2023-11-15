@@ -18,6 +18,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class CacheKeyDefine implements Serializable {
 
+    protected static final CacheStruct DEFAULT_STRUCT = RedisCacheStruct.STRING;
+
     protected static final long DEFAULT_TIMEOUT = 0L;
 
     protected static final TimeUnit DEFAULT_UNIT = TimeUnit.MILLISECONDS;
@@ -36,6 +38,7 @@ public class CacheKeyDefine implements Serializable {
      * 数据类型
      */
     private final Class<?> type;
+
     /**
      * 数据结构
      */
@@ -52,7 +55,7 @@ public class CacheKeyDefine implements Serializable {
     private TimeUnit unit;
 
     public CacheKeyDefine(String key) {
-        this(key, Strings.EMPTY, null, RedisCacheStruct.STRING, DEFAULT_TIMEOUT, DEFAULT_UNIT);
+        this(key, Strings.EMPTY, null, DEFAULT_STRUCT, DEFAULT_TIMEOUT, DEFAULT_UNIT);
     }
 
     public CacheKeyDefine(String key, String desc, Class<?> type, CacheStruct struct, long timeout, TimeUnit unit) {
@@ -118,6 +121,6 @@ public class CacheKeyDefine implements Serializable {
 
     @Override
     public String toString() {
-        return struct + Const.EMPTY + key + " (" + desc + ") [" + type.getSimpleName() + "] timeout: " + timeout + Const.SPACE + unit.name();
+        return struct + Const.SPACE + key + " (" + desc + ") [" + type.getSimpleName() + "] timeout: " + timeout + Const.SPACE + unit.name();
     }
 }

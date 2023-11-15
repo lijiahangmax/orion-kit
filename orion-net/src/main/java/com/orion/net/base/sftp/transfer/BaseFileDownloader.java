@@ -1,23 +1,24 @@
-package com.orion.net.base.file.transfer;
+package com.orion.net.base.sftp.transfer;
 
-import com.orion.lang.constant.Const;
 import com.orion.lang.support.progress.ByteTransferRateProgress;
-import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Valid;
 import com.orion.lang.utils.io.FileLocks;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
- * 大文件上传 基类 支持断点续传, 实时速率
+ * 大文件下载 基类 支持断点续传, 实时速率
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2021/3/14 00:07
+ * @since 2021/3/14 13:30
  */
-public abstract class BaseFileUploader implements IFileUploader {
+public abstract class BaseFileDownloader implements IFileDownloader {
 
     /**
      * 远程文件
@@ -45,12 +46,12 @@ public abstract class BaseFileUploader implements IFileUploader {
     protected int bufferSize;
 
     /**
-     * 是否强制覆盖上传 (不检测文件锁定/不检测文件大小/不走断点续传)
+     * 是否强制覆盖下载 (不检测文件锁定/不检测文件大小/不走断点续传)
      */
     protected boolean forceOverride;
 
     /**
-     * 文件大小相同则覆盖上传
+     * 文件大小相同则覆盖下载
      */
     protected boolean fileSizeEqualOverride;
 
@@ -59,17 +60,14 @@ public abstract class BaseFileUploader implements IFileUploader {
      */
     protected Long remoteFileLength;
 
-    protected BaseFileUploader(String remote, File local, String lockSuffix, int bufferSize) {
-        Valid.notEmpty(remote, "remote file is empty");
-        Valid.notNull(local, "upload file is null");
-        if (!local.exists() || !local.isFile()) {
-            throw Exceptions.notFound("not found upload local file");
-        }
+    public BaseFileDownloader(String remote, File local, String lockSuffix, int bufferSize) {
+        Valid.notEmpty(remote, "download remote file is empty");
+        Valid.notNull(local, "local file is null");
         this.remote = remote;
         this.local = local;
         this.bufferSize = bufferSize;
         this.lock = FileLocks.getSuffixFileLock(lockSuffix, local);
-        this.progress = new ByteTransferRateProgress(local.length());
+        this.progress = new ByteTransferRateProgress(0);
     }
 
     @Override
@@ -98,29 +96,30 @@ public abstract class BaseFileUploader implements IFileUploader {
     }
 
     /**
-     * 开始上传
+     * 开始下载
      *
      * @throws IOException IOException
      */
-    protected void startUpload() throws IOException {
+    protected void startDownload() throws IOException {
         boolean error = false;
         try {
-            // 强制覆盖上传
+            // 获取远程文件大小
+            long remoteSize = this.getRemoteFileLength();
+            // 设置进度条终点
+            progress.setEnd(remoteSize);
+            // 强制覆盖下载
             if (forceOverride) {
-                this.upload();
+                Files1.touch(local);
+                this.download();
                 return;
             }
-            // 检测文件大小
-            long remoteSize = this.getRemoteFileLength();
-            if (remoteSize == -1) {
-                // 远程文件为空 直接上传
-                this.upload();
-            } else {
-                if (remoteSize == local.length()) {
-                    // 文件大小一样 检测是否覆盖上传
+            if (Files1.isFile(local)) {
+                long localSize = local.length();
+                if (localSize == remoteSize) {
+                    // 文件大小一样 检测是否覆盖下载
                     if (fileSizeEqualOverride) {
-                        // 如果设置文件大小一致覆盖 则重新上传
-                        this.upload();
+                        // 如果设置文件大小一致覆盖 则重新下载
+                        this.download();
                     } else {
                         // 认为是文件相同(大文件节约性能) 则跳过
                         lock.unLock();
@@ -130,13 +129,17 @@ public abstract class BaseFileUploader implements IFileUploader {
                 } else {
                     // 文件大小不一样 检测是否断点续传
                     if (lock.isLocked()) {
-                        // 被锁定 继续上传
-                        this.breakPointResume(remoteSize);
+                        // 被锁定 继续下载
+                        this.breakPointResume(localSize);
                     } else {
-                        // 没被锁定 重新上传
-                        this.upload();
+                        // 没被锁定 重新下载
+                        this.download();
                     }
                 }
+            } else {
+                // 直接下载
+                Files1.touch(local);
+                this.download();
             }
         } catch (Exception e) {
             error = true;
@@ -147,26 +150,26 @@ public abstract class BaseFileUploader implements IFileUploader {
     }
 
     /**
-     * 直接上传
+     * 直接下载
      *
      * @throws IOException IOException
      */
-    protected void upload() throws IOException {
-        this.initUpload(false, 0);
+    protected void download() throws IOException {
+        this.initDownload(false, 0);
         progress.start();
         lock.tryLock();
-        InputStream in = null;
+        OutputStream out = null;
         try {
-            in = new BufferedInputStream(Files1.openInputStreamFastSafe(local), bufferSize);
+            out = new BufferedOutputStream(Files1.openOutputStreamFastSafe(local), bufferSize);
             int read;
             byte[] bs = new byte[bufferSize];
-            while ((read = in.read(bs)) != -1) {
+            while ((read = this.read(bs)) != -1) {
                 progress.accept(read);
-                this.write(bs, read);
+                out.write(bs, 0, read);
             }
             lock.unLock();
         } finally {
-            Streams.close(in);
+            Streams.close(out);
             this.transferFinish();
         }
     }
@@ -178,23 +181,22 @@ public abstract class BaseFileUploader implements IFileUploader {
      * @throws IOException IOException
      */
     protected void breakPointResume(long skip) throws IOException {
-        this.initUpload(true, skip);
+        this.initDownload(true, skip);
         progress.setStart(skip);
         progress.setCurrent(skip);
         progress.start();
-        RandomAccessFile access = null;
+        OutputStream out = null;
         try {
-            access = Files1.openRandomAccessSafe(local, Const.ACCESS_R);
-            access.seek(skip);
+            out = new BufferedOutputStream(Files1.openOutputStreamFastSafe(local, true), bufferSize);
             int read;
             byte[] bs = new byte[bufferSize];
-            while ((read = access.read(bs)) != -1) {
+            while ((read = this.read(bs)) != -1) {
                 progress.accept(read);
-                this.write(bs, read);
+                out.write(bs, 0, read);
             }
             lock.unLock();
         } finally {
-            Streams.close(access);
+            Streams.close(out);
             this.transferFinish();
         }
     }
@@ -202,28 +204,28 @@ public abstract class BaseFileUploader implements IFileUploader {
     /**
      * 获取远程文件大小
      *
-     * @return fileSize 文件不存在则返回 -1
+     * @return fileSize 文件不存在则返回-1
      * @throws IOException IOException
      */
     protected abstract long getRemoteFileSize() throws IOException;
 
     /**
-     * 准开始上传
+     * 准开始下载
      *
      * @param breakPoint 是否为断点续传
-     * @param skip       skip
+     * @param skip       跳过的长度
      * @throws IOException IOException
      */
-    protected abstract void initUpload(boolean breakPoint, long skip) throws IOException;
+    protected abstract void initDownload(boolean breakPoint, long skip) throws IOException;
 
     /**
-     * 写入
+     * 读取数据
      *
-     * @param bs  bs
-     * @param len 长度
+     * @param bs bs
+     * @return 长度
      * @throws IOException IOException
      */
-    protected abstract void write(byte[] bs, int len) throws IOException;
+    protected abstract int read(byte[] bs) throws IOException;
 
     /**
      * 传输完成回调

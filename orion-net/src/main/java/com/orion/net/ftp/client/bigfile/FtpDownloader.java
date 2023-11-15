@@ -3,7 +3,7 @@ package com.orion.net.ftp.client.bigfile;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Valid;
 import com.orion.lang.utils.io.Streams;
-import com.orion.net.base.file.transfer.BaseFileDownloader;
+import com.orion.net.base.sftp.transfer.BaseFileDownloader;
 import com.orion.net.ftp.client.FtpFile;
 import com.orion.net.ftp.client.instance.IFtpInstance;
 

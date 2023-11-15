@@ -5,7 +5,7 @@ import com.orion.lang.constant.Const;
 import com.orion.lang.utils.io.FileType;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.time.Dates;
-import com.orion.net.base.file.sftp.SftpFile;
+import com.orion.net.base.sftp.SftpFile;
 
 import java.util.Date;
 
@@ -47,31 +47,37 @@ public class SftpFileWrapper extends SftpFile {
         return attrs;
     }
 
+    @Override
     public void setSize(long size) {
         this.size = size;
         this.attrs.size = size;
     }
 
+    @Override
     public void setUid(int uid) {
         this.uid = uid;
         this.attrs.uid = uid;
     }
 
+    @Override
     public void setGid(int gid) {
         this.gid = gid;
         this.attrs.gid = gid;
     }
 
+    @Override
     public void setModifyTime(Date modifyTime) {
         this.modifyTime = modifyTime;
         this.attrs.mtime = ((int) (modifyTime.getTime() / Const.MS_S_1));
     }
 
+    @Override
     public void setAccessTime(Date accessTime) {
         this.accessTime = accessTime;
         this.attrs.atime = ((int) (accessTime.getTime() / Const.MS_S_1));
     }
 
+    @Override
     public void setPermission(int permission) {
         this.permission = permission;
         this.attrs.permissions = Files1.permission10to8(permission);

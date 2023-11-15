@@ -11,9 +11,9 @@ import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
-import com.orion.net.base.file.sftp.BaseSftpExecutor;
-import com.orion.net.base.file.sftp.SftpErrorMessage;
-import com.orion.net.base.file.sftp.SftpFile;
+import com.orion.net.base.sftp.BaseSftpExecutor;
+import com.orion.net.base.sftp.SftpErrorMessage;
+import com.orion.net.base.sftp.SftpFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,13 +28,13 @@ import java.util.List;
  * <p>
  * 文件路必须是绝对路径 可以包含 ../ ./
  * <p>
- * 默认执行一次读写操作最大字节为32768
+ * 默认执行一次读写操作最大字节为 32768
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2022/5/18 16:38
  */
-public class SftpExecutor extends BaseSftpExecutor {
+public class SftpExecutor extends BaseSftpExecutor implements IConnectionSftpExecutor {
 
     /**
      * 默认8进制权限
@@ -75,11 +75,7 @@ public class SftpExecutor extends BaseSftpExecutor {
         }
     }
 
-    /**
-     * 设置请求并行数量
-     *
-     * @param parallelism 请求并行数量
-     */
+    @Override
     public void requestParallelism(int parallelism) {
         client.setRequestParallelism(parallelism);
     }
@@ -182,7 +178,7 @@ public class SftpExecutor extends BaseSftpExecutor {
     }
 
     @Override
-    public void chmod(String file, int permission) {
+    public void changeMode(String file, int permission) {
         try {
             SFTPv3FileAttributes attr = new SFTPv3FileAttributes();
             attr.permissions = Files1.permission10to8(permission);
@@ -193,7 +189,7 @@ public class SftpExecutor extends BaseSftpExecutor {
     }
 
     @Override
-    public void chown(String file, int uid) {
+    public void changeOwner(String file, int uid) {
         try {
             SFTPv3FileAttributes attr = client.stat(file);
             attr.uid = uid;
@@ -204,7 +200,7 @@ public class SftpExecutor extends BaseSftpExecutor {
     }
 
     @Override
-    public void chgrp(String file, int gid) {
+    public void changeGroup(String file, int gid) {
         try {
             SFTPv3FileAttributes attr = client.stat(file);
             attr.gid = gid;
@@ -220,17 +216,12 @@ public class SftpExecutor extends BaseSftpExecutor {
     }
 
     @Override
-    public void mkdir(String path) {
-        this.mkdir(path, DEFAULT_PERMISSIONS);
+    public void makeDirectory(String path) {
+        this.makeDirectory(path, DEFAULT_PERMISSIONS);
     }
 
-    /**
-     * 创建文件夹
-     *
-     * @param path        path
-     * @param permissions 权限
-     */
-    public void mkdir(String path, int permissions) {
+    @Override
+    public void makeDirectory(String path, int permissions) {
         try {
             client.mkdir(path, permissions);
         } catch (IOException e) {
@@ -238,14 +229,9 @@ public class SftpExecutor extends BaseSftpExecutor {
         }
     }
 
-    /**
-     * 创建文件夹 递归
-     *
-     * @param path        path
-     * @param permissions 权限
-     */
-    public void mkdirs(String path, int permissions) {
-        super.doMakeDirs(path, p -> mkdir(path, permissions));
+    @Override
+    public void makeDirectories(String path, int permissions) {
+        super.doMakeDir(path, p -> makeDirectory(path, permissions));
     }
 
     @Override
@@ -285,7 +271,7 @@ public class SftpExecutor extends BaseSftpExecutor {
     @Override
     public void touch(String path, boolean truncate) {
         try {
-            this.mkdirs(Files1.getParentPath(path));
+            this.makeDirectories(Files1.getParentPath(path));
             SFTPv3FileHandle handle;
             if (truncate) {
                 handle = client.createFileTruncate(path);
@@ -303,7 +289,7 @@ public class SftpExecutor extends BaseSftpExecutor {
         try {
             // 检查是否需要创建目标文件目录
             if (!this.isSameParentPath(source, target)) {
-                this.mkdirs(Files1.getParentPath(target));
+                this.makeDirectories(Files1.getParentPath(target));
             }
             client.createSymlink(target, source);
         } catch (Exception e) {
@@ -347,7 +333,7 @@ public class SftpExecutor extends BaseSftpExecutor {
      */
     public SFTPv3FileHandle openFileHandler(String path, int type) {
         try {
-            this.mkdirs(Files1.getParentPath(path));
+            this.makeDirectories(Files1.getParentPath(path));
             switch (type) {
                 case 1:
                     return client.openFileRO(path);
@@ -365,12 +351,7 @@ public class SftpExecutor extends BaseSftpExecutor {
         }
     }
 
-    /**
-     * 关闭文件
-     *
-     * @param handle 文件处理器
-     * @return true成功
-     */
+    @Override
     public boolean closeFile(SFTPv3FileHandle handle) {
         if (handle == null) {
             return true;
@@ -551,16 +532,16 @@ public class SftpExecutor extends BaseSftpExecutor {
         this.write(path, 0, null, null, Lists.singleton(line), 2);
     }
 
-    public void overrideLine(String path, long fileOffset, String line) throws IOException {
-        this.write(path, fileOffset, null, null, Lists.singleton(line), 2);
+    public void overrideLine(String path, long offset, String line) throws IOException {
+        this.write(path, offset, null, null, Lists.singleton(line), 2);
     }
 
     public void overrideLines(String path, List<String> lines) throws IOException {
         this.write(path, 0, null, null, lines, 2);
     }
 
-    public void overrideLines(String path, long fileOffset, List<String> lines) throws IOException {
-        this.write(path, fileOffset, null, null, lines, 2);
+    public void overrideLines(String path, long offset, List<String> lines) throws IOException {
+        this.write(path, offset, null, null, lines, 2);
     }
 
     /**
@@ -688,7 +669,7 @@ public class SftpExecutor extends BaseSftpExecutor {
     // -------------------- list --------------------
 
     @Override
-    public List<SftpFile> ll(String path) {
+    public List<SftpFile> list(String path) {
         try {
             List<SftpFile> list = new ArrayList<>();
             List<SFTPv3DirectoryEntry> files = client.ls(path);

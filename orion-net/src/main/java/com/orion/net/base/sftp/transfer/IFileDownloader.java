@@ -1,25 +1,25 @@
-package com.orion.net.base.file.transfer;
+package com.orion.net.base.sftp.transfer;
 
 import java.io.IOException;
 
 /**
- * 文件上传器 接口
+ * 文件下载器 接口
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/4/11 18:08
+ * @since 2023/4/11 18:09
  */
-public interface IFileUploader extends IFileTransfer {
+public interface IFileDownloader extends IFileTransfer {
 
     /**
-     * 强制覆盖上传 (不检测文件锁定/不检测文件大小/不走断点续传)
+     * 强制覆盖下载 (不检测文件锁定/不检测文件大小/不走断点续传)
      *
      * @param forceOverride 是否覆盖
      */
     void forceOverride(boolean forceOverride);
 
     /**
-     * 文件大小相同则覆盖上传
+     * 文件大小相同则覆盖下载
      *
      * @param fileSizeEqualOverride fileSizeEqualOverride
      */

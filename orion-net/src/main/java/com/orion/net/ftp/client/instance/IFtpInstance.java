@@ -2,10 +2,10 @@ package com.orion.net.ftp.client.instance;
 
 import com.orion.lang.able.Destroyable;
 import com.orion.lang.able.SafeCloseable;
-import com.orion.net.base.file.transfer.IFileDownloader;
-import com.orion.net.base.file.transfer.IFileUploader;
+import com.orion.net.base.sftp.transfer.IFileDownloader;
+import com.orion.net.base.sftp.transfer.IFileUploader;
+import com.orion.net.ftp.client.FileFilter;
 import com.orion.net.ftp.client.FtpFile;
-import com.orion.net.ftp.client.FtpFileFilter;
 import com.orion.net.ftp.client.config.FtpConfig;
 import com.orion.net.ftp.client.pool.FtpClientPool;
 import org.apache.commons.net.ftp.FTPClient;
@@ -16,7 +16,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * ftp 实例 api
@@ -166,7 +165,7 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
      *
      * @param dir 文件夹
      */
-    void mkdirs(String dir);
+    void makeDirectories(String dir);
 
     /**
      * 创建文件
@@ -186,7 +185,7 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
      * @param source 原文件路径
      * @param target 移动后的路径 可以为相对路径 如果不加目录为重命名
      */
-    void mv(String source, String target);
+    void move(String source, String target);
 
     // -------------------- stream --------------------
 
@@ -559,78 +558,15 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
      */
     List<FtpFile> listDirs(String path, boolean child);
 
-    List<FtpFile> listFilesSuffix(String suffix);
+    List<FtpFile> listFilesFilter(FileFilter filter);
 
-    List<FtpFile> listFilesSuffix(String suffix, boolean child);
+    List<FtpFile> listFilesFilter(FileFilter filter, boolean child);
 
-    List<FtpFile> listFilesSuffix(String suffix, boolean child, boolean dir);
+    List<FtpFile> listFilesFilter(FileFilter filter, boolean child, boolean dir);
 
-    List<FtpFile> listFilesSuffix(String path, String suffix);
+    List<FtpFile> listFilesFilter(String path, FileFilter filter);
 
-    List<FtpFile> listFilesSuffix(String path, String suffix, boolean child);
-
-    /**
-     * 列出目录下的文件
-     *
-     * @param path   目录
-     * @param suffix 后缀
-     * @param child  是否递归子文件夹
-     * @param dir    是否添加文件夹
-     * @return 文件
-     */
-    List<FtpFile> listFilesSuffix(String path, String suffix, boolean child, boolean dir);
-
-    List<FtpFile> listFilesMatch(String match);
-
-    List<FtpFile> listFilesMatch(String match, boolean child);
-
-    List<FtpFile> listFilesMatch(String match, boolean child, boolean dir);
-
-    List<FtpFile> listFilesMatch(String path, String match);
-
-    List<FtpFile> listFilesMatch(String path, String match, boolean child);
-
-    /**
-     * 列出目录下的文件
-     *
-     * @param path  目录
-     * @param match 名称
-     * @param child 是否递归子文件夹
-     * @param dir   是否添加文件夹
-     * @return 文件
-     */
-    List<FtpFile> listFilesMatch(String path, String match, boolean child, boolean dir);
-
-    List<FtpFile> listFilesPattern(Pattern pattern);
-
-    List<FtpFile> listFilesPattern(Pattern pattern, boolean child);
-
-    List<FtpFile> listFilesPattern(Pattern pattern, boolean child, boolean dir);
-
-    List<FtpFile> listFilesPattern(String path, Pattern pattern);
-
-    List<FtpFile> listFilesPattern(String path, Pattern pattern, boolean child);
-
-    /**
-     * 列出目录下的文件
-     *
-     * @param path    目录
-     * @param pattern 正则
-     * @param child   是否递归子文件夹
-     * @param dir     是否添加文件夹
-     * @return 文件
-     */
-    List<FtpFile> listFilesPattern(String path, Pattern pattern, boolean child, boolean dir);
-
-    List<FtpFile> listFilesFilter(FtpFileFilter filter);
-
-    List<FtpFile> listFilesFilter(FtpFileFilter filter, boolean child);
-
-    List<FtpFile> listFilesFilter(FtpFileFilter filter, boolean child, boolean dir);
-
-    List<FtpFile> listFilesFilter(String path, FtpFileFilter filter);
-
-    List<FtpFile> listFilesFilter(String path, FtpFileFilter filter, boolean child);
+    List<FtpFile> listFilesFilter(String path, FileFilter filter, boolean child);
 
     /**
      * 列出目录下的文件
@@ -641,7 +577,7 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
      * @param dir    是否添加文件夹
      * @return 文件
      */
-    List<FtpFile> listFilesFilter(String path, FtpFileFilter filter, boolean child, boolean dir);
+    List<FtpFile> listFilesFilter(String path, FileFilter filter, boolean child, boolean dir);
 
     // -------------------- option --------------------
 

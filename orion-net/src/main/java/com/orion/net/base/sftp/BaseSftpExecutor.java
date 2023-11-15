@@ -1,9 +1,8 @@
-package com.orion.net.base.file.sftp;
+package com.orion.net.base.sftp;
 
 import com.orion.lang.constant.Const;
 import com.orion.lang.define.StreamEntry;
 import com.orion.lang.utils.Exceptions;
-import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
 
@@ -11,9 +10,10 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.regex.Pattern;
 
 /**
+ * sftp 执行器 基类
+ *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2022/5/18 15:23
@@ -35,22 +35,22 @@ public abstract class BaseSftpExecutor implements ISftpExecutor {
     }
 
     @Override
-    public void mkdirs(String path) {
-        this.doMakeDirs(path, this::mkdir);
+    public void makeDirectories(String path) {
+        this.doMakeDir(path, this::makeDirectory);
     }
 
     @Override
-    public void rm(String path) {
+    public void remove(String path) {
         try {
             SftpFile file = this.getFile(path);
             if (file == null) {
                 return;
             }
             if (file.isDirectory()) {
-                List<SftpFile> files = this.ll(path);
+                List<SftpFile> files = this.list(path);
                 for (SftpFile f : files) {
                     if (f.isDirectory()) {
-                        this.rm(f.getPath());
+                        this.remove(f.getPath());
                     } else {
                         this.removeFile(f.getPath());
                     }
@@ -68,14 +68,14 @@ public abstract class BaseSftpExecutor implements ISftpExecutor {
     }
 
     @Override
-    public void mv(String source, String target) {
+    public void move(String source, String target) {
         try {
             source = Files1.getPath(source);
             target = Files1.getPath(target);
             if (target.charAt(0) == '/') {
                 // 检查是否需要创建目标文件目录
                 if (!this.isSameParentPath(source, target)) {
-                    this.mkdirs(Files1.getParentPath(target));
+                    this.makeDirectories(Files1.getParentPath(target));
                 }
                 // 绝对路径
                 this.doMove(source, Files1.normalize(target));
@@ -88,34 +88,7 @@ public abstract class BaseSftpExecutor implements ISftpExecutor {
         }
     }
 
-    // -------------------- read --------------------
-
-    @Override
-    public int read(String path, byte[] bs) throws IOException {
-        return this.read(path, 0, bs, 0, bs.length);
-    }
-
-    @Override
-    public int read(String path, byte[] bs, int offset, int len) throws IOException {
-        return this.read(path, 0, bs, offset, len);
-    }
-
-    @Override
-    public int read(String path, long skip, byte[] bs) throws IOException {
-        return this.read(path, skip, bs, 0, bs.length);
-    }
-
     // -------------------- transfer --------------------
-
-    @Override
-    public long transfer(String path, OutputStream out) throws IOException {
-        return this.doTransfer(path, out, 0, -1, false);
-    }
-
-    @Override
-    public long transfer(String path, OutputStream out, long skip) throws IOException {
-        return this.doTransfer(path, out, skip, -1, false);
-    }
 
     @Override
     public long transfer(String path, OutputStream out, long skip, int size) throws IOException {
@@ -123,27 +96,9 @@ public abstract class BaseSftpExecutor implements ISftpExecutor {
     }
 
     @Override
-    public long transfer(String path, String file) throws IOException {
-        Files1.touch(file);
-        return this.doTransfer(path, Files1.openOutputStream(file), 0, -1, true);
-    }
-
-    @Override
-    public long transfer(String path, File file) throws IOException {
-        Files1.touch(file);
-        return this.doTransfer(path, Files1.openOutputStream(file), 0, -1, true);
-    }
-
-    @Override
     public long transfer(String path, String file, long skip) throws IOException {
         Files1.touch(file);
-        return this.doTransfer(path, Files1.openOutputStream(file), skip, -1, true);
-    }
-
-    @Override
-    public long transfer(String path, File file, long skip) throws IOException {
-        Files1.touch(file);
-        return this.doTransfer(path, Files1.openOutputStream(file), skip, -1, true);
+        return this.doTransfer(path, Files1.openOutputStreamFast(file), skip, -1, true);
     }
 
     // -------------------- write --------------------
@@ -154,18 +109,8 @@ public abstract class BaseSftpExecutor implements ISftpExecutor {
     }
 
     @Override
-    public void write(String path, byte[] bs) throws IOException {
-        this.doWrite(path, null, new StreamEntry(bs), null);
-    }
-
-    @Override
     public void write(String path, byte[] bs, int off, int len) throws IOException {
         this.doWrite(path, null, new StreamEntry(bs, off, len), null);
-    }
-
-    @Override
-    public void writeLine(String path, String line) throws IOException {
-        this.doWrite(path, null, null, Lists.singleton(line));
     }
 
     @Override
@@ -181,18 +126,8 @@ public abstract class BaseSftpExecutor implements ISftpExecutor {
     }
 
     @Override
-    public void append(String path, byte[] bs) throws IOException {
-        this.doAppend(path, null, new StreamEntry(bs), null);
-    }
-
-    @Override
     public void append(String path, byte[] bs, int off, int len) throws IOException {
         this.doAppend(path, null, new StreamEntry(bs, off, len), null);
-    }
-
-    @Override
-    public void appendLine(String path, String line) throws IOException {
-        this.doAppend(path, null, null, Lists.singleton(line));
     }
 
     @Override
@@ -251,7 +186,7 @@ public abstract class BaseSftpExecutor implements ISftpExecutor {
         List<File> dirs = Files1.listDirs(localDir, child);
         List<File> files = Files1.listFiles(localDir, child);
         for (File dir : dirs) {
-            this.mkdirs(Files1.getPath(remoteDir, dir.getAbsolutePath().substring(localDir.length())));
+            this.makeDirectories(Files1.getPath(remoteDir, dir.getAbsolutePath().substring(localDir.length())));
         }
         for (File file : files) {
             String path = Files1.getPath(remoteDir, file.getAbsolutePath().substring(localDir.length()));
@@ -321,20 +256,10 @@ public abstract class BaseSftpExecutor implements ISftpExecutor {
     // -------------------- list --------------------
 
     @Override
-    public List<SftpFile> listFiles(String path) {
-        return this.listFiles(path, false, false);
-    }
-
-    @Override
-    public List<SftpFile> listFiles(String path, boolean child) {
-        return this.listFiles(path, child, false);
-    }
-
-    @Override
     public List<SftpFile> listFiles(String path, boolean child, boolean dir) {
         List<SftpFile> list = new ArrayList<>();
         try {
-            List<SftpFile> ls = this.ll(path);
+            List<SftpFile> ls = this.list(path);
             for (SftpFile l : ls) {
                 if (l.isDirectory()) {
                     if (dir) {
@@ -354,15 +279,10 @@ public abstract class BaseSftpExecutor implements ISftpExecutor {
     }
 
     @Override
-    public List<SftpFile> listDirs(String path) {
-        return this.listDirs(path, false);
-    }
-
-    @Override
     public List<SftpFile> listDirs(String path, boolean child) {
         List<SftpFile> list = new ArrayList<>();
         try {
-            List<SftpFile> ls = this.ll(path);
+            List<SftpFile> ls = this.list(path);
             for (SftpFile l : ls) {
                 if (l.isDirectory()) {
                     list.add(l);
@@ -378,62 +298,7 @@ public abstract class BaseSftpExecutor implements ISftpExecutor {
     }
 
     @Override
-    public List<SftpFile> listFilesSuffix(String path, String suffix) {
-        return this.listFilesSuffix(path, suffix, false, false);
-    }
-
-    @Override
-    public List<SftpFile> listFilesSuffix(String path, String suffix, boolean child) {
-        return this.listFilesSuffix(path, suffix, child, false);
-    }
-
-    @Override
-    public List<SftpFile> listFilesSuffix(String path, String suffix, boolean child, boolean dir) {
-        return this.doListFiles(path, SftpFileAttributeFilter.suffix(suffix), child, dir);
-    }
-
-    @Override
-    public List<SftpFile> listFilesMatch(String path, String match) {
-        return this.listFilesMatch(path, match, false, false);
-    }
-
-    @Override
-    public List<SftpFile> listFilesMatch(String path, String match, boolean child) {
-        return this.listFilesMatch(path, match, child, false);
-    }
-
-    @Override
-    public List<SftpFile> listFilesMatch(String path, String match, boolean child, boolean dir) {
-        return this.doListFiles(path, SftpFileAttributeFilter.match(match), child, dir);
-    }
-
-    @Override
-    public List<SftpFile> listFilesPattern(String path, Pattern pattern) {
-        return this.listFilesPattern(path, pattern, false, false);
-    }
-
-    @Override
-    public List<SftpFile> listFilesPattern(String path, Pattern pattern, boolean child) {
-        return this.listFilesPattern(path, pattern, child, false);
-    }
-
-    @Override
-    public List<SftpFile> listFilesPattern(String path, Pattern pattern, boolean child, boolean dir) {
-        return this.doListFiles(path, SftpFileAttributeFilter.pattern(pattern), child, dir);
-    }
-
-    @Override
-    public List<SftpFile> listFilesFilter(String path, SftpFileAttributeFilter filter) {
-        return this.listFilesFilter(path, filter, false, false);
-    }
-
-    @Override
-    public List<SftpFile> listFilesFilter(String path, SftpFileAttributeFilter filter, boolean child) {
-        return this.listFilesFilter(path, filter, child, false);
-    }
-
-    @Override
-    public List<SftpFile> listFilesFilter(String path, SftpFileAttributeFilter filter, boolean child, boolean dir) {
+    public List<SftpFile> listFilesFilter(String path, FileFilter filter, boolean child, boolean dir) {
         return this.doListFiles(path, filter, child, dir);
     }
 
@@ -453,7 +318,7 @@ public abstract class BaseSftpExecutor implements ISftpExecutor {
      * @param path     path
      * @param creative 创建器
      */
-    protected void doMakeDirs(String path, Consumer<String> creative) {
+    protected void doMakeDir(String path, Consumer<String> creative) {
         SftpFile file = this.getFile(path, false);
         if (file != null && file.isDirectory()) {
             return;
@@ -522,15 +387,15 @@ public abstract class BaseSftpExecutor implements ISftpExecutor {
      * @param dir    是否添加文件夹
      * @return files
      */
-    private List<SftpFile> doListFiles(String path, SftpFileAttributeFilter filter, boolean child, boolean dir) {
+    private List<SftpFile> doListFiles(String path, FileFilter filter, boolean child, boolean dir) {
         List<SftpFile> list = new ArrayList<>();
         try {
-            List<SftpFile> ls = this.ll(path);
+            List<SftpFile> ls = this.list(path);
             for (SftpFile l : ls) {
                 String fn = l.getName();
                 boolean isDir = l.isDirectory();
                 if (!isDir || dir) {
-                    if (filter.accept(l)) {
+                    if (filter.test(l)) {
                         list.add(l);
                     }
                 }

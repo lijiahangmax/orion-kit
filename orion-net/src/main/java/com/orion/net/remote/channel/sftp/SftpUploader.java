@@ -4,8 +4,8 @@ import com.orion.lang.constant.Const;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Valid;
 import com.orion.lang.utils.io.Streams;
-import com.orion.net.base.file.sftp.SftpFile;
-import com.orion.net.base.file.transfer.BaseFileUploader;
+import com.orion.net.base.sftp.SftpFile;
+import com.orion.net.base.sftp.transfer.BaseFileUploader;
 
 import java.io.File;
 import java.io.IOException;

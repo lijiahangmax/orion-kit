@@ -6,9 +6,10 @@ import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
 import com.orion.lang.utils.time.Dates;
-import com.orion.net.base.file.sftp.SftpFile;
-import com.orion.net.base.file.transfer.IFileDownloader;
-import com.orion.net.base.file.transfer.IFileUploader;
+import com.orion.net.base.sftp.FileFilter;
+import com.orion.net.base.sftp.SftpFile;
+import com.orion.net.base.sftp.transfer.IFileDownloader;
+import com.orion.net.base.sftp.transfer.IFileUploader;
 import com.orion.net.remote.connection.sftp.SftpExecutor;
 import org.junit.After;
 import org.junit.Before;
@@ -75,15 +76,15 @@ public class SftpTests {
         String path = "/root/test/1.txt";
         e.touch(path);
         System.out.println(JSON.toJSONString(e.getFile(path)));
-        e.chmod(path, 111);
+        e.changeMode(path, 111);
         System.out.println(JSON.toJSONString(e.getFile(path)));
-        e.chgrp(path, 1);
+        e.changeGroup(path, 1);
         System.out.println(JSON.toJSONString(e.getFile(path)));
-        e.chgrp(path, 2);
+        e.changeGroup(path, 2);
         System.out.println(JSON.toJSONString(e.getFile(path)));
-        e.chown(path, 1);
+        e.changeOwner(path, 1);
         System.out.println(JSON.toJSONString(e.getFile(path)));
-        e.chown(path, 2);
+        e.changeOwner(path, 2);
         System.out.println(JSON.toJSONString(e.getFile(path)));
     }
 
@@ -125,9 +126,9 @@ public class SftpTests {
 
     @Test
     public void testMkdir() {
-        e.mkdirs("/root/test22/t/4/5");
-        e.mkdirs("/root/test22/t/4/5");
-        e.mkdir("/root/test22/t/4/6");
+        e.makeDirectories("/root/test22/t/4/5");
+        e.makeDirectories("/root/test22/t/4/5");
+        e.makeDirectory("/root/test22/t/4/6");
     }
 
     @Test
@@ -137,7 +138,7 @@ public class SftpTests {
         e.touch("/root/test2x/2.txt");
         e.removeFile("/root/test1x/1.txt");
         e.removeDir("/root/test1x");
-        e.rm("/root/test2x");
+        e.remove("/root/test2x");
     }
 
     @Test
@@ -147,9 +148,9 @@ public class SftpTests {
         String path3 = "/root/test2x/1/2/3/4/5/3.txt";
         e.touch(path1);
         System.out.println(JSON.toJSONString(e.getFile(path1)));
-        e.mv(path1, path2);
+        e.move(path1, path2);
         System.out.println(JSON.toJSONString(e.getFile(path2)));
-        e.mv(path2, "3.txt");
+        e.move(path2, "3.txt");
         System.out.println(JSON.toJSONString(e.getFile(path3)));
     }
 
@@ -169,15 +170,15 @@ public class SftpTests {
 
     @Test
     public void testList() {
-        System.out.println(e.ll("/root"));
+        System.out.println(e.list("/root"));
         System.out.println("---------");
         System.out.println(e.listFiles("/root", false));
         System.out.println("---------");
-        System.out.println(e.listFilesSuffix("/root", ".txt", false));
+        System.out.println(e.listFilesFilter("/root", FileFilter.suffix(".txt"), false));
         System.out.println("---------");
-        System.out.println(e.listFilesMatch("/root", "tmp", false));
+        System.out.println(e.listFilesFilter("/root", FileFilter.contains("tmp"), false));
         System.out.println("---------");
-        System.out.println(e.listFilesPattern("/root", Pattern.compile(".*\\.txt"), false));
+        System.out.println(e.listFilesFilter("/root", FileFilter.matches(Pattern.compile(".*\\.txt")), false));
         System.out.println("---------");
         System.out.println(e.listFilesFilter("/root", s -> s.getSize() > 100000, false));
         System.out.println("---------");

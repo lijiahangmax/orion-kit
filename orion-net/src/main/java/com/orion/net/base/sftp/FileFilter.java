@@ -1,7 +1,8 @@
-package com.orion.net.base.file.sftp;
+package com.orion.net.base.sftp;
 
 import com.orion.lang.utils.regexp.Matches;
 
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 /**
@@ -12,33 +13,25 @@ import java.util.regex.Pattern;
  * @since 2020/10/11 22:35
  */
 @FunctionalInterface
-public interface SftpFileAttributeFilter {
-
-    /**
-     * accept
-     *
-     * @param attr 文件属性
-     * @return 是否可用
-     */
-    boolean accept(SftpFile attr);
+public interface FileFilter extends Predicate<SftpFile> {
 
     /**
      * 后缀过滤器
      *
      * @param suffix 后缀
-     * @return SftpFileAttributeFilter
+     * @return filter
      */
-    static SftpFileAttributeFilter suffix(String suffix) {
+    static FileFilter suffix(String suffix) {
         return a -> a.getName().toLowerCase().endsWith(suffix.toLowerCase());
     }
 
     /**
-     * 文件名过滤器
+     * 包含过滤器
      *
      * @param name 文件名
-     * @return SftpFileAttributeFilter
+     * @return filter
      */
-    static SftpFileAttributeFilter match(String name) {
+    static FileFilter contains(String name) {
         return a -> a.getName().toLowerCase().contains(name.toLowerCase());
     }
 
@@ -46,9 +39,9 @@ public interface SftpFileAttributeFilter {
      * 正则过滤器
      *
      * @param pattern pattern
-     * @return SftpFileAttributeFilter
+     * @return filter
      */
-    static SftpFileAttributeFilter pattern(Pattern pattern) {
+    static FileFilter matches(Pattern pattern) {
         return a -> Matches.test(a.getName(), pattern);
     }
 

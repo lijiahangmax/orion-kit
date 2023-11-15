@@ -1,4 +1,4 @@
-package com.orion.net.base.file.sftp;
+package com.orion.net.base.sftp;
 
 import com.orion.lang.utils.Strings;
 

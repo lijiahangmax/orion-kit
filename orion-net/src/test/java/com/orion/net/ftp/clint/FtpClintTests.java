@@ -6,8 +6,9 @@ import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
 import com.orion.lang.utils.time.Dates;
-import com.orion.net.base.file.transfer.IFileDownloader;
-import com.orion.net.base.file.transfer.IFileUploader;
+import com.orion.net.base.sftp.transfer.IFileDownloader;
+import com.orion.net.base.sftp.transfer.IFileUploader;
+import com.orion.net.ftp.client.FileFilter;
 import com.orion.net.ftp.client.config.FtpConfig;
 import com.orion.net.ftp.client.instance.IFtpInstance;
 import com.orion.net.ftp.client.pool.FtpClientFactory;
@@ -77,11 +78,11 @@ public class FtpClintTests {
 
     @Test
     public void testMkdir() {
-        e.mkdirs("/root/test22/t/4/5");
-        e.mkdirs("/root/test22/t/4/5");
-        e.mkdirs("/root/test22/t/4/6");
-        e.mkdirs("/root/test22/t/4/7");
-        e.mkdirs("/root/test22/t/4/8");
+        e.makeDirectories("/root/test22/t/4/5");
+        e.makeDirectories("/root/test22/t/4/5");
+        e.makeDirectories("/root/test22/t/4/6");
+        e.makeDirectories("/root/test22/t/4/7");
+        e.makeDirectories("/root/test22/t/4/8");
     }
 
     @Test
@@ -103,11 +104,11 @@ public class FtpClintTests {
         String path4 = "/root/4.txt";
         e.touch(path1);
         System.out.println(JSON.toJSONString(e.getFile(path1)));
-        e.mv(path1, path2);
+        e.move(path1, path2);
         System.out.println(JSON.toJSONString(e.getFile(path2)));
-        e.mv(path2, "3.txt");
+        e.move(path2, "3.txt");
         System.out.println(JSON.toJSONString(e.getFile(path3)));
-        e.mv(path3, "../../4.txt");
+        e.move(path3, "../../4.txt");
         System.out.println(JSON.toJSONString(e.getFile(path4)));
     }
 
@@ -115,11 +116,11 @@ public class FtpClintTests {
     public void testList() {
         System.out.println(e.listFiles("/root", false));
         System.out.println("---------");
-        System.out.println(e.listFilesSuffix("/root", ".txt", false));
+        System.out.println(e.listFilesFilter("/root", FileFilter.suffix(".txt"), false));
         System.out.println("---------");
-        System.out.println(e.listFilesMatch("/root", "4.", false));
+        System.out.println(e.listFilesFilter("/root", FileFilter.contains("4."), false));
         System.out.println("---------");
-        System.out.println(e.listFilesPattern("/root", Pattern.compile(".*\\.txt"), false));
+        System.out.println(e.listFilesFilter("/root", FileFilter.matches(Pattern.compile(".*\\.txt")), false));
         System.out.println("---------");
         System.out.println(e.listFilesFilter("/root", s -> s.getSize() > 20, false));
         System.out.println("---------");
