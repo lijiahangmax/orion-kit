@@ -143,7 +143,7 @@ public class FtpInstance extends BaseFtpInstance {
     }
 
     @Override
-    public void rm(String file) {
+    public void remove(String file) {
         FtpFile ftpFile = this.getFile(file);
         if (ftpFile == null) {
             return;
@@ -245,28 +245,17 @@ public class FtpInstance extends BaseFtpInstance {
 
     // -------------------- stream --------------------
 
-    @Override
-    public InputStream openInputStream(String file) throws IOException {
-        try {
-            return client.retrieveFileStream(this.serverCharset(config.getRemoteRootDir() + file));
-        } catch (Exception e) {
-            throw Exceptions.io("cannot get file input stream " + file, e);
-        }
-    }
-
+    // fixme test
     @Override
     public InputStream openInputStream(String file, long skip) throws IOException {
         try {
             client.setRestartOffset(skip);
-            return this.openInputStream(file);
+            return client.retrieveFileStream(this.serverCharset(config.getRemoteRootDir() + file));
+        } catch (Exception e) {
+            throw Exceptions.io("cannot get file input stream " + file, e);
         } finally {
             client.setRestartOffset(0);
         }
-    }
-
-    @Override
-    public OutputStream openOutputStream(String file) throws IOException {
-        return this.openOutputStream(file, false);
     }
 
     @Override
@@ -280,36 +269,6 @@ public class FtpInstance extends BaseFtpInstance {
             }
         } catch (Exception e) {
             throw Exceptions.io("cannot get file out stream " + file, e);
-        }
-    }
-
-    @Override
-    public void readFromFile(String file, OutputStream out) throws IOException {
-        this.makeDirectories(Files1.getParentPath(file));
-        try {
-            client.retrieveFile(this.serverCharset(config.getRemoteRootDir() + file), out);
-        } catch (Exception e) {
-            throw Exceptions.io("cannot write to stream " + file, e);
-        }
-    }
-
-    @Override
-    public void appendToFile(String file, InputStream in) throws IOException {
-        this.makeDirectories(Files1.getParentPath(file));
-        try {
-            client.appendFile(this.serverCharset(config.getRemoteRootDir() + file), in);
-        } catch (Exception e) {
-            throw Exceptions.io("cannot write to stream " + file, e);
-        }
-    }
-
-    @Override
-    public void writeToFile(String file, InputStream in) throws IOException {
-        this.makeDirectories(Files1.getParentPath(file));
-        try {
-            client.storeFile(this.serverCharset(config.getRemoteRootDir() + file), in);
-        } catch (Exception e) {
-            throw Exceptions.io("cannot write to stream " + file, e);
         }
     }
 
@@ -428,18 +387,18 @@ public class FtpInstance extends BaseFtpInstance {
     // -------------------- write --------------------
 
     @Override
-    protected void doWrite(String path, InputStream in, StreamEntry entry, List<String> lines) throws IOException {
-        this.write(path, in, entry, lines, false);
+    protected void doWrite(String path, InputStream in, StreamEntry entry) throws IOException {
+        this.write(path, in, entry, false);
     }
 
     // -------------------- append --------------------
 
     @Override
-    protected void doAppend(String path, InputStream in, StreamEntry entry, List<String> lines) throws IOException {
-        this.write(path, in, entry, lines, true);
+    protected void doAppend(String path, InputStream in, StreamEntry entry) throws IOException {
+        this.write(path, in, entry, true);
     }
 
-    private void write(String path, InputStream in, StreamEntry entry, List<String> lines, boolean append) throws IOException {
+    private void write(String path, InputStream in, StreamEntry entry, boolean append) throws IOException {
         OutputStream out = null;
         try {
             out = this.openOutputStream(path, append);
@@ -451,10 +410,6 @@ public class FtpInstance extends BaseFtpInstance {
                 }
             } else if (entry != null) {
                 out.write(entry.getBytes(), entry.getOff(), entry.getLen());
-            } else if (lines != null) {
-                for (String line : lines) {
-                    out.write(Strings.bytes(line + Const.LF));
-                }
             }
             out.flush();
         } finally {

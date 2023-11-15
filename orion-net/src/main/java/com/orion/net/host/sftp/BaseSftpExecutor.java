@@ -97,7 +97,6 @@ public abstract class BaseSftpExecutor implements ISftpExecutor {
 
     @Override
     public long transfer(String path, String file, long skip) throws IOException {
-        Files1.touch(file);
         return this.doTransfer(path, Files1.openOutputStreamFast(file), skip, -1, true);
     }
 
@@ -163,7 +162,6 @@ public abstract class BaseSftpExecutor implements ISftpExecutor {
 
     @Override
     public void downloadFile(String remoteFile, String localFile) throws IOException {
-        Files1.touch(localFile);
         this.downloadFile(remoteFile, Files1.openOutputStreamFast(localFile), true);
     }
 

@@ -1,12 +1,10 @@
 package com.orion.lang.utils.io;
 
-import com.orion.lang.constant.Const;
 import com.orion.lang.utils.Strings;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
-import java.util.List;
 
 /**
  * 输出流工具类
@@ -76,38 +74,6 @@ public class StreamWriters {
      */
     public static void write(Writer writer, String str) throws IOException {
         writer.write(str);
-    }
-
-    public static void writeLine(Writer writer, String line) throws IOException {
-        writeLine(writer, line, Const.LF);
-    }
-
-    /**
-     * 写入一行
-     *
-     * @param writer        writer
-     * @param line          line
-     * @param lineSeparator 行分隔符
-     */
-    public static void writeLine(Writer writer, String line, String lineSeparator) throws IOException {
-        writer.write(line + lineSeparator);
-    }
-
-    public static void writeLines(Writer writer, List<String> lines) throws IOException {
-        writeLines(writer, lines, Const.LF);
-    }
-
-    /**
-     * 写入多行
-     *
-     * @param writer        writer
-     * @param lines         lines
-     * @param lineSeparator 行分隔符
-     */
-    public static void writeLines(Writer writer, List<String> lines, String lineSeparator) throws IOException {
-        for (String line : lines) {
-            writer.write(line + lineSeparator);
-        }
     }
 
 }

@@ -93,7 +93,7 @@ public class FtpClintTests {
         e.touch("/root/test2x/d/1.txt");
         e.removeFile("/root/test2x/1.txt");
         e.removeDir("/root/test1x");
-        e.rm("/root/test2x");
+        e.remove("/root/test2x");
     }
 
     @Test
@@ -233,12 +233,12 @@ public class FtpClintTests {
     public void testWriteLine() throws IOException {
         String path = "/root/write/1.txt";
 
-        e.writeLine(path, "111");
+        e.write(path, "111");
         e.transfer(path, System.out);
         Threads.sleep(500);
 
         System.out.println("----");
-        e.writeLines(path, Lists.of("111", "我是", "333", "444"));
+        e.write(path, String.join("\n", Lists.of("111", "我是", "333", "444")));
         e.transfer(path, System.out);
         Threads.sleep(500);
     }
@@ -268,12 +268,13 @@ public class FtpClintTests {
         String path = "/root/write/1.txt";
         e.truncate(path);
 
-        e.appendLine(path, "111");
+        e.append(path, "111");
         e.transfer(path, System.out);
         Threads.sleep(500);
 
         System.out.println("----");
-        e.appendLines(path, Lists.of("111", "我是", "333", "444"));
+        e.append(path, String.join("\n", Lists.of("111", "我是", "333", "444")));
+
         e.transfer(path, System.out);
         Threads.sleep(500);
     }

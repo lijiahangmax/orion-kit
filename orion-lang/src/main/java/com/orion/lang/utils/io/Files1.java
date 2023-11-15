@@ -1414,6 +1414,7 @@ public class Files1 {
                 }
             }
         }
+        // fixme 是不是会报错来着 用创建吗
         if (append) {
             return new FileOutputStream(file, true);
         } else {
@@ -1641,6 +1642,7 @@ public class Files1 {
             if (parent != null && !Files.exists(parent)) {
                 Files.createDirectories(parent);
             }
+            // fixme 是不是会报错来着 用创建吗
             if (append) {
                 Files.createFile(file);
             }
