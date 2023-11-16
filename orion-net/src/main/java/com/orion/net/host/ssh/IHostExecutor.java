@@ -8,7 +8,6 @@ import com.orion.lang.utils.Strings;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 
 /**
@@ -18,14 +17,15 @@ import java.util.function.Consumer;
  * @version 1.0.0
  * @since 2022/5/17 14:32
  */
-public interface IHostExecutor extends Executable, SafeCloseable {
+public interface IHostExecutor extends Executable, Runnable, SafeCloseable {
 
     /**
-     * 设置读取线程池
-     *
-     * @param scheduler pool
+     * 执行任务 线程方式
      */
-    void scheduler(ExecutorService scheduler);
+    @Override
+    default void run() {
+        this.exec();
+    }
 
     /**
      * 异步完成回调
@@ -48,6 +48,26 @@ public interface IHostExecutor extends Executable, SafeCloseable {
      * @param streamHandler 标准输入流处理器
      */
     void streamHandler(Consumer<InputStream> streamHandler);
+
+    /**
+     * 设置环境变量
+     * 这里只支持设置 /etc/ssh/sshd_config AcceptEnv 的环境变量
+     * 否则只能使用 export LANG="en_US"; 来设置
+     *
+     * @param key   key
+     * @param value value
+     */
+    void env(String key, String value);
+
+    /**
+     * 设置环境变量
+     * 这里只支持设置 /etc/ssh/sshd_config AcceptEnv 的环境变量
+     * 否则只能使用 export LANG="en_US"; 来设置
+     *
+     * @param key   key
+     * @param value value
+     */
+    void env(byte[] key, byte[] value);
 
     /**
      * 写入命令
@@ -137,13 +157,6 @@ public interface IHostExecutor extends Executable, SafeCloseable {
      * @return 标准输入流
      */
     OutputStream getOutputStream();
-
-    /**
-     * 是否为执行中
-     *
-     * @return isRun
-     */
-    boolean isRun();
 
     /**
      * 是否执行完成

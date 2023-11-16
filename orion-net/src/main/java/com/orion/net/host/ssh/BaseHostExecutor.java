@@ -7,7 +7,6 @@ import com.orion.lang.utils.io.Streams;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 
 /**
@@ -42,22 +41,12 @@ public abstract class BaseHostExecutor implements IHostExecutor {
     /**
      * 是否已运行
      */
-    protected volatile boolean run;
+    protected boolean run;
 
     /**
      * 是否执行完毕
      */
     protected volatile boolean done;
-
-    /**
-     * 调度线程池
-     */
-    protected ExecutorService scheduler;
-
-    @Override
-    public void scheduler(ExecutorService scheduler) {
-        this.scheduler = scheduler;
-    }
 
     @Override
     public void callback(Runnable callback) {
@@ -86,15 +75,15 @@ public abstract class BaseHostExecutor implements IHostExecutor {
         }
     }
 
+    /**
+     * 监听 标准输出/错误输出
+     */
+    protected abstract void listenerOutput();
+
     @Override
     public void close() {
         Streams.close(inputStream);
         Streams.close(outputStream);
-    }
-
-    @Override
-    public boolean isRun() {
-        return run;
     }
 
     @Override

@@ -36,7 +36,7 @@ public class Lambdas {
             method.setAccessible(true);
             return (SerializedLambda) method.invoke(serial);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw Exceptions.runtime(e);
         }
     }
 

@@ -65,6 +65,16 @@ public class ShellExecutor extends BaseShellExecutor implements HostConnector {
     }
 
     @Override
+    public void env(byte[] key, byte[] value) {
+        this.getChannel().setEnv(key, value);
+    }
+
+    @Override
+    public void env(String key, String value) {
+        channel.setEnv(key, value);
+    }
+
+    @Override
     public void exec() {
         if (streamHandler == null) {
             throw Exceptions.runtime("shell std output stream handler is null");
@@ -76,8 +86,8 @@ public class ShellExecutor extends BaseShellExecutor implements HostConnector {
             throw Exceptions.runtime("shell executor can only be executed once");
         }
         this.run = true;
-        // read standard output
-        super.listenerStdout();
+        // 监听输出流
+        super.listenerOutput();
     }
 
     @Override

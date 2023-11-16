@@ -1,6 +1,9 @@
 package com.orion.net.host.ssh.command;
 
+import com.orion.lang.support.timeout.TimeoutChecker;
+import com.orion.lang.support.timeout.TimeoutEndpoint;
 import com.orion.net.host.ssh.ExitCode;
+import com.orion.net.host.ssh.IHostExecutor;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,17 +18,12 @@ import java.util.function.Consumer;
  * @version 1.0.0
  * @since 2022/5/17 15:29
  */
-public interface ICommandExecutor {
+public interface ICommandExecutor extends IHostExecutor, TimeoutEndpoint {
 
     /**
      * 合并标准输出流和错误输出流
      */
     void merge();
-
-    /**
-     * 同步获取输出
-     */
-    void sync();
 
     /**
      * 是否使用伪终端
@@ -56,24 +54,31 @@ public interface ICommandExecutor {
      */
     void transferError(OutputStream out) throws IOException;
 
-    // FIXME 实现
+    /**
+     * 发送信号量
+     *
+     * @param signal 信号
+     */
+    void sendSignal(String signal);
 
     /**
      * 设置超时时间
      *
      * @param timeout timeout
+     * @param checker checker
      */
-    default void timeout(long timeout) {
-        this.timeout(timeout, TimeUnit.MILLISECONDS);
-    }
+    void timeout(long timeout, TimeoutChecker checker);
 
     /**
      * 设置超时时间
      *
      * @param timeout timeout
      * @param unit    unit
+     * @param checker checker
      */
-    void timeout(long timeout, TimeUnit unit);
+    default void timeout(long timeout, TimeUnit unit, TimeoutChecker checker) {
+        this.timeout(unit.toMillis(timeout), checker);
+    }
 
     /**
      * 获取退出码
@@ -97,6 +102,13 @@ public interface ICommandExecutor {
      * @return 是否合并
      */
     boolean isMerge();
+
+    /**
+     * 是否超时
+     *
+     * @return 是否超时
+     */
+    boolean isTimeout();
 
     /**
      * 获取执行的命令

@@ -75,11 +75,10 @@ public class CommandExecutors {
      * @return result
      * @throws IOException IOException
      */
-    public static byte[] getCommandOutputResult(BaseCommandExecutor executor) throws IOException {
+    public static byte[] getCommandOutputResult(ICommandExecutor executor) throws IOException {
         Valid.notNull(executor, "command executor is null");
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
-            executor.sync();
             executor.transfer(out);
             if (executor instanceof HostConnector) {
                 ((HostConnector) executor).connect();
@@ -97,9 +96,8 @@ public class CommandExecutors {
      * @param executor executor
      * @throws IOException IOException
      */
-    public static void syncExecCommand(BaseCommandExecutor executor, OutputStream transfer) throws IOException {
+    public static void syncExecCommand(ICommandExecutor executor, OutputStream transfer) throws IOException {
         executor.merge();
-        executor.sync();
         executor.transfer(transfer);
         if (executor instanceof HostConnector) {
             ((HostConnector) executor).connect();

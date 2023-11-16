@@ -1,6 +1,7 @@
 package com.orion.lang.utils.io;
 
 import com.orion.lang.constant.Letters;
+import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 
 import java.nio.ByteBuffer;
@@ -159,7 +160,7 @@ public class Buffers {
             if (charIndex - primitivePosition > maxLength) {
                 // 查找到尽头未找到 还原位置
                 buffer.position(primitivePosition);
-                throw new IndexOutOfBoundsException(Strings.format("position is out of maxLength: {}", maxLength));
+                throw Exceptions.index(Strings.format("position is out of maxLength: {}", maxLength));
             }
         }
         // 查找到尽头未找到 还原位置

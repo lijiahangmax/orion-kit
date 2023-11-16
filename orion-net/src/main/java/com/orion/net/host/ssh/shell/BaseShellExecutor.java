@@ -1,7 +1,5 @@
 package com.orion.net.host.ssh.shell;
 
-import com.orion.lang.define.thread.HookRunnable;
-import com.orion.lang.utils.Threads;
 import com.orion.net.host.ssh.BaseHostExecutor;
 import com.orion.net.host.ssh.TerminalType;
 
@@ -72,19 +70,18 @@ public abstract class BaseShellExecutor extends BaseHostExecutor implements IShe
         this.height = height;
     }
 
-    /**
-     * 监听标准输出流
-     */
-    protected void listenerStdout() {
-        Runnable runnable = new HookRunnable(() -> {
+    @Override
+    protected void listenerOutput() {
+        try {
+            // 监听输出流
             streamHandler.accept(inputStream);
-        }, () -> {
+        } finally {
+            // 回调
             this.done = true;
             if (callback != null) {
                 callback.run();
             }
-        }, true);
-        Threads.start(runnable, scheduler);
+        }
     }
 
     @Override

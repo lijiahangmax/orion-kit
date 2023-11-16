@@ -1,6 +1,7 @@
 package com.orion.net.host.ssh.command;
 
 import com.jcraft.jsch.ChannelExec;
+import com.orion.lang.constant.Const;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.net.host.HostConnector;
@@ -8,7 +9,6 @@ import com.orion.net.host.HostConnector;
 import java.io.IOException;
 import java.io.SequenceInputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 命令执行器
@@ -58,15 +58,6 @@ public class CommandExecutor extends BaseCommandExecutor implements HostConnecto
     }
 
     @Override
-    public void timeout(long timeout, TimeUnit unit) {
-
-    }
-
-    /**
-     * 发送信号量
-     *
-     * @param signal 信号
-     */
     public void sendSignal(String signal) {
         try {
             channel.sendSignal(signal);
@@ -75,22 +66,12 @@ public class CommandExecutor extends BaseCommandExecutor implements HostConnecto
         }
     }
 
-    /**
-     * 设置环境变量
-     *
-     * @param key   key
-     * @param value value
-     */
+    @Override
     public void env(byte[] key, byte[] value) {
         channel.setEnv(key, value);
     }
 
-    /**
-     * 设置环境变量
-     *
-     * @param key   key
-     * @param value value
-     */
+    @Override
     public void env(String key, String value) {
         channel.setEnv(key, value);
     }
@@ -110,8 +91,8 @@ public class CommandExecutor extends BaseCommandExecutor implements HostConnecto
         if (merge) {
             this.mergeStream = new SequenceInputStream(inputStream, errorStream);
         }
-        // read standard input & error stream
-        this.listenerStdoutAndError();
+        // 监听 标准输出 错误输出
+        this.listenerOutput();
     }
 
     @Override
@@ -141,6 +122,7 @@ public class CommandExecutor extends BaseCommandExecutor implements HostConnecto
 
     @Override
     public String toString() {
-        return command == null ? "[]" : "[" + this.getCommand() + "]";
+        return command == null ? Const.EMPTY : this.getCommand();
     }
+
 }

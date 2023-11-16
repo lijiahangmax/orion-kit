@@ -1,6 +1,7 @@
 package com.orion.net.host;
 
 import com.orion.lang.function.impl.ReaderLineConsumer;
+import com.orion.lang.support.timeout.TimeoutChecker;
 import com.orion.lang.utils.Threads;
 import com.orion.net.host.ssh.command.CommandExecutor;
 import com.orion.net.host.ssh.command.CommandExecutors;
@@ -43,7 +44,6 @@ public class CommandExecutorTests {
         e.errorStreamHandler(ReaderLineConsumer.printer());
         e.connect();
         e.exec();
-        Threads.sleep(3000);
     }
 
     @Test
@@ -59,33 +59,44 @@ public class CommandExecutorTests {
         });
         e.connect();
         e.exec();
-        Threads.sleep(3000);
     }
 
     @Test
     public void test1() throws IOException {
-        CommandExecutor executor = s.getCommandExecutor("echo $JAVA_HOME");
-
+        CommandExecutor executor = s.getCommandExecutor("echo $LC_MEASUREMENT 123 $JAVA_HOME");
+        executor.env("LC_MEASUREMENT", "xxx");
         executor.merge();
         executor.connect();
 
         System.out.println(CommandExecutors.getCommandOutputResultString(executor));
-
         System.out.println(executor.getExitCode());
         executor.close();
     }
 
     @Test
     public void test2() throws IOException {
-        CommandExecutor executor = s.getCommandExecutor("/bin/bash -c 'echo $JAVA_HOME'");
+        CommandExecutor executor = s.getCommandExecutor("echo input\n"
+                + "read -p \"enter number:\" no\n"
+                + "read -p \"enter name:\" name\n"
+                + "echo \"you have entered $no, $name\"");
+        // 执行
+        Threads.start(() -> {
+            try {
+                CommandExecutors.syncExecCommand(executor, System.out);
+                System.out.println(executor.getExitCode());
+                executor.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        // 等待连接
+        Threads.sleep(2000);
+        executor.write("1\n");
+        Threads.sleep(200);
+        executor.write("2\n");
 
-        executor.merge();
-        executor.connect();
-
-        System.out.println(CommandExecutors.getCommandOutputResultString(executor));
-
-        System.out.println(executor.getExitCode());
-        executor.close();
+        // 防止关闭
+        Threads.sleep(10000);
     }
 
     @Test
@@ -99,6 +110,28 @@ public class CommandExecutorTests {
 
         System.out.println(executor.getExitCode());
         executor.close();
+    }
+
+    @Test
+    public void timeout() throws IOException {
+        // 启动超时检测
+        TimeoutChecker checker = TimeoutChecker.create();
+        Threads.start(checker);
+
+        CommandExecutor executor = s.getCommandExecutor("top");
+        executor.timeout(3000, checker);
+        // 执行
+        CommandExecutors.syncExecCommand(executor, System.out);
+
+        System.out.println();
+        System.out.println("----------------------------------");
+        System.out.println(executor.isDone());
+        System.out.println(executor.isTimeout());
+        System.out.println("----------------------------------");
+        executor.close();
+
+        // 防止关闭
+        Threads.sleep(10000);
     }
 
 }

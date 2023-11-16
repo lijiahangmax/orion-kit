@@ -1,8 +1,8 @@
 package com.orion.net.host.ssh.command;
 
-import com.orion.lang.define.thread.HookRunnable;
 import com.orion.lang.support.Attempt;
-import com.orion.lang.utils.Threads;
+import com.orion.lang.support.timeout.TimeoutChecker;
+import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.io.Streams;
 import com.orion.net.host.ssh.BaseHostExecutor;
 
@@ -36,23 +36,33 @@ public abstract class BaseCommandExecutor extends BaseHostExecutor implements IC
     protected boolean merge;
 
     /**
-     * 是否同步获取输出
-     */
-    protected boolean sync;
-
-    /**
      * 错误输出流处理器
      */
     protected Consumer<InputStream> errorStreamHandler;
 
+    /**
+     * 超时时间 ms
+     */
+    protected long timeout;
+
+    /**
+     * 超时检测器
+     */
+    protected TimeoutChecker checker;
+
+    /**
+     * 开始时间
+     */
+    protected long startTime;
+
+    /**
+     * 是否已超时
+     */
+    protected volatile boolean expired;
+
     @Override
     public void merge() {
         this.merge = true;
-    }
-
-    @Override
-    public void sync() {
-        this.sync = true;
     }
 
     @Override
@@ -67,12 +77,21 @@ public abstract class BaseCommandExecutor extends BaseHostExecutor implements IC
         });
     }
 
-    /**
-     * 监听标准输出流和错误输出流
-     */
-    protected void listenerStdoutAndError() {
-        // 监听读取
-        Runnable runnable = new HookRunnable(() -> {
+    @Override
+    public void timeout(long timeout, TimeoutChecker checker) {
+        this.timeout = timeout;
+        this.checker = checker;
+    }
+
+    @Override
+    protected void listenerOutput() {
+        this.startTime = System.currentTimeMillis();
+        // 检测超时
+        if (timeout > 0 && checker != null) {
+            checker.addTask(this);
+        }
+        try {
+            // 监听读取
             if (merge) {
                 streamHandler.accept(mergeStream);
             } else {
@@ -81,19 +100,33 @@ public abstract class BaseCommandExecutor extends BaseHostExecutor implements IC
             if (errorStreamHandler != null && !merge) {
                 errorStreamHandler.accept(errorStream);
             }
-        }, () -> {
+        } catch (Exception e) {
+            // 超时异常
+            if (expired) {
+                throw Exceptions.timeout(e);
+            }
+            throw e;
+        } finally {
             this.done = true;
             if (callback != null) {
                 callback.run();
             }
-        }, true);
-        if (sync) {
-            // 同步执行
-            runnable.run();
-        } else {
-            // 异步执行
-            Threads.start(runnable, scheduler);
         }
+    }
+
+    @Override
+    public boolean checkTimeout() {
+        if (timeout == 0) {
+            return false;
+        }
+        // 未超时
+        if (System.currentTimeMillis() - startTime < timeout) {
+            return false;
+        }
+        // 超时 直接断开连接
+        this.expired = true;
+        Streams.close(this);
+        return false;
     }
 
     @Override
@@ -101,6 +134,11 @@ public abstract class BaseCommandExecutor extends BaseHostExecutor implements IC
         super.close();
         Streams.close(errorStream);
         Streams.close(mergeStream);
+    }
+
+    @Override
+    public boolean isTimeout() {
+        return expired;
     }
 
     @Override
