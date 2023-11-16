@@ -173,6 +173,9 @@ public abstract class BaseSftpExecutor implements ISftpExecutor {
     @Override
     public void downloadDir(String remoteDir, String localDir, boolean child) throws IOException {
         remoteDir = Files1.getPath(remoteDir);
+        if (this.getFile(remoteDir) == null) {
+            throw Exceptions.sftp("not found file " + remoteDir);
+        }
         if (!child) {
             List<SftpFile> list = this.listFiles(remoteDir, false);
             for (SftpFile s : list) {

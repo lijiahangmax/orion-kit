@@ -13,7 +13,10 @@ import com.orion.net.host.HostConnector;
 import com.orion.net.host.sftp.transfer.SftpDownloader;
 import com.orion.net.host.sftp.transfer.SftpUploader;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -53,6 +56,15 @@ public class SftpExecutor extends BaseSftpExecutor implements HostConnector {
             this.charset = charset;
         } catch (Exception e) {
             throw Exceptions.sftp("set sftp charset error", e);
+        }
+    }
+
+    @Override
+    public String getHome() {
+        try {
+            return channel.getHome();
+        } catch (SftpException e) {
+            throw Exceptions.sftp(e);
         }
     }
 
@@ -245,48 +257,18 @@ public class SftpExecutor extends BaseSftpExecutor implements HostConnector {
         }
     }
 
-    /**
-     * 创建软连接
-     * <p>
-     * 原始文件不存在 则会报错
-     * 连接文件存在 则会报错
-     *
-     * @param source source
-     * @param target target
-     */
-    public void touchHardLink(String source, String target) {
-        this.touchLink(source, target, true);
-    }
-
-    /**
-     * 创建软连接文件
-     * <p>
-     * 原始文件不存在 则会报错
-     * 连接文件存在 则会报错
-     *
-     * @param source source
-     * @param target target
-     */
-    public void touchSymLink(String source, String target) {
-        this.touchLink(source, target, false);
+    @Override
+    public void hardLink(String source, String target) {
+        this.link(source, target, true);
     }
 
     @Override
-    public void touchLink(String source, String target) {
-        this.touchLink(source, target, false);
+    public void symLink(String source, String target) {
+        this.link(source, target, false);
     }
 
-    /**
-     * 创建连接文件
-     * <p>
-     * 原始文件不存在 则会报错
-     * 连接文件存在 则会报错
-     *
-     * @param source source
-     * @param target target
-     * @param hard   是否为硬链接
-     */
-    public void touchLink(String source, String target, boolean hard) {
+    @Override
+    public void link(String source, String target, boolean hard) {
         try {
             // 检查是否需要创建目标文件目录
             if (!this.isSameParentPath(source, target)) {
@@ -311,20 +293,9 @@ public class SftpExecutor extends BaseSftpExecutor implements HostConnector {
         }
     }
 
-    // -------------------- stream --------------------
+    // -------------------- open --------------------
 
-    public InputStream openInputStream(String path) throws IOException {
-        return this.openInputStream(path, 0L);
-    }
-
-    /**
-     * 打开存在文件的输入流
-     *
-     * @param path 文件路径
-     * @param skip 跳过的字节
-     * @return InputStream
-     * @throws IOException IOException
-     */
+    @Override
     public InputStream openInputStream(String path, long skip) throws IOException {
         try {
             return channel.get(path, null, skip);
@@ -333,12 +304,13 @@ public class SftpExecutor extends BaseSftpExecutor implements HostConnector {
         }
     }
 
-    public OutputStream openOutputStreamWriter(String path) throws IOException {
-        return this.openOutputStream(path, 0);
-    }
-
-    public OutputStream openOutputStreamAppend(String path) throws IOException {
-        return this.openOutputStream(path, 2);
+    @Override
+    public OutputStream openOutputStream(String path, boolean append) throws IOException {
+        if (append) {
+            return this.openOutputStream(path, 2);
+        } else {
+            return this.openOutputStream(path, 0);
+        }
     }
 
     /**
@@ -370,76 +342,6 @@ public class SftpExecutor extends BaseSftpExecutor implements HostConnector {
             return in.read(bs, offset, len);
         } finally {
             Streams.close(in);
-        }
-    }
-
-    public String readLine(String path) throws IOException {
-        return this.readLine(path, 0L);
-    }
-
-    /**
-     * 读取一行
-     *
-     * @param path path
-     * @param skip skip
-     * @return line
-     * @throws IOException IOException
-     */
-    public String readLine(String path, long skip) throws IOException {
-        InputStream in = null;
-        BufferedReader reader = null;
-        try {
-            in = this.openInputStream(path, skip);
-            reader = new BufferedReader(new InputStreamReader(in, charset));
-            return reader.readLine();
-        } finally {
-            Streams.close(in);
-            Streams.close(reader);
-        }
-    }
-
-    public List<String> readLines(String path) throws IOException {
-        return this.readLines(path, 0L, 0);
-    }
-
-    public List<String> readLines(String path, long skip) throws IOException {
-        return this.readLines(path, skip, 0);
-    }
-
-    public List<String> readLines(String path, int lines) throws IOException {
-        return this.readLines(path, 0L, lines);
-    }
-
-    /**
-     * 读取多行
-     *
-     * @param path  path
-     * @param skip  skip
-     * @param lines 行数
-     * @return lines
-     * @throws IOException IOException
-     */
-    public List<String> readLines(String path, long skip, int lines) throws IOException {
-        InputStream in = null;
-        BufferedReader reader = null;
-        try {
-            in = this.openInputStream(path, skip);
-            reader = new BufferedReader(new InputStreamReader(in, charset));
-            List<String> list = new ArrayList<>();
-            String line;
-            if (lines > 0) {
-                for (int i = 0; i < lines && (line = reader.readLine()) != null; i++) {
-                    list.add(line);
-                }
-            } else {
-                while ((line = reader.readLine()) != null) {
-                    list.add(line);
-                }
-            }
-            return list;
-        } finally {
-            Streams.close(in);
-            Streams.close(reader);
         }
     }
 
@@ -574,19 +476,6 @@ public class SftpExecutor extends BaseSftpExecutor implements HostConnector {
             throw Exceptions.sftp(e);
         }
         return list;
-    }
-
-    /**
-     * 获取根目录
-     *
-     * @return 根目录
-     */
-    public String getHome() {
-        try {
-            return channel.getHome();
-        } catch (SftpException e) {
-            throw Exceptions.sftp(e);
-        }
     }
 
     @Override

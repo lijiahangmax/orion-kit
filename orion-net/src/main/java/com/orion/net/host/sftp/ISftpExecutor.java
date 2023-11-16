@@ -36,6 +36,13 @@ public interface ISftpExecutor extends SafeCloseable {
     void charset(String charset);
 
     /**
+     * 获取根目录
+     *
+     * @return 根目录
+     */
+    String getHome();
+
+    /**
      * 检查文件是否存在
      * <p>
      * 文件不存在不会报错
@@ -188,6 +195,8 @@ public interface ISftpExecutor extends SafeCloseable {
 
     /**
      * 递归删除文件或文件夹
+     * <p>
+     * 文件不存在 不会报错
      *
      * @param path 路径
      */
@@ -231,15 +240,42 @@ public interface ISftpExecutor extends SafeCloseable {
     void truncate(String path);
 
     /**
+     * 创建硬连接
+     * <p>
+     * 原始文件不存在 则会报错
+     * 连接文件存在 则会报错
+     *
+     * @param source source
+     * @param target target
+     */
+    default void hardLink(String source, String target) {
+        this.link(source, target, true);
+    }
+
+    /**
+     * 创建软连接文件
+     * <p>
+     * 原始文件不存在 则会报错
+     * 连接文件存在 则会报错
+     *
+     * @param source source
+     * @param target target
+     */
+    default void symLink(String source, String target) {
+        this.link(source, target, false);
+    }
+
+    /**
      * 创建连接文件
      * <p>
      * 原始文件不存在 则会报错
      * 连接文件存在 则会报错
      *
-     * @param source 原文件绝对路径
-     * @param target 连接文件绝对路径
+     * @param source source
+     * @param target target
+     * @param hard   是否为硬链接
      */
-    void touchLink(String source, String target);
+    void link(String source, String target, boolean hard);
 
     /**
      * 移动文件 / 改名
@@ -251,6 +287,58 @@ public interface ISftpExecutor extends SafeCloseable {
      * @param target 目标文件(绝对路径 相对路径) / 文件名称
      */
     void move(String source, String target);
+
+    // -------------------- open --------------------
+
+    /**
+     * 打开存在文件的输入流
+     * <p>
+     * 文件不存在会报错
+     *
+     * @param path 文件路径
+     * @return InputStream
+     * @throws IOException IOException
+     */
+    default InputStream openInputStream(String path) throws IOException {
+        return this.openInputStream(path, 0);
+    }
+
+    /**
+     * 打开存在文件的输入流
+     * <p>
+     * 文件不存在会报错
+     *
+     * @param path 文件路径
+     * @param skip 跳过的字节
+     * @return InputStream
+     * @throws IOException IOException
+     */
+    InputStream openInputStream(String path, long skip) throws IOException;
+
+    /**
+     * 打开存在文件的输出流
+     * <p>
+     * 文件不存在会创建
+     *
+     * @param path 文件路径
+     * @return OutputStream
+     * @throws IOException IOException
+     */
+    default OutputStream openOutputStream(String path) throws IOException {
+        return this.openOutputStream(path, false);
+    }
+
+    /**
+     * 打开存在文件的输出流
+     * <p>
+     * 文件不存在会创建
+     *
+     * @param path   文件路径
+     * @param append 是否为拼接
+     * @return OutputStream
+     * @throws IOException IOException
+     */
+    OutputStream openOutputStream(String path, boolean append) throws IOException;
 
     // -------------------- read --------------------
 
@@ -630,12 +718,10 @@ public interface ISftpExecutor extends SafeCloseable {
 
     // -------------------- download --------------------
 
-    // fixme 测试注释对不对
-
     /**
      * 下载文件
      * <p>
-     * 远程文件夹不存在不会报错
+     * 远程文件不存在则会报错
      *
      * @param remoteFile 远程文件路径
      * @param localFile  本地文件路径
@@ -648,7 +734,7 @@ public interface ISftpExecutor extends SafeCloseable {
     /**
      * 下载文件
      * <p>
-     * 远程文件夹不存在不会报错
+     * 远程文件不存在则会报错
      *
      * @param remoteFile 远程文件路径
      * @param localFile  本地文件路径
@@ -658,6 +744,8 @@ public interface ISftpExecutor extends SafeCloseable {
 
     /**
      * 下载文件
+     * <p>
+     * 远程文件不存在则会报错
      *
      * @param remoteFile 远程文件路径
      * @param out        output
@@ -670,7 +758,7 @@ public interface ISftpExecutor extends SafeCloseable {
     /**
      * 下载文件
      * <p>
-     * 远程文件夹不存在不会报错
+     * 远程文件不存在则会报错
      *
      * @param remoteFile 远程文件路径
      * @param out        output
@@ -682,8 +770,7 @@ public interface ISftpExecutor extends SafeCloseable {
     /**
      * 下载文件夹 递归
      * <p>
-     * 远程文件夹不存在不会报错
-     * 远程文件夹是个文件则会报错
+     * 远程文件夹不存在/是个文件 则会报错
      *
      * @param remoteDir 远程文件夹
      * @param localDir  本地文件夹
@@ -696,8 +783,7 @@ public interface ISftpExecutor extends SafeCloseable {
     /**
      * 下载文件夹 递归
      * <p>
-     * 远程文件夹不存在不会报错
-     * 远程文件夹是个文件则会报错
+     * 远程文件夹不存在/是个文件 则会报错
      *
      * @param remoteDir 远程文件夹
      * @param localDir  本地文件夹
@@ -710,8 +796,7 @@ public interface ISftpExecutor extends SafeCloseable {
     /**
      * 下载文件夹
      * <p>
-     * 远程文件夹不存在不会报错
-     * 远程文件夹是个文件则会报错
+     * 远程文件夹不存在/是个文件 则会报错
      *
      * @param remoteDir 远程文件夹
      * @param localDir  本地文件夹
@@ -725,8 +810,7 @@ public interface ISftpExecutor extends SafeCloseable {
     /**
      * 下载文件夹
      * <p>
-     * 远程文件夹不存在不会报错
-     * 远程文件夹是个文件则会报错
+     * 远程文件夹不存在/是个文件 则会报错
      *
      * @param remoteDir 远程文件夹
      * @param localDir  本地文件夹

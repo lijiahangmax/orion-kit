@@ -4,6 +4,8 @@ import com.orion.lang.function.impl.ReaderLineConsumer;
 import com.orion.lang.utils.Threads;
 import com.orion.net.host.ssh.shell.ShellExecutor;
 
+import java.util.Scanner;
+
 /**
  * @author Jiahang Li
  * @version 1.0.0
@@ -24,7 +26,20 @@ public class ShellExecutorTests {
         e.streamHandler(ReaderLineConsumer.printer());
         e.callback(() -> System.out.println("end...."));
         e.connect(20000);
-        e.exec();
+
+        // 连接
+        Threads.start(e);
+
+        // 手动键入
+        Threads.start(() -> {
+            Scanner scanner = new Scanner(System.in);
+            while (scanner.hasNext()) {
+                e.writeLine(scanner.nextLine());
+            }
+        });
+
+        // 键入
+        Threads.sleep(1000);
         e.write("ps -ef | grep java\n");
         e.write("ps -ef | grep ssh\n");
         e.write("ping www.baidu.com\n");
@@ -36,6 +51,14 @@ public class ShellExecutorTests {
         System.out.println(e.isConnected());
         System.out.println("--------------------------");
         e.interrupt();
+
+        // 测试键入
+        Threads.sleep(2000);
+        System.out.println("------------- 测试键入 20s -------------");
+        Threads.sleep(20000);
+
+        // 关闭
+        System.out.println("--------------------------");
         e.close();
         System.out.println(e.isClosed());
         System.out.println(e.isConnected());

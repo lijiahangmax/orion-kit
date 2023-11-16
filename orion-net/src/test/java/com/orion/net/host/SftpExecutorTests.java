@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.regex.Pattern;
 
 /**
@@ -165,8 +166,8 @@ public class SftpExecutorTests {
         String path2 = "/root/test1/x/2.txt";
         String path3 = "/root/test1/x/3.txt";
         e.touch(path1);
-        e.touchHardLink(path1, path2);
-        e.touchSymLink(path1, path3);
+        e.hardLink(path1, path2);
+        e.symLink(path1, path3);
         System.out.println(JSON.toJSONString(e.getFile(path1, true)));
         System.out.println(JSON.toJSONString(e.getFile(path1, false)));
         System.out.println(JSON.toJSONString(e.getFile(path2, true)));
@@ -193,6 +194,31 @@ public class SftpExecutorTests {
         System.out.println(e.listFilesFilter("/root", s -> s.getSize() > 100000, false));
         System.out.println("---------");
         System.out.println(e.listDirs("/root", false));
+    }
+
+    @Test
+    public void testReadInit() throws IOException {
+        String path = "/root/1.txt";
+        e.write(path, "0123456789\n0123456789\n0123456789\n0123456789\n");
+    }
+
+    @Test
+    public void testStream() throws IOException {
+        Streams.lineConsumer(e.openInputStream("/root/1.txt"), System.out::println);
+        System.out.println("------");
+
+        Streams.lineConsumer(e.openInputStream("/root/1.txt", 2), System.out::println);
+        System.out.println("------");
+
+        OutputStream write = e.openOutputStream("/root/12.txt");
+        write.write("123".getBytes());
+        Streams.close(write);
+
+        OutputStream append = e.openOutputStream("/root/12.txt", true);
+        append.write("456\n".getBytes());
+        Streams.close(append);
+
+        System.out.println(Streams.toString(e.openInputStream("/root/12.txt")));
     }
 
     @Test
@@ -227,46 +253,6 @@ public class SftpExecutorTests {
     }
 
     @Test
-    public void testReadLine() throws IOException {
-        String path = "/root/1.txt";
-        System.out.println(e.readLine(path));
-        System.out.println("-----");
-
-        System.out.println(e.readLine(path, 9));
-        System.out.println("-----");
-
-        System.out.println(e.readLine(path, 10));
-        System.out.println("-----");
-
-        System.out.println(e.readLine(path, 11));
-        System.out.println("-----");
-
-        System.out.println(e.readLines(path));
-        System.out.println("-----");
-
-        System.out.println(e.readLines(path, 2));
-        System.out.println("-----");
-
-        System.out.println(e.readLines(path, 3));
-        System.out.println("-----");
-
-        System.out.println(e.readLines(path, 2L));
-        System.out.println("-----");
-
-        System.out.println(e.readLines(path, 3L));
-        System.out.println("-----");
-
-        System.out.println(e.readLines(path, 2L, 2));
-        System.out.println("-----");
-
-        System.out.println(e.readLines(path, 3L, 2));
-        System.out.println("-----");
-
-        System.out.println(e.readLines(path, 10L, 2));
-        System.out.println("-----");
-    }
-
-    @Test
     public void testTransfer() throws IOException {
         String path = "/root/1.txt";
 
@@ -284,10 +270,6 @@ public class SftpExecutorTests {
         String path = "/root/write/1.txt";
         e.truncate(path);
 
-        e.write(path, "111".getBytes());
-        e.transfer(path, System.out);
-        Threads.sleep(500);
-
         System.out.println("----");
         e.write(path, "123\n".getBytes());
         e.transfer(path, System.out);
@@ -297,12 +279,6 @@ public class SftpExecutorTests {
         e.write(path, Streams.toInputStream("123123123123\n"));
         e.transfer(path, System.out);
         Threads.sleep(500);
-    }
-
-    @Test
-    public void testWriteLine() throws IOException {
-        String path = "/root/write/1.txt";
-        e.truncate(path);
 
         e.write(path, "111");
         e.transfer(path, System.out);
@@ -311,17 +287,12 @@ public class SftpExecutorTests {
         System.out.println("----");
         e.write(path, String.join("\n", Lists.of("111", "我是", "333", "444")));
         e.transfer(path, System.out);
-        Threads.sleep(500);
     }
 
     @Test
     public void testAppend() throws IOException {
         String path = "/root/write/1.txt";
         e.truncate(path);
-
-        e.append(path, "111".getBytes());
-        e.transfer(path, System.out);
-        Threads.sleep(500);
 
         System.out.println("----");
         e.append(path, "123\n".getBytes());
@@ -332,12 +303,6 @@ public class SftpExecutorTests {
         e.append(path, Streams.toInputStream("123123123123\n"));
         e.transfer(path, System.out);
         Threads.sleep(500);
-    }
-
-    @Test
-    public void testAppendLine() throws IOException {
-        String path = "/root/write/1.txt";
-        e.truncate(path);
 
         e.append(path, "111");
         e.transfer(path, System.out);
@@ -346,24 +311,23 @@ public class SftpExecutorTests {
         System.out.println("----");
         e.append(path, String.join("\n", Lists.of("111", "我是", "333", "444")));
         e.transfer(path, System.out);
-        Threads.sleep(500);
     }
 
     @Test
     public void testUpload() throws IOException {
-        e.uploadFile("/root/test/bug.txt", "C:\\Users\\ljh15\\Desktop\\bug.txt");
-        e.uploadDir("/root/test/dir", "C:\\Users\\ljh15\\Desktop\\data\\_FastStoneCapture7.3", true);
+        e.uploadFile("/root/test/bug.txt", "C:\\Users\\lijiahang\\Desktop\\bug.txt");
+        e.uploadDir("/root/test/dir", "C:\\Users\\lijiahang\\Desktop\\terminal", true);
     }
 
     @Test
     public void testDownload() throws IOException {
-        e.downloadFile("/root/test/bug.txt", "C:\\Users\\ljh15\\Desktop\\bug1.txt");
-        e.downloadDir("/root/test/dir", "C:\\Users\\ljh15\\Desktop\\_FastStoneCapture7.3", true);
+        e.downloadFile("/root/test/bug.txt", "C:\\Users\\lijiahang\\Desktop\\bug1.txt");
+        e.downloadDir("/root/test/dir", "C:\\Users\\lijiahang\\Desktop\\terminal1", true);
     }
 
     @Test
-    public void testBigUpload() {
-        String local = "C:\\Users\\ljh15\\Desktop\\cp.zip";
+    public void testTransferUpload() {
+        String local = "C:\\Users\\lijiahang\\Desktop\\cp.zip";
         System.out.println(Files1.md5(local));
 
         IFileUploader u = e.upload("/root/test/cp.zip", local);
@@ -381,8 +345,8 @@ public class SftpExecutorTests {
     }
 
     @Test
-    public void testBigDownload() {
-        String local = "C:\\Users\\ljh15\\Desktop\\cp1.zip";
+    public void testTransferDownload() {
+        String local = "C:\\Users\\lijiahang\\Desktop\\cp1.zip";
 
         IFileDownloader u = e.download("/root/test/cp.zip", local);
         u.getProgress()

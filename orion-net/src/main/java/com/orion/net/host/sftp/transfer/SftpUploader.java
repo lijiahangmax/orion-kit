@@ -72,9 +72,9 @@ public class SftpUploader extends BaseFileUploader {
     @Override
     protected void initUpload(boolean breakPoint, long skip) throws IOException {
         if (breakPoint) {
-            this.out = executor.openOutputStreamAppend(remote);
+            this.out = executor.openOutputStream(remote, true);
         } else {
-            this.out = executor.openOutputStreamWriter(remote);
+            this.out = executor.openOutputStream(remote);
         }
     }
 

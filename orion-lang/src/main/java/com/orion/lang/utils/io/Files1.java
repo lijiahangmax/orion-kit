@@ -1392,6 +1392,7 @@ public class Files1 {
 
     /**
      * 打开文件输出流
+     * 文件不存在会自动创建
      *
      * @param file   文件
      * @param append append
@@ -1407,6 +1408,7 @@ public class Files1 {
                 throw Exceptions.io("file '" + file + "' cannot be written to");
             }
         } else {
+            // 创建父文件夹
             File parent = file.getParentFile();
             if (parent != null && !parent.exists()) {
                 if (!parent.mkdirs()) {
@@ -1414,7 +1416,6 @@ public class Files1 {
                 }
             }
         }
-        // fixme 是不是会报错来着 用创建吗
         if (append) {
             return new FileOutputStream(file, true);
         } else {
@@ -1623,6 +1624,7 @@ public class Files1 {
 
     /**
      * 打开文件输出流
+     * 文件不存在则会自动创建
      *
      * @param file   文件
      * @param append append
@@ -1638,17 +1640,14 @@ public class Files1 {
                 throw Exceptions.io("file '" + file + "' cannot be written to");
             }
         } else {
+            // 创建父文件夹
             Path parent = file.getParent();
             if (parent != null && !Files.exists(parent)) {
                 Files.createDirectories(parent);
             }
-            // fixme 是不是会报错来着 用创建吗
-            if (append) {
-                Files.createFile(file);
-            }
         }
         if (append) {
-            return Files.newOutputStream(file, StandardOpenOption.APPEND);
+            return Files.newOutputStream(file, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         } else {
             return Files.newOutputStream(file);
         }
