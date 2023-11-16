@@ -245,12 +245,15 @@ public class FtpInstance extends BaseFtpInstance {
 
     // -------------------- stream --------------------
 
-    // fixme test
     @Override
     public InputStream openInputStream(String file, long skip) throws IOException {
         try {
             client.setRestartOffset(skip);
-            return client.retrieveFileStream(this.serverCharset(config.getRemoteRootDir() + file));
+            InputStream in = client.retrieveFileStream(this.serverCharset(config.getRemoteRootDir() + file));
+            if (in == null) {
+                throw Exceptions.ftp("not found file " + file);
+            }
+            return in;
         } catch (Exception e) {
             throw Exceptions.io("cannot get file input stream " + file, e);
         } finally {
@@ -278,53 +281,8 @@ public class FtpInstance extends BaseFtpInstance {
     public int read(String file, long skip, byte[] bs, int off, int len) throws IOException {
         InputStream in = null;
         try {
-            client.setRestartOffset(skip);
-            in = this.openInputStream(file);
+            in = this.openInputStream(file, skip);
             return in.read(bs, off, len);
-        } finally {
-            Streams.close(in);
-            client.setRestartOffset(0);
-            if (in != null) {
-                client.completePendingCommand();
-            }
-        }
-    }
-
-    @Override
-    public String readLine(String file, long skip) throws IOException {
-        BufferedReader in = null;
-        try {
-            client.setRestartOffset(skip);
-            in = new BufferedReader(new InputStreamReader(this.openInputStream(file), config.getRemoteFileNameCharset()));
-            return in.readLine();
-        } finally {
-            Streams.close(in);
-            client.setRestartOffset(0);
-            if (in != null) {
-                client.completePendingCommand();
-            }
-        }
-    }
-
-    @Override
-    public List<String> readLines(String file, long skip, int lines) throws IOException {
-        BufferedReader in = null;
-        try {
-            client.setRestartOffset(skip);
-            in = new BufferedReader(new InputStreamReader(this.openInputStream(file), config.getRemoteFileNameCharset()));
-            List<String> list = new ArrayList<>();
-            if (lines != -1) {
-                String line;
-                for (int i = 0; i < lines && (line = in.readLine()) != null; i++) {
-                    list.add(line);
-                }
-            } else {
-                String line;
-                while ((line = in.readLine()) != null) {
-                    list.add(line);
-                }
-            }
-            return list;
         } finally {
             Streams.close(in);
             client.setRestartOffset(0);
@@ -458,11 +416,7 @@ public class FtpInstance extends BaseFtpInstance {
     public void downloadFile(String remoteFile, OutputStream out, boolean close) throws IOException {
         InputStream in = null;
         try {
-            client.setRestartOffset(0);
             in = this.openInputStream(remoteFile);
-            if (in == null) {
-                throw Exceptions.ftp("not found file " + remoteFile);
-            }
             Streams.transfer(in, out);
         } finally {
             if (close) {

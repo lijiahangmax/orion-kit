@@ -193,9 +193,9 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
     /**
      * 获取文件输入流
      * <p>
+     * 文件不存在则报错
      * 使用完毕需要调用 client.completePendingCommand();
      * 这个操作在关闭 io 之后 | finally 中
-     * 文件不存在则 FIXME
      *
      * @param file 文件
      * @return InputStream
@@ -208,9 +208,9 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
     /**
      * 获取文件输入流
      * <p>
+     * 文件不存在则报错
      * 使用完毕需要调用 client.completePendingCommand();
      * 这个操作在关闭 io 之后 | finally 中
-     * 文件不存在则 FIXME
      *
      * @param file 文件
      * @param skip 跳过字节数
@@ -222,10 +222,9 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
     /**
      * 获取文件输出流
      * <p>
+     * 文件存在则自动创建
      * 使用完毕需要调用 client.completePendingCommand();
      * 这个操作在关闭 io 之后 | finally 中
-     * <p>
-     * 文件存在则 FIXME
      *
      * @param file 文件
      * @return OutputStream
@@ -238,10 +237,9 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
     /**
      * 获取文件输出流
      * <p>
+     * 文件存在则自动创建
      * 使用完毕需要调用 client.completePendingCommand();
      * 这个操作在关闭 io 之后 | finally 中
-     * <p>
-     * 文件存在则 FIXME
      *
      * @param file   文件
      * @param append 是否为拼接
@@ -255,7 +253,7 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
     /**
      * 读取文件到数组
      * <p>
-     * 文件不存在则 FIXME
+     * 文件不存在则报错
      *
      * @param file 文件
      * @param bs   数组
@@ -269,7 +267,7 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
     /**
      * 读取文件到数组
      * <p>
-     * 文件不存在则 FIXME
+     * 文件不存在则报错
      *
      * @param file 文件
      * @param skip 跳过字节数
@@ -284,7 +282,7 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
     /**
      * 读取文件到数组
      * <p>
-     * 文件不存在则 FIXME
+     * 文件不存在则报错
      *
      * @param file 文件
      * @param bs   数组
@@ -300,7 +298,7 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
     /**
      * 读取文件到数组
      * <p>
-     * 文件不存在则 FIXME
+     * 文件不存在则报错
      *
      * @param file 文件
      * @param skip 跳过字节数
@@ -311,76 +309,6 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
      * @throws IOException IOException
      */
     int read(String file, long skip, byte[] bs, int off, int len) throws IOException;
-
-    // -------------------- read line --------------------
-    // FIXME DOC
-
-    /**
-     * 读取一行
-     *
-     * @param file 文件
-     * @return 行
-     * @throws IOException IOException
-     */
-    default String readLine(String file) throws IOException {
-        return this.readLine(file, 0L);
-    }
-
-    /**
-     * 读取一行
-     *
-     * @param file 文件
-     * @param skip 跳过字节数
-     * @return 行
-     * @throws IOException IOException
-     */
-    String readLine(String file, long skip) throws IOException;
-
-    /**
-     * 读取多行
-     *
-     * @param file 文件
-     * @return 行
-     * @throws IOException IOException
-     */
-    default List<String> readLines(String file) throws IOException {
-        return this.readLines(file, 0, -1);
-    }
-
-    /**
-     * 读取多行
-     *
-     * @param file 文件
-     * @param skip 跳过字节数
-     * @return 行
-     * @throws IOException IOException
-     */
-    default List<String> readLines(String file, long skip) throws IOException {
-        return this.readLines(file, skip, -1);
-    }
-
-    /**
-     * 读取多行
-     *
-     * @param file  文件
-     * @param lines 读取行数 -1 读取所有行
-     * @return 行
-     * @throws IOException IOException
-     */
-    default List<String> readLines(String file, int lines) throws IOException {
-        return this.readLines(file, 0, lines);
-    }
-
-    /**
-     * 读取多行
-     *
-     * @param file  文件
-     * @param skip  跳过字节数
-     * @param lines 读取行数 -1 读取所有行
-     * @return 行
-     * @throws IOException IOException
-     */
-    List<String> readLines(String file, long skip, int lines) throws IOException;
 
     // -------------------- transfer --------------------
 
@@ -500,10 +428,11 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
     long transfer(String path, OutputStream out, long skip, int size) throws IOException;
 
     // -------------------- write --------------------
-    // FIXME DOC
 
     /**
      * 写入流到文件
+     * <p>
+     * 文件不存在则自动创建
      *
      * @param file 文件
      * @param in   in
@@ -513,6 +442,8 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
 
     /**
      * 写入字符
+     * <p>
+     * 文件不存在则自动创建
      *
      * @param file 文件
      * @param str  str
@@ -524,6 +455,8 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
 
     /**
      * 写入字节数组到文件
+     * <p>
+     * 文件不存在则自动创建
      *
      * @param file 文件
      * @param bs   字节数组
@@ -535,6 +468,8 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
 
     /**
      * 写入字节数组到文件
+     * <p>
+     * 文件不存在则自动创建
      *
      * @param file 文件
      * @param bs   字节数组
@@ -545,10 +480,11 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
     void write(String file, byte[] bs, int off, int len) throws IOException;
 
     // -------------------- append --------------------
-    // FIXME DOC
 
     /**
      * 拼接流到文件
+     * <p>
+     * 文件不存在则自动创建
      *
      * @param file 文件
      * @param in   in
@@ -558,6 +494,8 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
 
     /**
      * 拼接字符
+     * <p>
+     * 文件不存在则自动创建
      *
      * @param file 文件
      * @param str  str
@@ -569,6 +507,8 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
 
     /**
      * 拼接字节数组到文件
+     * <p>
+     * 文件不存在则自动创建
      *
      * @param file 文件
      * @param bs   字节数组
@@ -580,6 +520,8 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
 
     /**
      * 拼接字节数组到文件
+     * <p>
+     * 文件不存在则自动创建
      *
      * @param file 文件
      * @param bs   字节数组
