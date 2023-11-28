@@ -26,11 +26,6 @@ public abstract class BaseCommandExecutor extends BaseHostExecutor implements IC
     protected InputStream errorStream;
 
     /**
-     * 命令合并输出流
-     */
-    protected InputStream mergeStream;
-
-    /**
      * 是否合并标准输出流和错误输出流
      */
     protected boolean merge;
@@ -92,12 +87,9 @@ public abstract class BaseCommandExecutor extends BaseHostExecutor implements IC
         }
         try {
             // 监听读取
-            if (merge) {
-                streamHandler.accept(mergeStream);
-            } else {
-                streamHandler.accept(inputStream);
-            }
-            if (errorStreamHandler != null && !merge) {
+            streamHandler.accept(inputStream);
+            // 监听错误输出
+            if (errorStreamHandler != null) {
                 errorStreamHandler.accept(errorStream);
             }
         } catch (Exception e) {
@@ -133,22 +125,11 @@ public abstract class BaseCommandExecutor extends BaseHostExecutor implements IC
     public void close() {
         super.close();
         Streams.close(errorStream);
-        Streams.close(mergeStream);
     }
 
     @Override
     public boolean isTimeout() {
         return expired;
-    }
-
-    @Override
-    public boolean isMerge() {
-        return merge;
-    }
-
-    @Override
-    public InputStream getMergeStream() {
-        return mergeStream;
     }
 
     @Override

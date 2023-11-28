@@ -82,10 +82,6 @@ public class ShellExecutor extends BaseShellExecutor implements HostConnector {
         if (!this.isConnected()) {
             throw Exceptions.runtime("channel is not connected");
         }
-        if (run) {
-            throw Exceptions.runtime("shell executor can only be executed once");
-        }
-        this.run = true;
         // 监听输出流
         super.listenerOutput();
     }

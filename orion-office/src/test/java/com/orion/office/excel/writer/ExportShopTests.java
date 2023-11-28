@@ -36,11 +36,11 @@ public class ExportShopTests {
             shop.setShopName("          " + Strings.randomChars(5) + "的店铺        ");
             shop.setCreateDate(Dates.date(System.currentTimeMillis() + Randoms.randomLong(10000000)));
             shop.setBusinessCode(CreditCodes.random());
-            File picFile = new File("C:\\Users\\ljh15\\Desktop\\data\\pic\\" + i + ".jpg");
+            File picFile = new File("C:\\Users\\Administrator\\Desktop\\data\\pic\\" + i + ".jpg");
             if (picFile.exists()) {
                 shop.setBusinessPicture(Base64s.img64Encode(FileReaders.readAllBytesFast(picFile)));
             }
-            shop.setBusinessFile("C:/Users/ljh15/Desktop/export/index.html");
+            shop.setBusinessFile("C:/Users/Administrator/Desktop/export/index.html");
             shop.setMargin(BigDecimal.valueOf(Randoms.randomDouble(0, 10)));
             if (i % 10 == 0) {
                 return null;
@@ -52,7 +52,7 @@ public class ExportShopTests {
                 .init()
                 .skipNullRows(false)
                 .addRows(shopList)
-                .write("C:\\Users\\lijiahang\\Desktop\\1.xlsx")
+                .write("C:\\Users\\Administrator\\Desktop\\shop.xlsx")
                 .close();
     }
 
@@ -64,7 +64,7 @@ public class ExportShopTests {
             shop.setShopName(Strings.randomChars(5));
             shop.setCreateDate(Dates.date(System.currentTimeMillis() + Randoms.randomLong(10000000)));
             shop.setBusinessCode(CreditCodes.random());
-            shop.setBusinessFile("C:/Users/ljh15/Desktop/export/index.html");
+            shop.setBusinessFile("C:/Users/Administrator/Desktop/export/index.html");
             shop.setMargin(BigDecimal.valueOf(Randoms.randomDouble(0, 10)));
             return shop;
         }).collect(Collectors.toList());
@@ -86,7 +86,7 @@ public class ExportShopTests {
         });
 
         exporter.addRows(shopList)
-                .write("C:\\Users\\lijiahang\\Desktop\\1-1.xlsx")
+                .write("C:\\Users\\Administrator\\Desktop\\shop-1.xlsx")
                 .close();
     }
 

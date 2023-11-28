@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>${spring.mvc.version}</version>
+            <version>${spring.version}</version>
             <scope>provided</scope>
         </dependency>
 

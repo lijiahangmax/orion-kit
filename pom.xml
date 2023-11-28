@@ -32,44 +32,44 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.charset>UTF-8</maven.compiler.charset>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-        <junit.version>4.12</junit.version>
-        <spring.version>5.2.20.RELEASE</spring.version>
-        <spring.mvc.version>5.2.20.RELEASE</spring.mvc.version>
-        <cglib.version>3.2.6</cglib.version>
+        <junit.version>4.13.1</junit.version>
+        <spring.version>5.3.30</spring.version>
+        <cglib.version>3.3.0</cglib.version>
         <jedis.version>2.1.0</jedis.version>
-        <fastjson.version>1.2.70</fastjson.version>
+        <fastjson.version>2.0.42</fastjson.version>
         <jackson.version>2.10.2</jackson.version>
-        <google.zxing.version>3.3.3</google.zxing.version>
+        <google.zxing.version>3.5.2</google.zxing.version>
         <thumbnailator.version>0.4.8</thumbnailator.version>
         <servlet.version>3.1.0</servlet.version>
-        <apache.compress.version>1.19</apache.compress.version>
+        <apache.compress.version>1.21</apache.compress.version>
         <apache.codec.version>1.13</apache.codec.version>
         <org.tukaani.version>1.8</org.tukaani.version>
-        <apache.net.version>3.3</apache.net.version>
-        <apache.ftp.server.version>1.1.1</apache.ftp.server.version>
+        <apache.net.version>3.9.0</apache.net.version>
+        <apache.ftp.server.version>1.2.0</apache.ftp.server.version>
         <mail.version>1.4.7</mail.version>
         <pinyin4j.version>2.5.1</pinyin4j.version>
         <dom4j.version>2.1.4</dom4j.version>
         <emoji.version>5.1.1</emoji.version>
-        <yaml.version>1.30</yaml.version>
+        <org.json.version>20231013</org.json.version>
+        <yaml.version>2.0</yaml.version>
         <aspectj.version>1.8.10</aspectj.version>
         <poi.version>4.1.2</poi.version>
         <poi.stream.version>2.2.0</poi.stream.version>
         <poi.stream.xml.version>1.4.01</poi.stream.xml.version>
-        <okhttp.version>3.14.6</okhttp.version>
+        <okhttp.version>3.14.9</okhttp.version>
         <http.client.version>4.5.14</http.client.version>
-        <slf4j.version>1.7.30</slf4j.version>
-        <logback.version>1.2.3</logback.version>
-        <log4j.slf4j.version>1.7.30</log4j.slf4j.version>
-        <log4j.version>2.17.1</log4j.version>
+        <log4j.version>2.20.0</log4j.version>
+        <slf4j.version>2.0.9</slf4j.version>
+        <log4j.slf4j.version>2.0.9</log4j.slf4j.version>
+        <logback.version>1.4.11</logback.version>
         <jsch.version>0.2.13</jsch.version>
         <python.script.version>2.7.2</python.script.version>
         <lua.script.version>3.0.1</lua.script.version>
         <groovy.script.version>3.0.4</groovy.script.version>
-        <jsoup.version>1.14.2</jsoup.version>
+        <jsoup.version>1.15.3</jsoup.version>
         <ua.utils.version>1.21</ua.utils.version>
         <jgit.version>5.11.1.202105131744-r</jgit.version>
-        <bcprov.jdk15on.version>1.67</bcprov.jdk15on.version>
+        <bcprov.jdk15on.version>1.69</bcprov.jdk15on.version>
     </properties>
 
     <!-- license -->

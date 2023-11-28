@@ -39,11 +39,6 @@ public abstract class BaseHostExecutor implements IHostExecutor {
     protected Runnable callback;
 
     /**
-     * 是否已运行
-     */
-    protected boolean run;
-
-    /**
      * 是否执行完毕
      */
     protected volatile boolean done;

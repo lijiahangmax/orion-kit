@@ -18,8 +18,6 @@ public class ShellExecutorTests {
         h.setLogger(SessionLogger.INFO);
         ShellExecutor e = h.getSession("192.168.146.230", "root")
                 .password("admin123")
-                // ShellExecutor e = SessionHolder.getSession("192.168.146.230", "root")
-                //         .setPassword("admin123")
                 .timeout(20000)
                 .connect(20000)
                 .getShellExecutor();

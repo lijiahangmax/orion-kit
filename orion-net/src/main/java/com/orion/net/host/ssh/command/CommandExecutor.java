@@ -41,13 +41,6 @@ public class CommandExecutor extends BaseCommandExecutor implements HostConnecto
         this.channel = channel;
         this.command = command;
         this.channel.setCommand(command);
-        try {
-            this.inputStream = channel.getInputStream();
-            this.errorStream = channel.getErrStream();
-            this.outputStream = channel.getOutputStream();
-        } catch (IOException e) {
-            throw Exceptions.ioRuntime(e);
-        }
         // 分配伪终端 当程序关闭时 命令进程一起关闭
         channel.setPty(true);
     }
@@ -84,12 +77,22 @@ public class CommandExecutor extends BaseCommandExecutor implements HostConnecto
         if (!this.isConnected()) {
             throw Exceptions.runtime("channel is not connected");
         }
-        if (run) {
-            throw Exceptions.runtime("this executor can only be executed once");
-        }
-        this.run = true;
-        if (merge) {
-            this.mergeStream = new SequenceInputStream(inputStream, errorStream);
+        try {
+            if (merge) {
+                // 合并流
+                this.inputStream = new SequenceInputStream(channel.getInputStream(), channel.getErrStream());
+            } else {
+                // 标准输出
+                this.inputStream = channel.getInputStream();
+                // 错误输出
+                if (this.errorStreamHandler != null) {
+                    this.errorStream = channel.getErrStream();
+                }
+            }
+            // 标准输入
+            this.outputStream = channel.getOutputStream();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         // 监听 标准输出 错误输出
         this.listenerOutput();

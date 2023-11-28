@@ -97,13 +97,6 @@ public interface ICommandExecutor extends IHostExecutor, TimeoutEndpoint {
     }
 
     /**
-     * 是否已合并标准输出流和错误输出流
-     *
-     * @return 是否合并
-     */
-    boolean isMerge();
-
-    /**
      * 是否超时
      *
      * @return 是否超时
@@ -116,15 +109,6 @@ public interface ICommandExecutor extends IHostExecutor, TimeoutEndpoint {
      * @return command
      */
     String getCommand();
-
-    /**
-     * 获取合并输出流
-     *
-     * @return 合并输出流
-     * @see #merge
-     * @see #isMerge
-     */
-    InputStream getMergeStream();
 
     /**
      * 获取错误输出流

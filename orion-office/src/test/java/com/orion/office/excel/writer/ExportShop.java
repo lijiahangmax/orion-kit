@@ -21,7 +21,7 @@ public class ExportShop {
 
     @ExportField(index = 0, align = ExcelAlignType.CENTER, selectOptions = {"下拉1", "下拉2"}, header = "门店id")
     @ExportFont(fontName = "微软雅黑")
-    @ExportIgnore
+    // @ExportIgnore
     private Long shopId;
 
     @ExportField(index = 1, indent = 2, width = 30, wrapText = true, trim = true, header = "门店名称")

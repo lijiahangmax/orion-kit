@@ -19,7 +19,7 @@ import java.math.BigDecimal;
  */
 public class ImportShopTest {
 
-    private Workbook workbook = Excels.openWorkbook("C:\\Users\\ljh15\\Desktop\\data\\shop.xlsx");
+    private Workbook workbook = Excels.openWorkbook("C:\\Users\\Administrator\\Desktop\\shop.xlsx");
 
     private Sheet sheet = workbook.getSheetAt(0);
 
