@@ -11,6 +11,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 /**
  * @author Jiahang Li
@@ -101,7 +102,8 @@ public class ImportShopTest {
 
     @Test
     public void testMap1() {
-        new ExcelMapReader<String, Object>(workbook, sheet, Console::trace)
+        ArrayList<MutableMap<String, Object>> s = new ArrayList<>();
+        new ExcelMapReader<>(workbook, sheet, s)
                 .linked()
                 .option(0, "shopId", ExcelReadType.TEXT)
                 .option(1, "shopName", ExcelReadType.TEXT)
@@ -123,6 +125,7 @@ public class ImportShopTest {
                 .trim()
                 .read()
                 .close();
+        System.out.println(s.size());
     }
 
     @Test
