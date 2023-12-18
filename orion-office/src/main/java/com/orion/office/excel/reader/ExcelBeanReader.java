@@ -53,7 +53,7 @@ public class ExcelBeanReader<T> extends BaseExcelReader<String, T> {
     private boolean nullInvoke;
 
     /**
-     * 如果行为null是否添加一个新的实例对象
+     * 如果行为 null 是否添加一个新的实例对象
      */
     private boolean nullAddEmptyBean;
 

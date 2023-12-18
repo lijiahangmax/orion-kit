@@ -58,21 +58,12 @@ public class ExcelReaderIterator<T> implements Iterator<T>, Iterable<T> {
 
     @Override
     public T next() {
-        if (first) {
-            boolean next = this.getNext();
-            if (!next) {
-                this.throwNoSuch();
-            }
-        }
-        if (!hasNext && !first) {
+        if (!this.hasNext()) {
             this.throwNoSuch();
         }
-        if (first) {
-            first = false;
-        }
+        // 获取下一个元素并且返回上一个元素
         T next = this.next;
         this.hasNext = this.getNext();
-        reader.rowNum++;
         return next;
     }
 
@@ -86,13 +77,7 @@ public class ExcelReaderIterator<T> implements Iterator<T>, Iterable<T> {
             return false;
         }
         this.next = reader.nextRow();
-        if (reader.end) {
-            return false;
-        }
-        if (next == null && reader.skipNullRows) {
-            return this.getNext();
-        }
-        return true;
+        return !reader.end;
     }
 
     /**

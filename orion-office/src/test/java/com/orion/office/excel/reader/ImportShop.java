@@ -16,7 +16,7 @@ import java.util.Date;
  */
 public class ImportShop {
 
-    @ImportField(index = 0)
+    @ImportField(index = 0, type = ExcelReadType.LONG)
     private Long shopId;
 
     @ImportField(index = 1)

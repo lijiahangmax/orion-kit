@@ -236,6 +236,11 @@ public class Excels {
                 } else {
                     // 纯数字
                     value = BigDecimal.valueOf(cell.getNumericCellValue()).toString();
+                    String[] item = value.split("\\.");
+                    if (item.length > 1 && Strings.isInteger(item[1]) && Long.parseLong(item[1]) == 0) {
+                        // 整数
+                        value = item[0];
+                    }
                 }
                 break;
             case FORMULA:

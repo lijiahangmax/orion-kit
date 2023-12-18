@@ -157,7 +157,7 @@ public class ImportShopTest {
     @Test
     public void testLambda1() {
         new ExcelLambdaReader<>(workbook, sheet, Console::trace, ImportShop::new)
-                .<String, Long>option(0, ExcelReadType.TEXT, Long::valueOf, ImportShop::setShopId)
+                .option(0, ExcelReadType.LONG, ImportShop::setShopId)
                 .option(1, ExcelReadType.TEXT, ImportShop::setShopName)
                 .option(new ImportFieldOption(2, ExcelReadType.DATE, "yyyy年MM月dd日"), ImportShop::setCreateDate)
                 .option(4, ExcelReadType.PICTURE, ImportShop::setBusinessPicture)

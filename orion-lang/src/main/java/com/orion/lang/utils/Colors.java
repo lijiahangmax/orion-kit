@@ -129,4 +129,29 @@ public class Colors {
         return new Color(r, g, b);
     }
 
+    /**
+     * 是否为深色
+     * 亮度值 < 128 ? 深色 : 128
+     *
+     * @param hex hex
+     * @return 是否为深色
+     */
+    public static boolean isDarkColor(String hex) {
+        int[] rgb = toRgbColor(hex);
+        return isDarkColor(rgb[0], rgb[1], rgb[2]);
+    }
+
+    /**
+     * 是否为深色
+     * 亮度值 < 128 ? 深色 : 128
+     *
+     * @param r r
+     * @param g g
+     * @param b b
+     * @return 是否为深色
+     */
+    public static boolean isDarkColor(int r, int g, int b) {
+        return (r * 299 + g * 587 + b * 114) / 1000 < 128;
+    }
+
 }
