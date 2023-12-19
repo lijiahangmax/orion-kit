@@ -1,7 +1,7 @@
 package com.orion.lang.define.wrapper;
 
+import com.orion.lang.able.IJsonObject;
 import com.orion.lang.define.support.CloneSupport;
-import com.orion.lang.utils.Strings;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -14,7 +14,7 @@ import java.util.Optional;
  * @version 1.0.0
  * @since 2020/8/30 23:53
  */
-public class Ref<T> extends CloneSupport<Ref<T>> implements Serializable {
+public class Ref<T> extends CloneSupport<Ref<T>> implements Serializable, IJsonObject {
 
     private static final long serialVersionUID = -885690364340775L;
 
@@ -79,7 +79,7 @@ public class Ref<T> extends CloneSupport<Ref<T>> implements Serializable {
 
     @Override
     public String toString() {
-        return value == null ? Strings.EMPTY : value.toString();
+        return value == null ? null : value.toString();
     }
 
 }

@@ -23,7 +23,7 @@ public class ReplacementFormatter {
 
     private final Pattern pattern;
 
-    private final String perfix;
+    private final String prefix;
 
     private final String suffix;
 
@@ -31,8 +31,8 @@ public class ReplacementFormatter {
 
     private Map<String, Object> defaults;
 
-    public ReplacementFormatter(String perfix, String suffix) {
-        this.perfix = perfix;
+    public ReplacementFormatter(String prefix, String suffix) {
+        this.prefix = prefix;
         this.suffix = suffix;
         this.pattern = this.createPattern();
         this.noMatchStrategy = NoMatchStrategy.EMPTY;
@@ -41,18 +41,16 @@ public class ReplacementFormatter {
     /**
      * 创建正则
      *
-     * @param perfix perfix
-     * @param suffix suffix
      * @return 正则
      */
     private Pattern createPattern() {
-        String evalPerfix = perfix.chars()
+        String evalPrefix = prefix.chars()
                 .mapToObj(s -> "\\" + (char) s)
                 .collect(Collectors.joining());
         String evalSuffix = suffix.chars()
                 .mapToObj(s -> "\\" + (char) s)
                 .collect(Collectors.joining());
-        return Pattern.compile("(" + evalPerfix + ")(.+?)(" + evalSuffix + ")");
+        return Pattern.compile("(" + evalPrefix + ")(.+?)(" + evalSuffix + ")");
     }
 
     /**
@@ -122,7 +120,7 @@ public class ReplacementFormatter {
         while (matcher.find()) {
             // 获取替换符
             String replacement = matcher.group();
-            String path = replacement.substring(perfix.length(), replacement.length() - suffix.length()).trim();
+            String path = replacement.substring(prefix.length(), replacement.length() - suffix.length()).trim();
             Object readValue = JSONPath.read(json, path);
             if (readValue == null) {
                 // 获取默认值

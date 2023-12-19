@@ -169,7 +169,7 @@ public class WrapperAdapter {
                     } else if (dataClass == String.class) {
                         return (T) data.toString();
                     } else {
-                        return Jsons.toBean(Jsons.toJson(data), dataClass);
+                        return Jsons.parse(Jsons.toJson(data), dataClass);
                     }
                 } catch (Exception e) {
                     Exceptions.printStacks(e);

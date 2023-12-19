@@ -118,7 +118,7 @@ public class CsvBeanReader<T> extends BaseCsvReader<T> {
                 try {
                     Methods.invokeSetterInfer(t, setter, value);
                 } catch (Exception e) {
-                    // ignore
+                    Exceptions.printStacks(e);
                 }
             } else if (nullInvoke) {
                 Methods.invokeMethod(t, setter, (Object) null);
