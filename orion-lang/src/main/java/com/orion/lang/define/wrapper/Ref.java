@@ -62,7 +62,7 @@ public class Ref<T> extends CloneSupport<Ref<T>> implements Serializable, IJsonO
         if (o == null) {
             return value == null;
         }
-        if (getClass() != o.getClass()) {
+        if (this.getClass() != o.getClass()) {
             // unref
             return Objects.equals(value, o);
         } else {

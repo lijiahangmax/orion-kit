@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * 类型引用
  * <p>
- * from FastJSON 1.2.70
+ * from FastJSON
  *
  * @author Jiahang Li
  * @version 1.0.0
