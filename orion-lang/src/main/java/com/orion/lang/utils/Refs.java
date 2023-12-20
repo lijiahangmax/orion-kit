@@ -23,7 +23,7 @@ public class Refs {
      * @return json
      */
     public static String json(Object o) {
-        return Ref.of(o).toString();
+        return Ref.of(o).toJsonString();
     }
 
     /**

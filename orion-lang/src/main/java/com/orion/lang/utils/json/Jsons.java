@@ -22,27 +22,27 @@ public class Jsons {
     }
 
     /**
-     * bean -> json
+     * object -> json
      *
-     * @param bean 对象
+     * @param obj obj
      * @return ignore
      */
-    public static String toJson(Object bean) {
-        return JSON.toJSONString(bean);
+    public static String toJson(Object obj) {
+        return JSON.toJSONString(obj);
     }
 
     /**
-     * bean -> json
+     * object -> json
      *
-     * @param bean 对象
+     * @param obj obj
      * @return ignore
      */
-    public static String toJsonWriteNull(Object bean) {
-        return JSON.toJSONString(bean, WriteMapNullValue);
+    public static String toJsonWriteNull(Object obj) {
+        return JSON.toJSONString(obj, WriteMapNullValue);
     }
 
     /**
-     * json -> bean
+     * json -> object
      *
      * @param json  json
      * @param clazz ignore
