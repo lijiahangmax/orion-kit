@@ -64,7 +64,7 @@ public class CommandExecutors {
      * @return result
      * @throws IOException IOException
      */
-    public static String getCommandOutputResultString(BaseCommandExecutor executor) throws IOException {
+    public static String getCommandOutputResultString(ICommandExecutor executor) throws IOException {
         return new String(getCommandOutputResult(executor));
     }
 

@@ -420,6 +420,25 @@ public class Lists extends Collections {
 
     // -------------------- get set --------------------
 
+    /**
+     * 获取元素 如果元素存在
+     *
+     * @param list list
+     * @param i    i
+     * @param <E>  E
+     * @return E
+     */
+    public static <E> E getIfPresent(List<E> list, int i) {
+        int size = size(list);
+        if (size == 0) {
+            return null;
+        }
+        if (i >= size) {
+            return null;
+        }
+        return list.get(i);
+    }
+
     public static <E> E get(List<E> list, int i) {
         int size = size(list);
         if (size == 0) {

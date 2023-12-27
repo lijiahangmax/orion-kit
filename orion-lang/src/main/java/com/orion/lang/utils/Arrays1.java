@@ -89,6 +89,7 @@ public class Arrays1 {
      * @param <T>    ignore
      * @return 数组
      */
+    @SuppressWarnings("unchecked")
     public static <T> T[] newArrays(Class<T> type, int length) {
         return (T[]) Array.newInstance(type, length);
     }
@@ -216,6 +217,25 @@ public class Arrays1 {
     public static <T> T gets(Object arr, int i) {
         Valid.notNull(arr, "array is null");
         return (T) Array.get(arr, i);
+    }
+
+    /**
+     * 获取元素 如果元素存在
+     *
+     * @param arr list
+     * @param i   i
+     * @param <T> T
+     * @return T
+     */
+    public static <T> T getIfPresent(T[] arr, int i) {
+        int len = length(arr);
+        if (len == 0) {
+            return null;
+        }
+        if (i >= len) {
+            return null;
+        }
+        return arr[i];
     }
 
     public static <T> T get(T[] arr, int i) {
