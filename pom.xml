@@ -61,8 +61,7 @@
         <log4j.version>2.20.0</log4j.version>
         <slf4j.version>2.0.9</slf4j.version>
         <log4j.slf4j.version>2.0.9</log4j.slf4j.version>
-        <logback.version>1.4.11</logback.version>
-        <jsch.version>0.2.13</jsch.version>
+        <jsch.version>0.2.15</jsch.version>
         <python.script.version>2.7.2</python.script.version>
         <lua.script.version>3.0.1</lua.script.version>
         <groovy.script.version>3.0.4</groovy.script.version>
