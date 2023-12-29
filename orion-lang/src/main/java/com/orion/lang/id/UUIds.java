@@ -42,21 +42,21 @@ public class UUIds {
     }
 
     /**
-     * 获取36位UUID
+     * 获取 15位 uuid (精度有所损失)
      */
-    public static String random() {
-        return UUID.randomUUID().toString();
+    public static String random15() {
+        return UUIDMaker.generate();
     }
 
     /**
-     * 获取32位UUID
+     * 获取 15位 uuid long (精度有所损失)
      */
-    public static String random32() {
-        return UUID.randomUUID().toString().replace("-", Strings.EMPTY);
+    public static long random15Long() {
+        return toNumber(random15(), 10);
     }
 
     /**
-     * 获取19位的UUID
+     * 获取 19位 uuid
      */
     public static String random19() {
         // 产生UUID
@@ -70,21 +70,21 @@ public class UUIds {
     }
 
     /**
-     * 获取15位的UUID (精度有所损失)
+     * 获取 32位 uuid
      */
-    public static String random15() {
-        return UUIDMaker.generate();
+    public static String random32() {
+        return UUID.randomUUID().toString().replace("-", Strings.EMPTY);
     }
 
     /**
-     * 获取15位的Long型UUID (精度有所损失)
+     * 获取 36位 uuid
      */
-    public static long random15Long() {
-        return toNumber(random15(), 10);
+    public static String random() {
+        return UUID.randomUUID().toString();
     }
 
     /**
-     * 获取36位UUID进行编码
+     * 获取 36位 uuid base64
      */
     public static String randomBase64() {
         UUID uuid = UUID.randomUUID();
