@@ -1,5 +1,6 @@
 package com.orion.net.host.ssh.shell;
 
+import com.orion.net.host.ssh.IHostExecutor;
 import com.orion.net.host.ssh.TerminalType;
 
 /**
@@ -9,7 +10,7 @@ import com.orion.net.host.ssh.TerminalType;
  * @version 1.0.0
  * @since 2022/5/18 10:42
  */
-public interface IShellExecutor {
+public interface IShellExecutor extends IHostExecutor {
 
     /**
      * 设置终端类型
@@ -26,13 +27,6 @@ public interface IShellExecutor {
      * @param terminalType terminalType
      */
     void terminalType(String terminalType);
-
-    /**
-     * 是否启用 x11forwarding
-     *
-     * @param enable 是否启用
-     */
-    void x11Forward(boolean enable);
 
     /**
      * 设置页面大小

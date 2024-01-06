@@ -1,5 +1,6 @@
 package com.orion.net.host.ssh;
 
+import com.jcraft.jsch.Channel;
 import com.orion.lang.support.Attempt;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.io.Streams;
@@ -16,7 +17,9 @@ import java.util.function.Consumer;
  * @version 1.0.0
  * @since 2022/5/17 14:32
  */
-public abstract class BaseHostExecutor implements IHostExecutor {
+public abstract class BaseHostExecutor<T extends Channel> implements IHostExecutor {
+
+    protected final T channel;
 
     /**
      * 标准输出流
@@ -42,6 +45,10 @@ public abstract class BaseHostExecutor implements IHostExecutor {
      * 是否执行完毕
      */
     protected volatile boolean done;
+
+    public BaseHostExecutor(T channel) {
+        this.channel = channel;
+    }
 
     @Override
     public void callback(Runnable callback) {
@@ -70,6 +77,15 @@ public abstract class BaseHostExecutor implements IHostExecutor {
         }
     }
 
+    @Override
+    public void sendSignal(String signal) {
+        try {
+            channel.sendSignal(signal);
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime(e);
+        }
+    }
+
     /**
      * 监听 标准输出/错误输出
      */
@@ -94,6 +110,10 @@ public abstract class BaseHostExecutor implements IHostExecutor {
     @Override
     public OutputStream getOutputStream() {
         return outputStream;
+    }
+
+    public T getChannel() {
+        return channel;
     }
 
 }

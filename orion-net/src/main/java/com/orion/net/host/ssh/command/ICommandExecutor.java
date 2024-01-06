@@ -35,9 +35,9 @@ public interface ICommandExecutor extends IHostExecutor, TimeoutEndpoint {
      * {@link CommandExecutor#connect}
      * 之前调用
      *
-     * @param use 是否使用
+     * @param enable 是否使用
      */
-    void pty(boolean use);
+    void pty(boolean enable);
 
     /**
      * 设置错误输出流处理器
@@ -53,13 +53,6 @@ public interface ICommandExecutor extends IHostExecutor, TimeoutEndpoint {
      * @throws IOException IOException
      */
     void transferError(OutputStream out) throws IOException;
-
-    /**
-     * 发送信号量
-     *
-     * @param signal 信号
-     */
-    void sendSignal(String signal);
 
     /**
      * 设置超时时间
@@ -109,6 +102,13 @@ public interface ICommandExecutor extends IHostExecutor, TimeoutEndpoint {
      * @return command
      */
     String getCommand();
+
+    /**
+     * 获取执行的命令 byte
+     *
+     * @return command
+     */
+    byte[] getCommandBytes();
 
     /**
      * 获取错误输出流

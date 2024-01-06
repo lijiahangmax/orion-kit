@@ -11,7 +11,7 @@ import java.io.OutputStream;
 import java.util.function.Consumer;
 
 /**
- * 远程执行器 api
+ * 远程主机执行器 api
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -68,6 +68,20 @@ public interface IHostExecutor extends Executable, Runnable, SafeCloseable {
      * @param value value
      */
     void env(byte[] key, byte[] value);
+
+    /**
+     * 是否启用 x11forwarding
+     *
+     * @param enable 是否启用
+     */
+    void x11Forward(boolean enable);
+
+    /**
+     * 启用代理转发
+     *
+     * @param enable 是否启用
+     */
+    void setAgentForwarding(boolean enable);
 
     /**
      * 写入命令
@@ -143,6 +157,13 @@ public interface IHostExecutor extends Executable, Runnable, SafeCloseable {
     default void exit(int code) {
         this.write(Strings.bytes("exit " + code + Const.LF));
     }
+
+    /**
+     * 发送信号量
+     *
+     * @param signal 信号
+     */
+    void sendSignal(String signal);
 
     /**
      * 获取标准输出流
