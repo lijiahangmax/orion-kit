@@ -2,7 +2,6 @@ package com.orion.net.host.ssh.shell;
 
 import com.jcraft.jsch.ChannelShell;
 import com.orion.lang.utils.Exceptions;
-import com.orion.net.host.HostConnector;
 import com.orion.net.host.ssh.BaseHostExecutor;
 import com.orion.net.host.ssh.TerminalType;
 
@@ -15,7 +14,7 @@ import java.io.IOException;
  * @version 1.0.0
  * @since 2020/10/7 19:50
  */
-public class ShellExecutor extends BaseHostExecutor<ChannelShell> implements IShellExecutor, HostConnector {
+public class ShellExecutor extends BaseHostExecutor<ChannelShell> implements IShellExecutor {
 
     /**
      * 终端类型

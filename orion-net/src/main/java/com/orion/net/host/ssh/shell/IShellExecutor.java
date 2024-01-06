@@ -1,5 +1,6 @@
 package com.orion.net.host.ssh.shell;
 
+import com.orion.net.host.HostConnector;
 import com.orion.net.host.ssh.IHostExecutor;
 import com.orion.net.host.ssh.TerminalType;
 
@@ -10,7 +11,7 @@ import com.orion.net.host.ssh.TerminalType;
  * @version 1.0.0
  * @since 2022/5/18 10:42
  */
-public interface IShellExecutor extends IHostExecutor {
+public interface IShellExecutor extends IHostExecutor, HostConnector {
 
     /**
      * 设置终端类型

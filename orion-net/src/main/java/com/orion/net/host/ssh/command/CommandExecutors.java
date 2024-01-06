@@ -2,7 +2,6 @@ package com.orion.net.host.ssh.command;
 
 import com.orion.lang.utils.Valid;
 import com.orion.lang.utils.io.Streams;
-import com.orion.net.host.HostConnector;
 import com.orion.net.host.SessionHolder;
 import com.orion.net.host.SessionStore;
 
@@ -23,7 +22,7 @@ public class CommandExecutors {
     }
 
     /**
-     * 同步执行命令获取命令输出
+     * 执行命令获取命令输出
      *
      * @param host     机器主机
      * @param username 用户名
@@ -37,7 +36,7 @@ public class CommandExecutors {
     }
 
     /**
-     * 同步执行命令获取命令输出
+     * 执行命令获取命令输出
      *
      * @param host     机器主机
      * @param port     port
@@ -58,7 +57,7 @@ public class CommandExecutors {
     }
 
     /**
-     * 同步执行命令获取命令输出
+     * 执行命令获取命令输出
      *
      * @param executor executor
      * @return result
@@ -69,7 +68,7 @@ public class CommandExecutors {
     }
 
     /**
-     * 同步执行命令获取命令输出
+     * 执行命令获取命令输出
      *
      * @param executor executor
      * @return result
@@ -79,11 +78,8 @@ public class CommandExecutors {
         Valid.notNull(executor, "command executor is null");
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
-            executor.transfer(out);
-            if (executor instanceof HostConnector) {
-                ((HostConnector) executor).connect();
-            }
-            executor.exec();
+            // 执行命令
+            execCommand(executor, out);
             return out.toByteArray();
         } finally {
             Streams.close(out);
@@ -91,17 +87,14 @@ public class CommandExecutors {
     }
 
     /**
-     * 异步执行命令获取命令输出
+     * 执行命令
      *
      * @param executor executor
      * @throws IOException IOException
      */
-    public static void syncExecCommand(ICommandExecutor executor, OutputStream transfer) throws IOException {
-        executor.merge();
+    public static void execCommand(ICommandExecutor executor, OutputStream transfer) throws IOException {
         executor.transfer(transfer);
-        if (executor instanceof HostConnector) {
-            ((HostConnector) executor).connect();
-        }
+        executor.connect();
         executor.exec();
     }
 

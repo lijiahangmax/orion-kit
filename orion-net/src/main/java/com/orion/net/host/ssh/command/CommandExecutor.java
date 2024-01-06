@@ -7,7 +7,6 @@ import com.orion.lang.support.timeout.TimeoutChecker;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.io.Streams;
-import com.orion.net.host.HostConnector;
 import com.orion.net.host.ssh.BaseHostExecutor;
 
 import java.io.IOException;
@@ -24,7 +23,7 @@ import java.util.function.Consumer;
  * @version 1.0.0
  * @since 2020/10/6 12:51
  */
-public class CommandExecutor extends BaseHostExecutor<ChannelExec> implements ICommandExecutor, HostConnector {
+public class CommandExecutor extends BaseHostExecutor<ChannelExec> implements ICommandExecutor {
 
     /**
      * command

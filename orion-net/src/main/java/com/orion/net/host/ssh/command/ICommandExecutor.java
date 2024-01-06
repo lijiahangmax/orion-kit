@@ -2,6 +2,7 @@ package com.orion.net.host.ssh.command;
 
 import com.orion.lang.support.timeout.TimeoutChecker;
 import com.orion.lang.support.timeout.TimeoutEndpoint;
+import com.orion.net.host.HostConnector;
 import com.orion.net.host.ssh.ExitCode;
 import com.orion.net.host.ssh.IHostExecutor;
 
@@ -18,7 +19,7 @@ import java.util.function.Consumer;
  * @version 1.0.0
  * @since 2022/5/17 15:29
  */
-public interface ICommandExecutor extends IHostExecutor, TimeoutEndpoint {
+public interface ICommandExecutor extends IHostExecutor, HostConnector, TimeoutEndpoint {
 
     /**
      * 合并标准输出流和错误输出流

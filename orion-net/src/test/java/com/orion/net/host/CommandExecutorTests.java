@@ -82,7 +82,7 @@ public class CommandExecutorTests {
         // 执行
         Threads.start(() -> {
             try {
-                CommandExecutors.syncExecCommand(executor, System.out);
+                CommandExecutors.execCommand(executor, System.out);
                 System.out.println(executor.getExitCode());
                 executor.close();
             } catch (IOException e) {
@@ -121,7 +121,7 @@ public class CommandExecutorTests {
         CommandExecutor executor = s.getCommandExecutor("top");
         executor.timeout(3000, checker);
         // 执行
-        CommandExecutors.syncExecCommand(executor, System.out);
+        CommandExecutors.execCommand(executor, System.out);
 
         System.out.println();
         System.out.println("----------------------------------");
