@@ -33,7 +33,7 @@ public interface MutableMap<K, V> extends Map<K, V> {
 
     default Byte getByte(K k, Supplier<Byte> supplier) {
         Valid.notNull(supplier);
-        V v = get(k);
+        V v = this.get(k);
         if (v == null) {
             return supplier.get();
         }
@@ -50,7 +50,7 @@ public interface MutableMap<K, V> extends Map<K, V> {
 
     default byte getByteValue(K k, ByteSupplier supplier) {
         Valid.notNull(supplier);
-        V v = get(k);
+        V v = this.get(k);
         if (v == null) {
             return supplier.getAsByte();
         }
@@ -67,7 +67,7 @@ public interface MutableMap<K, V> extends Map<K, V> {
 
     default Short getShort(K k, Supplier<Short> supplier) {
         Valid.notNull(supplier);
-        V v = get(k);
+        V v = this.get(k);
         if (v == null) {
             return supplier.get();
         }
@@ -84,7 +84,7 @@ public interface MutableMap<K, V> extends Map<K, V> {
 
     default short getShortValue(K k, ShortSupplier supplier) {
         Valid.notNull(supplier);
-        V v = get(k);
+        V v = this.get(k);
         if (v == null) {
             return supplier.getAsShort();
         }
@@ -101,11 +101,11 @@ public interface MutableMap<K, V> extends Map<K, V> {
 
     default Integer getInteger(K k, Supplier<Integer> supplier) {
         Valid.notNull(supplier);
-        V v = get(k);
+        V v = this.get(k);
         if (v == null) {
             return supplier.get();
         }
-        return Converts.toInt(k);
+        return Converts.toInt(v);
     }
 
     default int getIntValue(K k) {
@@ -118,11 +118,11 @@ public interface MutableMap<K, V> extends Map<K, V> {
 
     default int getIntValue(K k, IntSupplier supplier) {
         Valid.notNull(supplier);
-        V v = get(k);
+        V v = this.get(k);
         if (v == null) {
             return supplier.getAsInt();
         }
-        return Converts.toInt(k);
+        return Converts.toInt(v);
     }
 
     default Long getLong(K k) {
@@ -135,7 +135,7 @@ public interface MutableMap<K, V> extends Map<K, V> {
 
     default Long getLong(K k, Supplier<Long> supplier) {
         Valid.notNull(supplier);
-        V v = get(k);
+        V v = this.get(k);
         if (v == null) {
             return supplier.get();
         }
@@ -152,7 +152,7 @@ public interface MutableMap<K, V> extends Map<K, V> {
 
     default long getLongValue(K k, LongSupplier supplier) {
         Valid.notNull(supplier);
-        V v = get(k);
+        V v = this.get(k);
         if (v == null) {
             return supplier.getAsLong();
         }
@@ -169,7 +169,7 @@ public interface MutableMap<K, V> extends Map<K, V> {
 
     default Float getFloat(K k, Supplier<Float> supplier) {
         Valid.notNull(supplier);
-        V v = get(k);
+        V v = this.get(k);
         if (v == null) {
             return supplier.get();
         }
@@ -186,7 +186,7 @@ public interface MutableMap<K, V> extends Map<K, V> {
 
     default float getFloatValue(K k, FloatSupplier supplier) {
         Valid.notNull(supplier);
-        V v = get(k);
+        V v = this.get(k);
         if (v == null) {
             return supplier.getAsFloat();
         }
@@ -203,7 +203,7 @@ public interface MutableMap<K, V> extends Map<K, V> {
 
     default Double getDouble(K k, Supplier<Double> supplier) {
         Valid.notNull(supplier);
-        V v = get(k);
+        V v = this.get(k);
         if (v == null) {
             return supplier.get();
         }
@@ -220,7 +220,7 @@ public interface MutableMap<K, V> extends Map<K, V> {
 
     default double getDoubleValue(K k, DoubleSupplier supplier) {
         Valid.notNull(supplier);
-        V v = get(k);
+        V v = this.get(k);
         if (v == null) {
             return supplier.getAsDouble();
         }
@@ -237,7 +237,7 @@ public interface MutableMap<K, V> extends Map<K, V> {
 
     default Boolean getBoolean(K k, Supplier<Boolean> supplier) {
         Valid.notNull(supplier);
-        V v = get(k);
+        V v = this.get(k);
         if (v == null) {
             return supplier.get();
         }
@@ -254,7 +254,7 @@ public interface MutableMap<K, V> extends Map<K, V> {
 
     default boolean getBooleanValue(K k, BooleanSupplier supplier) {
         Valid.notNull(supplier);
-        V v = get(k);
+        V v = this.get(k);
         if (v == null) {
             return supplier.getAsBoolean();
         }
@@ -271,7 +271,7 @@ public interface MutableMap<K, V> extends Map<K, V> {
 
     default Character getCharacter(K k, Supplier<Character> supplier) {
         Valid.notNull(supplier);
-        V v = get(k);
+        V v = this.get(k);
         if (v == null) {
             return supplier.get();
         }
@@ -288,7 +288,7 @@ public interface MutableMap<K, V> extends Map<K, V> {
 
     default char getCharValue(K k, CharSupplier supplier) {
         Valid.notNull(supplier);
-        V v = get(k);
+        V v = this.get(k);
         if (v == null) {
             return supplier.getAsChar();
         }
@@ -305,7 +305,7 @@ public interface MutableMap<K, V> extends Map<K, V> {
 
     default String getString(K k, Supplier<String> supplier) {
         Valid.notNull(supplier);
-        V v = get(k);
+        V v = this.get(k);
         if (v == null) {
             return supplier.get();
         }
@@ -322,7 +322,7 @@ public interface MutableMap<K, V> extends Map<K, V> {
 
     default Date getDate(K k, Supplier<Date> supplier) {
         Valid.notNull(supplier);
-        V v = get(k);
+        V v = this.get(k);
         if (v == null) {
             return supplier.get();
         }
@@ -339,7 +339,7 @@ public interface MutableMap<K, V> extends Map<K, V> {
 
     default LocalDateTime getLocalDateTime(K k, Supplier<LocalDateTime> supplier) {
         Valid.notNull(supplier);
-        V v = get(k);
+        V v = this.get(k);
         if (v == null) {
             return supplier.get();
         }
@@ -356,7 +356,7 @@ public interface MutableMap<K, V> extends Map<K, V> {
 
     default LocalDate getLocalDate(K k, Supplier<LocalDate> supplier) {
         Valid.notNull(supplier);
-        V v = get(k);
+        V v = this.get(k);
         if (v == null) {
             return supplier.get();
         }
@@ -373,7 +373,7 @@ public interface MutableMap<K, V> extends Map<K, V> {
 
     default BigDecimal getBigDecimal(K k, Supplier<BigDecimal> supplier) {
         Valid.notNull(supplier);
-        V v = get(k);
+        V v = this.get(k);
         if (v == null) {
             return supplier.get();
         }
@@ -390,7 +390,7 @@ public interface MutableMap<K, V> extends Map<K, V> {
 
     default BigInteger getBigInteger(K k, Supplier<BigInteger> supplier) {
         Valid.notNull(supplier);
-        V v = get(k);
+        V v = this.get(k);
         if (v == null) {
             return supplier.get();
         }
@@ -408,7 +408,7 @@ public interface MutableMap<K, V> extends Map<K, V> {
     @SuppressWarnings("unchecked")
     default <E> E getObject(K k, Supplier<E> supplier) {
         Valid.notNull(supplier);
-        V v = get(k);
+        V v = this.get(k);
         if (v == null) {
             return supplier.get();
         }
@@ -421,7 +421,7 @@ public interface MutableMap<K, V> extends Map<K, V> {
 
     default V get(K k, Supplier<V> supplier) {
         Valid.notNull(supplier);
-        V v = get(k);
+        V v = this.get(k);
         if (v == null) {
             return supplier.get();
         }

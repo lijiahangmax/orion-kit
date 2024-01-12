@@ -44,6 +44,7 @@ public class KitConfig {
      * @param <T> T
      * @return value
      */
+    @SuppressWarnings("unchecked")
     public static <T> T get(String key) {
         return (T) CONFIG.get(key);
     }
@@ -65,6 +66,7 @@ public class KitConfig {
      * @param <T> T
      * @return value
      */
+    @SuppressWarnings("unchecked")
     public static <T> T getOrDefault(String key, T def) {
         return (T) CONFIG.getOrDefault(key, def);
     }
