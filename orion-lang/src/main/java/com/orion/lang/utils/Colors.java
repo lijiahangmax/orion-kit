@@ -154,4 +154,26 @@ public class Colors {
         return (r * 299 + g * 587 + b * 114) / 1000 < 128;
     }
 
+    /**
+     * 调整颜色
+     *
+     * @param hex   hex
+     * @param range 正数越浅 负数越深
+     * @return hex
+     */
+    public static String adjustColor(String hex, int range) {
+        int[] rgb = toRgbColor(hex);
+        StringBuilder newColor = new StringBuilder("#");
+        for (int c : rgb) {
+            c += range;
+            if (c < 0) {
+                c = 0;
+            } else if (c > 255) {
+                c = 255;
+            }
+            newColor.append(Strings.leftPad(Integer.toString(c, 16), 2, "0"));
+        }
+        return newColor.toString();
+    }
+
 }

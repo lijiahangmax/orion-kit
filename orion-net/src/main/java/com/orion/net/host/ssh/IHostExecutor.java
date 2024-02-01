@@ -132,14 +132,7 @@ public interface IHostExecutor extends Executable, Runnable, SafeCloseable {
      * 中断 键入 ctrl + c
      */
     default void interrupt() {
-        this.write(new byte[]{3, 10});
-    }
-
-    /**
-     * 挂起 键入 ctrl + x
-     */
-    default void hangUp() {
-        this.write(new byte[]{24, 10});
+        this.write(new byte[]{3});
     }
 
     /**
