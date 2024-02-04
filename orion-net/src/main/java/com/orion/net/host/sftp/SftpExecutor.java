@@ -60,6 +60,15 @@ public class SftpExecutor extends BaseSftpExecutor implements HostConnector {
     }
 
     @Override
+    public void sendSignal(String signal) {
+        try {
+            channel.sendSignal(signal);
+        } catch (Exception e) {
+            throw Exceptions.ioRuntime(e);
+        }
+    }
+
+    @Override
     public String getHome() {
         try {
             return channel.getHome();

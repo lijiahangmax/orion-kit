@@ -36,6 +36,13 @@ public interface ISftpExecutor extends SafeCloseable {
     void charset(String charset);
 
     /**
+     * 发送信号量
+     *
+     * @param signal 信号
+     */
+    void sendSignal(String signal);
+
+    /**
      * 获取根目录
      *
      * @return 根目录

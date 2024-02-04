@@ -278,15 +278,6 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
     }
 
     /**
-     * 挂起 键入 ctrl+x
-     *
-     * @return this
-     */
-    public ProcessAwaitExecutor hangUp() {
-        return this.write(new byte[]{24}, true);
-    }
-
-    /**
      * 退出
      *
      * @return this
