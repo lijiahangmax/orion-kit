@@ -469,6 +469,12 @@ public class SftpExecutor extends BaseSftpExecutor implements HostConnector {
     public List<SftpFile> list(String path) {
         List<SftpFile> list = new ArrayList<>();
         try {
+            // 检查是否为目录
+            SftpATTRS stat = channel.stat(path);
+            if (!stat.isDir()) {
+                return new ArrayList<>();
+            }
+            // 查询列表
             Vector<?> files = channel.ls(path);
             for (Object file : files) {
                 ChannelSftp.LsEntry entity = (ChannelSftp.LsEntry) file;
