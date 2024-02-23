@@ -109,7 +109,7 @@ public class OkClientBuilder implements Buildable<OkHttpClient> {
     private List<ConnectionSpec> connectionSpecs;
 
     public OkClientBuilder() {
-        this.connectTimeout = Const.MS_S_3;
+        this.connectTimeout = Const.MS_S_10;
         this.callTimeout = Const.MS_S_15;
         this.readTimeout = Const.MS_S_15;
         this.writeTimeout = Const.MS_S_15;

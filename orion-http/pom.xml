@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.github.lijiahangmax</groupId>
         <artifactId>orion-kit</artifactId>
-        <version>1.0.5</version>
+        <version>1.0.6</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -18,14 +18,14 @@
         <dependency>
             <groupId>io.github.lijiahangmax</groupId>
             <artifactId>orion-lang</artifactId>
-            <version>${orion.lang.version}</version>
+            <version>${orion.kit.version}</version>
         </dependency>
 
         <!-- log -->
         <dependency>
             <groupId>io.github.lijiahangmax</groupId>
             <artifactId>orion-log</artifactId>
-            <version>${orion.log.version}</version>
+            <version>${orion.kit.version}</version>
         </dependency>
 
         <!-- ok-http -->
@@ -38,6 +38,12 @@
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>mockwebserver</artifactId>
             <version>${okhttp.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>junit</artifactId>
+                    <groupId>junit</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- http-client -->
@@ -45,11 +51,23 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>${http.client.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-codec</groupId>
+                    <artifactId>commons-codec</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpmime</artifactId>
             <version>${http.client.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-codec</groupId>
+                    <artifactId>commons-codec</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- jsoup -->

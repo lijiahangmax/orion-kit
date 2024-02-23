@@ -6,15 +6,19 @@ import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
 import com.orion.lang.utils.time.Dates;
-import com.orion.net.base.file.transfer.IFileTransfer;
+import com.orion.net.ftp.client.FtpFileFilter;
 import com.orion.net.ftp.client.config.FtpConfig;
 import com.orion.net.ftp.client.instance.IFtpInstance;
 import com.orion.net.ftp.client.pool.FtpClientFactory;
+import com.orion.net.specification.transfer.IFileDownloader;
+import com.orion.net.specification.transfer.IFileUploader;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Date;
 import java.util.regex.Pattern;
 
@@ -75,12 +79,12 @@ public class FtpClintTests {
     }
 
     @Test
-    public void testMkdir() {
-        e.mkdirs("/root/test22/t/4/5");
-        e.mkdirs("/root/test22/t/4/5");
-        e.mkdirs("/root/test22/t/4/6");
-        e.mkdirs("/root/test22/t/4/7");
-        e.mkdirs("/root/test22/t/4/8");
+    public void testMakeDir() {
+        e.makeDirectories("/root/test22/t/4/5");
+        e.makeDirectories("/root/test22/t/4/5");
+        e.makeDirectories("/root/test22/t/4/6");
+        e.makeDirectories("/root/test22/t/4/7");
+        e.makeDirectories("/root/test22/t/4/8");
     }
 
     @Test
@@ -91,7 +95,7 @@ public class FtpClintTests {
         e.touch("/root/test2x/d/1.txt");
         e.removeFile("/root/test2x/1.txt");
         e.removeDir("/root/test1x");
-        e.rm("/root/test2x");
+        e.remove("/root/test2x");
     }
 
     @Test
@@ -102,11 +106,11 @@ public class FtpClintTests {
         String path4 = "/root/4.txt";
         e.touch(path1);
         System.out.println(JSON.toJSONString(e.getFile(path1)));
-        e.mv(path1, path2);
+        e.move(path1, path2);
         System.out.println(JSON.toJSONString(e.getFile(path2)));
-        e.mv(path2, "3.txt");
+        e.move(path2, "3.txt");
         System.out.println(JSON.toJSONString(e.getFile(path3)));
-        e.mv(path3, "../../4.txt");
+        e.move(path3, "../../4.txt");
         System.out.println(JSON.toJSONString(e.getFile(path4)));
     }
 
@@ -114,15 +118,43 @@ public class FtpClintTests {
     public void testList() {
         System.out.println(e.listFiles("/root", false));
         System.out.println("---------");
-        System.out.println(e.listFilesSuffix("/root", ".txt", false));
+        System.out.println(e.listFilesFilter("/root", FtpFileFilter.suffix(".txt"), false));
         System.out.println("---------");
-        System.out.println(e.listFilesMatch("/root", "4.", false));
+        System.out.println(e.listFilesFilter("/root", FtpFileFilter.contains("4."), false));
         System.out.println("---------");
-        System.out.println(e.listFilesPattern("/root", Pattern.compile(".*\\.txt"), false));
+        System.out.println(e.listFilesFilter("/root", FtpFileFilter.matches(Pattern.compile(".*\\.txt")), false));
         System.out.println("---------");
-        System.out.println(e.listFilesFilter("/root", s -> s.getSize() > 20, false));
+        System.out.println(e.listFilesFilter("/root", s -> s.getSize() > 20, true));
         System.out.println("---------");
         System.out.println(e.listDirs("/root", false));
+    }
+
+    @Test
+    public void testStream() throws IOException {
+        try {
+            System.out.println(e.openInputStream("/root/1/2/3"));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        Threads.sleep(500);
+
+        e.touch("/root/2/2/3");
+        try (InputStream in = e.openInputStream("/root/2/2/3")) {
+            System.out.println(in);
+        }
+        System.out.println(e.pending());
+        Threads.sleep(500);
+
+        try (OutputStream o1 = e.openOutputStream("/root/3/2/3")) {
+            System.out.println(o1);
+        }
+        System.out.println(e.pending());
+        Threads.sleep(500);
+
+        try (OutputStream o2 = e.openOutputStream("/root/4/2/3", true)) {
+            System.out.println(o2);
+        }
+        System.out.println(e.pending());
     }
 
     @Test
@@ -157,46 +189,6 @@ public class FtpClintTests {
     }
 
     @Test
-    public void testReadLine() throws IOException {
-        String path = "/root/1.txt";
-        System.out.println(e.readLine(path));
-        System.out.println("-----");
-
-        System.out.println(e.readLine(path, 9));
-        System.out.println("-----");
-
-        System.out.println(e.readLine(path, 10));
-        System.out.println("-----");
-
-        System.out.println(e.readLine(path, 11));
-        System.out.println("-----");
-
-        System.out.println(e.readLines(path));
-        System.out.println("-----");
-
-        System.out.println(e.readLines(path, 2));
-        System.out.println("-----");
-
-        System.out.println(e.readLines(path, 3));
-        System.out.println("-----");
-
-        System.out.println(e.readLines(path, 2L));
-        System.out.println("-----");
-
-        System.out.println(e.readLines(path, 3L));
-        System.out.println("-----");
-
-        System.out.println(e.readLines(path, 2L, 2));
-        System.out.println("-----");
-
-        System.out.println(e.readLines(path, 3L, 2));
-        System.out.println("-----");
-
-        System.out.println(e.readLines(path, 10L, 2));
-        System.out.println("-----");
-    }
-
-    @Test
     public void testTransfer() throws IOException {
         String path = "/root/1.txt";
 
@@ -212,88 +204,71 @@ public class FtpClintTests {
     @Test
     public void testWrite() throws IOException {
         String path = "/root/write/1.txt";
-        e.write(path, "111".getBytes());
-        e.transfer(path, System.out);
-        Threads.sleep(500);
 
-        System.out.println("----");
         e.write(path, "123\n".getBytes());
         e.transfer(path, System.out);
         Threads.sleep(500);
-
         System.out.println("----");
+
         e.write(path, Streams.toInputStream("123123123123\n"));
         e.transfer(path, System.out);
         Threads.sleep(500);
-    }
 
-    @Test
-    public void testWriteLine() throws IOException {
-        String path = "/root/write/1.txt";
-
-        e.writeLine(path, "111");
+        e.write(path, "111");
         e.transfer(path, System.out);
         Threads.sleep(500);
-
         System.out.println("----");
-        e.writeLines(path, Lists.of("111", "我是", "333", "444"));
+
+        e.write(path, String.join("\n", Lists.of("111", "我是", "333", "444")));
         e.transfer(path, System.out);
         Threads.sleep(500);
     }
 
     @Test
     public void testAppend() throws IOException {
-        String path = "/root/write/12.txt";
+        String path = "/root/write1/12.txt";
         e.truncate(path);
 
-        e.append(path, "111".getBytes());
-        e.transfer(path, System.out);
-        Threads.sleep(500);
-
-        System.out.println("----");
         e.append(path, "123\n".getBytes());
         e.transfer(path, System.out);
         Threads.sleep(500);
-
         System.out.println("----");
+
         e.append(path, Streams.toInputStream("123123123123\n"));
         e.transfer(path, System.out);
         Threads.sleep(500);
-    }
-
-    @Test
-    public void testAppendLine() throws IOException {
-        String path = "/root/write/1.txt";
-        e.truncate(path);
-
-        e.appendLine(path, "111");
-        e.transfer(path, System.out);
-        Threads.sleep(500);
-
         System.out.println("----");
-        e.appendLines(path, Lists.of("111", "我是", "333", "444"));
+
+        e.append(path, "111");
         e.transfer(path, System.out);
         Threads.sleep(500);
+        System.out.println("----");
+
+        e.append(path, String.join("\n", Lists.of("111", "我是", "333", "444")));
+        System.out.println("----");
+        Threads.sleep(500);
+
+        e.transfer(path, System.out);
     }
 
     @Test
     public void testUpload() throws IOException {
-        e.uploadFile("/root/test/bug.txt", "C:\\Users\\ljh15\\Desktop\\bug.txt");
-        e.uploadDir("/root/test/dir", "C:\\Users\\ljh15\\Desktop\\data\\_FastStoneCapture7.3", true);
+        e.uploadFile("/root/test/bug.txt", "C:\\Users\\Administrator\\Desktop\\bug.txt");
+        e.uploadDir("/root/test/dir", "C:\\Users\\Administrator\\Desktop\\FastStoneCapture7.3", true);
     }
 
     @Test
     public void testDownload() throws IOException {
-        e.downloadFile("/root/test/bug.txt", "C:\\Users\\ljh15\\Desktop\\bug1.txt");
-        e.downloadDir("/root/test/dir", "C:\\Users\\ljh15\\Desktop\\_FastStoneCapture7.3", true);
+        e.downloadFile("/root/test/bug.txt", "C:\\Users\\Administrator\\Desktop\\bug1.txt");
+        e.downloadDir("/root/test/dir", "C:\\Users\\Administrator\\Desktop\\_FastStoneCapture7.3", true);
     }
 
     @Test
-    public void testBigUpload() {
-        String local = "C:\\Users\\ljh15\\Desktop\\cp.zip";
+    public void testTransferUpload() {
+        String local = "C:\\Users\\Administrator\\Desktop\\cp.zip";
         System.out.println(Files1.md5(local));
 
-        IFileTransfer u = e.upload("/root/test/cp.zip", local);
+        IFileUploader u = e.upload("/root/test/cp.zip", local);
         u.getProgress()
                 .computeRate()
                 .rateAcceptor(pr -> {
@@ -310,10 +285,10 @@ public class FtpClintTests {
     }
 
     @Test
-    public void testBigDownload() {
-        String local = "C:\\Users\\ljh15\\Desktop\\cp1.zip";
+    public void testTransferDownload() {
+        String local = "C:\\Users\\Administrator\\Desktop\\cp1.zip";
 
-        IFileTransfer u = e.download("/root/test/cp.zip", local);
+        IFileDownloader u = e.download("/root/test/cp.zip", local);
         u.getProgress()
                 .computeRate()
                 .rateAcceptor(pr -> {

@@ -58,7 +58,7 @@ public class CsvLambdaReader<T> extends BaseCsvReader<T> {
     }
 
     /**
-     * 如果列为null是否调用function consumer
+     * 如果列为 null 是否调用 function consumer
      *
      * @return this
      */

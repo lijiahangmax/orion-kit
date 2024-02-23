@@ -50,7 +50,7 @@ orion-all       | 全部模块聚合 包含了上述所有模块的引用
 
 ### 如何使用
 ``` pom.xml
-# 当前最新版本 1.0.5
+# 当前最新版本 1.0.6
 <dependency>
     <groupId>io.github.lijiahangmax</groupId>
     <artifactId>模块名称</artifactId>
@@ -61,7 +61,7 @@ orion-all       | 全部模块聚合 包含了上述所有模块的引用
 <dependency>
     <groupId>io.github.lijiahangmax</groupId>
     <artifactId>orion-all</artifactId>
-    <version>1.0.5</version>
+    <version>1.0.6</version>
 </dependency>
 ```
 
@@ -392,9 +392,7 @@ MD5签名   | Signatures.md5
 ┌─ftp
 │  ├─client                 FTPClient 工具类
 │  │  │
-│  │  ├─bigfile
-│  │  │   FtpDownload       FTPClient 大文件下载
-│  │  │   FtpUpload         FTPClient 大文件上传
+│  │  ├─transfer            FTP 大文件传输
 │  │  │
 │  │  ├─config              FTPClient 配置
 │  │  │
@@ -402,40 +400,21 @@ MD5签名   | Signatures.md5
 │  │
 │  └─server                 FTPServer 工具类
 │
-├─remote
+├─host                      远程机器连接工具 jsch
 │  │
-│  ├─channel                远程机器连接工具 jsch
-│  │  │
-│  │  ├─sftp                sftp 执行器
-│  │  │  │
-│  │  │  └─bigfile
-│  │  │     SftpDownload    sftp 大文件下载
-│  │  │     SftpUpload      sftp 大文件上传
-│  │  │
-│  │  └─ssh
-│  │       CommandExecutor  远程命令执行器
-│  │       ShellExecutor    shell 执行器
-│  │
-│  └─connection             远程机器连接工具 ssh2
-│      │
-│      ├─scp                scp 执行器
-│      │
-│      ├─sftp               sftp 执行器
-│      │  │
-│      │  └─bigfile        
-│      │    SftpDownload    sftp 大文件下载
-│      │    SftpUpload      sftp 大文件上传
-│      │
-│      └─ssh
-│           CommandExecutor 远程命令执行器
-│           ShellExecutor   shell 执行器
+│  ├─sftp                   sftp 执行器
+│  │  
+│  └─ssh                    shell / command 执行器 
 │
-└─socket
-     Sockets                socket 工具类
-     TcpReceive             tcp 接收器
-     TcpSend                tcp 发送器
-     UdpReceive             udp 接收器
-     UdpSend                udp 发送器
+├─socket
+│    Sockets                socket 工具类
+│    TcpReceive             tcp 接收器
+│    TcpSend                tcp 发送器
+│    UdpReceive             udp 接收器
+│    UdpSend                udp 发送器
+│
+└─specification             标准定义
+ 
 ```
 <br/>
 

@@ -20,18 +20,6 @@ public class WrapperException extends InvalidArgumentException {
         this.wrapper = wrapper;
     }
 
-    public WrapperException(Wrapper<?> wrapper, String message) {
-        super(message);
-        Valid.notNull(wrapper, "wrapper is null");
-        this.wrapper = wrapper;
-    }
-
-    public WrapperException(Wrapper<?> wrapper, String message, Throwable cause) {
-        super(message, cause);
-        Valid.notNull(wrapper, "wrapper is null");
-        this.wrapper = wrapper;
-    }
-
     public WrapperException(Wrapper<?> wrapper, Throwable cause) {
         super(cause);
         Valid.notNull(wrapper, "wrapper is null");

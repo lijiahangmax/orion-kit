@@ -26,13 +26,13 @@ import java.util.Map;
  */
 public class FileTypes {
 
-    private FileTypes() {
-    }
-
     /**
      * 文件头
      */
     private static final Map<String, String> FILE_HEAD_MAP = new LinkedHashMap<>();
+
+    private FileTypes() {
+    }
 
     static {
         FILE_HEAD_MAP.put("lnk", "4C0000000114020000000000C0000000");

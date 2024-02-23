@@ -60,7 +60,7 @@ public class DelayTracker extends AbstractDelayTracker {
      * @param str str
      * @return str
      */
-    private static String cleanMissCode(String str) {
+    public static String cleanMissCode(String str) {
         int testCount = Math.min(str.length(), 2);
         for (int i = testCount; i > 0; i--) {
             if (Spells.isMessyCode(String.valueOf(str.charAt(i - 1)))) {

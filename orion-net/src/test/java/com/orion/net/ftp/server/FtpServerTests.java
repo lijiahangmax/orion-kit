@@ -12,10 +12,10 @@ public class FtpServerTests {
         FtpUser user = new FtpUser();
         user.setUsername("user");
         user.setPassword("123");
-        user.setHomePath("C:\\Users\\ljh15\\Desktop\\ftp");
+        user.setHomePath("C:\\Users\\Administrator\\Desktop\\sftp");
         user.setWritePermission(true);
         instance.addUser(user)
-                // .sslConfig(new FtpServerSslConfig("C:\\Users\\ljh15\\Desktop\\1.jks", "123456"))
+                // .sslConfig(new FtpServerSslConfig("C:\Users\Administrator\Desktop\sftp\\1.jks", "123456"))
                 .listener()
                 .start();
     }

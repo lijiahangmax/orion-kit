@@ -2,6 +2,7 @@ package com.orion.lang.utils;
 
 import com.orion.lang.constant.Const;
 import com.orion.lang.utils.collect.Collections;
+import com.orion.lang.utils.collect.Maps;
 import com.orion.lang.utils.regexp.Matches;
 
 import java.nio.ByteBuffer;
@@ -12,6 +13,9 @@ import java.util.Random;
 import java.util.StringJoiner;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * String 工具类
@@ -212,13 +216,11 @@ public class Strings {
     /**
      * 是否全部为空
      *
-     * @param strs 待验证的一组字符串, 参数为空返回为true
-     * @return 全部为空true
+     * @param strs 参数为空返回为 true
+     * @return 全部为空 true
      */
     public static boolean isAllBlank(String... strs) {
-        if (strs == null) {
-            return true;
-        } else if (strs.length == 0) {
+        if (strs == null || strs.length == 0) {
             return true;
         }
         for (String str : strs) {
@@ -230,15 +232,31 @@ public class Strings {
     }
 
     /**
+     * 验证是否有为空
+     *
+     * @param strs 参数为空返回为 false
+     * @return 是否有空
+     */
+    public static boolean isAnyBlank(String... strs) {
+        if (strs == null || strs.length == 0) {
+            return false;
+        }
+        for (String str : strs) {
+            if (isBlank(str)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * 验证是否没有为空
      *
-     * @param strs 待验证的一组字符串, 参数为空返回为false
-     * @return 全部不为空true
+     * @param strs 参数为空返回为 false
+     * @return 全部不为空 true
      */
     public static boolean isNoneBlank(String... strs) {
-        if (strs == null) {
-            return false;
-        } else if (strs.length == 0) {
+        if (strs == null || strs.length == 0) {
             return false;
         }
         for (String str : strs) {
@@ -272,13 +290,11 @@ public class Strings {
     /**
      * 是否全部为空
      *
-     * @param strs 待验证的一组字符串, 参数为空返回为true
-     * @return 全部为空true
+     * @param strs 参数为空返回为 true
+     * @return 全部为空 true
      */
     public static boolean isAllEmpty(CharSequence... strs) {
-        if (strs == null) {
-            return true;
-        } else if (strs.length == 0) {
+        if (strs == null || strs.length == 0) {
             return true;
         }
         for (CharSequence str : strs) {
@@ -290,15 +306,31 @@ public class Strings {
     }
 
     /**
+     * 验证是否有为空
+     *
+     * @param strs 参数为空返回为 false
+     * @return 是否有空
+     */
+    public static boolean isAnyEmpty(String... strs) {
+        if (strs == null || strs.length == 0) {
+            return false;
+        }
+        for (String str : strs) {
+            if (isEmpty(str)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * 验证是否没有为空
      *
-     * @param strs 待验证的一组字符串, 参数为空返回为false
-     * @return 全部不为空true
+     * @param strs 参数为空返回为 false
+     * @return 全部不为空 true
      */
     public static boolean isNoneEmpty(CharSequence... strs) {
-        if (strs == null) {
-            return false;
-        } else if (strs.length == 0) {
+        if (strs == null || strs.length == 0) {
             return false;
         }
         for (CharSequence str : strs) {
@@ -656,42 +688,42 @@ public class Strings {
     /**
      * 连接字符串
      *
-     * @param strs   连接字符串
-     * @param symbol symbol
+     * @param strs      连接字符串
+     * @param delimiter delimiter
      * @return ignore
      */
-    public static String joinSymbol(String symbol, String... strs) {
+    public static String joinWith(String delimiter, String... strs) {
         if (Arrays1.length(strs) == 0) {
             return Strings.EMPTY;
         }
-        if (isBlank(symbol)) {
-            symbol = Strings.EMPTY;
+        if (isBlank(delimiter)) {
+            delimiter = Strings.EMPTY;
         }
         StringBuilder sb = newBuilder();
         for (String str : strs) {
-            sb.append(str).append(symbol);
+            sb.append(str).append(delimiter);
         }
-        sb.deleteCharAt(sb.length() - symbol.length());
+        sb.deleteCharAt(sb.length() - delimiter.length());
         return sb.toString();
     }
 
-    public static String join(Collection<String> list, String symbol) {
-        return join(list, symbol, Strings.EMPTY, Strings.EMPTY);
+    public static String join(Collection<String> list, String delimiter) {
+        return join(list, delimiter, Strings.EMPTY, Strings.EMPTY);
     }
 
     /**
      * 连接字符串
      *
-     * @param list   连接字符串
-     * @param symbol symbol
-     * @param prefix 前缀
-     * @param suffix 后缀
+     * @param list      连接字符串
+     * @param delimiter delimiter
+     * @param prefix    前缀
+     * @param suffix    后缀
      * @return 连接后的字符串
      */
-    public static String join(Collection<String> list, String symbol, String prefix, String suffix) {
+    public static String join(Collection<String> list, String delimiter, String prefix, String suffix) {
         prefix = isBlank(prefix) ? Strings.EMPTY : prefix;
         suffix = isBlank(suffix) ? Strings.EMPTY : suffix;
-        StringJoiner sj = new StringJoiner(symbol, prefix, suffix);
+        StringJoiner sj = new StringJoiner(delimiter, prefix, suffix);
         list.forEach(sj::add);
         return sj.toString();
     }
@@ -829,22 +861,36 @@ public class Strings {
      * @return str
      */
     public static String format(String str, Map<?, ?> map) {
-        for (Map.Entry<?, ?> entry : map.entrySet()) {
-            str = str.replaceAll("\\$\\{" + entry.getKey() + "}", Objects1.toString(entry.getValue()));
-        }
-        return str;
+        return format(str, "$", map);
     }
 
     /**
-     * 格式化字符串 comment{}
+     * 格式化字符串 replacement{}
+     * <p>
+     * 这里多层数据结构就会有问题 可以使用 {@link com.orion.lang.utils.json.matcher.ReplacementFormatters}
      *
      * @param str 字符串
-     * @param map comment{key} = value
+     * @param map replacement{key} = value
      * @return str
      */
-    public static String format(String str, String comment, Map<?, ?> map) {
-        for (Map.Entry<?, ?> entry : map.entrySet()) {
-            str = str.replaceAll(comment + "\\{" + entry.getKey() + "}", Objects1.toString(entry.getValue()));
+    public static String format(String str, String replacement, Map<?, ?> map) {
+        if (isEmpty(str) || Maps.isEmpty(map)) {
+            return str;
+        }
+        // 替换符
+        String newReplacement = replacement.chars()
+                .mapToObj(s -> "\\" + (char) s)
+                .collect(Collectors.joining());
+        Pattern p = Pattern.compile("(" + newReplacement + "\\{)(.+?)(\\})");
+        Matcher matcher = p.matcher(str);
+        while (matcher.find()) {
+            String group = matcher.group();
+            String key = group.substring(replacement.length() + 1, group.length() - 1);
+            Object value = map.get(key);
+            if (value == null) {
+                continue;
+            }
+            str = str.replace(group, Objects1.toString(value));
         }
         return str;
     }
@@ -1081,6 +1127,9 @@ public class Strings {
         if (num <= 0) {
             return Strings.EMPTY;
         }
+        if (num == 1) {
+            return str;
+        }
         StringBuilder s = new StringBuilder();
         for (int i = 0; i < num; i++) {
             s.append(str);
@@ -1116,9 +1165,12 @@ public class Strings {
     public static char[] repeatArr(String str, int num) {
         int length = Strings.length(str);
         if (num <= 0) {
-            num = 1;
+            return new char[0];
         }
         char[] chars = str.toCharArray();
+        if (num == 1) {
+            return chars;
+        }
         char[] arr = new char[length * num];
         for (int i = 0; i < num; i++) {
             System.arraycopy(chars, 0, arr, i * length, length);
@@ -1150,15 +1202,6 @@ public class Strings {
     }
 
     /**
-     * 生成一串字符
-     *
-     * @return 字符
-     */
-    public static String lorem() {
-        return "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque aut doloremque ea eveniet sint sit voluptas! Ab accusantium aperiam, earum eos id impedit, laboriosam necessitatibus nobis non sint vel voluptates?";
-    }
-
-    /**
      * 跳过字符串开头
      *
      * @param str  字符串
@@ -1176,6 +1219,24 @@ public class Strings {
         char[] cs = new char[length - skip];
         System.arraycopy(str.toCharArray(), skip, cs, 0, length - skip);
         return str(cs);
+    }
+
+    /**
+     * 保留长度
+     *
+     * @param str    str
+     * @param length length
+     * @return str
+     */
+    public static String retain(String str, int length) {
+        if (isEmpty(str)) {
+            return null;
+        }
+        int len = str.length();
+        if (len <= length) {
+            return str;
+        }
+        return str.substring(0, length);
     }
 
     public static String omit(String str, int length) {

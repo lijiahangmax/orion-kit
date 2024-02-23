@@ -48,12 +48,12 @@ public class ExcelBeanReader<T> extends BaseExcelReader<String, T> {
     private final Map<String, Method> setters;
 
     /**
-     * 如果列为null是否调用setter(null)
+     * 如果列为 null 是否调用 setter(null)
      */
     private boolean nullInvoke;
 
     /**
-     * 如果行为null是否添加一个新的实例对象
+     * 如果行为 null 是否添加一个新的实例对象
      */
     private boolean nullAddEmptyBean;
 
@@ -79,8 +79,20 @@ public class ExcelBeanReader<T> extends BaseExcelReader<String, T> {
         this.init = false;
     }
 
+    public static <T> ExcelBeanReader<T> create(Workbook workbook, Sheet sheet, Class<T> targetClass) {
+        return new ExcelBeanReader<>(workbook, sheet, targetClass);
+    }
+
+    public static <T> ExcelBeanReader<T> create(Workbook workbook, Sheet sheet, Class<T> targetClass, List<T> rows) {
+        return new ExcelBeanReader<>(workbook, sheet, targetClass, rows);
+    }
+
+    public static <T> ExcelBeanReader<T> create(Workbook workbook, Sheet sheet, Class<T> targetClass, Consumer<T> consumer) {
+        return new ExcelBeanReader<>(workbook, sheet, targetClass, consumer);
+    }
+
     /**
-     * 如果列为null是否调用setter(null)
+     * 如果列为 null 是否调用 setter(null)
      *
      * @return this
      */
@@ -90,7 +102,7 @@ public class ExcelBeanReader<T> extends BaseExcelReader<String, T> {
     }
 
     /**
-     * 如果行为null是否添加实例对象
+     * 如果行为 null 是否添加实例对象
      *
      * @return this
      */
@@ -162,11 +174,11 @@ public class ExcelBeanReader<T> extends BaseExcelReader<String, T> {
                 if (trim && value instanceof String) {
                     value = ((String) value).trim();
                 }
-                // 调用setter
+                // 调用 setter
                 try {
                     Methods.invokeSetterInfer(t, setter, value);
                 } catch (Exception e) {
-                    // ignore
+                    Exceptions.printStacks(e);
                 }
             } else if (nullInvoke) {
                 Methods.invokeMethod(t, setter, (Object) null);

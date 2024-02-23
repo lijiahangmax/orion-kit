@@ -72,7 +72,7 @@ public class Fields {
         if (method == null) {
             return null;
         }
-        return getFieldNameByMethodName(method.getName());
+        return getFieldNameByMethod(method.getName());
     }
 
     /**
@@ -81,7 +81,7 @@ public class Fields {
      * @param methodName 方法名称
      * @return 字段名称
      */
-    public static String getFieldNameByMethodName(String methodName) {
+    public static String getFieldNameByMethod(String methodName) {
         if (Strings.isBlank(methodName)) {
             return null;
         }
@@ -106,32 +106,25 @@ public class Fields {
     /**
      * 通过方法获取字段 仅限于 getter setter
      *
-     * @param methodClazz 方法类
+     * @param methodClass 方法类
      * @param method      方法
      * @return 字段
      */
-    public static Field getFieldByMethod(Class<?> methodClazz, Method method) {
-        if (method == null) {
-            return null;
-        }
-        String fieldName = getFieldNameByMethodName(method.getName());
-        if (fieldName != null) {
-            return getAccessibleField(methodClazz, fieldName);
-        }
-        return null;
+    public static Field getFieldByMethod(Class<?> methodClass, Method method) {
+        return getFieldByMethod(methodClass, method.getName());
     }
 
     /**
      * 通过方法获取字段 仅限于 getter setter
      *
-     * @param methodClazz 方法类
+     * @param methodClass 方法类
      * @param methodName  方法名称
      * @return 字段
      */
-    public static Field getFieldByMethodName(Class<?> methodClazz, String methodName) {
-        String fieldName = getFieldNameByMethodName(methodName);
+    public static Field getFieldByMethod(Class<?> methodClass, String methodName) {
+        String fieldName = getFieldNameByMethod(methodName);
         if (fieldName != null) {
-            return getAccessibleField(methodClazz, fieldName);
+            return getAccessibleField(methodClass, fieldName);
         }
         return null;
     }
@@ -151,11 +144,7 @@ public class Fields {
         if (field == null) {
             throw Exceptions.invoke(Strings.format("get field value not found field: {}, class {}", fieldName, obj.getClass().getName()));
         }
-        try {
-            return (E) field.get(obj);
-        } catch (Exception e) {
-            throw Exceptions.invoke(Strings.format("get field value error: {}, field: {}, class: {}", e.getMessage(), fieldName, obj.getClass().getName()), e);
-        }
+        return getFieldValue(obj, field);
     }
 
     /**
@@ -192,11 +181,7 @@ public class Fields {
         if (field == null) {
             throw Exceptions.invoke(Strings.format("set field value not found field: {}, class {}", fieldName, obj.getClass().getName()));
         }
-        try {
-            field.set(obj, value);
-        } catch (Exception e) {
-            throw Exceptions.invoke(Strings.format("set field value error: {}, field: {}, class: {}", e.getMessage(), fieldName, obj.getClass().getName(), value), e);
-        }
+        setFieldValue(obj, field, value);
     }
 
     /**
@@ -230,15 +215,10 @@ public class Fields {
         Valid.notNull(obj, "invoker object is null");
         Valid.notNull(fieldName, "invoke field is null");
         Field field = getAccessibleField(obj.getClass(), fieldName);
-        try {
-            if (TypeStore.canConvert(value.getClass(), field.getType())) {
-                field.set(obj, TypeStore.STORE.to(value, field.getType()));
-                return;
-            }
-            throw Exceptions.invoke(Strings.format("could infer set field value, field: {}, class: {}", fieldName, obj.getClass().getName()));
-        } catch (Exception e) {
-            throw Exceptions.invoke(Strings.format("set field value error: {}, field: {}, class: {}", e.getMessage(), fieldName, obj.getClass().getName()), e);
+        if (field == null) {
+            throw Exceptions.invoke(Strings.format("set field value not found field: {}, class {}", fieldName, obj.getClass().getName()));
         }
+        setFieldValueInfer(obj, field, value);
     }
 
     /**

@@ -56,7 +56,7 @@ public class BeanWrapper {
         }
         List<Method> getterMethods = Methods.getGetterMethodsByCache(bean.getClass());
         for (Method getterMethod : getterMethods) {
-            String fieldName = Fields.getFieldNameByMethodName(getterMethod.getName());
+            String fieldName = Fields.getFieldNameByMethod(getterMethod.getName());
             if (fieldMapper != null) {
                 String s = fieldMapper.get(fieldName);
                 if (s != null) {
@@ -140,7 +140,7 @@ public class BeanWrapper {
                     keyMap = (Map<String, ?>) field;
                 }
             }
-            String setterMethodName = Methods.getSetterMethodNameByFieldName(key);
+            String setterMethodName = Methods.getSetterMethodNameByField(key);
             for (Method setterMethod : setterMethods) {
                 Object value = entry.getValue();
                 if (setterMethod.getName().equals(setterMethodName)) {
@@ -299,7 +299,7 @@ public class BeanWrapper {
             }
             String sourceFieldName = getFieldNameAlias(targetFieldName, fieldMapper);
             for (Method sourceGetter : sourceGetters) {
-                if (Objects1.eq(Fields.getFieldNameByMethodName(sourceGetter.getName()), sourceFieldName)) {
+                if (Objects1.eq(Fields.getFieldNameByMethod(sourceGetter.getName()), sourceFieldName)) {
                     try {
                         Object sourceValue = Methods.invokeMethod(source, sourceGetter);
                         if (sourceValue != null) {

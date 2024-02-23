@@ -36,6 +36,26 @@ public class CsvArrayWriter extends BaseCsvWriter<Integer, String[]> {
         super(writer);
     }
 
+    public static CsvArrayWriter create(String file) {
+        return new CsvArrayWriter(file);
+    }
+
+    public static CsvArrayWriter create(File file) {
+        return new CsvArrayWriter(file);
+    }
+
+    public static CsvArrayWriter create(OutputStream out) {
+        return new CsvArrayWriter(out);
+    }
+
+    public static CsvArrayWriter create(Writer writer) {
+        return new CsvArrayWriter(writer);
+    }
+
+    public static CsvArrayWriter create(CsvWriter writer) {
+        return new CsvArrayWriter(writer);
+    }
+
     @Override
     protected String[] parseRow(String[] row) {
         String[] store;

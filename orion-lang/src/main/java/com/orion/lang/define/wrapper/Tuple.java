@@ -1,6 +1,7 @@
 package com.orion.lang.define.wrapper;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.orion.lang.able.IJsonObject;
 import com.orion.lang.define.iterator.ArrayIterator;
 import com.orion.lang.define.iterator.EmptyIterator;
@@ -96,11 +97,13 @@ public class Tuple extends CloneSupport<Tuple> implements Serializable, IJsonObj
     }
 
     @JSONField(serialize = false)
+    @JsonIgnore
     public boolean isEmpty() {
         return Arrays1.isEmpty(members);
     }
 
     @JSONField(serialize = false)
+    @JsonIgnore
     public boolean isNotEmpty() {
         return Arrays1.isNotEmpty(members);
     }

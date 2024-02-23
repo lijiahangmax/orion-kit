@@ -61,9 +61,6 @@ import java.util.Optional;
 @SuppressWarnings("unused")
 public class Excels {
 
-    private Excels() {
-    }
-
     private static final int BUFFER_LINE = Const.N_100;
 
     private static final int BUFFER_SIZE = Const.BUFFER_KB_8;
@@ -73,6 +70,9 @@ public class Excels {
     private static final String KIT_DEFAULT_AUTHOR = KitConfig.get(KitOfficeConfiguration.CONFIG.EXCEL_DEFAULT_AUTHOR);
 
     private static final String KIT_DEFAULT_APPLICATION = KitConfig.get(KitOfficeConfiguration.CONFIG.EXCEL_DEFAULT_APPLICATION);
+
+    private Excels() {
+    }
 
     /**
      * 获取列对应的数值
@@ -237,7 +237,7 @@ public class Excels {
                     // 纯数字
                     value = BigDecimal.valueOf(cell.getNumericCellValue()).toString();
                     String[] item = value.split("\\.");
-                    if (item.length > 1 && Integer.parseInt(item[1]) == 0) {
+                    if (item.length > 1 && Strings.isInteger(item[1]) && Long.parseLong(item[1]) == 0) {
                         // 整数
                         value = item[0];
                     }

@@ -33,4 +33,12 @@ public class MutableTreeMap<K, V> extends TreeMap<K, V> implements MutableMap<K,
         super(m);
     }
 
+    public static <K, V> MutableTreeMap<K, V> create() {
+        return new MutableTreeMap<>();
+    }
+
+    public static <K, V> MutableTreeMap<K, V> create(Map<? extends K, ? extends V> m) {
+        return new MutableTreeMap<>(m);
+    }
+
 }

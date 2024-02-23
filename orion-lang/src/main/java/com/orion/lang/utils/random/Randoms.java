@@ -15,9 +15,6 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class Randoms {
 
-    private Randoms() {
-    }
-
     public static final Random RANDOM = new Random();
 
     private static final String ALL = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -25,6 +22,9 @@ public class Randoms {
     private static final String LETTER = "abcdefghijkllmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     private static final String NUMBER = "0123456789";
+
+    private Randoms() {
+    }
 
     public static Random getRandom() {
         return RANDOM;

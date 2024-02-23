@@ -1,6 +1,5 @@
 package com.orion.lang.utils.crypto.symmetric;
 
-import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.Valid;
 import com.orion.lang.utils.crypto.enums.CipherAlgorithm;
 import com.orion.lang.utils.crypto.enums.PaddingMode;
@@ -8,7 +7,6 @@ import com.orion.lang.utils.crypto.enums.WorkingMode;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
-import java.util.Arrays;
 
 /**
  * 非对称加密父类
@@ -17,7 +15,7 @@ import java.util.Arrays;
  * @version 1.0.0
  * @since 2020/11/2 18:27
  */
-public abstract class BaseSymmetric {
+public abstract class BaseSymmetric implements SymmetricCrypto {
 
     /**
      * 加密算法
@@ -44,69 +42,6 @@ public abstract class BaseSymmetric {
         this.workingMode = Valid.notNull(workingMode, "workingMode is null");
         this.paddingMode = Valid.notNull(paddingMode, "paddingMode is null");
         this.secretKey = Valid.notNull(secretKey, "secretKey is null");
-    }
-
-    public byte[] encrypt(String plain) {
-        return this.encrypt(Strings.bytes(plain));
-    }
-
-    public String encryptAsString(String plain) {
-        return new String(this.encrypt(Strings.bytes(plain)));
-    }
-
-    public String encryptAsString(byte[] plain) {
-        return new String(this.encrypt(plain));
-    }
-
-    /**
-     * 加密
-     *
-     * @param plain 明文
-     * @return 密文
-     */
-    public abstract byte[] encrypt(byte[] plain);
-
-    public byte[] decrypt(String text) {
-        return this.decrypt(Strings.bytes(text));
-    }
-
-    public String decryptAsString(String text) {
-        return new String(this.decrypt(Strings.bytes(text)));
-    }
-
-    public String decryptAsString(byte[] text) {
-        return new String(this.decrypt(text));
-    }
-
-    /**
-     * 解密
-     *
-     * @param text 密文
-     * @return 明文
-     */
-    public abstract byte[] decrypt(byte[] text);
-
-    public boolean verify(String plain, String text) {
-        try {
-            return plain.equals(this.decryptAsString(text));
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    /**
-     * 验证加密结果
-     *
-     * @param plain 明文
-     * @param text  密文
-     * @return 是否成功
-     */
-    public boolean verify(byte[] plain, byte[] text) {
-        try {
-            return Arrays.equals(plain, this.decrypt(text));
-        } catch (Exception e) {
-            return false;
-        }
     }
 
     /**

@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.github.lijiahangmax</groupId>
         <artifactId>orion-kit</artifactId>
-        <version>1.0.5</version>
+        <version>1.0.6</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -18,7 +18,7 @@
         <dependency>
             <groupId>io.github.lijiahangmax</groupId>
             <artifactId>orion-lang</artifactId>
-            <version>${orion.lang.version}</version>
+            <version>${orion.kit.version}</version>
         </dependency>
 
         <!-- spring -->
@@ -26,13 +26,15 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- spring-mvc -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>${spring.mvc.version}</version>
+            <version>${spring.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- spring-aop -->
@@ -40,6 +42,7 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
             <version>${spring.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- aspectj -->
@@ -47,13 +50,7 @@
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
             <version>${aspectj.version}</version>
-        </dependency>
-
-        <!-- file-upload -->
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>${apache.upload.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- cglib -->
@@ -61,6 +58,7 @@
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
             <version>${cglib.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

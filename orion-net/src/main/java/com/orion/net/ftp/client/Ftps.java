@@ -1,5 +1,6 @@
 package com.orion.net.ftp.client;
 
+import com.orion.lang.utils.Exceptions;
 import com.orion.net.ftp.client.config.FtpConfig;
 import com.orion.net.ftp.client.instance.IFtpInstance;
 import com.orion.net.ftp.client.pool.FtpClientFactory;
@@ -28,12 +29,12 @@ public class Ftps {
             try {
                 client.logout();
             } catch (Exception e) {
-                // ignore
+                Exceptions.printStacks(e);
             } finally {
                 try {
                     client.disconnect();
                 } catch (Exception e) {
-                    // ignore
+                    Exceptions.printStacks(e);
                 }
             }
         }

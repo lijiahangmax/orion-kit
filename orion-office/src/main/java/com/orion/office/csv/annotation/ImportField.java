@@ -17,7 +17,7 @@ import java.lang.annotation.*;
 public @interface ImportField {
 
     /**
-     * 列
+     * 列 从 0 开始
      */
     int value();
 

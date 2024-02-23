@@ -31,4 +31,12 @@ public class MutableHashSet<E> extends HashSet<E> implements MutableSet<E>, Seri
         super(initialCapacity);
     }
 
+    public static <E> MutableHashSet<E> create() {
+        return new MutableHashSet<>();
+    }
+
+    public static <E> MutableHashSet<E> create(Collection<? extends E> c) {
+        return new MutableHashSet<>(c);
+    }
+
 }

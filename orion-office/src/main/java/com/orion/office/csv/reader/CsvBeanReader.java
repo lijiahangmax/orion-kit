@@ -75,7 +75,7 @@ public class CsvBeanReader<T> extends BaseCsvReader<T> {
     }
 
     /**
-     * 如果列为null是否调用setter(null)
+     * 如果列为 null 是否调用 setter(null)
      *
      * @return this
      */
@@ -113,12 +113,12 @@ public class CsvBeanReader<T> extends BaseCsvReader<T> {
                 return;
             }
             Object value = this.get(row, k);
-            // 执行setter
+            // 调用 setter
             if (value != null) {
                 try {
                     Methods.invokeSetterInfer(t, setter, value);
                 } catch (Exception e) {
-                    // ignore
+                    Exceptions.printStacks(e);
                 }
             } else if (nullInvoke) {
                 Methods.invokeMethod(t, setter, (Object) null);
@@ -128,7 +128,7 @@ public class CsvBeanReader<T> extends BaseCsvReader<T> {
     }
 
     /**
-     * 解析class
+     * 解析 class
      */
     protected void parseClass() {
         this.constructor = Valid.notNull(Constructors.getDefaultConstructor(targetClass), "target class not found default constructor");
@@ -156,7 +156,7 @@ public class CsvBeanReader<T> extends BaseCsvReader<T> {
     }
 
     /**
-     * 解析field
+     * 解析 field
      */
     protected void parseField() {
         // 注解field

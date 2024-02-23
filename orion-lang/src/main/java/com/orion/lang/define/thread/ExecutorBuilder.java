@@ -17,12 +17,12 @@ import java.util.concurrent.*;
 public class ExecutorBuilder implements Buildable<ThreadPoolExecutor> {
 
     /**
-     * 默认的等待队列容量
+     * 默认的工作队列容量
      */
     public static final int DEFAULT_QUEUE_CAPACITY = 1024;
 
     /**
-     * 初始池大小
+     * 核心池大小
      */
     private int corePoolSize;
 
@@ -32,22 +32,23 @@ public class ExecutorBuilder implements Buildable<ThreadPoolExecutor> {
     private int maxPoolSize;
 
     /**
-     * 线程存活时间, 即当池中线程多于初始大小时, 多出的线程保留的时长
+     * 线程存活时间
+     * 当池中线程多于核心大小时 多出的线程保留的时长
      */
     private long keepAliveTime;
 
     /**
-     * 队列, 用于存在未执行的线程
+     * 工作队列 用于存在未执行的线程
      */
     private BlockingQueue<Runnable> workQueue;
 
     /**
-     * 线程工厂, 用于自定义线程创建
+     * 线程工厂 用于自定义线程创建
      */
     private ThreadFactory threadFactory;
 
     /**
-     * 当线程阻塞 (block) 时的异常处理器, 所谓线程阻塞即线程池和等待队列已满, 无法处理线程时采取的策略
+     * 当线程阻塞 (block) 时的异常处理器
      */
     private RejectedExecutionHandler handler;
 
@@ -76,12 +77,12 @@ public class ExecutorBuilder implements Buildable<ThreadPoolExecutor> {
     }
 
     /**
-     * 设置初始池大小, 默认0
+     * 设置核心池大小 默认0
      *
-     * @param corePoolSize 初始池大小
+     * @param corePoolSize 核心池大小
      * @return this
      */
-    public ExecutorBuilder setCorePoolSize(int corePoolSize) {
+    public ExecutorBuilder corePoolSize(int corePoolSize) {
         this.corePoolSize = corePoolSize;
         return this;
     }
@@ -92,81 +93,101 @@ public class ExecutorBuilder implements Buildable<ThreadPoolExecutor> {
      * @param maxPoolSize 最大池大小 (允许同时执行的最大线程数)
      * @return this
      */
-    public ExecutorBuilder setMaxPoolSize(int maxPoolSize) {
+    public ExecutorBuilder maxPoolSize(int maxPoolSize) {
         this.maxPoolSize = maxPoolSize;
         return this;
     }
 
     /**
-     * 设置线程存活时间, 即当池中线程多于初始大小时, 多出的线程保留的时长
+     * 设置线程存活时间
+     * <p>
+     * 即当池中线程多于核心大小时 多出的线程保留的时长
      *
      * @param keepAliveTime 线程存活时间
      * @param unit          单位
      * @return this
      */
-    public ExecutorBuilder setKeepAliveTime(long keepAliveTime, TimeUnit unit) {
-        return setKeepAliveTime(unit.toNanos(keepAliveTime));
+    public ExecutorBuilder keepAliveTime(long keepAliveTime, TimeUnit unit) {
+        return this.keepAliveTime(unit.toNanos(keepAliveTime));
     }
 
     /**
-     * 设置线程存活时间, 即当池中线程多于初始大小时, 多出的线程保留的时长, 单位ms
+     * 设置线程存活时间 (ms)
+     * <p>
+     * 当池中线程多于核心大小时 多出的线程保留的时长
      *
-     * @param keepAliveTime 线程存活时间, 单位ms
+     * @param keepAliveTime 线程存活时间
      * @return this
      */
-    public ExecutorBuilder setKeepAliveTime(long keepAliveTime) {
+    public ExecutorBuilder keepAliveTime(long keepAliveTime) {
         this.keepAliveTime = keepAliveTime;
         return this;
     }
 
     /**
-     * 设置队列, 用于存在未执行的线程
+     * 设置工作队列
      * <p>
-     * SynchronousQueue    它将任务直接提交给线程而不保持它们, 当运行线程小于maxPoolSize时会创建新线程, 否则触发异常策略
+     * SynchronousQueue    它将任务直接提交给线程而不保持它们, 当运行线程小于 maxPoolSize 时会创建新线程, 否则触发异常策略
      * <p>
-     * LinkedBlockingQueue 默认无界队列, 当运行线程大于corePoolSize时始终放入此队列, 此时maximumPoolSize无效
-     * 当构造LinkedBlockingQueue对象时传入参数, 变为有界队列, 队列满时, 运行线程小于maxPoolSize时会创建新线程, 否则触发异常策略
+     * LinkedBlockingQueue 默认无界队列, 当运行线程大于 corePoolSize 时始终放入此队列, 此时 maximumPoolSize 无效
+     * 当构造LinkedBlockingQueue对象时传入参数, 变为有界队列, 队列满时, 运行线程小于 maxPoolSize 时会创建新线程, 否则触发异常策略
      * <p>
      * ArrayBlockingQueue  有界队列, 相对无界队列有利于控制队列大小, 队列满时, 运行线程小于maxPoolSize时会创建新线程, 否则触发异常策略
      *
      * @param workQueue 队列
      * @return this
      */
-    public ExecutorBuilder setWorkQueue(BlockingQueue<Runnable> workQueue) {
+    public ExecutorBuilder workQueue(BlockingQueue<Runnable> workQueue) {
         this.workQueue = workQueue;
         return this;
     }
 
     /**
-     * 使用 ArrayBlockingQueue 做为等待队列
-     * 有界队列, 相对无界队列有利于控制队列大小, 队列满时, 运行线程小于maxPoolSize时会创建新线程, 否则触发异常策略
+     * 使用 LinkedBlockingQueue 做为工作队列
+     *
+     * @return this
+     */
+    public ExecutorBuilder useLinkedBlockingQueue() {
+        return this.workQueue(new LinkedBlockingQueue<>());
+    }
+
+    /**
+     * 使用 LinkedBlockingQueue 做为工作队列
+     *
+     * @param capacity 队列容量
+     * @return this
+     */
+    public ExecutorBuilder useLinkedBlockingQueue(int capacity) {
+        return this.workQueue(new LinkedBlockingQueue<>(capacity));
+    }
+
+    /**
+     * 使用 ArrayBlockingQueue 做为工作队列
      *
      * @param capacity 队列容量
      * @return this
      */
     public ExecutorBuilder useArrayBlockingQueue(int capacity) {
-        return this.setWorkQueue(new ArrayBlockingQueue<>(capacity));
+        return this.workQueue(new ArrayBlockingQueue<>(capacity));
     }
 
     /**
-     * 使用 SynchronousQueue 做为等待队列  (非公平策略)
-     * 它将任务直接提交给线程而不保持它们当运行线程小于maxPoolSize时会创建新线程, 否则触发异常策略
+     * 使用 SynchronousQueue 做为工作队列 (非公平策略)
      *
      * @return this
      */
     public ExecutorBuilder useSynchronousQueue() {
-        return this.setWorkQueue(new SynchronousQueue<>(false));
+        return this.workQueue(new SynchronousQueue<>(false));
     }
 
     /**
-     * 使用 SynchronousQueue 做为等待队列
-     * 它将任务直接提交给线程而不保持它们当运行线程小于maxPoolSize时会创建新线程, 否则触发异常策略
+     * 使用 SynchronousQueue 做为工作队列
      *
      * @param fair 是否使用公平访问策略
      * @return this
      */
     public ExecutorBuilder useSynchronousQueue(boolean fair) {
-        return this.setWorkQueue(new SynchronousQueue<>(fair));
+        return this.workQueue(new SynchronousQueue<>(fair));
     }
 
     /**
@@ -175,7 +196,7 @@ public class ExecutorBuilder implements Buildable<ThreadPoolExecutor> {
      * @param threadFactory ThreadFactory
      * @return this
      */
-    public ExecutorBuilder setThreadFactory(ThreadFactory threadFactory) {
+    public ExecutorBuilder threadFactory(ThreadFactory threadFactory) {
         this.threadFactory = threadFactory;
         return this;
     }
@@ -186,19 +207,30 @@ public class ExecutorBuilder implements Buildable<ThreadPoolExecutor> {
      * @param threadPrefix 线程名称前缀
      * @return this
      */
-    public ExecutorBuilder setNamedThreadFactory(String threadPrefix) {
+    public ExecutorBuilder namedThreadFactory(String threadPrefix) {
         this.threadFactory = new NamedThreadFactory(threadPrefix);
         return this;
     }
 
     /**
-     * 设置当线程阻塞(block)时的异常处理器, 所谓线程阻塞即线程池和等待队列已满, 无法处理线程时采取的策略
+     * 设置当线程阻塞 (block) 异常处理器
+     * - 线程池和工作队列已满
      *
-     * @param handler RejectedExecutionHandler
+     * @param rejectHandler RejectedExecutionHandler
      * @return this
      */
-    public ExecutorBuilder setHandler(RejectedExecutionHandler handler) {
-        this.handler = handler;
+    public ExecutorBuilder rejectHandler(RejectedExecutionHandler rejectHandler) {
+        this.handler = rejectHandler;
+        return this;
+    }
+
+    /**
+     * 设置线程执行超时后回收线程
+     *
+     * @return this
+     */
+    public ExecutorBuilder allowCoreThreadTimeout() {
+        this.allowCoreThreadTimeout = true;
         return this;
     }
 
@@ -208,7 +240,7 @@ public class ExecutorBuilder implements Buildable<ThreadPoolExecutor> {
      * @param allowCoreThreadTimeout 线程执行超时后是否回收线程
      * @return this
      */
-    public ExecutorBuilder setAllowCoreThreadTimeout(boolean allowCoreThreadTimeout) {
+    public ExecutorBuilder allowCoreThreadTimeout(boolean allowCoreThreadTimeout) {
         this.allowCoreThreadTimeout = allowCoreThreadTimeout;
         return this;
     }
@@ -216,10 +248,20 @@ public class ExecutorBuilder implements Buildable<ThreadPoolExecutor> {
     /**
      * 预开启所有的核心线程
      *
+     * @return this
+     */
+    public ExecutorBuilder preStartAllCoreThreads() {
+        this.preStartAllCoreThreads = true;
+        return this;
+    }
+
+    /**
+     * 设置是否预开启所有的核心线程
+     *
      * @param preStartAllCoreThreads 是否预开启所有的核心线程
      * @return this
      */
-    public ExecutorBuilder setPreStartAllCoreThreads(boolean preStartAllCoreThreads) {
+    public ExecutorBuilder preStartAllCoreThreads(boolean preStartAllCoreThreads) {
         this.preStartAllCoreThreads = preStartAllCoreThreads;
         return this;
     }

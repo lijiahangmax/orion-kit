@@ -24,6 +24,14 @@ public class MutableObject<T> implements Mutable<T>, Serializable {
         this.value = value;
     }
 
+    public static <T> MutableObject<T> create() {
+        return new MutableObject<>();
+    }
+
+    public static <T> MutableObject<T> of(T value) {
+        return new MutableObject<>(value);
+    }
+
     @Override
     public T get() {
         return this.value;

@@ -19,7 +19,7 @@ public class DateAgo extends Ago {
     /**
      * 是否使用模糊时间 如: 昨天/23小时前
      */
-    private boolean vague;
+    private boolean vague = true;
 
     /**
      * 是否使用周 如: 1周前/8天前
@@ -40,10 +40,6 @@ public class DateAgo extends Ago {
 
     public DateAgo(Date source, Date target, DateAgoHint hint) {
         super(source, target, hint);
-    }
-
-    {
-        this.vague = true;
     }
 
     public static DateAgo of(Date target) {

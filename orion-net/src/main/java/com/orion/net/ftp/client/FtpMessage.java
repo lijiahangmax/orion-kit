@@ -12,13 +12,13 @@ import java.util.Map;
  */
 public class FtpMessage {
 
-    private FtpMessage() {
-    }
-
     /**
      * FTP状态码及其描述
      */
     public static final Map<Integer, String> REPLY_CODE = new HashMap<>();
+
+    private FtpMessage() {
+    }
 
     static {
         REPLY_CODE.put(120, "服务已就绪, 在 n 分钟后开始");

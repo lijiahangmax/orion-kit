@@ -10,13 +10,10 @@ import com.orion.lang.config.KitConfig;
  * @version 1.0.0
  * @since 2023/3/7 17:48
  */
-public class LocationConst {
+public interface LocationConst {
 
-    private LocationConst() {
-    }
+    String CZ88_NET = "CZ88.NET";
 
-    public static final String CZ88_NET = "CZ88.NET";
-
-    public static final String UNKNOWN = KitConfig.get(KitExtConfiguration.CONFIG.LOCATION_UNKNOWN);
+    String UNKNOWN = KitConfig.get(KitExtConfiguration.CONFIG.LOCATION_UNKNOWN);
 
 }

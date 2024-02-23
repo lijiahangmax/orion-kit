@@ -17,21 +17,6 @@ public class FileAttribute implements Serializable {
 
     private static final long serialVersionUID = 90456092839304098L;
 
-    public FileAttribute(Path path, BasicFileAttributes attr) {
-        this.path = path;
-        this.attr = attr;
-        this.filePath = path.toString();
-        this.fileName = Files1.getFileName(filePath);
-        this.size = attr.size();
-        this.symbolicLink = attr.isSymbolicLink();
-        this.directory = attr.isDirectory();
-        this.regularFile = attr.isRegularFile();
-        this.other = attr.isOther();
-        this.createTime = attr.creationTime().toMillis();
-        this.accessTime = attr.lastAccessTime().toMillis();
-        this.modifiedTime = attr.lastModifiedTime().toMillis();
-    }
-
     /**
      * attr
      */
@@ -91,6 +76,21 @@ public class FileAttribute implements Serializable {
      * 最后修改时间
      */
     private long modifiedTime;
+
+    public FileAttribute(Path path, BasicFileAttributes attr) {
+        this.path = path;
+        this.attr = attr;
+        this.filePath = path.toString();
+        this.fileName = Files1.getFileName(filePath);
+        this.size = attr.size();
+        this.symbolicLink = attr.isSymbolicLink();
+        this.directory = attr.isDirectory();
+        this.regularFile = attr.isRegularFile();
+        this.other = attr.isOther();
+        this.createTime = attr.creationTime().toMillis();
+        this.accessTime = attr.lastAccessTime().toMillis();
+        this.modifiedTime = attr.lastModifiedTime().toMillis();
+    }
 
     public Path getPath() {
         return path;

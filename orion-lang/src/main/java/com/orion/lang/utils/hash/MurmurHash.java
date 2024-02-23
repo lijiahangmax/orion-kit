@@ -18,9 +18,6 @@ import java.nio.charset.StandardCharsets;
  */
 public class MurmurHash {
 
-    private MurmurHash() {
-    }
-
     private static final int C1_32 = 0xCC9E2D51;
     private static final int C2_32 = 0x1B873593;
     private static final int R1_32 = 15;
@@ -39,6 +36,9 @@ public class MurmurHash {
 
     private static final int DEFAULT_SEED = 0;
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
+
+    private MurmurHash() {
+    }
 
     /**
      * Murmur3 32-bit Hash值计算

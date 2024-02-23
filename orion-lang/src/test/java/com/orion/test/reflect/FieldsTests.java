@@ -16,11 +16,11 @@ public class FieldsTests {
 
     @Test
     public void getTests() {
-        System.out.println(Fields.getFieldNameByMethodName("getName"));
-        System.out.println(Fields.getFieldNameByMethodName("setName"));
-        System.out.println(Fields.getFieldNameByMethodName("isName"));
+        System.out.println(Fields.getFieldNameByMethod("getName"));
+        System.out.println(Fields.getFieldNameByMethod("setName"));
+        System.out.println(Fields.getFieldNameByMethod("isName"));
         System.out.println(Fields.getFieldByMethod(User.class, Methods.getAccessibleMethod(User.class, "getId")));
-        System.out.println(Fields.getFieldByMethodName(User.class, "getId"));
+        System.out.println(Fields.getFieldByMethod(User.class, "getId"));
         System.out.println("------");
         System.out.println((Object) Fields.getFieldValue(new User(1L), "id"));
         System.out.println((Object) Fields.getFieldValue(new User(2L), Fields.getAccessibleField(User.class, "id")));

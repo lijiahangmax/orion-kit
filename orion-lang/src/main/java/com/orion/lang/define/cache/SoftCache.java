@@ -52,6 +52,22 @@ public class SoftCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializable 
         CACHE.putAll(m);
     }
 
+    public static <K, V> SoftCache<K, V> create() {
+        return new SoftCache<>();
+    }
+
+    public static <K, V> SoftCache<K, V> create(boolean useHit) {
+        return new SoftCache<>(useHit);
+    }
+
+    public static <K, V> SoftCache<K, V> create(Map<K, V> m) {
+        return new SoftCache<>(m);
+    }
+
+    public static <K, V> SoftCache<K, V> create(Map<K, V> m, boolean useHit) {
+        return new SoftCache<>(m, useHit);
+    }
+
     public V get(K key) {
         V v = CACHE.get(key);
         if (useHit) {

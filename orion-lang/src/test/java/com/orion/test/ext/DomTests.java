@@ -1,12 +1,9 @@
 package com.orion.test.ext;
 
-import com.orion.lang.constant.Const;
 import com.orion.lang.utils.ext.dom.*;
-import com.orion.lang.utils.io.FileReaders;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
 import java.util.Map;
 
 /**
@@ -36,7 +33,6 @@ public class DomTests {
                                 .addChildNode(new DomElement("man").addAttributes("key", "1"))
                                 .addChildNode(new DomElement("woman").addAttributes("key", "2"))));
         xml = builder.build().getFormatXml();
-        xml = String.join(Const.LF, FileReaders.readLines(new File("C:\\Users\\ljh15\\Desktop\\mapper.xml"), 0L));
         System.out.println(xml);
 
     }

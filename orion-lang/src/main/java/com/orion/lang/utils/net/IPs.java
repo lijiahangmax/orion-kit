@@ -311,7 +311,7 @@ public class IPs {
      * @param ip long
      * @return ipv4
      */
-    private static String longToIp(long ip) {
+    public static String longToIp(long ip) {
         return intToIp((int) ip);
     }
 

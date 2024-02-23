@@ -4,10 +4,8 @@ import com.orion.lang.constant.Const;
 import com.orion.lang.define.StreamEntry;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
-import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.io.Files1;
 import com.orion.net.ftp.client.FtpFile;
-import com.orion.net.ftp.client.FtpFileFilter;
 import com.orion.net.ftp.client.FtpMessage;
 import com.orion.net.ftp.client.Ftps;
 import com.orion.net.ftp.client.config.FtpConfig;
@@ -16,13 +14,11 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * ftp 操作实例 基类
@@ -83,82 +79,16 @@ public abstract class BaseFtpInstance implements IFtpInstance {
         return FTPReply.isPositiveCompletion(client.getReplyCode());
     }
 
-    // -------------------- read --------------------
-
-    @Override
-    public int read(String file, byte[] bs) throws IOException {
-        return this.read(file, 0, bs, 0, bs.length);
-    }
-
-    @Override
-    public int read(String file, long skip, byte[] bs) throws IOException {
-        return this.read(file, skip, bs, 0, bs.length);
-    }
-
-    @Override
-    public int read(String file, byte[] bs, int off, int len) throws IOException {
-        return this.read(file, 0, bs, off, len);
-    }
-
-    @Override
-    public String readLine(String file) throws IOException {
-        return this.readLine(file, 0);
-    }
-
-    @Override
-    public List<String> readLines(String file) throws IOException {
-        return this.readLines(file, 0, -1);
-    }
-
-    @Override
-    public List<String> readLines(String file, long skip) throws IOException {
-        return this.readLines(file, skip, -1);
-    }
-
-    @Override
-    public List<String> readLines(String file, int lines) throws IOException {
-        return this.readLines(file, 0, lines);
-    }
-
     // -------------------- transfer --------------------
 
     @Override
-    public long transfer(String path, OutputStream out) throws IOException {
-        return this.doTransfer(path, out, 0, -1, false);
-    }
-
-    @Override
-    public long transfer(String path, OutputStream out, long skip) throws IOException {
-        return this.doTransfer(path, out, skip, -1, false);
+    public long transfer(String path, String file, long skip, int size) throws IOException {
+        return this.doTransfer(path, Files1.openOutputStreamFast(file), skip, size, true);
     }
 
     @Override
     public long transfer(String path, OutputStream out, long skip, int size) throws IOException {
         return this.doTransfer(path, out, skip, size, false);
-    }
-
-    @Override
-    public long transfer(String path, String file) throws IOException {
-        Files1.touch(file);
-        return this.doTransfer(path, Files1.openOutputStream(file), 0, -1, true);
-    }
-
-    @Override
-    public long transfer(String path, File file) throws IOException {
-        Files1.touch(file);
-        return this.doTransfer(path, Files1.openOutputStream(file), 0, -1, true);
-    }
-
-    @Override
-    public long transfer(String path, String file, long skip) throws IOException {
-        Files1.touch(file);
-        return this.doTransfer(path, Files1.openOutputStream(file), skip, -1, true);
-    }
-
-    @Override
-    public long transfer(String path, File file, long skip) throws IOException {
-        Files1.touch(file);
-        return this.doTransfer(path, Files1.openOutputStream(file), skip, -1, true);
     }
 
     /**
@@ -178,27 +108,12 @@ public abstract class BaseFtpInstance implements IFtpInstance {
 
     @Override
     public void write(String path, InputStream in) throws IOException {
-        this.doWrite(path, in, null, null);
-    }
-
-    @Override
-    public void write(String path, byte[] bs) throws IOException {
-        this.doWrite(path, null, new StreamEntry(bs), null);
+        this.doWrite(path, in, null);
     }
 
     @Override
     public void write(String path, byte[] bs, int off, int len) throws IOException {
-        this.doWrite(path, null, new StreamEntry(bs, off, len), null);
-    }
-
-    @Override
-    public void writeLine(String path, String line) throws IOException {
-        this.doWrite(path, null, null, Lists.singleton(line));
-    }
-
-    @Override
-    public void writeLines(String path, List<String> lines) throws IOException {
-        this.doWrite(path, null, null, lines);
+        this.doWrite(path, null, new StreamEntry(bs, off, len));
     }
 
     /**
@@ -207,36 +122,20 @@ public abstract class BaseFtpInstance implements IFtpInstance {
      * @param path  path
      * @param in    in
      * @param entry entry
-     * @param lines lines
      * @throws IOException IOException
      */
-    protected abstract void doWrite(String path, InputStream in, StreamEntry entry, List<String> lines) throws IOException;
+    protected abstract void doWrite(String path, InputStream in, StreamEntry entry) throws IOException;
 
     // -------------------- append --------------------
 
     @Override
     public void append(String path, InputStream in) throws IOException {
-        this.doAppend(path, in, null, null);
-    }
-
-    @Override
-    public void append(String path, byte[] bs) throws IOException {
-        this.doAppend(path, null, new StreamEntry(bs), null);
+        this.doAppend(path, in, null);
     }
 
     @Override
     public void append(String path, byte[] bs, int off, int len) throws IOException {
-        this.doAppend(path, null, new StreamEntry(bs, off, len), null);
-    }
-
-    @Override
-    public void appendLine(String path, String line) throws IOException {
-        this.doAppend(path, null, null, Lists.singleton(line));
-    }
-
-    @Override
-    public void appendLines(String path, List<String> lines) throws IOException {
-        this.doAppend(path, null, null, lines);
+        this.doAppend(path, null, new StreamEntry(bs, off, len));
     }
 
     /**
@@ -245,10 +144,9 @@ public abstract class BaseFtpInstance implements IFtpInstance {
      * @param path  path
      * @param in    in
      * @param entry entry
-     * @param lines lines
      * @throws IOException IOException
      */
-    protected abstract void doAppend(String path, InputStream in, StreamEntry entry, List<String> lines) throws IOException;
+    protected abstract void doAppend(String path, InputStream in, StreamEntry entry) throws IOException;
 
     // -------------------- upload --------------------
 
@@ -257,91 +155,14 @@ public abstract class BaseFtpInstance implements IFtpInstance {
         this.uploadFile(remoteFile, Files1.openInputStreamSafe(localFile), true);
     }
 
-    @Override
-    public void uploadFile(String remoteFile, File localFile) throws IOException {
-        this.uploadFile(remoteFile, Files1.openInputStreamSafe(localFile), true);
-    }
-
-    @Override
-    public void uploadFile(String remoteFile, InputStream in) throws IOException {
-        this.uploadFile(remoteFile, in, false);
-    }
-
-    @Override
-    public void uploadDir(String remoteDir, File localDir) throws IOException {
-        this.uploadDir(remoteDir, localDir.getAbsolutePath(), true);
-    }
-
-    @Override
-    public void uploadDir(String remoteDir, String localDir) throws IOException {
-        this.uploadDir(remoteDir, localDir, true);
-    }
-
-    @Override
-    public void uploadDir(String remoteDir, File localDir, boolean child) throws IOException {
-        this.uploadDir(remoteDir, localDir.getAbsolutePath(), child);
-    }
-
     // -------------------- download --------------------
 
     @Override
     public void downloadFile(String remoteFile, String localFile) throws IOException {
-        Files1.touch(localFile);
-        this.downloadFile(remoteFile, Files1.openOutputStreamSafe(localFile), true);
-    }
-
-    @Override
-    public void downloadFile(String remoteFile, File localFile) throws IOException {
-        Files1.touch(localFile);
-        this.downloadFile(remoteFile, Files1.openOutputStreamSafe(localFile), true);
-    }
-
-    @Override
-    public void downloadFile(String remoteFile, OutputStream out) throws IOException {
-        this.downloadFile(remoteFile, out, false);
-    }
-
-    @Override
-    public void downloadDir(String remoteDir, File localDir) throws IOException {
-        this.downloadDir(remoteDir, localDir.getAbsolutePath(), true);
-    }
-
-    @Override
-    public void downloadDir(String remoteDir, String localDir) throws IOException {
-        this.downloadDir(remoteDir, localDir, true);
-    }
-
-    @Override
-    public void downloadDir(String remoteDir, File localDir, boolean child) throws IOException {
-        this.downloadDir(remoteDir, localDir.getAbsolutePath(), child);
+        this.downloadFile(remoteFile, Files1.openOutputStreamFast(localFile), true);
     }
 
     // -------------------- list --------------------
-
-    @Override
-    public List<FtpFile> listFiles() {
-        return this.listFiles(Strings.EMPTY, false, false);
-    }
-
-    @Override
-    public List<FtpFile> listFiles(boolean child) {
-        return this.listFiles(Strings.EMPTY, child, false);
-    }
-
-    @Override
-    public List<FtpFile> listFiles(boolean child, boolean dir) {
-        return this.listFiles(Strings.EMPTY, child, dir);
-    }
-
-    @Override
-    public List<FtpFile> listFiles(String path) {
-        return this.listFiles(path, false, false);
-    }
-
-    @Override
-    public List<FtpFile> listFiles(String path, boolean child) {
-        return this.listFiles(path, child, false);
-    }
 
     @Override
     public List<FtpFile> listFiles(String path, boolean child, boolean dir) {
@@ -369,21 +190,6 @@ public abstract class BaseFtpInstance implements IFtpInstance {
     }
 
     @Override
-    public List<FtpFile> listDirs() {
-        return this.listDirs(Strings.EMPTY, false);
-    }
-
-    @Override
-    public List<FtpFile> listDirs(boolean child) {
-        return this.listDirs(Strings.EMPTY, child);
-    }
-
-    @Override
-    public List<FtpFile> listDirs(String dir) {
-        return this.listDirs(dir, false);
-    }
-
-    @Override
     public List<FtpFile> listDirs(String path, boolean child) {
         String base = config.getRemoteRootDir();
         List<FtpFile> list = new ArrayList<>();
@@ -403,137 +209,6 @@ public abstract class BaseFtpInstance implements IFtpInstance {
         }
         return list;
     }
-
-    @Override
-    public List<FtpFile> listFilesSuffix(String suffix) {
-        return this.listFilesSuffix(Strings.EMPTY, suffix, false, false);
-    }
-
-    @Override
-    public List<FtpFile> listFilesSuffix(String suffix, boolean child) {
-        return this.listFilesSuffix(Strings.EMPTY, suffix, child, false);
-    }
-
-    @Override
-    public List<FtpFile> listFilesSuffix(String suffix, boolean child, boolean dir) {
-        return this.listFilesSuffix(Strings.EMPTY, suffix, child, dir);
-    }
-
-    @Override
-    public List<FtpFile> listFilesSuffix(String path, String suffix) {
-        return this.listFilesSuffix(path, suffix, false, false);
-    }
-
-    @Override
-    public List<FtpFile> listFilesSuffix(String path, String suffix, boolean child) {
-        return this.listFilesSuffix(path, suffix, child, false);
-    }
-
-    @Override
-    public List<FtpFile> listFilesSuffix(String path, String suffix, boolean child, boolean dir) {
-        return this.listFilesSearch(path, FtpFileFilter.suffix(suffix), child, dir);
-    }
-
-    @Override
-    public List<FtpFile> listFilesMatch(String match) {
-        return this.listFilesMatch(Strings.EMPTY, match, false, false);
-    }
-
-    @Override
-    public List<FtpFile> listFilesMatch(String match, boolean child) {
-        return this.listFilesMatch(Strings.EMPTY, match, child, false);
-    }
-
-    @Override
-    public List<FtpFile> listFilesMatch(String match, boolean child, boolean dir) {
-        return this.listFilesMatch(Strings.EMPTY, match, child, dir);
-    }
-
-    @Override
-    public List<FtpFile> listFilesMatch(String path, String match) {
-        return this.listFilesMatch(path, match, false, false);
-    }
-
-    @Override
-    public List<FtpFile> listFilesMatch(String path, String match, boolean child) {
-        return this.listFilesMatch(path, match, child, false);
-    }
-
-    @Override
-    public List<FtpFile> listFilesMatch(String path, String match, boolean child, boolean dir) {
-        return this.listFilesSearch(path, FtpFileFilter.match(match), child, dir);
-    }
-
-    @Override
-    public List<FtpFile> listFilesPattern(Pattern pattern) {
-        return this.listFilesPattern(Strings.EMPTY, pattern, false, false);
-    }
-
-    @Override
-    public List<FtpFile> listFilesPattern(Pattern pattern, boolean child) {
-        return this.listFilesPattern(Strings.EMPTY, pattern, child, false);
-    }
-
-    @Override
-    public List<FtpFile> listFilesPattern(Pattern pattern, boolean child, boolean dir) {
-        return this.listFilesPattern(Strings.EMPTY, pattern, child, dir);
-    }
-
-    @Override
-    public List<FtpFile> listFilesPattern(String path, Pattern pattern) {
-        return this.listFilesPattern(path, pattern, false, false);
-    }
-
-    @Override
-    public List<FtpFile> listFilesPattern(String path, Pattern pattern, boolean child) {
-        return this.listFilesPattern(path, pattern, child, false);
-    }
-
-    @Override
-    public List<FtpFile> listFilesPattern(String path, Pattern pattern, boolean child, boolean dir) {
-        return this.listFilesSearch(path, FtpFileFilter.pattern(pattern), child, dir);
-    }
-
-    @Override
-    public List<FtpFile> listFilesFilter(FtpFileFilter filter) {
-        return this.listFilesFilter(Strings.EMPTY, filter, false, false);
-    }
-
-    @Override
-    public List<FtpFile> listFilesFilter(FtpFileFilter filter, boolean child) {
-        return this.listFilesFilter(Strings.EMPTY, filter, child, false);
-    }
-
-    @Override
-    public List<FtpFile> listFilesFilter(FtpFileFilter filter, boolean child, boolean dir) {
-        return this.listFilesFilter(Strings.EMPTY, filter, child, dir);
-    }
-
-    @Override
-    public List<FtpFile> listFilesFilter(String path, FtpFileFilter filter) {
-        return this.listFilesFilter(path, filter, false, false);
-    }
-
-    @Override
-    public List<FtpFile> listFilesFilter(String path, FtpFileFilter filter, boolean child) {
-        return this.listFilesFilter(path, filter, child, false);
-    }
-
-    @Override
-    public List<FtpFile> listFilesFilter(String path, FtpFileFilter filter, boolean child, boolean dir) {
-        return this.listFilesSearch(path, filter, child, dir);
-    }
-
-    /**
-     * 文件列表搜索
-     *
-     * @param path   列表
-     * @param filter 过滤器
-     * @param child  是否递归子文件夹
-     * @param dir    是否添加文件夹
-     * @return 匹配的列表
-     */
-    protected abstract List<FtpFile> listFilesSearch(String path, FtpFileFilter filter, boolean child, boolean dir);
 
     // -------------------- option --------------------
 

@@ -44,11 +44,11 @@ public enum WorkingMode {
      */
     GCM("GCM");
 
+    private final String mode;
+
     WorkingMode(String mode) {
         this.mode = mode;
     }
-
-    private final String mode;
 
     public String getMode() {
         return mode;

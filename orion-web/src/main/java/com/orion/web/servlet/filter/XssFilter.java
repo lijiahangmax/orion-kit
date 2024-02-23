@@ -1,13 +1,13 @@
 package com.orion.web.servlet.filter;
 
 import com.orion.lang.utils.Strings;
-import com.orion.lang.utils.Xsses;
+import com.orion.web.servlet.wrapper.XssHttpServletRequestWrapper;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * xss 过滤器
@@ -71,70 +71,6 @@ public class XssFilter implements Filter {
 
     @Override
     public void destroy() {
-    }
-
-    /**
-     * xss请求过滤包装
-     */
-    static class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
-
-        /**
-         * 存放 url 中不需要过滤的字段名
-         */
-        private final Set<String> currentIgnoreField;
-
-        XssHttpServletRequestWrapper(HttpServletRequest servletRequest) {
-            super(servletRequest);
-            this.currentIgnoreField = Collections.emptySet();
-        }
-
-        XssHttpServletRequestWrapper(HttpServletRequest servletRequest, String field) {
-            super(servletRequest);
-            this.currentIgnoreField = new HashSet<>();
-            String[] fieldArr = field.split(",");
-            for (String f : fieldArr) {
-                currentIgnoreField.add(f.trim());
-            }
-        }
-
-        @Override
-        public String[] getParameterValues(String parameter) {
-            String[] values = super.getParameterValues(parameter);
-            if (values == null) {
-                return null;
-            }
-            int count = values.length;
-            String[] encodedValues = new String[count];
-            for (int i = 0; i < count; i++) {
-                if (currentIgnoreField.contains(parameter)) {
-                    encodedValues[i] = Xsses.clean(values[i]);
-                } else {
-                    encodedValues[i] = values[i];
-                }
-            }
-            return encodedValues;
-        }
-
-        @Override
-        public String getParameter(String parameter) {
-            String value = super.getParameter(parameter);
-            if (value == null) {
-                return null;
-            }
-            if (currentIgnoreField.contains(parameter)) {
-                return Xsses.clean(value);
-            }
-            return value;
-        }
-
-        @Override
-        public String getHeader(String name) {
-            String value = super.getHeader(name);
-            if (value == null) {
-                return null;
-            }
-            return Xsses.clean(value);
-        }
     }
 
 }

@@ -17,6 +17,9 @@ class BaseDates {
 
     public static final String WORLD = "EEE MMM dd HH:mm:ss z yyyy";
     public static final String YM = "yyyy-MM";
+    public static final String MD = "MM-dd";
+    public static final String MD_HM = "MM-dd HH:mm";
+    public static final String MD_HMS = "MM-dd HH:mm:ss";
     public static final String YMD = "yyyy-MM-dd";
     public static final String YMD_HM = "yyyy-MM-dd HH:mm";
     public static final String YMD_HMS = "yyyy-MM-dd HH:mm:ss";
@@ -115,13 +118,23 @@ class BaseDates {
     }
 
     /**
+     * 时间是否已过期
+     *
+     * @param time time
+     * @return 是否过期
+     */
+    public static boolean isExpired(long time) {
+        return time < System.currentTimeMillis();
+    }
+
+    /**
      * 判断时间是否在未来
      *
-     * @param date date
+     * @param time time
      * @return true 在未来
      */
-    public static boolean inFuture(long date) {
-        return date > System.currentTimeMillis();
+    public static boolean inFuture(long time) {
+        return time > System.currentTimeMillis();
     }
 
     public static String interval(long ms) {

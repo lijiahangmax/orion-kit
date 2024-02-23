@@ -87,7 +87,7 @@ public class HttpCookie implements Serializable {
 
     private void analysisEntry(String entity) {
         String[] kv = entity.split("=");
-        String key = kv[0].toLowerCase().trim(), value;
+        String key = kv[0].toLowerCase().trim();
         if (kv.length == 1) {
             switch (key) {
                 case "secure":
@@ -104,7 +104,7 @@ public class HttpCookie implements Serializable {
                     break;
             }
         } else if (kv.length == 2) {
-            value = kv[1].trim();
+            String value = kv[1].trim();
             switch (key) {
                 case "expires":
                     this.expires = Dates.parse(value, Locale.US, EXPIRES_DATE);
@@ -193,11 +193,11 @@ public class HttpCookie implements Serializable {
     }
 
     public String cookie() {
-        return COOKIE + ": " + this.toString();
+        return COOKIE + ": " + this;
     }
 
-    private String setCookie() {
-        return SET_COOKIE + ": " + this.toString();
+    public String setCookie() {
+        return SET_COOKIE + ": " + this;
     }
 
     @Override

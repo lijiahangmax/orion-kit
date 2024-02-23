@@ -1,6 +1,7 @@
 package com.orion.lang.define.wrapper;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.orion.lang.KitLangConfiguration;
 import com.orion.lang.able.ILogObject;
 import com.orion.lang.able.IMapObject;
@@ -196,13 +197,14 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
      * @return 是否成功
      */
     @JSONField(serialize = false)
+    @JsonIgnore
     public boolean isOk() {
         return HTTP_OK_CODE.equals(code);
     }
 
     @Override
     public String toString() {
-        return this.toLogString();
+        return this.toJsonString();
     }
 
     @Override

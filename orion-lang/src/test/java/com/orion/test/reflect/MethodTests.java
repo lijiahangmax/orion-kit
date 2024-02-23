@@ -62,14 +62,14 @@ public class MethodTests {
         user.setAge(1);
         user.setName("whh");
         System.out.println((Object) Methods.invokeMethod(user, "getName"));
-        System.out.println((Object) Methods.invokeMethod(user, "setName", new Object[]{"lsd"}));
+        Methods.invokeMethod(user, "setName", "lsd");
         System.out.println((Object) Methods.invokeMethod(user, "getName"));
-        System.out.println((Object) Methods.invokeSetter(user, "name", "q"));
+        Methods.invokeSetter(user, "name", "q");
         System.out.println(user.getName());
         System.out.println((Object) Methods.invokeGetter(user, "age"));
-        System.out.println((Object) Methods.invokeSetterInfer(user, "age", 2));
+        Methods.invokeSetterInfer(user, "age", 2);
         System.out.println((Object) Methods.invokeGetter(user, "age"));
-        System.out.println((Object) Methods.invokeMethodInfer(user, "setBalance", new Object[]{"2.2"}));
+        Methods.invokeMethodInfer(user, "setBalance", "2.2");
         System.out.println(user.getBalance());
     }
 

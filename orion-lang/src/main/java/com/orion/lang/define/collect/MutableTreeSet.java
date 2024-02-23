@@ -33,4 +33,16 @@ public class MutableTreeSet<E> extends TreeSet<E> implements MutableSet<E>, Seri
         super(s);
     }
 
+    public static <E> MutableTreeSet<E> create() {
+        return new MutableTreeSet<>();
+    }
+
+    public static <E> MutableTreeSet<E> create(Comparator<? super E> comparator) {
+        return new MutableTreeSet<>(comparator);
+    }
+
+    public static <E> MutableTreeSet<E> create(Collection<? extends E> c) {
+        return new MutableTreeSet<>(c);
+    }
+
 }

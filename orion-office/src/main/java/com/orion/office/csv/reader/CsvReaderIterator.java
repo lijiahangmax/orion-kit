@@ -54,21 +54,12 @@ public class CsvReaderIterator<T> implements SafeCloseable, Iterator<T>, Iterabl
 
     @Override
     public T next() {
-        if (first) {
-            boolean next = this.getNext();
-            if (!next) {
-                this.throwNoSuch();
-            }
-        }
-        if (!hasNext && !first) {
+        if (!this.hasNext()) {
             this.throwNoSuch();
         }
-        if (first) {
-            this.first = false;
-        }
+        // 获取下一个元素并且返回上一个元素
         T next = this.next;
         this.hasNext = this.getNext();
-        reader.rowNum++;
         return next;
     }
 

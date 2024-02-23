@@ -47,7 +47,11 @@ public class MutableString implements Mutable<String>, CharSequence, Serializabl
         this.builder = new StringBuilder(Strings.str(o));
     }
 
-    public MutableString of(String s) {
+    public static MutableString create() {
+        return new MutableString();
+    }
+
+    public static MutableString of(String s) {
         return new MutableString(s);
     }
 

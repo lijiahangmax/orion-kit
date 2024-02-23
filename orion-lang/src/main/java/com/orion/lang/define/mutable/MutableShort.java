@@ -30,6 +30,14 @@ public class MutableShort extends Number implements Comparable<MutableShort>, Mu
         this.value = Short.parseShort(value);
     }
 
+    public static MutableShort create() {
+        return new MutableShort();
+    }
+
+    public static MutableShort of(short value) {
+        return new MutableShort(value);
+    }
+
     @Override
     public Short get() {
         return this.value;

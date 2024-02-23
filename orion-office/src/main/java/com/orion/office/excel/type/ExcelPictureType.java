@@ -78,17 +78,17 @@ public enum ExcelPictureType {
      */
     WPG(-1, XSSFWorkbook.PICTURE_TYPE_WPG, "wpg");
 
+    private final int type1;
+
+    private final int type2;
+
+    private final String suffix;
+
     ExcelPictureType(int type1, int type2, String suffix) {
         this.type1 = type1;
         this.type2 = type2;
         this.suffix = suffix;
     }
-
-    private final int type1;
-
-    private final int type2;
-
-    private String suffix;
 
     public int getType1() {
         return type1;

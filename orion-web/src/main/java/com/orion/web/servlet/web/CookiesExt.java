@@ -19,14 +19,14 @@ import java.util.Map;
  */
 public class CookiesExt {
 
-    private CookiesExt() {
-    }
-
     public static final int SESSION = -1;
     public static final int NO_SAVE = 0;
     public static final int ONE_HOUR = 3600;
     public static final int ONE_DAY = 3600 * 24;
     public static final int ONE_WEEK = 3600 * 24 * 7;
+
+    private CookiesExt() {
+    }
 
     /**
      * 获取cookie
@@ -164,7 +164,7 @@ public class CookiesExt {
         if (path != null) {
             cookie.setPath(path);
         } else {
-            cookie.setPath(Const.ROOT);
+            cookie.setPath(Const.ROOT_PATH);
         }
         if (domain != null && !Const.LOCALHOST.equals(domain)) {
             cookie.setDomain(domain);
@@ -304,7 +304,7 @@ public class CookiesExt {
     public static void delete(HttpServletResponse response, String key) {
         Cookie cookie = new Cookie(key, null);
         cookie.setMaxAge(NO_SAVE);
-        cookie.setPath(Const.ROOT);
+        cookie.setPath(Const.ROOT_PATH);
         response.addCookie(cookie);
     }
 
@@ -318,7 +318,7 @@ public class CookiesExt {
         for (String key : keys) {
             Cookie cookie = new Cookie(key, null);
             cookie.setMaxAge(NO_SAVE);
-            cookie.setPath(Const.ROOT);
+            cookie.setPath(Const.ROOT_PATH);
             response.addCookie(cookie);
         }
     }

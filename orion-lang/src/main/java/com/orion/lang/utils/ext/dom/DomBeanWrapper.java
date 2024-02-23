@@ -62,11 +62,11 @@ public class DomBeanWrapper {
         }
         for (Map.Entry<String, Integer> singleEntry : singleMap.entrySet()) {
             for (Method method : setterMethod) {
-                String elementSet = Methods.getSetterMethodNameByFieldName(singleEntry.getKey());
+                String elementSet = Methods.getSetterMethodNameByField(singleEntry.getKey());
                 if (convertMapper != null) {
                     Object getSetter = convertMapper.get(singleEntry.getKey());
                     if (getSetter instanceof String) {
-                        elementSet = Methods.getSetterMethodNameByFieldName(getSetter.toString());
+                        elementSet = Methods.getSetterMethodNameByField(getSetter.toString());
                     }
                 }
                 if (method.getName().equals(elementSet)) {
@@ -126,11 +126,11 @@ public class DomBeanWrapper {
         }
         for (Map.Entry<String, Integer> multiEntry : multiMap.entrySet()) {
             for (Method method : setterMethod) {
-                String elementSet = Methods.getSetterMethodNameByFieldName(multiEntry.getKey());
+                String elementSet = Methods.getSetterMethodNameByField(multiEntry.getKey());
                 if (convertMapper != null) {
                     Object getSetter = convertMapper.get(multiEntry.getKey());
                     if (getSetter instanceof String) {
-                        elementSet = Methods.getSetterMethodNameByFieldName(getSetter.toString());
+                        elementSet = Methods.getSetterMethodNameByField(getSetter.toString());
                     }
                 }
                 if (method.getName().equals(elementSet)) {

@@ -20,12 +20,12 @@ import java.util.Set;
  */
 public class BankCardGenerator {
 
-    private BankCardGenerator() {
-    }
-
     private static final String BRANCH_BANK_NAME = "分行";
 
     private static final String SUBBRANCH_BANK_NAME = "支行";
+
+    private BankCardGenerator() {
+    }
 
     /**
      * 随机生成 借记卡 银行卡号

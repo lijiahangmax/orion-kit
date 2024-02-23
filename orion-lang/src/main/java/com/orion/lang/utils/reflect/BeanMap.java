@@ -84,13 +84,13 @@ public class BeanMap extends MutableLinkedHashMap<String, Object> {
     }
 
     /**
-     * 调用getter
+     * 调用 getter
      *
      * @param methods getterMethods
      */
     private void invokeGetter(List<Method> methods) {
         for (Method method : methods) {
-            String fieldName = Fields.getFieldNameByMethodName(method.getName());
+            String fieldName = Fields.getFieldNameByMethod(method.getName());
             if (this.isIgnoreField(fieldName)) {
                 continue;
             }

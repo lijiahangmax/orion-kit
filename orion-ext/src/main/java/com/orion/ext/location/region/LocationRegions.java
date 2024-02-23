@@ -27,9 +27,6 @@ public class LocationRegions {
 
     private static final String UNKNOWN = new Region().toString();
 
-    private LocationRegions() {
-    }
-
     /**
      * db文件路径
      */
@@ -44,6 +41,9 @@ public class LocationRegions {
      * 搜索器
      */
     private static final DbSearcher SEARCHER;
+
+    private LocationRegions() {
+    }
 
     static {
         boolean init;

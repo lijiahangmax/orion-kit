@@ -256,7 +256,7 @@ public class Cron implements Serializable {
                     throw Exceptions.parseCron("support for specifying multiple \"nth\" days is not implemented.");
                 }
 
-                StringTokenizer vTok = new StringTokenizer(expr, ",");
+                StringTokenizer vTok = new StringTokenizer(expr, Const.COMMA);
                 while (vTok.hasMoreTokens()) {
                     String v = vTok.nextToken();
                     this.storeExpressionVal(0, v, exprOn);
@@ -606,7 +606,7 @@ public class Cron implements Serializable {
             Integer iVal = itr.next();
             String val = iVal.toString();
             if (!first) {
-                buf.append(",");
+                buf.append(Const.COMMA);
             }
             buf.append(val);
             first = false;
@@ -628,7 +628,7 @@ public class Cron implements Serializable {
             Integer iVal = itr.next();
             String val = iVal.toString();
             if (!first) {
-                buf.append(",");
+                buf.append(Const.COMMA);
             }
             buf.append(val);
             first = false;

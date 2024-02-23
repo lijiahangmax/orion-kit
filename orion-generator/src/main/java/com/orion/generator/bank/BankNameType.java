@@ -1284,13 +1284,6 @@ public enum BankNameType {
 
     ;
 
-    BankNameType(String name, String code, Map<String, Integer> debitPrefix, Map<String, Integer> creditPrefix) {
-        this.name = name;
-        this.code = code;
-        this.debitPrefix = Collections.unmodifiableMap(debitPrefix);
-        this.creditPrefix = Collections.unmodifiableMap(creditPrefix);
-    }
-
     /**
      * 银行名称
      */
@@ -1315,6 +1308,13 @@ public enum BankNameType {
      */
     private final Map<String, Integer> creditPrefix;
 
+    BankNameType(String name, String code, Map<String, Integer> debitPrefix, Map<String, Integer> creditPrefix) {
+        this.name = name;
+        this.code = code;
+        this.debitPrefix = Collections.unmodifiableMap(debitPrefix);
+        this.creditPrefix = Collections.unmodifiableMap(creditPrefix);
+    }
+
     public String getName() {
         return name;
     }
@@ -1336,7 +1336,7 @@ public enum BankNameType {
             return null;
         }
         for (BankNameType value : values()) {
-            if (value.code.toLowerCase().equals(code.toLowerCase())) {
+            if (value.code.equalsIgnoreCase(code)) {
                 return value;
             }
         }

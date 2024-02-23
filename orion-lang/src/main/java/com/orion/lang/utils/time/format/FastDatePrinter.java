@@ -931,6 +931,12 @@ public class FastDatePrinter implements DatePrinter, Serializable {
          */
         static Iso8601Rule ISO8601_HOURS_COLON_MINUTES = new Iso8601Rule(6);
 
+        int length;
+
+        Iso8601Rule(int length) {
+            this.length = length;
+        }
+
         static Iso8601Rule getRule(int tokenLen) {
             switch (tokenLen) {
                 case 1:
@@ -942,12 +948,6 @@ public class FastDatePrinter implements DatePrinter, Serializable {
                 default:
                     throw Exceptions.argument("invalid number of X");
             }
-        }
-
-        int length;
-
-        Iso8601Rule(int length) {
-            this.length = length;
         }
 
         @Override
@@ -983,11 +983,11 @@ public class FastDatePrinter implements DatePrinter, Serializable {
 
     private static class TimeZoneDisplayKey {
 
-        private TimeZone timeZone;
+        private final TimeZone timeZone;
 
-        private int style;
+        private final int style;
 
-        private Locale locale;
+        private final Locale locale;
 
         TimeZoneDisplayKey(TimeZone timeZone, boolean daylight, int style, Locale locale) {
             this.timeZone = timeZone;

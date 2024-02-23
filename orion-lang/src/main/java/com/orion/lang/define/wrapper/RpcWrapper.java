@@ -1,6 +1,7 @@
 package com.orion.lang.define.wrapper;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.orion.lang.KitLangConfiguration;
 import com.orion.lang.able.ILogObject;
 import com.orion.lang.able.IMapObject;
@@ -170,6 +171,7 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
      * 检查是否成功
      */
     @JSONField(serialize = false)
+    @JsonIgnore
     public boolean isSuccess() {
         return !RPC_ERROR_CODE.equals(code) && Lists.isEmpty(errorMessages);
     }
@@ -177,25 +179,13 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
     /**
      * 失败抛出异常
      */
-    public void errorThrows() {
-        this.errorThrows(null, (Object[]) null);
-    }
-
-    public void errorThrows(String msg) {
-        this.errorThrows(msg, (Object[]) null);
-    }
-
-    public void errorThrows(String msg, Object... args) {
+    public void checkIsError() {
         if (!isSuccess()) {
-            if (msg == null) {
-                throw Exceptions.rpcWrapper(this);
-            } else {
-                throw Exceptions.rpcWrapper(this, Strings.format(msg, args));
-            }
+            throw Exceptions.rpcWrapper(this);
         }
     }
 
-    public void errorThrows(Supplier<? extends RuntimeException> e) {
+    public void checkIsError(Supplier<? extends RuntimeException> e) {
         if (!isSuccess()) {
             throw e.get();
         }
@@ -270,8 +260,9 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
     }
 
     @JSONField(serialize = false)
+    @JsonIgnore
     public String getErrorMessageString() {
-        return errorMessages == null ? Strings.EMPTY : Lists.join(errorMessages, ",");
+        return errorMessages == null ? Strings.EMPTY : Lists.join(errorMessages, Const.COMMA);
     }
 
     private String createTrace() {
@@ -280,14 +271,14 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
 
     @Override
     public String toString() {
-        return this.toLogString();
+        return this.toJsonString();
     }
 
     @Override
     public String toLogString() {
-        StringBuilder builder = new StringBuilder("RpcWrapper: ");
         boolean success = this.isSuccess();
-        builder.append("\n  isSuccess ==> ").append(success)
+        StringBuilder builder = new StringBuilder("RpcWrapper: ")
+                .append("\n  isSuccess ==> ").append(success)
                 .append("\n    traceId ==> ").append(traceId)
                 .append("\n       code ==> ").append(code)
                 .append("\n        msg ==> ").append(msg)

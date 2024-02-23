@@ -11,6 +11,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 /**
  * @author Jiahang Li
@@ -19,7 +20,7 @@ import java.math.BigDecimal;
  */
 public class ImportShopTest {
 
-    private Workbook workbook = Excels.openWorkbook("C:\\Users\\ljh15\\Desktop\\data\\shop.xlsx");
+    private Workbook workbook = Excels.openWorkbook("C:\\Users\\Administrator\\Desktop\\shop.xlsx");
 
     private Sheet sheet = workbook.getSheetAt(0);
 
@@ -101,7 +102,8 @@ public class ImportShopTest {
 
     @Test
     public void testMap1() {
-        new ExcelMapReader<String, Object>(workbook, sheet, Console::trace)
+        ArrayList<MutableMap<String, Object>> s = new ArrayList<>();
+        new ExcelMapReader<>(workbook, sheet, s)
                 .linked()
                 .option(0, "shopId", ExcelReadType.TEXT)
                 .option(1, "shopName", ExcelReadType.TEXT)
@@ -123,6 +125,7 @@ public class ImportShopTest {
                 .trim()
                 .read()
                 .close();
+        System.out.println(s.size());
     }
 
     @Test
@@ -154,7 +157,7 @@ public class ImportShopTest {
     @Test
     public void testLambda1() {
         new ExcelLambdaReader<>(workbook, sheet, Console::trace, ImportShop::new)
-                .<String, Long>option(0, ExcelReadType.TEXT, Long::valueOf, ImportShop::setShopId)
+                .option(0, ExcelReadType.LONG, ImportShop::setShopId)
                 .option(1, ExcelReadType.TEXT, ImportShop::setShopName)
                 .option(new ImportFieldOption(2, ExcelReadType.DATE, "yyyy年MM月dd日"), ImportShop::setCreateDate)
                 .option(4, ExcelReadType.PICTURE, ImportShop::setBusinessPicture)

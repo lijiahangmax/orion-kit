@@ -35,4 +35,12 @@ public class MutableLinkedHashMap<K, V> extends LinkedHashMap<K, V> implements M
         super(m);
     }
 
+    public static <K, V> MutableLinkedHashMap<K, V> create() {
+        return new MutableLinkedHashMap<>();
+    }
+
+    public static <K, V> MutableLinkedHashMap<K, V> create(Map<? extends K, ? extends V> m) {
+        return new MutableLinkedHashMap<>(m);
+    }
+
 }

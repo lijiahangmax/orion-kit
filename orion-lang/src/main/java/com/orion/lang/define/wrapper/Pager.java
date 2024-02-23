@@ -1,6 +1,7 @@
 package com.orion.lang.define.wrapper;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.orion.lang.KitLangConfiguration;
 import com.orion.lang.able.IJsonObject;
 import com.orion.lang.config.KitConfig;
@@ -95,7 +96,7 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, IJ
         this(page, DEFAULT_LIMIT);
     }
 
-    public Pager(PageRequest request) {
+    public Pager(IPageRequest request) {
         this(request.getPage(), request.getLimit());
     }
 
@@ -125,7 +126,7 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, IJ
         return new Pager<>(page, limit);
     }
 
-    public static <T> Pager<T> of(PageRequest request) {
+    public static <T> Pager<T> of(IPageRequest request) {
         return new Pager<>(request);
     }
 
@@ -302,11 +303,13 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, IJ
     }
 
     @JSONField(serialize = false)
+    @JsonIgnore
     public boolean isEmpty() {
         return Lists.isEmpty(rows);
     }
 
     @JSONField(serialize = false)
+    @JsonIgnore
     public boolean isNotEmpty() {
         return Lists.isNotEmpty(rows);
     }

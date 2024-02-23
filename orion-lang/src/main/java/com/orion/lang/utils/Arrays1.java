@@ -89,6 +89,7 @@ public class Arrays1 {
      * @param <T>    ignore
      * @return 数组
      */
+    @SuppressWarnings("unchecked")
     public static <T> T[] newArrays(Class<T> type, int length) {
         return (T[]) Array.newInstance(type, length);
     }
@@ -216,6 +217,25 @@ public class Arrays1 {
     public static <T> T gets(Object arr, int i) {
         Valid.notNull(arr, "array is null");
         return (T) Array.get(arr, i);
+    }
+
+    /**
+     * 获取元素 如果元素存在
+     *
+     * @param arr list
+     * @param i   i
+     * @param <T> T
+     * @return T
+     */
+    public static <T> T getIfPresent(T[] arr, int i) {
+        int len = length(arr);
+        if (len == 0) {
+            return null;
+        }
+        if (i >= len) {
+            return null;
+        }
+        return arr[i];
     }
 
     public static <T> T get(T[] arr, int i) {
@@ -743,7 +763,7 @@ public class Arrays1 {
         if (isEmpty(es)) {
             return arr;
         }
-        int num = excludeSwap(arr, len, i -> {
+        int num = excludeSwaps(arr, len, i -> {
             for (Object e : es) {
                 if (Objects1.eq(i, e)) {
                     return true;
@@ -761,7 +781,7 @@ public class Arrays1 {
         if (len == 0) {
             return generator.apply(0);
         }
-        int num = excludeSwap(arr, len, (Predicate<Object>) p);
+        int num = excludeSwaps(arr, len, p);
         T[] na = generator.apply(len - num);
         System.arraycopy(arr, 0, na, 0, len - num);
         return na;
@@ -960,7 +980,7 @@ public class Arrays1 {
      * 消费对象
      *
      * @param consumer 消费函数
-     * @param arr        元素
+     * @param arr      元素
      * @param <T>      对象类型
      */
     public static <T> void forEach(Consumer<T> consumer, T[] arr) {

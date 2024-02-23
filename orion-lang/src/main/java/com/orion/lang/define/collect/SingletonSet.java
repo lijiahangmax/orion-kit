@@ -27,6 +27,10 @@ public class SingletonSet<E> extends AbstractSet<E> implements Serializable {
         element = obj;
     }
 
+    public static <E> SingletonSet<E> create(E obj) {
+        return new SingletonSet<>(obj);
+    }
+
     @Override
     public int size() {
         return 1;

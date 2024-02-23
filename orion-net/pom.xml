@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.github.lijiahangmax</groupId>
         <artifactId>orion-kit</artifactId>
-        <version>1.0.5</version>
+        <version>1.0.6</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -18,14 +18,14 @@
         <dependency>
             <groupId>io.github.lijiahangmax</groupId>
             <artifactId>orion-lang</artifactId>
-            <version>${orion.lang.version}</version>
+            <version>${orion.kit.version}</version>
         </dependency>
 
         <!-- log -->
         <dependency>
             <groupId>io.github.lijiahangmax</groupId>
             <artifactId>orion-log</artifactId>
-            <version>${orion.log.version}</version>
+            <version>${orion.kit.version}</version>
         </dependency>
 
         <!-- apache net -->
@@ -40,13 +40,12 @@
             <groupId>org.apache.ftpserver</groupId>
             <artifactId>ftpserver-core</artifactId>
             <version>${apache.ftp.server.version}</version>
-        </dependency>
-
-        <!-- ssh2 -->
-        <dependency>
-            <groupId>ch.ethz.ganymed</groupId>
-            <artifactId>ganymed-ssh2</artifactId>
-            <version>${ssh2.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>slf4j-api</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- jsch -->

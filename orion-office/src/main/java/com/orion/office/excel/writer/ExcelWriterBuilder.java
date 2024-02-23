@@ -22,6 +22,25 @@ public class ExcelWriterBuilder extends BaseExcelWriteable {
         super(workbook);
     }
 
+    /**
+     * 创建写入实例
+     *
+     * @return ExcelWriterBuilder
+     */
+    public static ExcelWriterBuilder create() {
+        return new ExcelWriterBuilder();
+    }
+
+    /**
+     * 创建写入实例
+     *
+     * @param workbook workbook
+     * @return ExcelWriterBuilder
+     */
+    public static ExcelWriterBuilder create(Workbook workbook) {
+        return new ExcelWriterBuilder(workbook);
+    }
+
     public <T> ExcelArrayWriter<T> getArrayWriter(String name) {
         return new ExcelArrayWriter<>(workbook, workbook.getSheet(name));
     }

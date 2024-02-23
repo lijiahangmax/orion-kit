@@ -144,7 +144,6 @@ public abstract class BaseCsvReader<T> implements SafeCloseable, Iterable<T> {
         } else {
             consumer.accept(row);
         }
-        rowNum++;
     }
 
     /**
@@ -163,6 +162,7 @@ public abstract class BaseCsvReader<T> implements SafeCloseable, Iterable<T> {
                 this.end = true;
                 return null;
             }
+            rowNum++;
             // 解析行
             return this.parserRow(reader.getRow());
         } catch (Exception e) {

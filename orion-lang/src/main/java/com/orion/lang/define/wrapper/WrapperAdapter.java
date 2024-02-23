@@ -17,17 +17,17 @@ import java.util.Map;
  */
 public class WrapperAdapter {
 
-    private WrapperAdapter() {
-    }
-
     /**
-     * 转换为wrapper的key
+     * 转换为 wrapper 的 key
      */
     private static final String[] DEFAULT_CODE = {"code"};
 
     private static final String[] DEFAULT_MSG = {"msg", "message"};
 
     private static final String[] DEFAULT_DATA = {"data", "res", "result"};
+
+    private WrapperAdapter() {
+    }
 
     /**
      * 转Wrapper
@@ -169,7 +169,7 @@ public class WrapperAdapter {
                     } else if (dataClass == String.class) {
                         return (T) data.toString();
                     } else {
-                        return Jsons.toBean(Jsons.toJson(data), dataClass);
+                        return Jsons.parse(Jsons.toJson(data), dataClass);
                     }
                 } catch (Exception e) {
                     Exceptions.printStacks(e);

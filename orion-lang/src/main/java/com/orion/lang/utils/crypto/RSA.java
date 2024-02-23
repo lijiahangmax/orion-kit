@@ -30,10 +30,10 @@ import static com.orion.lang.utils.crypto.Keys.getKey;
  */
 public class RSA {
 
+    public static final KeyFactory RSA_KEY_FACTORY;
+
     private RSA() {
     }
-
-    public static final KeyFactory RSA_KEY_FACTORY;
 
     static {
         try {

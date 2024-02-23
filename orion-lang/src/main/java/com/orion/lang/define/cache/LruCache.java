@@ -47,11 +47,11 @@ public class LruCache<K, V> extends LinkedHashMap<K, V> {
         this.lock = new ReentrantLock();
     }
 
-    public static <K, V> LruCache<K, V> newLru() {
+    public static <K, V> LruCache<K, V> create() {
         return new LruCache<>();
     }
 
-    public static <K, V> LruCache<K, V> newLru(int maxCapacity) {
+    public static <K, V> LruCache<K, V> create(int maxCapacity) {
         return new LruCache<>(maxCapacity);
     }
 

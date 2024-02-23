@@ -25,7 +25,7 @@ public class CsvMapReader<K, V> extends BaseCsvReader<MutableMap<K, V>> {
     private final Map<K, V> defaultValue;
 
     /**
-     * 为null是否插入kay
+     * 为 null 是否插入 kay
      */
     private boolean nullPutKey;
 
@@ -71,7 +71,7 @@ public class CsvMapReader<K, V> extends BaseCsvReader<MutableMap<K, V>> {
     }
 
     /**
-     * 如果为null是否插入key
+     * 如果为 null 是否插入 key
      *
      * @param nullPutKey ignore
      * @return this

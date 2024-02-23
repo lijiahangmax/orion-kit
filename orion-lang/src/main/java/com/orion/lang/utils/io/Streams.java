@@ -29,6 +29,13 @@ public class Streams {
     // -------------------- close --------------------
 
     public static void close(AutoCloseable c) {
+        close(c, true);
+    }
+
+    public static void close(AutoCloseable c, boolean close) {
+        if (!close) {
+            return;
+        }
         try {
             if (c != null) {
                 c.close();
@@ -41,6 +48,13 @@ public class Streams {
     // -------------------- flush --------------------
 
     public static void flush(Flushable f) {
+        flush(f, true);
+    }
+
+    public static void flush(Flushable f, boolean flush) {
+        if (!flush) {
+            return;
+        }
         try {
             if (f != null) {
                 f.flush();

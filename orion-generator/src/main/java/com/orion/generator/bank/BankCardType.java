@@ -34,7 +34,7 @@ public enum BankCardType {
             return null;
         }
         for (BankCardType value : values()) {
-            if (value.name().toLowerCase().equals(card.toLowerCase())) {
+            if (value.name().equalsIgnoreCase(card)) {
                 return value;
             }
         }

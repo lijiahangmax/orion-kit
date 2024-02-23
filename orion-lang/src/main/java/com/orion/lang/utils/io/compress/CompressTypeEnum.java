@@ -73,17 +73,17 @@ public enum CompressTypeEnum implements CompressType<FileCompressor, FileDecompr
 
     ;
 
-    CompressTypeEnum(String suffix, Supplier<FileCompressor> compressor, Supplier<FileDecompressor> decompressor) {
-        this.suffix = suffix;
-        this.compressor = compressor;
-        this.decompressor = decompressor;
-    }
-
     private final String suffix;
 
     private final Supplier<FileCompressor> compressor;
 
     private final Supplier<FileDecompressor> decompressor;
+
+    CompressTypeEnum(String suffix, Supplier<FileCompressor> compressor, Supplier<FileDecompressor> decompressor) {
+        this.suffix = suffix;
+        this.compressor = compressor;
+        this.decompressor = decompressor;
+    }
 
     @Override
     public Supplier<FileCompressor> compressor() {

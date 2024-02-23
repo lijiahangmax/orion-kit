@@ -179,29 +179,29 @@ public class Sets extends Collections {
     }
 
     @SafeVarargs
-    public static <E> Set<E> of(E... e) {
-        return new HashSet<>(Arrays.asList(e));
+    public static <E> Set<E> of(E... array) {
+        return new HashSet<>(Arrays.asList(array));
     }
 
     @SafeVarargs
-    public static <E, V> Set<E> of(Function<V, E> f, V... e) {
-        Valid.notNull(f, "convert function is null");
+    public static <E, V> Set<E> of(Function<V, E> mapper, V... values) {
+        Valid.notNull(mapper, "convert function is null");
         Set<E> list = new HashSet<>();
-        int length = Arrays1.length(e);
+        int length = Arrays1.length(values);
         for (int i = 0; i < length; i++) {
-            list.add(f.apply(e[i]));
+            list.add(mapper.apply(values[i]));
         }
         return list;
     }
 
-    public static <E, V> Set<E> map(List<V> l, Function<V, E> f) {
-        Valid.notNull(f, "convert function is null");
+    public static <E, V> Set<E> map(List<V> l, Function<V, E> mapper) {
+        Valid.notNull(mapper, "convert function is null");
         Set<E> set = new HashSet<>();
         if (isEmpty(l)) {
             return set;
         }
         for (V v : l) {
-            set.add(f.apply(v));
+            set.add(mapper.apply(v));
         }
         return set;
     }
@@ -229,25 +229,20 @@ public class Sets extends Collections {
     /**
      * 合并set
      *
-     * @param set 合并到的set
-     * @param ms  需要合并的set
-     * @param <E> ignore
-     * @return 合并后的set
+     * @param source   合并到的 set
+     * @param setArray 需要合并的 set
+     * @param <E>      ignore
      */
     @SafeVarargs
-    public static <E> Set<E> merge(Set<E> set, Set<E>... ms) {
-        if (set == null) {
-            set = new HashSet<>();
+    public static <E> void merge(Set<E> source, Set<E>... setArray) {
+        if (setArray == null) {
+            return;
         }
-        if (ms == null) {
-            return set;
-        }
-        for (Set<E> m : ms) {
+        for (Set<E> m : setArray) {
             if (m != null) {
-                set.addAll(m);
+                source.addAll(m);
             }
         }
-        return set;
     }
 
     /**

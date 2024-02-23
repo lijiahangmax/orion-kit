@@ -90,6 +90,14 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
         }
     }
 
+    public static <K, V> ConcurrentReferenceHashMap<K, V> create() {
+        return new ConcurrentReferenceHashMap<>();
+    }
+
+    public static <K, V> ConcurrentReferenceHashMap<K, V> create(ReferenceType referenceType) {
+        return new ConcurrentReferenceHashMap<>(referenceType);
+    }
+
     protected final float getLoadFactor() {
         return this.loadFactor;
     }

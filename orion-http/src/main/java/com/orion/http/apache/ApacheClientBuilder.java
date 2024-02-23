@@ -122,7 +122,7 @@ public class ApacheClientBuilder implements Buildable<CloseableHttpClient> {
     private LayeredConnectionSocketFactory sslSocketFactory;
 
     public ApacheClientBuilder() {
-        this.connectTimeout = Const.MS_S_3;
+        this.connectTimeout = Const.MS_S_10;
         this.socketTimeout = Const.MS_S_15;
         this.requestTimeout = Const.MS_S_15;
         this.userAgent = KitConfig.get(KitHttpConfiguration.CONFIG.HTTP_DEFAULT_USERAGENT);

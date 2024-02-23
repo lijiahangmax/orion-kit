@@ -12,20 +12,20 @@ import com.orion.office.csv.annotation.ImportSetting;
 @ImportSetting(delimiter = ',')
 public class ImportUser {
 
-    @ImportField(value = 1)
+    @ImportField(value = 0)
     @ImportIgnore
     private int id;
 
-    @ImportField(value = 2)
+    @ImportField(value = 1)
     private String name;
 
-    @ImportField(value = 3)
+    @ImportField(value = 2)
     private String date;
 
-    @ImportField(value = 4)
+    @ImportField(value = 3)
     private String desc;
 
-    @ImportField(value = 5)
+    @ImportField(value = 4)
     private String empty;
 
     public int getId() {

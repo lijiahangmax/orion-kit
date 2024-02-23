@@ -63,11 +63,6 @@ public abstract class BaseExcelReader<K, T> implements SafeCloseable, Iterable<T
     protected boolean end;
 
     /**
-     * 是否跳过空行
-     */
-    protected boolean skipNullRows;
-
-    /**
      * 是否清除空格
      *
      * @see String
@@ -119,7 +114,6 @@ public abstract class BaseExcelReader<K, T> implements SafeCloseable, Iterable<T
         }
         this.workbook = workbook;
         this.sheet = sheet;
-        this.skipNullRows = true;
         this.rows = rows;
         this.consumer = consumer;
         this.store = rows != null;
@@ -150,8 +144,8 @@ public abstract class BaseExcelReader<K, T> implements SafeCloseable, Iterable<T
             return this;
         }
         this.init = true;
-        boolean havePicture = this.checkHasPicture();
-        if (havePicture) {
+        boolean hasPicture = this.checkHasPicture();
+        if (hasPicture) {
             this.pictureParser = new PictureParser(workbook, sheet);
             pictureParser.analysis();
         }
@@ -176,17 +170,6 @@ public abstract class BaseExcelReader<K, T> implements SafeCloseable, Iterable<T
      */
     public BaseExcelReader<K, T> skip(int i) {
         rowIndex += i;
-        return this;
-    }
-
-    /**
-     * 跳过空行
-     *
-     * @param skip 是否跳过空行
-     * @return this
-     */
-    public BaseExcelReader<K, T> skipNullRows(boolean skip) {
-        this.skipNullRows = skip;
         return this;
     }
 
@@ -255,7 +238,7 @@ public abstract class BaseExcelReader<K, T> implements SafeCloseable, Iterable<T
     protected void readRow() {
         this.checkInit();
         T row = this.nextRow();
-        if (end || (row == null && skipNullRows)) {
+        if (end || row == null) {
             return;
         }
         if (store) {
@@ -263,7 +246,6 @@ public abstract class BaseExcelReader<K, T> implements SafeCloseable, Iterable<T
         } else {
             consumer.accept(row);
         }
-        rowNum++;
     }
 
     /**
@@ -277,12 +259,13 @@ public abstract class BaseExcelReader<K, T> implements SafeCloseable, Iterable<T
             return null;
         }
         if (!iterator.hasNext()) {
-            end = true;
+            this.end = true;
             return null;
         }
         Row row = iterator.next();
         if (currentIndex++ == rowIndex) {
             rowIndex++;
+            rowNum++;
             return this.parserRow(row);
         }
         return this.nextRow();

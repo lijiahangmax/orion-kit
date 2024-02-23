@@ -30,6 +30,14 @@ public class MutableInt extends Number implements Comparable<MutableInt>, Mutabl
         this.value = Integer.parseInt(value);
     }
 
+    public static MutableInt create() {
+        return new MutableInt();
+    }
+
+    public static MutableInt of(int value) {
+        return new MutableInt(value);
+    }
+
     @Override
     public Integer get() {
         return this.value;

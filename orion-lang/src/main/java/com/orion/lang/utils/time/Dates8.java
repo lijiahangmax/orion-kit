@@ -377,4 +377,15 @@ public class Dates8 extends BaseDates {
         }
     }
 
+    /**
+     * 时间是否已过期
+     *
+     * @param time time
+     * @return 是否过期
+     */
+    public static boolean isExpired(LocalDateTime time) {
+        LocalDateTime now = LocalDateTime.now();
+        return now.isAfter(time);
+    }
+
 }

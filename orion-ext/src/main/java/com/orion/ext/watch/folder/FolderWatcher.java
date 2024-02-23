@@ -137,11 +137,10 @@ public abstract class FolderWatcher implements Runnable, Watchable, Stoppable, S
                     }
                 });
             }
+        } catch (AccessDeniedException e) {
+            // ignore 禁止访问异常
         } catch (IOException e) {
-            if (!(e instanceof AccessDeniedException)) {
-                // 非禁止访问异常
-                throw Exceptions.watch(e);
-            }
+            throw Exceptions.watch(e);
         }
     }
 

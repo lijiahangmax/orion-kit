@@ -12,9 +12,6 @@ import java.util.function.*;
 @SuppressWarnings("unchecked")
 public class Suppliers {
 
-    private Suppliers() {
-    }
-
     /**
      * null 提供者
      */
@@ -35,6 +32,9 @@ public class Suppliers {
     public static final BooleanSupplier BOOLEAN_SUPPLIER = () -> false;
 
     public static final CharSupplier CHAR_SUPPLIER = () -> (char) 0;
+
+    private Suppliers() {
+    }
 
     // -------------------- getter --------------------
 

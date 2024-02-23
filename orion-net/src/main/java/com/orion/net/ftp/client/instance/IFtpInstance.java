@@ -2,11 +2,13 @@ package com.orion.net.ftp.client.instance;
 
 import com.orion.lang.able.Destroyable;
 import com.orion.lang.able.SafeCloseable;
-import com.orion.net.base.file.transfer.IFileTransfer;
+import com.orion.lang.utils.Strings;
 import com.orion.net.ftp.client.FtpFile;
 import com.orion.net.ftp.client.FtpFileFilter;
 import com.orion.net.ftp.client.config.FtpConfig;
 import com.orion.net.ftp.client.pool.FtpClientPool;
+import com.orion.net.specification.transfer.IFileDownloader;
+import com.orion.net.specification.transfer.IFileUploader;
 import org.apache.commons.net.ftp.FTPClient;
 
 import java.io.File;
@@ -15,7 +17,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * ftp 实例 api
@@ -91,7 +92,7 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
     /**
      * 获取文件大小
      * <p>
-     * 文件不存在返回-1
+     * 文件不存在返回 -1
      *
      * @param file file
      * @return size
@@ -136,7 +137,7 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
      *
      * @param file file
      */
-    void rm(String file);
+    void remove(String file);
 
     /**
      * 删除文件
@@ -165,7 +166,7 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
      *
      * @param dir 文件夹
      */
-    void mkdirs(String dir);
+    void makeDirectories(String dir);
 
     /**
      * 创建文件
@@ -185,17 +186,31 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
      * @param source 原文件路径
      * @param target 移动后的路径 可以为相对路径 如果不加目录为重命名
      */
-    void mv(String source, String target);
+    void move(String source, String target);
 
     // -------------------- stream --------------------
-
-    InputStream openInputStream(String file) throws IOException;
 
     /**
      * 获取文件输入流
      * <p>
+     * 文件不存在则报错
      * 使用完毕需要调用 client.completePendingCommand();
-     * 这个操作在关闭io之后
+     * 这个操作在关闭 io 之后 | finally 中
+     *
+     * @param file 文件
+     * @return InputStream
+     * @throws IOException IOException
+     */
+    default InputStream openInputStream(String file) throws IOException {
+        return this.openInputStream(file, 0L);
+    }
+
+    /**
+     * 获取文件输入流
+     * <p>
+     * 文件不存在则报错
+     * 使用完毕需要调用 client.completePendingCommand();
+     * 这个操作在关闭 io 之后 | finally 中
      *
      * @param file 文件
      * @param skip 跳过字节数
@@ -204,13 +219,27 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
      */
     InputStream openInputStream(String file, long skip) throws IOException;
 
-    OutputStream openOutputStream(String file) throws IOException;
+    /**
+     * 获取文件输出流
+     * <p>
+     * 文件存在则自动创建
+     * 使用完毕需要调用 client.completePendingCommand();
+     * 这个操作在关闭 io 之后 | finally 中
+     *
+     * @param file 文件
+     * @return OutputStream
+     * @throws IOException IOException
+     */
+    default OutputStream openOutputStream(String file) throws IOException {
+        return this.openOutputStream(file, false);
+    }
 
     /**
      * 获取文件输出流
      * <p>
+     * 文件存在则自动创建
      * 使用完毕需要调用 client.completePendingCommand();
-     * 这个操作在关闭io之后
+     * 这个操作在关闭 io 之后 | finally 中
      *
      * @param file   文件
      * @param append 是否为拼接
@@ -219,40 +248,57 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
      */
     OutputStream openOutputStream(String file, boolean append) throws IOException;
 
-    /**
-     * 读取文件到流
-     *
-     * @param file 文件
-     * @param out  输出流
-     */
-    void readFromFile(String file, OutputStream out) throws IOException;
-
-    /**
-     * 拼接流到文件
-     *
-     * @param file 文件
-     * @param in   输入流
-     */
-    void appendToFile(String file, InputStream in) throws IOException;
-
-    /**
-     * 写入流到文件
-     *
-     * @param file 文件
-     * @param in   输入流
-     */
-    void writeToFile(String file, InputStream in) throws IOException;
-
     // -------------------- read --------------------
-
-    int read(String file, byte[] bs) throws IOException;
-
-    int read(String file, long skip, byte[] bs) throws IOException;
-
-    int read(String file, byte[] bs, int off, int len) throws IOException;
 
     /**
      * 读取文件到数组
+     * <p>
+     * 文件不存在则报错
+     *
+     * @param file 文件
+     * @param bs   数组
+     * @return 读取的长度
+     * @throws IOException IOException
+     */
+    default int read(String file, byte[] bs) throws IOException {
+        return this.read(file, 0L, bs, 0, bs.length);
+    }
+
+    /**
+     * 读取文件到数组
+     * <p>
+     * 文件不存在则报错
+     *
+     * @param file 文件
+     * @param skip 跳过字节数
+     * @param bs   数组
+     * @return 读取的长度
+     * @throws IOException IOException
+     */
+    default int read(String file, long skip, byte[] bs) throws IOException {
+        return this.read(file, skip, bs, 0, bs.length);
+    }
+
+    /**
+     * 读取文件到数组
+     * <p>
+     * 文件不存在则报错
+     *
+     * @param file 文件
+     * @param bs   数组
+     * @param off  偏移量
+     * @param len  长度
+     * @return 读取的长度
+     * @throws IOException IOException
+     */
+    default int read(String file, byte[] bs, int off, int len) throws IOException {
+        return this.read(file, 0L, bs, off, len);
+    }
+
+    /**
+     * 读取文件到数组
+     * <p>
+     * 文件不存在则报错
      *
      * @param file 文件
      * @param skip 跳过字节数
@@ -264,48 +310,108 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
      */
     int read(String file, long skip, byte[] bs, int off, int len) throws IOException;
 
-    String readLine(String file) throws IOException;
-
-    /**
-     * 读取一行
-     *
-     * @param file 文件
-     * @param skip 跳过字节数
-     * @return 行
-     * @throws IOException IOException
-     */
-    String readLine(String file, long skip) throws IOException;
-
-    List<String> readLines(String file) throws IOException;
-
-    List<String> readLines(String file, long skip) throws IOException;
-
-    List<String> readLines(String file, int lines) throws IOException;
-
-    /**
-     * 读取多行
-     *
-     * @param file  文件
-     * @param skip  跳过字节数
-     * @param lines 读取行数 -1 读取所有行
-     * @return 行
-     * @throws IOException IOException
-     */
-    List<String> readLines(String file, long skip, int lines) throws IOException;
-
     // -------------------- transfer --------------------
 
-    long transfer(String path, OutputStream out) throws IOException;
+    /**
+     * 读取字节到文件
+     * <p>
+     * 文件不存在则报错
+     *
+     * @param path 文件绝对路径
+     * @param file 输出流
+     * @return 已读取长度
+     * @throws IOException IOException
+     */
+    default long transfer(String path, File file) throws IOException {
+        return this.transfer(path, file.getAbsolutePath(), 0, -1);
+    }
 
-    long transfer(String path, OutputStream out, long skip) throws IOException;
+    /**
+     * 读取字节到文件
+     * <p>
+     * 文件不存在则报错
+     *
+     * @param path 文件绝对路径
+     * @param file 输出流
+     * @param skip 跳过字数
+     * @return 已读取长度
+     * @throws IOException IOException
+     */
+    default long transfer(String path, File file, long skip) throws IOException {
+        return this.transfer(path, file.getAbsolutePath(), skip, -1);
+    }
 
-    long transfer(String path, String file) throws IOException;
+    /**
+     * 读取字节到文件
+     * <p>
+     * 文件不存在则报错
+     *
+     * @param path 文件绝对路径
+     * @param file 输出流
+     * @return 已读取长度
+     * @throws IOException IOException
+     */
+    default long transfer(String path, String file) throws IOException {
+        return this.transfer(path, file, 0, -1);
+    }
 
-    long transfer(String path, String file, long skip) throws IOException;
+    /**
+     * 读取字节到文件
+     * <p>
+     * 文件不存在则报错
+     *
+     * @param path 文件绝对路径
+     * @param file 输出流
+     * @param skip 跳过字数
+     * @return 已读取长度
+     * @throws IOException IOException
+     */
+    default long transfer(String path, String file, long skip) throws IOException {
+        return this.transfer(path, file, skip, -1);
+    }
 
-    long transfer(String path, File file) throws IOException;
+    /**
+     * 读取字节到文件
+     * <p>
+     * 文件不存在则报错
+     *
+     * @param path 文件绝对路径
+     * @param file 输出流
+     * @param skip 跳过字数
+     * @param size 读取长度 -1 读取全部
+     * @return 已读取长度
+     * @throws IOException IOException
+     */
+    long transfer(String path, String file, long skip, int size) throws IOException;
 
-    long transfer(String path, File file, long skip) throws IOException;
+    /**
+     * 读取字节到输出流
+     * <p>
+     * 文件不存在则报错
+     *
+     * @param path 文件绝对路径
+     * @param out  输出流
+     * @return 已读取长度
+     * @throws IOException IOException
+     */
+    default long transfer(String path, OutputStream out) throws IOException {
+        return this.transfer(path, out, 0, -1);
+    }
+
+    /**
+     * 读取字节到输出流
+     * <p>
+     * 文件不存在则报错
+     *
+     * @param path 文件绝对路径
+     * @param out  输出流
+     * @param skip 跳过字数
+     * @return 已读取长度
+     * @throws IOException IOException
+     */
+    default long transfer(String path, OutputStream out, long skip) throws IOException {
+        return this.transfer(path, out, skip, -1);
+    }
 
     /**
      * 读取字节到输出流
@@ -325,6 +431,8 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
 
     /**
      * 写入流到文件
+     * <p>
+     * 文件不存在则自动创建
      *
      * @param file 文件
      * @param in   in
@@ -333,16 +441,35 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
     void write(String file, InputStream in) throws IOException;
 
     /**
+     * 写入字符
+     * <p>
+     * 文件不存在则自动创建
+     *
+     * @param file 文件
+     * @param str  str
+     * @throws IOException IOException
+     */
+    default void write(String file, String str) throws IOException {
+        this.write(file, Strings.bytes(str));
+    }
+
+    /**
      * 写入字节数组到文件
+     * <p>
+     * 文件不存在则自动创建
      *
      * @param file 文件
      * @param bs   字节数组
      * @throws IOException IOException
      */
-    void write(String file, byte[] bs) throws IOException;
+    default void write(String file, byte[] bs) throws IOException {
+        this.write(file, bs, 0, bs.length);
+    }
 
     /**
      * 写入字节数组到文件
+     * <p>
+     * 文件不存在则自动创建
      *
      * @param file 文件
      * @param bs   字节数组
@@ -352,28 +479,12 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
      */
     void write(String file, byte[] bs, int off, int len) throws IOException;
 
-    /**
-     * 写入一行
-     *
-     * @param file 文件
-     * @param line 行
-     * @throws IOException IOException
-     */
-    void writeLine(String file, String line) throws IOException;
-
-    /**
-     * 写入多行
-     *
-     * @param file  文件
-     * @param lines 行
-     * @throws IOException IOException
-     */
-    void writeLines(String file, List<String> lines) throws IOException;
-
     // -------------------- append --------------------
 
     /**
      * 拼接流到文件
+     * <p>
+     * 文件不存在则自动创建
      *
      * @param file 文件
      * @param in   in
@@ -382,16 +493,35 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
     void append(String file, InputStream in) throws IOException;
 
     /**
+     * 拼接字符
+     * <p>
+     * 文件不存在则自动创建
+     *
+     * @param file 文件
+     * @param str  str
+     * @throws IOException IOException
+     */
+    default void append(String file, String str) throws IOException {
+        this.append(file, Strings.bytes(str));
+    }
+
+    /**
      * 拼接字节数组到文件
+     * <p>
+     * 文件不存在则自动创建
      *
      * @param file 文件
      * @param bs   字节数组
      * @throws IOException IOException
      */
-    void append(String file, byte[] bs) throws IOException;
+    default void append(String file, byte[] bs) throws IOException {
+        this.append(file, bs, 0, bs.length);
+    }
 
     /**
      * 拼接字节数组到文件
+     * <p>
+     * 文件不存在则自动创建
      *
      * @param file 文件
      * @param bs   字节数组
@@ -401,31 +531,50 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
      */
     void append(String file, byte[] bs, int off, int len) throws IOException;
 
-    /**
-     * 拼接一行
-     *
-     * @param file 文件
-     * @param line 行
-     * @throws IOException IOException
-     */
-    void appendLine(String file, String line) throws IOException;
-
-    /**
-     * 拼接多行
-     *
-     * @param file  文件
-     * @param lines 行
-     * @throws IOException IOException
-     */
-    void appendLines(String file, List<String> lines) throws IOException;
-
     // -------------------- upload --------------------
 
+    /**
+     * 上传文件
+     * <p>
+     * 远程文件存在则会覆盖
+     * <p>
+     * 远程文件是个文件夹则会报错
+     *
+     * @param remoteFile 远程文件
+     * @param localFile  本地文件
+     * @throws IOException IOException
+     */
+    default void uploadFile(String remoteFile, File localFile) throws IOException {
+        this.uploadFile(remoteFile, localFile.getAbsolutePath());
+    }
+
+    /**
+     * 上传文件
+     * <p>
+     * 远程文件存在则会覆盖
+     * <p>
+     * 远程文件是个文件夹则会报错
+     *
+     * @param remoteFile 远程文件
+     * @param localFile  本地文件
+     * @throws IOException IOException
+     */
     void uploadFile(String remoteFile, String localFile) throws IOException;
 
-    void uploadFile(String remoteFile, File localFile) throws IOException;
-
-    void uploadFile(String remoteFile, InputStream in) throws IOException;
+    /**
+     * 上传文件
+     * <p>
+     * 远程文件存在则会覆盖
+     * <p>
+     * 远程文件是个文件夹则会报错
+     *
+     * @param remoteFile 远程文件
+     * @param in         input
+     * @throws IOException IOException
+     */
+    default void uploadFile(String remoteFile, InputStream in) throws IOException {
+        this.uploadFile(remoteFile, in, false);
+    }
 
     /**
      * 上传文件
@@ -441,11 +590,57 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
      */
     void uploadFile(String remoteFile, InputStream in, boolean close) throws IOException;
 
-    void uploadDir(String remoteDir, File localDir) throws IOException;
+    /**
+     * 上传文件夹
+     * <p>
+     * /root/target > /home/ljh/target
+     * 如果远程文件夹不设置 /target 则会将 /home/ljh/target 的文件传输到 /root
+     * <p>
+     * 远程文件夹不存在不会报错
+     * 远程文件夹是个文件则会报错
+     *
+     * @param remoteDir 远程文件夹
+     * @param localDir  本地文件夹 上传时不包含此文件夹
+     * @throws IOException IOException
+     */
+    default void uploadDir(String remoteDir, File localDir) throws IOException {
+        this.uploadDir(remoteDir, localDir.getAbsolutePath(), true);
+    }
 
-    void uploadDir(String remoteDir, String localDir) throws IOException;
+    /**
+     * 上传文件夹
+     * <p>
+     * /root/target > /home/ljh/target
+     * 如果远程文件夹不设置 /target 则会将 /home/ljh/target 的文件传输到 /root
+     * <p>
+     * 远程文件夹不存在不会报错
+     * 远程文件夹是个文件则会报错
+     *
+     * @param remoteDir 远程文件夹
+     * @param localDir  本地文件夹 上传时不包含此文件夹
+     * @throws IOException IOException
+     */
+    default void uploadDir(String remoteDir, String localDir) throws IOException {
+        this.uploadDir(remoteDir, localDir, true);
+    }
 
-    void uploadDir(String remoteDir, File localDir, boolean child) throws IOException;
+    /**
+     * 上传文件夹
+     * <p>
+     * /root/target > /home/ljh/target
+     * 如果远程文件夹不设置 /target 则会将 /home/ljh/target 的文件传输到 /root
+     * <p>
+     * 远程文件夹不存在不会报错
+     * 远程文件夹是个文件则会报错
+     *
+     * @param remoteDir 远程文件夹
+     * @param localDir  本地文件夹 上传时不包含此文件夹
+     * @param child     是否遍历上传
+     * @throws IOException IOException
+     */
+    default void uploadDir(String remoteDir, File localDir, boolean child) throws IOException {
+        this.uploadDir(remoteDir, localDir.getAbsolutePath(), child);
+    }
 
     /**
      * 上传文件夹
@@ -465,11 +660,36 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
 
     // -------------------- download --------------------
 
+    /**
+     * 下载文件
+     *
+     * @param remoteFile 远程文件路径
+     * @param localFile  本地文件路径
+     * @throws IOException pending
+     */
+    default void downloadFile(String remoteFile, File localFile) throws IOException {
+        this.downloadFile(remoteFile, localFile.getAbsolutePath());
+    }
+
+    /**
+     * 下载文件
+     *
+     * @param remoteFile 远程文件路径
+     * @param localFile  本地文件
+     * @throws IOException pending
+     */
     void downloadFile(String remoteFile, String localFile) throws IOException;
 
-    void downloadFile(String remoteFile, File localFile) throws IOException;
-
-    void downloadFile(String remoteFile, OutputStream out) throws IOException;
+    /**
+     * 下载文件
+     *
+     * @param remoteFile 远程文件路径
+     * @param out        output
+     * @throws IOException pending
+     */
+    default void downloadFile(String remoteFile, OutputStream out) throws IOException {
+        this.downloadFile(remoteFile, out, false);
+    }
 
     /**
      * 下载文件
@@ -481,11 +701,39 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
      */
     void downloadFile(String remoteFile, OutputStream out, boolean close) throws IOException;
 
-    void downloadDir(String remoteDir, File localDir) throws IOException;
+    /**
+     * 下载文件夹
+     *
+     * @param remoteDir 远程文件夹
+     * @param localDir  本地文件夹
+     * @throws IOException pending
+     */
+    default void downloadDir(String remoteDir, File localDir) throws IOException {
+        this.downloadDir(remoteDir, localDir.getAbsolutePath(), true);
+    }
 
-    void downloadDir(String remoteDir, String localDir) throws IOException;
+    /**
+     * 下载文件夹
+     *
+     * @param remoteDir 远程文件夹
+     * @param localDir  本地文件夹
+     * @throws IOException pending
+     */
+    default void downloadDir(String remoteDir, String localDir) throws IOException {
+        this.downloadDir(remoteDir, localDir, true);
+    }
 
-    void downloadDir(String remoteDir, File localDir, boolean child) throws IOException;
+    /**
+     * 下载文件夹
+     *
+     * @param remoteDir 远程文件夹
+     * @param localDir  本地文件夹
+     * @param child     是否递归子文件夹下载
+     * @throws IOException pending
+     */
+    default void downloadDir(String remoteDir, File localDir, boolean child) throws IOException {
+        this.downloadDir(remoteDir, localDir.getAbsolutePath(), child);
+    }
 
     /**
      * 下载文件夹
@@ -497,20 +745,7 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
      */
     void downloadDir(String remoteDir, String localDir, boolean child) throws IOException;
 
-    // -------------------- big file --------------------
-
-    IFileTransfer upload(String remote, String local);
-
-    /**
-     * 获取大文件上传器
-     *
-     * @param remote 远程文件
-     * @param local  本地文件
-     * @return FtpUpload
-     */
-    IFileTransfer upload(String remote, File local);
-
-    IFileTransfer download(String remote, String local);
+    // -------------------- file transfer --------------------
 
     /**
      * 获取大文件下载器
@@ -519,19 +754,57 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
      * @param local  本地文件
      * @return FtpDownload
      */
-    IFileTransfer download(String remote, File local);
+    IFileUploader upload(String remote, String local);
+
+    /**
+     * 获取大文件上传器
+     *
+     * @param remote 远程文件
+     * @param local  本地文件
+     * @return FtpUpload
+     */
+    IFileUploader upload(String remote, File local);
+
+    /**
+     * 获取大文件下载器
+     *
+     * @param remote 远程文件
+     * @param local  本地文件
+     * @return FtpDownload
+     */
+    IFileDownloader download(String remote, String local);
+
+    /**
+     * 获取大文件下载器
+     *
+     * @param remote 远程文件
+     * @param local  本地文件
+     * @return FtpDownload
+     */
+    IFileDownloader download(String remote, File local);
 
     // -------------------- list --------------------
 
-    List<FtpFile> listFiles();
+    /**
+     * 列出目录下的文件
+     *
+     * @param path 目录
+     * @return 文件
+     */
+    default List<FtpFile> listFiles(String path) {
+        return this.listFiles(path, false, false);
+    }
 
-    List<FtpFile> listFiles(boolean child);
-
-    List<FtpFile> listFiles(boolean child, boolean dir);
-
-    List<FtpFile> listFiles(String path);
-
-    List<FtpFile> listFiles(String path, boolean child);
+    /**
+     * 列出目录下的文件
+     *
+     * @param path  目录
+     * @param child 是否递归子文件夹
+     * @return 文件
+     */
+    default List<FtpFile> listFiles(String path, boolean child) {
+        return this.listFiles(path, child, false);
+    }
 
     /**
      * 文件和文件夹列表
@@ -543,11 +816,15 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
      */
     List<FtpFile> listFiles(String path, boolean child, boolean dir);
 
-    List<FtpFile> listDirs();
-
-    List<FtpFile> listDirs(boolean child);
-
-    List<FtpFile> listDirs(String dir);
+    /**
+     * 列出目录下的文件
+     *
+     * @param path 目录
+     * @return 文件
+     */
+    default List<FtpFile> listDirs(String path) {
+        return this.listDirs(path, false);
+    }
 
     /**
      * 列出文件夹
@@ -558,78 +835,28 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
      */
     List<FtpFile> listDirs(String path, boolean child);
 
-    List<FtpFile> listFilesSuffix(String suffix);
-
-    List<FtpFile> listFilesSuffix(String suffix, boolean child);
-
-    List<FtpFile> listFilesSuffix(String suffix, boolean child, boolean dir);
-
-    List<FtpFile> listFilesSuffix(String path, String suffix);
-
-    List<FtpFile> listFilesSuffix(String path, String suffix, boolean child);
+    /**
+     * 列出目录下的文件
+     *
+     * @param path   目录
+     * @param filter 过滤器
+     * @return 文件
+     */
+    default List<FtpFile> listFilesFilter(String path, FtpFileFilter filter) {
+        return this.listFilesFilter(path, filter, false, false);
+    }
 
     /**
      * 列出目录下的文件
      *
      * @param path   目录
-     * @param suffix 后缀
+     * @param filter 过滤器
      * @param child  是否递归子文件夹
-     * @param dir    是否添加文件夹
      * @return 文件
      */
-    List<FtpFile> listFilesSuffix(String path, String suffix, boolean child, boolean dir);
-
-    List<FtpFile> listFilesMatch(String match);
-
-    List<FtpFile> listFilesMatch(String match, boolean child);
-
-    List<FtpFile> listFilesMatch(String match, boolean child, boolean dir);
-
-    List<FtpFile> listFilesMatch(String path, String match);
-
-    List<FtpFile> listFilesMatch(String path, String match, boolean child);
-
-    /**
-     * 列出目录下的文件
-     *
-     * @param path  目录
-     * @param match 名称
-     * @param child 是否递归子文件夹
-     * @param dir   是否添加文件夹
-     * @return 文件
-     */
-    List<FtpFile> listFilesMatch(String path, String match, boolean child, boolean dir);
-
-    List<FtpFile> listFilesPattern(Pattern pattern);
-
-    List<FtpFile> listFilesPattern(Pattern pattern, boolean child);
-
-    List<FtpFile> listFilesPattern(Pattern pattern, boolean child, boolean dir);
-
-    List<FtpFile> listFilesPattern(String path, Pattern pattern);
-
-    List<FtpFile> listFilesPattern(String path, Pattern pattern, boolean child);
-
-    /**
-     * 列出目录下的文件
-     *
-     * @param path    目录
-     * @param pattern 正则
-     * @param child   是否递归子文件夹
-     * @param dir     是否添加文件夹
-     * @return 文件
-     */
-    List<FtpFile> listFilesPattern(String path, Pattern pattern, boolean child, boolean dir);
-
-    List<FtpFile> listFilesFilter(FtpFileFilter filter);
-
-    List<FtpFile> listFilesFilter(FtpFileFilter filter, boolean child);
-
-    List<FtpFile> listFilesFilter(FtpFileFilter filter, boolean child, boolean dir);
-
-    List<FtpFile> listFilesFilter(String path, FtpFileFilter filter);
-
-    List<FtpFile> listFilesFilter(String path, FtpFileFilter filter, boolean child);
+    default List<FtpFile> listFilesFilter(String path, FtpFileFilter filter, boolean child) {
+        return this.listFilesFilter(path, filter, child, false);
+    }
 
     /**
      * 列出目录下的文件
@@ -687,7 +914,7 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
     String getStatus(String path);
 
     /**
-     * 获取链接
+     * 获取连接
      *
      * @return client
      */
@@ -716,7 +943,7 @@ public interface IFtpInstance extends SafeCloseable, Destroyable {
     boolean sendNoop() throws IOException;
 
     /**
-     * ftp服务文件编码
+     * ftp 服务文件编码
      *
      * @param chars chars
      * @return 编码

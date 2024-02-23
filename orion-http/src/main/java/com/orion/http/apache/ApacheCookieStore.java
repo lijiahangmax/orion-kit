@@ -16,19 +16,19 @@ import java.util.Map;
 public class ApacheCookieStore extends BasicCookieStore {
 
     public ApacheCookieStore addCookie(String key, String value, String domain) {
-        return this.addCookie(key, value, domain, Const.ROOT);
+        return this.addCookie(key, value, domain, Const.ROOT_PATH);
     }
 
     public ApacheCookieStore addCookie(String key, String value, String domain, String path) {
         BasicClientCookie c = new BasicClientCookie(key, value);
         c.setDomain(domain);
         c.setPath(path);
-        addCookie(c);
+        this.addCookie(c);
         return this;
     }
 
     public ApacheCookieStore addCookies(Map<String, String> map, String domain) {
-        return this.addCookies(map, domain, Const.ROOT);
+        return this.addCookies(map, domain, Const.ROOT_PATH);
     }
 
     public ApacheCookieStore addCookies(Map<String, String> map, String domain, String path) {
@@ -36,7 +36,7 @@ public class ApacheCookieStore extends BasicCookieStore {
             BasicClientCookie c = new BasicClientCookie(k, v);
             c.setDomain(domain);
             c.setPath(path);
-            addCookie(c);
+            this.addCookie(c);
         });
         return this;
     }

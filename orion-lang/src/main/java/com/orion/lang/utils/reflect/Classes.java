@@ -153,7 +153,7 @@ public class Classes {
      * @return true 是
      */
     public static boolean isJdkProxy(Object o) {
-        return Proxy.isProxyClass(o.getClass());
+        return o != null && Proxy.isProxyClass(o.getClass());
     }
 
     /**

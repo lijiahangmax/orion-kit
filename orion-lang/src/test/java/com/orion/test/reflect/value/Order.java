@@ -7,6 +7,14 @@ package com.orion.test.reflect.value;
  */
 public class Order {
 
+    @OrderAnno(value = "id f")
+    int id;
+
+    @OrderAnno(value = "name f")
+    String name;
+
+    String mobile;
+
     @OrderAnno(value = "222")
     public Order() {
     }
@@ -17,14 +25,6 @@ public class Order {
     @OrderAnno
     public Order(int id, String name) {
     }
-
-    @OrderAnno(value = "id f")
-    int id;
-
-    @OrderAnno(value = "name f")
-    String name;
-
-    String mobile;
 
     @OrderAnno(value = "id get")
     public int getId() {

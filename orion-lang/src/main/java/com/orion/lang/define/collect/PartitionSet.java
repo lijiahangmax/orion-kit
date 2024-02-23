@@ -15,9 +15,9 @@ import java.util.Set;
  * @version 1.0.0
  * @since 2023/1/16 16:40
  */
-public class PartitionSet<T> extends AbstractSet<Set<T>> implements Iterator<Set<T>> {
+public class PartitionSet<E> extends AbstractSet<Set<E>> implements Iterator<Set<E>> {
 
-    private final Iterator<T> iterator;
+    private final Iterator<E> iterator;
 
     private final int size;
 
@@ -25,10 +25,14 @@ public class PartitionSet<T> extends AbstractSet<Set<T>> implements Iterator<Set
 
     private int current;
 
-    public PartitionSet(Set<T> set, int size) {
+    public PartitionSet(Set<E> set, int size) {
         this.iterator = set.iterator();
         this.size = size;
         this.totalSize = set.size();
+    }
+
+    public static <E> PartitionSet<E> create(Set<E> set, int size) {
+        return new PartitionSet<>(set, size);
     }
 
     @Override
@@ -42,7 +46,7 @@ public class PartitionSet<T> extends AbstractSet<Set<T>> implements Iterator<Set
     }
 
     @Override
-    public Iterator<Set<T>> iterator() {
+    public Iterator<Set<E>> iterator() {
         return this;
     }
 
@@ -52,12 +56,12 @@ public class PartitionSet<T> extends AbstractSet<Set<T>> implements Iterator<Set
     }
 
     @Override
-    public Set<T> next() {
+    public Set<E> next() {
         if (!this.hasNext()) {
             throw Exceptions.noSuchElement("there are no more elements");
         }
         current++;
-        Set<T> set = new HashSet<>(Numbers.getMin2Power(size));
+        Set<E> set = new HashSet<>(Numbers.getMin2Power(size));
         for (int i = 0; i < size; i++) {
             if (iterator.hasNext()) {
                 set.add(iterator.next());

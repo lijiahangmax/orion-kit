@@ -47,9 +47,14 @@ public class LocationSeeker {
     private MappedByteBuffer mbb;
 
     /**
-     * 起始地区的开始和结束的绝对偏移
+     * 起始地区的开始的绝对偏移
      */
-    private long ipBegin, ipEnd;
+    private long ipBegin;
+
+    /**
+     * 起始地区的结束的绝对偏移
+     */
+    private long ipEnd;
 
     private IpLocation loc;
 

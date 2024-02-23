@@ -30,6 +30,14 @@ public class MutableFloat extends Number implements Comparable<MutableFloat>, Mu
         this.value = Float.parseFloat(value);
     }
 
+    public static MutableFloat create() {
+        return new MutableFloat();
+    }
+
+    public static MutableFloat of(float value) {
+        return new MutableFloat(value);
+    }
+
     @Override
     public Float get() {
         return this.value;

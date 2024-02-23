@@ -126,8 +126,8 @@ public class Lists extends Collections {
         return new CopyOnWriteArrayList<>();
     }
 
-    public static <E> List<E> newCopyOnWriteList(E[] ea) {
-        return new CopyOnWriteArrayList<>(ea);
+    public static <E> List<E> newCopyOnWriteList(E[] array) {
+        return new CopyOnWriteArrayList<>(array);
     }
 
     public static <E> List<E> newCopyOnWriteList(Collection<? extends E> c) {
@@ -141,15 +141,15 @@ public class Lists extends Collections {
         return java.util.Collections.synchronizedList(new ArrayList<>());
     }
 
-    public static <E> List<E> newSynchronizedList(List<E> c) {
-        if (c == null) {
+    public static <E> List<E> newSynchronizedList(List<E> list) {
+        if (list == null) {
             return java.util.Collections.synchronizedList(new ArrayList<>());
         }
-        return java.util.Collections.synchronizedList(c);
+        return java.util.Collections.synchronizedList(list);
     }
 
-    public static <E> List<E> unmodified(List<E> c) {
-        return java.util.Collections.unmodifiableList(c);
+    public static <E> List<E> unmodified(List<E> list) {
+        return java.util.Collections.unmodifiableList(list);
     }
 
     public static <E> List<E> singleton(E e) {
@@ -175,31 +175,31 @@ public class Lists extends Collections {
     }
 
     @SafeVarargs
-    public static <E> List<E> of(E... e) {
-        return new ArrayList<>(Arrays.asList(e));
+    public static <E> List<E> of(E... values) {
+        return new ArrayList<>(Arrays.asList(values));
     }
 
     @SafeVarargs
-    public static <E, V> List<E> of(Function<V, E> f, V... e) {
-        Valid.notNull(f, "convert function is null");
+    public static <E, V> List<E> of(Function<V, E> mapper, V... values) {
+        Valid.notNull(mapper, "convert function is null");
         List<E> list = new ArrayList<>();
-        int length = Arrays1.length(e);
+        int length = Arrays1.length(values);
         for (int i = 0; i < length; i++) {
-            list.add(f.apply(e[i]));
+            list.add(mapper.apply(values[i]));
         }
         return list;
     }
 
-    public static <E, V> List<E> map(List<V> l, Function<V, E> f) {
-        Valid.notNull(f, "convert function is null");
-        List<E> list = new ArrayList<>();
-        if (isEmpty(l)) {
-            return list;
+    public static <E, V> List<E> map(List<V> list, Function<V, E> mapper) {
+        Valid.notNull(mapper, "convert function is null");
+        List<E> result = new ArrayList<>();
+        if (isEmpty(list)) {
+            return result;
         }
-        for (V v : l) {
-            list.add(f.apply(v));
+        for (V v : list) {
+            result.add(mapper.apply(v));
         }
-        return list;
+        return result;
     }
 
     public static <E> List<E> as(Iterator<E> iterator) {
@@ -267,27 +267,22 @@ public class Lists extends Collections {
     }
 
     /**
-     * 合并list
+     * 合并 list
      *
-     * @param list 合并到的list
-     * @param ms   需要合并的list
-     * @param <E>  ignore
-     * @return 合并后的list
+     * @param source    合并到的 list
+     * @param listArray 需要合并的 list
+     * @param <E>       ignore
      */
     @SafeVarargs
-    public static <E> List<E> merge(List<E> list, List<E>... ms) {
-        if (list == null) {
-            list = new ArrayList<>();
+    public static <E> void merge(List<E> source, List<E>... listArray) {
+        if (listArray == null) {
+            return;
         }
-        if (ms == null) {
-            return list;
-        }
-        for (List<E> m : ms) {
+        for (List<E> m : listArray) {
             if (m != null) {
-                list.addAll(m);
+                source.addAll(m);
             }
         }
-        return list;
     }
 
     /**
@@ -360,23 +355,23 @@ public class Lists extends Collections {
     /**
      * 集合是否相等
      *
-     * @param l1 ignore
-     * @param l2 ignore
+     * @param list1 ignore
+     * @param list2 ignore
      * @return true 相等
      */
-    public static boolean eq(List<?> l1, List<?> l2) {
-        if (l1 == null && l2 == null) {
+    public static boolean eq(List<?> list1, List<?> list2) {
+        if (list1 == null && list2 == null) {
             return true;
         }
-        if (l1 == null || l2 == null) {
+        if (list1 == null || list2 == null) {
             return false;
         }
-        int size = size(l1);
-        if (size != size(l2)) {
+        int size = size(list1);
+        if (size != size(list2)) {
             return false;
         }
         for (int i = 0; i < size; i++) {
-            if (!Objects1.eq(l1.get(i), l2.get(i))) {
+            if (!Objects1.eq(list1.get(i), list2.get(i))) {
                 return false;
             }
         }
@@ -424,6 +419,25 @@ public class Lists extends Collections {
     }
 
     // -------------------- get set --------------------
+
+    /**
+     * 获取元素 如果元素存在
+     *
+     * @param list list
+     * @param i    i
+     * @param <E>  E
+     * @return E
+     */
+    public static <E> E getIfPresent(List<E> list, int i) {
+        int size = size(list);
+        if (size == 0) {
+            return null;
+        }
+        if (i >= size) {
+            return null;
+        }
+        return list.get(i);
+    }
 
     public static <E> E get(List<E> list, int i) {
         int size = size(list);

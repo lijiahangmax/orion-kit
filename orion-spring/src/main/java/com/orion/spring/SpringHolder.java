@@ -30,17 +30,18 @@ public class SpringHolder {
     public static class ApplicationContextAwareStore implements ApplicationContextAware, BeanFactoryPostProcessor {
 
         public ApplicationContextAwareStore() {
+            Console.log("init spring holder");
         }
 
         @Override
         public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-            Console.log("SpringHolder: Inject ApplicationContext");
+            Console.log("inject spring holder ApplicationContext");
             SpringHolder.applicationContext = applicationContext;
         }
 
         @Override
         public void postProcessBeanFactory(ConfigurableListableBeanFactory configurableListableBeanFactory) throws BeansException {
-            Console.log("SpringHolder: Inject BeanFactory");
+            Console.log("inject spring holder BeanFactory");
             SpringHolder.beanFactory = configurableListableBeanFactory;
         }
 

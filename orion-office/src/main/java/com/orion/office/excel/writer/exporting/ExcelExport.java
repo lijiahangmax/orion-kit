@@ -66,6 +66,29 @@ public class ExcelExport<T> extends BaseExcelWriteable {
     }
 
     /**
+     * 创建导出实例并初始化
+     *
+     * @param targetClass targetClass
+     * @param <T>         T
+     * @return exporter
+     */
+    public static <T> ExcelExport<T> create(Class<T> targetClass) {
+        return new ExcelExport<>(targetClass).init();
+    }
+
+    public static <T> ExcelExport<T> create(Class<T> targetClass, Workbook workbook) {
+        return new ExcelExport<>(targetClass, workbook).init();
+    }
+
+    public static <T> ExcelExport<T> create(Class<T> targetClass, Sheet sheet) {
+        return new ExcelExport<>(targetClass, sheet).init();
+    }
+
+    public static <T> ExcelExport<T> create(Class<T> targetClass, Workbook workbook, Sheet sheet) {
+        return new ExcelExport<>(targetClass, workbook, sheet).init();
+    }
+
+    /**
      * 初始化
      *
      * @return this

@@ -30,6 +30,10 @@ public class SingletonList<E> extends AbstractList<E> implements RandomAccess, S
         element = o;
     }
 
+    public static <E> SingletonList<E> create(E o) {
+        return new SingletonList<>(o);
+    }
+
     @Override
     public int size() {
         return 1;

@@ -1,5 +1,6 @@
 package com.orion.lang.utils;
 
+import com.orion.lang.define.wrapper.CodeInfo;
 import com.orion.lang.define.wrapper.HttpWrapper;
 import com.orion.lang.define.wrapper.RpcWrapper;
 import com.orion.lang.define.wrapper.Wrapper;
@@ -945,14 +946,6 @@ public class Exceptions {
         return new WrapperException(wrapper, t);
     }
 
-    public static WrapperException wrapper(Wrapper<?> wrapper, String s) {
-        return new WrapperException(wrapper, s);
-    }
-
-    public static WrapperException wrapper(Wrapper<?> wrapper, String s, Throwable t) {
-        return new WrapperException(wrapper, s, t);
-    }
-
     public static HttpWrapperException httpWrapper(HttpWrapper<?> wrapper) {
         return new HttpWrapperException(wrapper);
     }
@@ -961,12 +954,12 @@ public class Exceptions {
         return new HttpWrapperException(wrapper, t);
     }
 
-    public static HttpWrapperException httpWrapper(HttpWrapper<?> wrapper, String s) {
-        return new HttpWrapperException(wrapper, s);
+    public static HttpWrapperException httpWrapper(CodeInfo code) {
+        return new HttpWrapperException(code.toHttpWrapper());
     }
 
-    public static HttpWrapperException httpWrapper(HttpWrapper<?> wrapper, String s, Throwable t) {
-        return new HttpWrapperException(wrapper, s, t);
+    public static HttpWrapperException httpWrapper(CodeInfo code, Throwable t) {
+        return new HttpWrapperException(code.toHttpWrapper(), t);
     }
 
     public static RpcWrapperException rpcWrapper(RpcWrapper<?> wrapper) {
@@ -977,12 +970,12 @@ public class Exceptions {
         return new RpcWrapperException(wrapper, t);
     }
 
-    public static RpcWrapperException rpcWrapper(RpcWrapper<?> wrapper, String s) {
-        return new RpcWrapperException(wrapper, s);
+    public static RpcWrapperException rpcWrapper(CodeInfo code) {
+        return new RpcWrapperException(code.toRpcWrapper());
     }
 
-    public static RpcWrapperException rpcWrapper(RpcWrapper<?> wrapper, String s, Throwable t) {
-        return new RpcWrapperException(wrapper, s, t);
+    public static RpcWrapperException rpcWrapper(CodeInfo code, Throwable t) {
+        return new RpcWrapperException(code.toRpcWrapper(), t);
     }
 
 }

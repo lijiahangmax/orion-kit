@@ -805,6 +805,16 @@ public class Dates extends BaseDates {
     }
 
     /**
+     * 时间是否已过期
+     *
+     * @param time time
+     * @return 是否过期
+     */
+    public static boolean isExpired(Date time) {
+        return isExpired(time.getTime());
+    }
+
+    /**
      * 判断时间是否在未来
      *
      * @param date date

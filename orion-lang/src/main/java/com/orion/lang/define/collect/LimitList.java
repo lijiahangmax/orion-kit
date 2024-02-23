@@ -1,5 +1,8 @@
 package com.orion.lang.define.collect;
 
+import com.orion.lang.KitLangConfiguration;
+import com.orion.lang.config.KitConfig;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,13 +19,15 @@ public class LimitList<E> extends ArrayList<E> implements Serializable {
 
     private static final long serialVersionUID = 829347812390094123L;
 
+    private static final int LIMIT_LIST_DEFAULT_LIMIT = KitConfig.get(KitLangConfiguration.CONFIG.LIMIT_LIST_DEFAULT_LIMIT);
+
     /**
      * 条数
      */
     private int limit;
 
     public LimitList() {
-        this(10);
+        this(LIMIT_LIST_DEFAULT_LIMIT);
     }
 
     public LimitList(int limit) {
@@ -36,7 +41,7 @@ public class LimitList<E> extends ArrayList<E> implements Serializable {
     }
 
     public LimitList(Collection<? extends E> c) {
-        this(c, 10);
+        this(c, LIMIT_LIST_DEFAULT_LIMIT);
     }
 
     public LimitList(Collection<? extends E> c, int limit) {
@@ -44,23 +49,23 @@ public class LimitList<E> extends ArrayList<E> implements Serializable {
         this.limit = limit;
     }
 
-    public static <E> LimitList<E> of() {
+    public static <E> LimitList<E> create() {
         return new LimitList<>();
     }
 
-    public static <E> LimitList<E> of(int limit) {
+    public static <E> LimitList<E> create(int limit) {
         return new LimitList<>(limit);
     }
 
-    public static <E> LimitList<E> of(int initialCapacity, int limit) {
+    public static <E> LimitList<E> create(int initialCapacity, int limit) {
         return new LimitList<>(initialCapacity, limit);
     }
 
-    public static <E> LimitList<E> of(Collection<? extends E> c) {
+    public static <E> LimitList<E> create(Collection<? extends E> c) {
         return new LimitList<>(c);
     }
 
-    public static <E> LimitList<E> of(Collection<? extends E> c, int limit) {
+    public static <E> LimitList<E> create(Collection<? extends E> c, int limit) {
         return new LimitList<>(c, limit);
     }
 

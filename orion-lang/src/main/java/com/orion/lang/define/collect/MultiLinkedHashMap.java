@@ -12,71 +12,79 @@ import java.util.LinkedHashMap;
  * @version 1.0.0
  * @since 2020/10/19 16:56
  */
-public class MultiLinkedHashMap<E, K, V> extends LinkedHashMap<E, LinkedHashMap<K, V>>
-        implements MultiMap<E, K, V, LinkedHashMap<K, V>>, Serializable {
+public class MultiLinkedHashMap<K, V, E> extends LinkedHashMap<K, LinkedHashMap<V, E>>
+        implements MultiMap<K, V, E, LinkedHashMap<V, E>>, Serializable {
 
     private static final long serialVersionUID = 1237895897912782748L;
 
     private static final float DEFAULT_LOAD_FACTOR = 0.75F;
 
     /**
-     * key 初始化空间
+     * value 初始化空间
      */
-    private int keyInitialCapacity;
+    private int valueInitialCapacity;
 
     /**
-     * key 负载因子
+     * value 负载因子
      */
-    private float keyLoadFactor;
+    private float valueLoadFactor;
 
     /**
-     * key 排序模式
+     * value 排序模式
      */
-    private boolean keyAccessOrder;
+    private boolean valueAccessOrder;
 
     public MultiLinkedHashMap() {
-        super(Const.CAPACITY_16);
+        this(Const.CAPACITY_16, DEFAULT_LOAD_FACTOR, false);
     }
 
-    public MultiLinkedHashMap(int elementInitialCapacity) {
-        this(elementInitialCapacity, DEFAULT_LOAD_FACTOR, false);
+    public MultiLinkedHashMap(int initialCapacity) {
+        this(initialCapacity, DEFAULT_LOAD_FACTOR, false);
     }
 
-    public MultiLinkedHashMap(int elementInitialCapacity, float loadFactor) {
-        this(elementInitialCapacity, loadFactor, false);
+    public MultiLinkedHashMap(int initialCapacity, float loadFactor) {
+        this(initialCapacity, loadFactor, false);
     }
 
-    public MultiLinkedHashMap(int elementInitialCapacity, float loadFactor, boolean accessOrder) {
-        super(elementInitialCapacity, loadFactor, accessOrder);
-        this.keyInitialCapacity = Const.CAPACITY_16;
-        this.keyLoadFactor = DEFAULT_LOAD_FACTOR;
-        this.keyAccessOrder = false;
+    public MultiLinkedHashMap(int initialCapacity, float loadFactor, boolean accessOrder) {
+        super(initialCapacity, loadFactor, accessOrder);
+        this.valueInitialCapacity = initialCapacity;
+        this.valueLoadFactor = loadFactor;
+        this.valueAccessOrder = accessOrder;
     }
 
-    public void keyCapacity(int keyInitialCapacity) {
-        this.keyCapacity(keyInitialCapacity, DEFAULT_LOAD_FACTOR, false);
+    public static <K, V, E> MultiLinkedHashMap<K, V, E> create() {
+        return new MultiLinkedHashMap<>();
     }
 
-    public void keyCapacity(int keyInitialCapacity, float keyLoadFactor) {
-        this.keyCapacity(keyInitialCapacity, keyLoadFactor, false);
+    public static <K, V, E> MultiLinkedHashMap<K, V, E> create(int initialCapacity, float loadFactor, boolean accessOrder) {
+        return new MultiLinkedHashMap<>(initialCapacity, loadFactor, accessOrder);
+    }
+
+    public void valueCapacity(int valueInitialCapacity) {
+        this.valueCapacity(valueInitialCapacity, DEFAULT_LOAD_FACTOR, false);
+    }
+
+    public void valueCapacity(int valueInitialCapacity, float valueLoadFactor) {
+        this.valueCapacity(valueInitialCapacity, valueLoadFactor, false);
     }
 
     /**
-     * 设置 key 初始化参数
+     * 设置 value 初始化参数
      *
-     * @param keyInitialCapacity 初始化空间
-     * @param keyLoadFactor      负载因子
-     * @param keyAccessOrder     排序模式
+     * @param valueInitialCapacity 初始化空间
+     * @param valueLoadFactor      负载因子
+     * @param valueAccessOrder     排序模式
      */
-    public void keyCapacity(int keyInitialCapacity, float keyLoadFactor, boolean keyAccessOrder) {
-        this.keyInitialCapacity = keyInitialCapacity;
-        this.keyLoadFactor = keyLoadFactor;
-        this.keyAccessOrder = keyAccessOrder;
+    public void valueCapacity(int valueInitialCapacity, float valueLoadFactor, boolean valueAccessOrder) {
+        this.valueInitialCapacity = valueInitialCapacity;
+        this.valueLoadFactor = valueLoadFactor;
+        this.valueAccessOrder = valueAccessOrder;
     }
 
     @Override
-    public LinkedHashMap<K, V> computeSpace(E e) {
-        return super.computeIfAbsent(e, k -> new LinkedHashMap<K, V>(keyInitialCapacity, keyLoadFactor, keyAccessOrder));
+    public LinkedHashMap<V, E> computeSpace(K e) {
+        return super.computeIfAbsent(e, k -> new LinkedHashMap<V, E>(valueInitialCapacity, valueLoadFactor, valueAccessOrder));
     }
 
 }

@@ -1,6 +1,7 @@
 package com.orion.lang.define.builder;
 
 import com.orion.lang.able.Buildable;
+import com.orion.lang.utils.Objects1;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.Valid;
 
@@ -24,7 +25,7 @@ public class StringJoiner implements Buildable<String> {
 
     private String suffix;
 
-    private String symbol;
+    private String delimiter;
 
     private Predicate<String> filter;
 
@@ -36,12 +37,12 @@ public class StringJoiner implements Buildable<String> {
         this.modifiers = new ArrayList<>();
     }
 
-    public StringJoiner(String symbol) {
-        this(symbol, null, null);
+    public StringJoiner(String delimiter) {
+        this(delimiter, null, null);
     }
 
-    public StringJoiner(String symbol, String prefix, String suffix) {
-        this.symbol = symbol;
+    public StringJoiner(String delimiter, String prefix, String suffix) {
+        this.delimiter = delimiter;
         this.prefix = prefix;
         this.suffix = suffix;
         this.modifiers = new ArrayList<>();
@@ -51,39 +52,39 @@ public class StringJoiner implements Buildable<String> {
         return new StringJoiner();
     }
 
-    public static StringJoiner of(String symbol) {
-        return new StringJoiner(symbol);
+    public static StringJoiner of(String delimiter) {
+        return new StringJoiner(delimiter);
     }
 
-    public static StringJoiner of(Supplier<String> symbolSupplier) {
-        Valid.notNull(symbolSupplier, "symbol supplier is null");
-        return new StringJoiner(symbolSupplier.get());
+    public static StringJoiner of(Supplier<String> delimiterSupplier) {
+        Valid.notNull(delimiterSupplier, "delimiter supplier is null");
+        return new StringJoiner(delimiterSupplier.get());
     }
 
-    public static StringJoiner of(String symbol, String prefix, String suffix) {
-        return new StringJoiner(symbol, prefix, suffix);
+    public static StringJoiner of(String delimiter, String prefix, String suffix) {
+        return new StringJoiner(delimiter, prefix, suffix);
     }
 
     /**
      * 设置标识符
      *
-     * @param symbol symbol
+     * @param delimiter delimiter
      * @return this
      */
-    public StringJoiner symbol(String symbol) {
-        this.symbol = symbol;
+    public StringJoiner delimiter(String delimiter) {
+        this.delimiter = delimiter;
         return this;
     }
 
     /**
      * 设置标识符
      *
-     * @param symbolSupplier symbol
+     * @param delimiterSupplier delimiter
      * @return this
      */
-    public StringJoiner symbol(Supplier<String> symbolSupplier) {
-        Valid.notNull(symbolSupplier, "symbol supplier is null");
-        this.symbol = symbolSupplier.get();
+    public StringJoiner delimiter(Supplier<String> delimiterSupplier) {
+        Valid.notNull(delimiterSupplier, "delimiter supplier is null");
+        this.delimiter = delimiterSupplier.get();
         return this;
     }
 
@@ -139,7 +140,7 @@ public class StringJoiner implements Buildable<String> {
      * @return this
      */
     public StringJoiner skipNull() {
-        addFilter(Objects::nonNull);
+        this.addFilter(Objects::nonNull);
         return this;
     }
 
@@ -149,7 +150,7 @@ public class StringJoiner implements Buildable<String> {
      * @return this
      */
     public StringJoiner skipEmpty() {
-        addFilter(Strings::isNotEmpty);
+        this.addFilter(Strings::isNotEmpty);
         return this;
     }
 
@@ -159,7 +160,7 @@ public class StringJoiner implements Buildable<String> {
      * @return this
      */
     public StringJoiner skipBlank() {
-        addFilter(Strings::isNotBlank);
+        this.addFilter(Strings::isNotBlank);
         return this;
     }
 
@@ -170,7 +171,7 @@ public class StringJoiner implements Buildable<String> {
      * @return this
      */
     public StringJoiner filter(Predicate<String> filter) {
-        addFilter(filter);
+        this.addFilter(filter);
         return this;
     }
 
@@ -204,6 +205,11 @@ public class StringJoiner implements Buildable<String> {
         return this;
     }
 
+    public StringJoiner with(Object o) {
+        modifiers.add(Objects1.toString(o));
+        return this;
+    }
+
     public StringJoiner with(Supplier<String> supplier) {
         Valid.notNull(supplier, "supplier is null");
         modifiers.add(supplier.get());
@@ -227,8 +233,8 @@ public class StringJoiner implements Buildable<String> {
                 modifier = wrapper.apply(modifier);
             }
             builder.append(modifier);
-            if (symbol != null) {
-                builder.append(symbol);
+            if (delimiter != null) {
+                builder.append(delimiter);
                 add = true;
             }
         }

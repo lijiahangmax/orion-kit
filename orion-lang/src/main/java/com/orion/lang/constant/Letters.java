@@ -7,50 +7,54 @@ package com.orion.lang.constant;
  * @version 1.0.0
  * @since 2021/1/21 16:06
  */
-public abstract class Letters {
+public interface Letters {
 
-    public static final char LF = '\n';
+    char LF = '\n';
 
-    public static final char CR = '\r';
+    char CR = '\r';
 
-    public static final char QUOTE = '"';
+    char QUOTE = '"';
 
-    public static final char SINGLE_QUOTE = '\'';
+    char SINGLE_QUOTE = '\'';
 
-    public static final char UNDERLINE = '_';
+    char UNDERLINE = '_';
 
-    public static final char DASHED = '-';
+    char DASHED = '-';
 
-    public static final char COLON = ':';
+    char COLON = ':';
 
-    public static final char COMMA = ',';
+    char COMMA = ',';
 
-    public static final char SPACE = ' ';
+    char SPACE = ' ';
 
-    public static final char DOT = '.';
+    char DOT = '.';
 
-    public static final char TAB = '\t';
+    char TAB = '\t';
 
-    public static final char POUND = '#';
+    char POUND = '#';
 
-    public static final char DOLLAR = '$';
+    char DOLLAR = '$';
 
-    public static final char SLASH = '/';
+    char SLASH = '/';
 
-    public static final char BACKSLASH = '\\';
+    char BACKSLASH = '\\';
 
-    public static final char AMP = '&';
+    char AMP = '&';
 
-    public static final char NULL = '\0';
+    char AT = '@';
 
-    public static final char BACKSPACE = '\b';
+    char ASTERISK = '*';
 
-    public static final char FORM_FEED = '\f';
+    char NULL = '\0';
 
-    public static final char ESCAPE = '\u001B';
+    char BACKSPACE = '\b';
 
-    public static final char VERTICAL_TAB = '\u000B';
+    char FORM_FEED = '\f';
 
-    public static final char ALERT = '\u0007';
+    char ESCAPE = '\u001B';
+
+    char VERTICAL_TAB = '\u000B';
+
+    char ALERT = '\u0007';
 
 }

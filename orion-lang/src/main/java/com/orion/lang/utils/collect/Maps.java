@@ -215,11 +215,11 @@ public class Maps {
     }
 
     public static <K, V> Map<K, V> unmodified(Map<? extends K, ? extends V> c) {
-        return java.util.Collections.unmodifiableMap(c);
+        return Collections.unmodifiableMap(c);
     }
 
     public static <K, V> SortedMap<K, V> unmodified(SortedMap<K, ? extends V> c) {
-        return java.util.Collections.unmodifiableSortedMap(c);
+        return Collections.unmodifiableSortedMap(c);
     }
 
     public static <K, V> Map<K, V> singleton(K k, V v) {
@@ -303,84 +303,112 @@ public class Maps {
         return res;
     }
 
-    public static <K1, V1, K2, V2> Map<K2, V2> map(Map<K1, V1> map, Function<K1, K2> kf, Function<V1, V2> vf) {
-        Valid.notNull(kf, "key convert function is null");
-        Valid.notNull(vf, "value convert function is null");
+    public static <K1, K2, V> Map<K2, V> mapKey(Map<K1, V> map, Function<K1, K2> mapper) {
+        return map(map, mapper, Function.identity());
+    }
+
+    public static <K, V1, V2> Map<K, V2> mapValue(Map<K, V1> map, Function<V1, V2> mapper) {
+        return map(map, Function.identity(), mapper);
+    }
+
+    public static <K1, V1, K2, V2> Map<K2, V2> map(Map<K1, V1> map,
+                                                   Function<K1, K2> keyMapper,
+                                                   Function<V1, V2> valueMapper) {
+        Valid.notNull(keyMapper, "key mapper function is null");
+        Valid.notNull(valueMapper, "value mapper function is null");
         int size = size(map);
         if (size == 0) {
             return new HashMap<>(Const.CAPACITY_16);
         }
         Map<K2, V2> res = new HashMap<>(getNoCapacitySize(size));
         map.forEach((k, v) -> {
-            res.put(kf.apply(k), vf.apply(v));
+            res.put(keyMapper.apply(k), valueMapper.apply(v));
         });
         return res;
     }
 
     /**
-     * 合并map
+     * 合并 map
+     * 如果对象是 map 将会再次合并
      *
-     * @param map 合并到的map
-     * @param ms  需要合并的map
-     * @param <K> ignore
-     * @param <V> ignore
-     * @return 合并后的map
+     * @param sourceMap sourceMap
+     * @param addMap    addMap
+     * @param <K>       K
+     * @param <V>       V
+     */
+    public static <K, V> void combine(Map<K, V> sourceMap, Map<K, V> addMap) {
+        addMap.forEach((k, v) -> {
+            V sourceValue = sourceMap.get(k);
+            // 都为 map 则再次合并
+            if (sourceValue instanceof Map && v instanceof Map) {
+                combine((Map<K, V>) sourceValue, (Map<K, V>) v);
+            } else {
+                sourceMap.put(k, v);
+            }
+        });
+    }
+
+    /**
+     * 合并 map
+     * <p>
+     * 将会覆盖 sourceMap
+     *
+     * @param sourceMap 合并到的 map
+     * @param mapArray  需要合并的 map
+     * @param <K>       ignore
+     * @param <V>       ignore
      */
     @SafeVarargs
-    public static <K, V> Map<K, V> merge(Map<K, V> map, Map<K, V>... ms) {
-        if (map == null) {
-            map = new HashMap<>(Const.CAPACITY_16);
+    public static <K, V> void merge(Map<K, V> sourceMap, Map<K, V>... mapArray) {
+        if (mapArray == null) {
+            return;
         }
-        if (ms == null) {
-            return map;
+        for (Map<K, V> map : mapArray) {
+            sourceMap.putAll(map);
         }
-        for (Map<K, V> m : ms) {
-            map.putAll(m);
-        }
-        return map;
     }
 
     /**
-     * map长度
+     * map 长度
      *
-     * @param m map
+     * @param map map
      * @return 长度
      */
-    public static int size(Map<?, ?> m) {
-        return m == null ? 0 : m.size();
+    public static int size(Map<?, ?> map) {
+        return map == null ? 0 : map.size();
     }
 
     /**
-     * map是否为空
+     * map 是否为空
      *
-     * @param m map
+     * @param map map
      * @return true为空
      */
-    public static boolean isEmpty(Map<?, ?> m) {
-        return size(m) == 0;
+    public static boolean isEmpty(Map<?, ?> map) {
+        return size(map) == 0;
     }
 
     /**
-     * map是否不为空
+     * map 是否不为空
      *
-     * @param m map
+     * @param map map
      * @return true不为空
      */
-    public static boolean isNotEmpty(Map<?, ?> m) {
-        return !isEmpty(m);
+    public static boolean isNotEmpty(Map<?, ?> map) {
+        return !isEmpty(map);
     }
 
     /**
-     * map是否全为空
+     * map 是否全为空
      *
-     * @param ms map
+     * @param mapArray map
      * @return true全为空
      */
-    public static boolean isAllEmpty(Map<?, ?>... ms) {
-        if (ms == null) {
+    public static boolean isAllEmpty(Map<?, ?>... mapArray) {
+        if (mapArray == null) {
             return true;
         }
-        for (Map<?, ?> m : ms) {
+        for (Map<?, ?> m : mapArray) {
             if (!isEmpty(m)) {
                 return false;
             }
@@ -389,16 +417,16 @@ public class Maps {
     }
 
     /**
-     * map是否全不为空
+     * map 是否全不为空
      *
-     * @param ms map
+     * @param mapArray map
      * @return true全不为空, 参数为空false
      */
-    public static boolean isNoneEmpty(Map<?, ?>... ms) {
-        if (ms == null) {
+    public static boolean isNoneEmpty(Map<?, ?>... mapArray) {
+        if (mapArray == null) {
             return false;
         }
-        for (Map<?, ?> m : ms) {
+        for (Map<?, ?> m : mapArray) {
             if (isEmpty(m)) {
                 return false;
             }
@@ -525,31 +553,31 @@ public class Maps {
     /**
      * 获取最后一个元素
      *
-     * @param m   集合
+     * @param map 集合
      * @param <K> ignore
      * @param <V> ignore
      * @return 最后一个元素
      */
-    public static <K, V> Map.Entry<K, V> last(Map<K, V> m) {
-        if (size(m) == 0) {
+    public static <K, V> Map.Entry<K, V> last(Map<K, V> map) {
+        if (size(map) == 0) {
             return null;
         }
-        return Lists.last(m.entrySet());
+        return Lists.last(map.entrySet());
     }
 
     /**
      * 遍历
      *
-     * @param m      m
+     * @param map    map
      * @param action action
      * @param <K>    K
      * @param <V>    V
      */
-    public static <K, V> void forEach(Map<K, V> m, BiConsumer<? super K, ? super V> action) {
-        if (isEmpty(m)) {
+    public static <K, V> void forEach(Map<K, V> map, BiConsumer<? super K, ? super V> action) {
+        if (isEmpty(map)) {
             return;
         }
-        m.forEach(action);
+        map.forEach(action);
     }
 
     /**
