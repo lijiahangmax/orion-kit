@@ -8,7 +8,6 @@ import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.Systems;
 import com.orion.lang.utils.crypto.enums.HashDigest;
-import com.orion.lang.utils.math.Numbers;
 import com.orion.lang.utils.regexp.Matches;
 
 import java.io.*;
@@ -441,21 +440,33 @@ public class Files1 {
      * @return ignore
      */
     public static String getSize(long size) {
+        return getSize(size, 2);
+    }
+
+    /**
+     * 获取大小
+     *
+     * @param size  字节
+     * @param scale 小数位
+     * @return ignore
+     */
+    public static String getSize(long size, int scale) {
+        String result;
         String unit;
-        double s;
-        if (size / (SIZE_UNIT_EFFECT[1] * SIZE_UNIT_EFFECT[1] * SIZE_UNIT_EFFECT[1]) > 0) {
-            s = (double) size / (double) (SIZE_UNIT_EFFECT[1] * SIZE_UNIT_EFFECT[1] * SIZE_UNIT_EFFECT[1]);
+        if (size >= 1024 * 1024 * 1024) {
+            result = String.format("%." + scale + "f", (double) size / (1024 * 1024 * 1024));
             unit = " GB";
-        } else if (size / (SIZE_UNIT_EFFECT[1] * SIZE_UNIT_EFFECT[1]) > 0) {
-            s = (double) size / (double) (SIZE_UNIT_EFFECT[1] * SIZE_UNIT_EFFECT[1]);
+        } else if (size >= 1024 * 1024) {
+            result = String.format("%." + scale + "f", (double) size / (1024 * 1024));
             unit = " MB";
-        } else if (size / SIZE_UNIT_EFFECT[1] > 0) {
-            s = (double) size / (double) SIZE_UNIT_EFFECT[1];
+        } else if (size >= 1024) {
+            result = String.format("%." + scale + "f", (double) size / 1024);
             unit = " KB";
         } else {
-            return size + " B";
+            result = String.format("%." + scale + "f", (double) size);
+            unit = " B";
         }
-        return Numbers.setScale(s, 1) + unit;
+        return result + unit;
     }
 
     /**
