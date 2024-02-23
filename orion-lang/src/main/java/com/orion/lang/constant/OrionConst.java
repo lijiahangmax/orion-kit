@@ -17,7 +17,7 @@ public interface OrionConst {
 
     String ORION_DISPLAY = ".orion";
 
-    String ORION_KIT_VERSION = "1.0.6";
+    String ORION_KIT_VERSION = "1.0.7";
 
     String ORION_AUTHOR = "Jiahang Li";
 
