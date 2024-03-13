@@ -141,7 +141,7 @@ public class CommandExecutor extends BaseHostExecutor<ChannelExec> implements IC
         // 超时 直接断开连接
         this.expired = true;
         Streams.close(this);
-        return false;
+        return true;
     }
 
     @Override
