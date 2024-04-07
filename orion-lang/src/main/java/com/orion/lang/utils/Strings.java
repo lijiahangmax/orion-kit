@@ -1230,7 +1230,7 @@ public class Strings {
      */
     public static String retain(String str, int length) {
         if (isEmpty(str)) {
-            return null;
+            return str;
         }
         int len = str.length();
         if (len <= length) {

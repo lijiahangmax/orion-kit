@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Spliterator;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -67,6 +68,8 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
     private List<T> rows;
 
     public DataGrid() {
+        this.page = 1;
+        this.limit = DEFAULT_LIMIT;
     }
 
     public DataGrid(List<T> rows) {
@@ -74,14 +77,11 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
     }
 
     public DataGrid(List<T> rows, int total) {
-        this.page = 1;
-        this.limit = DEFAULT_LIMIT;
+        this();
         this.rows = rows;
         this.size = Lists.size(this.rows);
         this.total = total;
-        if (total != 0) {
-            this.pages = total % limit == 0 ? total / limit : (total / limit + 1);
-        }
+        this.resetPages();
     }
 
     public DataGrid(Pager<T> pager) {
@@ -156,7 +156,9 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
      */
     public void setRows(List<T> rows) {
         this.rows = rows;
-        if (rows != null) {
+        if (rows == null) {
+            this.size = 0;
+        } else {
             this.size = rows.size();
         }
     }
@@ -167,9 +169,7 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
 
     public void setTotal(int total) {
         this.total = total;
-        if (total != 0) {
-            this.pages = total % limit == 0 ? total / limit : (total / limit + 1);
-        }
+        this.resetPages();
     }
 
     public int getPage() {
@@ -211,7 +211,9 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
      * @return this
      */
     public DataGrid<T> resetPages() {
-        if (total != 0) {
+        if (total == 0) {
+            this.pages = 0;
+        } else {
             this.pages = total % limit == 0 ? total / limit : (total / limit + 1);
         }
         return this;
@@ -247,6 +249,24 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
         } else {
             return rows.stream();
         }
+    }
+
+    /**
+     * 映射
+     *
+     * @param mapping mapping
+     * @param <E>     E
+     * @return mapped
+     */
+    public <E> DataGrid<E> map(Function<T, E> mapping) {
+        DataGrid<E> result = new DataGrid<>();
+        result.page = this.page;
+        result.limit = this.limit;
+        result.size = this.size;
+        result.pages = this.pages;
+        result.total = this.total;
+        result.rows = Lists.map(this.rows, mapping);
+        return result;
     }
 
     @Override

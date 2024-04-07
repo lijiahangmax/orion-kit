@@ -14,6 +14,7 @@ import com.orion.lang.utils.Strings;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * restful 结果封装
@@ -222,6 +223,21 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
         map.put("msg", msg);
         map.put("data", data);
         return map;
+    }
+
+    /**
+     * 映射
+     *
+     * @param mapping mapping
+     * @param <E>     E
+     * @return mapped
+     */
+    public <E> HttpWrapper<E> map(Function<T, E> mapping) {
+        HttpWrapper<E> result = new HttpWrapper<>();
+        result.code = this.code;
+        result.msg = this.msg;
+        result.data = Objects1.map(this.data, mapping);
+        return result;
     }
 
     /**

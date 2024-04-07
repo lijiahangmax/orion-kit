@@ -1,9 +1,7 @@
 package com.orion.lang.support.timeout;
 
-import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Threads;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,16 +12,16 @@ import java.util.List;
  * @version 1.0.0
  * @since 2023/11/15 19:24
  */
-public class TimeoutCheckerImpl implements TimeoutChecker {
+public class TimeoutCheckerImpl<T extends TimeoutEndpoint> implements TimeoutChecker<T> {
 
-    private final List<TimeoutEndpoint> tasks = new ArrayList<>();
+    private final List<T> tasks = new ArrayList<>();
 
     private final long delay;
 
     private boolean run;
 
     public TimeoutCheckerImpl() {
-        this(DEFAULT_DELAY);
+        this(TimeoutCheckers.DEFAULT_DELAY);
     }
 
     public TimeoutCheckerImpl(long delay) {
@@ -32,43 +30,45 @@ public class TimeoutCheckerImpl implements TimeoutChecker {
     }
 
     @Override
-    public <T extends TimeoutEndpoint> void addTask(T task) {
-        synchronized (tasks) {
-            tasks.add(task);
-            // 唤醒等待
-            tasks.notify();
-        }
+    public void addTask(T task) {
+        tasks.add(task);
     }
 
     @Override
     public void run() {
-        synchronized (tasks) {
-            while (run) {
-                // 完成或超时 直接移除
-                tasks.removeIf(ch -> ch.isDone() || ch.checkTimeout());
-                // 等待
-                try {
-                    if (tasks.isEmpty()) {
-                        // 为空则等待 直到有新的数据
-                        tasks.wait();
-                    } else {
-                        // 不为空则休眠
-                        Threads.sleep(delay);
-                    }
-                } catch (InterruptedException e) {
-                    throw Exceptions.interruptedRuntime(e);
-                }
-            }
+        while (run) {
+            // 完成或超时 直接移除
+            tasks.removeIf(ch -> ch.isDone() || ch.checkTimeout());
+            // 等待
+            Threads.sleep(delay);
         }
     }
 
     @Override
-    public void close() throws IOException {
-        synchronized (tasks) {
-            this.run = false;
-            // 唤醒等待
-            tasks.notify();
-        }
+    public void clear() {
+        tasks.clear();
+    }
+
+
+    @Override
+    public boolean isEmpty() {
+        return tasks.isEmpty();
+    }
+
+
+    @Override
+    public boolean isRun() {
+        return run;
+    }
+
+    @Override
+    public List<T> getTasks() {
+        return tasks;
+    }
+
+    @Override
+    public void close() {
+        this.run = false;
     }
 
 }
