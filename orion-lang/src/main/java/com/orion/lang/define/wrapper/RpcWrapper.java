@@ -10,11 +10,13 @@ import com.orion.lang.constant.Const;
 import com.orion.lang.define.support.CloneSupport;
 import com.orion.lang.id.UUIds;
 import com.orion.lang.utils.Exceptions;
+import com.orion.lang.utils.Objects1;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.json.Jsons;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -305,6 +307,23 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
      */
     public HttpWrapper<T> toHttpWrapper() {
         return HttpWrapper.of(code, msg, data);
+    }
+
+    /**
+     * 映射
+     *
+     * @param mapping mapping
+     * @param <E>     E
+     * @return mapped
+     */
+    public <E> RpcWrapper<E> map(Function<T, E> mapping) {
+        RpcWrapper<E> result = new RpcWrapper<>();
+        result.code = this.code;
+        result.msg = this.msg;
+        result.traceId = this.traceId;
+        result.errorMessages = this.errorMessages;
+        result.data = Objects1.map(this.data, mapping);
+        return result;
     }
 
     /**

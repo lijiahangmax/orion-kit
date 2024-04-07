@@ -254,19 +254,19 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
     /**
      * 映射
      *
-     * @param mapper mapper
-     * @param <E>    E
-     * @return DataGrid
+     * @param mapping mapping
+     * @param <E>     E
+     * @return mapped
      */
-    public <E> DataGrid<E> map(Function<T, E> mapper) {
-        DataGrid<E> dataGrid = new DataGrid<>();
-        dataGrid.page = this.page;
-        dataGrid.limit = this.limit;
-        dataGrid.size = this.size;
-        dataGrid.pages = this.pages;
-        dataGrid.total = this.total;
-        dataGrid.rows = Lists.map(this.rows, mapper);
-        return dataGrid;
+    public <E> DataGrid<E> map(Function<T, E> mapping) {
+        DataGrid<E> result = new DataGrid<>();
+        result.page = this.page;
+        result.limit = this.limit;
+        result.size = this.size;
+        result.pages = this.pages;
+        result.total = this.total;
+        result.rows = Lists.map(this.rows, mapping);
+        return result;
     }
 
     @Override

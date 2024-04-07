@@ -2,10 +2,12 @@ package com.orion.lang.define.wrapper;
 
 import com.orion.lang.able.IJsonObject;
 import com.orion.lang.define.support.CloneSupport;
+import com.orion.lang.utils.Objects1;
 
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * 对象 包装类
@@ -45,6 +47,17 @@ public class Ref<T> extends CloneSupport<Ref<T>> implements Serializable, IJsonO
 
     public void setValue(T value) {
         this.value = value;
+    }
+
+    /**
+     * 映射
+     *
+     * @param mapping mapping
+     * @param <E>     E
+     * @return mapped
+     */
+    public <E> Ref<E> map(Function<T, E> mapping) {
+        return new Ref<>(Objects1.map(this.value, mapping));
     }
 
     /**

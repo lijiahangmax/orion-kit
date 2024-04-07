@@ -2,6 +2,8 @@ package com.orion.net.host;
 
 import com.orion.lang.function.impl.ReaderLineConsumer;
 import com.orion.lang.support.timeout.TimeoutChecker;
+import com.orion.lang.support.timeout.TimeoutCheckers;
+import com.orion.lang.support.timeout.TimeoutEndpoint;
 import com.orion.lang.utils.Threads;
 import com.orion.net.host.ssh.command.CommandExecutor;
 import com.orion.net.host.ssh.command.CommandExecutors;
@@ -74,7 +76,7 @@ public class CommandExecutorTests {
     }
 
     @Test
-    public void test2() throws IOException {
+    public void test2() {
         CommandExecutor executor = s.getCommandExecutor("echo input\n"
                 + "read -p \"enter number:\" no\n"
                 + "read -p \"enter name:\" name\n"
@@ -115,7 +117,7 @@ public class CommandExecutorTests {
     @Test
     public void timeout() throws IOException {
         // 启动超时检测
-        TimeoutChecker checker = TimeoutChecker.create();
+        TimeoutChecker<TimeoutEndpoint> checker = TimeoutCheckers.create();
         Threads.start(checker);
 
         CommandExecutor executor = s.getCommandExecutor("top");

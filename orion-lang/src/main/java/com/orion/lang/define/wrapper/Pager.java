@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Spliterator;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -323,6 +324,27 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, IJ
         } else {
             return rows.stream();
         }
+    }
+
+    /**
+     * 映射
+     *
+     * @param mapping mapping
+     * @param <E>     E
+     * @return mapped
+     */
+    public <E> Pager<E> map(Function<T, E> mapping) {
+        Pager<E> result = new Pager<>();
+        result.page = this.page;
+        result.limit = this.limit;
+        result.offset = this.offset;
+        result.pages = this.pages;
+        result.total = this.total;
+        result.prePage = this.prePage;
+        result.nextPage = this.nextPage;
+        result.sql = this.sql;
+        result.rows = Lists.map(this.rows, mapping);
+        return result;
     }
 
     @Override
