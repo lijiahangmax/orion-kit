@@ -61,7 +61,7 @@ public interface ICommandExecutor extends IHostExecutor, HostConnector, TimeoutE
      * @param timeout timeout
      * @param checker checker
      */
-    void timeout(long timeout, TimeoutChecker checker);
+    void timeout(long timeout, TimeoutChecker<TimeoutEndpoint> checker);
 
     /**
      * 设置超时时间
@@ -70,7 +70,7 @@ public interface ICommandExecutor extends IHostExecutor, HostConnector, TimeoutE
      * @param unit    unit
      * @param checker checker
      */
-    default void timeout(long timeout, TimeUnit unit, TimeoutChecker checker) {
+    default void timeout(long timeout, TimeUnit unit, TimeoutChecker<TimeoutEndpoint> checker) {
         this.timeout(unit.toMillis(timeout), checker);
     }
 

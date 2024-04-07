@@ -24,8 +24,8 @@ public class XssFilter implements Filter {
     private String applicationContext;
 
     /**
-     * key: 不需要过滤的 url
-     * value: 这个url中不需要过滤的字段, 如果有多个字段, 则用","分开, 如: a,b,c
+     * key: 需要过滤的 url
+     * value: url 中不需要过滤的字段, 如果有多个字段则用","分开, 如: a,b,c
      */
     private final Map<String, String> ignoreFields;
 

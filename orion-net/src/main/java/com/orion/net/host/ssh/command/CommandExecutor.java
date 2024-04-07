@@ -4,6 +4,7 @@ import com.jcraft.jsch.ChannelExec;
 import com.orion.lang.constant.Const;
 import com.orion.lang.support.Attempt;
 import com.orion.lang.support.timeout.TimeoutChecker;
+import com.orion.lang.support.timeout.TimeoutEndpoint;
 import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.io.Streams;
@@ -53,7 +54,7 @@ public class CommandExecutor extends BaseHostExecutor<ChannelExec> implements IC
     /**
      * 超时检测器
      */
-    private TimeoutChecker checker;
+    private TimeoutChecker<TimeoutEndpoint> checker;
 
     /**
      * 开始时间
@@ -124,7 +125,7 @@ public class CommandExecutor extends BaseHostExecutor<ChannelExec> implements IC
     }
 
     @Override
-    public void timeout(long timeout, TimeoutChecker checker) {
+    public void timeout(long timeout, TimeoutChecker<TimeoutEndpoint> checker) {
         this.timeout = timeout;
         this.checker = checker;
     }
