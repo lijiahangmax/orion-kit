@@ -35,13 +35,23 @@ public enum ExitCode {
     }
 
     /**
-     * 判断是否成功执行
+     * 判断是否执行成功
      *
      * @param exitCode exitCode
      * @return isSuccess
      */
     public static boolean isSuccess(Integer exitCode) {
         return SUCCESS.code.equals(exitCode);
+    }
+
+    /**
+     * 判断是否执行失败
+     *
+     * @param exitCode exitCode
+     * @return isFailed
+     */
+    public static boolean isFailed(Integer exitCode) {
+        return !SUCCESS.code.equals(exitCode);
     }
 
 }
