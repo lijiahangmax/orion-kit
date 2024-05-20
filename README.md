@@ -158,7 +158,7 @@ MD5签名   | Signatures.md5
     │  │  Caesars           凯撒密码工具类          
     │  │  DES               DES 工具类
     │  │  DES3              3DES 工具类
-    │  │  Keys              秘钥工具类
+    │  │  Keys              密钥工具类
     │  │  RC4               RC4 工具类
     │  │  RSA               RSA 工具类
     │  │  Signatures        签名工具类

@@ -30,10 +30,6 @@ public interface Const extends OrionConst {
 
     String TAB = "\t";
 
-    String DOT = ".";
-
-    String DOT_2 = "..";
-
     String POUND = "#";
 
     String DOLLAR = "$";
@@ -68,6 +64,10 @@ public interface Const extends OrionConst {
 
     String SPACE_4 = "    ";
 
+    String DOT = ".";
+
+    String DOT_2 = "..";
+
     String OMIT = "...";
 
     // -------------------- charset --------------------
@@ -100,6 +100,8 @@ public interface Const extends OrionConst {
 
     int BUFFER_KB_32 = 1024 * 32;
 
+    int BUFFER_KB_64 = 1024 * 64;
+
     int MBP = 1024 * 128;
 
     // -------------------- capacity --------------------
@@ -130,15 +132,29 @@ public interface Const extends OrionConst {
 
     int MS_100 = 100;
 
+    int MS_200 = 200;
+
     int MS_300 = 300;
 
+    int MS_400 = 400;
+
     int MS_500 = 500;
+
+    int MS_600 = 600;
+
+    int MS_700 = 700;
+
+    int MS_800 = 800;
+
+    int MS_900 = 900;
 
     int MS_S_1 = 1000;
 
     int MS_S_2 = 1000 * 2;
 
     int MS_S_3 = 1000 * 3;
+
+    int MS_S_4 = 1000 * 4;
 
     int MS_S_5 = 1000 * 5;
 

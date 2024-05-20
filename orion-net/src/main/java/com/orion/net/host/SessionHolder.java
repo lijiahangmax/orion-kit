@@ -151,7 +151,7 @@ public class SessionHolder {
     }
 
     /**
-     * 删除加载的秘钥
+     * 删除加载的密钥
      *
      * @param key key
      */
@@ -173,7 +173,7 @@ public class SessionHolder {
     }
 
     /**
-     * 删除所有加载的秘钥
+     * 删除所有加载的密钥
      */
     public void removeAllIdentity() {
         try {
@@ -184,7 +184,7 @@ public class SessionHolder {
     }
 
     /**
-     * 获取加载的秘钥
+     * 获取加载的密钥
      *
      * @return keys
      */
