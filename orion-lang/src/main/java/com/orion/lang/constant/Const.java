@@ -50,6 +50,22 @@ public interface Const extends OrionConst {
 
     String COMMA = ",";
 
+    String PLUS = "+";
+
+    String EQUALS = "=";
+
+    String PIPE = "|";
+
+    String SEMICOLON = ";";
+
+    String EXCLAMATION = "!";
+
+    String PERCENT = "%";
+
+    String CARET = "^";
+
+    String QUESTION = "?";
+
     String AMP = "&";
 
     String AT = "@";
@@ -319,6 +335,8 @@ public interface Const extends OrionConst {
     Integer HTTP_OK_CODE = 200;
 
     Integer HTTP_BAD_REQUEST_CODE = 400;
+
+    Integer HTTP_FORBIDDEN_CODE = 403;
 
     Integer HTTP_NOT_FOUND_CODE = 404;
 

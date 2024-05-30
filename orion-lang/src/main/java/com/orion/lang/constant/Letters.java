@@ -45,6 +45,22 @@ public interface Letters {
 
     char ASTERISK = '*';
 
+    char PLUS = '+';
+
+    char EQUALS = '=';
+
+    char PIPE = '|';
+
+    char SEMICOLON = ';';
+
+    char EXCLAMATION = '!';
+
+    char PERCENT = '%';
+
+    char CARET = '^';
+
+    char QUESTION = '?';
+
     char NULL = '\0';
 
     char BACKSPACE = '\b';
