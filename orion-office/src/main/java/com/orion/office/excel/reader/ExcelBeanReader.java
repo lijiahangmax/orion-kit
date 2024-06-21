@@ -206,7 +206,7 @@ public class ExcelBeanReader<T> extends BaseExcelReader<String, T> {
         }
         Class<?> parameterType = setter.getParameterTypes()[0];
         if (parameterType == String.class) {
-            return Base64s.img64Encode(picture.getData(), picture.getMimeType());
+            return Base64s.imgEncode(picture.getData(), picture.getMimeType());
         } else if (parameterType == byte[].class) {
             return picture.getData();
         } else if (parameterType == OutputStream.class || parameterType == ByteArrayOutputStream.class) {

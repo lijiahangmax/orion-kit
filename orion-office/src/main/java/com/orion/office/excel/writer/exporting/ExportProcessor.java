@@ -98,8 +98,8 @@ public class ExportProcessor<T> {
                 } else if (pictureValue instanceof byte[]) {
                     picture = Excels.setPicture(workbook, sheet, (byte[]) pictureValue, rowIndex, columnIndex, pictureOption.getType());
                 } else if (pictureValue instanceof String && pictureOption.isBase64()) {
-                    String type = Base64s.img64Type((String) pictureValue);
-                    byte[] bytes = Base64s.img64Decode((String) pictureValue);
+                    String type = Base64s.getMimeTypeLast((String) pictureValue);
+                    byte[] bytes = Base64s.mimeTypeDecode((String) pictureValue);
                     picture = Excels.setPicture(workbook, sheet, bytes, rowIndex, columnIndex, type, pictureOption.getType());
                 }
                 if (picture != null) {
