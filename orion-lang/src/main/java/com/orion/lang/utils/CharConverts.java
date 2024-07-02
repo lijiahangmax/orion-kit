@@ -195,4 +195,29 @@ public class CharConverts {
         return ret;
     }
 
+    /**
+     * 转换控制字符 unicode
+     *
+     * @param str str
+     * @return unicode
+     */
+    public static String convertControlCodeToUnicode(String str) {
+        char[] chars = str.toCharArray();
+        StringBuilder sb = new StringBuilder();
+        for (char c : chars) {
+            if (c < 32 || c == 34 || c == 92 || c == 127) {
+                sb.append("\\u00");
+                int code = (c & 0xFF);
+                String tmp = Integer.toHexString(code);
+                if (tmp.length() == 1) {
+                    sb.append("0");
+                }
+                sb.append(tmp);
+            } else {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+
 }
