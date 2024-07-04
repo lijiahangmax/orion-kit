@@ -71,6 +71,16 @@ public class AnsiAppender {
     }
 
     /**
+     * 拼接 reset
+     *
+     * @return this
+     */
+    public AnsiAppender reset() {
+        builder.append(AnsiConst.CSI_RESET);
+        return this;
+    }
+
+    /**
      * 新行
      *
      * @return this
@@ -84,7 +94,7 @@ public class AnsiAppender {
     /**
      * 重置
      */
-    public void reset() {
+    public void clear() {
         this.builder = new StringBuilder();
     }
 
@@ -102,9 +112,9 @@ public class AnsiAppender {
      *
      * @return value
      */
-    public String getReset() {
+    public String getAndClear() {
         String r = this.get();
-        this.reset();
+        this.clear();
         return r;
     }
 
