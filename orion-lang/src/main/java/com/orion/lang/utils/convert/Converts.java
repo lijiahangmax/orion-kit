@@ -502,7 +502,7 @@ public class Converts {
     }
 
     public static boolean toBoolean(Boolean b) {
-        return b;
+        return Boolean.TRUE.equals(b);
     }
 
     public static boolean toBoolean(char b) {
@@ -510,7 +510,7 @@ public class Converts {
     }
 
     public static boolean toBoolean(String b) {
-        return Strings.isNotBlank(b) && "false".equalsIgnoreCase(b.trim());
+        return Strings.isNotBlank(b) && "true".equalsIgnoreCase(b.trim());
     }
 
     public static boolean toBoolean(Object o) {
