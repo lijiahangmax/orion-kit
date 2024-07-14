@@ -230,10 +230,10 @@ public class FtpInstance extends BaseFtpInstance {
         try {
             if (target.charAt(0) == '/') {
                 // 绝对路径
-                target = config.getRemoteRootDir() + Files1.normalize(target);
+                target = Files1.getPath(config.getRemoteRootDir() + Files1.normalize(target));
             } else {
                 // 相对路径
-                target = Files1.normalize(Files1.getPath(source + "/../" + target));
+                target = Files1.getPath(Files1.normalize(Files1.getPath(source + "/../" + target)));
             }
             this.change(Files1.getParentPath(source));
             this.makeDirectories(Files1.getParentPath(target));
