@@ -31,12 +31,28 @@ public class Exceptions {
     }
 
     /**
+     * 获取异常信息
+     *
+     * @param e e
+     * @return msg
+     */
+    public static String getMessage(Throwable e) {
+        if (e == null) {
+            return null;
+        }
+        return e.getMessage();
+    }
+
+    /**
      * 获取异常摘要信息
      *
      * @param e e
      * @return 摘要
      */
     public static String getDigest(Throwable e) {
+        if (e == null) {
+            return null;
+        }
         if (e.getMessage() == null) {
             return e.getClass().getName();
         } else {
