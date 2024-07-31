@@ -125,10 +125,6 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
         return new HttpWrapper<>(HTTP_ERROR_CODE, HTTP_ERROR_MESSAGE);
     }
 
-    public static <T> HttpWrapper<T> error(int code) {
-        return new HttpWrapper<>(code, HTTP_ERROR_MESSAGE);
-    }
-
     public static <T> HttpWrapper<T> error(String msg) {
         return new HttpWrapper<>(HTTP_ERROR_CODE, msg);
     }
@@ -137,20 +133,12 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
         return new HttpWrapper<>(HTTP_ERROR_CODE, Strings.format(msg, params));
     }
 
-    public static <T> HttpWrapper<T> error(int code, String msg) {
-        return new HttpWrapper<>(code, msg);
-    }
-
-    public static <T> HttpWrapper<T> error(int code, String msg, Object... params) {
-        return new HttpWrapper<>(code, Strings.format(msg, params));
-    }
-
     public static <T> HttpWrapper<T> error(Throwable t) {
-        return new HttpWrapper<>(HTTP_ERROR_CODE, t.getMessage());
-    }
-
-    public static <T> HttpWrapper<T> error(int code, Throwable t) {
-        return new HttpWrapper<>(code, t.getMessage());
+        if (t == null) {
+            return new HttpWrapper<>(HTTP_ERROR_CODE, HTTP_ERROR_MESSAGE);
+        } else {
+            return new HttpWrapper<>(HTTP_ERROR_CODE, t.getMessage());
+        }
     }
 
     public HttpWrapper<T> code(int code) {

@@ -119,6 +119,10 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
         return new RpcWrapper<>(code);
     }
 
+    public static <T> RpcWrapper<T> of(int code, String msg) {
+        return new RpcWrapper<>(code, msg);
+    }
+
     public static <T> RpcWrapper<T> of(int code, String msg, T data) {
         return new RpcWrapper<>(code, msg, data);
     }
@@ -141,10 +145,6 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
         return new RpcWrapper<>(RPC_ERROR_CODE, RPC_ERROR_MESSAGE);
     }
 
-    public static <T> RpcWrapper<T> error(int code) {
-        return new RpcWrapper<>(code, RPC_ERROR_MESSAGE);
-    }
-
     public static <T> RpcWrapper<T> error(String msg) {
         return new RpcWrapper<>(RPC_ERROR_CODE, msg);
     }
@@ -153,20 +153,12 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
         return new RpcWrapper<>(RPC_ERROR_CODE, Strings.format(msg, params));
     }
 
-    public static <T> RpcWrapper<T> error(int code, String msg) {
-        return new RpcWrapper<>(code, msg);
-    }
-
-    public static <T> RpcWrapper<T> error(int code, String msg, Object... params) {
-        return new RpcWrapper<>(code, Strings.format(msg, params));
-    }
-
     public static <T> RpcWrapper<T> error(Throwable t) {
-        return new RpcWrapper<>(RPC_ERROR_CODE, t.getMessage());
-    }
-
-    public static <T> RpcWrapper<T> error(int code, Throwable t) {
-        return new RpcWrapper<>(code, t.getMessage());
+        if (t == null) {
+            return new RpcWrapper<>(RPC_ERROR_CODE, RPC_ERROR_MESSAGE);
+        } else {
+            return new RpcWrapper<>(RPC_ERROR_CODE, t.getMessage());
+        }
     }
 
     /**

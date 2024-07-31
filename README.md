@@ -1,94 +1,105 @@
-### orion-kit 是什么
-
-`orion-kit` 是一个功能强大, 覆盖面广的工具类库。让你的开发无须编写重复的底层代码, 提高开发效率, 让你的代码更加简练、易读, 稳定且优雅。它是我学习以及时工作用到的工具重构, 补全注释, 统一规范后的产物。
-
-<br/>
-
-<p style="text-align: center">
-	<a target="_blank" href="https://search.maven.org/artifact/io.github.lijiahangmax/orion-all">
-		<img src="https://img.shields.io/maven-central/v/io.github.lijiahangmax/orion-all.svg" alt="maven"/>
-	</a>
-    <a target="_blank" href="https://www.codacy.com/gh/lijiahangmax/orion-kit/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=lijiahangmax/orion-kit&amp;utm_campaign=Badge_Grade">
+<p style="margin-top: 12px" align="center"><b>一个功能强大, 覆盖面广的工具类库。让你的开发无须编写重复的底层代码, 提高开发效率, 让你的代码更加简练、易读, 稳定且优雅。它是我学习以及时工作用到的工具重构, 补全注释, 统一规范后的产物。</b></p>
+<p align="center">
+    <a target="_blank"
+       style="text-decoration: none !important;"
+       href="https://search.maven.org/artifact/io.github.lijiahangmax/orion-all">
+        <img src="https://img.shields.io/maven-central/v/io.github.lijiahangmax/orion-all.svg" alt="maven"/>
+    </a>
+    <a target="_blank"
+       style="text-decoration: none !important;"
+       href="https://www.codacy.com/gh/lijiahangmax/orion-kit/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=lijiahangmax/orion-kit&amp;utm_campaign=Badge_Grade">
         <img src="https://app.codacy.com/project/badge/Grade/2886375d056342028ef7da0ae7b6fa26" alt="Codacy"/>
     </a>
-    <a target="_blank" href="https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html">
+    <a target="_blank"
+       style="text-decoration: none !important;"
+       href="https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html">
         <img src="https://img.shields.io/badge/JDK-8+-green.svg" alt="jdk8"/>
     </a>
-    <a target="_blank" href="https://opensource.org/licenses/mit-license.php">
+    <a target="_blank"
+       style="text-decoration: none !important;"
+       href="https://opensource.org/licenses/mit-license.php">
         <img src="https://img.shields.io/github/license/lijiahangmax/orion-kit" alt="License"/>
-    </a>	
-	<a target="_blank" href="https://gitee.com/lijiahangmax/orion-kit/stargazers">
-		<img src="https://gitee.com/lijiahangmax/orion-kit/badge/star.svg?theme=dark" alt="star"/>
-	</a>
-	<a target="_blank" href="https://gitee.com/lijiahangmax/orion-kit/members">
-		<img src="https://gitee.com/lijiahangmax/orion-kit/badge/fork.svg?theme=dark" alt="fork"/>
-	</a>
-    <!--	<a target="_blank" href="https://github.com/lijiahangmax/orion-kit">
-		<img src="https://img.shields.io/github/stars/lijiahangmax/orion-kit.svg?style=social" alt="star"/>
-	</a> -->
+    </a>
+    <a target="_blank"
+       style="text-decoration: none !important;"
+       href="https://gitee.com/lijiahangmax/orion-kit/stargazers">
+        <img src="https://gitee.com/lijiahangmax/orion-kit/badge/star.svg?theme=dark" alt="star"/>
+    </a>
+    <a target="_blank"
+       style="text-decoration: none !important;"
+       href="https://gitee.com/lijiahangmax/orion-kit/members">
+        <img src="https://gitee.com/lijiahangmax/orion-kit/badge/fork.svg?theme=dark" alt="fork"/>
+    </a>
+    <a target="_blank"
+       style="text-decoration: none !important;"
+       href="https://github.com/lijiahangmax/orion-kit">
+        <img src="https://img.shields.io/github/stars/lijiahangmax/orion-kit.svg?style=social" alt="star"/>
+    </a>
 </p>
 
-文档: https://apidoc.gitee.com/lijiahangmax/orion-kit  
+------------------------------
+
+* [javaDoc](https://apidoc.gitee.com/lijiahangmax/orion-kit)
+* [项目文档](https://lijiahangmax.github.io/open-orion/orion-kit)
 
 ### 工程模块
 
-模块             | 数量
-:---            | :---
-orion-lang      | 底层核心模块  集合、IO、反射、转换、日期、异常、加密、编码, 函数等
-orion-ext       | 拓展模块  IP位置、邮件、process、tail、git, watch等    
-orion-office    | 数据处理模块  csv, excel导入导出以及相互转化等
-orion-log       | 日志模块 (忽略)
-orion-http      | http模块  OkHttp、HttpClient、jsup的统一封装, UA生成器等
-orion-net       | 网络交互模块  SSH、SFTP、FTP, Socket的简单封装
-orion-web       | servlet模块 (忽略)
-orion-redis     | redis模块 (忽略)
-orion-spring    | spring模块 (忽略)
-orion-generator | 随机信息生成器模块 包含各式各样的随机数据生成器
-orion-all       | 全部模块聚合 包含了上述所有模块的引用
+| 模块              | 数量                                         |
+|:----------------|:-------------------------------------------|
+| orion-lang      | 底层核心模块 集合、IO、反射、转换、日期、异常、加密、编码, 函数等        |
+| orion-ext       | 拓展模块 IP位置、邮件、process、tail、git, watch等      |
+| orion-office    | 数据处理模块 csv, excel导入导出以及相互转化等               |
+| orion-log       | 日志模块 (忽略)                                  |
+| orion-http      | http模块 OkHttp、HttpClient、jsup的统一封装, UA生成器等 |
+| orion-net       | 网络交互模块 SSH、SFTP、FTP, Socket的简单封装           |
+| orion-web       | servlet模块 (忽略)                             |
+| orion-redis     | redis模块 (忽略)                               |
+| orion-spring    | spring模块 (忽略)                              |
+| orion-generator | 随机信息生成器模块 包含各式各样的随机数据生成器                   |
+| orion-all       | 全部模块聚合 包含了上述所有模块的引用                        |
 
-<br/>
+## 模块化引用
 
-### 如何使用
-``` pom.xml
-# 当前最新版本 1.0.7
+```xml
+<!-- 模块化引用 -->
 <dependency>
     <groupId>io.github.lijiahangmax</groupId>
     <artifactId>模块名称</artifactId>
-    <version>最新版本</version>
-</dependency>
-
-# 如果想引用所有可以直接引入 orion-all
-<dependency>
-    <groupId>io.github.lijiahangmax</groupId>
-    <artifactId>orion-all</artifactId>
-    <version>1.0.7</version>
+    <version>1.0.8</version>
 </dependency>
 ```
 
-<br/>
+## 引用全部
+
+```xml
+<!-- 如果想引用所有可以直接引入 orion-all -->
+<dependency>
+    <groupId>io.github.lijiahangmax</groupId>
+    <artifactId>orion-all</artifactId>
+    <version>1.0.8</version>
+</dependency>
+```
 
 ### 如何寻找需要的工具类
 
-可以使用英文直译的方式寻找, 工具命名规则为 `职能 + s`, 如过存在原生工具如`Arrays`, `Objects`, `Files` 则命名为 `Arrays1`, `Objects1`, `Files1`  
-> 示例 
+可以使用英文直译的方式寻找, 工具命名规则为 `职能 + s`, 如过存在原生工具如`Arrays`, `Objects`, `Files` 则命名为 `Arrays1`, `Objects1`, `Files1`
+> 示例
 
-描述                 | 方法
-:---                    | :---
-字符串判空      |Strings.isBlank
-集合判空         | List.isEmpty  Maps.isEmpty    
-读取文件列表  | Files1.listFiles
-读取文件内容   | FileReaders.readAllLines
-文件压缩         | Compresses.zip
-Input转byte[]  |Streams.toByteArray
-时间格式化      | Dates.format
-反射读取类字段 | Fields.getFieldByMethod
-反射读取类方法 | Methods.getAccessibleMethod
-生成二维码 | new QRCodes().encodeBase64
-生成一维码  | new BarCodes().encodeBase64
-并发执行线程 | Threads.concurrent
-MD5签名   | Signatures.md5
-
-<br/>
+| 描述           | 方法                          | 
+|:-------------|:----------------------------| 
+| 字符串判空        | Strings.isBlank             | 
+| 集合判空         | List.isEmpty  Maps.isEmpty  | 
+| 读取文件列表       | Files1.listFiles            | 
+| 读取文件内容       | FileReaders.readAllLines    | 
+| 文件压缩         | Compresses.zip              | 
+| Input转byte[] | Streams.toByteArray         | 
+| 时间格式化        | Dates.format                | 
+| 反射读取类字段      | Fields.getFieldByMethod     | 
+| 反射读取类方法      | Methods.getAccessibleMethod | 
+| 生成二维码        | new QRCodes().encodeBase64  | 
+| 生成一维码        | new BarCodes().encodeBase64 | 
+| 并发执行线程       | Threads.concurrent          | 
+| MD5签名        | Signatures.md5              | 
 
 ### orion-lang 模块职能
 
@@ -158,7 +169,7 @@ MD5签名   | Signatures.md5
     │  │  Caesars           凯撒密码工具类          
     │  │  DES               DES 工具类
     │  │  DES3              3DES 工具类
-    │  │  Keys              秘钥工具类
+    │  │  Keys              密钥工具类
     │  │  RC4               RC4 工具类
     │  │  RSA               RSA 工具类
     │  │  Signatures        签名工具类
@@ -253,7 +264,6 @@ MD5签名   | Signatures.md5
             LengthUnit      长度单位
             WeightUnit      重量单位
 ```
-<br/>
 
 ### orion-ext 模块职能
 
@@ -274,7 +284,6 @@ MD5签名   | Signatures.md5
     │
     └─folder               文件夹监听工具类
 ```
-<br/>
 
 ### orion-office 模块职能
 
@@ -361,7 +370,6 @@ MD5签名   | Signatures.md5
        │ 
        └─exporting            excel 注解写入器   
 ```
-<br/>
 
 ### orion-http 模块职能
 
@@ -384,7 +392,6 @@ MD5签名   | Signatures.md5
     StandardUserAgent       UA 常量
     UserAgentGenerators     UA 生成器
 ```
-<br/>
 
 ### orion-net 模块职能
 
@@ -416,7 +423,6 @@ MD5签名   | Signatures.md5
 └─specification             标准定义
  
 ```
-<br/>
 
 ### orion-generator 模块职能
 
@@ -444,16 +450,13 @@ MD5签名   | Signatures.md5
 └─plate            随机车牌号生成器
 ```
 
-
 ### 联系我
 
 <img src="https://yxythpt.oss-cn-shenzhen.aliyuncs.com/2022-03-28/files5090991341399292419.jpg" alt="联系微信" width="268px"/>
-<br/>
 
 ### 支持一下
 
 <img src="https://yxythpt.oss-cn-shenzhen.aliyuncs.com/2022-04-25/files4948235556147091810.png" alt="收款码" width="540px"/>
-<br/>
 
 ### License
 

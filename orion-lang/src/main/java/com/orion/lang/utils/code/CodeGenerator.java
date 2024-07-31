@@ -219,11 +219,11 @@ public abstract class CodeGenerator {
     }
 
     public String encodeBase64(String content) {
-        return Base64s.img64Encode(this.encode(content, (String) null), suffix);
+        return Base64s.imgEncode(this.encode(content, (String) null), suffix);
     }
 
     public String encodeBase64(String content, String words) {
-        return Base64s.img64Encode(this.encode(content, words), suffix);
+        return Base64s.imgEncode(this.encode(content, words), suffix);
     }
 
     /**

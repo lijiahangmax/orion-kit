@@ -30,7 +30,7 @@ public class SessionStore implements SafeCloseable {
     /**
      * session
      */
-    private final Session session;
+    protected final Session session;
 
     public SessionStore(Session session) {
         this.session = session;
@@ -309,8 +309,16 @@ public class SessionStore implements SafeCloseable {
         return session.getHost();
     }
 
+    public void setHost(String host) {
+        session.setHost(host);
+    }
+
     public int getPort() {
         return session.getPort();
+    }
+
+    public void setPort(int port) {
+        session.setPort(port);
     }
 
     public String getUsername() {

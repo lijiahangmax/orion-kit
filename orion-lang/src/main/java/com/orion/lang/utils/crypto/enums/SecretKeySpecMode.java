@@ -3,7 +3,7 @@ package com.orion.lang.utils.crypto.enums;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
- * 秘钥规格
+ * 密钥规格
  *
  * @author Jiahang Li
  * @version 1.0.0

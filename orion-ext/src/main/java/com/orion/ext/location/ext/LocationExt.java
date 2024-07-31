@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * 纯真ip地理位置提取器
+ * 纯真ip 地理位置提取器 cz88
  *
  * @author Jiahang Li
  * @version 1.0.0

@@ -36,7 +36,7 @@ public class SymmetricBuilder {
     protected PaddingMode paddingMode;
 
     /**
-     * 秘钥
+     * 密钥
      */
     protected SecretKey secretKey;
 
@@ -134,7 +134,7 @@ public class SymmetricBuilder {
     }
 
     /**
-     * 设置秘钥
+     * 设置密钥
      *
      * @param secretKey secretKey
      * @return this
@@ -145,7 +145,7 @@ public class SymmetricBuilder {
     }
 
     /**
-     * 设置秘钥
+     * 设置密钥
      *
      * @param secretKey secretKey
      * @return this
@@ -156,7 +156,7 @@ public class SymmetricBuilder {
     }
 
     /**
-     * 生成秘钥
+     * 生成密钥
      *
      * @param secretKey secretKey
      * @return this
@@ -167,7 +167,7 @@ public class SymmetricBuilder {
     }
 
     /**
-     * 生成秘钥
+     * 生成密钥
      *
      * @param secretKey secretKey
      * @return this
@@ -178,7 +178,7 @@ public class SymmetricBuilder {
     }
 
     /**
-     * 生成秘钥
+     * 生成密钥
      *
      * @param secretKey secretKey
      * @param keySize   keySize
@@ -190,7 +190,7 @@ public class SymmetricBuilder {
     }
 
     /**
-     * 生成秘钥
+     * 生成密钥
      *
      * @param secretKey secretKey
      * @param keySize   keySize

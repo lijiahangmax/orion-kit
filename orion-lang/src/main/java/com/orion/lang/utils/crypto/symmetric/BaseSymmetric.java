@@ -33,7 +33,7 @@ public abstract class BaseSymmetric implements SymmetricCrypto {
     protected PaddingMode paddingMode;
 
     /**
-     * 秘钥
+     * 密钥
      */
     protected SecretKey secretKey;
 

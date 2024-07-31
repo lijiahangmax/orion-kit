@@ -78,10 +78,10 @@ public abstract class BaseSftpExecutor implements ISftpExecutor {
                     this.makeDirectories(Files1.getParentPath(target));
                 }
                 // 绝对路径
-                this.doMove(source, Files1.normalize(target));
+                this.doMove(source, Files1.getPath(Files1.normalize(target)));
             } else {
                 // 相对路径
-                this.doMove(source, Files1.normalize(Files1.getPath(source + "/../" + target)));
+                this.doMove(source, Files1.getPath(Files1.normalize(Files1.getPath(source + "/../" + target))));
             }
         } catch (Exception e) {
             throw Exceptions.sftp(e);

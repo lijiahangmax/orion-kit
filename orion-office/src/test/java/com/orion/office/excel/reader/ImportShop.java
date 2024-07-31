@@ -63,7 +63,7 @@ public class ImportShop {
     }
 
     public String getBusinessPicture() {
-        return businessPicture != null ? Base64s.img64Encode(businessPicture) : "";
+        return businessPicture != null ? Base64s.imgEncode(businessPicture) : "";
     }
 
     public void setBusinessPicture(byte[] businessPicture) {

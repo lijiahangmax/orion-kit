@@ -193,7 +193,7 @@ public class Images {
      */
     public static BufferedImage getImageBase64(String base64) {
         try {
-            return ImageIO.read(Streams.toInputStream(Base64s.img64Decode(base64)));
+            return ImageIO.read(Streams.toInputStream(Base64s.mimeTypeDecode(base64)));
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
         }
@@ -222,7 +222,7 @@ public class Images {
     }
 
     public static BufferedImage getImageByIcons(String base64) {
-        return getImageByIcons(new ImageIcon(Base64s.img64Decode(base64)));
+        return getImageByIcons(new ImageIcon(Base64s.mimeTypeDecode(base64)));
     }
 
     /**
@@ -369,38 +369,38 @@ public class Images {
      * @return base64
      */
     public static String base64Encode(BufferedImage img, String format) {
-        return Base64s.img64Encode(getBytes(img, format), format);
+        return Base64s.imgEncode(getBytes(img, format), format);
     }
 
     /**
-     * 图片base64编码
+     * 图片 base64 编码
      *
      * @param bs bs
      * @return base64
      */
     public static String base64Encode(byte[] bs) {
-        return Base64s.img64Encode(bs);
+        return Base64s.imgEncode(bs);
     }
 
     /**
-     * 图片base64编码
+     * 图片 base64 编码
      *
      * @param bs   bs
-     * @param type jpg, jepg, png
+     * @param type jpg, jpeg, png
      * @return base64
      */
     public static String base64Encode(byte[] bs, String type) {
-        return Base64s.img64Encode(bs, type);
+        return Base64s.imgEncode(bs, type);
     }
 
     /**
-     * 图片base64解码
+     * 图片 base64 解码
      *
      * @param s base64
      * @return 图片
      */
     public static byte[] base64Decode(String s) {
-        return Base64s.img64Decode(s);
+        return Base64s.mimeTypeDecode(s);
     }
 
 }
