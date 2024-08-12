@@ -1121,8 +1121,8 @@ public class Strings {
      * @return 重复后的字符串
      */
     public static String repeat(String str, int num) {
-        if (isBlank(str)) {
-            return str;
+        if (isEmpty(str)) {
+            str = Strings.EMPTY;
         }
         if (num <= 0) {
             return Strings.EMPTY;
