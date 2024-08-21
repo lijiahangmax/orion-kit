@@ -128,11 +128,11 @@ public class CsvExt implements SafeCloseable {
 
     // -------------------- bean reader --------------------
 
-    public <T> CsvBeanReader<T> mapReader(Class<T> targetClass) {
+    public <T> CsvBeanReader<T> beanReader(Class<T> targetClass) {
         return new CsvBeanReader<>(reader, targetClass);
     }
 
-    public <T> CsvBeanReader<T> mapReader(Class<T> targetClass, List<T> rows) {
+    public <T> CsvBeanReader<T> beanReader(Class<T> targetClass, List<T> rows) {
         return new CsvBeanReader<>(reader, targetClass, rows);
     }
 
@@ -143,7 +143,7 @@ public class CsvExt implements SafeCloseable {
      * @param <T>      T
      * @return CsvBeanReader
      */
-    public <T> CsvBeanReader<T> mapReader(Class<T> targetClass, Consumer<T> consumer) {
+    public <T> CsvBeanReader<T> beanReader(Class<T> targetClass, Consumer<T> consumer) {
         return new CsvBeanReader<>(reader, targetClass, consumer);
     }
 
