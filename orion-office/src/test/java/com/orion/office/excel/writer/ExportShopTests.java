@@ -1,7 +1,5 @@
 package com.orion.office.excel.writer;
 
-import com.orion.lang.function.select.Branches;
-import com.orion.lang.function.select.Selector;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.codec.Base64s;
 import com.orion.lang.utils.identity.CreditCodes;
@@ -10,7 +8,6 @@ import com.orion.lang.utils.random.Randoms;
 import com.orion.lang.utils.time.Dates;
 import com.orion.office.excel.Excels;
 import com.orion.office.excel.writer.exporting.ExcelExport;
-import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.junit.Test;
@@ -72,17 +69,20 @@ public class ExportShopTests {
         ExcelExport<ExportShop> exporter = new ExcelExport<>(ExportShop.class)
                 .init();
         // 获取列样式的克隆对象
-        XSSFCellStyle redStyle = (XSSFCellStyle) exporter.cloneCellStyle(0);
+        XSSFCellStyle redStyle = exporter.cloneCellStyle(0);
         redStyle.setFillPattern(FillPatternType.forInt(FillPatternType.SOLID_FOREGROUND.getCode()));
         redStyle.setFillForegroundColor(Excels.getColor("#a60300"));
-        XSSFCellStyle blueStyle = (XSSFCellStyle) exporter.cloneCellStyle(0);
+        XSSFCellStyle blueStyle = exporter.cloneCellStyle(0);
         blueStyle.setFillPattern(FillPatternType.forInt(FillPatternType.SOLID_FOREGROUND.getCode()));
         blueStyle.setFillForegroundColor(Excels.getColor("#0b00a6"));
         // 设置样式选择器
         exporter.getSheetConfig().setColumnStyle(0, s -> {
-            return Selector.<ExportShop, CellStyle>of(s)
-                    .test(Branches.<ExportShop>when(v -> v.getShopId() % 3 == 0).then(redStyle))
-                    .test(Branches.<ExportShop>when(v -> v.getShopId() % 4 == 0).then(blueStyle));
+            if (s.getShopId() % 3 == 0) {
+                return redStyle;
+            } else if (s.getShopId() % 4 == 0) {
+                return blueStyle;
+            }
+            return null;
         });
 
         exporter.addRows(shopList)

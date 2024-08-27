@@ -11,6 +11,8 @@ import com.orion.office.csv.annotation.ImportIgnore;
 import com.orion.office.csv.annotation.ImportSetting;
 import com.orion.office.csv.core.CsvReader;
 import com.orion.office.csv.option.CsvReaderOption;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -32,6 +34,11 @@ import java.util.stream.Collectors;
  * @since 2021/2/7 14:50
  */
 public class CsvBeanReader<T> extends BaseCsvReader<T> {
+
+    /**
+     * LOG
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(CsvBeanReader.class);
 
     private final Class<T> targetClass;
 
@@ -118,7 +125,7 @@ public class CsvBeanReader<T> extends BaseCsvReader<T> {
                 try {
                     Methods.invokeSetterInfer(t, setter, value);
                 } catch (Exception e) {
-                    Exceptions.printStacks(e);
+                    LOGGER.error("CsvBeanReader.parserRow error", e);
                 }
             } else if (nullInvoke) {
                 Methods.invokeMethod(t, setter, (Object) null);

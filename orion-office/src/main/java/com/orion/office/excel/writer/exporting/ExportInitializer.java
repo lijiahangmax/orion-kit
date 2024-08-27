@@ -85,6 +85,10 @@ public class ExportInitializer<T> {
      * 初始化
      */
     protected void init() {
+        if (init) {
+            // 已初始化
+            return;
+        }
         this.init = true;
         // 表格
         this.setSheetOption();

@@ -44,6 +44,8 @@ import org.apache.poi.ss.util.SheetUtil;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.*;
 import org.openxmlformats.schemas.officeDocument.x2006.extendedProperties.CTProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -60,6 +62,11 @@ import java.util.Optional;
  */
 @SuppressWarnings("unused")
 public class Excels {
+
+    /**
+     * LOG
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(Excels.class);
 
     private static final int BUFFER_LINE = Const.N_100;
 
@@ -1093,7 +1100,7 @@ public class Excels {
             // 设置属性
             Excels.setProperties(workbook, properties);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Excels.setDefaultProperties setDefaultProperties error", e);
         }
     }
 
@@ -1771,6 +1778,9 @@ public class Excels {
      * @param options     选项
      */
     public static void addSelectOptions(Sheet sheet, int startRow, int endRow, int startColumn, int endColumn, String[] options) {
+        if (endRow < startRow || endColumn < startColumn) {
+            return;
+        }
         CellRangeAddressList range = new CellRangeAddressList(startRow, endRow, startColumn, endColumn);
         DataValidationConstraint c = sheet.getDataValidationHelper().createExplicitListConstraint(options);
         DataValidation v = sheet.getDataValidationHelper().createValidation(c, range);

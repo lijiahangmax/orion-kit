@@ -48,7 +48,6 @@ public class ExportProcessor<T> {
         // 设置样式
         CellStyle style = Optional.ofNullable(sheetConfig.columnStyleSelector.get(columnIndex))
                 .map(s -> s.apply(row))
-                .map(s -> s.orElse(null))
                 .orElse(sheetConfig.columnStyles.get(columnIndex));
         if (style != null) {
             cell.setCellStyle(style);

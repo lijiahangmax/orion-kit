@@ -16,6 +16,8 @@ import com.orion.office.excel.option.CellOption;
 import com.orion.office.excel.option.ImportFieldOption;
 import com.orion.office.excel.type.ExcelReadType;
 import org.apache.poi.ss.usermodel.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
@@ -40,6 +42,11 @@ import java.util.function.Consumer;
  * @since 2021/1/6 17:10
  */
 public class ExcelBeanReader<T> extends BaseExcelReader<String, T> {
+
+    /**
+     * LOG
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExcelBeanReader.class);
 
     private final Class<T> targetClass;
 
@@ -178,7 +185,7 @@ public class ExcelBeanReader<T> extends BaseExcelReader<String, T> {
                 try {
                     Methods.invokeSetterInfer(t, setter, value);
                 } catch (Exception e) {
-                    Exceptions.printStacks(e);
+                    LOGGER.error("ExcelBeanReader.parserRow error", e);
                 }
             } else if (nullInvoke) {
                 Methods.invokeMethod(t, setter, (Object) null);

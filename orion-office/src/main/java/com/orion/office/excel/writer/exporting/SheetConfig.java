@@ -1,6 +1,5 @@
 package com.orion.office.excel.writer.exporting;
 
-import com.orion.lang.function.select.Selector;
 import com.orion.office.excel.Excels;
 import com.orion.office.excel.option.ExportFieldOption;
 import com.orion.office.excel.option.ExportSheetOption;
@@ -49,7 +48,7 @@ public class SheetConfig<T> implements Serializable {
      * <p>
      * 有选择到的将会覆盖原有样式
      */
-    protected Map<Integer, Function<T, Selector<T, CellStyle>>> columnStyleSelector;
+    protected Map<Integer, Function<T, CellStyle>> columnStyleSelector;
 
     /**
      * 列配置
@@ -252,7 +251,7 @@ public class SheetConfig<T> implements Serializable {
      * @param selector selector
      * @return this
      */
-    public SheetConfig<T> setColumnStyle(int column, Function<T, Selector<T, CellStyle>> selector) {
+    public SheetConfig<T> setColumnStyle(int column, Function<T, CellStyle> selector) {
         columnStyleSelector.put(column, selector);
         return this;
     }
@@ -272,7 +271,7 @@ public class SheetConfig<T> implements Serializable {
         return headerStyles;
     }
 
-    public Map<Integer, Function<T, Selector<T, CellStyle>>> getColumnStyleSelector() {
+    public Map<Integer, Function<T, CellStyle>> getColumnStyleSelector() {
         initializer.checkInit();
         return columnStyleSelector;
     }
