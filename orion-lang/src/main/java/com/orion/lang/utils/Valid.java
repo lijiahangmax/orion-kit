@@ -39,6 +39,7 @@ public abstract class Valid {
     private static final String VALID_IS_FALSE = "the validated expression is false";
     private static final String VALID_IS_TRUE = "the validated expression is true";
     private static final String VALID_IS_NULL = "the validated object is null";
+    private static final String VALID_IS_NOT_NULL = "the validated object is not null";
     private static final String VALID_NOT_ARRAY = "the validated object not in array";
     private static final String VALID_NOT_COLLECTION = "the validated object not in collection";
     private static final String VALID_NOT_IN_ARRAY = "the validated object in array";
@@ -239,6 +240,17 @@ public abstract class Valid {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
         return false;
+    }
+
+    public static <T> T isNull(T object) {
+        return isNull(object, VALID_IS_NOT_NULL);
+    }
+
+    public static <T> T isNull(T object, String message, Object... values) {
+        if (object != null) {
+            throw Exceptions.nullArgument(Strings.format(message, values));
+        }
+        return object;
     }
 
     public static <T> T notNull(T object) {

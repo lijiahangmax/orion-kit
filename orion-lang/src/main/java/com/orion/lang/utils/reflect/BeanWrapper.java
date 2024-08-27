@@ -4,6 +4,8 @@ import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Objects1;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -23,6 +25,11 @@ import static com.orion.lang.utils.reflect.Classes.isImplClass;
  */
 @SuppressWarnings("unchecked")
 public class BeanWrapper {
+
+    /**
+     * LOG
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(BeanWrapper.class);
 
     private BeanWrapper() {
     }
@@ -164,7 +171,7 @@ public class BeanWrapper {
                             Methods.invokeMethodInfer(t, setterMethod, value);
                         }
                     } catch (Exception e) {
-                        Exceptions.printStacks(e);
+                        LOGGER.error("BeanWrapper.toBean callSetterMethod error {}", setterMethodName, e);
                     }
                     break;
                 }

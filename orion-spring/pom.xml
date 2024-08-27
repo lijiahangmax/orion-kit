@@ -21,6 +21,13 @@
             <version>${orion.kit.version}</version>
         </dependency>
 
+        <!-- log -->
+        <dependency>
+            <groupId>io.github.lijiahangmax</groupId>
+            <artifactId>orion-log</artifactId>
+            <version>${orion.kit.version}</version>
+        </dependency>
+
         <!-- spring -->
         <dependency>
             <groupId>org.springframework</groupId>

@@ -329,23 +329,10 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
 
     @Override
     public void close() {
-        this.close(false);
-    }
-
-    /**
-     * 关闭进程
-     *
-     * @param exit 是否键入exit
-     */
-    public void close(boolean exit) {
-        this.close = true;
-        if (exit && outputStream != null) {
-            try {
-                this.write(Strings.bytes("exit 0"));
-            } catch (Exception e1) {
-                Exceptions.printStacks(e1);
-            }
+        if (close) {
+            return;
         }
+        this.close = true;
         if (process != null) {
             process.destroy();
         }

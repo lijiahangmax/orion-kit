@@ -1,9 +1,11 @@
 package com.orion.ext.location.ext.core;
 
-import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
+import java.util.StringTokenizer;
 
 /**
  * 查询工具
@@ -13,6 +15,11 @@ import java.io.UnsupportedEncodingException;
  * @since 2020/3/3 19:28
  */
 public class SeekerSupport {
+
+    /**
+     * LOG
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(SeekerSupport.class);
 
     private SeekerSupport() {
     }
@@ -25,14 +32,14 @@ public class SeekerSupport {
      */
     public static byte[] getIpByteArrayFromString(String ip) {
         byte[] ret = new byte[4];
-        java.util.StringTokenizer st = new java.util.StringTokenizer(ip, ".");
+        StringTokenizer st = new StringTokenizer(ip, ".");
         try {
             ret[0] = (byte) (Integer.parseInt(st.nextToken()) & 0xFF);
             ret[1] = (byte) (Integer.parseInt(st.nextToken()) & 0xFF);
             ret[2] = (byte) (Integer.parseInt(st.nextToken()) & 0xFF);
             ret[3] = (byte) (Integer.parseInt(st.nextToken()) & 0xFF);
         } catch (Exception e) {
-            Exceptions.printStacks(e);
+            LOGGER.error("SeekerSupport.getIpByteArrayFromString error ip: {}", ip, e);
         }
         return ret;
     }

@@ -40,7 +40,7 @@
 ------------------------------
 
 * [javaDoc](https://apidoc.gitee.com/lijiahangmax/orion-kit)
-* [项目文档](https://lijiahangmax.github.io/open-orion/orion-kit)
+* [项目文档](https://kit.orionsec.cn)
 
 ### 工程模块
 

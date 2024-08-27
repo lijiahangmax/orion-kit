@@ -1,9 +1,10 @@
 package com.orion.net.socket;
 
 import com.orion.lang.constant.Const;
-import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Threads;
 import com.orion.lang.utils.io.Streams;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -24,6 +25,11 @@ import java.util.concurrent.TimeUnit;
  * @since 2020/6/5 16:35
  */
 public class TcpReceive implements AutoCloseable {
+
+    /**
+     * LOG
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(TcpReceive.class);
 
     private final int port;
 
@@ -74,7 +80,7 @@ public class TcpReceive implements AutoCloseable {
                 try {
                     receiveSocketList.add(serverSocket.accept());
                 } catch (IOException e) {
-                    Exceptions.printStacks(e);
+                    LOGGER.error("TcpReceive.accept error", e);
                 }
             }
         });
@@ -92,8 +98,15 @@ public class TcpReceive implements AutoCloseable {
         return this;
     }
 
+    /**
+     * 批量发送数据
+     *
+     * @param bs bs
+     * @return this
+     * @throws IOException IOException
+     */
     public TcpReceive sendAll(byte[] bs) throws IOException {
-        return sendAll(bs, 0, bs.length);
+        return this.sendAll(bs, 0, bs.length);
     }
 
     /**

@@ -5,6 +5,8 @@ import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.io.Files1;
 import com.orion.lang.utils.io.Streams;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,6 +21,11 @@ import java.util.concurrent.Callable;
  * @since 2020/2/14 15:38
  */
 public class FileSplit implements Callable<String[]> {
+
+    /**
+     * LOG
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileSplit.class);
 
     /**
      * 默认分割为几块 8
@@ -175,7 +182,7 @@ public class FileSplit implements Callable<String[]> {
             outputStream.write(buffer, 0, accessFile.read(buffer));
             outputStream.flush();
         } catch (Exception e) {
-            Exceptions.printStacks(e);
+            LOGGER.error("FileSplit.randomReadToFile error", e);
         } finally {
             Streams.close(outputStream);
             Streams.close(accessFile);

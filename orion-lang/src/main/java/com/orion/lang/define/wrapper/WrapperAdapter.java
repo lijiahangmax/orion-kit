@@ -1,9 +1,10 @@
 package com.orion.lang.define.wrapper;
 
-import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.convert.Converts;
 import com.orion.lang.utils.json.Jsons;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 import java.util.Map;
@@ -16,6 +17,11 @@ import java.util.Map;
  * @since 2020/3/19 11:02
  */
 public class WrapperAdapter {
+
+    /**
+     * LOG
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(WrapperAdapter.class);
 
     /**
      * 转换为 wrapper 的 key
@@ -172,7 +178,7 @@ public class WrapperAdapter {
                         return Jsons.parse(Jsons.toJson(data), dataClass);
                     }
                 } catch (Exception e) {
-                    Exceptions.printStacks(e);
+                    LOGGER.error("WrapperAdapter.dataAdapter parse error", e);
                 }
             }
         }

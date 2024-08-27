@@ -1,12 +1,14 @@
 package com.orion.spring;
 
-import com.orion.lang.define.Console;
 import com.orion.lang.utils.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ConfigurableApplicationContext;
 
 /**
@@ -20,6 +22,11 @@ import org.springframework.context.ConfigurableApplicationContext;
  */
 public class SpringHolder {
 
+    /**
+     * LOG
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(SpringHolder.class);
+
     private static ApplicationContext applicationContext;
 
     private static ConfigurableListableBeanFactory beanFactory;
@@ -30,18 +37,18 @@ public class SpringHolder {
     public static class ApplicationContextAwareStore implements ApplicationContextAware, BeanFactoryPostProcessor {
 
         public ApplicationContextAwareStore() {
-            Console.log("init spring holder");
+            LOGGER.info("init spring holder");
         }
 
         @Override
         public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-            Console.log("inject spring holder ApplicationContext");
+            LOGGER.info("inject spring holder ApplicationContext");
             SpringHolder.applicationContext = applicationContext;
         }
 
         @Override
         public void postProcessBeanFactory(ConfigurableListableBeanFactory configurableListableBeanFactory) throws BeansException {
-            Console.log("inject spring holder BeanFactory");
+            LOGGER.info("inject spring holder BeanFactory");
             SpringHolder.beanFactory = configurableListableBeanFactory;
         }
 
@@ -58,6 +65,24 @@ public class SpringHolder {
 
     public static ConfigurableListableBeanFactory getBeanFactory() {
         return beanFactory;
+    }
+
+    /**
+     * 发布事件
+     *
+     * @param event event
+     */
+    public static void publishEvent(ApplicationEvent event) {
+        applicationContext.publishEvent(event);
+    }
+
+    /**
+     * 发布事件
+     *
+     * @param event event
+     */
+    public static void publishEvent(Object event) {
+        applicationContext.publishEvent(event);
     }
 
     @SuppressWarnings("unchecked")

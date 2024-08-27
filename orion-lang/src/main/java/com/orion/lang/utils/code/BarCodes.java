@@ -4,8 +4,9 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
-import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -20,6 +21,11 @@ import java.io.OutputStream;
  * @since 2020/7/8 17:15
  */
 public class BarCodes extends CodeGenerator {
+
+    /**
+     * LOG
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(BarCodes.class);
 
     public BarCodes() {
         this.format = BarcodeFormat.CODE_128;
@@ -72,7 +78,7 @@ public class BarCodes extends CodeGenerator {
             }
             ImageIO.write(image, suffix, out);
         } catch (Exception e) {
-            Exceptions.printStacks(e);
+            LOGGER.error("BarCodes.encode error", e);
         }
     }
 

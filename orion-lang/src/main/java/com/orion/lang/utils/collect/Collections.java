@@ -469,4 +469,49 @@ public class Collections {
         return map.values();
     }
 
+    /**
+     * 查询第一个重复项
+     *
+     * @param list list
+     * @param <T>  T
+     * @return 重复项目
+     */
+    public static <T> T getFirstDuplicateItem(Collection<T> list) {
+        Map<T, Integer> map = Maps.newMap();
+        for (T item : list) {
+            if (map.containsKey(item)) {
+                return item;
+            } else {
+                map.put(item, 1);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 查询全部重复项
+     *
+     * @param list list
+     * @param <T>  T
+     * @return 重复项目
+     */
+    public static <T> List<T> getDuplicateItems(Collection<T> list) {
+        Map<T, Integer> map = Maps.newMap();
+        for (T item : list) {
+            if (map.containsKey(item)) {
+                map.put(item, map.get(item) + 1);
+            } else {
+                map.put(item, 1);
+            }
+        }
+        // 返回
+        List<T> result = Lists.newList();
+        map.forEach((k, v) -> {
+            if (v > 1) {
+                result.add(k);
+            }
+        });
+        return result;
+    }
+
 }

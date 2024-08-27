@@ -1,11 +1,12 @@
 package com.orion.net.ftp.client;
 
-import com.orion.lang.utils.Exceptions;
 import com.orion.net.ftp.client.config.FtpConfig;
 import com.orion.net.ftp.client.instance.IFtpInstance;
 import com.orion.net.ftp.client.pool.FtpClientFactory;
 import com.orion.net.ftp.client.pool.FtpClientPool;
 import org.apache.commons.net.ftp.FTPClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * FTP 工具类
@@ -15,6 +16,11 @@ import org.apache.commons.net.ftp.FTPClient;
  * @since 2020/3/17 16:10
  */
 public class Ftps {
+
+    /**
+     * LOG
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(Ftps.class);
 
     private Ftps() {
     }
@@ -29,12 +35,12 @@ public class Ftps {
             try {
                 client.logout();
             } catch (Exception e) {
-                Exceptions.printStacks(e);
+                LOGGER.error("Ftps.destroy logout error", e);
             } finally {
                 try {
                     client.disconnect();
                 } catch (Exception e) {
-                    Exceptions.printStacks(e);
+                    LOGGER.error("Ftps.destroy disconnect error", e);
                 }
             }
         }

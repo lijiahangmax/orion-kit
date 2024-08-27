@@ -3,9 +3,10 @@ package com.orion.ext.location.ext.core;
 import com.orion.ext.location.LocationConst;
 import com.orion.ext.location.Region;
 import com.orion.lang.constant.Const;
-import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.io.Files1;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +27,11 @@ import java.util.List;
  */
 @SuppressWarnings("ALL")
 public class LocationSeeker {
+
+    /**
+     * LOG
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(LocationSeeker.class);
 
     private static final int IP_RECORD_LENGTH = 7;
     private static final byte AREA_FOLLOWED = 0x01;
@@ -132,7 +138,7 @@ public class LocationSeeker {
                 }
             }
         } catch (IOException e) {
-            Exceptions.printStacks(e);
+            LOGGER.error("LocationSeeker.getIPEntries error ip: {}", s, e);
         }
         return ret;
     }
@@ -390,12 +396,10 @@ public class LocationSeeker {
                 }
             }
         } catch (Exception e) {
-            Exceptions.printStacks(e);
+            LOGGER.error("LocationSeeker.getRegion error ip: {}", ip, e);
         }
         return info;
     }
-
-    // private
 
     /**
      * 从内存映射文件的 offset 位置开始的3个字节读取一个 int
@@ -483,7 +487,7 @@ public class LocationSeeker {
             ip[1] = ip[2];
             ip[2] = temp;
         } catch (IOException e) {
-            Exceptions.printStacks(e);
+            LOGGER.error("LocationSeeker.readIP error", e);
         }
     }
 
@@ -627,7 +631,7 @@ public class LocationSeeker {
             }
             return loc;
         } catch (IOException e) {
-            Exceptions.printStacks(e);
+            LOGGER.error("LocationSeeker.getIpLocation error", e);
             return null;
         }
     }
@@ -720,7 +724,7 @@ public class LocationSeeker {
                 return SeekerSupport.getString(buf, 0, i, Const.GBK);
             }
         } catch (IOException e) {
-            Exceptions.printStacks(e);
+            LOGGER.error("LocationSeeker.readString error", e);
         }
         return Strings.EMPTY;
     }
@@ -738,7 +742,7 @@ public class LocationSeeker {
                 return SeekerSupport.getString(buf, 0, i, Const.GBK);
             }
         } catch (IllegalArgumentException e) {
-            Exceptions.printStacks(e);
+            LOGGER.error("LocationSeeker.getIpLocation error", e);
         }
         return Strings.EMPTY;
     }

@@ -1,12 +1,13 @@
 package com.orion.lang.utils.ext.dom;
 
-import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.collect.Lists;
 import com.orion.lang.utils.reflect.Classes;
 import com.orion.lang.utils.reflect.Constructors;
 import com.orion.lang.utils.reflect.Methods;
 import org.dom4j.Document;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -20,6 +21,11 @@ import java.util.*;
  */
 @SuppressWarnings("unchecked")
 public class DomBeanWrapper {
+
+    /**
+     * LOG
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(DomBeanWrapper.class);
 
     private DomBeanWrapper() {
     }
@@ -115,7 +121,7 @@ public class DomBeanWrapper {
                         try {
                             paramValue = element.element(singleEntry.getKey()).getStringValue();
                         } catch (Exception e) {
-                            Exceptions.printStacks(e);
+                            LOGGER.error("DomBeanWrapper.toBean get element error", e);
                         }
                     }
                     if (paramValue != null) {
