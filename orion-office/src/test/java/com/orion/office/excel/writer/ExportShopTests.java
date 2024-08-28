@@ -69,10 +69,10 @@ public class ExportShopTests {
         ExcelExport<ExportShop> exporter = new ExcelExport<>(ExportShop.class)
                 .init();
         // 获取列样式的克隆对象
-        XSSFCellStyle redStyle = exporter.cloneCellStyle(0);
+        XSSFCellStyle redStyle = (XSSFCellStyle) exporter.cloneCellStyle(0);
         redStyle.setFillPattern(FillPatternType.forInt(FillPatternType.SOLID_FOREGROUND.getCode()));
         redStyle.setFillForegroundColor(Excels.getColor("#a60300"));
-        XSSFCellStyle blueStyle = exporter.cloneCellStyle(0);
+        XSSFCellStyle blueStyle = (XSSFCellStyle) exporter.cloneCellStyle(0);
         blueStyle.setFillPattern(FillPatternType.forInt(FillPatternType.SOLID_FOREGROUND.getCode()));
         blueStyle.setFillForegroundColor(Excels.getColor("#0b00a6"));
         // 设置样式选择器

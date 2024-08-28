@@ -541,6 +541,17 @@ public class StyleStream {
     }
 
     /**
+     * 设置背景纹理为实体
+     *
+     * @param i 纹理样式
+     * @return this
+     */
+    public StyleStream texture() {
+        style.setFillPattern(FillPatternType.forInt(FillPatternType.SOLID_FOREGROUND.getCode()));
+        return this;
+    }
+
+    /**
      * 设置背景纹理
      *
      * @param i 纹理样式

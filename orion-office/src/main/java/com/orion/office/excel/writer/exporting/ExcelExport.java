@@ -19,7 +19,6 @@ import java.util.Optional;
  * @version 1.0.0
  * @since 2020/5/28 11:15
  */
-@SuppressWarnings("unchecked")
 public class ExcelExport<T> extends BaseExcelWriteable {
 
     private final Sheet sheet;
@@ -287,52 +286,48 @@ public class ExcelExport<T> extends BaseExcelWriteable {
     /**
      * 获取一个单元格样式 用于样式修改
      *
-     * @param <E> impl
      * @return 单元格样式
      */
-    public <E extends CellStyle> E createCellStyle() {
-        return (E) workbook.createCellStyle();
+    public CellStyle createCellStyle() {
+        return workbook.createCellStyle();
     }
 
     /**
      * 复制列样式 用于样式修改
      *
      * @param column column
-     * @param <E>    impl
      * @return 单元格样式
      */
-    public <E extends CellStyle> E cloneCellStyle(int column) {
+    public CellStyle cloneCellStyle(int column) {
         CellStyle style = workbook.createCellStyle();
         // 获取列样式并且复制
         CellStyle columnStyle = sheetConfig.getColumnStyles().get(column);
         if (columnStyle != null) {
             style.cloneStyleFrom(columnStyle);
         }
-        return (E) style;
+        return style;
     }
 
     /**
      * 获取一个字体 用于样式修改
      *
-     * @param <E> impl
      * @return 字体
      */
-    public <E extends Font> E createFont() {
-        return (E) workbook.createFont();
+    public Font createFont() {
+        return workbook.createFont();
     }
 
     /**
      * 获取一个格式 用于样式修改
      *
-     * @param <E> impl
      * @return 格式
      */
-    public <E extends DataFormat> E createFormat() {
-        return (E) workbook.createDataFormat();
+    public DataFormat createFormat() {
+        return workbook.createDataFormat();
     }
 
-    public <E extends Sheet> E getSheet() {
-        return (E) sheet;
+    public Sheet getSheet() {
+        return sheet;
     }
 
     public SheetConfig<T> getSheetConfig() {

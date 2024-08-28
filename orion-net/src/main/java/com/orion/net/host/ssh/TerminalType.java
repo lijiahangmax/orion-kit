@@ -1,7 +1,5 @@
 package com.orion.net.host.ssh;
 
-import com.orion.lang.utils.Valid;
-
 /**
  * 终端类型
  *
@@ -82,13 +80,15 @@ public enum TerminalType {
     }
 
     public static TerminalType of(String type) {
-        Valid.notBlank(type, "terminal type is blank");
+        if (type == null) {
+            return XTERM;
+        }
         for (TerminalType value : values()) {
             if (value.type.equals(type)) {
                 return value;
             }
         }
-        return null;
+        return XTERM;
     }
 
 }
