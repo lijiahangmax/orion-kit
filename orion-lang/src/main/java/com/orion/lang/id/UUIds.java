@@ -1,7 +1,7 @@
 package com.orion.lang.id;
 
+import com.orion.lang.constant.Const;
 import com.orion.lang.utils.Exceptions;
-import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.Valid;
 
 import java.util.Base64;
@@ -73,7 +73,7 @@ public class UUIds {
      * 获取 32位 uuid
      */
     public static String random32() {
-        return UUID.randomUUID().toString().replace("-", Strings.EMPTY);
+        return UUID.randomUUID().toString().replace(Const.DASHED, Const.EMPTY);
     }
 
     /**
