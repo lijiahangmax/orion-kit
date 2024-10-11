@@ -61,17 +61,19 @@ public class AddLicenseHeader {
             " * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n" +
             " */";
 
-    private static final String PATH = "D:\\idea-project\\orion-kit";
+    private static final String PATH = new File("").getAbsolutePath();
 
     public static void main(String[] args) {
         StopWatch sw = StopWatch.begin();
         // 扫描文件
         List<File> files = Files1.listFilesFilter(PATH, file -> file.isFile()
-                && file.getName().endsWith(".java")
-                && !file.getAbsolutePath().contains("node_modules"), true, false);
+                && file.getName().endsWith(".java"), true, false);
+        sw.tag("list");
         // 添加头
         files.forEach(AddLicenseHeader::addLicenseToFile);
-        System.out.println(sw.tag("add"));
+        sw.tag(" add");
+        sw.stop();
+        System.out.println(sw);
     }
 
     /**
