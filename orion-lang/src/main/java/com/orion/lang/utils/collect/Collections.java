@@ -1,3 +1,24 @@
+/*
+ * Copyright (c) 2019 - present Jiahang Li (kit.orionsec.cn ljh1553488six@139.com).
+ *
+ * The MIT License (MIT)
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 package com.orion.lang.utils.collect;
 
 import com.orion.lang.constant.Const;
@@ -467,6 +488,51 @@ public class Collections {
             map.put(keyGetter.apply(e), e);
         }
         return map.values();
+    }
+
+    /**
+     * 查询第一个重复项
+     *
+     * @param list list
+     * @param <T>  T
+     * @return 重复项目
+     */
+    public static <T> T getFirstDuplicateItem(Collection<T> list) {
+        Map<T, Integer> map = Maps.newMap();
+        for (T item : list) {
+            if (map.containsKey(item)) {
+                return item;
+            } else {
+                map.put(item, 1);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 查询全部重复项
+     *
+     * @param list list
+     * @param <T>  T
+     * @return 重复项目
+     */
+    public static <T> List<T> getDuplicateItems(Collection<T> list) {
+        Map<T, Integer> map = Maps.newMap();
+        for (T item : list) {
+            if (map.containsKey(item)) {
+                map.put(item, map.get(item) + 1);
+            } else {
+                map.put(item, 1);
+            }
+        }
+        // 返回
+        List<T> result = Lists.newList();
+        map.forEach((k, v) -> {
+            if (v > 1) {
+                result.add(k);
+            }
+        });
+        return result;
     }
 
 }

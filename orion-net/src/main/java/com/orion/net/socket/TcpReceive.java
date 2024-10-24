@@ -1,9 +1,31 @@
+/*
+ * Copyright (c) 2019 - present Jiahang Li (kit.orionsec.cn ljh1553488six@139.com).
+ *
+ * The MIT License (MIT)
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 package com.orion.net.socket;
 
 import com.orion.lang.constant.Const;
-import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Threads;
 import com.orion.lang.utils.io.Streams;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -24,6 +46,11 @@ import java.util.concurrent.TimeUnit;
  * @since 2020/6/5 16:35
  */
 public class TcpReceive implements AutoCloseable {
+
+    /**
+     * LOG
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(TcpReceive.class);
 
     private final int port;
 
@@ -74,7 +101,7 @@ public class TcpReceive implements AutoCloseable {
                 try {
                     receiveSocketList.add(serverSocket.accept());
                 } catch (IOException e) {
-                    Exceptions.printStacks(e);
+                    LOGGER.error("TcpReceive.accept error", e);
                 }
             }
         });
@@ -92,8 +119,15 @@ public class TcpReceive implements AutoCloseable {
         return this;
     }
 
+    /**
+     * 批量发送数据
+     *
+     * @param bs bs
+     * @return this
+     * @throws IOException IOException
+     */
     public TcpReceive sendAll(byte[] bs) throws IOException {
-        return sendAll(bs, 0, bs.length);
+        return this.sendAll(bs, 0, bs.length);
     }
 
     /**

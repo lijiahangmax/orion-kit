@@ -1,11 +1,33 @@
+/*
+ * Copyright (c) 2019 - present Jiahang Li (kit.orionsec.cn ljh1553488six@139.com).
+ *
+ * The MIT License (MIT)
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 package com.orion.ext.location.ext.core;
 
 import com.orion.ext.location.LocationConst;
 import com.orion.ext.location.Region;
 import com.orion.lang.constant.Const;
-import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
 import com.orion.lang.utils.io.Files1;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +48,11 @@ import java.util.List;
  */
 @SuppressWarnings("ALL")
 public class LocationSeeker {
+
+    /**
+     * LOG
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(LocationSeeker.class);
 
     private static final int IP_RECORD_LENGTH = 7;
     private static final byte AREA_FOLLOWED = 0x01;
@@ -132,7 +159,7 @@ public class LocationSeeker {
                 }
             }
         } catch (IOException e) {
-            Exceptions.printStacks(e);
+            LOGGER.error("LocationSeeker.getIPEntries error ip: {}", s, e);
         }
         return ret;
     }
@@ -390,12 +417,10 @@ public class LocationSeeker {
                 }
             }
         } catch (Exception e) {
-            Exceptions.printStacks(e);
+            LOGGER.error("LocationSeeker.getRegion error ip: {}", ip, e);
         }
         return info;
     }
-
-    // private
 
     /**
      * 从内存映射文件的 offset 位置开始的3个字节读取一个 int
@@ -483,7 +508,7 @@ public class LocationSeeker {
             ip[1] = ip[2];
             ip[2] = temp;
         } catch (IOException e) {
-            Exceptions.printStacks(e);
+            LOGGER.error("LocationSeeker.readIP error", e);
         }
     }
 
@@ -627,7 +652,7 @@ public class LocationSeeker {
             }
             return loc;
         } catch (IOException e) {
-            Exceptions.printStacks(e);
+            LOGGER.error("LocationSeeker.getIpLocation error", e);
             return null;
         }
     }
@@ -720,7 +745,7 @@ public class LocationSeeker {
                 return SeekerSupport.getString(buf, 0, i, Const.GBK);
             }
         } catch (IOException e) {
-            Exceptions.printStacks(e);
+            LOGGER.error("LocationSeeker.readString error", e);
         }
         return Strings.EMPTY;
     }
@@ -738,7 +763,7 @@ public class LocationSeeker {
                 return SeekerSupport.getString(buf, 0, i, Const.GBK);
             }
         } catch (IllegalArgumentException e) {
-            Exceptions.printStacks(e);
+            LOGGER.error("LocationSeeker.getIpLocation error", e);
         }
         return Strings.EMPTY;
     }

@@ -1,9 +1,32 @@
+/*
+ * Copyright (c) 2019 - present Jiahang Li (kit.orionsec.cn ljh1553488six@139.com).
+ *
+ * The MIT License (MIT)
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 package com.orion.ext.location.ext.core;
 
-import com.orion.lang.utils.Exceptions;
 import com.orion.lang.utils.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
+import java.util.StringTokenizer;
 
 /**
  * 查询工具
@@ -13,6 +36,11 @@ import java.io.UnsupportedEncodingException;
  * @since 2020/3/3 19:28
  */
 public class SeekerSupport {
+
+    /**
+     * LOG
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(SeekerSupport.class);
 
     private SeekerSupport() {
     }
@@ -25,14 +53,14 @@ public class SeekerSupport {
      */
     public static byte[] getIpByteArrayFromString(String ip) {
         byte[] ret = new byte[4];
-        java.util.StringTokenizer st = new java.util.StringTokenizer(ip, ".");
+        StringTokenizer st = new StringTokenizer(ip, ".");
         try {
             ret[0] = (byte) (Integer.parseInt(st.nextToken()) & 0xFF);
             ret[1] = (byte) (Integer.parseInt(st.nextToken()) & 0xFF);
             ret[2] = (byte) (Integer.parseInt(st.nextToken()) & 0xFF);
             ret[3] = (byte) (Integer.parseInt(st.nextToken()) & 0xFF);
         } catch (Exception e) {
-            Exceptions.printStacks(e);
+            LOGGER.error("SeekerSupport.getIpByteArrayFromString error ip: {}", ip, e);
         }
         return ret;
     }

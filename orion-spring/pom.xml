@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.github.lijiahangmax</groupId>
         <artifactId>orion-kit</artifactId>
-        <version>1.0.8</version>
+        <version>1.0.9</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -18,6 +18,13 @@
         <dependency>
             <groupId>io.github.lijiahangmax</groupId>
             <artifactId>orion-lang</artifactId>
+            <version>${orion.kit.version}</version>
+        </dependency>
+
+        <!-- log -->
+        <dependency>
+            <groupId>io.github.lijiahangmax</groupId>
+            <artifactId>orion-log</artifactId>
             <version>${orion.kit.version}</version>
         </dependency>
 

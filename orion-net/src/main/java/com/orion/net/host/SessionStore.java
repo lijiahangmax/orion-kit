@@ -1,3 +1,24 @@
+/*
+ * Copyright (c) 2019 - present Jiahang Li (kit.orionsec.cn ljh1553488six@139.com).
+ *
+ * The MIT License (MIT)
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 package com.orion.net.host;
 
 import com.jcraft.jsch.*;
@@ -71,71 +92,67 @@ public class SessionStore implements SafeCloseable {
     }
 
     public SessionStore httpProxy(String host, int port) {
-        session.setProxy(new ProxyHTTP(host, port));
-        return this;
+        return this.proxy(SessionProxyType.HTTP, host, port, null, null);
     }
 
-    /**
-     * 设置 http 代理
-     *
-     * @param host     主机
-     * @param port     端口
-     * @param username 用户名
-     * @param password 密码
-     * @return this
-     */
     public SessionStore httpProxy(String host, int port, String username, String password) {
-        ProxyHTTP proxy = new ProxyHTTP(host, port);
-        if (!Strings.isBlank(username)) {
-            proxy.setUserPasswd(username, password);
-        }
-        session.setProxy(proxy);
-        return this;
+        return this.proxy(SessionProxyType.HTTP, host, port, username, password);
     }
 
     public SessionStore socks4Proxy(String host, int port) {
-        session.setProxy(new ProxySOCKS4(host, port));
-        return this;
+        return this.proxy(SessionProxyType.SOCKS4, host, port, null, null);
     }
 
-    /**
-     * 设置 socks4 代理
-     *
-     * @param host     主机
-     * @param port     端口
-     * @param username 用户名
-     * @param password 密码
-     * @return this
-     */
     public SessionStore socks4Proxy(String host, int port, String username, String password) {
-        ProxySOCKS4 proxy = new ProxySOCKS4(host, port);
-        if (!Strings.isBlank(username)) {
-            proxy.setUserPasswd(username, password);
-        }
-        session.setProxy(proxy);
-        return this;
+        return this.proxy(SessionProxyType.SOCKS4, host, port, username, password);
     }
 
     public SessionStore socks5Proxy(String host, int port) {
-        session.setProxy(new ProxySOCKS5(host, port));
-        return this;
+        return this.proxy(SessionProxyType.SOCKS5, host, port, null, null);
+    }
+
+    public SessionStore socks5Proxy(String host, int port, String username, String password) {
+        return this.proxy(SessionProxyType.SOCKS5, host, port, username, password);
+    }
+
+    public SessionStore proxy(SessionProxyType type, String host, int port) {
+        return this.proxy(type, host, port, null, null);
     }
 
     /**
-     * 设置 socks5 代理
+     * 设置代理
      *
-     * @param host     主机
-     * @param port     端口
-     * @param username 用户名
-     * @param password 密码
+     * @param type     代理类型
+     * @param host     代理地址
+     * @param port     代理端口
+     * @param username 代理用户名
+     * @param password 代理密码
      * @return this
      */
-    public SessionStore socks5Proxy(String host, int port, String username, String password) {
-        ProxySOCKS5 proxy = new ProxySOCKS5(host, port);
-        if (!Strings.isBlank(username)) {
-            proxy.setUserPasswd(username, password);
+    public SessionStore proxy(SessionProxyType type,
+                              String host, int port,
+                              String username, String password) {
+        Proxy proxy = null;
+        if (SessionProxyType.HTTP.equals(type)) {
+            proxy = new ProxyHTTP(host, port);
+            if (!Strings.isBlank(username)) {
+                ((ProxyHTTP) proxy).setUserPasswd(username, password);
+            }
+        } else if (SessionProxyType.SOCKS4.equals(type)) {
+            proxy = new ProxySOCKS4(host, port);
+            if (!Strings.isBlank(username)) {
+                ((ProxySOCKS4) proxy).setUserPasswd(username, password);
+            }
+        } else if (SessionProxyType.SOCKS5.equals(type)) {
+            proxy = new ProxySOCKS5(host, port);
+            if (!Strings.isBlank(username)) {
+                ((ProxySOCKS5) proxy).setUserPasswd(username, password);
+            }
         }
-        session.setProxy(proxy);
+        // 设置代理
+        if (proxy != null) {
+            session.setProxy(proxy);
+        }
         return this;
     }
 
