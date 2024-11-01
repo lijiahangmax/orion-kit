@@ -2,8 +2,8 @@
 <p align="center">
     <a target="_blank"
        style="text-decoration: none !important;"
-       href="https://search.maven.org/artifact/io.github.lijiahangmax/orion-all">
-        <img src="https://img.shields.io/maven-central/v/io.github.lijiahangmax/orion-all.svg" alt="maven"/>
+       href="https://search.maven.org/artifact/cn.orionsec.kit/orion-all">
+        <img src="https://img.shields.io/maven-central/v/cn.orionsec.kit/orion-all.svg" alt="maven"/>
     </a>
     <a target="_blank"
        style="text-decoration: none !important;"
@@ -63,9 +63,9 @@
 ```xml
 <!-- 模块化引用 -->
 <dependency>
-    <groupId>io.github.lijiahangmax</groupId>
+    <groupId>cn.orionsec.kit</groupId>
     <artifactId>模块名称</artifactId>
-    <version>1.0.9</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
@@ -74,9 +74,9 @@
 ```xml
 <!-- 如果想引用所有可以直接引入 orion-all -->
 <dependency>
-    <groupId>io.github.lijiahangmax</groupId>
+    <groupId>cn.orionsec.kit</groupId>
     <artifactId>orion-all</artifactId>
-    <version>1.0.9</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
@@ -453,6 +453,9 @@
 ### 联系我
 
 <img src="https://yxythpt.oss-cn-shenzhen.aliyuncs.com/2022-03-28/files5090991341399292419.jpg" alt="联系微信" width="268px"/>
+
+📧 问题/加群微信备注: kit  
+📧 合作/功能定制备注: 合作
 
 ### 支持一下
 
