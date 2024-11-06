@@ -1199,6 +1199,28 @@ public class Numbers {
     // -------------------- scale --------------------
 
     /**
+     * 格式化
+     *
+     * @param value  value
+     * @param format format
+     * @return formatter
+     */
+    public static String format(float value, String format) {
+        return new DecimalFormat(format).format(value);
+    }
+
+    /**
+     * 格式化
+     *
+     * @param value  value
+     * @param format format
+     * @return formatter
+     */
+    public static String format(double value, String format) {
+        return new DecimalFormat(format).format(value);
+    }
+
+    /**
      * 清空小数
      *
      * @param f float
@@ -1246,7 +1268,7 @@ public class Numbers {
      * @return string
      */
     public static String setScale(double d, int decimalLen) {
-        DecimalFormat format = new DecimalFormat("#." + Strings.repeat('#', decimalLen));
+        DecimalFormat format = new DecimalFormat("0." + Strings.repeat('0', decimalLen));
         return format.format(d);
     }
 
@@ -1258,7 +1280,7 @@ public class Numbers {
      * @return string
      */
     public static String setScale(float f, int decimalLen) {
-        DecimalFormat format = new DecimalFormat("#." + Strings.repeat('#', decimalLen));
+        DecimalFormat format = new DecimalFormat("0." + Strings.repeat('0', decimalLen));
         return format.format(f);
     }
 
