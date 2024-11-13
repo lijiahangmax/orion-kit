@@ -168,14 +168,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.0</version>
-                <!--                <version>3.10.1</version>-->
-                <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <encoding>${maven.compiler.charset}</encoding>
-                    <docencoding>${maven.compiler.charset}</docencoding>
-                    <charset>${maven.compiler.charset}</charset>
-                </configuration>
+                <version>3.10.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
