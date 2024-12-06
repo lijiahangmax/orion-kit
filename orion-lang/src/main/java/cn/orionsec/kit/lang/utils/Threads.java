@@ -45,8 +45,8 @@ public class Threads {
      */
     public static final ExecutorService GLOBAL_EXECUTOR = ExecutorBuilder.create()
             .namedThreadFactory("orion-global-thread-")
-            .corePoolSize(2)
-            .maxPoolSize(32)
+            .corePoolSize(Systems.PROCESS_NUM)
+            .maxPoolSize(Systems.PROCESS_NUM)
             .keepAliveTime(Const.MS_S_60)
             .workQueue(new LinkedBlockingQueue<>())
             .allowCoreThreadTimeout(true)
