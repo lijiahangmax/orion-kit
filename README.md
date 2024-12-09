@@ -39,8 +39,8 @@
 
 ------------------------------
 
-* [javaDoc](https://apidoc.gitee.com/lijiahangmax/orion-kit)
 * [项目文档](https://kit.orionsec.cn)
+* [javaDoc](https://kit-docs.orionsec.cn)
 
 ### 工程模块
 
