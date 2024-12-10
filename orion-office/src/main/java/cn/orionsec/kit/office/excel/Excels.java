@@ -162,6 +162,16 @@ public class Excels {
      * @return poi width
      */
     public static int getWidth(int width) {
+        return getWidth((double) width);
+    }
+
+    /**
+     * 获取 poi 的 width
+     *
+     * @param width width
+     * @return poi width
+     */
+    public static int getWidth(double width) {
         return (int) ((width + 0.72) * 256);
     }
 

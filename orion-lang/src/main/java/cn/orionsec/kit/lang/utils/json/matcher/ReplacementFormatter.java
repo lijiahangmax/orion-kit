@@ -202,4 +202,28 @@ public class ReplacementFormatter {
         return result;
     }
 
+    public Pattern getPattern() {
+        return pattern;
+    }
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public String getSuffix() {
+        return suffix;
+    }
+
+    public NoMatchStrategy getNoMatchStrategy() {
+        return noMatchStrategy;
+    }
+
+    public ErrorStrategy getErrorStrategy() {
+        return errorStrategy;
+    }
+
+    public Map<String, Object> getDefaults() {
+        return defaults;
+    }
+
 }

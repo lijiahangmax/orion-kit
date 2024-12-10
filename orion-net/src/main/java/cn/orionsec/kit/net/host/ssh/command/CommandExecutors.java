@@ -111,9 +111,25 @@ public class CommandExecutors {
      * 执行命令
      *
      * @param executor executor
+     * @param transfer transfer
      * @throws IOException IOException
      */
     public static void execCommand(ICommandExecutor executor, OutputStream transfer) throws IOException {
+        execCommand(executor, transfer, true);
+    }
+
+    /**
+     * 执行命令
+     *
+     * @param executor executor
+     * @param transfer transfer
+     * @param merge    merge
+     * @throws IOException IOException
+     */
+    public static void execCommand(ICommandExecutor executor, OutputStream transfer, boolean merge) throws IOException {
+        if (merge) {
+            executor.merge();
+        }
         executor.transfer(transfer);
         executor.connect();
         executor.exec();

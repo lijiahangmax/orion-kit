@@ -39,8 +39,8 @@
 
 ------------------------------
 
-* [javaDoc](https://apidoc.gitee.com/lijiahangmax/orion-kit)
 * [项目文档](https://kit.orionsec.cn)
+* [javaDoc](https://kit-docs.orionsec.cn)
 
 ### 工程模块
 
@@ -65,7 +65,7 @@
 <dependency>
     <groupId>cn.orionsec.kit</groupId>
     <artifactId>模块名称</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
 </dependency>
 ```
 
@@ -76,7 +76,7 @@
 <dependency>
     <groupId>cn.orionsec.kit</groupId>
     <artifactId>orion-all</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
 </dependency>
 ```
 
