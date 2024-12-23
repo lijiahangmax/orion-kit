@@ -1,5 +1,10 @@
 /*
- * Copyright (c) 2019 - present Jiahang Li (kit.orionsec.cn ljh1553488six@139.com).
+ * Copyright (c) 2019 - present Jiahang Li, All rights reserved.
+ *
+ *   https://kit.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * The MIT License (MIT)
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -33,6 +38,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
+ * 添加 license 头
+ *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2024/10/11 12:55
@@ -40,7 +47,12 @@ import java.util.List;
 public class AddLicenseHeader {
 
     private static final String LICENSE = "/*\n" +
-            " * Copyright (c) 2019 - present Jiahang Li (kit.orionsec.cn ljh1553488six@139.com).\n" +
+            " * Copyright (c) 2019 - present Jiahang Li, All rights reserved.\n" +
+            " *\n" +
+            " *   https://kit.orionsec.cn\n" +
+            " *\n" +
+            " * Members:\n" +
+            " *   Jiahang Li - ljh1553488six@139.com - author\n" +
             " *\n" +
             " * The MIT License (MIT)\n" +
             " * Permission is hereby granted, free of charge, to any person obtaining a copy of\n" +
@@ -67,12 +79,14 @@ public class AddLicenseHeader {
         StopWatch sw = StopWatch.begin();
         // 扫描文件
         List<File> files = Files1.listFilesFilter(PATH, file -> file.isFile()
-                && file.getName().endsWith(".java"), true, false);
+                && (file.getName().endsWith(".java") || file.getName().endsWith(".java.vm"))
+                && !file.getAbsolutePath().contains("generated-sources"), true, false);
         sw.tag("list");
         // 添加头
         files.forEach(AddLicenseHeader::addLicenseToFile);
         sw.tag(" add");
         sw.stop();
+        System.out.println();
         System.out.println(sw);
     }
 
@@ -82,10 +96,11 @@ public class AddLicenseHeader {
      * @param file file
      */
     private static void addLicenseToFile(File file) {
+        String path = file.getAbsolutePath().substring(PATH.length());
         try {
             String line = FileReaders.readLine(file);
             if (line != null && line.trim().equals("/*")) {
-                System.out.println("License already exists in " + file.getAbsolutePath());
+                System.out.println("Exists " + path);
                 return;
             }
             // 读取原始文件内容
@@ -97,9 +112,9 @@ public class AddLicenseHeader {
             out.write(new String(bytes).replaceAll("\r\n", "\n").getBytes(StandardCharsets.UTF_8));
             // 写入
             FileWriters.writeFast(file, out.toByteArray());
-            System.out.println("License added to " + file.getAbsolutePath());
+            System.out.println("Added  " + path);
         } catch (IOException e) {
-            System.err.println("Failed to add license to " + file.getAbsolutePath());
+            System.err.println("Failed " + path);
         }
     }
 
