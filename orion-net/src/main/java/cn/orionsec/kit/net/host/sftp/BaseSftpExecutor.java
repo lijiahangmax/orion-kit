@@ -1,5 +1,10 @@
 /*
- * Copyright (c) 2019 - present Jiahang Li (kit.orionsec.cn ljh1553488six@139.com).
+ * Copyright (c) 2019 - present Jiahang Li, All rights reserved.
+ *
+ *   https://kit.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
  *
  * The MIT License (MIT)
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
