@@ -62,6 +62,7 @@ class BaseDates {
     public static final String YMD_HM2 = "yyyyMMddHHmm";
     public static final String YMD_HMS2 = "yyyyMMddHHmmss";
     public static final String YMD_HMSS2 = "yyyyMMddHHmmssSSS";
+    public static final String YMD_T_HMS_Z = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     public static final String[] PARSE_PATTERN_GROUP1 = {YMD_HMS, YMD, YM, YMD_HM, YMD_HMSS};
     public static final String[] PARSE_PATTERN_GROUP2 = {YMD_HMS1, YMD1, YM1, YMD_HM1, YMD_HMSS1};
     public static final String[] PARSE_PATTERN_GROUP3 = {YMD_HMS2, YMD2, YM2, YMD_HM2, YMD_HMSS2};
