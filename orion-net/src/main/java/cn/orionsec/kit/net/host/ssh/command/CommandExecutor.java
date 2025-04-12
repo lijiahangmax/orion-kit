@@ -222,7 +222,7 @@ public class CommandExecutor extends BaseHostExecutor<ChannelExec> implements IC
             // 标准输入
             this.outputStream = channel.getOutputStream();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw Exceptions.runtime(e);
         }
         // 监听 标准输出 错误输出
         this.listenerOutput();

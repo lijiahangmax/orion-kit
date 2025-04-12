@@ -388,6 +388,8 @@ public interface Const extends OrionConst {
 
     String ROOT = "root";
 
+    String ADMINISTRATOR = "Administrator";
+
     String TOKEN = "token";
 
     String ADMIN = "admin";
