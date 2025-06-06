@@ -93,7 +93,7 @@ public class HttpUploadPart {
     public HttpUploadPart(String param, File file) {
         this.param = param;
         this.file = file;
-        this.suffix = Files1.getSuffix(file);
+        this.suffix = Files1.getFileNameSuffix(file);
     }
 
     public HttpUploadPart(String param, byte[] bytes) {

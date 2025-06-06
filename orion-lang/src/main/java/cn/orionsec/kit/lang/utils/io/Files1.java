@@ -1930,27 +1930,13 @@ public class Files1 {
     }
 
     /**
-     * 获取文件后缀名
+     * 获取文件名称
      *
      * @param file 文件
-     * @return 后缀
+     * @return 文件名称
      */
-    public static String getSuffix(File file) {
-        return getSuffix(file.getName());
-    }
-
-    /**
-     * 获取文件后缀名
-     *
-     * @param file 文件
-     * @return 后缀
-     */
-    public static String getSuffix(String file) {
-        int i = file.lastIndexOf(".");
-        if (i == -1) {
-            return Strings.EMPTY;
-        }
-        return file.substring(i + 1);
+    public static String getFileName(File file) {
+        return file.getName();
     }
 
     /**
@@ -1969,13 +1955,52 @@ public class Files1 {
     }
 
     /**
-     * 获取文件名称
+     * 获取文件后缀名
      *
      * @param file 文件
-     * @return 文件名称
+     * @return 后缀
      */
-    public static String getFileName(File file) {
-        return file.getName();
+    public static String getFileNameSuffix(File file) {
+        return getFileNameSuffix(file.getName());
+    }
+
+    /**
+     * 获取文件后缀名
+     *
+     * @param file 文件
+     * @return 后缀
+     */
+    public static String getFileNameSuffix(String file) {
+        int i = file.lastIndexOf(".");
+        if (i == -1) {
+            return Strings.EMPTY;
+        }
+        return file.substring(i + 1);
+    }
+
+    /**
+     * 获取文件前缀名
+     *
+     * @param file 文件
+     * @return 前缀
+     */
+    public static String getFileNamePrefix(File file) {
+        return getFileNamePrefix(file.getName());
+    }
+
+    /**
+     * 获取文件前缀名
+     *
+     * @param file 文件
+     * @return 前缀
+     */
+    public static String getFileNamePrefix(String file) {
+        file = getFileName(file);
+        int i = file.lastIndexOf(".");
+        if (i == -1) {
+            return file;
+        }
+        return file.substring(0, i);
     }
 
     /**
