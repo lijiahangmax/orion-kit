@@ -58,6 +58,11 @@ public class CacheKeyDefine implements Serializable {
     private final String key;
 
     /**
+     * 缓存前缀
+     */
+    private final String prefix;
+
+    /**
      * 缓存描述
      */
     private final String desc;
@@ -91,28 +96,13 @@ public class CacheKeyDefine implements Serializable {
     }
 
     public CacheKeyDefine(String key, String prefix, String desc, Class<?> type, CacheStruct struct, long timeout, TimeUnit unit) {
+        this.key = prefix + key;
+        this.prefix = prefix;
         this.desc = desc;
         this.type = type;
         this.struct = struct;
         this.timeout = timeout;
         this.unit = unit;
-        // 缓存前缀
-        if (prefix == null) {
-            prefix = globalPrefix;
-        }
-        if (prefix == null) {
-            prefix = Strings.EMPTY;
-        }
-        this.key = prefix + key;
-    }
-
-    /**
-     * 设置全局缓存前缀
-     *
-     * @param globalPrefix globalPrefix
-     */
-    public static void setGlobalPrefix(String globalPrefix) {
-        CacheKeyDefine.globalPrefix = globalPrefix;
     }
 
     /**
@@ -122,7 +112,7 @@ public class CacheKeyDefine implements Serializable {
      * @return key
      */
     public String format(Object... param) {
-        return Strings.format(key, param);
+        return Strings.format(this.getKey(), param);
     }
 
     /**
@@ -132,10 +122,20 @@ public class CacheKeyDefine implements Serializable {
      * @return key
      */
     public String format(Map<?, ?> map) {
-        return Strings.format(key, map);
+        return Strings.format(this.getKey(), map);
     }
 
+    /**
+     * 获取 key
+     *
+     * @return key
+     */
     public String getKey() {
+        if (prefix != null) {
+            return prefix + key;
+        } else if (globalPrefix != null) {
+            return globalPrefix + key;
+        }
         return key;
     }
 
@@ -167,8 +167,21 @@ public class CacheKeyDefine implements Serializable {
         this.unit = unit;
     }
 
+    /**
+     * 设置全局缓存前缀
+     *
+     * @param globalPrefix globalPrefix
+     */
+    public static void setGlobalPrefix(String globalPrefix) {
+        CacheKeyDefine.globalPrefix = globalPrefix;
+    }
+
+    public static String getGlobalPrefix() {
+        return globalPrefix;
+    }
+
     @Override
     public String toString() {
-        return struct + Const.SPACE + key + " (" + desc + ") [" + type.getSimpleName() + "] timeout: " + timeout + Const.SPACE + unit.name();
+        return struct + Const.SPACE + this.getKey() + " (" + desc + ") [" + type.getSimpleName() + "] timeout: " + timeout + Const.SPACE + unit.name();
     }
 }
