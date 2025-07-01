@@ -188,6 +188,7 @@
     </build>
 
     <profiles>
+        <!-- 发布 -->
         <profile>
             <id>release</id>
             <distributionManagement>
@@ -244,6 +245,16 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <!-- 跳过文档 -->
+        <profile>
+            <id>skip-docs</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <maven.javadoc.skip>true</maven.javadoc.skip>
+            </properties>
         </profile>
     </profiles>
 
