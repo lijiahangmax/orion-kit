@@ -47,27 +47,27 @@ import java.lang.annotation.*;
 public @interface Document {
 
     /**
-     * 文档
+     * @return 文档
      */
     String value();
 
     /**
-     * 描述
+     * @return 描述
      */
     String desc() default Const.EMPTY;
 
     /**
-     * 版本
+     * @return 版本
      */
     String version() default Const.EMPTY;
 
     /**
-     * 维护者
+     * @return 维护者
      */
     String support() default Const.EMPTY;
 
     /**
-     * review
+     * @return review
      */
     String review() default Const.EMPTY;
 

@@ -108,14 +108,21 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
     }
 
     /**
-     * 初始化
+     * 获取空 HttpWrapper
+     *
+     * @param <T> T
+     * @return HttpWrapper
      */
     public static <T> HttpWrapper<T> get() {
         return new HttpWrapper<>();
     }
 
     /**
-     * 定义
+     * 定义 HttpWrapper
+     *
+     * @param <T>  T
+     * @param info info
+     * @return HttpWrapper
      */
     public static <T> HttpWrapper<T> of(CodeInfo info) {
         return new HttpWrapper<>(info.code(), info.message());
@@ -135,6 +142,9 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
 
     /**
      * 成功
+     *
+     * @param <T> T
+     * @return HttpWrapper
      */
     public static <T> HttpWrapper<T> ok() {
         return new HttpWrapper<>(HTTP_OK_CODE, HTTP_OK_MESSAGE);
@@ -146,6 +156,9 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
 
     /**
      * 失败
+     *
+     * @param <T> T
+     * @return HttpWrapper
      */
     public static <T> HttpWrapper<T> error() {
         return new HttpWrapper<>(HTTP_ERROR_CODE, HTTP_ERROR_MESSAGE);

@@ -102,9 +102,6 @@ public class Builder<T> implements Buildable<T> {
     @FunctionalInterface
     public interface Consumer1<T, P1> {
 
-        /**
-         * accept
-         */
         void accept(T t, P1 p1);
 
     }
@@ -112,9 +109,6 @@ public class Builder<T> implements Buildable<T> {
     @FunctionalInterface
     public interface Consumer2<T, P1, P2> {
 
-        /**
-         * accept
-         */
         void accept(T t, P1 p1, P2 p2);
 
     }
@@ -122,9 +116,6 @@ public class Builder<T> implements Buildable<T> {
     @FunctionalInterface
     public interface Consumer3<T, P1, P2, P3> {
 
-        /**
-         * accept
-         */
         void accept(T t, P1 p1, P2 p2, P3 p3);
 
     }
@@ -132,9 +123,6 @@ public class Builder<T> implements Buildable<T> {
     @FunctionalInterface
     public interface Consumer4<T, P1, P2, P3, P4> {
 
-        /**
-         * accept
-         */
         void accept(T t, P1 p1, P2 p2, P3 p3, P4 p4);
 
     }
@@ -142,9 +130,6 @@ public class Builder<T> implements Buildable<T> {
     @FunctionalInterface
     public interface Consumer5<T, P1, P2, P3, P4, P5> {
 
-        /**
-         * accept
-         */
         void accept(T t, P1 p1, P2 p2, P3 p3, P4 p4, P5 p5);
 
     }

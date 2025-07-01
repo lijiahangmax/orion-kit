@@ -124,14 +124,21 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
     }
 
     /**
-     * 初始化
+     * 获取空 RpcWrapper
+     *
+     * @param <T> T
+     * @return RpcWrapper
      */
     public static <T> RpcWrapper<T> get() {
         return new RpcWrapper<>();
     }
 
     /**
-     * 定义
+     * 定义 RpcWrapper
+     *
+     * @param <T>  T
+     * @param info info
+     * @return RpcWrapper
      */
     public static <T> RpcWrapper<T> of(CodeInfo info) {
         return new RpcWrapper<>(info.code(), info.message());
@@ -189,6 +196,8 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
 
     /**
      * 检查是否成功
+     *
+     * @return success
      */
     @JSONField(serialize = false)
     @JsonIgnore

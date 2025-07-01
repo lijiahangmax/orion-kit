@@ -48,6 +48,8 @@ public abstract class AnsiBitColor implements AnsiColor {
     /**
      * 生成颜色码
      *
+     * @param type type
+     * @param bit  bit
      * @param elem elem
      * @return color
      */

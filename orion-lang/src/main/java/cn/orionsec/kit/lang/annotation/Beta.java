@@ -47,7 +47,7 @@ import java.lang.annotation.*;
 public @interface Beta {
 
     /**
-     * 测试版本
+     * @return 测试版本
      */
     @Alias("version")
     String value() default Const.EMPTY;

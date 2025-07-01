@@ -193,6 +193,7 @@ public class Compares {
      *                       [1, 1], [1, 1] true
      *                       [1, 2], [1, 1] true
      *                       [1, 2], [1, 2] true
+     * @param <T>            T
      * @return true 在区间内
      */
     public static <T extends Comparable<T>> boolean rangeInRange(T rangeStart, T rangeEnd, T testRangeStart, T testRangeEnd) {
@@ -211,6 +212,7 @@ public class Compares {
      * @param rangeEnd       区间结束
      * @param testRangeStart 测试的区间开始
      * @param testRangeEnd   测试的区间结束
+     * @param <T>            T
      * @return true 不在区间内
      */
     public static <T extends Comparable<T>> boolean rangeNotInRange(T rangeStart, T rangeEnd, T testRangeStart, T testRangeEnd) {
@@ -229,6 +231,7 @@ public class Compares {
      *               [1, 2] [1, 1] false
      *               [1, 2] [2, 3] false
      *               [1, 2] [1, 2] true
+     * @param <T>    T
      * @return 是否有交差
      */
     public static <T extends Comparable<T>> boolean cross(T start1, T end1, T start2, T end2) {
@@ -253,6 +256,7 @@ public class Compares {
      * @param end1   结束区间1
      * @param start2 开始区间2
      * @param end2   结束区间2
+     * @param <T>    T
      * @return 是否不交叉
      */
     public static <T extends Comparable<T>> boolean uncross(T start1, T end1, T start2, T end2) {

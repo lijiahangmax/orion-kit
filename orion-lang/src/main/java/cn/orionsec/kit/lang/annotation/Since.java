@@ -47,7 +47,7 @@ import java.lang.annotation.*;
 public @interface Since {
 
     /**
-     * 发行版本
+     * @return 发行版本
      */
     @Alias("version")
     String value();

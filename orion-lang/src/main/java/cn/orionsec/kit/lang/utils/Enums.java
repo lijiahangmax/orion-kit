@@ -85,6 +85,7 @@ public class Enums {
      *
      * @param enumClass 枚举类
      * @param index     枚举索引
+     * @param <E>       E
      * @return 枚举值 null表示无此对应枚举
      */
     public static <E extends Enum<E>> E getEnum(Class<E> enumClass, int index) {
@@ -98,6 +99,7 @@ public class Enums {
      * @param enumClass 枚举类
      * @param index     枚举索引
      * @param def       默认值
+     * @param <E>       E
      * @return 枚举值 null表示无此对应枚举
      */
     public static <E extends Enum<E>> E getEnum(Class<E> enumClass, int index, E def) {
@@ -110,6 +112,7 @@ public class Enums {
      *
      * @param enumClass 枚举类
      * @param value     值
+     * @param <E>       E
      * @return 枚举值
      */
     public static <E extends Enum<E>> E getEnum(Class<E> enumClass, String value) {
@@ -122,6 +125,7 @@ public class Enums {
      * @param enumClass 枚举类
      * @param value     值
      * @param def       默认值
+     * @param <E>       E
      * @return 枚举值
      */
     public static <E extends Enum<E>> E getEnum(Class<E> enumClass, String value, E def) {

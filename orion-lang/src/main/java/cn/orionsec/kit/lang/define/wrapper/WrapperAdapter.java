@@ -62,7 +62,10 @@ public class WrapperAdapter {
     }
 
     /**
-     * 转Wrapper
+     * 转 HttpWrapper
+     *
+     * @param json json
+     * @return HttpWrapper
      */
     public static HttpWrapper<Object> toHttp(String json) {
         return (HttpWrapper<Object>) toWrapper(json, Object.class, true);

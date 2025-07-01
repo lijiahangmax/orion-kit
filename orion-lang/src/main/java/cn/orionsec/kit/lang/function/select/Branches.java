@@ -53,6 +53,7 @@ public class Branches<P> {
      * 构建分支
      *
      * @param factory factory
+     * @param <R>     R
      * @return {@link Branch}
      */
     public <R> Branch<P, R> then(Function<P, R> factory) {
@@ -63,6 +64,7 @@ public class Branches<P> {
      * 构建分支
      *
      * @param supplier supplier
+     * @param <R>      R
      * @return {@link Branch}
      */
     public <R> Branch<P, R> then(Supplier<R> supplier) {
@@ -72,7 +74,8 @@ public class Branches<P> {
     /**
      * 构建分支
      *
-     * @param r result
+     * @param r   result
+     * @param <R> R
      * @return {@link Branch}
      */
     public <R> Branch<P, R> then(R r) {

@@ -47,7 +47,7 @@ import java.lang.annotation.*;
 public @interface Removed {
 
     /**
-     * 预计移除删除版本
+     * @return 预计移除删除版本
      */
     @Alias("version")
     String value();

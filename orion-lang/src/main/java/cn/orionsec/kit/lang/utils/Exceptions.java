@@ -92,7 +92,7 @@ public class Exceptions {
     }
 
     /**
-     * Throwable ->  RuntimeException
+     * Throwable -> RuntimeException
      *
      * @param e Throwable
      * @return RuntimeException
