@@ -96,7 +96,7 @@ public class CacheKeyDefine implements Serializable {
     }
 
     public CacheKeyDefine(String key, String prefix, String desc, Class<?> type, CacheStruct struct, long timeout, TimeUnit unit) {
-        this.key = prefix + key;
+        this.key = key;
         this.prefix = prefix;
         this.desc = desc;
         this.type = type;
