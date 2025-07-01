@@ -44,6 +44,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class CacheKeyDefine implements Serializable {
 
+    protected static String globalPrefix = null;
+
     protected static final CacheStruct DEFAULT_STRUCT = RedisCacheStruct.STRING;
 
     protected static final long DEFAULT_TIMEOUT = 0L;
@@ -81,16 +83,36 @@ public class CacheKeyDefine implements Serializable {
     private TimeUnit unit;
 
     public CacheKeyDefine(String key) {
-        this(key, Strings.EMPTY, null, DEFAULT_STRUCT, DEFAULT_TIMEOUT, DEFAULT_UNIT);
+        this(key, null, Strings.EMPTY, null, DEFAULT_STRUCT, DEFAULT_TIMEOUT, DEFAULT_UNIT);
     }
 
-    public CacheKeyDefine(String key, String desc, Class<?> type, CacheStruct struct, long timeout, TimeUnit unit) {
-        this.key = key;
+    public CacheKeyDefine(String key, String prefix) {
+        this(key, prefix, Strings.EMPTY, null, DEFAULT_STRUCT, DEFAULT_TIMEOUT, DEFAULT_UNIT);
+    }
+
+    public CacheKeyDefine(String key, String prefix, String desc, Class<?> type, CacheStruct struct, long timeout, TimeUnit unit) {
         this.desc = desc;
         this.type = type;
         this.struct = struct;
         this.timeout = timeout;
         this.unit = unit;
+        // 缓存前缀
+        if (prefix == null) {
+            prefix = globalPrefix;
+        }
+        if (prefix == null) {
+            prefix = Strings.EMPTY;
+        }
+        this.key = prefix + key;
+    }
+
+    /**
+     * 设置全局缓存前缀
+     *
+     * @param globalPrefix globalPrefix
+     */
+    public static void setGlobalPrefix(String globalPrefix) {
+        CacheKeyDefine.globalPrefix = globalPrefix;
     }
 
     /**

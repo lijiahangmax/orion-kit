@@ -27,6 +27,7 @@
 package cn.orionsec.kit.lang.define.cache.key;
 
 import cn.orionsec.kit.lang.able.Buildable;
+import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.define.cache.key.struct.CacheStruct;
 
 import java.util.concurrent.TimeUnit;
@@ -41,9 +42,14 @@ import java.util.concurrent.TimeUnit;
 public class CacheKeyBuilder implements Buildable<CacheKeyDefine> {
 
     /**
-     * 缓存key
+     * 缓存 key
      */
     private String key;
+
+    /**
+     * 缓存前缀
+     */
+    private String prefix;
 
     /**
      * 缓存描述
@@ -88,6 +94,27 @@ public class CacheKeyBuilder implements Buildable<CacheKeyDefine> {
      */
     public CacheKeyBuilder key(String key) {
         this.key = key;
+        return this;
+    }
+
+    /**
+     * 设置前缀
+     *
+     * @param prefix prefix
+     * @return this
+     */
+    public CacheKeyBuilder prefix(String prefix) {
+        this.prefix = prefix;
+        return this;
+    }
+
+    /**
+     * 设置无前缀
+     *
+     * @return this
+     */
+    public CacheKeyBuilder noPrefix() {
+        this.prefix = Const.EMPTY;
         return this;
     }
 
@@ -161,7 +188,7 @@ public class CacheKeyBuilder implements Buildable<CacheKeyDefine> {
 
     @Override
     public CacheKeyDefine build() {
-        return new CacheKeyDefine(key, desc, type, struct, timeout, unit);
+        return new CacheKeyDefine(key, prefix, desc, type, struct, timeout, unit);
     }
 
 }
