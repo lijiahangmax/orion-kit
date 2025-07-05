@@ -50,7 +50,7 @@ public class DateRanges {
      * @param rangeEnd1   时间1结束
      * @param rangeStart2 时间2开始
      * @param rangeEnd2   时间2结束
-     * @return true有交差
+     * @return true 有交差
      */
     public static boolean cross(Date rangeStart1, Date rangeEnd1, Date rangeStart2, Date rangeEnd2) {
         return Compares.cross(rangeStart1, rangeEnd1, rangeStart2, rangeEnd2);
@@ -63,7 +63,7 @@ public class DateRanges {
      * @param rangeEnd1   时间1结束
      * @param rangeStart2 时间2开始
      * @param rangeEnd2   时间2结束
-     * @return true没有交差
+     * @return true 没有交差
      */
     public static boolean uncross(Date rangeStart1, Date rangeEnd1, Date rangeStart2, Date rangeEnd2) {
         return !cross(rangeStart1, rangeEnd1, rangeStart2, rangeEnd2);

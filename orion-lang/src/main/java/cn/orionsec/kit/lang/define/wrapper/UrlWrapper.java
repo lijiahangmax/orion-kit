@@ -97,7 +97,10 @@ public class UrlWrapper<T> extends CloneSupport<UrlWrapper<T>> implements Wrappe
     }
 
     /**
-     * 初始化
+     * 获取空 UrlWrapper
+     *
+     * @param <T> T
+     * @return UrlWrapper
      */
     public static <T> UrlWrapper<T> get() {
         return new UrlWrapper<>(Strings.EMPTY, URL_NO_OPERATION, null);
@@ -109,6 +112,9 @@ public class UrlWrapper<T> extends CloneSupport<UrlWrapper<T>> implements Wrappe
 
     /**
      * 刷新页面
+     *
+     * @param <T> T
+     * @return UrlWrapper
      */
     public static <T> UrlWrapper<T> refresh() {
         return new UrlWrapper<>(Strings.EMPTY, URL_REFRESH, null);
@@ -120,6 +126,9 @@ public class UrlWrapper<T> extends CloneSupport<UrlWrapper<T>> implements Wrappe
 
     /**
      * 重定向页面
+     *
+     * @param <T> T
+     * @return UrlWrapper
      */
     public static <T> UrlWrapper<T> redirect() {
         return new UrlWrapper<>(Strings.EMPTY, URL_REDIRECT, null);

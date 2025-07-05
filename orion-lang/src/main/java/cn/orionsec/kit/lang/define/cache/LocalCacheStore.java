@@ -60,7 +60,7 @@ public class LocalCacheStore {
     private Map<Object, Object> localStore;
 
     /**
-     * 默认store
+     * 默认 store
      */
     public static final LocalCacheStore STORE = new LocalCacheStore();
 
@@ -92,6 +92,8 @@ public class LocalCacheStore {
 
     /**
      * 删除文件
+     *
+     * @return deleted
      */
     public boolean deleteFile() {
         return localDataStoreFile.delete();
@@ -99,6 +101,9 @@ public class LocalCacheStore {
 
     /**
      * 插入元素
+     *
+     * @param key   key
+     * @param value value
      */
     public void put(Serializable key, Serializable value) {
         localStore.put(key, value);
@@ -147,6 +152,8 @@ public class LocalCacheStore {
 
     /**
      * 大小
+     *
+     * @return size
      */
     public int size() {
         return localStore.size();

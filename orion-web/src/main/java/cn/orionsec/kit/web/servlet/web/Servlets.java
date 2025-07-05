@@ -34,6 +34,7 @@ import cn.orionsec.kit.lang.define.mutable.MutableString;
 import cn.orionsec.kit.lang.define.wrapper.HttpWrapper;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Urls;
+import cn.orionsec.kit.lang.utils.collect.Maps;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.lang.utils.net.IPs;
 import com.alibaba.fastjson.JSON;
@@ -512,16 +513,65 @@ public class Servlets {
      * 设置响应头
      *
      * @param response response
-     * @param handler  key,value
+     * @param header   key,value
      */
-    public static void setHeaders(HttpServletResponse response, Map<String, String> handler) {
-        for (Map.Entry<String, String> entry : handler.entrySet()) {
+    public static void setHeaders(HttpServletResponse response, Map<String, String> header) {
+        for (Map.Entry<String, String> entry : header.entrySet()) {
             response.setHeader(entry.getKey(), entry.getValue());
         }
     }
 
     /**
-     * 获取HTTP状态码
+     * 添加响应头
+     *
+     * @param response response
+     * @param key      key
+     * @param value    value
+     */
+    public static void addHeader(HttpServletResponse response, String key, String value) {
+        response.addHeader(key, value);
+    }
+
+    /**
+     * 添加响应头
+     *
+     * @param response response
+     * @param header   key,value
+     */
+    public static void addHeaders(HttpServletResponse response, Map<String, String> header) {
+        for (Map.Entry<String, String> entry : header.entrySet()) {
+            response.addHeader(entry.getKey(), entry.getValue());
+        }
+    }
+
+    /**
+     * 添加自定义响应头
+     *
+     * @param response response
+     * @param key      key
+     * @param value    value
+     */
+    public static void addCustomHeader(HttpServletResponse response, String key, String value) {
+        response.addHeader(StandardHttpHeader.ACCESS_CONTROL_EXPOSE_HEADERS, key);
+        response.addHeader(key, value);
+    }
+
+    /**
+     * 添加自定义响应头
+     *
+     * @param response response
+     * @param headers  headers
+     */
+    public static void addCustomHeaders(HttpServletResponse response, Map<String, String> headers) {
+        if (Maps.isEmpty(headers)) {
+            return;
+        }
+        response.addHeader(StandardHttpHeader.ACCESS_CONTROL_EXPOSE_HEADERS, String.join(Const.COMMA, headers.keySet()));
+        headers.forEach(response::addHeader);
+    }
+
+    /**
+     * 获取 HTTP 状态码
      *
      * @param response response
      * @return HTTP状态码
@@ -531,7 +581,7 @@ public class Servlets {
     }
 
     /**
-     * 设置HTTP状态码
+     * 设置 HTTP 状态码
      *
      * @param response response
      * @param status   status
@@ -682,9 +732,9 @@ public class Servlets {
      */
     public static void setAttachmentHeader(HttpServletResponse response, String fileName) {
         response.setContentType(StandardContentType.APPLICATION_STREAM);
-        response.setHeader(StandardHttpHeader.ACCESS_CONTROL_EXPOSE_HEADERS, StandardHttpHeader.CONTENT_DISPOSITION);
+        response.addHeader(StandardHttpHeader.ACCESS_CONTROL_EXPOSE_HEADERS, StandardHttpHeader.CONTENT_DISPOSITION);
         try {
-            response.setHeader(StandardHttpHeader.CONTENT_DISPOSITION, "attachment; filename=" + URLEncoder.encode(fileName, Const.UTF_8));
+            response.addHeader(StandardHttpHeader.CONTENT_DISPOSITION, "attachment; filename=" + URLEncoder.encode(fileName, Const.UTF_8));
         } catch (UnsupportedEncodingException e) {
             throw Exceptions.unsupportedEncoding(e);
         }

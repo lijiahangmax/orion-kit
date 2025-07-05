@@ -90,6 +90,32 @@ public class Streams {
         }
     }
 
+    // -------------------- skip --------------------
+
+    /**
+     * 循环跳过
+     *
+     * @param in   in
+     * @param skip skip
+     * @return skipped
+     * @throws IOException IOException
+     */
+    public static long skip(InputStream in, long skip) throws IOException {
+        if (skip <= 0) {
+            return 0;
+        }
+        long remaining = skip;
+        while (remaining > 0) {
+            long skipped = in.skip(remaining);
+            if (skipped <= 0) {
+                // 已经到达文件末尾或不支持 skip 操作
+                break;
+            }
+            remaining -= skipped;
+        }
+        return skip - remaining;
+    }
+
     // -------------------- buffer --------------------
 
     public static BufferedReader toBufferedReader(Reader reader) {

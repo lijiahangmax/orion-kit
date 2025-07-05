@@ -139,6 +139,7 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
      * 添加结果
      *
      * @param row 结果列
+     * @return this
      */
     public DataGrid<T> addRow(T row) {
         if (row == null) {
@@ -157,6 +158,7 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
      * 添加结果
      *
      * @param rows 结果列表
+     * @return this
      */
     public DataGrid<T> addRows(List<T> rows) {
         if (this.rows == null) {

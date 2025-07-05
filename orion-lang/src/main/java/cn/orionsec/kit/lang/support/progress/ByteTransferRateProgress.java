@@ -83,6 +83,7 @@ public class ByteTransferRateProgress extends ByteTransferProgress {
      * 开启计算实时速率
      *
      * @param interval 间隔
+     * @return this
      */
     public ByteTransferRateProgress computeRate(int interval) {
         this.computeRate = true;

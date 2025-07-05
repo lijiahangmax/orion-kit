@@ -69,6 +69,8 @@ public class UUIds {
 
     /**
      * 获取 15位 uuid (精度有所损失)
+     *
+     * @return uuid
      */
     public static String random15() {
         return UUIDMaker.generate();
@@ -76,6 +78,8 @@ public class UUIds {
 
     /**
      * 获取 15位 uuid long (精度有所损失)
+     *
+     * @return uuid
      */
     public static long random15Long() {
         return toNumber(random15(), 10);
@@ -83,6 +87,8 @@ public class UUIds {
 
     /**
      * 获取 19位 uuid
+     *
+     * @return uuid
      */
     public static String random19() {
         // 产生UUID
@@ -97,6 +103,8 @@ public class UUIds {
 
     /**
      * 获取 32位 uuid
+     *
+     * @return uuid
      */
     public static String random32() {
         return UUID.randomUUID().toString().replace(Const.DASHED, Const.EMPTY);
@@ -104,6 +112,8 @@ public class UUIds {
 
     /**
      * 获取 36位 uuid
+     *
+     * @return uuid
      */
     public static String random() {
         return UUID.randomUUID().toString();
@@ -111,6 +121,8 @@ public class UUIds {
 
     /**
      * 获取 36位 uuid base64
+     *
+     * @return base64
      */
     public static String randomBase64() {
         UUID uuid = UUID.randomUUID();
@@ -133,6 +145,7 @@ public class UUIds {
      *
      * @param s     数字字符串
      * @param radix 进制数
+     * @return long
      */
     private static long toNumber(String s, int radix) {
         Valid.notNull(s, "number is null");

@@ -52,8 +52,13 @@ public class Exceptions {
     private Exceptions() {
     }
 
-    public static void impossible() {
-        throw runtime("impossible exceptions...");
+    /**
+     * 不会发生的异常
+     *
+     * @return exception
+     */
+    public static RuntimeException impossible() {
+        return runtime("impossible exception...");
     }
 
     /**
@@ -87,7 +92,7 @@ public class Exceptions {
     }
 
     /**
-     * Throwable ->  RuntimeException
+     * Throwable -> RuntimeException
      *
      * @param e Throwable
      * @return RuntimeException

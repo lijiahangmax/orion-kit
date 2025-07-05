@@ -46,10 +46,7 @@ import java.util.List;
  */
 public class Ports {
 
-    /**
-     * 默认建立连接超时时间
-     */
-    private static int timeout = Const.MS_S_3;
+    private static final int TIMEOUT = Const.MS_S_3;
 
     private Ports() {
     }
@@ -225,107 +222,25 @@ public class Ports {
     }
 
     /**
-     * 获取已开启的端口
+     * 判断端口是否开启
      *
-     * @param host  主机
-     * @param ports 端口
-     * @return 已开启的端口
+     * @param host host
+     * @param port port
+     * @return opened
      */
-    public static List<Integer> getOpenPorts(String host, int[] ports) {
-        List<Integer> openPorts = new ArrayList<>();
-        for (int port : ports) {
-            try {
-                Socket socket = new Socket();
-                socket.connect(new InetSocketAddress(host, port), timeout);
-                Streams.close(socket);
-                openPorts.add(port);
-            } catch (Exception e) {
-                // try next port
-            }
-        }
-        return openPorts;
-    }
-
-    /**
-     * 获取已开启的端口
-     *
-     * @param host  主机
-     * @param start 端口开始
-     * @param end   端口结束
-     * @return 已开启的端口
-     */
-    public static List<Integer> getOpenPorts(String host, int start, int end) {
-        Valid.gt(start, 0, "start port must greater than 0");
-        Valid.lte(end, 65535, "end port must less than 65536");
-        Valid.gt(end, start, "end port must greater than start");
-        List<Integer> openPorts = new ArrayList<>();
-        for (int i = start; i <= end; i++) {
-            try {
-                Socket socket = new Socket();
-                socket.connect(new InetSocketAddress(host, i), timeout);
-                Streams.close(socket);
-                openPorts.add(i);
-            } catch (IOException ex) {
-                // try next port
-            }
-        }
-        return openPorts;
-    }
-
-    /**
-     * 获取未开启的端口
-     *
-     * @param host  主机
-     * @param ports 端口
-     * @return 已开启的端口
-     */
-    public static List<Integer> getClosePorts(String host, int[] ports) {
-        List<Integer> closePorts = new ArrayList<>();
-        for (int port : ports) {
-            try {
-                Socket socket = new Socket();
-                socket.connect(new InetSocketAddress(host, port), timeout);
-                Streams.close(socket);
-            } catch (Exception e) {
-                closePorts.add(port);
-            }
-        }
-        return closePorts;
-    }
-
-    /**
-     * 获取未开启的端口
-     *
-     * @param host  主机
-     * @param start 端口开始
-     * @param end   端口结束
-     * @return 已开启的端口
-     */
-    public static List<Integer> getClosePorts(String host, int start, int end) {
-        Valid.gt(start, 0, "start port must greater than 0");
-        Valid.lte(end, 65535, "end port must less than 65536");
-        Valid.gt(end, start, "end port must greater than start");
-        List<Integer> closePorts = new ArrayList<>();
-        for (int i = start; i <= end; i++) {
-            try {
-                Socket socket = new Socket();
-                socket.connect(new InetSocketAddress(host, i), timeout);
-                Streams.close(socket);
-            } catch (IOException ex) {
-                closePorts.add(i);
-            }
-        }
-        return closePorts;
+    public static boolean isOpen(String host, int port) {
+        return isOpen(host, port, TIMEOUT);
     }
 
     /**
      * 判断端口是否开启
      *
-     * @param host 主机
-     * @param port 端口
-     * @return true开启
+     * @param host    host
+     * @param port    port
+     * @param timeout timeout
+     * @return opened
      */
-    public static boolean isOpen(String host, int port) {
+    public static boolean isOpen(String host, int port, int timeout) {
         try {
             Socket socket = new Socket();
             socket.connect(new InetSocketAddress(host, port), timeout);
@@ -348,21 +263,159 @@ public class Ports {
     }
 
     /**
-     * 获取当前建立连接超时时间
+     * 判断端口是否关闭
      *
-     * @return 超时时间ms
+     * @param host    host
+     * @param port    port
+     * @param timeout timeout
+     * @return true关闭
      */
-    public static int getTimeout() {
-        return timeout;
+    public static boolean isClose(String host, int port, int timeout) {
+        return !isOpen(host, port, timeout);
     }
 
     /**
-     * 设置建立连接超时时间
+     * 获取已开启的端口
      *
-     * @param timeout 超时时间ms
+     * @param host  host
+     * @param ports ports
+     * @return openedPorts
      */
-    public static void setTimeout(int timeout) {
-        Ports.timeout = timeout;
+    public static List<Integer> getOpenPorts(String host, int[] ports) {
+        return getOpenPorts(host, ports, TIMEOUT);
+    }
+
+    /**
+     * 获取已开启的端口
+     *
+     * @param host    host
+     * @param ports   ports
+     * @param timeout timeout
+     * @return openedPorts
+     */
+    public static List<Integer> getOpenPorts(String host, int[] ports, int timeout) {
+        List<Integer> openedPorts = new ArrayList<>();
+        for (int port : ports) {
+            try {
+                Socket socket = new Socket();
+                socket.connect(new InetSocketAddress(host, port), timeout);
+                Streams.close(socket);
+                openedPorts.add(port);
+            } catch (Exception e) {
+                // try next port
+            }
+        }
+        return openedPorts;
+    }
+
+    /**
+     * 获取已开启的端口
+     *
+     * @param host  host
+     * @param start start
+     * @param end   end
+     * @return openedPorts
+     */
+    public static List<Integer> getOpenPorts(String host, int start, int end) {
+        return getOpenPorts(host, start, end, TIMEOUT);
+    }
+
+    /**
+     * 获取已开启的端口
+     *
+     * @param host    host
+     * @param start   start
+     * @param end     end
+     * @param timeout timeout
+     * @return openedPorts
+     */
+    public static List<Integer> getOpenPorts(String host, int start, int end, int timeout) {
+        Valid.gt(start, 0, "start port must greater than 0");
+        Valid.lte(end, 65535, "end port must less than 65536");
+        Valid.gt(end, start, "end port must greater than start");
+        List<Integer> openedPorts = new ArrayList<>();
+        for (int i = start; i <= end; i++) {
+            try {
+                Socket socket = new Socket();
+                socket.connect(new InetSocketAddress(host, i), timeout);
+                Streams.close(socket);
+                openedPorts.add(i);
+            } catch (IOException ex) {
+                // try next port
+            }
+        }
+        return openedPorts;
+    }
+
+    /**
+     * 获取未开启的端口
+     *
+     * @param host  host
+     * @param ports ports
+     * @return closedPorts
+     */
+    public static List<Integer> getClosePorts(String host, int[] ports) {
+        return getClosePorts(host, ports, TIMEOUT);
+    }
+
+    /**
+     * 获取未开启的端口
+     *
+     * @param host    host
+     * @param ports   ports
+     * @param timeout timeout
+     * @return closedPorts
+     */
+    public static List<Integer> getClosePorts(String host, int[] ports, int timeout) {
+        List<Integer> closedPorts = new ArrayList<>();
+        for (int port : ports) {
+            try {
+                Socket socket = new Socket();
+                socket.connect(new InetSocketAddress(host, port), timeout);
+                Streams.close(socket);
+            } catch (Exception e) {
+                closedPorts.add(port);
+            }
+        }
+        return closedPorts;
+    }
+
+    /**
+     * 获取未开启的端口
+     *
+     * @param host  host
+     * @param start start
+     * @param end   end
+     * @return closedPorts
+     */
+    public static List<Integer> getClosePorts(String host, int start, int end) {
+        return getClosePorts(host, start, end, TIMEOUT);
+    }
+
+    /**
+     * 获取未开启的端口
+     *
+     * @param host    host
+     * @param start   start
+     * @param end     end
+     * @param timeout timeout
+     * @return closedPorts
+     */
+    public static List<Integer> getClosePorts(String host, int start, int end, int timeout) {
+        Valid.gt(start, 0, "start port must greater than 0");
+        Valid.lte(end, 65535, "end port must less than 65536");
+        Valid.gt(end, start, "end port must greater than start");
+        List<Integer> closedPorts = new ArrayList<>();
+        for (int i = start; i <= end; i++) {
+            try {
+                Socket socket = new Socket();
+                socket.connect(new InetSocketAddress(host, i), timeout);
+                Streams.close(socket);
+            } catch (IOException ex) {
+                closedPorts.add(i);
+            }
+        }
+        return closedPorts;
     }
 
 }

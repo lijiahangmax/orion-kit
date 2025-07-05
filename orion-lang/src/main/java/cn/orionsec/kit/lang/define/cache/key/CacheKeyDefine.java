@@ -44,6 +44,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class CacheKeyDefine implements Serializable {
 
+    protected static String globalPrefix = null;
+
     protected static final CacheStruct DEFAULT_STRUCT = RedisCacheStruct.STRING;
 
     protected static final long DEFAULT_TIMEOUT = 0L;
@@ -54,6 +56,11 @@ public class CacheKeyDefine implements Serializable {
      * 缓存 key
      */
     private final String key;
+
+    /**
+     * 缓存前缀
+     */
+    private final String prefix;
 
     /**
      * 缓存描述
@@ -81,11 +88,16 @@ public class CacheKeyDefine implements Serializable {
     private TimeUnit unit;
 
     public CacheKeyDefine(String key) {
-        this(key, Strings.EMPTY, null, DEFAULT_STRUCT, DEFAULT_TIMEOUT, DEFAULT_UNIT);
+        this(key, null, Strings.EMPTY, null, DEFAULT_STRUCT, DEFAULT_TIMEOUT, DEFAULT_UNIT);
     }
 
-    public CacheKeyDefine(String key, String desc, Class<?> type, CacheStruct struct, long timeout, TimeUnit unit) {
+    public CacheKeyDefine(String key, String prefix) {
+        this(key, prefix, Strings.EMPTY, null, DEFAULT_STRUCT, DEFAULT_TIMEOUT, DEFAULT_UNIT);
+    }
+
+    public CacheKeyDefine(String key, String prefix, String desc, Class<?> type, CacheStruct struct, long timeout, TimeUnit unit) {
         this.key = key;
+        this.prefix = prefix;
         this.desc = desc;
         this.type = type;
         this.struct = struct;
@@ -100,7 +112,7 @@ public class CacheKeyDefine implements Serializable {
      * @return key
      */
     public String format(Object... param) {
-        return Strings.format(key, param);
+        return Strings.format(this.getKey(), param);
     }
 
     /**
@@ -110,10 +122,20 @@ public class CacheKeyDefine implements Serializable {
      * @return key
      */
     public String format(Map<?, ?> map) {
-        return Strings.format(key, map);
+        return Strings.format(this.getKey(), map);
     }
 
+    /**
+     * 获取 key
+     *
+     * @return key
+     */
     public String getKey() {
+        if (prefix != null) {
+            return prefix + key;
+        } else if (globalPrefix != null) {
+            return globalPrefix + key;
+        }
         return key;
     }
 
@@ -145,8 +167,21 @@ public class CacheKeyDefine implements Serializable {
         this.unit = unit;
     }
 
+    /**
+     * 设置全局缓存前缀
+     *
+     * @param globalPrefix globalPrefix
+     */
+    public static void setGlobalPrefix(String globalPrefix) {
+        CacheKeyDefine.globalPrefix = globalPrefix;
+    }
+
+    public static String getGlobalPrefix() {
+        return globalPrefix;
+    }
+
     @Override
     public String toString() {
-        return struct + Const.SPACE + key + " (" + desc + ") [" + type.getSimpleName() + "] timeout: " + timeout + Const.SPACE + unit.name();
+        return struct + Const.SPACE + this.getKey() + " (" + desc + ") [" + type.getSimpleName() + "] timeout: " + timeout + Const.SPACE + unit.name();
     }
 }

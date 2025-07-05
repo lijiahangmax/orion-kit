@@ -1298,6 +1298,8 @@ public class Arrays1 {
      * 如果数组为空返回默认数组
      *
      * @param arr arr
+     * @param def def
+     * @param <T> T
      * @return array
      */
     public static <T> T[] def(T[] arr, T[] def) {
@@ -2533,6 +2535,7 @@ public class Arrays1 {
      *
      * @param target 目标元素
      * @param arr    数组 可以传基本类型的元素 但是不可以传基本类型的数组
+     * @param <T>    T
      * @return 次数
      */
     @SafeVarargs
@@ -2660,6 +2663,7 @@ public class Arrays1 {
      *
      * @param target 目标元素
      * @param arr    数组, 可以传基本类型的元素, 但是不可以传基本类型的数组
+     * @param <T>    T
      * @return true 出现
      */
     @SafeVarargs
@@ -2901,6 +2905,7 @@ public class Arrays1 {
      * 获取数组第一个元素
      *
      * @param arr array
+     * @param <T> T
      * @return 第一个元素 长度为0则抛出异常
      */
     public static <T> T first(T[] arr) {
@@ -2980,6 +2985,7 @@ public class Arrays1 {
      *
      * @param arr array
      * @param def 默认值
+     * @param <T> T
      * @return 第一个元素
      */
     public static <T> T first(T[] arr, T def) {
@@ -3060,7 +3066,8 @@ public class Arrays1 {
      * 获取数组最后一个元素
      *
      * @param arr array
-     * @return 第一个元素  长度为0则抛出异常
+     * @param <T> T
+     * @return 最后一个元素  长度为0则抛出异常
      */
     public static <T> T last(T[] arr) {
         int length = length(arr);
@@ -3139,7 +3146,8 @@ public class Arrays1 {
      *
      * @param arr array
      * @param def 默认值
-     * @return 第一个元素
+     * @param <T> T
+     * @return 最后一个元素
      */
     public static <T> T last(T[] arr, T def) {
         int length = length(arr);

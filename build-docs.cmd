@@ -1,0 +1,1 @@
+mvn javadoc:aggregate

@@ -143,6 +143,8 @@ public class Console {
 
     /**
      * 输出 trace
+     *
+     * @param os objects
      */
     public static void trace(Object... os) {
         StringJoiner joiner = new StringJoiner(Strings.SPACE);

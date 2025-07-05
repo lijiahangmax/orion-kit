@@ -45,7 +45,7 @@ import java.lang.annotation.*;
 public @interface Alias {
 
     /**
-     * 别名
+     * @return 别名
      */
     @Alias("for")
     String[] value();

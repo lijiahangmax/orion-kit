@@ -54,6 +54,9 @@ public class Functions {
 
     /**
      * 空实现的 Consumer
+     *
+     * @param <T> T
+     * @return Consumer
      */
     public static <T> Consumer<T> emptyConsumer() {
         return (Consumer<T>) EMPTY_CONSUMER;
@@ -61,6 +64,10 @@ public class Functions {
 
     /**
      * 空实现 BiConsumer
+     *
+     * @param <T> T
+     * @param <U> U
+     * @return BiConsumer
      */
     public static <T, U> BiConsumer<T, U> emptyBiConsumer() {
         return (BiConsumer<T, U>) EMPTY_BI_CONSUMER;
@@ -68,6 +75,9 @@ public class Functions {
 
     /**
      * 打印的 Consumer
+     *
+     * @param <T> T
+     * @return Consumer
      */
     public static <T> Consumer<T> printConsumer() {
         return Console::trace;

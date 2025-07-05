@@ -182,6 +182,14 @@ public class Lists extends Collections {
         return new SingletonList<>(e);
     }
 
+    public static <E> List<E> singletonNullable(E e) {
+        List<E> list = new ArrayList<>();
+        if (e != null) {
+            list.add(e);
+        }
+        return list;
+    }
+
     public static <E> List<E> empty() {
         return (List<E>) EmptyList.EMPTY;
     }
