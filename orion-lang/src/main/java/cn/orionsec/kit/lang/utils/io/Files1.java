@@ -942,12 +942,12 @@ public class Files1 {
         file.deleteOnExit();
     }
 
-    public static boolean mv(String file, File target) {
-        return new File(file).renameTo(target);
+    public static boolean move(String file, String target) {
+        return move(Paths.get(file), Paths.get(target));
     }
 
-    public static boolean mv(File file, File target) {
-        return file.renameTo(target);
+    public static boolean move(File file, File target) {
+        return move(Paths.get(file.getAbsolutePath()), Paths.get(target.getAbsolutePath()));
     }
 
     /**
@@ -957,7 +957,7 @@ public class Files1 {
      * @param target 目标位置
      * @return 是否处理成功
      */
-    public static boolean mv(Path file, Path target) {
+    public static boolean move(Path file, Path target) {
         try {
             Files.move(file, target);
             return true;
@@ -966,12 +966,12 @@ public class Files1 {
         }
     }
 
-    public static boolean mv(String file, String name) {
-        return mv(new File(file), name);
+    public static boolean rename(String file, String name) {
+        return rename(Paths.get(file), name);
     }
 
-    public static boolean mv(File file, String name) {
-        return file.renameTo(new File(file.getParent(), name));
+    public static boolean rename(File file, String name) {
+        return rename(Paths.get(file.getAbsolutePath()), name);
     }
 
     /**
@@ -981,7 +981,7 @@ public class Files1 {
      * @param name 名称
      * @return 是否处理成功
      */
-    public static boolean mv(Path file, String name) {
+    public static boolean rename(Path file, String name) {
         try {
             Files.move(file, file.getParent().resolve(name));
             return true;
