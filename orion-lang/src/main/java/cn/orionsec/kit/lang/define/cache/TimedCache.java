@@ -26,18 +26,9 @@
  */
 package cn.orionsec.kit.lang.define.cache;
 
-import cn.orionsec.kit.lang.constant.Const;
-import cn.orionsec.kit.lang.define.thread.ExecutorBuilder;
-import cn.orionsec.kit.lang.utils.Objects1;
-import cn.orionsec.kit.lang.utils.Threads;
-
 import java.io.Closeable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.SynchronousQueue;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -47,60 +38,17 @@ import java.util.function.Supplier;
  * @version 1.0.0
  * @since 2023/10/13 12:00
  */
-public class TimedCache implements Closeable {
-
-    /**
-     * 检测线程池
-     */
-    private static final ExecutorService CHECKER_EXECUTOR = ExecutorBuilder.create()
-            .namedThreadFactory("orion-cache-checker-")
-            .corePoolSize(1)
-            .maxPoolSize(Integer.MAX_VALUE)
-            .keepAliveTime(Const.MS_S_60)
-            .workQueue(new SynchronousQueue<>())
-            .allowCoreThreadTimeout(true)
-            .build();
-
-    private final int expireAfter;
-
-    private final ConcurrentHashMap<String, Value> store;
-
-    private final Checker checker;
-
-    public TimedCache(int expireAfter, int checkInterval, BiConsumer<String, Object> expiredListener) {
-        this.expireAfter = expireAfter;
-        this.store = new ConcurrentHashMap<>();
-        this.checker = new Checker(checkInterval, store, expiredListener);
-        CHECKER_EXECUTOR.execute(checker);
-    }
+public interface TimedCache extends Closeable {
 
     /**
      * 添加
      *
-     * @param key           key
-     * @param valueSupplier valueSupplier
-     * @param <V>           V
+     * @param key      key
+     * @param supplier supplier
+     * @param <V>      V
      * @return V
      */
-    @SuppressWarnings("unchecked")
-    public <V> V put(String key, Supplier<V> valueSupplier) {
-        Value ref = store.computeIfAbsent(key, s -> this.createValue(valueSupplier.get()));
-        return (V) ref.value;
-    }
-
-    /**
-     * 添加
-     *
-     * @param key           key
-     * @param valueSupplier valueSupplier
-     * @param <V>           V
-     * @return V
-     */
-    @SuppressWarnings("unchecked")
-    public <V> V put(String key, Function<String, V> valueSupplier) {
-        Value ref = store.computeIfAbsent(key, s -> this.createValue(valueSupplier.apply(key)));
-        return (V) ref.value;
-    }
+    <V> V put(String key, Supplier<V> supplier);
 
     /**
      * 添加
@@ -108,18 +56,76 @@ public class TimedCache implements Closeable {
      * @param key   key
      * @param value value
      */
-    public void put(String key, Object value) {
-        store.put(key, this.createValue(value));
-    }
+    void put(String key, Object value);
+
+    /**
+     * 添加
+     *
+     * @param key      key
+     * @param supplier supplier
+     * @param <V>      V
+     * @return value
+     */
+    <V> V putIfAbsent(String key, Supplier<V> supplier);
+
+    /**
+     * 添加
+     *
+     * @param key   key
+     * @param value value
+     * @param <V>   V
+     * @return value
+     */
+    <V> V putIfAbsent(String key, Object value);
+
+    /**
+     * 添加并指定过期时间
+     *
+     * @param key         key
+     * @param value       value
+     * @param expireAfter 自定义过期时间
+     */
+    void put(String key, Object value, long expireAfter);
+
+    /**
+     * 添加并指定过期时间
+     *
+     * @param key         key
+     * @param supplier    supplier
+     * @param expireAfter 自定义过期时间
+     * @param <V>         V
+     * @return V
+     */
+    <V> V put(String key, Supplier<V> supplier, long expireAfter);
+
+    /**
+     * 添加并指定过期时间
+     *
+     * @param key         key
+     * @param value       value
+     * @param expireAfter 自定义过期时间
+     * @param <V>         V
+     * @return value
+     */
+    <V> V putIfAbsent(String key, Object value, long expireAfter);
+
+    /**
+     * 添加并指定过期时间
+     *
+     * @param key         key
+     * @param supplier    supplier
+     * @param expireAfter 自定义过期时间
+     * @param <V>         V
+     * @return value
+     */
+    <V> V putIfAbsent(String key, Supplier<V> supplier, long expireAfter);
 
     /**
      * 添加
      *
      * @param map map
      */
-    public void putAll(Map<String, Object> map) {
-        map.forEach((k, v) -> store.put(k, this.createValue(v)));
-    }
+    void putAll(Map<String, Object> map);
 
     /**
      * 获取值
@@ -128,9 +134,7 @@ public class TimedCache implements Closeable {
      * @param <V> V
      * @return value
      */
-    public <V> V get(String key) {
-        return this.getOrDefault(key, null);
-    }
+    <V> V get(String key);
 
     /**
      * 获取值
@@ -140,14 +144,7 @@ public class TimedCache implements Closeable {
      * @param <V> V
      * @return value
      */
-    @SuppressWarnings("unchecked")
-    public <V> V getOrDefault(String key, V def) {
-        Value value = store.get(key);
-        if (value == null) {
-            return def;
-        }
-        return (V) value.value;
-    }
+    <V> V getOrDefault(String key, V def);
 
     /**
      * 检测是否有此缓存
@@ -155,111 +152,18 @@ public class TimedCache implements Closeable {
      * @param key key
      * @return contains
      */
-    public boolean containsKey(String key) {
-        return store.containsKey(key);
-    }
+    boolean containsKey(String key);
 
     /**
      * 清空
      */
-    public void clear() {
-        store.clear();
-    }
-
-    public ConcurrentHashMap<String, Value> getStore() {
-        return store;
-    }
+    void clear();
 
     /**
-     * 创建缓存值
+     * 获取存储容器
      *
-     * @param o o
-     * @return value
+     * @return store
      */
-    private Value createValue(Object o) {
-        return new Value(System.currentTimeMillis() + expireAfter, o);
-    }
-
-    @Override
-    public void close() {
-        store.clear();
-        checker.close();
-    }
-
-    @Override
-    public String toString() {
-        return store.toString();
-    }
-
-    /**
-     * 缓存值
-     */
-    static class Value {
-
-        /**
-         * 过期时间
-         */
-        private final long expireTime;
-
-        /**
-         * 值
-         */
-        private final Object value;
-
-        public Value(long expireTime, Object value) {
-            this.expireTime = expireTime;
-            this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return Objects1.toString(value);
-        }
-    }
-
-    /**
-     * 缓存检测
-     */
-    static class Checker implements Runnable, Closeable {
-
-        private final ConcurrentHashMap<String, Value> store;
-
-        private final int checkDelay;
-
-        private final BiConsumer<String, Object> expiredListener;
-
-        private volatile boolean run;
-
-        public Checker(int checkDelay,
-                       ConcurrentHashMap<String, Value> store,
-                       BiConsumer<String, Object> expiredListener) {
-            this.run = true;
-            this.checkDelay = checkDelay;
-            this.expiredListener = expiredListener;
-            this.store = store;
-        }
-
-        @Override
-        public void run() {
-            while (run) {
-                Threads.sleep(checkDelay);
-                long curr = System.currentTimeMillis();
-                for (String key : store.keySet()) {
-                    Value value = store.get(key);
-                    if (value.expireTime < curr) {
-                        // 删除
-                        store.remove(key);
-                        // 通知
-                        expiredListener.accept(key, value.value);
-                    }
-                }
-            }
-        }
-
-        @Override
-        public void close() {
-            this.run = false;
-        }
-    }
+    ConcurrentHashMap<String, TimedCacheValue> getStore();
 
 }

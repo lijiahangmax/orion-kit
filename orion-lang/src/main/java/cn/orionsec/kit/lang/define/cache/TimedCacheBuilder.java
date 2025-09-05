@@ -72,11 +72,11 @@ public class TimedCacheBuilder implements Buildable<TimedCache> {
     /**
      * 创建过期缓存
      *
-     * @param expired 过期时间
+     * @param expireAfter 过期时间
      * @return cache
      */
-    public static TimedCache create(int expired) {
-        return new TimedCache(expired, DEFAULT_CHECK_INTERVAL, null);
+    public static TimedCache create(int expireAfter) {
+        return new TimedCacheImpl(expireAfter, DEFAULT_CHECK_INTERVAL, null);
     }
 
     /**
@@ -87,7 +87,7 @@ public class TimedCacheBuilder implements Buildable<TimedCache> {
      * @return cache
      */
     public static TimedCache create(int expireAfter, int checkInterval) {
-        return new TimedCache(expireAfter, checkInterval, null);
+        return new TimedCacheImpl(expireAfter, checkInterval, null);
     }
 
     /**
@@ -125,7 +125,7 @@ public class TimedCacheBuilder implements Buildable<TimedCache> {
 
     @Override
     public TimedCache build() {
-        return new TimedCache(expireAfter, checkInterval, expiredListener);
+        return new TimedCacheImpl(expireAfter, checkInterval, expiredListener);
     }
 
 }
