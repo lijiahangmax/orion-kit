@@ -39,17 +39,17 @@ import java.util.function.BiConsumer;
  */
 public class TimedCacheBuilder implements Buildable<TimedCache> {
 
-    private static final int CHECK_DELAY = 5000;
+    private static final int DEFAULT_CHECK_INTERVAL = 5000;
 
     /**
-     * 过期延迟 ms
+     * 过期时间 ms
      */
-    private int expiredDelay;
+    private int expireAfter;
 
     /**
-     * 检测延迟 ms
+     * 检测间隔 ms
      */
-    private int checkDelay;
+    private int checkInterval;
 
     /**
      * 过期监听器
@@ -57,7 +57,7 @@ public class TimedCacheBuilder implements Buildable<TimedCache> {
     private BiConsumer<String, Object> expiredListener;
 
     private TimedCacheBuilder() {
-        this.checkDelay = CHECK_DELAY;
+        this.checkInterval = DEFAULT_CHECK_INTERVAL;
     }
 
     /**
@@ -76,39 +76,39 @@ public class TimedCacheBuilder implements Buildable<TimedCache> {
      * @return cache
      */
     public static TimedCache create(int expired) {
-        return new TimedCache(expired, CHECK_DELAY, null);
+        return new TimedCache(expired, DEFAULT_CHECK_INTERVAL, null);
     }
 
     /**
      * 创建过期缓存
      *
-     * @param expired    过期时间
-     * @param checkDelay 检测时间
+     * @param expireAfter   过期时间
+     * @param checkInterval 检测时间
      * @return cache
      */
-    public static TimedCache create(int expired, int checkDelay) {
-        return new TimedCache(expired, checkDelay, null);
+    public static TimedCache create(int expireAfter, int checkInterval) {
+        return new TimedCache(expireAfter, checkInterval, null);
     }
 
     /**
      * 设置检测延迟 ms
      *
-     * @param expiredDelay expiredDelay
+     * @param expireAfter expireAfter
      * @return this
      */
-    public TimedCacheBuilder expiredDelay(int expiredDelay) {
-        this.expiredDelay = expiredDelay;
+    public TimedCacheBuilder expireAfter(int expireAfter) {
+        this.expireAfter = expireAfter;
         return this;
     }
 
     /**
      * 检测延迟 ms
      *
-     * @param checkDelay checkDelay
+     * @param checkInterval checkInterval
      * @return this
      */
-    public TimedCacheBuilder checkDelay(int checkDelay) {
-        this.checkDelay = checkDelay;
+    public TimedCacheBuilder checkInterval(int checkInterval) {
+        this.checkInterval = checkInterval;
         return this;
     }
 
@@ -125,7 +125,7 @@ public class TimedCacheBuilder implements Buildable<TimedCache> {
 
     @Override
     public TimedCache build() {
-        return new TimedCache(expiredDelay, checkDelay, expiredListener);
+        return new TimedCache(expireAfter, checkInterval, expiredListener);
     }
 
 }

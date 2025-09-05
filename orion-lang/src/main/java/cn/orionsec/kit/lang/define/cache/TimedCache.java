@@ -52,8 +52,8 @@ public class TimedCache implements Closeable {
     /**
      * 检测线程池
      */
-    private static final ExecutorService CHECK_EXECUTOR = ExecutorBuilder.create()
-            .namedThreadFactory("orion-cache-check-")
+    private static final ExecutorService CHECKER_EXECUTOR = ExecutorBuilder.create()
+            .namedThreadFactory("orion-cache-checker-")
             .corePoolSize(1)
             .maxPoolSize(Integer.MAX_VALUE)
             .keepAliveTime(Const.MS_S_60)
@@ -61,17 +61,17 @@ public class TimedCache implements Closeable {
             .allowCoreThreadTimeout(true)
             .build();
 
-    private final int expiredDelay;
+    private final int expireAfter;
 
     private final ConcurrentHashMap<String, Value> store;
 
     private final Checker checker;
 
-    public TimedCache(int expiredDelay, int checkDelay, BiConsumer<String, Object> expiredListener) {
-        this.expiredDelay = expiredDelay;
+    public TimedCache(int expireAfter, int checkInterval, BiConsumer<String, Object> expiredListener) {
+        this.expireAfter = expireAfter;
         this.store = new ConcurrentHashMap<>();
-        this.checker = new Checker(checkDelay, store, expiredListener);
-        CHECK_EXECUTOR.execute(checker);
+        this.checker = new Checker(checkInterval, store, expiredListener);
+        CHECKER_EXECUTOR.execute(checker);
     }
 
     /**
@@ -177,7 +177,7 @@ public class TimedCache implements Closeable {
      * @return value
      */
     private Value createValue(Object o) {
-        return new Value(System.currentTimeMillis() + expiredDelay, o);
+        return new Value(System.currentTimeMillis() + expireAfter, o);
     }
 
     @Override
