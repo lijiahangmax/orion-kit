@@ -90,7 +90,7 @@ public class CommandExecutor extends BaseHostExecutor<ChannelExec> implements IC
     /**
      * 是否已超时
      */
-    private volatile boolean expired;
+    private volatile boolean isTimeout;
 
     public CommandExecutor(ChannelExec channel, String command) {
         this(channel, Strings.bytes(command, StandardCharsets.UTF_8));
@@ -166,7 +166,7 @@ public class CommandExecutor extends BaseHostExecutor<ChannelExec> implements IC
             return false;
         }
         // 超时 直接断开连接
-        this.expired = true;
+        this.isTimeout = true;
         Streams.close(this);
         return true;
     }
@@ -187,7 +187,7 @@ public class CommandExecutor extends BaseHostExecutor<ChannelExec> implements IC
             }
         } catch (Exception e) {
             // 超时异常
-            if (expired) {
+            if (isTimeout) {
                 throw Exceptions.timeout(e);
             }
             throw e;
@@ -222,7 +222,7 @@ public class CommandExecutor extends BaseHostExecutor<ChannelExec> implements IC
             // 标准输入
             this.outputStream = channel.getOutputStream();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw Exceptions.runtime(e);
         }
         // 监听 标准输出 错误输出
         this.listenerOutput();
@@ -252,7 +252,7 @@ public class CommandExecutor extends BaseHostExecutor<ChannelExec> implements IC
 
     @Override
     public boolean isTimeout() {
-        return expired;
+        return isTimeout;
     }
 
     @Override

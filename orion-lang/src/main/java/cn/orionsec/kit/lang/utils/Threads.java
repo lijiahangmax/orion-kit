@@ -89,7 +89,7 @@ public class Threads {
      * @param r    ignore
      * @param pool 线程池
      */
-    public static void start(Runnable r, ExecutorService pool) {
+    public static void start(Runnable r, Executor pool) {
         if (pool == null) {
             pool = GLOBAL_EXECUTOR;
         }
@@ -102,7 +102,7 @@ public class Threads {
      * @param rs   线程
      * @param pool 线程池
      */
-    public static void start(Collection<Runnable> rs, ExecutorService pool) {
+    public static void start(Collection<Runnable> rs, Executor pool) {
         Valid.notEmpty(rs, "task is empty");
         if (pool == null) {
             pool = GLOBAL_EXECUTOR;
@@ -191,7 +191,7 @@ public class Threads {
      * @param pool  线程池
      * @throws InterruptedException InterruptedException
      */
-    public static void blockRun(Runnable r, int count, ExecutorService pool) throws InterruptedException {
+    public static void blockRun(Runnable r, int count, Executor pool) throws InterruptedException {
         blockRun(r, new CountDownLatch(count), pool);
     }
 
@@ -203,7 +203,7 @@ public class Threads {
      * @param pool 线程池
      * @throws InterruptedException InterruptedException
      */
-    public static void blockRun(Runnable r, CountDownLatch c, ExecutorService pool) throws InterruptedException {
+    public static void blockRun(Runnable r, CountDownLatch c, Executor pool) throws InterruptedException {
         Valid.notNull(r, "task is null");
         if (pool == null) {
             pool = GLOBAL_EXECUTOR;
@@ -222,7 +222,7 @@ public class Threads {
      * @param pool 线程池
      * @throws InterruptedException InterruptedException
      */
-    public static void blockRun(Collection<? extends Runnable> rs, ExecutorService pool) throws InterruptedException {
+    public static void blockRun(Collection<? extends Runnable> rs, Executor pool) throws InterruptedException {
         Valid.notEmpty(rs, "task is empty");
         if (pool == null) {
             pool = GLOBAL_EXECUTOR;
@@ -244,7 +244,7 @@ public class Threads {
      * @param pool  线程池
      * @return 屏障
      */
-    public static CyclicBarrier concurrent(Runnable r, int count, ExecutorService pool) {
+    public static CyclicBarrier concurrent(Runnable r, int count, Executor pool) {
         if (pool == null) {
             pool = CACHE_EXECUTOR;
         }
@@ -265,7 +265,7 @@ public class Threads {
      * @param pool 线程池
      * @param cb   屏障
      */
-    public static void concurrent(Runnable r, ExecutorService pool, CyclicBarrier cb) {
+    public static void concurrent(Runnable r, Executor pool, CyclicBarrier cb) {
         if (pool == null) {
             pool = CACHE_EXECUTOR;
         }
@@ -285,7 +285,7 @@ public class Threads {
      * @param pool 线程池
      * @param cd   闭锁
      */
-    public static void concurrent(Runnable r, ExecutorService pool, CountDownLatch cd) {
+    public static void concurrent(Runnable r, Executor pool, CountDownLatch cd) {
         if (pool == null) {
             pool = CACHE_EXECUTOR;
         }
