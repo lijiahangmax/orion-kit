@@ -33,7 +33,7 @@ package cn.orionsec.kit.lang.define.cache;
  * @version 1.0.0
  * @since 2025/9/6 1:38
  */
-public class TimedCacheValue {
+public class TimedCacheValue<T> {
 
     /**
      * 过期时间
@@ -43,9 +43,9 @@ public class TimedCacheValue {
     /**
      * 值
      */
-    protected final Object value;
+    protected final T value;
 
-    public TimedCacheValue(long expireTime, Object value) {
+    public TimedCacheValue(long expireTime, T value) {
         this.expireTime = expireTime;
         this.value = value;
     }

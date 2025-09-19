@@ -28,7 +28,6 @@ package cn.orionsec.kit.lang.define.cache;
 
 import java.io.Closeable;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 /**
@@ -38,45 +37,25 @@ import java.util.function.Supplier;
  * @version 1.0.0
  * @since 2023/10/13 12:00
  */
-public interface TimedCache extends Closeable {
+public interface TimedCache<T> extends Map<String, T>, Closeable {
 
     /**
      * 添加
      *
      * @param key      key
      * @param supplier supplier
-     * @param <V>      V
-     * @return V
+     * @return T
      */
-    <V> V put(String key, Supplier<V> supplier);
-
-    /**
-     * 添加
-     *
-     * @param key   key
-     * @param value value
-     */
-    void put(String key, Object value);
+    T put(String key, Supplier<T> supplier);
 
     /**
      * 添加
      *
      * @param key      key
      * @param supplier supplier
-     * @param <V>      V
      * @return value
      */
-    <V> V putIfAbsent(String key, Supplier<V> supplier);
-
-    /**
-     * 添加
-     *
-     * @param key   key
-     * @param value value
-     * @param <V>   V
-     * @return value
-     */
-    <V> V putIfAbsent(String key, Object value);
+    T putIfAbsent(String key, Supplier<T> supplier);
 
     /**
      * 添加并指定过期时间
@@ -85,7 +64,7 @@ public interface TimedCache extends Closeable {
      * @param value       value
      * @param expireAfter 自定义过期时间
      */
-    void put(String key, Object value, long expireAfter);
+    void put(String key, T value, long expireAfter);
 
     /**
      * 添加并指定过期时间
@@ -93,10 +72,9 @@ public interface TimedCache extends Closeable {
      * @param key         key
      * @param supplier    supplier
      * @param expireAfter 自定义过期时间
-     * @param <V>         V
-     * @return V
+     * @return T
      */
-    <V> V put(String key, Supplier<V> supplier, long expireAfter);
+    T put(String key, Supplier<T> supplier, long expireAfter);
 
     /**
      * 添加并指定过期时间
@@ -104,10 +82,9 @@ public interface TimedCache extends Closeable {
      * @param key         key
      * @param value       value
      * @param expireAfter 自定义过期时间
-     * @param <V>         V
      * @return value
      */
-    <V> V putIfAbsent(String key, Object value, long expireAfter);
+    T putIfAbsent(String key, T value, long expireAfter);
 
     /**
      * 添加并指定过期时间
@@ -115,55 +92,15 @@ public interface TimedCache extends Closeable {
      * @param key         key
      * @param supplier    supplier
      * @param expireAfter 自定义过期时间
-     * @param <V>         V
      * @return value
      */
-    <V> V putIfAbsent(String key, Supplier<V> supplier, long expireAfter);
-
-    /**
-     * 添加
-     *
-     * @param map map
-     */
-    void putAll(Map<String, Object> map);
-
-    /**
-     * 获取值
-     *
-     * @param key key
-     * @param <V> V
-     * @return value
-     */
-    <V> V get(String key);
-
-    /**
-     * 获取值
-     *
-     * @param key key
-     * @param def def
-     * @param <V> V
-     * @return value
-     */
-    <V> V getOrDefault(String key, V def);
-
-    /**
-     * 检测是否有此缓存
-     *
-     * @param key key
-     * @return contains
-     */
-    boolean containsKey(String key);
-
-    /**
-     * 清空
-     */
-    void clear();
+    T putIfAbsent(String key, Supplier<T> supplier, long expireAfter);
 
     /**
      * 获取存储容器
      *
      * @return store
      */
-    ConcurrentHashMap<String, TimedCacheValue> getStore();
+    Map<String, TimedCacheValue<T>> getStore();
 
 }
