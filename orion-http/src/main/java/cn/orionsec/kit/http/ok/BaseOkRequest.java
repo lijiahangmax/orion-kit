@@ -96,18 +96,22 @@ public abstract class BaseOkRequest extends BaseHttpRequest {
         Request.Builder requestBuilder = new Request.Builder();
         HttpMethod.valid(method, 6);
         requestBuilder.url(url);
+        // 设置 header
         if (headers != null) {
             headers.forEach(requestBuilder::addHeader);
         }
+        // 设置 cookie
         if (cookies != null) {
             cookies.forEach(c -> requestBuilder.addHeader(StandardHttpHeader.COOKIE, c.toString()));
         }
+        // 忽略的请求头
         if (ignoreHeaders != null) {
             ignoreHeaders.forEach(requestBuilder::removeHeader);
         }
         if (tag != null) {
             requestBuilder.tag(tag);
         }
+        // 设置 body
         boolean noBody = super.isNoBodyRequest();
         if (noBody) {
             requestBuilder.method(method, null);
@@ -124,13 +128,13 @@ public abstract class BaseOkRequest extends BaseHttpRequest {
      */
     protected void setBody(Request.Builder requestBuilder) {
         if (body != null) {
-            requestBuilder.method(method, RequestBody.create(MediaType.parse(contentType + "; charset=" + charset), body, bodyOffset, bodyLen));
+            requestBuilder.method(method, RequestBody.create(MediaType.parse(contentType), body, bodyOffset, bodyLen));
         } else if (formParts != null) {
             FormBody.Builder formBuilder = new FormBody.Builder(Charset.forName(charset));
             formParts.forEach(formBuilder::addEncoded);
             requestBuilder.method(method, formBuilder.build());
         } else {
-            requestBuilder.method(method, RequestBody.create(MediaType.parse(contentType + "; charset=" + charset), Strings.EMPTY));
+            requestBuilder.method(method, RequestBody.create(MediaType.parse(contentType), Strings.EMPTY));
         }
     }
 
