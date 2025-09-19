@@ -26,9 +26,10 @@
  */
 package cn.orionsec.kit.lang.define.cache;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.function.Supplier;
+import cn.orionsec.kit.lang.utils.Objects1;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 过期缓存
@@ -56,102 +57,101 @@ public class TimedCacheImpl<T> implements TimedCache<T> {
     }
 
     @Override
-    public T put(String key, Supplier<T> supplier) {
-        TimedCacheValue<T> value = store.computeIfAbsent(key, s -> this.createValue(supplier.get()));
-        return value.value;
-    }
-
-    @Override
     public T put(String key, T value) {
-        TimedCacheValue<T> before = store.put(key, this.createValue(value));
-        if (before == null) {
-
-        }
+        TimedCacheValue<T> returnValue = store.put(key, this.createValue(value));
+        return this.safeGet(returnValue);
     }
 
     @Override
-
-    public T putIfAbsent(String key, Supplier<T> supplier) {
-        TimedCacheValue<T> value = store.putIfAbsent(key, this.createValue(supplier.get()));
-        if (value == null) {
-            // 新插入的值
-            return supplier.get();
-        } else {
-            // 返回原值
-            return value.value;
-        }
+    public T put(String key, T value, long expireAfter) {
+        TimedCacheValue<T> returnValue = store.put(key, this.createValue(value, expireAfter));
+        return this.safeGet(returnValue);
     }
 
     @Override
     public T putIfAbsent(String key, T value) {
-        TimedCacheValue<T> newValue = store.putIfAbsent(key, this.createValue(value));
-        if (newValue == null) {
-            return null;
-        } else {
-            return newValue.value;
-        }
-    }
-
-    @Override
-    public void put(String key, T value, long expireAfter) {
-        store.put(key, this.createValue(value, expireAfter));
-    }
-
-    @Override
-    public T put(String key, Supplier<T> supplier, long expireAfter) {
-        T value = supplier.get();
-        store.put(key, this.createValue(value, expireAfter));
-        return value;
+        TimedCacheValue<T> returnValue = store.putIfAbsent(key, this.createValue(value));
+        return this.safeGet(returnValue);
     }
 
     @Override
     public T putIfAbsent(String key, T value, long expireAfter) {
-        TimedCacheValue<T> newValue = store.putIfAbsent(key, this.createValue(value, expireAfter));
-        if (newValue == null) {
-            return null;
-        } else {
-            return newValue.value;
-        }
+        TimedCacheValue<T> returnValue = store.putIfAbsent(key, this.createValue(value, expireAfter));
+        return this.safeGet(returnValue);
     }
 
     @Override
-    public T putIfAbsent(String key, Supplier<T> supplier, long expireAfter) {
-        TimedCacheValue<T> newValue = store.computeIfAbsent(key, s -> this.createValue(supplier.get(), expireAfter));
-        return newValue.value;
-    }
-
-    @Override
-    public void putAll(Map<String, T> map) {
+    public void putAll(Map<? extends String, ? extends T> map) {
         map.forEach((k, v) -> store.put(k, this.createValue(v)));
     }
 
     @Override
-    public T get(String key) {
+    public T get(Object key) {
         return this.getOrDefault(key, null);
     }
 
     @Override
-    public T getOrDefault(String key, T def) {
-        TimedCacheValue<T> value = store.get(key);
-        if (value == null) {
-            return def;
-        }
-        return value.value;
+    public T getOrDefault(Object key, T defaultValue) {
+        TimedCacheValue<T> value = store.get((String) key);
+        return Objects1.def(this.safeGet(value), defaultValue);
     }
 
     @Override
-    public boolean containsKey(String key) {
+    public T remove(Object key) {
+        return this.safeGet(store.remove(key));
+    }
+
+    @Override
+    public int size() {
+        return store.size();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return store.isEmpty();
+    }
+
+    @Override
+    public boolean containsKey(Object key) {
         return store.containsKey(key);
     }
 
     @Override
-    public T remove(String key) {
-        return store.remove(KE);
+    public boolean containsValue(Object value) {
+        return store.values()
+                .stream()
+                .anyMatch(v -> Objects.equals(value, v.value));
     }
 
     @Override
-    public void removeAll(Collection<String> keys) {
+    public void clear() {
+        store.clear();
+    }
 
+    @Override
+    public Set<String> keySet() {
+        return store.keySet();
+    }
+
+    @Override
+    public Collection<T> values() {
+        return store.values()
+                .stream()
+                .map(this::safeGet)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Set<Entry<String, T>> entrySet() {
+        return store.keySet()
+                .stream()
+                .map(s -> new AbstractMap.SimpleEntry<>(s, this.safeGet(store.get(s))))
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Map<String, TimedCacheValue<T>> getStore() {
+        return store;
     }
 
     /**
@@ -186,16 +186,6 @@ public class TimedCacheImpl<T> implements TimedCache<T> {
      */
     private TimedCacheValue<T> createValue(T o, long expireAfter) {
         return new TimedCacheValue<T>(System.currentTimeMillis() + expireAfter, o);
-    }
-
-    @Override
-    public void clear() {
-        store.clear();
-    }
-
-    @Override
-    public Map<String, TimedCacheValue<T>> getStore() {
-        return store;
     }
 
     @Override

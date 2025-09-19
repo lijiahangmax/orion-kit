@@ -28,7 +28,6 @@ package cn.orionsec.kit.lang.define.cache;
 
 import java.io.Closeable;
 import java.util.Map;
-import java.util.function.Supplier;
 
 /**
  * 过期缓存
@@ -40,41 +39,14 @@ import java.util.function.Supplier;
 public interface TimedCache<T> extends Map<String, T>, Closeable {
 
     /**
-     * 添加
-     *
-     * @param key      key
-     * @param supplier supplier
-     * @return T
-     */
-    T put(String key, Supplier<T> supplier);
-
-    /**
-     * 添加
-     *
-     * @param key      key
-     * @param supplier supplier
-     * @return value
-     */
-    T putIfAbsent(String key, Supplier<T> supplier);
-
-    /**
      * 添加并指定过期时间
      *
      * @param key         key
      * @param value       value
      * @param expireAfter 自定义过期时间
+     * @return value
      */
-    void put(String key, T value, long expireAfter);
-
-    /**
-     * 添加并指定过期时间
-     *
-     * @param key         key
-     * @param supplier    supplier
-     * @param expireAfter 自定义过期时间
-     * @return T
-     */
-    T put(String key, Supplier<T> supplier, long expireAfter);
+    T put(String key, T value, long expireAfter);
 
     /**
      * 添加并指定过期时间
@@ -85,16 +57,6 @@ public interface TimedCache<T> extends Map<String, T>, Closeable {
      * @return value
      */
     T putIfAbsent(String key, T value, long expireAfter);
-
-    /**
-     * 添加并指定过期时间
-     *
-     * @param key         key
-     * @param supplier    supplier
-     * @param expireAfter 自定义过期时间
-     * @return value
-     */
-    T putIfAbsent(String key, Supplier<T> supplier, long expireAfter);
 
     /**
      * 获取存储容器
