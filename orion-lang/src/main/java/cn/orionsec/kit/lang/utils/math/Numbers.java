@@ -28,9 +28,9 @@ package cn.orionsec.kit.lang.utils.math;
 
 import cn.orionsec.kit.lang.utils.Arrays1;
 import cn.orionsec.kit.lang.utils.Compares;
-import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.Valid;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
 /**
@@ -1268,25 +1268,55 @@ public class Numbers {
     /**
      * 设置小数位
      *
-     * @param d          double
-     * @param decimalLen 小数位
+     * @param d                  double
+     * @param precision          小数位
+     * @param forceTrailingZeros 是否强制填充 0
      * @return string
      */
-    public static String setScale(double d, int decimalLen) {
-        DecimalFormat format = new DecimalFormat("0." + Strings.repeat('0', decimalLen));
-        return format.format(d);
+    public static String formatPrecision(double d, int precision, boolean forceTrailingZeros) {
+        return getFormatter(precision, forceTrailingZeros).format(d);
     }
 
     /**
      * 设置小数位
      *
-     * @param f          float
-     * @param decimalLen 小数位
+     * @param f                  float
+     * @param precision          小数位
+     * @param forceTrailingZeros 是否强制填充 0
      * @return string
      */
-    public static String setScale(float f, int decimalLen) {
-        DecimalFormat format = new DecimalFormat("0." + Strings.repeat('0', decimalLen));
-        return format.format(f);
+    public static String formatPrecision(float f, int precision, boolean forceTrailingZeros) {
+        return getFormatter(precision, forceTrailingZeros).format(f);
+    }
+
+    /**
+     * 设置小数位
+     *
+     * @param b                  float
+     * @param precision          小数位
+     * @param forceTrailingZeros 是否强制填充 0
+     * @return string
+     */
+    public static String formatPrecision(BigDecimal b, int precision, boolean forceTrailingZeros) {
+        return getFormatter(precision, forceTrailingZeros).format(b);
+    }
+
+    /**
+     * 获取小数格式
+     *
+     * @param precision          precision
+     * @param forceTrailingZeros 是否强制填充 0
+     * @return formatter
+     */
+    public static DecimalFormat getFormatter(int precision, boolean forceTrailingZeros) {
+        StringBuilder pattern = new StringBuilder("0");
+        if (precision > 0) {
+            pattern.append(".");
+            for (int i = 0; i < precision; i++) {
+                pattern.append(forceTrailingZeros ? "0" : "#");
+            }
+        }
+        return new DecimalFormat(pattern.toString());
     }
 
     /**
