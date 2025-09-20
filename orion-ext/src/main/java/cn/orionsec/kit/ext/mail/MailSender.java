@@ -38,6 +38,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -78,6 +79,7 @@ public class MailSender implements ISendEvent<MailMessage> {
      */
     public MailSender ssl() {
         props.put("mail.smtp.ssl.enable", true);
+        props.put("mail.smtp.ssl.protocols", "TLSv1.2");
         return this;
     }
 
@@ -89,8 +91,9 @@ public class MailSender implements ISendEvent<MailMessage> {
      */
     public MailSender ssl(int sslPort) {
         props.put("mail.smtp.ssl.enable", true);
-        props.put("mail.smtp.port", sslPort + Strings.EMPTY);
-        props.put("mail.smtp.socketFactory.port", sslPort + Strings.EMPTY);
+        props.put("mail.smtp.port", sslPort);
+        props.put("mail.smtp.socketFactory.port", sslPort);
+        props.put("mail.smtp.ssl.protocols", "TLSv1.2");
         return this;
     }
 
@@ -113,6 +116,29 @@ public class MailSender implements ISendEvent<MailMessage> {
      */
     public MailSender auth(String serverUsername, String serverPassword) {
         this.authentication = new PasswordAuthentication(serverUsername, serverPassword);
+        return this;
+    }
+
+    /**
+     * 添加参数
+     *
+     * @param key   key
+     * @param value value
+     * @return this
+     */
+    public MailSender props(Object key, Object value) {
+        props.put(key, value);
+        return this;
+    }
+
+    /**
+     * 添加参数
+     *
+     * @param map map
+     * @return this
+     */
+    public MailSender props(Map<? super Object, ? super Object> map) {
+        props.putAll(map);
         return this;
     }
 
