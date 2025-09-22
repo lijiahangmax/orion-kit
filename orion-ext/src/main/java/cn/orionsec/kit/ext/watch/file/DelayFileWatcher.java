@@ -29,8 +29,8 @@ package cn.orionsec.kit.ext.watch.file;
 import cn.orionsec.kit.ext.watch.file.handler.EventHandler;
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.utils.Arrays1;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Threads;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.io.FileAttribute;
 import cn.orionsec.kit.lang.utils.io.Files1;
 
@@ -77,7 +77,7 @@ public class DelayFileWatcher extends FileWatcher {
     }
 
     public DelayFileWatcher(int delayMillis, EventHandler handler, FileWatchEvent... events) {
-        Valid.notNull(handler, "event handler is null");
+        Assert.notNull(handler, "event handler is null");
         this.delayMillis = delayMillis;
         this.eventHandler = handler;
         this.events = Arrays1.def(events, FileWatchEvent.ALL);

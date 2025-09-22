@@ -26,7 +26,7 @@
  */
 package cn.orionsec.kit.lang.utils.reflect;
 
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.reflect.type.TypeReference;
 
 import java.lang.reflect.Field;
@@ -65,7 +65,7 @@ public class Generics {
         if (types == null) {
             return null;
         }
-        return Valid.validIndex(types, genericIndex);
+        return Assert.validIndex(types, genericIndex);
     }
 
     /**
@@ -93,7 +93,7 @@ public class Generics {
         if (types == null) {
             return null;
         }
-        return Valid.validIndex(types, genericIndex);
+        return Assert.validIndex(types, genericIndex);
     }
 
     /**
@@ -133,7 +133,7 @@ public class Generics {
         if (types == null) {
             return null;
         }
-        return Valid.validIndex(types, genericIndex);
+        return Assert.validIndex(types, genericIndex);
     }
 
     /**
@@ -160,7 +160,7 @@ public class Generics {
         if (types == null) {
             return null;
         }
-        return Valid.validIndex(types, genericIndex);
+        return Assert.validIndex(types, genericIndex);
     }
 
     /**
@@ -187,7 +187,7 @@ public class Generics {
         if (types == null) {
             return null;
         }
-        return Valid.validIndex(types, genericIndex);
+        return Assert.validIndex(types, genericIndex);
     }
 
     /**
@@ -215,7 +215,7 @@ public class Generics {
         if (types == null) {
             return null;
         }
-        return Valid.validIndex(types, genericIndex);
+        return Assert.validIndex(types, genericIndex);
     }
 
     /**

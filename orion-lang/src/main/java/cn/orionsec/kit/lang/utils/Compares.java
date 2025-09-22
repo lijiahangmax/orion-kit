@@ -105,8 +105,8 @@ public class Compares {
      * @return true  value < refer
      */
     public static <T extends Comparable<T>> boolean lt(T value, T refer) {
-        Valid.notNull(value, "value is null");
-        Valid.notNull(refer, "refer is null");
+        Assert.notNull(value, "value is null");
+        Assert.notNull(refer, "refer is null");
         return value.compareTo(refer) < 0;
     }
 
@@ -119,8 +119,8 @@ public class Compares {
      * @return true  value <= refer
      */
     public static <T extends Comparable<T>> boolean lte(T value, T refer) {
-        Valid.notNull(value, "value is null");
-        Valid.notNull(refer, "refer is null");
+        Assert.notNull(value, "value is null");
+        Assert.notNull(refer, "refer is null");
         return value.compareTo(refer) <= 0;
     }
 
@@ -133,8 +133,8 @@ public class Compares {
      * @return true  value > refer
      */
     public static <T extends Comparable<T>> boolean gt(T value, T refer) {
-        Valid.notNull(value, "value is null");
-        Valid.notNull(refer, "refer is null");
+        Assert.notNull(value, "value is null");
+        Assert.notNull(refer, "refer is null");
         return value.compareTo(refer) > 0;
     }
 
@@ -147,8 +147,8 @@ public class Compares {
      * @return true  value >= refer
      */
     public static <T extends Comparable<T>> boolean gte(T value, T refer) {
-        Valid.notNull(value, "value is null");
-        Valid.notNull(refer, "refer is null");
+        Assert.notNull(value, "value is null");
+        Assert.notNull(refer, "refer is null");
         return value.compareTo(refer) >= 0;
     }
 
@@ -162,9 +162,9 @@ public class Compares {
      * @return true 在区间内
      */
     public static <T extends Comparable<T>> boolean inRange(T value, T start, T end) {
-        Valid.notNull(value, "value is null");
-        Valid.notNull(start, "start range is null");
-        Valid.notNull(value, "end range is null");
+        Assert.notNull(value, "value is null");
+        Assert.notNull(start, "start range is null");
+        Assert.notNull(value, "end range is null");
         return start.compareTo(value) <= 0 && value.compareTo(end) <= 0;
     }
 
@@ -197,10 +197,10 @@ public class Compares {
      * @return true 在区间内
      */
     public static <T extends Comparable<T>> boolean rangeInRange(T rangeStart, T rangeEnd, T testRangeStart, T testRangeEnd) {
-        Valid.notNull(rangeStart, "start range is null");
-        Valid.notNull(rangeEnd, "end range is null");
-        Valid.notNull(testRangeStart, "test start range is null");
-        Valid.notNull(testRangeEnd, "test end range is null");
+        Assert.notNull(rangeStart, "start range is null");
+        Assert.notNull(rangeEnd, "end range is null");
+        Assert.notNull(testRangeStart, "test start range is null");
+        Assert.notNull(testRangeEnd, "test end range is null");
         return (rangeStart.compareTo(testRangeStart) <= 0 && rangeStart.compareTo(testRangeEnd) <= 0)
                 && (testRangeStart.compareTo(rangeEnd) <= 0 && testRangeEnd.compareTo(rangeEnd) <= 0);
     }
@@ -235,10 +235,10 @@ public class Compares {
      * @return 是否有交差
      */
     public static <T extends Comparable<T>> boolean cross(T start1, T end1, T start2, T end2) {
-        Valid.notNull(start1, "start range1 is null");
-        Valid.notNull(end1, "end range1 is null");
-        Valid.notNull(start2, "start range2 is null");
-        Valid.notNull(end2, "end range2 is null");
+        Assert.notNull(start1, "start range1 is null");
+        Assert.notNull(end1, "end range1 is null");
+        Assert.notNull(start2, "start range2 is null");
+        Assert.notNull(end2, "end range2 is null");
         if (end1.compareTo(start2) <= 0 || end2.compareTo(start1) <= 0) {
             return false;
         }

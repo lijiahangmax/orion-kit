@@ -26,7 +26,7 @@
  */
 package cn.orionsec.kit.spring;
 
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -155,7 +155,7 @@ public class SpringHolder {
     }
 
     public static void refresh() {
-        Valid.isInstanceOf(applicationContext, ConfigurableApplicationContext.class);
+        Assert.isInstanceOf(applicationContext, ConfigurableApplicationContext.class);
         ConfigurableApplicationContext applicationContext = (ConfigurableApplicationContext) SpringHolder.applicationContext;
         applicationContext.refresh();
     }

@@ -26,10 +26,10 @@
  */
 package cn.orionsec.kit.office.csv.writer;
 
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Objects1;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.collect.Maps;
 import cn.orionsec.kit.lang.utils.reflect.Annotations;
 import cn.orionsec.kit.lang.utils.reflect.Fields;
@@ -102,7 +102,7 @@ public class CsvBeanWriter<T> extends BaseCsvWriter<String, T> {
 
     public CsvBeanWriter(CsvWriter writer, Class<T> targetClass) {
         super(writer);
-        this.targetClass = Valid.notNull(targetClass, "target class is null");
+        this.targetClass = Assert.notNull(targetClass, "target class is null");
         this.headers = new TreeMap<>();
         this.parseClass();
         this.parseField();

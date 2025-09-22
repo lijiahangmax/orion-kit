@@ -26,7 +26,7 @@
  */
 package cn.orionsec.kit.lang.utils.crypto.symmetric;
 
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.crypto.enums.CipherAlgorithm;
 import cn.orionsec.kit.lang.utils.crypto.enums.PaddingMode;
 import cn.orionsec.kit.lang.utils.crypto.enums.WorkingMode;
@@ -64,10 +64,10 @@ public abstract class BaseSymmetric implements SymmetricCrypto {
     protected SecretKey secretKey;
 
     protected BaseSymmetric(CipherAlgorithm cipherAlgorithm, WorkingMode workingMode, PaddingMode paddingMode, SecretKey secretKey) {
-        this.algorithm = Valid.notNull(cipherAlgorithm, "cipherAlgorithm is null");
-        this.workingMode = Valid.notNull(workingMode, "workingMode is null");
-        this.paddingMode = Valid.notNull(paddingMode, "paddingMode is null");
-        this.secretKey = Valid.notNull(secretKey, "secretKey is null");
+        this.algorithm = Assert.notNull(cipherAlgorithm, "cipherAlgorithm is null");
+        this.workingMode = Assert.notNull(workingMode, "workingMode is null");
+        this.paddingMode = Assert.notNull(paddingMode, "paddingMode is null");
+        this.secretKey = Assert.notNull(secretKey, "secretKey is null");
     }
 
     /**

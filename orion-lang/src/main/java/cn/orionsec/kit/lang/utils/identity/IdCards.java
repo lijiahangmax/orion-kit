@@ -26,7 +26,7 @@
  */
 package cn.orionsec.kit.lang.utils.identity;
 
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.regexp.Matches;
 import cn.orionsec.kit.lang.utils.regexp.Patterns;
 import cn.orionsec.kit.lang.utils.time.Birthdays;
@@ -182,7 +182,7 @@ public class IdCards {
      * @return yyyyMMdd
      */
     public static String getBirth(String idCard) {
-        Valid.validLength(idCard, CHINA_ID_LENGTH, "ID Card length must be 18");
+        Assert.validLength(idCard, CHINA_ID_LENGTH, "ID Card length must be 18");
 
         return Objects.requireNonNull(idCard).substring(6, 14);
     }
@@ -194,7 +194,7 @@ public class IdCards {
      * @return yyyy
      */
     public static int getYear(String idCard) {
-        Valid.validLength(idCard, CHINA_ID_LENGTH, "ID Card length must be 18");
+        Assert.validLength(idCard, CHINA_ID_LENGTH, "ID Card length must be 18");
         return Integer.parseInt(Objects.requireNonNull(idCard).substring(6, 10));
     }
 
@@ -205,7 +205,7 @@ public class IdCards {
      * @return MM
      */
     public static int getMonth(String idCard) {
-        Valid.validLength(idCard, CHINA_ID_LENGTH, "ID Card length must be 18");
+        Assert.validLength(idCard, CHINA_ID_LENGTH, "ID Card length must be 18");
         return Integer.parseInt(Objects.requireNonNull(idCard).substring(10, 12));
     }
 
@@ -216,7 +216,7 @@ public class IdCards {
      * @return dd
      */
     public static int getDay(String idCard) {
-        Valid.validLength(idCard, CHINA_ID_LENGTH, "ID Card length must be 18");
+        Assert.validLength(idCard, CHINA_ID_LENGTH, "ID Card length must be 18");
         return Integer.parseInt(Objects.requireNonNull(idCard).substring(12, 14));
     }
 
@@ -227,7 +227,7 @@ public class IdCards {
      * @return true男
      */
     public static boolean getGender(String idCard) {
-        Valid.validLength(idCard, CHINA_ID_LENGTH, "ID Card length must be 18");
+        Assert.validLength(idCard, CHINA_ID_LENGTH, "ID Card length must be 18");
         return idCard.charAt(16) % 2 == 1;
     }
 
@@ -238,7 +238,7 @@ public class IdCards {
      * @return 省级编码
      */
     public static String getProvince(String idCard) {
-        Valid.validLength(idCard, CHINA_ID_LENGTH, "ID Card length must be 18");
+        Assert.validLength(idCard, CHINA_ID_LENGTH, "ID Card length must be 18");
         return CITY_CODES.get(idCard.substring(0, 2));
     }
 
@@ -249,7 +249,7 @@ public class IdCards {
      * @return 省级编码
      */
     public static Integer getProvinceCode(String idCard) {
-        Valid.validLength(idCard, CHINA_ID_LENGTH, "ID Card length must be 18");
+        Assert.validLength(idCard, CHINA_ID_LENGTH, "ID Card length must be 18");
         return Integer.valueOf(idCard.substring(0, 2));
     }
 
@@ -260,7 +260,7 @@ public class IdCards {
      * @return 市级编码
      */
     public static Integer getCityCode(String idCard) {
-        Valid.validLength(idCard, CHINA_ID_LENGTH, "ID Card length must be 18");
+        Assert.validLength(idCard, CHINA_ID_LENGTH, "ID Card length must be 18");
         return Integer.valueOf(idCard.substring(0, 4));
     }
 
@@ -271,7 +271,7 @@ public class IdCards {
      * @return 县级编码
      */
     public static Integer getCountryCode(String idCard) {
-        Valid.validLength(idCard, CHINA_ID_LENGTH, "ID Card length must be 18");
+        Assert.validLength(idCard, CHINA_ID_LENGTH, "ID Card length must be 18");
         return Integer.valueOf(idCard.substring(0, 6));
     }
 

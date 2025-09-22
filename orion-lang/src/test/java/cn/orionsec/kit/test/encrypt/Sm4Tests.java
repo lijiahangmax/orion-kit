@@ -26,8 +26,8 @@
  */
 package cn.orionsec.kit.test.encrypt;
 
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.crypto.Keys;
 import cn.orionsec.kit.lang.utils.crypto.SM4;
 import cn.orionsec.kit.lang.utils.crypto.enums.CipherAlgorithm;
@@ -71,7 +71,7 @@ public class Sm4Tests {
             System.out.println(enc);
             String dec = SM4.decrypt(enc, key);
             System.out.println(dec);
-            Valid.isTrue(s.equals(dec));
+            Assert.isTrue(s.equals(dec));
         }
     }
 
@@ -87,7 +87,7 @@ public class Sm4Tests {
             // System.out.println(en);
             // System.out.println(de);
             // System.out.println();
-            Valid.isTrue(val.equals(de));
+            Assert.isTrue(val.equals(de));
         }
     }
 

@@ -27,7 +27,7 @@
 package cn.orionsec.kit.lang.define.collect;
 
 import cn.orionsec.kit.lang.constant.Const;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 
 import java.io.Serializable;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -46,7 +46,7 @@ public class FixedQueue<E> extends ConcurrentLinkedQueue<E> implements Serializa
     private final int maxSize;
 
     public FixedQueue(int maxSize) {
-        this.maxSize = Valid.gt(maxSize, Const.N_0);
+        this.maxSize = Assert.gt(maxSize, Const.N_0);
     }
 
     public static <E> FixedQueue<E> create(int maxSize) {

@@ -28,8 +28,8 @@ package cn.orionsec.kit.office.support;
 
 import cn.orionsec.kit.lang.able.SafeCloseable;
 import cn.orionsec.kit.lang.constant.Const;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.lang.utils.io.Streams;
@@ -106,7 +106,7 @@ public abstract class SplitTargetGenerator implements SafeCloseable {
      * @return this
      */
     public SplitTargetGenerator target(OutputStream... target) {
-        Valid.notEmpty(target, "target file is empty");
+        Assert.notEmpty(target, "target file is empty");
         this.targets = Lists.of(target);
         this.generatorPathDir = null;
         this.generatorBaseName = null;
@@ -120,7 +120,7 @@ public abstract class SplitTargetGenerator implements SafeCloseable {
      * @return this
      */
     public SplitTargetGenerator target(File... target) {
-        Valid.notEmpty(target, "target file is empty");
+        Assert.notEmpty(target, "target file is empty");
         OutputStream[] streams = Arrays.stream(target)
                 .map(Files1::openOutputStreamSafe)
                 .toArray(OutputStream[]::new);
@@ -134,7 +134,7 @@ public abstract class SplitTargetGenerator implements SafeCloseable {
      * @return this
      */
     public SplitTargetGenerator target(String... target) {
-        Valid.notEmpty(target, "target file is empty");
+        Assert.notEmpty(target, "target file is empty");
         OutputStream[] streams = Arrays.stream(target)
                 .map(Files1::openOutputStreamSafe)
                 .toArray(OutputStream[]::new);
@@ -161,8 +161,8 @@ public abstract class SplitTargetGenerator implements SafeCloseable {
      * @return this
      */
     public SplitTargetGenerator targetPath(String pathDir, String baseName, String nameSuffix) {
-        Valid.notNull(pathDir, "target path dir is null");
-        Valid.notNull(baseName, "target file base name is null");
+        Assert.notNull(pathDir, "target path dir is null");
+        Assert.notNull(baseName, "target file base name is null");
         this.targets = null;
         this.generatorPathDir = pathDir;
         this.generatorBaseName = baseName;

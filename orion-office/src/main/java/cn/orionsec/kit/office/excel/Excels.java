@@ -140,8 +140,8 @@ public class Excels {
      * @return symbol
      */
     public static String getColumnSymbol(int column) {
-        Valid.gt(column, 0, "column must > 0 && < 703");
-        Valid.lt(column, 703, "column must > 0 && < 703");
+        Assert.gt(column, 0, "column must > 0 && < 703");
+        Assert.lt(column, 703, "column must > 0 && < 703");
         if (column == 26) {
             return Const.LETTERS[25];
         }
@@ -1845,8 +1845,8 @@ public class Excels {
      * @param close    是否关闭流
      */
     public static void write(Workbook workbook, OutputStream out, boolean close) {
-        Valid.notNull(workbook, "workbook is null");
-        Valid.notNull(out, "outputStream is null");
+        Assert.notNull(workbook, "workbook is null");
+        Assert.notNull(out, "outputStream is null");
         try {
             workbook.write(out);
         } catch (Exception e) {
@@ -1879,8 +1879,8 @@ public class Excels {
      * @param close    是否关闭流
      */
     public static void write(Workbook workbook, OutputStream out, String password, boolean close) {
-        Valid.notNull(workbook, "workbook is null");
-        Valid.notNull(out, "outputStream is null");
+        Assert.notNull(workbook, "workbook is null");
+        Assert.notNull(out, "outputStream is null");
         if (password == null) {
             write(workbook, out, close);
             return;

@@ -27,7 +27,7 @@
 package cn.orionsec.kit.office.excel.split;
 
 import cn.orionsec.kit.lang.utils.Arrays1;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.office.excel.Excels;
 import cn.orionsec.kit.office.excel.writer.BaseExcelWriteable;
@@ -81,9 +81,9 @@ public class ExcelColumnSingleSplit extends BaseExcelWriteable {
 
     public ExcelColumnSingleSplit(Workbook sourceWorkbook, Sheet sourceSheet, int... columns) {
         super(new SXSSFWorkbook());
-        this.sourceWorkbook = Valid.notNull(sourceWorkbook, "split workbook is null");
-        this.sourceSheet = Valid.notNull(sourceSheet, "split sheet is null");
-        Valid.isTrue(!Arrays1.isEmpty(columns), "split columns is empty");
+        this.sourceWorkbook = Assert.notNull(sourceWorkbook, "split workbook is null");
+        this.sourceSheet = Assert.notNull(sourceSheet, "split sheet is null");
+        Assert.isTrue(!Arrays1.isEmpty(columns), "split columns is empty");
         this.targetSheet = super.workbook.createSheet(sourceSheet.getSheetName());
         this.columns = columns;
         this.streaming = Excels.isStreamingSheet(sourceSheet);

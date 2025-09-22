@@ -28,8 +28,8 @@ package cn.orionsec.kit.lang.define.iterator;
 
 import cn.orionsec.kit.lang.able.SafeCloseable;
 import cn.orionsec.kit.lang.constant.Const;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.io.Streams;
 
 import java.io.BufferedReader;
@@ -63,7 +63,7 @@ public class LineIterator implements Iterator<String>, Iterable<String>, SafeClo
     }
 
     public LineIterator(Reader reader, int bufferSize) {
-        Valid.notNull(reader, "reader is null");
+        Assert.notNull(reader, "reader is null");
         this.reader = Streams.toBufferedReader(reader, bufferSize);
     }
 

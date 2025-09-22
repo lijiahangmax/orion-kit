@@ -27,9 +27,9 @@
 package cn.orionsec.kit.lang.define.builder;
 
 import cn.orionsec.kit.lang.able.Buildable;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Objects1;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +83,7 @@ public class StringJoiner implements Buildable<String> {
     }
 
     public static StringJoiner of(Supplier<String> delimiterSupplier) {
-        Valid.notNull(delimiterSupplier, "delimiter supplier is null");
+        Assert.notNull(delimiterSupplier, "delimiter supplier is null");
         return new StringJoiner(delimiterSupplier.get());
     }
 
@@ -109,7 +109,7 @@ public class StringJoiner implements Buildable<String> {
      * @return this
      */
     public StringJoiner delimiter(Supplier<String> delimiterSupplier) {
-        Valid.notNull(delimiterSupplier, "delimiter supplier is null");
+        Assert.notNull(delimiterSupplier, "delimiter supplier is null");
         this.delimiter = delimiterSupplier.get();
         return this;
     }
@@ -132,7 +132,7 @@ public class StringJoiner implements Buildable<String> {
      * @return this
      */
     public StringJoiner prefix(Supplier<String> prefixSupplier) {
-        Valid.notNull(prefixSupplier, "prefix supplier is null");
+        Assert.notNull(prefixSupplier, "prefix supplier is null");
         this.prefix = prefixSupplier.get();
         return this;
     }
@@ -155,7 +155,7 @@ public class StringJoiner implements Buildable<String> {
      * @return this
      */
     public StringJoiner suffix(Supplier<String> suffixSupplier) {
-        Valid.notNull(suffixSupplier, "suffix supplier is null");
+        Assert.notNull(suffixSupplier, "suffix supplier is null");
         this.suffix = suffixSupplier.get();
         return this;
     }
@@ -207,7 +207,7 @@ public class StringJoiner implements Buildable<String> {
      * @param filter 过滤器
      */
     private void addFilter(Predicate<String> filter) {
-        Valid.notNull(filter, "filter is null");
+        Assert.notNull(filter, "filter is null");
         if (this.filter == null) {
             this.filter = filter;
         }
@@ -221,7 +221,7 @@ public class StringJoiner implements Buildable<String> {
      * @return this
      */
     public StringJoiner wrapper(Function<String, String> wrapper) {
-        Valid.notNull(wrapper, "wrapper is null");
+        Assert.notNull(wrapper, "wrapper is null");
         this.wrapper = wrapper;
         return this;
     }
@@ -237,7 +237,7 @@ public class StringJoiner implements Buildable<String> {
     }
 
     public StringJoiner with(Supplier<String> supplier) {
-        Valid.notNull(supplier, "supplier is null");
+        Assert.notNull(supplier, "supplier is null");
         modifiers.add(supplier.get());
         return this;
     }

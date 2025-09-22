@@ -29,8 +29,8 @@ package cn.orionsec.kit.lang.function.impl;
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.define.Console;
 import cn.orionsec.kit.lang.function.Functions;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
-import cn.orionsec.kit.lang.utils.Valid;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -83,13 +83,13 @@ public class ReaderLineConsumer implements Consumer<InputStream> {
     }
 
     public ReaderLineConsumer lineConsumer(Consumer<String> lineConsumer) {
-        Valid.notNull(lineConsumer, "line consumer is null");
+        Assert.notNull(lineConsumer, "line consumer is null");
         this.lineConsumer = lineConsumer;
         return this;
     }
 
     public ReaderLineConsumer lineConsumer(Consumer<String> lineConsumer, String charset) {
-        Valid.notNull(lineConsumer, "line consumer is null");
+        Assert.notNull(lineConsumer, "line consumer is null");
         this.lineConsumer = lineConsumer;
         this.charset = charset;
         return this;

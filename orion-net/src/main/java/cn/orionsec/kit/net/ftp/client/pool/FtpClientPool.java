@@ -27,8 +27,8 @@
 package cn.orionsec.kit.net.ftp.client.pool;
 
 import cn.orionsec.kit.lang.constant.Const;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.net.ftp.client.Ftps;
 import cn.orionsec.kit.net.ftp.client.config.FtpConfig;
@@ -86,7 +86,7 @@ public class FtpClientPool implements AutoCloseable {
     }
 
     public FtpClientPool(FtpClientFactory factory, int size) {
-        Valid.notNull(factory, "ftp client factory is null");
+        Assert.notNull(factory, "ftp client factory is null");
         this.timeout = Const.MS_S_5;
         this.noAvailableThenCreate = false;
         this.factory = factory;
@@ -189,7 +189,7 @@ public class FtpClientPool implements AutoCloseable {
      */
     public synchronized void returnClient(FTPClient client) {
         try {
-            Valid.notNull(client, "return client is null");
+            Assert.notNull(client, "return client is null");
             LOGGER.debug("return ftp client with pool");
             if (!pool.offer(client, timeout, TimeUnit.MILLISECONDS)) {
                 Ftps.destroy(client);

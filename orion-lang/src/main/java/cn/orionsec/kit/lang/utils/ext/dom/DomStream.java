@@ -26,9 +26,9 @@
  */
 package cn.orionsec.kit.lang.utils.ext.dom;
 
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -54,12 +54,12 @@ public class DomStream {
     }
 
     public DomStream(Document document) {
-        Valid.notNull(document, "the document is null");
+        Assert.notNull(document, "the document is null");
         this.element = document.getRootElement();
     }
 
     public DomStream(Element element) {
-        Valid.notNull(element, "the element is null");
+        Assert.notNull(element, "the element is null");
         this.element = element;
     }
 

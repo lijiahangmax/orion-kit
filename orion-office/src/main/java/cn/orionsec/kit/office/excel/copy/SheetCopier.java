@@ -26,7 +26,7 @@
  */
 package cn.orionsec.kit.office.excel.copy;
 
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.office.excel.Excels;
 import org.apache.poi.hssf.usermodel.HSSFPalette;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -72,11 +72,11 @@ public class SheetCopier {
     private int column;
 
     public SheetCopier(Workbook sourceWorkbook, Workbook targetWorkbook, Sheet sourceSheet, Sheet targetSheet) {
-        Valid.notNull(sourceWorkbook, "sourceWorkbook is null");
-        Valid.notNull(targetWorkbook, "targetWorkbook is null");
-        Valid.notNull(sourceSheet, "sourceSheet is null");
-        Valid.notNull(targetSheet, "targetSheet is null");
-        Valid.isTrue((sourceSheet.getClass() == targetSheet.getClass()), "sourceSheet class not equal targetSheet class");
+        Assert.notNull(sourceWorkbook, "sourceWorkbook is null");
+        Assert.notNull(targetWorkbook, "targetWorkbook is null");
+        Assert.notNull(sourceSheet, "sourceSheet is null");
+        Assert.notNull(targetSheet, "targetSheet is null");
+        Assert.isTrue((sourceSheet.getClass() == targetSheet.getClass()), "sourceSheet class not equal targetSheet class");
         this.sourceWorkbook = sourceWorkbook;
         this.targetWorkbook = targetWorkbook;
         this.sourceSheet = sourceSheet;

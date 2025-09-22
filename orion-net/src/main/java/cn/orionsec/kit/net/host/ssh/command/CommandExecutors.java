@@ -26,7 +26,7 @@
  */
 package cn.orionsec.kit.net.host.ssh.command;
 
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.net.host.SessionHolder;
 import cn.orionsec.kit.net.host.SessionStore;
@@ -101,7 +101,7 @@ public class CommandExecutors {
      * @throws IOException IOException
      */
     public static byte[] getCommandOutputResult(ICommandExecutor executor) throws IOException {
-        Valid.notNull(executor, "command executor is null");
+        Assert.notNull(executor, "command executor is null");
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
             // 执行命令

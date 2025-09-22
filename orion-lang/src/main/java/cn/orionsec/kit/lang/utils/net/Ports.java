@@ -27,7 +27,7 @@
 package cn.orionsec.kit.lang.utils.net;
 
 import cn.orionsec.kit.lang.constant.Const;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.io.Streams;
 
 import java.io.IOException;
@@ -94,9 +94,9 @@ public class Ports {
      * @return 端口 没有返回 -1
      */
     public static int getFreePort(int start, int end) {
-        Valid.gte(start, 1001, "start port must greater than 1000");
-        Valid.lte(end, 65535, "end port must less than 65536");
-        Valid.gt(end, start, "end port must greater than start");
+        Assert.gte(start, 1001, "start port must greater than 1000");
+        Assert.lte(end, 65535, "end port must less than 65536");
+        Assert.gt(end, start, "end port must greater than start");
         for (int i = start; i <= end; i++) {
             try {
                 ServerSocket serverSocket = new ServerSocket(i);
@@ -137,9 +137,9 @@ public class Ports {
      * @return 端口
      */
     public static List<Integer> getFreePorts(int start, int end) {
-        Valid.gte(start, 1001, "start port must greater than 1000");
-        Valid.lte(end, 65535, "end port must less than 65536");
-        Valid.gt(end, start, "end port must greater than start");
+        Assert.gte(start, 1001, "start port must greater than 1000");
+        Assert.lte(end, 65535, "end port must less than 65536");
+        Assert.gt(end, start, "end port must greater than start");
         List<Integer> freePorts = new ArrayList<>();
         for (int i = start; i <= end; i++) {
             try {
@@ -180,9 +180,9 @@ public class Ports {
      * @return 端口
      */
     public static List<Integer> getUsedPorts(int start, int end) {
-        Valid.gte(start, 1001, "start port must greater than 1000");
-        Valid.lte(end, 65535, "end port must less than 65536");
-        Valid.gt(end, start, "end port must greater than start");
+        Assert.gte(start, 1001, "start port must greater than 1000");
+        Assert.lte(end, 65535, "end port must less than 65536");
+        Assert.gt(end, start, "end port must greater than start");
         List<Integer> usedPorts = new ArrayList<>();
         for (int i = start; i <= end; i++) {
             try {
@@ -330,9 +330,9 @@ public class Ports {
      * @return openedPorts
      */
     public static List<Integer> getOpenPorts(String host, int start, int end, int timeout) {
-        Valid.gt(start, 0, "start port must greater than 0");
-        Valid.lte(end, 65535, "end port must less than 65536");
-        Valid.gt(end, start, "end port must greater than start");
+        Assert.gt(start, 0, "start port must greater than 0");
+        Assert.lte(end, 65535, "end port must less than 65536");
+        Assert.gt(end, start, "end port must greater than start");
         List<Integer> openedPorts = new ArrayList<>();
         for (int i = start; i <= end; i++) {
             try {
@@ -402,9 +402,9 @@ public class Ports {
      * @return closedPorts
      */
     public static List<Integer> getClosePorts(String host, int start, int end, int timeout) {
-        Valid.gt(start, 0, "start port must greater than 0");
-        Valid.lte(end, 65535, "end port must less than 65536");
-        Valid.gt(end, start, "end port must greater than start");
+        Assert.gt(start, 0, "start port must greater than 0");
+        Assert.lte(end, 65535, "end port must less than 65536");
+        Assert.gt(end, start, "end port must greater than start");
         List<Integer> closedPorts = new ArrayList<>();
         for (int i = start; i <= end; i++) {
             try {

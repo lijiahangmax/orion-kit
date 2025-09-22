@@ -26,8 +26,8 @@
  */
 package cn.orionsec.kit.lang.define.thread;
 
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
-import cn.orionsec.kit.lang.utils.Valid;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
@@ -48,15 +48,15 @@ public class ConcurrentRunnable implements Runnable {
     private CountDownLatch cd;
 
     public ConcurrentRunnable(Runnable r, CyclicBarrier cb) {
-        Valid.notNull(r, "runnable is null");
-        Valid.notNull(cb, "cyclicBarrier is null");
+        Assert.notNull(r, "runnable is null");
+        Assert.notNull(cb, "cyclicBarrier is null");
         this.r = r;
         this.cb = cb;
     }
 
     public ConcurrentRunnable(Runnable r, CountDownLatch cd) {
-        Valid.notNull(r, "runnable is null");
-        Valid.notNull(cd, "countDownLatch is null");
+        Assert.notNull(r, "runnable is null");
+        Assert.notNull(cd, "countDownLatch is null");
         this.r = r;
         this.cd = cd;
     }

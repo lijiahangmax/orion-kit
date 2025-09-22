@@ -28,7 +28,7 @@ package cn.orionsec.kit.http.support;
 
 import cn.orionsec.kit.lang.constant.StandardHttpHeader;
 import cn.orionsec.kit.lang.define.collect.MutableHashMap;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.convert.Converts;
 import cn.orionsec.kit.lang.utils.time.Dates;
 
@@ -228,7 +228,7 @@ public class HttpCookie implements Serializable {
 
     @Override
     public String toString() {
-        Valid.notNull(values, "cookies value is null");
+        Assert.notNull(values, "cookies value is null");
         StringBuilder cookie = new StringBuilder();
         int i = 0;
         for (Map.Entry<String, String> entry : values.entrySet()) {

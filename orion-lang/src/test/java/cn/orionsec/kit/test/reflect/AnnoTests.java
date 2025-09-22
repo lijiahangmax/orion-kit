@@ -27,7 +27,7 @@
 package cn.orionsec.kit.test.reflect;
 
 import cn.orionsec.kit.lang.define.Console;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.reflect.Annotations;
 import cn.orionsec.kit.lang.utils.reflect.Constructors;
 import cn.orionsec.kit.lang.utils.reflect.Fields;
@@ -68,33 +68,33 @@ public class AnnoTests {
 
     @Test
     public void present() {
-        Valid.isTrue(Annotations.present(User.class, UserAnno1.class));
+        Assert.isTrue(Annotations.present(User.class, UserAnno1.class));
 
-        Valid.isFalse(Annotations.present(User.class, UserAnno2.class));
-        Valid.isFalse(Annotations.present(User.class, UserAnno1.class, UserAnno2.class));
+        Assert.isFalse(Annotations.present(User.class, UserAnno2.class));
+        Assert.isFalse(Annotations.present(User.class, UserAnno1.class, UserAnno2.class));
 
-        Valid.isTrue(Annotations.present(Constructors.getConstructor(User.class, 1), UserAnno1.class));
-        Valid.isTrue(Annotations.present(Constructors.getConstructor(User.class, 2), UserAnno1.class, UserAnno2.class));
+        Assert.isTrue(Annotations.present(Constructors.getConstructor(User.class, 1), UserAnno1.class));
+        Assert.isTrue(Annotations.present(Constructors.getConstructor(User.class, 2), UserAnno1.class, UserAnno2.class));
 
-        Valid.isFalse(Annotations.present(Constructors.getConstructor(User.class, 0), UserAnno1.class));
-        Valid.isFalse(Annotations.present(Constructors.getConstructor(User.class, 1), UserAnno2.class));
-        Valid.isFalse(Annotations.present(Constructors.getConstructor(User.class, 1), UserAnno1.class, UserAnno2.class));
+        Assert.isFalse(Annotations.present(Constructors.getConstructor(User.class, 0), UserAnno1.class));
+        Assert.isFalse(Annotations.present(Constructors.getConstructor(User.class, 1), UserAnno2.class));
+        Assert.isFalse(Annotations.present(Constructors.getConstructor(User.class, 1), UserAnno1.class, UserAnno2.class));
 
-        Valid.isTrue(Annotations.present(Fields.getAccessibleField(User.class, "id"), UserAnno1.class));
-        Valid.isTrue(Annotations.present(Fields.getAccessibleField(User.class, "age"), UserAnno2.class));
-        Valid.isTrue(Annotations.present(Fields.getAccessibleField(User.class, "sex"), UserAnno1.class, UserAnno2.class));
+        Assert.isTrue(Annotations.present(Fields.getAccessibleField(User.class, "id"), UserAnno1.class));
+        Assert.isTrue(Annotations.present(Fields.getAccessibleField(User.class, "age"), UserAnno2.class));
+        Assert.isTrue(Annotations.present(Fields.getAccessibleField(User.class, "sex"), UserAnno1.class, UserAnno2.class));
 
-        Valid.isFalse(Annotations.present(Fields.getAccessibleField(User.class, "id"), UserAnno2.class));
-        Valid.isFalse(Annotations.present(Fields.getAccessibleField(User.class, "age"), UserAnno1.class));
-        Valid.isFalse(Annotations.present(Fields.getAccessibleField(User.class, "type"), UserAnno1.class, UserAnno2.class));
+        Assert.isFalse(Annotations.present(Fields.getAccessibleField(User.class, "id"), UserAnno2.class));
+        Assert.isFalse(Annotations.present(Fields.getAccessibleField(User.class, "age"), UserAnno1.class));
+        Assert.isFalse(Annotations.present(Fields.getAccessibleField(User.class, "type"), UserAnno1.class, UserAnno2.class));
 
-        Valid.isTrue(Annotations.present(Methods.getAccessibleMethod(User.class, "getId"), UserAnno1.class));
-        Valid.isTrue(Annotations.present(Methods.getAccessibleMethod(User.class, "setId"), UserAnno2.class));
-        Valid.isTrue(Annotations.present(Methods.getAccessibleMethod(User.class, "getAge"), UserAnno1.class, UserAnno2.class));
+        Assert.isTrue(Annotations.present(Methods.getAccessibleMethod(User.class, "getId"), UserAnno1.class));
+        Assert.isTrue(Annotations.present(Methods.getAccessibleMethod(User.class, "setId"), UserAnno2.class));
+        Assert.isTrue(Annotations.present(Methods.getAccessibleMethod(User.class, "getAge"), UserAnno1.class, UserAnno2.class));
 
-        Valid.isFalse(Annotations.present(Methods.getAccessibleMethod(User.class, "getId"), UserAnno2.class));
-        Valid.isFalse(Annotations.present(Methods.getAccessibleMethod(User.class, "setId"), UserAnno1.class));
-        Valid.isFalse(Annotations.present(Methods.getAccessibleMethod(User.class, "isOk"), UserAnno1.class, UserAnno2.class));
+        Assert.isFalse(Annotations.present(Methods.getAccessibleMethod(User.class, "getId"), UserAnno2.class));
+        Assert.isFalse(Annotations.present(Methods.getAccessibleMethod(User.class, "setId"), UserAnno1.class));
+        Assert.isFalse(Annotations.present(Methods.getAccessibleMethod(User.class, "isOk"), UserAnno1.class, UserAnno2.class));
     }
 
     @Test

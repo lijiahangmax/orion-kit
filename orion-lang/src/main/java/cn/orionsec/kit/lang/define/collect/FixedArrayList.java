@@ -27,7 +27,7 @@
 package cn.orionsec.kit.lang.define.collect;
 
 import cn.orionsec.kit.lang.constant.Const;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,7 +50,7 @@ public class FixedArrayList<E> extends ArrayList<E> {
 
     public FixedArrayList(int maxSize) {
         super();
-        this.maxSize = Valid.gt(maxSize, Const.N_0);
+        this.maxSize = Assert.gt(maxSize, Const.N_0);
     }
 
     public static <E> FixedArrayList<E> create(int maxSize) {
@@ -71,14 +71,14 @@ public class FixedArrayList<E> extends ArrayList<E> {
 
     @Override
     public boolean addAll(Collection<? extends E> c) {
-        Valid.lte(c.size(), maxSize);
+        Assert.lte(c.size(), maxSize);
         this.removeIfFull(c.size());
         return super.addAll(c);
     }
 
     @Override
     public boolean addAll(int index, Collection<? extends E> c) {
-        Valid.lte(c.size(), maxSize);
+        Assert.lte(c.size(), maxSize);
         this.removeIfFull(c.size());
         return super.addAll(index, c);
     }

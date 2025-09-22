@@ -52,7 +52,7 @@ import java.util.regex.Pattern;
  * @since 2019/11/18 16:25
  */
 @SuppressWarnings("unused")
-public abstract class Valid {
+public abstract class Assert {
 
     private static final String VALID_NOT_EQUAL = "the validated objects not equal";
     private static final String VALID_IS_EQUAL = "the validated objects is equal";
@@ -99,7 +99,7 @@ public abstract class Valid {
     private static final String RPC_WRAPPER_NOT_SUCCESS = "rpc wrapper not success. code: {}, message: {}";
     private static final String HTTP_REQ_NOT_OK = "http request not success. code: {}, url: {}";
 
-    public Valid() {
+    public Assert() {
     }
 
     public static void eq(Object o1, Object o2) {
@@ -153,7 +153,7 @@ public abstract class Valid {
     }
 
     public static <T> void compare(T t1, T t2, Comparator<T> comparator, String message, Object... values) {
-        Valid.notNull(comparator, message, values);
+        Assert.notNull(comparator, message, values);
         if (comparator.compare(t1, t2) != 0) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
@@ -164,7 +164,7 @@ public abstract class Valid {
     }
 
     public static <T> void notCompare(T t1, T t2, Comparator<T> comparator, String message, Object... values) {
-        Valid.notNull(comparator, message, values);
+        Assert.notNull(comparator, message, values);
         if (comparator.compare(t1, t2) == 0) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }

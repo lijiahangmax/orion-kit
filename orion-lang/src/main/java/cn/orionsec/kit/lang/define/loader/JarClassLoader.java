@@ -26,8 +26,8 @@
  */
 package cn.orionsec.kit.lang.define.loader;
 
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.lang.utils.reflect.Classes;
 import cn.orionsec.kit.lang.utils.reflect.Methods;
@@ -110,7 +110,7 @@ public class JarClassLoader extends URLClassLoader {
      * @return this
      */
     public JarClassLoader addJar(String file) {
-        Valid.notBlank(file, "file path is empty");
+        Assert.notBlank(file, "file path is empty");
         return this.addJar(new File(file));
     }
 
@@ -121,7 +121,7 @@ public class JarClassLoader extends URLClassLoader {
      * @return this
      */
     public JarClassLoader addJar(File file) {
-        Valid.notNull(file, "jar file is null");
+        Assert.notNull(file, "jar file is null");
         if (isJarFile(file)) {
             this.addURL(Files1.toUrl(file));
         } else {

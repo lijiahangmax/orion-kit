@@ -28,7 +28,7 @@ package cn.orionsec.kit.office.excel;
 
 import cn.orionsec.kit.lang.able.SafeCloseable;
 import cn.orionsec.kit.lang.define.collect.MutableMap;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.office.excel.reader.ExcelArrayReader;
@@ -114,14 +114,14 @@ public class ExcelExt implements SafeCloseable {
         } else {
             this.workbook = Excels.openWorkbook(in, password);
         }
-        Valid.notNull(workbook, "workbook is null");
+        Assert.notNull(workbook, "workbook is null");
         if (close) {
             Streams.close(in);
         }
     }
 
     public ExcelExt(Workbook workbook) {
-        Valid.notNull(workbook, "workbook is null");
+        Assert.notNull(workbook, "workbook is null");
         this.workbook = workbook;
     }
 

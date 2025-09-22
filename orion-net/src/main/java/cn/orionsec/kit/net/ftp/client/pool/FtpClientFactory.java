@@ -26,8 +26,8 @@
  */
 package cn.orionsec.kit.net.ftp.client.pool;
 
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.net.ftp.client.config.FtpConfig;
 import cn.orionsec.kit.net.ftp.client.config.FtpsConfig;
 import cn.orionsec.kit.net.ftp.client.instance.FtpInstance;
@@ -54,7 +54,7 @@ public class FtpClientFactory {
     private final FtpConfig config;
 
     public FtpClientFactory(FtpConfig config) {
-        Valid.notNull(config, "config is null");
+        Assert.notNull(config, "config is null");
         this.config = config;
     }
 

@@ -27,7 +27,7 @@
 package cn.orionsec.kit.lang.define.collect;
 
 import cn.orionsec.kit.lang.function.*;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.convert.Converts;
 import cn.orionsec.kit.lang.utils.math.BigDecimals;
 import cn.orionsec.kit.lang.utils.math.BigIntegers;
@@ -66,7 +66,7 @@ public interface MutableCollection<E> extends Collection<E> {
     }
 
     default Byte getByte(int i, Supplier<Byte> supplier) {
-        Valid.notNull(supplier);
+        Assert.notNull(supplier);
         E e = this.get(i);
         if (e == null) {
             return supplier.get();
@@ -83,7 +83,7 @@ public interface MutableCollection<E> extends Collection<E> {
     }
 
     default byte getByteValue(int i, ByteSupplier supplier) {
-        Valid.notNull(supplier);
+        Assert.notNull(supplier);
         E e = this.get(i);
         if (e == null) {
             return supplier.getAsByte();
@@ -100,7 +100,7 @@ public interface MutableCollection<E> extends Collection<E> {
     }
 
     default Short getShort(int i, Supplier<Short> supplier) {
-        Valid.notNull(supplier);
+        Assert.notNull(supplier);
         E e = this.get(i);
         if (e == null) {
             return supplier.get();
@@ -117,7 +117,7 @@ public interface MutableCollection<E> extends Collection<E> {
     }
 
     default short getShortValue(int i, ShortSupplier supplier) {
-        Valid.notNull(supplier);
+        Assert.notNull(supplier);
         E e = this.get(i);
         if (e == null) {
             return supplier.getAsShort();
@@ -134,7 +134,7 @@ public interface MutableCollection<E> extends Collection<E> {
     }
 
     default Integer getInteger(int i, Supplier<Integer> supplier) {
-        Valid.notNull(supplier);
+        Assert.notNull(supplier);
         E e = this.get(i);
         if (e == null) {
             return supplier.get();
@@ -151,7 +151,7 @@ public interface MutableCollection<E> extends Collection<E> {
     }
 
     default int getIntValue(int i, IntSupplier supplier) {
-        Valid.notNull(supplier);
+        Assert.notNull(supplier);
         E e = this.get(i);
         if (e == null) {
             return supplier.getAsInt();
@@ -168,7 +168,7 @@ public interface MutableCollection<E> extends Collection<E> {
     }
 
     default Long getLong(int i, Supplier<Long> supplier) {
-        Valid.notNull(supplier);
+        Assert.notNull(supplier);
         E e = this.get(i);
         if (e == null) {
             return supplier.get();
@@ -185,7 +185,7 @@ public interface MutableCollection<E> extends Collection<E> {
     }
 
     default long getLongValue(int i, LongSupplier supplier) {
-        Valid.notNull(supplier);
+        Assert.notNull(supplier);
         E e = this.get(i);
         if (e == null) {
             return supplier.getAsLong();
@@ -202,7 +202,7 @@ public interface MutableCollection<E> extends Collection<E> {
     }
 
     default Float getFloat(int i, Supplier<Float> supplier) {
-        Valid.notNull(supplier);
+        Assert.notNull(supplier);
         E e = this.get(i);
         if (e == null) {
             return supplier.get();
@@ -219,7 +219,7 @@ public interface MutableCollection<E> extends Collection<E> {
     }
 
     default float getFloatValue(int i, FloatSupplier supplier) {
-        Valid.notNull(supplier);
+        Assert.notNull(supplier);
         E e = this.get(i);
         if (e == null) {
             return supplier.getAsFloat();
@@ -236,7 +236,7 @@ public interface MutableCollection<E> extends Collection<E> {
     }
 
     default Double getDouble(int i, Supplier<Double> supplier) {
-        Valid.notNull(supplier);
+        Assert.notNull(supplier);
         E e = this.get(i);
         if (e == null) {
             return supplier.get();
@@ -253,7 +253,7 @@ public interface MutableCollection<E> extends Collection<E> {
     }
 
     default double getDoubleValue(int i, DoubleSupplier supplier) {
-        Valid.notNull(supplier);
+        Assert.notNull(supplier);
         E e = this.get(i);
         if (e == null) {
             return supplier.getAsDouble();
@@ -270,7 +270,7 @@ public interface MutableCollection<E> extends Collection<E> {
     }
 
     default Boolean getBoolean(int i, Supplier<Boolean> supplier) {
-        Valid.notNull(supplier);
+        Assert.notNull(supplier);
         E e = this.get(i);
         if (e == null) {
             return supplier.get();
@@ -287,7 +287,7 @@ public interface MutableCollection<E> extends Collection<E> {
     }
 
     default boolean getBooleanValue(int i, BooleanSupplier supplier) {
-        Valid.notNull(supplier);
+        Assert.notNull(supplier);
         E e = this.get(i);
         if (e == null) {
             return supplier.getAsBoolean();
@@ -304,7 +304,7 @@ public interface MutableCollection<E> extends Collection<E> {
     }
 
     default Character getCharacter(int i, Supplier<Character> supplier) {
-        Valid.notNull(supplier);
+        Assert.notNull(supplier);
         E e = this.get(i);
         if (e == null) {
             return supplier.get();
@@ -321,7 +321,7 @@ public interface MutableCollection<E> extends Collection<E> {
     }
 
     default char getCharValue(int i, CharSupplier supplier) {
-        Valid.notNull(supplier);
+        Assert.notNull(supplier);
         E e = this.get(i);
         if (e == null) {
             return supplier.getAsChar();
@@ -338,7 +338,7 @@ public interface MutableCollection<E> extends Collection<E> {
     }
 
     default String getString(int i, Supplier<String> supplier) {
-        Valid.notNull(supplier);
+        Assert.notNull(supplier);
         E e = this.get(i);
         if (e == null) {
             return supplier.get();
@@ -355,7 +355,7 @@ public interface MutableCollection<E> extends Collection<E> {
     }
 
     default Date getDate(int i, Supplier<Date> supplier) {
-        Valid.notNull(supplier);
+        Assert.notNull(supplier);
         E e = this.get(i);
         if (e == null) {
             return supplier.get();
@@ -372,7 +372,7 @@ public interface MutableCollection<E> extends Collection<E> {
     }
 
     default LocalDateTime getLocalDateTime(int i, Supplier<LocalDateTime> supplier) {
-        Valid.notNull(supplier);
+        Assert.notNull(supplier);
         E e = this.get(i);
         if (e == null) {
             return supplier.get();
@@ -389,7 +389,7 @@ public interface MutableCollection<E> extends Collection<E> {
     }
 
     default LocalDate getLocalDate(int i, Supplier<LocalDate> supplier) {
-        Valid.notNull(supplier);
+        Assert.notNull(supplier);
         E e = this.get(i);
         if (e == null) {
             return supplier.get();
@@ -406,7 +406,7 @@ public interface MutableCollection<E> extends Collection<E> {
     }
 
     default BigDecimal getBigDecimal(int i, Supplier<BigDecimal> supplier) {
-        Valid.notNull(supplier);
+        Assert.notNull(supplier);
         E e = this.get(i);
         if (e == null) {
             return supplier.get();
@@ -423,7 +423,7 @@ public interface MutableCollection<E> extends Collection<E> {
     }
 
     default BigInteger getBigInteger(int i, Supplier<BigInteger> supplier) {
-        Valid.notNull(supplier);
+        Assert.notNull(supplier);
         E e = this.get(i);
         if (e == null) {
             return supplier.get();
@@ -441,7 +441,7 @@ public interface MutableCollection<E> extends Collection<E> {
 
     @SuppressWarnings("unchecked")
     default <V> V getObject(int i, Supplier<V> supplier) {
-        Valid.notNull(supplier);
+        Assert.notNull(supplier);
         E e = this.get(i);
         if (e == null) {
             return supplier.get();
@@ -454,7 +454,7 @@ public interface MutableCollection<E> extends Collection<E> {
     }
 
     default E get(int i, Supplier<E> supplier) {
-        Valid.notNull(supplier);
+        Assert.notNull(supplier);
         E e = this.get(i);
         if (e == null) {
             return supplier.get();

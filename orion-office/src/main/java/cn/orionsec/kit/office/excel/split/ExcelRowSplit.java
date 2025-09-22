@@ -28,8 +28,8 @@ package cn.orionsec.kit.office.excel.split;
 
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.utils.Arrays1;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.office.excel.Excels;
 import cn.orionsec.kit.office.support.SplitTargetGenerator;
@@ -93,8 +93,8 @@ public class ExcelRowSplit extends SplitTargetGenerator {
     private boolean end;
 
     public ExcelRowSplit(Sheet sheet, int limit) {
-        this.sheet = Valid.notNull(sheet, "split sheet is null");
-        Valid.lte(0, limit, "limit not be lte 0");
+        this.sheet = Assert.notNull(sheet, "split sheet is null");
+        Assert.lte(0, limit, "limit not be lte 0");
         this.columnSize = 32;
         this.limit = limit;
         this.streaming = Excels.isStreamingSheet(sheet);

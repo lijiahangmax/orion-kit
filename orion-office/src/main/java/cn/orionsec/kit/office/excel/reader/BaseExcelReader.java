@@ -27,8 +27,8 @@
 package cn.orionsec.kit.office.excel.reader;
 
 import cn.orionsec.kit.lang.able.SafeCloseable;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.office.excel.option.ImportFieldOption;
 import cn.orionsec.kit.office.excel.picture.PictureParser;
@@ -133,8 +133,8 @@ public abstract class BaseExcelReader<K, T> implements SafeCloseable, Iterable<T
     protected boolean init;
 
     protected BaseExcelReader(Workbook workbook, Sheet sheet, List<T> rows, Consumer<T> consumer) {
-        Valid.notNull(workbook, "workbook is null");
-        Valid.notNull(sheet, "sheet is null");
+        Assert.notNull(workbook, "workbook is null");
+        Assert.notNull(sheet, "sheet is null");
         if (rows == null && consumer == null) {
             throw Exceptions.argument("rows container or row consumer one of them must not be empty");
         }
@@ -352,7 +352,7 @@ public abstract class BaseExcelReader<K, T> implements SafeCloseable, Iterable<T
      * @param option 配置
      */
     protected void addOption(K k, ImportFieldOption option) {
-        Valid.notNull(option, "field option is null");
+        Assert.notNull(option, "field option is null");
         ExcelReadType type = option.getType();
         if (type == null) {
             throw Exceptions.init("type must not be null");

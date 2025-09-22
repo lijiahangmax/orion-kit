@@ -26,14 +26,14 @@
  */
 package cn.orionsec.kit.lang.exception.argument;
 
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 
 /**
  * 对象验证不合法异常
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @see Valid
+ * @see Assert
  * @since 2020/10/18 21:37
  */
 public class InvalidArgumentException extends RuntimeException {

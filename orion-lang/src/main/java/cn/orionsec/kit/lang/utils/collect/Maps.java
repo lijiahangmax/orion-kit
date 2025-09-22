@@ -30,12 +30,12 @@ import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.define.collect.*;
 import cn.orionsec.kit.lang.define.wrapper.Pair;
 import cn.orionsec.kit.lang.utils.Arrays1;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.math.Numbers;
 
-import java.util.Collections;
 import java.util.*;
+import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -340,8 +340,8 @@ public class Maps {
     public static <K1, V1, K2, V2> Map<K2, V2> map(Map<K1, V1> map,
                                                    Function<K1, K2> keyMapper,
                                                    Function<V1, V2> valueMapper) {
-        Valid.notNull(keyMapper, "key mapper function is null");
-        Valid.notNull(valueMapper, "value mapper function is null");
+        Assert.notNull(keyMapper, "key mapper function is null");
+        Assert.notNull(valueMapper, "value mapper function is null");
         int size = size(map);
         if (size == 0) {
             return new HashMap<>(Const.CAPACITY_16);

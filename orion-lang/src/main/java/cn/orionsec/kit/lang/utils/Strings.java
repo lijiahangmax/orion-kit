@@ -199,7 +199,7 @@ public class Strings {
      * @param acceptor acceptor
      */
     public static void ifNotBlank(String s, Consumer<String> acceptor) {
-        Valid.notNull(acceptor, "acceptor is null");
+        Assert.notNull(acceptor, "acceptor is null");
         if (isBlank(s)) {
             return;
         }
@@ -213,7 +213,7 @@ public class Strings {
      * @param acceptor acceptor
      */
     public static void ifNotEmpty(String s, Consumer<String> acceptor) {
-        Valid.notNull(acceptor, "acceptor is null");
+        Assert.notNull(acceptor, "acceptor is null");
         if (isEmpty(s)) {
             return;
         }
@@ -1303,7 +1303,7 @@ public class Strings {
      * @return 省略后的字符串
      */
     public static String centerOmit(String str, int leftLength, int length, String omit) {
-        Valid.gte(length, leftLength, "length must >= left length");
+        Assert.gte(length, leftLength, "length must >= left length");
         if (isEmpty(str)) {
             return str;
         }

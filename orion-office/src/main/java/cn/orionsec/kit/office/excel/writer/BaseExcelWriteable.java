@@ -27,7 +27,7 @@
 package cn.orionsec.kit.office.excel.writer;
 
 import cn.orionsec.kit.lang.able.SafeCloseable;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.office.excel.Excels;
@@ -48,37 +48,37 @@ public class BaseExcelWriteable implements SafeCloseable {
     protected Workbook workbook;
 
     public BaseExcelWriteable(Workbook workbook) {
-        Valid.notNull(workbook, "workbook is null");
+        Assert.notNull(workbook, "workbook is null");
         this.workbook = workbook;
     }
 
     public BaseExcelWriteable write(String file) {
-        Valid.notNull(file, "file is null");
+        Assert.notNull(file, "file is null");
         return this.write(Files1.openOutputStreamSafe(file), null, true);
     }
 
     public BaseExcelWriteable write(File file) {
-        Valid.notNull(file, "file is null");
+        Assert.notNull(file, "file is null");
         return this.write(Files1.openOutputStreamSafe(file), null, true);
     }
 
     public BaseExcelWriteable write(OutputStream out) {
-        Valid.notNull(out, "stream is null");
+        Assert.notNull(out, "stream is null");
         return this.write(out, null, false);
     }
 
     public BaseExcelWriteable write(String file, String password) {
-        Valid.notNull(file, "file is null");
+        Assert.notNull(file, "file is null");
         return this.write(Files1.openOutputStreamSafe(file), password, true);
     }
 
     public BaseExcelWriteable write(File file, String password) {
-        Valid.notNull(file, "file is null");
+        Assert.notNull(file, "file is null");
         return this.write(Files1.openOutputStreamSafe(file), password, true);
     }
 
     public BaseExcelWriteable write(OutputStream out, String password) {
-        Valid.notNull(out, "stream is null");
+        Assert.notNull(out, "stream is null");
         return this.write(out, password, false);
     }
 

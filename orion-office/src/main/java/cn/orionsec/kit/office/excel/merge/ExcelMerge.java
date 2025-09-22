@@ -26,7 +26,7 @@
  */
 package cn.orionsec.kit.office.excel.merge;
 
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.office.excel.Excels;
 import cn.orionsec.kit.office.excel.writer.BaseExcelWriteable;
 import org.apache.poi.ss.usermodel.*;
@@ -69,7 +69,7 @@ public class ExcelMerge extends BaseExcelWriteable {
 
     public ExcelMerge(Workbook sourceWorkbook, Sheet sourceSheet) {
         super(sourceWorkbook);
-        Valid.isFalse(Excels.isStreamingSheet(sourceSheet), "origin is not be streaming");
+        Assert.isFalse(Excels.isStreamingSheet(sourceSheet), "origin is not be streaming");
         this.sourceWorkbook = sourceWorkbook;
         if (sourceSheet == null) {
             sourceSheet = sourceWorkbook.createSheet();

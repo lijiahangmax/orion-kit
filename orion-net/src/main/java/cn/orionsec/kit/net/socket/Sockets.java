@@ -26,7 +26,7 @@
  */
 package cn.orionsec.kit.net.socket;
 
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -77,9 +77,9 @@ public class Sockets {
      * @return ServerSocket 未找到返回null
      */
     public static ServerSocket create(int start, int end) {
-        Valid.gt(start, 1000, "start port must greater than 1000");
-        Valid.gt(end, 1000, "end port must greater than 1000");
-        Valid.lte(end, 65535, "end port must less than 65536");
+        Assert.gt(start, 1000, "start port must greater than 1000");
+        Assert.gt(end, 1000, "end port must greater than 1000");
+        Assert.lte(end, 65535, "end port must less than 65536");
         for (int i = start; i <= end; i++) {
             try {
                 return new ServerSocket(i);

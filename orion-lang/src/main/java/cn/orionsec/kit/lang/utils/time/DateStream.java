@@ -27,7 +27,7 @@
 package cn.orionsec.kit.lang.utils.time;
 
 import cn.orionsec.kit.lang.define.support.CloneSupport;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -53,28 +53,28 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
     }
 
     public DateStream(Date date) {
-        Valid.notNull(date, "date is null");
+        Assert.notNull(date, "date is null");
         this.c = Dates.calendar(date);
     }
 
     public DateStream(Date date, TimeZone timeZone) {
-        Valid.notNull(date, "date is null");
-        Valid.notNull(timeZone, "time zone is null");
+        Assert.notNull(date, "date is null");
+        Assert.notNull(timeZone, "time zone is null");
         this.c = Calendar.getInstance(timeZone);
         this.c.setTime(date);
     }
 
     public DateStream(Date date, Locale locale) {
-        Valid.notNull(date, "date is null");
-        Valid.notNull(locale, "locale is null");
+        Assert.notNull(date, "date is null");
+        Assert.notNull(locale, "locale is null");
         this.c = Calendar.getInstance(locale);
         this.c.setTime(date);
     }
 
     public DateStream(Date date, TimeZone timeZone, Locale locale) {
-        Valid.notNull(date, "date is null");
-        Valid.notNull(timeZone, "time zone is null");
-        Valid.notNull(locale, "locale is null");
+        Assert.notNull(date, "date is null");
+        Assert.notNull(timeZone, "time zone is null");
+        Assert.notNull(locale, "locale is null");
         this.c = Calendar.getInstance(timeZone, locale);
         this.c.setTime(date);
     }

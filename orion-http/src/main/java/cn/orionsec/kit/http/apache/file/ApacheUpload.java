@@ -34,9 +34,9 @@ import cn.orionsec.kit.http.support.HttpContentType;
 import cn.orionsec.kit.http.support.HttpMethod;
 import cn.orionsec.kit.http.support.HttpUploadPart;
 import cn.orionsec.kit.lang.constant.StandardContentType;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Charsets;
 import cn.orionsec.kit.lang.utils.Exceptions;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -139,7 +139,7 @@ public class ApacheUpload extends BaseApacheRequest {
 
     @Override
     protected HttpEntity getEntry() {
-        Valid.notEmpty(parts, "upload part is empty");
+        Assert.notEmpty(parts, "upload part is empty");
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         if (formParts != null) {
             formParts.forEach((k, v) -> {

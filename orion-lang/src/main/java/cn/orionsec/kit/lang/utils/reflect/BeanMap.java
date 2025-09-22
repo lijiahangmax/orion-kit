@@ -28,7 +28,7 @@ package cn.orionsec.kit.lang.utils.reflect;
 
 import cn.orionsec.kit.lang.define.collect.MutableLinkedHashMap;
 import cn.orionsec.kit.lang.utils.Arrays1;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.VariableStyles;
 
 import java.lang.reflect.Method;
@@ -76,7 +76,7 @@ public class BeanMap extends MutableLinkedHashMap<String, Object> {
     }
 
     public BeanMap(Object o, VariableStyles variableStyle, boolean addNull, String... ignoreFields) {
-        Valid.notNull(o, "object is null");
+        Assert.notNull(o, "object is null");
         this.o = o;
         this.variableStyle = variableStyle;
         this.addNull = addNull;

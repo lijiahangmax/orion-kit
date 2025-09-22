@@ -26,9 +26,9 @@
  */
 package cn.orionsec.kit.net.host;
 
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import com.jcraft.jsch.Identity;
 import com.jcraft.jsch.JSch;
@@ -58,7 +58,7 @@ public class SessionHolder {
     }
 
     public SessionHolder(JSch ch) {
-        Valid.notNull(ch, "jsch is null");
+        Assert.notNull(ch, "jsch is null");
         this.ch = ch;
     }
 
@@ -124,7 +124,7 @@ public class SessionHolder {
      * @param password       私钥密码
      */
     public void addIdentity(String privateKeyPath, String publicKeyPath, String password) {
-        Valid.notNull(privateKeyPath, "private key is null");
+        Assert.notNull(privateKeyPath, "private key is null");
         try {
             ch.addIdentity(privateKeyPath,
                     publicKeyPath,
@@ -164,8 +164,8 @@ public class SessionHolder {
      * @param password       私钥密码
      */
     public void addIdentityValue(String keyName, String privateKeyValue, String publicKeyValue, String password) {
-        Valid.notNull(keyName, "key name is null");
-        Valid.notNull(privateKeyValue, "private key is null");
+        Assert.notNull(keyName, "key name is null");
+        Assert.notNull(privateKeyValue, "private key is null");
         try {
             ch.addIdentity(keyName,
                     Strings.bytes(privateKeyValue),

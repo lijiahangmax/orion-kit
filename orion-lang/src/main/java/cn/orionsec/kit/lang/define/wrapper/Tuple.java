@@ -31,7 +31,7 @@ import cn.orionsec.kit.lang.define.iterator.ArrayIterator;
 import cn.orionsec.kit.lang.define.iterator.EmptyIterator;
 import cn.orionsec.kit.lang.define.support.CloneSupport;
 import cn.orionsec.kit.lang.utils.Arrays1;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.json.Jsons;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -58,7 +58,7 @@ public class Tuple extends CloneSupport<Tuple> implements Serializable, IJsonObj
     private final Object[] members;
 
     public Tuple(Object... members) {
-        Valid.notEmpty(members, "arguments size is zero");
+        Assert.notEmpty(members, "arguments size is zero");
         this.members = members;
     }
 

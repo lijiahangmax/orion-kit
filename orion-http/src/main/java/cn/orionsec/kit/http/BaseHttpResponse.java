@@ -27,7 +27,7 @@
 package cn.orionsec.kit.http;
 
 import cn.orionsec.kit.lang.able.IHttpResponse;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 
@@ -58,7 +58,7 @@ public abstract class BaseHttpResponse implements IHttpResponse {
      * 验证是否成功
      */
     public void validOk() {
-        Valid.validHttpOk(this);
+        Assert.validHttpOk(this);
     }
 
     /**

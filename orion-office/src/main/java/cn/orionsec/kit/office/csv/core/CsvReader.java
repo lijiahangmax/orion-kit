@@ -29,10 +29,10 @@ package cn.orionsec.kit.office.csv.core;
 import cn.orionsec.kit.lang.able.SafeCloseable;
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.constant.Letters;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Objects1;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.office.csv.option.CsvOption;
@@ -152,7 +152,7 @@ public class CsvReader implements SafeCloseable {
     }
 
     public CsvReader(InputStream in, CsvReaderOption option) {
-        Valid.notNull(in, "inputStream can not be null");
+        Assert.notNull(in, "inputStream can not be null");
         this.option = Objects1.def(option, CsvReaderOption::new);
         this.reader = new InputStreamReader(in, this.option.getCharset());
         this.isQualified = new boolean[values.length];
@@ -167,7 +167,7 @@ public class CsvReader implements SafeCloseable {
     }
 
     public CsvReader(Reader reader, CsvReaderOption option) {
-        Valid.notNull(reader, "reader can not be null");
+        Assert.notNull(reader, "reader can not be null");
         this.reader = reader;
         this.option = Objects1.def(option, CsvReaderOption::new);
         this.isQualified = new boolean[values.length];
@@ -180,7 +180,7 @@ public class CsvReader implements SafeCloseable {
      * @return CsvReader
      */
     public static CsvReader parse(String data) {
-        Valid.notBlank(data, "data is blank");
+        Assert.notBlank(data, "data is blank");
         return new CsvReader(new StringReader(data));
     }
 
@@ -192,7 +192,7 @@ public class CsvReader implements SafeCloseable {
      * @return CsvReader
      */
     public static CsvReader parse(String data, char delimiter) {
-        Valid.notBlank(data, "data is blank");
+        Assert.notBlank(data, "data is blank");
         return new CsvReader(new StringReader(data), new CsvReaderOption(delimiter));
     }
 
@@ -204,7 +204,7 @@ public class CsvReader implements SafeCloseable {
      * @return CsvReader
      */
     public static CsvReader parse(String data, CsvReaderOption option) {
-        Valid.notBlank(data, "data is blank");
+        Assert.notBlank(data, "data is blank");
         return new CsvReader(new StringReader(data), option);
     }
 

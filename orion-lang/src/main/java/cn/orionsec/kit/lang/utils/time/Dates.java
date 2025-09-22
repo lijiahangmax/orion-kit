@@ -26,8 +26,8 @@
  */
 package cn.orionsec.kit.lang.utils.time;
 
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.convert.Converts;
 import cn.orionsec.kit.lang.utils.time.ago.DateAgo;
 import cn.orionsec.kit.lang.utils.time.format.FastDateFormat;
@@ -857,35 +857,35 @@ public class Dates extends BaseDates {
     }
 
     public static DateStream stream(TimeZone timeZone) {
-        Valid.notNull(timeZone);
+        Assert.notNull(timeZone);
         return new DateStream(new Date(), timeZone);
     }
 
     public static DateStream stream(Locale locale) {
-        Valid.notNull(locale);
+        Assert.notNull(locale);
         return new DateStream(new Date(), locale);
     }
 
     public static DateStream stream(TimeZone timeZone, Locale locale) {
-        Valid.notNull(timeZone);
-        Valid.notNull(locale);
+        Assert.notNull(timeZone);
+        Assert.notNull(locale);
         return new DateStream(new Date(), timeZone, locale);
     }
 
     public static DateStream stream(Date date) {
-        Valid.notNull(date);
+        Assert.notNull(date);
         return new DateStream(date);
     }
 
     public static DateStream stream(Date date, TimeZone timeZone) {
-        Valid.notNull(date);
-        Valid.notNull(timeZone);
+        Assert.notNull(date);
+        Assert.notNull(timeZone);
         return new DateStream(date, timeZone);
     }
 
     public static DateStream stream(Date date, Locale locale) {
-        Valid.notNull(date);
-        Valid.notNull(locale);
+        Assert.notNull(date);
+        Assert.notNull(locale);
         return new DateStream(date, locale);
     }
 
@@ -898,9 +898,9 @@ public class Dates extends BaseDates {
      * @return 流
      */
     public static DateStream stream(Date date, TimeZone timeZone, Locale locale) {
-        Valid.notNull(date);
-        Valid.notNull(timeZone);
-        Valid.notNull(locale);
+        Assert.notNull(date);
+        Assert.notNull(timeZone);
+        Assert.notNull(locale);
         return new DateStream(date, timeZone, locale);
     }
 
@@ -911,7 +911,7 @@ public class Dates extends BaseDates {
      * @return 流
      */
     public static DateStream stream(Calendar c) {
-        Valid.notNull(c);
+        Assert.notNull(c);
         return new DateStream(c);
     }
 

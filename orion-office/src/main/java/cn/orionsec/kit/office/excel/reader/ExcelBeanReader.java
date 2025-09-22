@@ -26,10 +26,10 @@
  */
 package cn.orionsec.kit.office.excel.reader;
 
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Objects1;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.codec.Base64s;
 import cn.orionsec.kit.lang.utils.reflect.Annotations;
 import cn.orionsec.kit.lang.utils.reflect.Constructors;
@@ -104,8 +104,8 @@ public class ExcelBeanReader<T> extends BaseExcelReader<String, T> {
 
     protected ExcelBeanReader(Workbook workbook, Sheet sheet, Class<T> targetClass, List<T> rows, Consumer<T> consumer) {
         super(workbook, sheet, rows, consumer);
-        this.targetClass = Valid.notNull(targetClass, "target class is null");
-        this.constructor = Valid.notNull(Constructors.getDefaultConstructor(targetClass), "target class not found default constructor");
+        this.targetClass = Assert.notNull(targetClass, "target class is null");
+        this.constructor = Assert.notNull(Constructors.getDefaultConstructor(targetClass), "target class not found default constructor");
         this.setters = new HashMap<>();
         this.options = new HashMap<>();
         this.analysisField();
@@ -177,8 +177,8 @@ public class ExcelBeanReader<T> extends BaseExcelReader<String, T> {
      */
     @Override
     protected void addOption(String field, ImportFieldOption option) {
-        Valid.notNull(option, "field option is null");
-        Valid.notNull(setters.get(field), "not found setter method ({}) in {}", field, targetClass);
+        Assert.notNull(option, "field option is null");
+        Assert.notNull(setters.get(field), "not found setter method ({}) in {}", field, targetClass);
         super.addOption(field, option);
     }
 
@@ -310,9 +310,9 @@ public class ExcelBeanReader<T> extends BaseExcelReader<String, T> {
      * @param method    method
      */
     private void analysisColumn(ImportFieldOption option, String fieldName, Method method) {
-        Valid.notNull(option, "option is null");
-        Valid.notNull(method, fieldName + " setter method not found from " + targetClass);
-        Valid.gte(option.getIndex(), 0, "index must >= 0");
+        Assert.notNull(option, "option is null");
+        Assert.notNull(method, fieldName + " setter method not found from " + targetClass);
+        Assert.gte(option.getIndex(), 0, "index must >= 0");
         // check
         ExcelReadType type = Objects1.def(option.getType(), ExcelReadType.TEXT);
         option.setType(type);

@@ -27,7 +27,7 @@
 package cn.orionsec.kit.generator;
 
 import cn.orionsec.kit.generator.idcard.IdCardGenerator;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.identity.IdCards;
 import org.junit.Test;
 
@@ -51,8 +51,8 @@ public class IdCardGeneratorTest {
             System.out.print(IdCardGenerator.getPeriodString(c) + " ");
             System.out.print(IdCardGenerator.getAddress(c) + " ");
             System.out.println();
-            Valid.isTrue(IdCards.isValidCard(c));
-            Valid.isTrue(IdCards.getAge(c) == 18);
+            Assert.isTrue(IdCards.isValidCard(c));
+            Assert.isTrue(IdCards.getAge(c) == 18);
         }
     }
 
@@ -70,7 +70,7 @@ public class IdCardGeneratorTest {
             System.out.print(Arrays.toString(IdCardGenerator.getAddressCodeExt(c)) + " ");
             System.out.print(Arrays.toString(IdCardGenerator.getAddressExt(c)) + " ");
             System.out.println();
-            Valid.isTrue(IdCards.isValidCard(c));
+            Assert.isTrue(IdCards.isValidCard(c));
         }
     }
 

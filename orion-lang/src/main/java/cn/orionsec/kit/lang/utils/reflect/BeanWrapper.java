@@ -26,10 +26,10 @@
  */
 package cn.orionsec.kit.lang.utils.reflect;
 
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Objects1;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -311,8 +311,8 @@ public class BeanWrapper {
     }
 
     private static <R, T> T copy(R source, Class<T> targetClass, Map<String, String> fieldMapper, String[] ignoreFields) {
-        Valid.notNull(source, "source object is null");
-        Valid.notNull(targetClass, "target class is null");
+        Assert.notNull(source, "source object is null");
+        Assert.notNull(targetClass, "target class is null");
         Constructor<T> constructor = Constructors.getDefaultConstructorByCache(targetClass);
         T target = Constructors.newInstance(constructor);
         copy(source, target, fieldMapper, ignoreFields);
@@ -320,8 +320,8 @@ public class BeanWrapper {
     }
 
     private static <R, T> void copy(R source, T target, Map<String, String> fieldMapper, String[] ignoreFields) {
-        Valid.notNull(source, "source object is null");
-        Valid.notNull(target, "target object is null");
+        Assert.notNull(source, "source object is null");
+        Assert.notNull(target, "target object is null");
         List<Method> sourceGetters = Methods.getGetterMethodsByCache(source.getClass());
         List<Method> targetSetters = Methods.getSetterMethodsByCache(target.getClass());
         for (Method targetSetter : targetSetters) {

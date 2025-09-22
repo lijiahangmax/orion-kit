@@ -159,7 +159,7 @@ public class Converts {
     }
 
     public static byte toByte(Object o) {
-        Valid.notNull(o);
+        Assert.notNull(o);
         if (o instanceof Number) {
             return ((Number) o).byteValue();
         } else if (o instanceof Boolean) {
@@ -225,7 +225,7 @@ public class Converts {
     }
 
     public static short toShort(Object o) {
-        Valid.notNull(o);
+        Assert.notNull(o);
         if (o instanceof byte[]) {
             return toShort((byte[]) o);
         } else if (o instanceof Byte[]) {
@@ -298,7 +298,7 @@ public class Converts {
     }
 
     public static int toInt(Object o) {
-        Valid.notNull(o);
+        Assert.notNull(o);
         if (o instanceof byte[]) {
             return toInt((byte[]) o);
         } else if (o instanceof Byte[]) {
@@ -380,7 +380,7 @@ public class Converts {
     }
 
     public static long toLong(Object o) {
-        Valid.notNull(o);
+        Assert.notNull(o);
         if (o instanceof byte[]) {
             return toLong((byte[]) o);
         } else if (o instanceof Byte[]) {
@@ -436,7 +436,7 @@ public class Converts {
     }
 
     public static float toFloat(Object o) {
-        Valid.notNull(o);
+        Assert.notNull(o);
         if (o instanceof Number) {
             return ((Number) o).floatValue();
         } else if (o instanceof Boolean) {
@@ -488,7 +488,7 @@ public class Converts {
     }
 
     public static double toDouble(Object o) {
-        Valid.notNull(o);
+        Assert.notNull(o);
         if (o instanceof Number) {
             return ((Number) o).doubleValue();
         } else if (o instanceof Boolean) {
@@ -604,7 +604,7 @@ public class Converts {
     }
 
     public static char toChar(Object o) {
-        Valid.notNull(o);
+        Assert.notNull(o);
         if (o instanceof Byte) {
             return (char) ((byte) o);
         } else if (o instanceof Short) {
@@ -799,7 +799,7 @@ public class Converts {
     }
 
     public static byte[] toBytes(Object o) {
-        Valid.notNull(o);
+        Assert.notNull(o);
         if (o instanceof Short) {
             return toBytes((short) o);
         } else if (o instanceof Integer) {
@@ -985,7 +985,7 @@ public class Converts {
     }
 
     public static short[] toShorts(Object o) {
-        Valid.notNull(o);
+        Assert.notNull(o);
         if (o instanceof byte[]) {
             return toShorts((byte[]) o);
         } else if (o instanceof Byte[]) {
@@ -1163,7 +1163,7 @@ public class Converts {
     }
 
     public static int[] toInts(Object o) {
-        Valid.notNull(o);
+        Assert.notNull(o);
         if (o instanceof byte[]) {
             return toInts((byte[]) o);
         } else if (o instanceof Byte[]) {
@@ -1341,7 +1341,7 @@ public class Converts {
     }
 
     public static long[] toLongs(Object o) {
-        Valid.notNull(o);
+        Assert.notNull(o);
         if (o instanceof byte[]) {
             return toLongs((byte[]) o);
         } else if (o instanceof Byte[]) {
@@ -1519,7 +1519,7 @@ public class Converts {
     }
 
     public static float[] toFloats(Object o) {
-        Valid.notNull(o);
+        Assert.notNull(o);
         if (o instanceof byte[]) {
             return toFloats((byte[]) o);
         } else if (o instanceof Byte[]) {
@@ -1697,7 +1697,7 @@ public class Converts {
     }
 
     public static double[] toDoubles(Object o) {
-        Valid.notNull(o);
+        Assert.notNull(o);
         if (o instanceof byte[]) {
             return toDoubles((byte[]) o);
         } else if (o instanceof Byte[]) {
@@ -2066,7 +2066,7 @@ public class Converts {
     }
 
     public static char[] toChars(Object o) {
-        Valid.notNull(o);
+        Assert.notNull(o);
         if (o instanceof String) {
             return toChars((String) o);
         } else if (o instanceof byte[]) {
@@ -2238,7 +2238,7 @@ public class Converts {
     }
 
     public static String[] toStrings(Object o) {
-        Valid.notNull(o);
+        Assert.notNull(o);
         if (o instanceof String) {
             return new String[]{(String) o};
         } else if (o instanceof byte[]) {

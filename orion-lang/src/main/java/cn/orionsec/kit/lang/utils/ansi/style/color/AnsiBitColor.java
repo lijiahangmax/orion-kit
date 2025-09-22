@@ -26,7 +26,7 @@
  */
 package cn.orionsec.kit.lang.utils.ansi.style.color;
 
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 
 import static cn.orionsec.kit.lang.utils.ansi.AnsiConst.*;
 
@@ -61,7 +61,7 @@ public abstract class AnsiBitColor implements AnsiColor {
                 .append(JOIN);
         for (int i = 0, len = elem.length; i < len; i++) {
             int color = elem[i];
-            Valid.isTrue(color >= 0 && color <= 255, "color must be between 0 and 255");
+            Assert.isTrue(color >= 0 && color <= 255, "color must be between 0 and 255");
             sb.append(color);
             if (i < len - 1) {
                 sb.append(";");

@@ -27,8 +27,8 @@
 package cn.orionsec.kit.lang.utils.math;
 
 import cn.orionsec.kit.lang.utils.Arrays1;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Compares;
-import cn.orionsec.kit.lang.utils.Valid;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -54,8 +54,8 @@ public class Numbers {
      * @return %
      */
     public static int getRangeNum(int num, int startRange, int endRange) {
-        Valid.gte(startRange, 0, "start range must greater than or equal 0");
-        Valid.gt(endRange, startRange, "end range must greater than start range");
+        Assert.gte(startRange, 0, "start range must greater than or equal 0");
+        Assert.gt(endRange, startRange, "end range must greater than start range");
         return startRange + (num % (endRange - startRange));
     }
 

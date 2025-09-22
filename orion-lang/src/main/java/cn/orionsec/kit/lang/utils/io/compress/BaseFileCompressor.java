@@ -27,9 +27,9 @@
 package cn.orionsec.kit.lang.utils.io.compress;
 
 import cn.orionsec.kit.lang.id.ObjectIds;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Systems;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.lang.utils.io.Streams;
 
@@ -104,13 +104,13 @@ public abstract class BaseFileCompressor implements FileCompressor {
 
     @Override
     public void addFile(String file) {
-        Valid.notBlank(file, "file is null");
+        Assert.notBlank(file, "file is null");
         this.addFile(new File(file));
     }
 
     @Override
     public void addFile(File file) {
-        Valid.notNull(file, "file is null");
+        Assert.notNull(file, "file is null");
         if (!file.exists()) {
             throw Exceptions.notFound(file + " compress file not found");
         }
@@ -127,14 +127,14 @@ public abstract class BaseFileCompressor implements FileCompressor {
 
     @Override
     public void addFile(String name, String file) {
-        Valid.notBlank(file, "file is null");
+        Assert.notBlank(file, "file is null");
         this.addFile(name, new File(file));
     }
 
     @Override
     public void addFile(String name, File file) {
-        Valid.notBlank(name, "name is null");
-        Valid.notNull(file, "file is null");
+        Assert.notBlank(name, "name is null");
+        Assert.notNull(file, "file is null");
         if (!file.exists()) {
             throw Exceptions.notFound(file + " compress file not found");
         }
@@ -146,14 +146,14 @@ public abstract class BaseFileCompressor implements FileCompressor {
 
     @Override
     public void addFilePrefix(String prefix, String file) {
-        Valid.notNull(file, "file is null");
+        Assert.notNull(file, "file is null");
         this.addFilePrefix(prefix, new File(file));
     }
 
     @Override
     public void addFilePrefix(String prefix, File file) {
-        Valid.notBlank(prefix, "prefix is null");
-        Valid.notNull(file, "file is null");
+        Assert.notBlank(prefix, "prefix is null");
+        Assert.notNull(file, "file is null");
         if (!file.exists()) {
             throw Exceptions.notFound(file + " compress file not found");
         }
@@ -173,15 +173,15 @@ public abstract class BaseFileCompressor implements FileCompressor {
 
     @Override
     public void addFile(String name, byte[] bs) {
-        Valid.notBlank(name, "name is null");
-        Valid.notNull(bs, "byte array is null");
+        Assert.notBlank(name, "name is null");
+        Assert.notNull(bs, "byte array is null");
         compressStreams.put(name, Streams.toInputStream(bs));
     }
 
     @Override
     public void addFile(String name, InputStream in) {
-        Valid.notBlank(name, "name is null");
-        Valid.notNull(in, "input stream is null");
+        Assert.notBlank(name, "name is null");
+        Assert.notNull(in, "input stream is null");
         compressStreams.put(name, in);
     }
 
@@ -192,7 +192,7 @@ public abstract class BaseFileCompressor implements FileCompressor {
 
     @Override
     public void compress() throws Exception {
-        Valid.isFalse(compressFiles.isEmpty() && compressStreams.isEmpty(), "compress entities is empty");
+        Assert.isFalse(compressFiles.isEmpty() && compressStreams.isEmpty(), "compress entities is empty");
         this.doCompress();
     }
 

@@ -27,8 +27,8 @@
 package cn.orionsec.kit.net.host.sftp.transfer;
 
 import cn.orionsec.kit.lang.constant.Const;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.net.host.sftp.SftpExecutor;
 import cn.orionsec.kit.net.host.sftp.SftpFile;
@@ -65,7 +65,7 @@ public class SftpDownloader extends BaseFileDownloader {
 
     public SftpDownloader(SftpExecutor executor, String remote, File local) {
         super(remote, local, LOCK_SUFFIX, Const.BUFFER_KB_32);
-        Valid.notNull(executor, "sftp executor is null");
+        Assert.notNull(executor, "sftp executor is null");
         this.executor = executor;
     }
 

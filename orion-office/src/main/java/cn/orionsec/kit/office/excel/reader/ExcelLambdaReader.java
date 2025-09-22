@@ -27,7 +27,7 @@
 package cn.orionsec.kit.office.excel.reader;
 
 import cn.orionsec.kit.lang.define.wrapper.Pair;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.office.excel.Excels;
 import cn.orionsec.kit.office.excel.option.CellOption;
 import cn.orionsec.kit.office.excel.option.ImportFieldOption;
@@ -95,7 +95,7 @@ public class ExcelLambdaReader<T> extends BaseExcelReader<Pair<Function<?, ?>, B
 
     protected ExcelLambdaReader(Workbook workbook, Sheet sheet, List<T> store, Consumer<T> consumer, Supplier<T> supplier) {
         super(workbook, sheet, store, consumer);
-        this.supplier = Valid.notNull(supplier, "supplier is null");
+        this.supplier = Assert.notNull(supplier, "supplier is null");
         this.options = new HashMap<>();
         this.init = false;
     }

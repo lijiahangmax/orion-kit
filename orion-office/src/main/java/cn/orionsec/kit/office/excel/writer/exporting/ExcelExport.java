@@ -26,7 +26,7 @@
  */
 package cn.orionsec.kit.office.excel.writer.exporting;
 
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import cn.orionsec.kit.office.excel.Excels;
 import cn.orionsec.kit.office.excel.writer.BaseExcelWriteable;
@@ -83,7 +83,7 @@ public class ExcelExport<T> extends BaseExcelWriteable {
 
     public ExcelExport(Class<T> targetClass, Workbook workbook, Sheet sheet) {
         super(workbook);
-        Valid.notNull(targetClass, "target class is null");
+        Assert.notNull(targetClass, "target class is null");
         this.sheetConfig = new SheetConfig<>();
         this.initializer = new ExportInitializer<>(workbook, sheet, targetClass, sheetConfig);
         this.sheetConfig.initializer = initializer;

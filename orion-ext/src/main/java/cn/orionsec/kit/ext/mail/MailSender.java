@@ -27,9 +27,9 @@
 package cn.orionsec.kit.ext.mail;
 
 import cn.orionsec.kit.lang.able.ISendEvent;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -147,7 +147,7 @@ public class MailSender implements ISendEvent<MailMessage> {
      */
     @Override
     public void send(MailMessage msg) {
-        Valid.notNull(authentication, "sender service unauthorized");
+        Assert.notNull(authentication, "sender service unauthorized");
         // 会话
         Session session = Session.getDefaultInstance(props, new Authenticator() {
             @Override

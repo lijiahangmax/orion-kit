@@ -27,8 +27,8 @@
 package cn.orionsec.kit.lang.utils.io.compress.bz2;
 
 import cn.orionsec.kit.lang.constant.Const;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.lang.utils.io.compress.BaseFileCompressor;
@@ -116,7 +116,7 @@ public class Bz2Compressor extends BaseFileCompressor {
     }
 
     public void setCompressFile(String file) {
-        Valid.notBlank(file, "file is null");
+        Assert.notBlank(file, "file is null");
         this.setCompressFile(new File(file));
     }
 
@@ -126,8 +126,8 @@ public class Bz2Compressor extends BaseFileCompressor {
      * @param file 压缩文件
      */
     public void setCompressFile(File file) {
-        Valid.notNull(file, "file is null");
-        Valid.isTrue(Files1.isFile(file), "compress file must be a normal file");
+        Assert.notNull(file, "file is null");
+        Assert.isTrue(Files1.isFile(file), "compress file must be a normal file");
         this.compressFile = file;
         this.setFileName(file.getName());
     }
@@ -156,7 +156,7 @@ public class Bz2Compressor extends BaseFileCompressor {
 
     @Override
     public void compress() throws Exception {
-        Valid.isFalse(compressFile == null && compressInputStream == null, "bzip2 compress file just support compress one file");
+        Assert.isFalse(compressFile == null && compressInputStream == null, "bzip2 compress file just support compress one file");
         this.doCompress();
     }
 

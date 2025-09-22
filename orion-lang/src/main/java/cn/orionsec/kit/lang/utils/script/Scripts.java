@@ -27,8 +27,8 @@
 package cn.orionsec.kit.lang.utils.script;
 
 import cn.orionsec.kit.lang.define.collect.ConcurrentReferenceHashMap;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.reflect.Annotations;
 import cn.orionsec.kit.lang.utils.reflect.Methods;
 
@@ -235,7 +235,7 @@ public class Scripts {
      * @return 脚本结果
      */
     public static <T> Object eval(ScriptEngine engine, String script, T args) {
-        Valid.notNull(args, "eval args is null");
+        Assert.notNull(args, "eval args is null");
         try {
             Map<Method, Bind> methods = Annotations.getAnnotatedGetterMethodsMergeField(args.getClass(), Bind.class, true);
             Map<String, Object> binds = new LinkedHashMap<>();
@@ -257,7 +257,7 @@ public class Scripts {
      */
     public static Invocable evalInvocable(ScriptEngine engine, String script) {
         Object eval = eval(engine, script);
-        return Valid.isInstanceOf(eval, Invocable.class, "script cannot invocable");
+        return Assert.isInstanceOf(eval, Invocable.class, "script cannot invocable");
     }
 
     /**
@@ -304,7 +304,7 @@ public class Scripts {
      */
     public static CompiledScript compile(ScriptEngine engine, String script) {
         try {
-            Valid.isInstanceOf(engine, Compilable.class, "engine does not support compilable");
+            Assert.isInstanceOf(engine, Compilable.class, "engine does not support compilable");
             Compilable compEngine = (Compilable) engine;
             return compEngine.compile(script);
         } catch (ScriptException e) {

@@ -28,9 +28,9 @@ package cn.orionsec.kit.ext.tail.delay;
 
 import cn.orionsec.kit.ext.tail.handler.LineHandler;
 import cn.orionsec.kit.lang.constant.Const;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Spells;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.io.FileReaders;
 
 import java.io.File;
@@ -61,7 +61,7 @@ public class DelayTracker extends AbstractDelayTracker {
 
     public DelayTracker(File tailFile, LineHandler handler) {
         super(tailFile);
-        this.handler = Valid.notNull(handler, "line handler is null");
+        this.handler = Assert.notNull(handler, "line handler is null");
     }
 
     @Override

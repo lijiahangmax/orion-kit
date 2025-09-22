@@ -26,9 +26,9 @@
  */
 package cn.orionsec.kit.lang.define.collect;
 
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Objects1;
-import cn.orionsec.kit.lang.utils.Valid;
 
 import java.io.Serializable;
 import java.lang.ref.ReferenceQueue;
@@ -101,10 +101,10 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
 
     @SuppressWarnings("unchecked")
     public ConcurrentReferenceHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, ReferenceType referenceType) {
-        Valid.isTrue(initialCapacity >= 0, "Initial capacity must not be negative");
-        Valid.isTrue(loadFactor > 0f, "Load factor must be positive");
-        Valid.isTrue(concurrencyLevel > 0, "Concurrency level must be positive");
-        Valid.notNull(referenceType, "Reference type must not be null");
+        Assert.isTrue(initialCapacity >= 0, "Initial capacity must not be negative");
+        Assert.isTrue(loadFactor > 0f, "Load factor must be positive");
+        Assert.isTrue(concurrencyLevel > 0, "Concurrency level must be positive");
+        Assert.notNull(referenceType, "Reference type must not be null");
         this.loadFactor = loadFactor;
         this.shift = calculateShift(concurrencyLevel, MAXIMUM_CONCURRENCY_LEVEL);
         int size = 1 << this.shift;
@@ -707,7 +707,7 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
 
         @Override
         public void remove() {
-            Valid.isTrue(this.last != null);
+            Assert.isTrue(this.last != null);
             ConcurrentReferenceHashMap.this.remove(this.last.getKey());
         }
     }

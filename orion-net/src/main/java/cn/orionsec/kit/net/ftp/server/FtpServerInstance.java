@@ -27,8 +27,8 @@
 package cn.orionsec.kit.net.ftp.server;
 
 import cn.orionsec.kit.lang.constant.Const;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import org.apache.ftpserver.ConnectionConfig;
 import org.apache.ftpserver.FtpServer;
@@ -211,8 +211,8 @@ public class FtpServerInstance {
      */
     private SslConfiguration convertSslConfig() {
         SslConfigurationFactory ssl = new SslConfigurationFactory();
-        File keyStoreFile = Valid.notNull(sslConfig.getKeyStoreFile(), "key store file is null");
-        String keyStorePassword = Valid.notNull(sslConfig.getKeyStorePassword(), "key store password is null");
+        File keyStoreFile = Assert.notNull(sslConfig.getKeyStoreFile(), "key store file is null");
+        String keyStorePassword = Assert.notNull(sslConfig.getKeyStorePassword(), "key store password is null");
         ssl.setKeystoreFile(keyStoreFile);
         ssl.setKeystorePassword(keyStorePassword);
         String sslProtocol = sslConfig.getSslProtocol();

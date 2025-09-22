@@ -26,7 +26,7 @@
  */
 package cn.orionsec.kit.office.excel.writer;
 
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.reflect.Fields;
 import cn.orionsec.kit.lang.utils.reflect.Methods;
 import cn.orionsec.kit.office.excel.option.WriteFieldOption;
@@ -59,14 +59,14 @@ public class ExcelBeanWriter<T> extends BaseExcelWriter<String, T> {
 
     public ExcelBeanWriter(Workbook workbook, Sheet sheet, Class<T> targetClass) {
         super(workbook, sheet);
-        this.targetClass = Valid.notNull(targetClass, "target class is null");
+        this.targetClass = Assert.notNull(targetClass, "target class is null");
         this.getters = Methods.getGetterMethodsByCache(targetClass).stream()
                 .collect(Collectors.toMap(Fields::getFieldNameByMethod, Function.identity()));
     }
 
     @Override
     protected void addOption(String field, WriteFieldOption option, Object defaultValue) {
-        Valid.notNull(getters.get(field), "not found getter method ({}) in {}", field, targetClass);
+        Assert.notNull(getters.get(field), "not found getter method ({}) in {}", field, targetClass);
         super.addOption(field, option, defaultValue);
     }
 
