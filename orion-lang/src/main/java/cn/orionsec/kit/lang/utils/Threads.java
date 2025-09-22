@@ -375,7 +375,7 @@ public class Threads {
      * @param rs   线程
      * @param pool 线程池
      */
-    public static void concurrentRunnable(Collection<? extends Runnable> rs, ExecutorService pool) {
+    public static void concurrentRunnable(Collection<? extends Runnable> rs, Executor pool) {
         Valid.notEmpty(rs, "task is empty");
         if (pool == null) {
             pool = CACHE_EXECUTOR;

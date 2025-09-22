@@ -27,7 +27,14 @@
 package cn.orionsec.kit.lang.define.cache;
 
 import cn.orionsec.kit.lang.able.Buildable;
+import cn.orionsec.kit.lang.constant.Const;
+import cn.orionsec.kit.lang.define.thread.ExecutorBuilder;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.SynchronousQueue;
 import java.util.function.BiConsumer;
 
 /**
@@ -37,78 +44,113 @@ import java.util.function.BiConsumer;
  * @version 1.0.0
  * @since 2023/10/13 13:42
  */
-public class TimedCacheBuilder implements Buildable<TimedCache> {
-
-    private static final int CHECK_DELAY = 5000;
+public class TimedCacheBuilder<T> implements Buildable<TimedCache<T>> {
 
     /**
-     * 过期延迟 ms
+     * 检测线程池
      */
-    private int expiredDelay;
+    private static final ExecutorService CHECKER_EXECUTOR = ExecutorBuilder.create()
+            .namedThreadFactory("orion-cache-checker-")
+            .corePoolSize(1)
+            .maxPoolSize(Integer.MAX_VALUE)
+            .keepAliveTime(Const.MS_S_60)
+            .workQueue(new SynchronousQueue<>())
+            .allowCoreThreadTimeout(true)
+            .build();
+
+    private static final int DEFAULT_CHECK_INTERVAL = 5000;
 
     /**
-     * 检测延迟 ms
+     * 过期时间 ms
      */
-    private int checkDelay;
+    private int expireAfter;
+
+    /**
+     * 检测间隔 ms
+     */
+    private int checkInterval;
+
+    /**
+     * 检查线程池
+     */
+    private Executor checkExecutor;
 
     /**
      * 过期监听器
      */
-    private BiConsumer<String, Object> expiredListener;
+    private BiConsumer<String, T> expiredListener;
 
     private TimedCacheBuilder() {
-        this.checkDelay = CHECK_DELAY;
+        this.checkInterval = DEFAULT_CHECK_INTERVAL;
+        this.checkExecutor = CHECKER_EXECUTOR;
     }
 
     /**
      * 创建过期缓存
      *
+     * @param <T> T
      * @return cache
      */
-    public static TimedCacheBuilder create() {
-        return new TimedCacheBuilder();
+    public static <T> TimedCacheBuilder<T> create() {
+        return new TimedCacheBuilder<>();
     }
 
     /**
      * 创建过期缓存
      *
-     * @param expired 过期时间
+     * @param expireAfter 过期时间
      * @return cache
      */
-    public static TimedCache create(int expired) {
-        return new TimedCache(expired, CHECK_DELAY, null);
+    public static <T> TimedCache<T> create(int expireAfter) {
+        return new TimedCacheBuilder<T>()
+                .expireAfter(expireAfter)
+                .build();
     }
 
     /**
      * 创建过期缓存
      *
-     * @param expired    过期时间
-     * @param checkDelay 检测时间
+     * @param expireAfter   过期时间
+     * @param checkInterval 检测时间
      * @return cache
      */
-    public static TimedCache create(int expired, int checkDelay) {
-        return new TimedCache(expired, checkDelay, null);
+    public static <T> TimedCache<T> create(int expireAfter, int checkInterval) {
+        return new TimedCacheBuilder<T>()
+                .expireAfter(expireAfter)
+                .checkInterval(checkInterval)
+                .build();
+    }
+
+    /**
+     * 设置过期时间 ms
+     *
+     * @param expireAfter expireAfter
+     * @return this
+     */
+    public TimedCacheBuilder<T> expireAfter(int expireAfter) {
+        this.expireAfter = expireAfter;
+        return this;
     }
 
     /**
      * 设置检测延迟 ms
      *
-     * @param expiredDelay expiredDelay
+     * @param checkInterval checkInterval
      * @return this
      */
-    public TimedCacheBuilder expiredDelay(int expiredDelay) {
-        this.expiredDelay = expiredDelay;
+    public TimedCacheBuilder<T> checkInterval(int checkInterval) {
+        this.checkInterval = checkInterval;
         return this;
     }
 
     /**
-     * 检测延迟 ms
+     * 设置检查线程池
      *
-     * @param checkDelay checkDelay
+     * @param checkExecutor checkExecutor
      * @return this
      */
-    public TimedCacheBuilder checkDelay(int checkDelay) {
-        this.checkDelay = checkDelay;
+    public TimedCacheBuilder<T> checkExecutor(Executor checkExecutor) {
+        this.checkExecutor = checkExecutor;
         return this;
     }
 
@@ -118,14 +160,21 @@ public class TimedCacheBuilder implements Buildable<TimedCache> {
      * @param expiredListener expiredListener
      * @return this
      */
-    public TimedCacheBuilder expiredListener(BiConsumer<String, Object> expiredListener) {
+    public TimedCacheBuilder<T> expiredListener(BiConsumer<String, T> expiredListener) {
         this.expiredListener = expiredListener;
         return this;
     }
 
     @Override
-    public TimedCache build() {
-        return new TimedCache(expiredDelay, checkDelay, expiredListener);
+    public TimedCache<T> build() {
+        Map<String, TimedCacheValue<T>> store = new ConcurrentHashMap<>();
+        TimedCacheChecker<T> checker = new TimedCacheChecker<>(
+                checkInterval,
+                checkExecutor,
+                store,
+                expiredListener
+        );
+        return new TimedCacheImpl<>(expireAfter, store, checker);
     }
 
 }

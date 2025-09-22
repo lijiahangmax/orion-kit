@@ -252,9 +252,25 @@ public class Signatures {
      * @param digest MessageDigest
      * @return 签名
      */
-    private static String hashSign(byte[] bs, MessageDigest digest) {
+    public static String hashSign(byte[] bs, MessageDigest digest) {
+        byte[] bytes = hashSignBytes(bs, digest);
+        if (bytes != null) {
+            return toHex(bytes);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 散列签名的方法
+     *
+     * @param bs     明文
+     * @param digest MessageDigest
+     * @return 签名
+     */
+    public static byte[] hashSignBytes(byte[] bs, MessageDigest digest) {
         try {
-            return toHex(digest.digest(bs));
+            return digest.digest(bs);
         } catch (Exception e) {
             return null;
         }
@@ -419,7 +435,7 @@ public class Signatures {
     }
 
     /**
-     * mac + hash签名
+     * hmac + hash签名
      *
      * @param bs   明文
      * @param key  key
@@ -427,11 +443,28 @@ public class Signatures {
      * @return 签名
      */
     public static String hmacHashSign(byte[] bs, byte[] key, SecretKeySpecMode mode) {
+        byte[] bytes = hmacHashSignBytes(bs, key, mode);
+        if (bytes != null) {
+            return toHex(bytes);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * hmac + hash签名
+     *
+     * @param bs   明文
+     * @param key  key
+     * @param mode SecretKeySpecMode
+     * @return 签名
+     */
+    public static byte[] hmacHashSignBytes(byte[] bs, byte[] key, SecretKeySpecMode mode) {
         try {
             SecretKeySpec secretKey = mode.getSecretKeySpec(key);
             Mac mac = Mac.getInstance(mode.getMode());
             mac.init(secretKey);
-            return toHex(mac.doFinal(bs));
+            return mac.doFinal(bs);
         } catch (Exception e) {
             return null;
         }

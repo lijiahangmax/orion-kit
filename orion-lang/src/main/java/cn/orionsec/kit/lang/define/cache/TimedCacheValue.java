@@ -26,43 +26,33 @@
  */
 package cn.orionsec.kit.lang.define.cache;
 
-import java.io.Closeable;
-import java.util.Map;
-
 /**
- * 过期缓存
+ * 过期缓存值
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2023/10/13 12:00
+ * @since 2025/9/6 1:38
  */
-public interface TimedCache<T> extends Map<String, T>, Closeable {
+public class TimedCacheValue<T> {
 
     /**
-     * 添加并指定过期时间
-     *
-     * @param key         key
-     * @param value       value
-     * @param expireAfter 自定义过期时间
-     * @return value
+     * 过期时间
      */
-    T put(String key, T value, long expireAfter);
+    protected final long expireTime;
 
     /**
-     * 添加并指定过期时间
-     *
-     * @param key         key
-     * @param value       value
-     * @param expireAfter 自定义过期时间
-     * @return value
+     * 值
      */
-    T putIfAbsent(String key, T value, long expireAfter);
+    protected final T value;
 
-    /**
-     * 获取存储容器
-     *
-     * @return store
-     */
-    Map<String, TimedCacheValue<T>> getStore();
+    public TimedCacheValue(long expireTime, T value) {
+        this.expireTime = expireTime;
+        this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return value != null ? value.toString() : "null";
+    }
 
 }

@@ -186,13 +186,13 @@ public class StopWatch {
     }
 
     /**
-     * 获取tag使用的时间半分比
+     * 获取 tag 使用的时间半分比
      *
      * @param tag tag
      * @return use%
      */
     private String getUse(StopTag tag) {
-        return Numbers.setScale(((double) tag.getDuration() / (double) (to - from)) * 100, 6);
+        return Numbers.formatPrecision(((double) tag.getDuration() / (double) (to - from)) * 100, 6, true);
     }
 
     /**

@@ -1,1 +1,1 @@
-mvn javadoc:aggregate -P!skip-docs
+mvn javadoc:aggregate -P !skip-docs

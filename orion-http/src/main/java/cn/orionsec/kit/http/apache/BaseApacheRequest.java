@@ -87,21 +87,26 @@ public abstract class BaseApacheRequest extends BaseHttpRequest implements Await
 
     @Override
     protected void buildRequest() {
+        // 构建请求路径
         super.buildRequest();
+        // 获取请求方法
         this.getRequestByMethod();
+        // 设置 header
         if (headers != null) {
             headers.forEach((k, v) -> request.addHeader(new BasicHeader(k, v)));
         }
+        // 设置 cookie
         if (cookies != null) {
             cookies.forEach(c -> request.addHeader(new BasicHeader(StandardHttpHeader.COOKIE, c.toString())));
         }
+        // 忽略的请求头
         if (ignoreHeaders != null) {
             ignoreHeaders.forEach(ignoreHeader -> request.removeHeader(new BasicHeader(ignoreHeader, null)));
         }
+        // 设置 contentType
         if (!super.isNoBodyRequest()) {
-            return;
+            request.setHeader(new BasicHeader(StandardContentType.CONTENT_TYPE, contentType));
         }
-        request.setHeader(new BasicHeader(StandardContentType.CONTENT_TYPE, contentType + "; charset=" + charset));
     }
 
     /**
