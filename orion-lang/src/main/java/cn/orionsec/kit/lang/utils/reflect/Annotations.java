@@ -27,8 +27,8 @@
 package cn.orionsec.kit.lang.utils.reflect;
 
 import cn.orionsec.kit.lang.define.collect.MutableHashMap;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 
 import java.lang.annotation.Annotation;
@@ -402,8 +402,8 @@ public class Annotations {
      */
     @SafeVarargs
     public static boolean present(Class<?> clazz, Class<? extends Annotation>... annotatedClasses) {
-        Valid.notNull(clazz, "class is null");
-        Valid.notEmpty(annotatedClasses, "annotated classes length is 0");
+        Assert.notNull(clazz, "class is null");
+        Assert.notEmpty(annotatedClasses, "annotated classes length is 0");
         if (annotatedClasses.length == 1) {
             return clazz.isAnnotationPresent(annotatedClasses[0]);
         } else {
@@ -420,8 +420,8 @@ public class Annotations {
      */
     @SafeVarargs
     public static boolean present(Constructor<?> constructor, Class<? extends Annotation>... annotatedClasses) {
-        Valid.notNull(constructor, "constructor is null");
-        Valid.notEmpty(annotatedClasses, "annotated classes length is 0");
+        Assert.notNull(constructor, "constructor is null");
+        Assert.notEmpty(annotatedClasses, "annotated classes length is 0");
         if (annotatedClasses.length == 1) {
             return constructor.isAnnotationPresent(annotatedClasses[0]);
         } else {
@@ -438,8 +438,8 @@ public class Annotations {
      */
     @SafeVarargs
     public static boolean present(Method method, Class<? extends Annotation>... annotatedClasses) {
-        Valid.notNull(method, "method is null");
-        Valid.notEmpty(annotatedClasses, "annotated classes length is 0");
+        Assert.notNull(method, "method is null");
+        Assert.notEmpty(annotatedClasses, "annotated classes length is 0");
         if (annotatedClasses.length == 1) {
             return method.isAnnotationPresent(annotatedClasses[0]);
         } else {
@@ -456,8 +456,8 @@ public class Annotations {
      */
     @SafeVarargs
     public static boolean present(Field field, Class<? extends Annotation>... annotatedClasses) {
-        Valid.notNull(field, "field is null");
-        Valid.notEmpty(annotatedClasses, "annotated classes length is 0");
+        Assert.notNull(field, "field is null");
+        Assert.notEmpty(annotatedClasses, "annotated classes length is 0");
         if (annotatedClasses.length == 1) {
             return field.isAnnotationPresent(annotatedClasses[0]);
         } else {

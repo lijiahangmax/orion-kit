@@ -27,8 +27,8 @@
 package cn.orionsec.kit.office.excel.split;
 
 import cn.orionsec.kit.lang.able.SafeCloseable;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.office.excel.Excels;
@@ -67,24 +67,24 @@ public class ExcelColumnMultiSplit implements SafeCloseable {
 
     public ExcelColumnMultiSplit(Workbook sourceWorkbook, int sourceSheetIndex) {
         this(sourceWorkbook);
-        Valid.gte(sourceSheetIndex, 0, "split sheet index must >= 0");
+        Assert.gte(sourceSheetIndex, 0, "split sheet index must >= 0");
         this.sourceSheet = sourceWorkbook.getSheetAt(sourceSheetIndex);
     }
 
     public ExcelColumnMultiSplit(Workbook sourceWorkbook, String sourceSheetName) {
         this(sourceWorkbook);
-        Valid.notBlank(sourceSheetName, "split sheet name is null");
+        Assert.notBlank(sourceSheetName, "split sheet name is null");
         this.sourceSheet = sourceWorkbook.getSheet(sourceSheetName);
     }
 
     public ExcelColumnMultiSplit(Workbook sourceWorkbook, Sheet sourceSheet) {
         this(sourceWorkbook);
-        this.sourceSheet = Valid.notNull(sourceSheet, "split sheet is null");
+        this.sourceSheet = Assert.notNull(sourceSheet, "split sheet is null");
     }
 
     private ExcelColumnMultiSplit(Workbook sourceWorkbook) {
-        this.sourceWorkbook = Valid.notNull(sourceWorkbook, "split workbook is null");
-        Valid.isTrue(!Excels.isStreamingWorkbook(sourceWorkbook), "unsupported streaming reading, please use ExcelColumnSingleSplit");
+        this.sourceWorkbook = Assert.notNull(sourceWorkbook, "split workbook is null");
+        Assert.isTrue(!Excels.isStreamingWorkbook(sourceWorkbook), "unsupported streaming reading, please use ExcelColumnSingleSplit");
     }
 
     /**
@@ -167,7 +167,7 @@ public class ExcelColumnMultiSplit implements SafeCloseable {
      * @return this
      */
     public ExcelColumnMultiSplit split(int[] columns, String[] headers, String password, OutputStream out, boolean close) {
-        Valid.notNull(out, "dest stream is null");
+        Assert.notNull(out, "dest stream is null");
         Workbook targetWorkbook = new SXSSFWorkbook();
         Sheet targetSheet = targetWorkbook.createSheet(sourceSheet.getSheetName());
         ExcelColumnSplitSupport.split(sourceSheet, targetWorkbook, targetSheet, columns, headers, skip, false);

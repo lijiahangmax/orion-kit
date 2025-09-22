@@ -103,7 +103,7 @@ public class Threads {
      * @param pool 线程池
      */
     public static void start(Collection<Runnable> rs, Executor pool) {
-        Valid.notEmpty(rs, "task is empty");
+        Assert.notEmpty(rs, "task is empty");
         if (pool == null) {
             pool = GLOBAL_EXECUTOR;
         }
@@ -138,7 +138,7 @@ public class Threads {
      * @return Future
      */
     public static <V> List<Future<V>> call(Collection<? extends Callable<V>> cs, ExecutorService pool) {
-        Valid.notEmpty(cs, "task is empty");
+        Assert.notEmpty(cs, "task is empty");
         if (pool == null) {
             pool = GLOBAL_EXECUTOR;
         }
@@ -204,7 +204,7 @@ public class Threads {
      * @throws InterruptedException InterruptedException
      */
     public static void blockRun(Runnable r, CountDownLatch c, Executor pool) throws InterruptedException {
-        Valid.notNull(r, "task is null");
+        Assert.notNull(r, "task is null");
         if (pool == null) {
             pool = GLOBAL_EXECUTOR;
         }
@@ -223,7 +223,7 @@ public class Threads {
      * @throws InterruptedException InterruptedException
      */
     public static void blockRun(Collection<? extends Runnable> rs, Executor pool) throws InterruptedException {
-        Valid.notEmpty(rs, "task is empty");
+        Assert.notEmpty(rs, "task is empty");
         if (pool == null) {
             pool = GLOBAL_EXECUTOR;
         }
@@ -376,7 +376,7 @@ public class Threads {
      * @param pool 线程池
      */
     public static void concurrentRunnable(Collection<? extends Runnable> rs, Executor pool) {
-        Valid.notEmpty(rs, "task is empty");
+        Assert.notEmpty(rs, "task is empty");
         if (pool == null) {
             pool = CACHE_EXECUTOR;
         }
@@ -397,7 +397,7 @@ public class Threads {
      * @return Future
      */
     public static <V> List<Future<V>> concurrentCallable(Collection<? extends Callable<V>> cs, ExecutorService pool) {
-        Valid.notEmpty(cs, "task is empty");
+        Assert.notEmpty(cs, "task is empty");
         if (pool == null) {
             pool = CACHE_EXECUTOR;
         }

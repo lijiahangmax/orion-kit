@@ -27,8 +27,8 @@
 package cn.orionsec.kit.lang.id;
 
 import cn.orionsec.kit.lang.constant.Const;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
-import cn.orionsec.kit.lang.utils.Valid;
 
 import java.util.Base64;
 import java.util.HashMap;
@@ -148,7 +148,7 @@ public class UUIds {
      * @return long
      */
     private static long toNumber(String s, int radix) {
-        Valid.notNull(s, "number is null");
+        Assert.notNull(s, "number is null");
         if (radix < MIN_RADIX) {
             throw Exceptions.numberFormat("radix " + radix + " less than MIN_RADIX");
         }

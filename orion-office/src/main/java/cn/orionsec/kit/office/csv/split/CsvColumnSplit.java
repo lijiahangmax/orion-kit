@@ -29,7 +29,7 @@ package cn.orionsec.kit.office.csv.split;
 import cn.orionsec.kit.lang.able.SafeCloseable;
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.utils.Arrays1;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.office.csv.CsvExt;
@@ -74,8 +74,8 @@ public class CsvColumnSplit implements SafeCloseable {
     }
 
     public CsvColumnSplit(CsvArrayReader reader, int... columns) {
-        Valid.notNull(reader, "split reader is null");
-        Valid.isFalse(Arrays1.isEmpty(columns), "split columns is null");
+        Assert.notNull(reader, "split reader is null");
+        Assert.isFalse(Arrays1.isEmpty(columns), "split columns is null");
         this.reader = reader;
         this.columns = columns;
         this.bufferLine = Const.N_100;

@@ -27,7 +27,7 @@
 package cn.orionsec.kit.office.csv.reader;
 
 import cn.orionsec.kit.lang.define.wrapper.Pair;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.office.csv.core.CsvReader;
 
 import java.util.ArrayList;
@@ -79,7 +79,7 @@ public class CsvLambdaReader<T> extends BaseCsvReader<T> {
 
     protected CsvLambdaReader(CsvReader reader, Collection<T> rows, Consumer<T> consumer, Supplier<T> supplier) {
         super(reader, rows, consumer);
-        this.supplier = Valid.notNull(supplier, "supplier is null");
+        this.supplier = Assert.notNull(supplier, "supplier is null");
         this.mapping = new TreeMap<>();
     }
 

@@ -26,9 +26,9 @@
  */
 package cn.orionsec.kit.lang.utils.crypto.symmetric;
 
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.crypto.enums.CipherAlgorithm;
 import cn.orionsec.kit.lang.utils.crypto.enums.PaddingMode;
 import cn.orionsec.kit.lang.utils.crypto.enums.WorkingMode;
@@ -65,7 +65,7 @@ public class ParamSymmetric extends BaseSymmetric {
 
     public ParamSymmetric(CipherAlgorithm cipherAlgorithm, WorkingMode workingMode, PaddingMode paddingMode, SecretKey secretKey, AlgorithmParameterSpec paramSpec) {
         super(cipherAlgorithm, workingMode, paddingMode, secretKey);
-        this.paramSpec = Valid.notNull(paramSpec, "paramSpec is null");
+        this.paramSpec = Assert.notNull(paramSpec, "paramSpec is null");
     }
 
     public void setAad(String aad) {

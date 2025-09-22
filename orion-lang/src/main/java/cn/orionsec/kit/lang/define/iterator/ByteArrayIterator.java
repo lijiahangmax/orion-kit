@@ -27,8 +27,8 @@
 package cn.orionsec.kit.lang.define.iterator;
 
 import cn.orionsec.kit.lang.able.SafeCloseable;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.io.Streams;
 
 import java.io.IOException;
@@ -57,8 +57,8 @@ public class ByteArrayIterator implements Iterator<Integer>, Iterable<Integer>, 
     private boolean autoClose;
 
     public ByteArrayIterator(InputStream in, byte[] buffer) {
-        Valid.notNull(in, "input stream is null");
-        Valid.notNull(buffer, "buffer is null");
+        Assert.notNull(in, "input stream is null");
+        Assert.notNull(buffer, "buffer is null");
         this.in = in;
         this.buffer = buffer;
     }

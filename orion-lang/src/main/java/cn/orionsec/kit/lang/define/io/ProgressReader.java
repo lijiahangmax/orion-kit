@@ -27,7 +27,7 @@
 package cn.orionsec.kit.lang.define.io;
 
 import cn.orionsec.kit.lang.support.progress.ByteTransferProgress;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -55,7 +55,7 @@ public class ProgressReader extends Reader {
     }
 
     public ProgressReader(Reader wrapper, ByteTransferProgress progress) {
-        this.wrapper = Valid.notNull(wrapper, "wrapper reader is null");
+        this.wrapper = Assert.notNull(wrapper, "wrapper reader is null");
         this.progress = progress;
     }
 

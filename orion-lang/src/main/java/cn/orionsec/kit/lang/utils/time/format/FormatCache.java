@@ -27,8 +27,8 @@
 package cn.orionsec.kit.lang.utils.time.format;
 
 import cn.orionsec.kit.lang.define.wrapper.Tuple;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
-import cn.orionsec.kit.lang.utils.Valid;
 
 import java.text.DateFormat;
 import java.text.Format;
@@ -72,7 +72,7 @@ abstract class FormatCache<F extends Format> {
      * @return instance
      */
     public F getInstance(String pattern, TimeZone timeZone, Locale locale) {
-        Valid.notBlank(pattern, "pattern must not be empty");
+        Assert.notBlank(pattern, "pattern must not be empty");
         if (timeZone == null) {
             timeZone = TimeZone.getDefault();
         }

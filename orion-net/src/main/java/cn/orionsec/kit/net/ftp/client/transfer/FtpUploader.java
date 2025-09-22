@@ -26,8 +26,8 @@
  */
 package cn.orionsec.kit.net.ftp.client.transfer;
 
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.net.ftp.client.FtpFile;
 import cn.orionsec.kit.net.ftp.client.instance.FtpInstance;
@@ -65,7 +65,7 @@ public class FtpUploader extends BaseFileUploader {
 
     public FtpUploader(FtpInstance instance, String remote, File local) {
         super(remote, local, LOCK_SUFFIX, instance.getConfig().getBuffSize());
-        Valid.notNull(instance, "ftp instance is null");
+        Assert.notNull(instance, "ftp instance is null");
         this.instance = instance;
     }
 

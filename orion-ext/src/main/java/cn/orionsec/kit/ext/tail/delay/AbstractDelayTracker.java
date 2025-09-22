@@ -31,10 +31,10 @@ import cn.orionsec.kit.ext.tail.mode.FileMinusMode;
 import cn.orionsec.kit.ext.tail.mode.FileNotFoundMode;
 import cn.orionsec.kit.ext.tail.mode.FileOffsetMode;
 import cn.orionsec.kit.lang.constant.Const;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.Threads;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.io.FileReaders;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.lang.utils.io.Streams;
@@ -107,7 +107,7 @@ public abstract class AbstractDelayTracker extends Tracker {
     }
 
     public AbstractDelayTracker(File tailFile) {
-        Valid.notNull(tailFile, "tail file is null");
+        Assert.notNull(tailFile, "tail file is null");
         this.tailFile = tailFile;
         this.charset = Const.UTF_8;
         this.offset = -1L;
@@ -316,7 +316,7 @@ public abstract class AbstractDelayTracker extends Tracker {
         this.notFoundMode = notFoundMode;
         this.notFountTimes = notFountTimes;
         if (notFoundMode == FileNotFoundMode.WAIT_TIMES || notFoundMode == FileNotFoundMode.WAIT_COUNT) {
-            Valid.gte(notFountTimes, 0, "not fount times has to be greater than or equal to 0");
+            Assert.gte(notFountTimes, 0, "not fount times has to be greater than or equal to 0");
         }
         return this;
     }

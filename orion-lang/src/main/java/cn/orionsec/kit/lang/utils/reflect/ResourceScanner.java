@@ -110,7 +110,7 @@ public class ResourceScanner {
      * @return this
      */
     public ResourceScanner with(Class<?> resourceClass) {
-        Valid.notNull(resourceClass, "resourceClass is null");
+        Assert.notNull(resourceClass, "resourceClass is null");
         URL r1 = resourceClass.getProtectionDomain().getCodeSource().getLocation();
         URL r2 = resourceClass.getClassLoader().getResource(Strings.EMPTY);
         if (r1 != null) {

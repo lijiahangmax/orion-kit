@@ -31,8 +31,8 @@ import cn.orionsec.kit.lang.able.SafeCloseable;
 import cn.orionsec.kit.lang.able.Stoppable;
 import cn.orionsec.kit.lang.able.Watchable;
 import cn.orionsec.kit.lang.utils.Arrays1;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.io.Streams;
 
 import java.io.File;
@@ -78,7 +78,7 @@ public abstract class FolderWatcher implements Runnable, Watchable, Stoppable, S
     }
 
     protected FolderWatcher(WatchHandler handler, WatchEvent.Modifier[] modifiers, WatchEvent.Kind<?>... kinds) {
-        Valid.notNull(handler, "watch handler is null");
+        Assert.notNull(handler, "watch handler is null");
         this.handler = handler;
         this.modifiers = modifiers;
         this.kinds = Arrays1.def(kinds, WatchEventKind.ALL);

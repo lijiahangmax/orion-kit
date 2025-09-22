@@ -30,9 +30,9 @@ import cn.orionsec.kit.http.BaseHttpResponse;
 import cn.orionsec.kit.http.ok.file.OkAsyncDownload;
 import cn.orionsec.kit.http.support.HttpCookie;
 import cn.orionsec.kit.lang.define.mutable.MutableString;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
@@ -206,7 +206,7 @@ public class OkResponse extends BaseHttpResponse implements Serializable {
      * 检查请求是否完毕
      */
     private void validDone() {
-        Valid.isTrue(done, "ok request is not done");
+        Assert.isTrue(done, "ok request is not done");
     }
 
     /**

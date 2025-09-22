@@ -30,9 +30,9 @@ import cn.orionsec.kit.lang.able.SafeCloseable;
 import cn.orionsec.kit.lang.able.SafeFlushable;
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.constant.Letters;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.office.csv.option.CsvOption;
@@ -74,16 +74,16 @@ public class CsvWriter implements SafeCloseable, SafeFlushable {
     }
 
     public CsvWriter(String file, char delimiter, Charset charset) {
-        Valid.notBlank(file, "file can not be null");
-        Valid.notNull(charset, "charset can not be null");
+        Assert.notBlank(file, "file can not be null");
+        Assert.notNull(charset, "charset can not be null");
         this.option = new CsvWriterOption(delimiter, charset);
         this.writer = new BufferedWriter(new OutputStreamWriter(Files1.openOutputStreamSafe(file), charset));
     }
 
     public CsvWriter(String file, CsvWriterOption option) {
-        Valid.notBlank(file, "file can not be null");
-        Valid.notNull(option, "option not be null");
-        Valid.notNull(option.getCharset(), "charset can not be null");
+        Assert.notBlank(file, "file can not be null");
+        Assert.notNull(option, "option not be null");
+        Assert.notNull(option.getCharset(), "charset can not be null");
         this.option = option;
         this.writer = new BufferedWriter(new OutputStreamWriter(Files1.openOutputStreamSafe(file), option.getCharset()));
     }
@@ -97,16 +97,16 @@ public class CsvWriter implements SafeCloseable, SafeFlushable {
     }
 
     public CsvWriter(File file, char delimiter, Charset charset) {
-        Valid.notNull(file, "file can not be null");
-        Valid.notNull(charset, "charset can not be null");
+        Assert.notNull(file, "file can not be null");
+        Assert.notNull(charset, "charset can not be null");
         this.option = new CsvWriterOption(delimiter, charset);
         this.writer = new BufferedWriter(new OutputStreamWriter(Files1.openOutputStreamSafe(file), charset));
     }
 
     public CsvWriter(File file, CsvWriterOption option) {
-        Valid.notNull(file, "file can not be null");
-        Valid.notNull(option, "option can not be null");
-        Valid.notNull(option.getCharset(), "charset can not be null");
+        Assert.notNull(file, "file can not be null");
+        Assert.notNull(option, "option can not be null");
+        Assert.notNull(option.getCharset(), "charset can not be null");
         this.option = option;
         this.writer = new BufferedWriter(new OutputStreamWriter(Files1.openOutputStreamSafe(file), option.getCharset()));
     }
@@ -132,14 +132,14 @@ public class CsvWriter implements SafeCloseable, SafeFlushable {
     }
 
     public CsvWriter(Writer writer, char delimiter) {
-        Valid.notNull(writer, "writer can not be null");
+        Assert.notNull(writer, "writer can not be null");
         this.writer = writer;
         this.option = new CsvWriterOption(delimiter);
     }
 
     public CsvWriter(Writer writer, CsvWriterOption option) {
-        Valid.notNull(option, "option can not be null");
-        Valid.notNull(writer, "writer can not be null");
+        Assert.notNull(option, "option can not be null");
+        Assert.notNull(writer, "writer can not be null");
         this.writer = writer;
         this.option = option;
     }

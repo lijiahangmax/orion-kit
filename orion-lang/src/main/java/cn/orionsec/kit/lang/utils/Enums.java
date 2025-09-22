@@ -55,7 +55,7 @@ public class Enums {
      * @return true enum
      */
     public static boolean isEnum(Class<?> clazz) {
-        Valid.notNull(clazz);
+        Assert.notNull(clazz);
         return clazz.isEnum();
     }
 
@@ -66,7 +66,7 @@ public class Enums {
      * @return true enum
      */
     public static boolean isEnum(Object obj) {
-        Valid.notNull(obj);
+        Assert.notNull(obj);
         return obj.getClass().isEnum();
     }
 

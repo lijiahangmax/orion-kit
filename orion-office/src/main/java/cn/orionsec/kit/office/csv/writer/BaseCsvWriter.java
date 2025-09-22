@@ -28,8 +28,8 @@ package cn.orionsec.kit.office.csv.writer;
 
 import cn.orionsec.kit.lang.able.SafeCloseable;
 import cn.orionsec.kit.lang.able.SafeFlushable;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.office.csv.core.CsvWriter;
 import cn.orionsec.kit.office.csv.option.CsvWriterOption;
 
@@ -81,7 +81,7 @@ public abstract class BaseCsvWriter<K, V> implements SafeCloseable, SafeFlushabl
     protected Map<Integer, K> mapping;
 
     public BaseCsvWriter(CsvWriter writer) {
-        Valid.notNull(writer, "csv writer is null");
+        Assert.notNull(writer, "csv writer is null");
         this.writer = writer;
         this.skipNullRows = true;
         this.capacity = -1;

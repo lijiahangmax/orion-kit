@@ -30,8 +30,8 @@ import cn.orionsec.kit.http.ok.BaseOkRequest;
 import cn.orionsec.kit.http.ok.OkRequests;
 import cn.orionsec.kit.http.ok.OkResponse;
 import cn.orionsec.kit.lang.able.Asyncable;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import okhttp3.*;
@@ -137,7 +137,7 @@ public class OkAsyncDownload extends BaseOkRequest implements Asyncable<Consumer
 
     @Override
     public void async(Consumer<OkResponse> callback) {
-        Valid.notNull(callback, "async call back is null");
+        Assert.notNull(callback, "async call back is null");
         super.buildRequest();
         this.call = client.newCall(request);
         OkResponse response = new OkResponse(url, tag);

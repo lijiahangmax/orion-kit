@@ -26,9 +26,9 @@
  */
 package cn.orionsec.kit.lang.utils.random;
 
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.Systems;
-import cn.orionsec.kit.lang.utils.Valid;
 
 import java.util.regex.Pattern;
 
@@ -74,7 +74,7 @@ public class RndGenerator {
     }
 
     public RndGenerator(long seed, int bit) {
-        Valid.gte((seed + Strings.EMPTY).length(), bit, "bit len must less than or equal seed len");
+        Assert.gte((seed + Strings.EMPTY).length(), bit, "bit len must less than or equal seed len");
         this.seed = seed;
         this.originSeed = seed;
         this.bit = bit;

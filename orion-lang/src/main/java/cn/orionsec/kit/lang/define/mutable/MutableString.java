@@ -27,9 +27,9 @@
 package cn.orionsec.kit.lang.define.mutable;
 
 import cn.orionsec.kit.lang.able.Mutable;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.Urls;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.Xsses;
 import cn.orionsec.kit.lang.utils.codec.Base64s;
 import cn.orionsec.kit.lang.utils.convert.Converts;
@@ -59,17 +59,17 @@ public class MutableString implements Mutable<String>, CharSequence, Serializabl
     }
 
     public MutableString(String s) {
-        Valid.notNull(s);
+        Assert.notNull(s);
         this.builder = new StringBuilder(s);
     }
 
     public MutableString(StringBuilder builder) {
-        Valid.notNull(builder);
+        Assert.notNull(builder);
         this.builder = builder;
     }
 
     public MutableString(Object o) {
-        Valid.notNull(o);
+        Assert.notNull(o);
         this.builder = new StringBuilder(Strings.str(o));
     }
 
@@ -88,7 +88,7 @@ public class MutableString implements Mutable<String>, CharSequence, Serializabl
 
     @Override
     public void set(String s) {
-        Valid.notNull(s);
+        Assert.notNull(s);
         this.builder = new StringBuilder(s);
     }
 

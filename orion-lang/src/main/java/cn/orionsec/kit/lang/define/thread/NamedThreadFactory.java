@@ -26,8 +26,8 @@
  */
 package cn.orionsec.kit.lang.define.thread;
 
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.concurrent.ThreadFactory;
@@ -94,8 +94,8 @@ public class NamedThreadFactory implements ThreadFactory {
     }
 
     public NamedThreadFactory setPriority(int priority) {
-        Valid.gte(priority, 1, "priority must greater than or eq 1");
-        Valid.lte(priority, 10, "priority must less than or eq 10");
+        Assert.gte(priority, 1, "priority must greater than or eq 1");
+        Assert.lte(priority, 10, "priority must less than or eq 10");
         this.priority = priority;
         return this;
     }

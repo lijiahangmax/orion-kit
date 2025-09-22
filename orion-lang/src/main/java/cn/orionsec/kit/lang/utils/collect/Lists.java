@@ -28,9 +28,9 @@ package cn.orionsec.kit.lang.utils.collect;
 
 import cn.orionsec.kit.lang.define.collect.*;
 import cn.orionsec.kit.lang.utils.Arrays1;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Objects1;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.random.Randoms;
 
 import java.util.*;
@@ -215,7 +215,7 @@ public class Lists extends Collections {
 
     @SafeVarargs
     public static <E, V> List<E> of(Function<V, E> mapper, V... values) {
-        Valid.notNull(mapper, "convert function is null");
+        Assert.notNull(mapper, "convert function is null");
         List<E> list = new ArrayList<>();
         int length = Arrays1.length(values);
         for (int i = 0; i < length; i++) {
@@ -225,7 +225,7 @@ public class Lists extends Collections {
     }
 
     public static <E, V> List<E> map(List<V> list, Function<V, E> mapper) {
-        Valid.notNull(mapper, "convert function is null");
+        Assert.notNull(mapper, "convert function is null");
         List<E> result = new ArrayList<>();
         if (isEmpty(list)) {
             return result;

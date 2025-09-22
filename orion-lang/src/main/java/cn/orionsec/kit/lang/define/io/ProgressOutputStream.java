@@ -27,7 +27,7 @@
 package cn.orionsec.kit.lang.define.io;
 
 import cn.orionsec.kit.lang.support.progress.ByteTransferProgress;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -54,7 +54,7 @@ public class ProgressOutputStream extends OutputStream {
     }
 
     public ProgressOutputStream(OutputStream wrapper, ByteTransferProgress progress) {
-        this.wrapper = Valid.notNull(wrapper, "wrapper output stream is null");
+        this.wrapper = Assert.notNull(wrapper, "wrapper output stream is null");
         this.progress = progress;
     }
 

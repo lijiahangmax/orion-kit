@@ -28,7 +28,7 @@ package cn.orionsec.kit.lang.utils.collect;
 
 import cn.orionsec.kit.lang.define.collect.*;
 import cn.orionsec.kit.lang.utils.Arrays1;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.random.Randoms;
 
 import java.util.*;
@@ -211,7 +211,7 @@ public class Sets extends Collections {
 
     @SafeVarargs
     public static <E, V> Set<E> of(Function<V, E> mapper, V... values) {
-        Valid.notNull(mapper, "convert function is null");
+        Assert.notNull(mapper, "convert function is null");
         Set<E> list = new HashSet<>();
         int length = Arrays1.length(values);
         for (int i = 0; i < length; i++) {
@@ -221,7 +221,7 @@ public class Sets extends Collections {
     }
 
     public static <E, V> Set<E> map(List<V> l, Function<V, E> mapper) {
-        Valid.notNull(mapper, "convert function is null");
+        Assert.notNull(mapper, "convert function is null");
         Set<E> set = new HashSet<>();
         if (isEmpty(l)) {
             return set;

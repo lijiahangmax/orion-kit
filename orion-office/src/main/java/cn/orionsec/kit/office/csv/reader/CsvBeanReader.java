@@ -26,8 +26,8 @@
  */
 package cn.orionsec.kit.office.csv.reader;
 
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.reflect.Annotations;
 import cn.orionsec.kit.lang.utils.reflect.Constructors;
 import cn.orionsec.kit.lang.utils.reflect.Fields;
@@ -101,7 +101,7 @@ public class CsvBeanReader<T> extends BaseCsvReader<T> {
 
     protected CsvBeanReader(CsvReader reader, Class<T> targetClass, List<T> rows, Consumer<T> consumer) {
         super(reader, rows, consumer);
-        this.targetClass = Valid.notNull(targetClass, "target class is null");
+        this.targetClass = Assert.notNull(targetClass, "target class is null");
         this.mapping = new TreeMap<>();
         this.parseClass();
         this.parseField();
@@ -164,7 +164,7 @@ public class CsvBeanReader<T> extends BaseCsvReader<T> {
      * 解析 class
      */
     protected void parseClass() {
-        this.constructor = Valid.notNull(Constructors.getDefaultConstructor(targetClass), "target class not found default constructor");
+        this.constructor = Assert.notNull(Constructors.getDefaultConstructor(targetClass), "target class not found default constructor");
         ImportSetting setting = Annotations.getAnnotation(targetClass, ImportSetting.class);
         CsvReaderOption option = new CsvReaderOption();
         if (setting == null) {

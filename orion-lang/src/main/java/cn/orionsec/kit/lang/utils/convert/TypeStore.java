@@ -31,9 +31,9 @@ import cn.orionsec.kit.lang.define.iterator.ClassIterator;
 import cn.orionsec.kit.lang.define.support.CloneSupport;
 import cn.orionsec.kit.lang.function.Conversion;
 import cn.orionsec.kit.lang.utils.Arrays1;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.collect.Sets;
 import cn.orionsec.kit.lang.utils.reflect.Classes;
 
@@ -113,7 +113,7 @@ public class TypeStore extends CloneSupport<TypeStore> implements Serializable {
      * @return R
      */
     public <T, R> R to(T t, Class<R> targetClass) {
-        Valid.notNull(t, "convert target object is null");
+        Assert.notNull(t, "convert target object is null");
         Class<?> sourceClass = t.getClass();
         targetClass = (Class<R>) Classes.getWrapClass(targetClass);
         // 检查是否可以直接转换
@@ -254,8 +254,8 @@ public class TypeStore extends CloneSupport<TypeStore> implements Serializable {
      * @return true可以直接转换
      */
     public static boolean canConvert(Class<?> sourceClass, Class<?> targetClass, TypeStore store) {
-        Valid.notNull(sourceClass, "source class is null");
-        Valid.notNull(targetClass, "target class is null");
+        Assert.notNull(sourceClass, "source class is null");
+        Assert.notNull(targetClass, "target class is null");
         sourceClass = Classes.getWrapClass(sourceClass);
         targetClass = Classes.getWrapClass(targetClass);
         if (canDirectConvert(sourceClass, targetClass, false)) {
@@ -302,8 +302,8 @@ public class TypeStore extends CloneSupport<TypeStore> implements Serializable {
      * @return true可以直接转换
      */
     private static boolean canDirectConvert(Class<?> sourceClass, Class<?> targetClass, boolean wrap) {
-        Valid.notNull(sourceClass, "source class is null");
-        Valid.notNull(targetClass, "target class is null");
+        Assert.notNull(sourceClass, "source class is null");
+        Assert.notNull(targetClass, "target class is null");
         if (wrap) {
             sourceClass = Classes.getWrapClass(sourceClass);
             targetClass = Classes.getWrapClass(targetClass);

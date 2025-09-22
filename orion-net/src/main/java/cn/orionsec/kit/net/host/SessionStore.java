@@ -28,9 +28,9 @@ package cn.orionsec.kit.net.host;
 
 import cn.orionsec.kit.lang.able.SafeCloseable;
 import cn.orionsec.kit.lang.constant.Const;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.net.host.sftp.SftpExecutor;
 import cn.orionsec.kit.net.host.ssh.command.CommandExecutor;
 import cn.orionsec.kit.net.host.ssh.shell.ShellExecutor;
@@ -210,7 +210,7 @@ public class SessionStore implements SafeCloseable {
      * @return this
      */
     public SessionStore timeout(int timeout) {
-        Valid.gte(timeout, 0, "the time must greater than or equal 0");
+        Assert.gte(timeout, 0, "the time must greater than or equal 0");
         try {
             session.setServerAliveInterval(timeout);
             session.setServerAliveCountMax(2);

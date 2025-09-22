@@ -26,8 +26,8 @@
  */
 package cn.orionsec.kit.test.encrypt;
 
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.crypto.DES;
 import cn.orionsec.kit.lang.utils.crypto.DES3;
 import cn.orionsec.kit.lang.utils.crypto.Keys;
@@ -77,7 +77,7 @@ public class DesTests {
             System.out.println(enc);
             String dec = DES.decrypt(enc, key);
             System.out.println(dec);
-            Valid.isTrue(s.equals(dec));
+            Assert.isTrue(s.equals(dec));
         }
     }
 
@@ -90,7 +90,7 @@ public class DesTests {
             System.out.println(enc);
             String dec = DES3.decrypt(enc, key);
             System.out.println(dec);
-            Valid.isTrue(s.equals(dec));
+            Assert.isTrue(s.equals(dec));
         }
     }
 
@@ -106,7 +106,7 @@ public class DesTests {
             // System.out.println(en);
             // System.out.println(de);
             // System.out.println();
-            Valid.isTrue(val.equals(de));
+            Assert.isTrue(val.equals(de));
         }
     }
 
@@ -122,7 +122,7 @@ public class DesTests {
             // System.out.println(en);
             // System.out.println(de);
             // System.out.println();
-            Valid.isTrue(val.equals(de));
+            Assert.isTrue(val.equals(de));
         }
     }
 

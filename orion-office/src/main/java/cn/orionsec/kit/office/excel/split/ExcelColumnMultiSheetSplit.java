@@ -26,8 +26,8 @@
  */
 package cn.orionsec.kit.office.excel.split;
 
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.office.excel.Excels;
 import cn.orionsec.kit.office.excel.writer.BaseExcelWriteable;
@@ -68,25 +68,25 @@ public class ExcelColumnMultiSheetSplit extends BaseExcelWriteable {
 
     public ExcelColumnMultiSheetSplit(Workbook sourceWorkbook, int sourceSheetIndex) {
         this(sourceWorkbook);
-        Valid.gte(sourceSheetIndex, 0, "split sheet index must >= 0");
+        Assert.gte(sourceSheetIndex, 0, "split sheet index must >= 0");
         this.sourceSheet = sourceWorkbook.getSheetAt(sourceSheetIndex);
     }
 
     public ExcelColumnMultiSheetSplit(Workbook sourceWorkbook, String sourceSheetName) {
         this(sourceWorkbook);
-        Valid.notBlank(sourceSheetName, "split sheet name is null");
+        Assert.notBlank(sourceSheetName, "split sheet name is null");
         this.sourceSheet = sourceWorkbook.getSheet(sourceSheetName);
     }
 
     public ExcelColumnMultiSheetSplit(Workbook sourceWorkbook, Sheet sourceSheet) {
         this(sourceWorkbook);
-        this.sourceSheet = Valid.notNull(sourceSheet, "split sheet is null");
+        this.sourceSheet = Assert.notNull(sourceSheet, "split sheet is null");
     }
 
     private ExcelColumnMultiSheetSplit(Workbook sourceWorkbook) {
         super(new SXSSFWorkbook());
-        this.sourceWorkbook = Valid.notNull(sourceWorkbook, "split workbook is null");
-        Valid.isTrue(!Excels.isStreamingWorkbook(sourceWorkbook), "unsupported streaming reading, please use ExcelColumnSingleSplit");
+        this.sourceWorkbook = Assert.notNull(sourceWorkbook, "split workbook is null");
+        Assert.isTrue(!Excels.isStreamingWorkbook(sourceWorkbook), "unsupported streaming reading, please use ExcelColumnSingleSplit");
     }
 
     /**

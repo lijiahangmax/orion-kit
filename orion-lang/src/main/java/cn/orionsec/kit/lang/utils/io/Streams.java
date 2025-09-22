@@ -29,8 +29,8 @@ package cn.orionsec.kit.lang.utils.io;
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.define.iterator.ByteArrayIterator;
 import cn.orionsec.kit.lang.define.iterator.LineIterator;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.crypto.Signatures;
 import cn.orionsec.kit.lang.utils.crypto.enums.HashDigest;
 
@@ -458,7 +458,7 @@ public class Streams {
     }
 
     public static void lineConsumer(Reader reader, int bufferSize, Consumer<String> c) throws IOException {
-        Valid.notNull(reader, "reader is null");
+        Assert.notNull(reader, "reader is null");
         BufferedReader bufferedReader = toBufferedReader(reader, bufferSize);
         String line;
         while ((line = bufferedReader.readLine()) != null) {

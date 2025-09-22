@@ -27,8 +27,8 @@
 package cn.orionsec.kit.office.csv.reader;
 
 import cn.orionsec.kit.lang.able.SafeCloseable;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.office.csv.core.CsvReader;
 import cn.orionsec.kit.office.csv.option.CsvReaderOption;
 
@@ -75,7 +75,7 @@ public abstract class BaseCsvReader<T> implements SafeCloseable, Iterable<T> {
     protected boolean store;
 
     protected BaseCsvReader(CsvReader reader, Collection<T> rows, Consumer<T> consumer) {
-        this.reader = Valid.notNull(reader, "reader is null");
+        this.reader = Assert.notNull(reader, "reader is null");
         if (rows == null && consumer == null) {
             throw Exceptions.argument("rows container or row consumer one of them must not be empty");
         }

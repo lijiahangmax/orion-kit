@@ -28,8 +28,8 @@ package cn.orionsec.kit.net.specification.transfer;
 
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.support.progress.ByteTransferRateProgress;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.io.FileLocks;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.lang.utils.io.Streams;
@@ -86,8 +86,8 @@ public abstract class BaseFileUploader implements IFileUploader {
     protected Long remoteFileLength;
 
     protected BaseFileUploader(String remote, File local, String lockSuffix, int bufferSize) {
-        Valid.notEmpty(remote, "remote file is empty");
-        Valid.notNull(local, "upload file is null");
+        Assert.notEmpty(remote, "remote file is empty");
+        Assert.notNull(local, "upload file is null");
         if (!local.exists() || !local.isFile()) {
             throw Exceptions.notFound("not found upload local file");
         }

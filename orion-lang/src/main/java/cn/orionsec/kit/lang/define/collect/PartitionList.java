@@ -26,7 +26,7 @@
  */
 package cn.orionsec.kit.lang.define.collect;
 
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 
 import java.util.AbstractList;
 import java.util.List;
@@ -56,8 +56,8 @@ public class PartitionList<E> extends AbstractList<List<E>> {
     @Override
     public List<E> get(int index) {
         int listSize = this.size();
-        Valid.gte(index, 0, "index {} must not be negative", index);
-        Valid.lt(index, listSize, "index {} must be less than size {}", index, listSize);
+        Assert.gte(index, 0, "index {} must not be negative", index);
+        Assert.lt(index, listSize, "index {} must be less than size {}", index, listSize);
         int start = index * size;
         int end = Math.min(start + size, list.size());
         return list.subList(start, end);

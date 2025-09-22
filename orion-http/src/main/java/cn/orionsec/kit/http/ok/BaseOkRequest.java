@@ -30,9 +30,9 @@ import cn.orionsec.kit.http.BaseHttpRequest;
 import cn.orionsec.kit.http.support.HttpMethod;
 import cn.orionsec.kit.http.support.HttpUploadPart;
 import cn.orionsec.kit.lang.constant.StandardHttpHeader;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import okhttp3.*;
 
@@ -85,7 +85,7 @@ public abstract class BaseOkRequest extends BaseHttpRequest {
      * @return this
      */
     public BaseOkRequest cancel() {
-        Valid.notNull(this.call, "request not call");
+        Assert.notNull(this.call, "request not call");
         this.call.cancel();
         return this;
     }

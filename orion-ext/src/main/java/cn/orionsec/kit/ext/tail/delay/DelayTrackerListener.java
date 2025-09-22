@@ -28,7 +28,7 @@ package cn.orionsec.kit.ext.tail.delay;
 
 import cn.orionsec.kit.ext.tail.handler.DataHandler;
 import cn.orionsec.kit.lang.constant.Const;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,7 +58,7 @@ public class DelayTrackerListener extends AbstractDelayTracker {
 
     public DelayTrackerListener(File tailFile, DataHandler handler) {
         super(tailFile);
-        this.handler = Valid.notNull(handler, "data handler is null");
+        this.handler = Assert.notNull(handler, "data handler is null");
         this.buffer = new byte[Const.BUFFER_KB_8];
     }
 

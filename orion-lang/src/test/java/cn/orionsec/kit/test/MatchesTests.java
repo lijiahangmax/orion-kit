@@ -27,7 +27,7 @@
 package cn.orionsec.kit.test;
 
 import cn.orionsec.kit.lang.constant.Const;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.identity.CreditCodes;
 import cn.orionsec.kit.lang.utils.regexp.Matches;
 import org.junit.Test;
@@ -45,7 +45,7 @@ public class MatchesTests {
 
     @Test
     public void test() {
-        Valid.isTrue(Matches.isHex("123345ABCDEF"));
+        Assert.isTrue(Matches.isHex("123345ABCDEF"));
         System.out.println("Matches.isHex(\"123345ABCDEFG\") = " + Matches.isHex("123345ABCDEFG"));
         System.out.println("Matches.isIpv4(\"192.168.1.1\") = " + Matches.isIpv4("192.168.1.1"));
         System.out.println("Matches.isIpv4(\"255.168.255.0\") = " + Matches.isIpv4("255.168.255.0"));
@@ -85,7 +85,7 @@ public class MatchesTests {
         System.out.println("Matches.isEmail(\"lasd2@_qwe.com.com\") = " + Matches.isEmail("lasd2@_qwe.com.com"));
         System.out.println("Matches.isEmail(\"lasd2_@1sd.com\") = " + Matches.isEmail("lasd2_@1sd.com"));
         System.out.println("Matches.isEmail(\"lasd2@_&*qwe22.@sd.com\") = " + Matches.isEmail("lasd2@_&*qwe22.@sd.com"));
-        IntStream.range(1, 20).forEach((__) -> Valid.isTrue(Matches.isCreditCode(CreditCodes.random())));
+        IntStream.range(1, 20).forEach((__) -> Assert.isTrue(Matches.isCreditCode(CreditCodes.random())));
 
     }
 

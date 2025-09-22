@@ -26,7 +26,7 @@
  */
 package cn.orionsec.kit.test.reflect;
 
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.reflect.Constructors;
 import cn.orionsec.kit.lang.utils.reflect.Methods;
 import cn.orionsec.kit.test.reflect.value.User;
@@ -48,7 +48,7 @@ public class ParameterTests {
     @Test
     public void testParameter() {
         Method method = Methods.getAccessibleMethod(User.class, "say");
-        method = Valid.notNull(method);
+        method = Assert.notNull(method);
         Parameter[] parameters = method.getParameters();
         for (Parameter p : parameters) {
             System.out.println(p.getAnnotation(UserAnno1.class));
@@ -57,7 +57,7 @@ public class ParameterTests {
         }
         System.out.println("---");
         Constructor<User> c = Constructors.getConstructor(User.class, 2);
-        c = Valid.notNull(c);
+        c = Assert.notNull(c);
         parameters = c.getParameters();
         for (Parameter p : parameters) {
             System.out.println(p.getAnnotation(UserAnno1.class));
@@ -69,7 +69,7 @@ public class ParameterTests {
     @Test
     public void testParameter1() {
         Method method = Methods.getAccessibleMethod(User.class, "setId");
-        method = Valid.notNull(method);
+        method = Assert.notNull(method);
         for (Annotation[] a : method.getParameterAnnotations()) {
             System.out.println(a.length);
         }

@@ -28,7 +28,7 @@ package cn.orionsec.kit.ext.mail;
 
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.constant.StandardContentType;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.lang.utils.io.Streams;
 
@@ -94,21 +94,21 @@ public class MailAttachment implements Serializable {
 
     public MailAttachment(InputStream body, String name, boolean autoClose) {
         this();
-        Valid.notNull(body, "attachment body is null");
-        Valid.notBlank(name, "attachment file name is blank");
+        Assert.notNull(body, "attachment body is null");
+        Assert.notBlank(name, "attachment file name is blank");
         this.body = body;
         this.name = name;
         this.autoClose = autoClose;
     }
 
     public MailAttachment name(String name) {
-        Valid.notBlank(name, "attachment file name is blank");
+        Assert.notBlank(name, "attachment file name is blank");
         this.name = name;
         return this;
     }
 
     public MailAttachment body(InputStream body) {
-        Valid.notNull(body, "attachment body is null");
+        Assert.notNull(body, "attachment body is null");
         this.body = body;
         return this;
     }

@@ -26,8 +26,8 @@
  */
 package cn.orionsec.kit.test.encrypt;
 
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.crypto.AES;
 import cn.orionsec.kit.lang.utils.crypto.Keys;
 import cn.orionsec.kit.lang.utils.crypto.enums.CipherAlgorithm;
@@ -97,7 +97,7 @@ public class AesTests {
             System.out.println(enc);
             String dec = AES.decrypt(enc, key);
             System.out.println(dec);
-            Valid.isTrue(s.equals(dec));
+            Assert.isTrue(s.equals(dec));
         }
     }
 
@@ -113,7 +113,7 @@ public class AesTests {
             // System.out.println(en);
             // System.out.println(de);
             // System.out.println();
-            Valid.isTrue(val.equals(de));
+            Assert.isTrue(val.equals(de));
         }
     }
 

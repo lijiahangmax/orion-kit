@@ -26,7 +26,7 @@
  */
 package cn.orionsec.kit.lang.utils.io.compress;
 
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.io.Files1;
 
 import java.io.File;
@@ -86,9 +86,9 @@ public abstract class BaseFileDecompressor implements FileDecompressor {
 
     @Override
     public void decompress() throws Exception {
-        Valid.notNull(decompressFile, "decompress file is null");
-        Valid.notNull(decompressTargetPath, "decompress target path is null");
-        Valid.isTrue(Files1.isFile(decompressFile), "decompress file is not a file");
+        Assert.notNull(decompressFile, "decompress file is null");
+        Assert.notNull(decompressTargetPath, "decompress target path is null");
+        Assert.isTrue(Files1.isFile(decompressFile), "decompress file is not a file");
         this.doDecompress();
     }
 

@@ -27,8 +27,8 @@
 package cn.orionsec.kit.lang.utils.time.cron;
 
 import cn.orionsec.kit.lang.constant.Const;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.time.Dates;
 
 import java.io.Serializable;
@@ -104,7 +104,7 @@ public class Cron implements Serializable {
     public static final int MAX_YEAR = Calendar.getInstance().get(Calendar.YEAR) + 100;
 
     public Cron(String cronExpression) {
-        Valid.notBlank(cronExpression, "cron expression not be empty");
+        Assert.notBlank(cronExpression, "cron expression not be empty");
         this.cronExpression = cronExpression.trim().toUpperCase(Locale.US);
         this.buildExpression(this.cronExpression);
     }

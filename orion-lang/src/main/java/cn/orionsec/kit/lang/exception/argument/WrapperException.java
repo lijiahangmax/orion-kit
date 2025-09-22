@@ -27,7 +27,7 @@
 package cn.orionsec.kit.lang.exception.argument;
 
 import cn.orionsec.kit.lang.define.wrapper.Wrapper;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 
 /**
  * Wrapper 的 exception
@@ -42,13 +42,13 @@ public class WrapperException extends InvalidArgumentException {
     private final Wrapper<?> wrapper;
 
     public WrapperException(Wrapper<?> wrapper) {
-        Valid.notNull(wrapper, "wrapper is null");
+        Assert.notNull(wrapper, "wrapper is null");
         this.wrapper = wrapper;
     }
 
     public WrapperException(Wrapper<?> wrapper, Throwable cause) {
         super(cause);
-        Valid.notNull(wrapper, "wrapper is null");
+        Assert.notNull(wrapper, "wrapper is null");
         this.wrapper = wrapper;
     }
 

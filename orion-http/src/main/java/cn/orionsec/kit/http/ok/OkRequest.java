@@ -28,8 +28,8 @@ package cn.orionsec.kit.http.ok;
 
 import cn.orionsec.kit.lang.able.Asyncable;
 import cn.orionsec.kit.lang.able.Awaitable;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
-import cn.orionsec.kit.lang.utils.Valid;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -104,7 +104,7 @@ public class OkRequest extends BaseOkRequest implements Awaitable<OkResponse>, A
 
     @Override
     public void async(Consumer<OkResponse> callback) {
-        Valid.notNull(callback, "async call back is null");
+        Assert.notNull(callback, "async call back is null");
         this.asyncCallback = callback;
         this.async = true;
         super.buildRequest();

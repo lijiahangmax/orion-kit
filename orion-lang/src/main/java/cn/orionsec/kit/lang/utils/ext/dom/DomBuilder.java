@@ -28,7 +28,7 @@ package cn.orionsec.kit.lang.utils.ext.dom;
 
 import cn.orionsec.kit.lang.able.Buildable;
 import cn.orionsec.kit.lang.constant.Const;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import cn.orionsec.kit.lang.utils.collect.Maps;
 import org.dom4j.Attribute;
@@ -122,7 +122,7 @@ public class DomBuilder implements Buildable<DomBuilder> {
      */
     @Override
     public DomBuilder build() {
-        Valid.notNull(domElement, "element is null");
+        Assert.notNull(domElement, "element is null");
         this.document = new DefaultDocument();
         document.setXMLEncoding(charset);
         Element rootElement = new DefaultElement(domElement.getName());

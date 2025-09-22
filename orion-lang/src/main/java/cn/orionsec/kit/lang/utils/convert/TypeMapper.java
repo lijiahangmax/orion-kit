@@ -27,7 +27,7 @@
 package cn.orionsec.kit.lang.utils.convert;
 
 import cn.orionsec.kit.lang.function.Conversion;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -53,8 +53,8 @@ public abstract class TypeMapper<T> implements Serializable {
     }
 
     public TypeMapper(Class<T> sourceType, TypeStore store) {
-        Valid.notNull(sourceType, "sourceType is null");
-        Valid.notNull(store, "typeStore is null");
+        Assert.notNull(sourceType, "sourceType is null");
+        Assert.notNull(store, "typeStore is null");
         this.sourceType = sourceType;
         this.store = store;
     }

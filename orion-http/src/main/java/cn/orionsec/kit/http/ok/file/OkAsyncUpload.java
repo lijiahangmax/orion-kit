@@ -34,8 +34,8 @@ import cn.orionsec.kit.http.support.HttpContentType;
 import cn.orionsec.kit.http.support.HttpMethod;
 import cn.orionsec.kit.http.support.HttpUploadPart;
 import cn.orionsec.kit.lang.able.Asyncable;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import okhttp3.*;
 
@@ -150,7 +150,7 @@ public class OkAsyncUpload extends BaseOkRequest implements Asyncable<Consumer<O
 
     @Override
     public void async(Consumer<OkResponse> callback) {
-        Valid.notNull(callback, "async call back is null");
+        Assert.notNull(callback, "async call back is null");
         super.buildRequest();
         this.call = client.newCall(request);
         OkResponse response = new OkResponse(url, tag);

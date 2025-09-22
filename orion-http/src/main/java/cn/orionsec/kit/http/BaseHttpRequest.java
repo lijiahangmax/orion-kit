@@ -33,9 +33,9 @@ import cn.orionsec.kit.http.useragent.StandardUserAgent;
 import cn.orionsec.kit.lang.config.KitConfig;
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.constant.StandardHttpHeader;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.Urls;
-import cn.orionsec.kit.lang.utils.Valid;
 
 import java.util.*;
 
@@ -324,7 +324,7 @@ public abstract class BaseHttpRequest {
      * 构建请求
      */
     protected void buildRequest() {
-        Valid.notNull(url, "request url is null");
+        Assert.notNull(url, "request url is null");
         this.method = method.trim().toUpperCase();
         if (this.isNoBodyRequest() && formParts != null) {
             if (queryParams == null) {

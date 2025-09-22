@@ -27,8 +27,8 @@
 package cn.orionsec.kit.lang.define.thread;
 
 import cn.orionsec.kit.lang.define.wrapper.Tuple;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
-import cn.orionsec.kit.lang.utils.Valid;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -54,7 +54,7 @@ public class TaskCollector {
     private Future<?>[] futures;
 
     public TaskCollector(ExecutorService dispatch) {
-        Valid.notNull(dispatch, "task dispatch is null");
+        Assert.notNull(dispatch, "task dispatch is null");
         this.dispatch = dispatch;
     }
 

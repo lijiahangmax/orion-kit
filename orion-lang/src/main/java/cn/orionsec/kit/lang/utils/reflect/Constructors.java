@@ -29,9 +29,9 @@ package cn.orionsec.kit.lang.utils.reflect;
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.define.collect.ConcurrentReferenceHashMap;
 import cn.orionsec.kit.lang.utils.Arrays1;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 
 import java.lang.reflect.Constructor;
@@ -81,7 +81,7 @@ public class Constructors {
      * @return 构造方法
      */
     public static <T> Constructor<T> getDefaultConstructor(Class<T> clazz) {
-        Valid.notNull(clazz, "class is null");
+        Assert.notNull(clazz, "class is null");
         try {
             Constructor<T> constructor = clazz.getDeclaredConstructor();
             constructor.setAccessible(true);
@@ -100,7 +100,7 @@ public class Constructors {
      * @return 构造方法
      */
     public static <T> Constructor<T> getConstructor(Class<T> clazz, Class<?>... parameterTypes) {
-        Valid.notNull(clazz, "class is null");
+        Assert.notNull(clazz, "class is null");
         if (Arrays1.length(parameterTypes) == 0) {
             return getDefaultConstructor(clazz);
         }
@@ -122,7 +122,7 @@ public class Constructors {
      * @return 构造方法
      */
     public static <T> Constructor<T> getConstructor(Class<T> clazz, int len) {
-        Valid.notNull(clazz, "class is null");
+        Assert.notNull(clazz, "class is null");
         if (len == 0) {
             return getDefaultConstructor(clazz);
         }
@@ -149,7 +149,7 @@ public class Constructors {
      * @return 构造方法
      */
     public static <T> List<Constructor<T>> getConstructors(Class<T> clazz, int len) {
-        Valid.notNull(clazz, "class is null");
+        Assert.notNull(clazz, "class is null");
         List<Constructor<T>> list = new ArrayList<>();
         if (len == 0) {
             list.add(getDefaultConstructor(clazz));
@@ -177,7 +177,7 @@ public class Constructors {
      * @return 构造方法
      */
     public static <T> List<Constructor<T>> getConstructors(Class<T> clazz) {
-        Valid.notNull(clazz, "class is null");
+        Assert.notNull(clazz, "class is null");
         List<Constructor<T>> list = new ArrayList<>();
         try {
             Constructor<?>[] constructors = clazz.getConstructors();
@@ -195,7 +195,7 @@ public class Constructors {
      * 设置构造方法可访问
      */
     public static void setAccessible(Constructor<?> constructor) {
-        Valid.notNull(constructor, "set accessible constructor class is null");
+        Assert.notNull(constructor, "set accessible constructor class is null");
         if ((!Modifier.isPublic(constructor.getModifiers()) || !Modifier.isPublic(constructor.getDeclaringClass().getModifiers())) && !constructor.isAccessible()) {
             constructor.setAccessible(true);
         }
@@ -209,7 +209,7 @@ public class Constructors {
      * @return 实例
      */
     public static <T> T newInstance(Constructor<T> constructor) {
-        Valid.notNull(constructor, "constructor is null");
+        Assert.notNull(constructor, "constructor is null");
         try {
             constructor.setAccessible(true);
             return constructor.newInstance();
@@ -227,7 +227,7 @@ public class Constructors {
      * @return 实例
      */
     public static <T> T newInstance(Constructor<T> constructor, Object... values) {
-        Valid.notNull(constructor, "constructor is null");
+        Assert.notNull(constructor, "constructor is null");
         try {
             constructor.setAccessible(true);
             return constructor.newInstance(values);
@@ -244,7 +244,7 @@ public class Constructors {
      * @return 实例
      */
     public static <T> T newInstance(Class<T> clazz) {
-        Valid.notNull(clazz, "class is null");
+        Assert.notNull(clazz, "class is null");
         try {
             Constructor<T> constructor = clazz.getDeclaredConstructor();
             constructor.setAccessible(true);
@@ -264,7 +264,7 @@ public class Constructors {
      * @return 实例
      */
     public static <T> T newInstance(Class<T> clazz, Class<?>[] parameterTypes, Object... values) {
-        Valid.notNull(clazz, "class is null");
+        Assert.notNull(clazz, "class is null");
         try {
             Constructor<T> constructor = clazz.getDeclaredConstructor(parameterTypes);
             constructor.setAccessible(true);
@@ -282,7 +282,7 @@ public class Constructors {
      * @return 实例
      */
     public static <T> T newInstanceInfer(Constructor<T> constructor, Object... args) {
-        Valid.notNull(constructor, "constructor is null");
+        Assert.notNull(constructor, "constructor is null");
         if (Arrays1.isEmpty(args)) {
             return newInstance(constructor);
         }
@@ -297,7 +297,7 @@ public class Constructors {
      * @return 实例
      */
     public static <T> T newInstanceInfer(Class<T> clazz, Object... args) {
-        Valid.notNull(clazz, "class is null");
+        Assert.notNull(clazz, "class is null");
         if (Arrays1.isEmpty(args)) {
             return newInstance(clazz);
         }

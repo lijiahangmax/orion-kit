@@ -28,7 +28,7 @@ package cn.orionsec.kit.office.csv.split;
 
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.utils.Arrays1;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.office.csv.CsvExt;
 import cn.orionsec.kit.office.csv.core.CsvWriter;
 import cn.orionsec.kit.office.csv.reader.CsvArrayReader;
@@ -73,8 +73,8 @@ public class CsvRowSplit extends SplitTargetGenerator {
     }
 
     public CsvRowSplit(CsvArrayReader reader, int limit) {
-        Valid.notNull(reader, "reader is null");
-        Valid.lte(0, limit, "limit not be lte 0");
+        Assert.notNull(reader, "reader is null");
+        Assert.lte(0, limit, "limit not be lte 0");
         this.reader = reader;
         this.limit = limit;
         this.suffix = Const.SUFFIX_CSV;

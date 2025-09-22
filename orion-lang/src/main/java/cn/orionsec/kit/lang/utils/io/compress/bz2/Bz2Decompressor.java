@@ -28,7 +28,7 @@ package cn.orionsec.kit.lang.utils.io.compress.bz2;
 
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.id.ObjectIds;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.lang.utils.io.compress.BaseFileDecompressor;
@@ -81,12 +81,12 @@ public class Bz2Decompressor extends BaseFileDecompressor {
     @Override
     public void decompress() throws Exception {
         if (decompressFile != null) {
-            Valid.isTrue(Files1.isFile(decompressFile), "decompress file is not a file");
+            Assert.isTrue(Files1.isFile(decompressFile), "decompress file is not a file");
         } else {
-            Valid.notNull(decompressInputStream, "decompress file and decompress input stream is null");
+            Assert.notNull(decompressInputStream, "decompress file and decompress input stream is null");
         }
         if (decompressTargetPath == null) {
-            Valid.notNull(decompressTargetOutputStream, "decompress target path and is decompress target output stream null");
+            Assert.notNull(decompressTargetOutputStream, "decompress target path and is decompress target output stream null");
         }
         this.doDecompress();
     }

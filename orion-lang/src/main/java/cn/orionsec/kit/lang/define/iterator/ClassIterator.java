@@ -26,7 +26,7 @@
  */
 package cn.orionsec.kit.lang.define.iterator;
 
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.reflect.Classes;
 
 import java.io.Serializable;
@@ -55,7 +55,7 @@ public class ClassIterator<T> implements Iterator<Class<? super T>>, Iterable<Cl
     }
 
     public ClassIterator(Class<T> clazz, boolean includeObject) {
-        Valid.notNull(clazz, "class is null");
+        Assert.notNull(clazz, "class is null");
         this.current = this.clazz = clazz;
         this.includeObject = includeObject;
     }

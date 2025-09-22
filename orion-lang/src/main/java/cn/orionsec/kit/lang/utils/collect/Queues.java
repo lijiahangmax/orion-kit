@@ -29,7 +29,7 @@ package cn.orionsec.kit.lang.utils.collect;
 import cn.orionsec.kit.lang.define.collect.FixedDeque;
 import cn.orionsec.kit.lang.define.collect.FixedQueue;
 import cn.orionsec.kit.lang.utils.Arrays1;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -113,7 +113,7 @@ public class Queues extends Collections {
 
     @SafeVarargs
     public static <E, V> Queue<E> of(Function<V, E> mapper, V... values) {
-        Valid.notNull(mapper, "convert function is null");
+        Assert.notNull(mapper, "convert function is null");
         Queue<E> q = new ConcurrentLinkedQueue<>();
         int length = Arrays1.length(values);
         for (int i = 0; i < length; i++) {
@@ -124,7 +124,7 @@ public class Queues extends Collections {
 
     @SafeVarargs
     public static <E, V> Deque<E> ofd(Function<V, E> mapper, V... e) {
-        Valid.notNull(mapper, "convert function is null");
+        Assert.notNull(mapper, "convert function is null");
         Deque<E> q = new ConcurrentLinkedDeque<>();
         int length = Arrays1.length(e);
         for (int i = 0; i < length; i++) {
@@ -134,7 +134,7 @@ public class Queues extends Collections {
     }
 
     public static <E, V> Queue<E> map(Queue<V> queue, Function<V, E> mapper) {
-        Valid.notNull(mapper, "convert function is null");
+        Assert.notNull(mapper, "convert function is null");
         Queue<E> q = new ConcurrentLinkedQueue<>();
         if (isEmpty(queue)) {
             return q;
@@ -146,7 +146,7 @@ public class Queues extends Collections {
     }
 
     public static <E, V> Deque<E> map(Deque<V> queue, Function<V, E> f) {
-        Valid.notNull(f, "convert function is null");
+        Assert.notNull(f, "convert function is null");
         Deque<E> q = new ConcurrentLinkedDeque<>();
         if (isEmpty(queue)) {
             return q;

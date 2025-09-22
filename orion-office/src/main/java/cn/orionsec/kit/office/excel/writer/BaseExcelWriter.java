@@ -28,8 +28,8 @@ package cn.orionsec.kit.office.excel.writer;
 
 import cn.orionsec.kit.lang.function.select.Selector;
 import cn.orionsec.kit.lang.utils.Arrays1;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Objects1;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.office.excel.Excels;
 import cn.orionsec.kit.office.excel.option.FooterOption;
 import cn.orionsec.kit.office.excel.option.HeaderOption;
@@ -178,8 +178,8 @@ public abstract class BaseExcelWriter<K, V> {
      * @return this
      */
     public BaseExcelWriter<K, V> title(String title, int row, int lastColumnIndex) {
-        Valid.gt(row, 0, "title use row must > 0");
-        Valid.gte(lastColumnIndex, 0, "title last column index row must >= 0");
+        Assert.gt(row, 0, "title use row must > 0");
+        Assert.gte(lastColumnIndex, 0, "title last column index row must >= 0");
         // row
         Row titleRow = sheet.createRow(rowIndex++);
         if (titleHeight != 0) {
@@ -566,7 +566,7 @@ public abstract class BaseExcelWriter<K, V> {
      * @param option option
      */
     protected void addOption(K k, WriteFieldOption option, Object defaultValue) {
-        Valid.gte(option.getIndex(), 0, "title use row must >= 0");
+        Assert.gte(option.getIndex(), 0, "title use row must >= 0");
         options.put(k, option);
         this.columnMaxIndex = Math.max(columnMaxIndex, option.getIndex());
         if (defaultValue != null) {

@@ -27,7 +27,7 @@
 package cn.orionsec.kit.lang.define.io;
 
 import cn.orionsec.kit.lang.support.progress.ByteTransferProgress;
-import cn.orionsec.kit.lang.utils.Valid;
+import cn.orionsec.kit.lang.utils.Assert;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -54,7 +54,7 @@ public class ProgressWriter extends Writer {
     }
 
     public ProgressWriter(Writer wrapper, ByteTransferProgress progress) {
-        this.wrapper = Valid.notNull(wrapper, "wrapper writer is null");
+        this.wrapper = Assert.notNull(wrapper, "wrapper writer is null");
         this.progress = progress;
     }
 

@@ -26,8 +26,8 @@
  */
 package cn.orionsec.kit.lang.utils.time;
 
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Compares;
-import cn.orionsec.kit.lang.utils.Valid;
 
 import java.util.Date;
 
@@ -127,8 +127,8 @@ public class DateRanges {
      * @return true 之前
      */
     public static boolean before(Date date1, Date date2) {
-        Valid.notNull(date1, "date1 is null");
-        Valid.notNull(date2, "date2 is null");
+        Assert.notNull(date1, "date1 is null");
+        Assert.notNull(date2, "date2 is null");
         return date1.compareTo(date2) < 0;
     }
 
@@ -140,8 +140,8 @@ public class DateRanges {
      * @return true 之后
      */
     public static boolean after(Date date1, Date date2) {
-        Valid.notNull(date1, "date1 is null");
-        Valid.notNull(date2, "date2 is null");
+        Assert.notNull(date1, "date1 is null");
+        Assert.notNull(date2, "date2 is null");
         return date1.compareTo(date2) > 0;
     }
 

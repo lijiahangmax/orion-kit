@@ -28,9 +28,9 @@ package cn.orionsec.kit.lang.utils.reflect;
 
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.define.collect.ConcurrentReferenceHashMap;
+import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Valid;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import cn.orionsec.kit.lang.utils.convert.TypeStore;
 
@@ -164,8 +164,8 @@ public class Fields {
      * @return 对象
      */
     public static <E> E getFieldValue(Object obj, String fieldName) {
-        Valid.notNull(obj, "invoker object is null");
-        Valid.notBlank(fieldName, "invoke field is null");
+        Assert.notNull(obj, "invoker object is null");
+        Assert.notBlank(fieldName, "invoke field is null");
         Field field = getAccessibleField(obj.getClass(), fieldName);
         if (field == null) {
             throw Exceptions.invoke(Strings.format("get field value not found field: {}, class {}", fieldName, obj.getClass().getName()));
@@ -182,8 +182,8 @@ public class Fields {
      * @return 对象
      */
     public static <E> E getFieldValue(Object obj, Field field) {
-        Valid.notNull(obj, "invoker object is null");
-        Valid.notNull(field, "invoke field is null");
+        Assert.notNull(obj, "invoker object is null");
+        Assert.notNull(field, "invoke field is null");
         try {
             setAccessible(field);
             return (E) field.get(obj);
@@ -201,8 +201,8 @@ public class Fields {
      * @param <E>       属性类型
      */
     public static <E> void setFieldValue(Object obj, String fieldName, E value) {
-        Valid.notNull(obj, "invoker object is null");
-        Valid.notBlank(fieldName, "invoke field is null");
+        Assert.notNull(obj, "invoker object is null");
+        Assert.notBlank(fieldName, "invoke field is null");
         Field field = getAccessibleField(obj.getClass(), fieldName);
         if (field == null) {
             throw Exceptions.invoke(Strings.format("set field value not found field: {}, class {}", fieldName, obj.getClass().getName()));
@@ -219,8 +219,8 @@ public class Fields {
      * @param <E>   属性类型
      */
     public static <E> void setFieldValue(Object obj, Field field, E value) {
-        Valid.notNull(obj, "invoker object is null");
-        Valid.notNull(field, "invoke field is null");
+        Assert.notNull(obj, "invoker object is null");
+        Assert.notNull(field, "invoke field is null");
         try {
             setAccessible(field);
             field.set(obj, value);
@@ -238,8 +238,8 @@ public class Fields {
      * @param <E>       属性类型
      */
     public static <E> void setFieldValueInfer(Object obj, String fieldName, E value) {
-        Valid.notNull(obj, "invoker object is null");
-        Valid.notNull(fieldName, "invoke field is null");
+        Assert.notNull(obj, "invoker object is null");
+        Assert.notNull(fieldName, "invoke field is null");
         Field field = getAccessibleField(obj.getClass(), fieldName);
         if (field == null) {
             throw Exceptions.invoke(Strings.format("set field value not found field: {}, class {}", fieldName, obj.getClass().getName()));
@@ -256,8 +256,8 @@ public class Fields {
      * @param <E>   属性类型
      */
     public static <E> void setFieldValueInfer(Object obj, Field field, E value) {
-        Valid.notNull(obj, "invoker object is null");
-        Valid.notNull(field, "invoke field is null");
+        Assert.notNull(obj, "invoker object is null");
+        Assert.notNull(field, "invoke field is null");
         try {
             setAccessible(field);
             if (TypeStore.canConvert(value.getClass(), field.getType())) {
@@ -287,7 +287,7 @@ public class Fields {
      * @return 属性
      */
     public static List<Field> getFields(Class<?> clazz) {
-        Valid.notNull(clazz, "field class is null");
+        Assert.notNull(clazz, "field class is null");
         if (clazz.getSuperclass() != null) {
             List<Field> fieldList = Stream.of(clazz.getDeclaredFields())
                     .filter(field -> !Modifier.isStatic(field.getModifiers()))
@@ -326,7 +326,7 @@ public class Fields {
      * @return 字段对象
      */
     public static Field getAccessibleField(Class<?> clazz, String fieldName) {
-        Valid.notNull(clazz, "field class is null");
+        Assert.notNull(clazz, "field class is null");
         for (Class<?> superClass = clazz; superClass != Object.class; superClass = superClass.getSuperclass()) {
             try {
                 Field field = superClass.getDeclaredField(fieldName);
@@ -345,7 +345,7 @@ public class Fields {
      * @param field 属性
      */
     public static void setAccessible(Field field) {
-        Valid.notNull(field, "set accessible field class is null");
+        Assert.notNull(field, "set accessible field class is null");
         if ((!Modifier.isPublic(field.getModifiers()) || !Modifier.isPublic(field.getDeclaringClass().getModifiers()) || Modifier.isFinal(field.getModifiers())) && !field.isAccessible()) {
             field.setAccessible(true);
         }
