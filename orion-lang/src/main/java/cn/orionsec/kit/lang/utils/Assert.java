@@ -42,7 +42,7 @@ import java.util.function.BooleanSupplier;
 import java.util.regex.Pattern;
 
 /**
- * 合法性验证
+ * 断言工具类
  * <p>
  * 可以被拓展
  * 所抛出的异常必须为 {@link InvalidArgumentException} 或其子类
