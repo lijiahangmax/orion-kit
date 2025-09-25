@@ -135,7 +135,7 @@
     │  Strings              字符串工具类
     │  Systems              系统工具类
     │  Threads              线程工具类
-    │  Valid                验证工具类
+    │  Assert               断言工具类
     │
     ├─awt
     │  Clipboards           剪切板工具类
