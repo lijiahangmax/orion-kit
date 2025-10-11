@@ -218,7 +218,7 @@ public class Ports {
      * @return true占用
      */
     public static boolean isUsed(int port) {
-        return isFree(port);
+        return !isFree(port);
     }
 
     /**
