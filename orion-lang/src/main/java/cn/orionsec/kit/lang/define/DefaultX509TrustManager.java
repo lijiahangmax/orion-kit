@@ -39,6 +39,7 @@ import java.security.cert.X509Certificate;
 public class DefaultX509TrustManager implements X509TrustManager {
 
     public static final X509TrustManager DEFAULT_X509_TRUST_MANAGER = new DefaultX509TrustManager();
+    public static final X509TrustManager[] DEFAULT_X509_TRUST_MANAGERS = new X509TrustManager[]{DEFAULT_X509_TRUST_MANAGER};
 
     @Override
     public void checkClientTrusted(X509Certificate[] x509Certificates, String s) {
