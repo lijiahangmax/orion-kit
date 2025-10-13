@@ -68,6 +68,11 @@ public @interface ExportField {
     boolean wrapText() default false;
 
     /**
+     * 富文本
+     */
+    boolean rich() default false;
+
+    /**
      * 垂直对齐方式
      */
     ExcelVerticalAlignType verticalAlign() default ExcelVerticalAlignType.CENTER;

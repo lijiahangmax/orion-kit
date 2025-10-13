@@ -42,6 +42,11 @@ public class CellOption implements Serializable {
      */
     private String format;
 
+    /**
+     * 富文本
+     */
+    private boolean rich;
+
     public CellOption() {
     }
 
@@ -55,6 +60,14 @@ public class CellOption implements Serializable {
 
     public void setFormat(String format) {
         this.format = format;
+    }
+
+    public boolean isRich() {
+        return rich;
+    }
+
+    public void setRich(boolean rich) {
+        this.rich = rich;
     }
 
 }
