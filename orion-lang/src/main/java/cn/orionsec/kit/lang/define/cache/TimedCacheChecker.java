@@ -82,7 +82,9 @@ public class TimedCacheChecker<T> implements Runnable, Closeable {
                     // 删除
                     store.remove(key);
                     // 通知
-                    expiredListener.accept(key, value.value);
+                    if (expiredListener != null) {
+                        expiredListener.accept(key, value.value);
+                    }
                 }
             }
         }
