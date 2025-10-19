@@ -106,6 +106,15 @@ public class CacheKeyDefine implements Serializable {
     }
 
     /**
+     * 复制
+     *
+     * @return key
+     */
+    public CacheKeyDefine copy() {
+        return new CacheKeyDefine(key, prefix, desc, type, struct, timeout, unit);
+    }
+
+    /**
      * 格式化 key 占位符 {}
      *
      * @param param param

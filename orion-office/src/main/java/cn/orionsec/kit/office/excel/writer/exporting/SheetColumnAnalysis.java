@@ -181,6 +181,7 @@ public class SheetColumnAnalysis<T> implements Analysable {
             exportFieldOption.setType(type);
         }
         exportFieldOption.setTrim(field.trim());
+        exportFieldOption.setRich(field.rich());
         exportFieldOption.setFormat(field.format());
         exportFieldOption.setHeader(field.header());
         exportFieldOption.setSkipHeaderStyle(field.skipHeaderStyle());
@@ -193,6 +194,7 @@ public class SheetColumnAnalysis<T> implements Analysable {
         // cell
         CellOption cellOption = new CellOption();
         cellOption.setFormat(field.format());
+        cellOption.setRich(field.rich());
         exportFieldOption.setCellOption(cellOption);
         sheetConfig.fieldOptions.put(field.index(), exportFieldOption);
         return exportFieldOption;

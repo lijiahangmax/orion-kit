@@ -704,10 +704,31 @@ public class Excels {
                     break;
                 case TEXT:
                 default:
-                    cell.setCellValue(Objects1.toString(value));
+                    String text = Objects1.toString(value);
+                    if (option.isRich()) {
+                        // 富文本
+                        cell.setCellValue(getRichTextString(cell, text));
+                    } else {
+                        // 普通文本
+                        cell.setCellValue(text);
+                    }
                     break;
             }
         }
+    }
+
+    /**
+     * 获取富文本
+     *
+     * @param cell cell
+     * @param text text
+     * @return text
+     */
+    public static RichTextString getRichTextString(Cell cell, String text) {
+        if (cell instanceof HSSFCell) {
+            return new HSSFRichTextString(text);
+        }
+        return new XSSFRichTextString(text);
     }
 
     /**

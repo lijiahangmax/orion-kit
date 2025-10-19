@@ -65,7 +65,7 @@
 <dependency>
     <groupId>cn.orionsec.kit</groupId>
     <artifactId>模块名称</artifactId>
-    <version>2.0.4</version>
+    <version>2.0.5</version>
 </dependency>
 ```
 
@@ -76,7 +76,7 @@
 <dependency>
     <groupId>cn.orionsec.kit</groupId>
     <artifactId>orion-all</artifactId>
-    <version>2.0.4</version>
+    <version>2.0.5</version>
 </dependency>
 ```
 

@@ -54,6 +54,11 @@ public class ExportFieldOption implements Serializable {
     private boolean wrapText;
 
     /**
+     * 自动换行
+     */
+    private boolean rich;
+
+    /**
      * 垂直对齐方式
      */
     private ExcelVerticalAlignType verticalAlign;
@@ -369,6 +374,14 @@ public class ExportFieldOption implements Serializable {
 
     public void setTrim(boolean trim) {
         this.trim = trim;
+    }
+
+    public boolean isRich() {
+        return rich;
+    }
+
+    public void setRich(boolean rich) {
+        this.rich = rich;
     }
 
 }
