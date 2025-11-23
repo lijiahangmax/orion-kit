@@ -705,7 +705,7 @@ public class Excels {
                 case TEXT:
                 default:
                     String text = Objects1.toString(value);
-                    if (option.isRich()) {
+                    if (option != null && option.isRich()) {
                         // 富文本
                         cell.setCellValue(getRichTextString(cell, text));
                     } else {
