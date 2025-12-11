@@ -38,6 +38,8 @@ import org.apache.commons.net.ftp.FTPSClient;
 
 import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 
 /**
  * FTPClient 工厂
@@ -72,13 +74,13 @@ public class FtpClientFactory {
         }
         int reply;
         try {
-            client.setDataTimeout(config.getDateTimeout());
+            client.setDataTimeout(Duration.of(config.getDateTimeout(), ChronoUnit.MILLIS));
             client.setConnectTimeout(config.getConnTimeout());
             client.setListHiddenFiles(config.isShowHidden());
             client.setControlEncoding(config.getRemoteContentCharset());
             client.setBufferSize(config.getBuffSize());
             client.connect(config.getHost(), config.getPort());
-            if (config instanceof FtpsConfig && client instanceof FTPSClient) {
+            if (config instanceof FtpsConfig) {
                 ((FTPSClient) client).execPROT(((FtpsConfig) config).getProtect());
                 SSLSocketFactory socketFactory = ((FtpsConfig) config).getSocketFactory();
                 if (socketFactory != null) {

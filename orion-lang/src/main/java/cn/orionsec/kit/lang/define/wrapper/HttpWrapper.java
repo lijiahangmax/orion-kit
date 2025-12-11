@@ -34,7 +34,7 @@ import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.define.support.CloneSupport;
 import cn.orionsec.kit.lang.utils.Objects1;
 import cn.orionsec.kit.lang.utils.Strings;
-import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.HashMap;

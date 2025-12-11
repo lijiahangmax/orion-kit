@@ -29,13 +29,12 @@ package cn.orionsec.kit.lang.utils.json;
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.utils.Objects1;
 import cn.orionsec.kit.lang.utils.Strings;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONPath;
-import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONWriter;
+import com.alibaba.fastjson2.TypeReference;
 
 import java.util.*;
-
-import static com.alibaba.fastjson.serializer.SerializerFeature.WriteMapNullValue;
 
 /**
  * fastJson 工具类
@@ -66,7 +65,7 @@ public class Jsons {
      * @return ignore
      */
     public static String toJsonWriteNull(Object obj) {
-        return JSON.toJSONString(obj, WriteMapNullValue);
+        return JSON.toJSONString(obj, JSONWriter.Feature.WriteMapNullValue);
     }
 
     /**

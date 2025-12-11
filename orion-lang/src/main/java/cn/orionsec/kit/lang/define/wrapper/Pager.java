@@ -32,7 +32,7 @@ import cn.orionsec.kit.lang.config.KitConfig;
 import cn.orionsec.kit.lang.define.iterator.EmptyIterator;
 import cn.orionsec.kit.lang.define.support.CloneSupport;
 import cn.orionsec.kit.lang.utils.collect.Lists;
-import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;

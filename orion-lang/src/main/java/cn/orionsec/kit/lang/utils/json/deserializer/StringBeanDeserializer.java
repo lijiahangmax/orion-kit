@@ -26,9 +26,9 @@
  */
 package cn.orionsec.kit.lang.utils.json.deserializer;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.parser.DefaultJSONParser;
 import com.alibaba.fastjson.parser.deserializer.ObjectDeserializer;
+import com.alibaba.fastjson2.JSON;
 
 import java.lang.reflect.Type;
 
