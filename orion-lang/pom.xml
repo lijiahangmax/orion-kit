@@ -61,11 +61,24 @@
             <version>${jackson.version}</version>
         </dependency>
 
+        <!-- apache-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${apache.lang3.version}</version>
+        </dependency>
+
         <!-- apache-compress -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
             <version>${apache.compress.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-lang3</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- apache-compress-support -->
@@ -115,11 +128,11 @@
             <version>${yaml.version}</version>
         </dependency>
 
-        <!-- 国密 -->
+        <!-- 加密套件 -->
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk15on</artifactId>
-            <version>${bcprov.jdk15on.version}</version>
+            <artifactId>bcprov-jdk18on</artifactId>
+            <version>${bcprov.jdk18on.version}</version>
         </dependency>
 
         <!-- slf4j -->

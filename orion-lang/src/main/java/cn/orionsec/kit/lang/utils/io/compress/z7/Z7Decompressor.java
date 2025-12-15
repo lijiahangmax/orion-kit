@@ -30,7 +30,7 @@ import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.lang.utils.io.compress.BaseFileDecompressor;
-import org.apache.commons.compress.archivers.ArchiveEntry;
+import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 
 import java.io.File;
@@ -59,8 +59,10 @@ public class Z7Decompressor extends BaseFileDecompressor {
     @Override
     public void doDecompress() throws Exception {
         try {
-            this.z7File = new SevenZFile(decompressFile);
-            ArchiveEntry entry;
+            this.z7File = new SevenZFile.Builder()
+                    .setFile(decompressFile)
+                    .get();
+            SevenZArchiveEntry entry;
             while ((entry = z7File.getNextEntry()) != null) {
                 File file = new File(decompressTargetPath, entry.getName());
                 if (entry.isDirectory()) {

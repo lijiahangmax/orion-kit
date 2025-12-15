@@ -30,7 +30,6 @@ import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.lang.utils.io.compress.BaseFileCompressor;
-import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 
@@ -63,7 +62,7 @@ public class TarCompressor extends BaseFileCompressor {
             this.outputStream = new TarArchiveOutputStream(Files1.openOutputStreamFast(new File(this.getAbsoluteCompressPath())));
             // 设置压缩文件
             for (Map.Entry<String, File> fileEntity : compressFiles.entrySet()) {
-                ArchiveEntry entity = outputStream.createArchiveEntry(fileEntity.getValue(), fileEntity.getKey());
+                TarArchiveEntry entity = outputStream.createArchiveEntry(fileEntity.getValue(), fileEntity.getKey());
                 outputStream.putArchiveEntry(entity);
                 try (InputStream in = Files1.openInputStreamFast(fileEntity.getValue())) {
                     Streams.transfer(in, outputStream);

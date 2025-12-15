@@ -33,7 +33,7 @@
         <maven.compiler.charset>UTF-8</maven.compiler.charset>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         <junit.version>4.13.1</junit.version>
-        <spring.version>5.3.30</spring.version>
+        <spring.version>5.3.39</spring.version>
         <cglib.version>3.3.0</cglib.version>
         <jedis.version>2.1.0</jedis.version>
         <fastjson.version>2.0.42</fastjson.version>
@@ -41,11 +41,12 @@
         <google.zxing.version>3.5.2</google.zxing.version>
         <thumbnailator.version>0.4.8</thumbnailator.version>
         <servlet.version>3.1.0</servlet.version>
-        <apache.compress.version>1.21</apache.compress.version>
+        <apache.lang3.version>3.18.0</apache.lang3.version>
+        <apache.compress.version>1.26.0</apache.compress.version>
         <apache.codec.version>1.13</apache.codec.version>
         <org.tukaani.version>1.8</org.tukaani.version>
         <apache.net.version>3.9.0</apache.net.version>
-        <apache.ftp.server.version>1.2.0</apache.ftp.server.version>
+        <apache.ftp.server.version>1.2.1</apache.ftp.server.version>
         <mail.version>1.4.7</mail.version>
         <pinyin4j.version>2.5.1</pinyin4j.version>
         <dom4j.version>2.1.4</dom4j.version>
@@ -61,14 +62,14 @@
         <log4j.version>2.20.0</log4j.version>
         <slf4j.version>2.0.9</slf4j.version>
         <log4j.slf4j.version>2.0.9</log4j.slf4j.version>
-        <jsch.version>0.2.15</jsch.version>
+        <jsch.version>2.27.7</jsch.version>
         <python.script.version>2.7.2</python.script.version>
         <lua.script.version>3.0.1</lua.script.version>
         <groovy.script.version>3.0.4</groovy.script.version>
         <jsoup.version>1.15.3</jsoup.version>
         <ua.utils.version>1.21</ua.utils.version>
         <jgit.version>5.11.1.202105131744-r</jgit.version>
-        <bcprov.jdk15on.version>1.70</bcprov.jdk15on.version>
+        <bcprov.jdk18on.version>1.83</bcprov.jdk18on.version>
     </properties>
 
     <!-- license -->

@@ -217,7 +217,7 @@ public class FtpServerInstance {
         ssl.setKeystorePassword(keyStorePassword);
         String sslProtocol = sslConfig.getSslProtocol();
         if (sslProtocol != null) {
-            ssl.setSslProtocol(sslProtocol);
+            ssl.setSslProtocol(new String[]{sslProtocol});
         }
         String keyStoreAlgorithm = sslConfig.getKeyStoreAlgorithm();
         if (keyStoreAlgorithm != null) {

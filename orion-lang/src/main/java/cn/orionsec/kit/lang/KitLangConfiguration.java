@@ -27,7 +27,9 @@
 package cn.orionsec.kit.lang;
 
 import cn.orionsec.kit.lang.config.KitConfig;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
+import java.security.Security;
 import java.util.regex.Pattern;
 
 /**
@@ -148,6 +150,14 @@ public final class KitLangConfiguration {
     private KitLangConfiguration() {
     }
 
+    // 加密套件
+    static {
+        if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
+            Security.addProvider(new BouncyCastleProvider());
+        }
+    }
+
+    // limit
     static {
         KitConfig.init(CONFIG.LIMIT_LIST_DEFAULT_LIMIT, 10);
     }

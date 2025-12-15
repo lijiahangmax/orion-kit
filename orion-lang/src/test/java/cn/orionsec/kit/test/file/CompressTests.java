@@ -56,11 +56,13 @@ import org.junit.Test;
  */
 public class CompressTests {
 
-    private String dir = "C:\\Users\\ljh15\\Desktop\\3.0";
+    private String fileName = "3";
 
-    private String desktop = "C:\\Users\\ljh15\\Desktop";
+    private String dir = "C:\\Users\\Administrator\\Desktop\\" + fileName;
 
-    private String target = "C:\\Users\\ljh15\\Desktop\\target1";
+    private String desktop = "C:\\Users\\Administrator\\Desktop";
+
+    private String target = "C:\\Users\\Administrator\\Desktop\\target1";
 
     @Test
     public void zipCompress() throws Exception {
@@ -69,7 +71,7 @@ public class CompressTests {
         c.addFile("REAMDE", "readme".getBytes());
         c.addFile("_/REAMDE", "readme".getBytes());
         c.setCompressPath(desktop);
-        c.setFileName("3.0");
+        c.setFileName(fileName);
         c.compress();
         String absoluteCompressPath = c.getAbsoluteCompressPath();
         System.out.println(absoluteCompressPath);
@@ -78,7 +80,7 @@ public class CompressTests {
     @Test
     public void zipDecompress() throws Exception {
         ZipDecompressor d = new ZipDecompressor();
-        d.setDecompressFile("C:\\Users\\ljh15\\Desktop\\3.0.zip");
+        d.setDecompressFile(dir + ".zip");
         d.setDecompressTargetPath(target);
         d.decompress();
         Files1.delete(target);
@@ -92,7 +94,7 @@ public class CompressTests {
         c.addFile("REAMDE", "readme".getBytes());
         c.addFile("_/REAMDE", "readme".getBytes());
         c.setCompressPath(desktop);
-        c.setFileName("3.0");
+        c.setFileName(fileName);
         c.compress();
         String absoluteCompressPath = c.getAbsoluteCompressPath();
         System.out.println(absoluteCompressPath);
@@ -101,7 +103,7 @@ public class CompressTests {
     @Test
     public void jarDecompress() throws Exception {
         JarDecompressor d = new JarDecompressor();
-        d.setDecompressFile("C:\\Users\\ljh15\\Desktop\\3.0.jar");
+        d.setDecompressFile(dir + ".jar");
         d.setDecompressTargetPath(target);
         d.decompress();
         Files1.delete(target);
@@ -115,7 +117,7 @@ public class CompressTests {
         c.addFile("REAMDE", "readme".getBytes());
         c.addFile("_/REAMDE", "readme".getBytes());
         c.setCompressPath(desktop);
-        c.setFileName("3.0");
+        c.setFileName(fileName);
         c.compress();
         String absoluteCompressPath = c.getAbsoluteCompressPath();
         System.out.println(absoluteCompressPath);
@@ -124,7 +126,7 @@ public class CompressTests {
     @Test
     public void z7Decompress() throws Exception {
         Z7Decompressor d = new Z7Decompressor();
-        d.setDecompressFile("C:\\Users\\ljh15\\Desktop\\3.0.7z");
+        d.setDecompressFile(dir + ".7z");
         d.setDecompressTargetPath(target);
         d.decompress();
         Files1.delete(target);
@@ -138,7 +140,7 @@ public class CompressTests {
         c.addFile("REAMDE", "readme".getBytes());
         c.addFile("_/REAMDE", "readme".getBytes());
         c.setCompressPath(desktop);
-        c.setFileName("3.0");
+        c.setFileName(fileName);
         c.compress();
         String absoluteCompressPath = c.getAbsoluteCompressPath();
         System.out.println(absoluteCompressPath);
@@ -147,7 +149,7 @@ public class CompressTests {
     @Test
     public void tarDecompress() throws Exception {
         TarDecompressor d = new TarDecompressor();
-        d.setDecompressFile("C:\\Users\\ljh15\\Desktop\\3.0.tar");
+        d.setDecompressFile(dir + ".tar");
         d.setDecompressTargetPath(target);
         d.decompress();
         Files1.delete(target);
@@ -159,7 +161,7 @@ public class CompressTests {
         GzCompressor c = new GzCompressor();
         c.setCompressFile("REAMDE", "readme".getBytes());
         c.setCompressPath(desktop);
-        c.setFileName("3.0");
+        c.setFileName(fileName);
         c.compress();
         String absoluteCompressPath = c.getAbsoluteCompressPath();
         System.out.println(absoluteCompressPath);
@@ -168,7 +170,7 @@ public class CompressTests {
     @Test
     public void gzDecompress() throws Exception {
         GzDecompressor d = new GzDecompressor();
-        d.setDecompressFile("C:\\Users\\ljh15\\Desktop\\3.0.gz");
+        d.setDecompressFile(dir + ".gz");
         d.setDecompressTargetPath(target);
         d.decompress();
         System.out.println(d.getDecompressTargetFile());
@@ -181,7 +183,7 @@ public class CompressTests {
         Bz2Compressor c = new Bz2Compressor();
         c.setCompressFile("readme".getBytes());
         c.setCompressPath(desktop);
-        c.setFileName("3.0");
+        c.setFileName(fileName);
         c.compress();
         String absoluteCompressPath = c.getAbsoluteCompressPath();
         System.out.println(absoluteCompressPath);
@@ -190,7 +192,7 @@ public class CompressTests {
     @Test
     public void bz2Decompress() throws Exception {
         Bz2Decompressor d = new Bz2Decompressor();
-        d.setDecompressFile("C:\\Users\\ljh15\\Desktop\\3.0.bz2");
+        d.setDecompressFile(dir + ".bz2");
         d.setDecompressTargetPath(target);
         d.setDecompressTargetFileName("README");
         d.decompress();
@@ -206,7 +208,7 @@ public class CompressTests {
         c.addFile("REAMDE", "readme".getBytes());
         c.addFile("_/REAMDE", "readme".getBytes());
         c.setCompressPath(desktop);
-        c.setFileName("3.0");
+        c.setFileName(fileName);
         c.compress();
         String absoluteCompressPath = c.getAbsoluteCompressPath();
         System.out.println(absoluteCompressPath);
@@ -215,7 +217,7 @@ public class CompressTests {
     @Test
     public void tarGzDecompress() throws Exception {
         TarGzDecompressor d = new TarGzDecompressor();
-        d.setDecompressFile("C:\\Users\\ljh15\\Desktop\\3.0.tar.gz");
+        d.setDecompressFile(dir + ".tar.gz");
         d.setDecompressTargetPath(target);
         d.decompress();
         Files1.delete(target);
@@ -229,7 +231,7 @@ public class CompressTests {
         c.addFile("REAMDE", "readme".getBytes());
         c.addFile("_/REAMDE", "readme".getBytes());
         c.setCompressPath(desktop);
-        c.setFileName("3.0");
+        c.setFileName(fileName);
         c.compress();
         String absoluteCompressPath = c.getAbsoluteCompressPath();
         System.out.println(absoluteCompressPath);
@@ -238,7 +240,7 @@ public class CompressTests {
     @Test
     public void tarBz2Decompress() throws Exception {
         TarBz2Decompressor d = new TarBz2Decompressor();
-        d.setDecompressFile("C:\\Users\\ljh15\\Desktop\\3.0.tar.bz2");
+        d.setDecompressFile(dir + ".tar.bz2");
         d.setDecompressTargetPath(target);
         d.decompress();
         Files1.delete(target);
@@ -247,12 +249,12 @@ public class CompressTests {
 
     @Test
     public void zip() {
-        Compresses.zip(dir, desktop + "/3.0.zip");
+        Compresses.zip(dir, dir + ".zip");
     }
 
     @Test
     public void unzip() {
-        Compresses.unzip(desktop + "/3.0.zip", target);
+        Compresses.unzip(dir + ".zip", target);
     }
 
     @Test
@@ -287,13 +289,13 @@ public class CompressTests {
         c.addFile("REAMDE", "readme".getBytes());
         c.addFile("_/REAMDE", "readme".getBytes());
         c.setCompressPath(desktop);
-        c.setFileName("3.0");
+        c.setFileName(fileName);
         c.compress();
         String absoluteCompressPath = c.getAbsoluteCompressPath();
         System.out.println(absoluteCompressPath);
 
         FileDecompressor d = zip.decompressor().get();
-        d.setDecompressFile("C:\\Users\\ljh15\\Desktop\\3.0.zip");
+        d.setDecompressFile(dir + ".zip");
         d.setDecompressTargetPath(target);
         d.decompress();
         Files1.delete(target);

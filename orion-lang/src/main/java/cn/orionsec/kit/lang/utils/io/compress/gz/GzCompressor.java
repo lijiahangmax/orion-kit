@@ -190,7 +190,7 @@ public class GzCompressor extends BaseFileCompressor {
     @Override
     public void doCompress() throws Exception {
         GzipParameters params = new GzipParameters();
-        params.setFilename(compressEntityName);
+        params.setFileName(compressEntityName);
         InputStream in = null;
         try {
             if (compressOutputStream != null) {
