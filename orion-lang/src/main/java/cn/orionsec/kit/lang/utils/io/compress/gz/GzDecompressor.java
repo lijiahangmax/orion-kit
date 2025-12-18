@@ -130,7 +130,7 @@ public class GzDecompressor extends BaseFileDecompressor {
                 this.inputStream = new GzipCompressorInputStream(Files1.openInputStreamFast(decompressFile));
             }
             String entityName = Optional.ofNullable(inputStream.getMetaData())
-                    .map(GzipParameters::getFilename)
+                    .map(GzipParameters::getFileName)
                     .orElse(null);
             if (decompressTargetFileName == null) {
                 // 配置 > entity > file > objectId

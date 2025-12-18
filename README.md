@@ -44,19 +44,19 @@
 
 ### 工程模块
 
-| 模块              | 数量                                         |
-|:----------------|:-------------------------------------------|
-| orion-lang      | 底层核心模块 集合、IO、反射、转换、日期、异常、加密、编码, 函数等        |
-| orion-ext       | 拓展模块 IP位置、邮件、process、tail、git, watch等      |
-| orion-office    | 数据处理模块 csv, excel导入导出以及相互转化等               |
-| orion-log       | 日志模块 (忽略)                                  |
-| orion-http      | http模块 OkHttp、HttpClient、jsup的统一封装, UA生成器等 |
-| orion-net       | 网络交互模块 SSH、SFTP、FTP, Socket的简单封装           |
-| orion-web       | servlet模块 (忽略)                             |
-| orion-redis     | redis模块 (忽略)                               |
-| orion-spring    | spring模块 (忽略)                              |
-| orion-generator | 随机信息生成器模块 包含各式各样的随机数据生成器                   |
-| orion-all       | 全部模块聚合 包含了上述所有模块的引用                        |
+| 模块              | 数量                                          |
+|:----------------|:--------------------------------------------|
+| orion-lang      | 底层核心模块 集合、IO、反射、转换、日期、异常、加密、编码, 函数等         |
+| orion-ext       | 拓展模块 IP位置、邮件、process、tail、git, watch等       |
+| orion-office    | 数据处理模块 csv, excel导入导出以及相互转化等                |
+| orion-http      | Http 模块 OkHttp、HttpClient、jsup的统一封装, UA生成器等 |
+| orion-net       | 网络交互模块 SSH、SFTP、FTP, Socket的简单封装            |
+| orion-web       | Web 模块 Servlet 工具类等                         |
+| orion-spring    | Spring 模块 容器工具类等                            |
+| orion-log       | 日志模块 (忽略)                                   |
+| orion-redis     | Redis 模块 (忽略)                               |
+| orion-generator | 随机信息生成器模块 包含各式各样的随机数据生成器                    |
+| orion-all       | 全部模块聚合 包含了上述所有模块的引用                         |
 
 ## 模块化引用
 
@@ -65,7 +65,7 @@
 <dependency>
     <groupId>cn.orionsec.kit</groupId>
     <artifactId>模块名称</artifactId>
-    <version>2.0.5</version>
+    <version>2.0.6</version>
 </dependency>
 ```
 
@@ -76,7 +76,7 @@
 <dependency>
     <groupId>cn.orionsec.kit</groupId>
     <artifactId>orion-all</artifactId>
-    <version>2.0.5</version>
+    <version>2.0.6</version>
 </dependency>
 ```
 

@@ -37,7 +37,7 @@ import cn.orionsec.kit.lang.utils.Urls;
 import cn.orionsec.kit.lang.utils.collect.Maps;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.lang.utils.net.IPs;
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;

@@ -29,7 +29,7 @@ package cn.orionsec.kit.generator;
 import cn.orionsec.kit.generator.faker.Faker;
 import cn.orionsec.kit.generator.faker.FakerInfo;
 import cn.orionsec.kit.generator.faker.FakerType;
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import org.junit.Test;
 
 /**
@@ -43,7 +43,7 @@ public class FakerTest {
     public void faker1() {
         for (int i = 0; i < 20; i++) {
             FakerInfo faker = Faker.generator(FakerType.BASE);
-            System.out.println(JSON.toJSONString(faker, true));
+            System.out.println(JSON.toJSONString(faker));
             System.out.println();
         }
     }
@@ -52,7 +52,7 @@ public class FakerTest {
     public void faker2() {
         for (int i = 0; i < 20; i++) {
             FakerInfo faker = Faker.generator(FakerType.ALL);
-            System.out.println(JSON.toJSONString(faker, true));
+            System.out.println(JSON.toJSONString(faker));
             System.out.println();
         }
     }
@@ -61,7 +61,7 @@ public class FakerTest {
     public void faker3() {
         for (int i = 0; i < 20; i++) {
             FakerInfo faker = Faker.generator(FakerType.ID_CARD, FakerType.DEBIT_CARD);
-            System.out.println(JSON.toJSONString(faker, true));
+            System.out.println(JSON.toJSONString(faker));
             System.out.println();
         }
     }

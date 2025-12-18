@@ -37,7 +37,7 @@ import cn.orionsec.kit.net.host.sftp.SftpFile;
 import cn.orionsec.kit.net.host.sftp.SftpFileFilter;
 import cn.orionsec.kit.net.specification.transfer.IFileDownloader;
 import cn.orionsec.kit.net.specification.transfer.IFileUploader;
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -125,7 +125,7 @@ public class SftpExecutorTests {
         String path = "/root/test/21.txt";
         e.touch(path);
         SftpFile file = e.getFile(path);
-        System.out.println(JSON.toJSONStringWithDateFormat(file, Dates.YMD_HMS));
+        System.out.println(JSON.toJSONString(file, Dates.YMD_HMS));
         file.setSize(200);
         file.setGid(2);
         file.setUid(2);
@@ -133,9 +133,9 @@ public class SftpExecutorTests {
         file.setAccessTime(Dates.build(2020, 1, 1, 1, 1, 1));
         file.setModifyTime(Dates.build(2020, 1, 1, 1, 1, 1));
         e.setFileAttribute(file);
-        System.out.println(JSON.toJSONStringWithDateFormat(e.getFile(path), Dates.YMD_HMS));
+        System.out.println(JSON.toJSONString(e.getFile(path), Dates.YMD_HMS));
         e.setModifyTime(path, Dates.build(2020, 2, 2, 2, 2, 2));
-        System.out.println(JSON.toJSONStringWithDateFormat(e.getFile(path), Dates.YMD_HMS));
+        System.out.println(JSON.toJSONString(e.getFile(path), Dates.YMD_HMS));
     }
 
     @Test

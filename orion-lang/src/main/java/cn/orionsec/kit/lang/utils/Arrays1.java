@@ -3221,6 +3221,28 @@ public class Arrays1 {
         return arr[length - 1];
     }
 
+    // -------------------- coalesce --------------------
+
+    /**
+     * 获取第一个非 null 的值
+     *
+     * @param values values
+     * @param <T>    T
+     * @return value
+     */
+    public static <T> T coalesce(T... values) {
+        int length = length(values);
+        if (length == 0) {
+            return null;
+        }
+        for (T value : values) {
+            if (value != null) {
+                return value;
+            }
+        }
+        return null;
+    }
+
     // -------------------- swap --------------------
 
     /**

@@ -480,6 +480,25 @@ public class Collections {
     }
 
     /**
+     * 获取第一个非 null 的值
+     *
+     * @param values values
+     * @param <E>    T
+     * @return value
+     */
+    public static <E> E coalesce(Collection<E> c) {
+        if (size(c) == 0) {
+            return null;
+        }
+        for (E value : c) {
+            if (value != null) {
+                return value;
+            }
+        }
+        return null;
+    }
+
+    /**
      * 集合去重
      *
      * @param c         c
