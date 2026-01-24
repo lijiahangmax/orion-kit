@@ -49,14 +49,14 @@ class BaseDates {
     public static final String YMD = "yyyy-MM-dd";
     public static final String YMD_HM = "yyyy-MM-dd HH:mm";
     public static final String YMD_HMS = "yyyy-MM-dd HH:mm:ss";
-    public static final String YMD_HMSS = "yyyy-MM-dd HH:mm:ss SSS";
+    public static final String YMD_HMSS = "yyyy-MM-dd HH:mm:ss.SSS";
     public static final String HMS = "HH:mm:ss";
     public static final String HMSS = "HH:mm:ss SSS";
     public static final String YM1 = "yyyy/MM";
     public static final String YMD1 = "yyyy/MM/dd";
     public static final String YMD_HM1 = "yyyy/MM/dd HH/mm";
     public static final String YMD_HMS1 = "yyyy/MM/dd HH/mm/ss";
-    public static final String YMD_HMSS1 = "yyyy/MM/dd HH/mm/ss SSS";
+    public static final String YMD_HMSS1 = "yyyy/MM/dd HH/mm/ss.SSS";
     public static final String YM2 = "yyyyMM";
     public static final String YMD2 = "yyyyMMdd";
     public static final String YMD_HM2 = "yyyyMMddHHmm";
