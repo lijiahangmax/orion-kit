@@ -74,6 +74,10 @@ public abstract class Assert {
     private static final String VALID_COLLECTION_IS_EMPTY = "the validated collection is empty";
     private static final String VALID_MAP_IS_EMPTY = "the validated map is empty";
     private static final String VALID_STRING_IS_EMPTY = "the validated string is empty";
+    private static final String VALID_ARRAY_IS_NOT_EMPTY = "the validated array is not empty";
+    private static final String VALID_COLLECTION_IS_NOT_EMPTY = "the validated collection is not empty";
+    private static final String VALID_MAP_IS_NOT_EMPTY = "the validated map is not empty";
+    private static final String VALID_STRING_IS_NOT_EMPTY = "the validated string is not empty";
     private static final String VALID_STRING_IS_BLANK = "the validated string is blank";
     private static final String VALID_STRING_NOT_NUMBER = "the validated string not numbers";
     private static final String VALID_STRING_NOT_INTEGER = "the validated string not integer";
@@ -394,7 +398,63 @@ public abstract class Assert {
         if (s == null) {
             throw Exceptions.nullArgument(Strings.format(message, values));
         }
-        if (s.length() == 0) {
+        if (s.isEmpty()) {
+            throw Exceptions.invalidArgument(Strings.format(message, values));
+        }
+        return s;
+    }
+
+    public static <T> T[] isEmpty(T[] array) {
+        return isEmpty(array, VALID_ARRAY_IS_NOT_EMPTY);
+    }
+
+    public static <T> T[] isEmpty(T[] array, String message, Object... values) {
+        if (array == null) {
+            return null;
+        }
+        if (array.length > 0) {
+            throw Exceptions.invalidArgument(Strings.format(message, values));
+        }
+        return array;
+    }
+
+    public static <T extends Collection<?>> T isEmpty(T collection) {
+        return isEmpty(collection, VALID_COLLECTION_IS_NOT_EMPTY);
+    }
+
+    public static <T extends Collection<?>> T isEmpty(T collection, String message, Object... values) {
+        if (collection == null) {
+            return null;
+        }
+        if (!collection.isEmpty()) {
+            throw Exceptions.invalidArgument(Strings.format(message, values));
+        }
+        return collection;
+    }
+
+    public static <T extends Map<?, ?>> T isEmpty(T map) {
+        return isEmpty(map, VALID_MAP_IS_NOT_EMPTY);
+    }
+
+    public static <T extends Map<?, ?>> T isEmpty(T map, String message, Object... values) {
+        if (map == null) {
+            return null;
+        }
+        if (!map.isEmpty()) {
+            throw Exceptions.invalidArgument(Strings.format(message, values));
+        }
+        return map;
+    }
+
+    public static String isEmpty(String s) {
+        return isEmpty(s, VALID_STRING_IS_NOT_EMPTY);
+    }
+
+    public static String isEmpty(String s, String message, Object... values) {
+        if (s == null) {
+            return null;
+        }
+        if (!s.isEmpty()) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
         return s;
