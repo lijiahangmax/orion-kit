@@ -37,13 +37,13 @@ import java.io.OutputStream;
 import java.util.function.Consumer;
 
 /**
- * 远程执行器 基类
+ * SSH 执行器 基类
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2022/5/17 14:32
  */
-public abstract class BaseHostExecutor<T extends Channel> implements IHostExecutor {
+public abstract class BaseSshExecutor<T extends Channel> implements ISshExecutor {
 
     protected final T channel;
 
@@ -72,7 +72,7 @@ public abstract class BaseHostExecutor<T extends Channel> implements IHostExecut
      */
     protected volatile boolean done;
 
-    public BaseHostExecutor(T channel) {
+    public BaseSshExecutor(T channel) {
         this.channel = channel;
     }
 

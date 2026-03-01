@@ -30,7 +30,7 @@ import cn.orionsec.kit.lang.support.timeout.TimeoutChecker;
 import cn.orionsec.kit.lang.support.timeout.TimeoutEndpoint;
 import cn.orionsec.kit.net.host.HostConnector;
 import cn.orionsec.kit.net.host.ssh.ExitCode;
-import cn.orionsec.kit.net.host.ssh.IHostExecutor;
+import cn.orionsec.kit.net.host.ssh.ISshExecutor;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,7 +45,7 @@ import java.util.function.Consumer;
  * @version 1.0.0
  * @since 2022/5/17 15:29
  */
-public interface ICommandExecutor extends IHostExecutor, HostConnector, TimeoutEndpoint {
+public interface ICommandExecutor extends ISshExecutor, HostConnector, TimeoutEndpoint {
 
     /**
      * 合并标准输出流和错误输出流

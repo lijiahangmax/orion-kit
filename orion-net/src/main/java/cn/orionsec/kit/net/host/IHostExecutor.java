@@ -24,7 +24,7 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package cn.orionsec.kit.net.host.ssh;
+package cn.orionsec.kit.net.host;
 
 import cn.orionsec.kit.lang.able.Executable;
 import cn.orionsec.kit.lang.able.SafeCloseable;
@@ -74,40 +74,6 @@ public interface IHostExecutor extends Executable, Runnable, SafeCloseable {
      * @param streamHandler 标准输入流处理器
      */
     void streamHandler(Consumer<InputStream> streamHandler);
-
-    /**
-     * 设置环境变量
-     * 这里只支持设置 /etc/ssh/sshd_config AcceptEnv 的环境变量
-     * 否则只能使用 export LANG="en_US"; 来设置
-     *
-     * @param key   key
-     * @param value value
-     */
-    void env(String key, String value);
-
-    /**
-     * 设置环境变量
-     * 这里只支持设置 /etc/ssh/sshd_config AcceptEnv 的环境变量
-     * 否则只能使用 export LANG="en_US"; 来设置
-     *
-     * @param key   key
-     * @param value value
-     */
-    void env(byte[] key, byte[] value);
-
-    /**
-     * 是否启用 x11forwarding
-     *
-     * @param enable 是否启用
-     */
-    void x11Forward(boolean enable);
-
-    /**
-     * 启用代理转发
-     *
-     * @param enable 是否启用
-     */
-    void setAgentForwarding(boolean enable);
 
     /**
      * 写入命令
@@ -176,13 +142,6 @@ public interface IHostExecutor extends Executable, Runnable, SafeCloseable {
     default void exit(int code) {
         this.write(Strings.bytes("exit " + code + Const.LF));
     }
-
-    /**
-     * 发送信号量
-     *
-     * @param signal 信号
-     */
-    void sendSignal(String signal);
 
     /**
      * 获取标准输出流

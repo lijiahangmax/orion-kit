@@ -24,101 +24,89 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package cn.orionsec.kit.net.host.ssh.shell;
+package cn.orionsec.kit.net.host.telnet;
 
-import cn.orionsec.kit.net.host.HostConnector;
-import cn.orionsec.kit.net.host.ssh.ISshExecutor;
-import cn.orionsec.kit.net.host.ssh.TerminalType;
+import cn.orionsec.kit.net.host.IHostExecutor;
+
+import java.io.IOException;
 
 /**
- * shell 执行器 api
+ * Telnet 执行器 api
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2022/5/18 10:42
+ * @since 2026/3/2 1:40
  */
-public interface IShellExecutor extends ISshExecutor, HostConnector {
+public interface ITelnetExecutor extends IHostExecutor {
 
     /**
-     * 设置终端类型
+     * 设置提示符
      *
-     * @param type type
+     * @param prompt prompt
      */
-    default void terminalType(TerminalType type) {
-        this.terminalType(type.getType());
-    }
+    void prompt(String prompt);
 
     /**
-     * 设置终端类型
+     * 设置编码
      *
-     * @param terminalType terminalType
+     * @param charset charset
      */
-    void terminalType(String terminalType);
+    void charset(String charset);
 
     /**
-     * 设置页面大小
+     * 读取直到命中指定内容
      *
-     * @param cols 行字数
-     * @param rows 列数
+     * @param pattern pattern
+     * @return 读取内容
+     * @throws IOException IOException
      */
-    void size(int cols, int rows);
+    String readUntil(String pattern) throws IOException;
 
     /**
-     * 设置页面 dpi
+     * 读取直到命中指定内容
      *
-     * @param width  宽px
-     * @param height 高px
+     * @param pattern pattern
+     * @param timeout timeout
+     * @return 读取内容
+     * @throws IOException IOException
      */
-    void dpi(int width, int height);
+    String readUntil(String pattern, int timeout) throws IOException;
 
     /**
-     * 设置页面大小
+     * 读取直到命中提示符
      *
-     * @param cols   行字数
-     * @param rows   列数
-     * @param width  宽px
-     * @param height 高px
+     * @return 读取内容
+     * @throws IOException IOException
      */
-    void size(int cols, int rows, int width, int height);
+    String readUntilPrompt() throws IOException;
 
     /**
-     * 告知服务器重新设置终端大小
-     */
-    void resize();
-
-    /**
-     * 获取设置的终端类型
+     * 执行命令
      *
-     * @return 终端类型
+     * @param command command
+     * @return 输出内容
+     * @throws IOException IOException
      */
-    String getTerminalType();
+    String execCommand(String command) throws IOException;
 
     /**
-     * 获取 行字数
+     * 执行命令
      *
-     * @return 行字数
+     * @param command command
+     * @param timeout timeout
+     * @return 输出内容
+     * @throws IOException IOException
      */
-    int getCols();
+    String execCommand(String command, int timeout) throws IOException;
 
     /**
-     * 获取 列数
-     *
-     * @return 列数
+     * @return 提示符
      */
-    int getRows();
+    String getPrompt();
 
     /**
-     * 获取 宽px
-     *
-     * @return 宽px
+     * @return 编码
      */
-    int getWidth();
-
-    /**
-     * 获取 高px
-     *
-     * @return 高px
-     */
-    int getHeight();
+    String getCharset();
 
 }

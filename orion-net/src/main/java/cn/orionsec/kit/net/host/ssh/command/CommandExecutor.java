@@ -33,7 +33,7 @@ import cn.orionsec.kit.lang.support.timeout.TimeoutEndpoint;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.io.Streams;
-import cn.orionsec.kit.net.host.ssh.BaseHostExecutor;
+import cn.orionsec.kit.net.host.ssh.BaseSshExecutor;
 import com.jcraft.jsch.ChannelExec;
 
 import java.io.IOException;
@@ -50,7 +50,7 @@ import java.util.function.Consumer;
  * @version 1.0.0
  * @since 2020/10/6 12:51
  */
-public class CommandExecutor extends BaseHostExecutor<ChannelExec> implements ICommandExecutor {
+public class CommandExecutor extends BaseSshExecutor<ChannelExec> implements ICommandExecutor {
 
     /**
      * command
