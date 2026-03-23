@@ -31,6 +31,7 @@ import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.define.wrapper.HttpWrapper;
 import cn.orionsec.kit.lang.define.wrapper.RpcWrapper;
 import cn.orionsec.kit.lang.exception.argument.InvalidArgumentException;
+import org.springframework.lang.Nullable;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -106,33 +107,33 @@ public abstract class Assert {
     public Assert() {
     }
 
-    public static void eq(Object o1, Object o2) {
+    public static void eq(@Nullable Object o1, @Nullable Object o2) {
         eq(o1, o2, VALID_NOT_EQUAL);
     }
 
-    public static void eq(Object o1, Object o2, String message, Object... values) {
+    public static void eq(@Nullable Object o1, @Nullable Object o2, String message, Object... values) {
         notNull(o1, message, values);
         if (!Objects1.eq(o1, o2)) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
     }
 
-    public static void neq(Object o1, Object o2) {
+    public static void neq(@Nullable Object o1, @Nullable Object o2) {
         neq(o1, o2, VALID_IS_EQUAL);
     }
 
-    public static void neq(Object o1, Object o2, String message, Object... values) {
+    public static void neq(@Nullable Object o1, @Nullable Object o2, String message, Object... values) {
         notNull(o1, message, values);
         if (Objects1.eq(o1, o2)) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
     }
 
-    public static <T extends Comparable<T>> void compare(T t1, T t2) {
+    public static <T extends Comparable<T>> void compare(@Nullable T t1, @Nullable T t2) {
         compare(t1, t2, VALID_NOT_COMPARE);
     }
 
-    public static <T extends Comparable<T>> void compare(T t1, T t2, String message, Object... values) {
+    public static <T extends Comparable<T>> void compare(@Nullable T t1, @Nullable T t2, String message, Object... values) {
         notNull(t1, message, values);
         notNull(t2, message, values);
         if (t1.compareTo(t2) != 0) {
@@ -140,11 +141,11 @@ public abstract class Assert {
         }
     }
 
-    public static <T extends Comparable<T>> void notCompare(T t1, T t2) {
+    public static <T extends Comparable<T>> void notCompare(@Nullable T t1, @Nullable T t2) {
         notCompare(t1, t2, VALID_IS_COMPARE);
     }
 
-    public static <T extends Comparable<T>> void notCompare(T t1, T t2, String message, Object... values) {
+    public static <T extends Comparable<T>> void notCompare(@Nullable T t1, @Nullable T t2, String message, Object... values) {
         notNull(t1, message, values);
         notNull(t2, message, values);
         if (t1.compareTo(t2) == 0) {
@@ -152,33 +153,33 @@ public abstract class Assert {
         }
     }
 
-    public static <T> void compare(T t1, T t2, Comparator<T> comparator) {
+    public static <T> void compare(@Nullable T t1, @Nullable T t2, Comparator<T> comparator) {
         compare(t1, t2, comparator, VALID_NOT_COMPARE);
     }
 
-    public static <T> void compare(T t1, T t2, Comparator<T> comparator, String message, Object... values) {
+    public static <T> void compare(@Nullable T t1, @Nullable T t2, Comparator<T> comparator, String message, Object... values) {
         Assert.notNull(comparator, message, values);
         if (comparator.compare(t1, t2) != 0) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
     }
 
-    public static <T> void notCompare(T t1, T t2, Comparator<T> comparator) {
+    public static <T> void notCompare(@Nullable T t1, @Nullable T t2, Comparator<T> comparator) {
         notCompare(t1, t2, comparator, VALID_IS_COMPARE);
     }
 
-    public static <T> void notCompare(T t1, T t2, Comparator<T> comparator, String message, Object... values) {
+    public static <T> void notCompare(@Nullable T t1, @Nullable T t2, Comparator<T> comparator, String message, Object... values) {
         Assert.notNull(comparator, message, values);
         if (comparator.compare(t1, t2) == 0) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
     }
 
-    public static <T extends Comparable<T>> T lt(T value, T refer) {
+    public static <T extends Comparable<T>> T lt(@Nullable T value, @Nullable T refer) {
         return lt(value, refer, VALID_NOT_LT);
     }
 
-    public static <T extends Comparable<T>> T lt(T value, T refer, String message, Object... values) {
+    public static <T extends Comparable<T>> T lt(@Nullable T value, @Nullable T refer, String message, Object... values) {
         notNull(value, message, values);
         notNull(refer, message, values);
         if (value.compareTo(refer) >= 0) {
@@ -187,11 +188,11 @@ public abstract class Assert {
         return value;
     }
 
-    public static <T extends Comparable<T>> T lte(T value, T refer) {
+    public static <T extends Comparable<T>> T lte(@Nullable T value, @Nullable T refer) {
         return lte(value, refer, VALID_NOT_LT_EQ);
     }
 
-    public static <T extends Comparable<T>> T lte(T value, T refer, String message, Object... values) {
+    public static <T extends Comparable<T>> T lte(@Nullable T value, @Nullable T refer, String message, Object... values) {
         notNull(value, message, values);
         notNull(refer, message, values);
         if (value.compareTo(refer) > 0) {
@@ -200,11 +201,11 @@ public abstract class Assert {
         return value;
     }
 
-    public static <T extends Comparable<T>> T gt(T value, T refer) {
+    public static <T extends Comparable<T>> T gt(@Nullable T value, @Nullable T refer) {
         return gt(value, refer, VALID_NOT_GT);
     }
 
-    public static <T extends Comparable<T>> T gt(T value, T refer, String message, Object... values) {
+    public static <T extends Comparable<T>> T gt(@Nullable T value, @Nullable T refer, String message, Object... values) {
         notNull(value, message, values);
         notNull(refer, message, values);
         if (value.compareTo(refer) <= 0) {
@@ -213,11 +214,11 @@ public abstract class Assert {
         return value;
     }
 
-    public static <T extends Comparable<T>> T gte(T value, T refer) {
+    public static <T extends Comparable<T>> T gte(@Nullable T value, @Nullable T refer) {
         return gte(value, refer, VALID_NOT_GT_EQ);
     }
 
-    public static <T extends Comparable<T>> T gte(T value, T refer, String message, Object... values) {
+    public static <T extends Comparable<T>> T gte(@Nullable T value, @Nullable T refer, String message, Object... values) {
         notNull(value, message, values);
         notNull(refer, message, values);
         if (value.compareTo(refer) < 0) {
@@ -272,22 +273,22 @@ public abstract class Assert {
         return false;
     }
 
-    public static <T> T isNull(T object) {
+    public static <T> T isNull(@Nullable T object) {
         return isNull(object, VALID_IS_NOT_NULL);
     }
 
-    public static <T> T isNull(T object, String message, Object... values) {
+    public static <T> T isNull(@Nullable T object, String message, Object... values) {
         if (object != null) {
             throw Exceptions.nullArgument(Strings.format(message, values));
         }
         return object;
     }
 
-    public static <T> T notNull(T object) {
+    public static <T> T notNull(@Nullable T object) {
         return notNull(object, VALID_IS_NULL);
     }
 
-    public static <T> T notNull(T object, String message, Object... values) {
+    public static <T> T notNull(@Nullable T object, String message, Object... values) {
         if (object == null) {
             throw Exceptions.nullArgument(Strings.format(message, values));
         }
@@ -295,11 +296,11 @@ public abstract class Assert {
     }
 
     @SafeVarargs
-    public static <T> T in(T t, T... arr) {
+    public static <T> T in(@Nullable T t, @Nullable T... arr) {
         return in(t, arr, VALID_NOT_ARRAY);
     }
 
-    public static <T> T in(T t, T[] arr, String message, Object... values) {
+    public static <T> T in(@Nullable T t, @Nullable T[] arr, String message, Object... values) {
         notNull(t, message, values);
         notEmpty(arr, message, values);
         if (!Arrays1.contains(arr, t)) {
@@ -308,11 +309,11 @@ public abstract class Assert {
         return t;
     }
 
-    public static <T> T in(T t, Collection<? extends T> c) {
+    public static <T> T in(@Nullable T t, @Nullable Collection<? extends T> c) {
         return in(t, c, VALID_NOT_COLLECTION);
     }
 
-    public static <T> T in(T t, Collection<? extends T> c, String message, Object... values) {
+    public static <T> T in(@Nullable T t, @Nullable Collection<? extends T> c, String message, Object... values) {
         notNull(t, message, values);
         notEmpty(c, message, values);
         if (!c.contains(t)) {
@@ -322,11 +323,11 @@ public abstract class Assert {
     }
 
     @SafeVarargs
-    public static <T> T notIn(T t, T... arr) {
+    public static <T> T notIn(@Nullable T t, @Nullable T... arr) {
         return notIn(t, arr, VALID_NOT_IN_ARRAY);
     }
 
-    public static <T> T notIn(T t, T[] arr, String message, Object... values) {
+    public static <T> T notIn(@Nullable T t, @Nullable T[] arr, String message, Object... values) {
         notNull(t, message, values);
         notEmpty(arr, message, values);
         if (Arrays1.contains(arr, t)) {
@@ -335,11 +336,11 @@ public abstract class Assert {
         return t;
     }
 
-    public static <T> T notIn(T t, Collection<? extends T> c) {
+    public static <T> T notIn(@Nullable T t, Collection<? extends T> c) {
         return notIn(t, c, VALID_NOT_IN_COLLECTION);
     }
 
-    public static <T> T notIn(T t, Collection<? extends T> c, String message, Object... values) {
+    public static <T> T notIn(@Nullable T t, Collection<? extends T> c, String message, Object... values) {
         notNull(t, message, values);
         notEmpty(c, message, values);
         if (c.contains(t)) {
@@ -348,11 +349,11 @@ public abstract class Assert {
         return t;
     }
 
-    public static <T> T[] notEmpty(T[] array) {
+    public static <T> T[] notEmpty(@Nullable T[] array) {
         return notEmpty(array, VALID_ARRAY_IS_EMPTY);
     }
 
-    public static <T> T[] notEmpty(T[] array, String message, Object... values) {
+    public static <T> T[] notEmpty(@Nullable T[] array, String message, Object... values) {
         if (array == null) {
             throw Exceptions.nullArgument(Strings.format(message, values));
         }
@@ -362,11 +363,11 @@ public abstract class Assert {
         return array;
     }
 
-    public static <T extends Collection<?>> T notEmpty(T collection) {
+    public static <T extends Collection<?>> T notEmpty(@Nullable T collection) {
         return notEmpty(collection, VALID_COLLECTION_IS_EMPTY);
     }
 
-    public static <T extends Collection<?>> T notEmpty(T collection, String message, Object... values) {
+    public static <T extends Collection<?>> T notEmpty(@Nullable T collection, String message, Object... values) {
         if (collection == null) {
             throw Exceptions.nullArgument(Strings.format(message, values));
         }
@@ -376,11 +377,11 @@ public abstract class Assert {
         return collection;
     }
 
-    public static <T extends Map<?, ?>> T notEmpty(T map) {
+    public static <T extends Map<?, ?>> T notEmpty(@Nullable T map) {
         return notEmpty(map, VALID_MAP_IS_EMPTY);
     }
 
-    public static <T extends Map<?, ?>> T notEmpty(T map, String message, Object... values) {
+    public static <T extends Map<?, ?>> T notEmpty(@Nullable T map, String message, Object... values) {
         if (map == null) {
             throw Exceptions.nullArgument(Strings.format(message, values));
         }
@@ -390,11 +391,11 @@ public abstract class Assert {
         return map;
     }
 
-    public static String notEmpty(String s) {
+    public static String notEmpty(@Nullable String s) {
         return notEmpty(s, VALID_STRING_IS_EMPTY);
     }
 
-    public static String notEmpty(String s, String message, Object... values) {
+    public static String notEmpty(@Nullable String s, String message, Object... values) {
         if (s == null) {
             throw Exceptions.nullArgument(Strings.format(message, values));
         }
@@ -404,11 +405,11 @@ public abstract class Assert {
         return s;
     }
 
-    public static <T> T[] isEmpty(T[] array) {
+    public static <T> T[] isEmpty(@Nullable T[] array) {
         return isEmpty(array, VALID_ARRAY_IS_NOT_EMPTY);
     }
 
-    public static <T> T[] isEmpty(T[] array, String message, Object... values) {
+    public static <T> T[] isEmpty(@Nullable T[] array, String message, Object... values) {
         if (array == null) {
             return null;
         }
@@ -418,11 +419,11 @@ public abstract class Assert {
         return array;
     }
 
-    public static <T extends Collection<?>> T isEmpty(T collection) {
+    public static <T extends Collection<?>> T isEmpty(@Nullable T collection) {
         return isEmpty(collection, VALID_COLLECTION_IS_NOT_EMPTY);
     }
 
-    public static <T extends Collection<?>> T isEmpty(T collection, String message, Object... values) {
+    public static <T extends Collection<?>> T isEmpty(@Nullable T collection, String message, Object... values) {
         if (collection == null) {
             return null;
         }
@@ -432,11 +433,11 @@ public abstract class Assert {
         return collection;
     }
 
-    public static <T extends Map<?, ?>> T isEmpty(T map) {
+    public static <T extends Map<?, ?>> T isEmpty(@Nullable T map) {
         return isEmpty(map, VALID_MAP_IS_NOT_EMPTY);
     }
 
-    public static <T extends Map<?, ?>> T isEmpty(T map, String message, Object... values) {
+    public static <T extends Map<?, ?>> T isEmpty(@Nullable T map, String message, Object... values) {
         if (map == null) {
             return null;
         }
@@ -446,11 +447,11 @@ public abstract class Assert {
         return map;
     }
 
-    public static String isEmpty(String s) {
+    public static String isEmpty(@Nullable String s) {
         return isEmpty(s, VALID_STRING_IS_NOT_EMPTY);
     }
 
-    public static String isEmpty(String s, String message, Object... values) {
+    public static String isEmpty(@Nullable String s, String message, Object... values) {
         if (s == null) {
             return null;
         }
@@ -460,55 +461,55 @@ public abstract class Assert {
         return s;
     }
 
-    public static String notBlank(String s) {
+    public static String notBlank(@Nullable String s) {
         return notBlank(s, VALID_STRING_IS_BLANK);
     }
 
-    public static String notBlank(String s, String message, Object... values) {
+    public static String notBlank(@Nullable String s, String message, Object... values) {
         if (Strings.isBlank(s)) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
         return s;
     }
 
-    public static String isNumber(String s) {
+    public static String isNumber(@Nullable String s) {
         return isNumber(s, VALID_STRING_NOT_NUMBER);
     }
 
-    public static String isNumber(String s, String message, Object... values) {
+    public static String isNumber(@Nullable String s, String message, Object... values) {
         if (!Strings.isNumber(s)) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
         return s;
     }
 
-    public static String isInteger(String s) {
+    public static String isInteger(@Nullable String s) {
         return isInteger(s, VALID_STRING_NOT_INTEGER);
     }
 
-    public static String isInteger(String s, String message, Object... values) {
+    public static String isInteger(@Nullable String s, String message, Object... values) {
         if (!Strings.isInteger(s)) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
         return s;
     }
 
-    public static String isDouble(String s) {
+    public static String isDouble(@Nullable String s) {
         return isNumber(s, VALID_STRING_NOT_DOUBLE);
     }
 
-    public static String isDouble(String s, String message, Object... values) {
+    public static String isDouble(@Nullable String s, String message, Object... values) {
         if (!Strings.isDouble(s)) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
         return s;
     }
 
-    public static <T> T validIndex(T[] array, int index) {
+    public static <T> T validIndex(@Nullable T[] array, int index) {
         return validIndex(array, index, VALID_ARRAY_INDEX, index);
     }
 
-    public static <T> T validIndex(T[] array, int index, String message, Object... values) {
+    public static <T> T validIndex(@Nullable T[] array, int index, String message, Object... values) {
         notNull(array, message, values);
         if (index < 0 || index >= array.length) {
             throw Exceptions.indexArgument(Strings.format(message, values));
@@ -516,22 +517,22 @@ public abstract class Assert {
         return array[index];
     }
 
-    public static <T extends Collection<?>> void validIndex(T collection, int index) {
+    public static <T extends Collection<?>> void validIndex(@Nullable T collection, int index) {
         validIndex(collection, index, VALID_COLLECTION_INDEX, index);
     }
 
-    public static <T extends Collection<?>> void validIndex(T collection, int index, String message, Object... values) {
+    public static <T extends Collection<?>> void validIndex(@Nullable T collection, int index, String message, Object... values) {
         notNull(collection, message, values);
         if (index < 0 || index >= collection.size()) {
             throw Exceptions.indexArgument(Strings.format(message, values));
         }
     }
 
-    public static <T> T[] noNullElements(T[] array) {
+    public static <T> T[] noNullElements(@Nullable T[] array) {
         return noNullElements(array, VALID_ARRAY_CONTENTS_NULL);
     }
 
-    public static <T> T[] noNullElements(T[] array, String message, Object... values) {
+    public static <T> T[] noNullElements(@Nullable T[] array, String message, Object... values) {
         notNull(array, message, values);
         for (T t : array) {
             if (t == null) {
@@ -541,11 +542,11 @@ public abstract class Assert {
         return array;
     }
 
-    public static <T extends Iterable<?>> T noNullElements(T iterable) {
+    public static <T extends Iterable<?>> T noNullElements(@Nullable T iterable) {
         return noNullElements(iterable, VALID_COLLECTION_CONTENTS_NULL);
     }
 
-    public static <T extends Iterable<?>> T noNullElements(T iterable, String message, Object... values) {
+    public static <T extends Iterable<?>> T noNullElements(@Nullable T iterable, String message, Object... values) {
         notNull(iterable, message, values);
         int i = 0;
         for (Iterator<?> it = iterable.iterator(); it.hasNext(); i++) {
@@ -556,22 +557,22 @@ public abstract class Assert {
         return iterable;
     }
 
-    public static String isMatches(String input, String pattern) {
+    public static String isMatches(@Nullable String input, @Nullable String pattern) {
         return notMatches(input, pattern, VALID_STRING_NOT_MATCH, input, pattern);
     }
 
-    public static String isMatches(String input, String pattern, String message, Object... values) {
+    public static String isMatches(@Nullable String input, @Nullable String pattern, String message, Object... values) {
         if (!Pattern.matches(pattern, input)) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
         return input;
     }
 
-    public static String notMatches(String input, String pattern) {
+    public static String notMatches(@Nullable String input, @Nullable String pattern) {
         return notMatches(input, pattern, VALID_STRING_MATCH, input, pattern);
     }
 
-    public static String notMatches(String input, String pattern, String message, Object... values) {
+    public static String notMatches(@Nullable String input, @Nullable String pattern, String message, Object... values) {
         if (Pattern.matches(pattern, input)) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
@@ -611,21 +612,21 @@ public abstract class Assert {
         return value;
     }
 
-    public static BigDecimal notZero(BigDecimal value) {
+    public static BigDecimal notZero(@Nullable BigDecimal value) {
         return notZero(value, VALID_VALUE_IS_ZERO);
     }
 
-    public static BigDecimal notZero(BigDecimal value, String message, Object... values) {
+    public static BigDecimal notZero(@Nullable BigDecimal value, String message, Object... values) {
         notNull(value, message, values);
         notCompare(BigDecimal.ZERO, value, message, values);
         return value;
     }
 
-    public static BigInteger notZero(BigInteger value) {
+    public static BigInteger notZero(@Nullable BigInteger value) {
         return notZero(value, VALID_VALUE_IS_ZERO);
     }
 
-    public static BigInteger notZero(BigInteger value, String message, Object... values) {
+    public static BigInteger notZero(@Nullable BigInteger value, String message, Object... values) {
         notNull(value, message, values);
         notCompare(BigInteger.ZERO, value, message, values);
         return value;
@@ -653,11 +654,11 @@ public abstract class Assert {
         return value;
     }
 
-    public static <T extends Comparable<T>> T inRange(T value, T start, T end) {
+    public static <T extends Comparable<T>> T inRange(@Nullable T value, @Nullable T start, @Nullable T end) {
         return inRange(value, start, end, VALID_VALUE_NOT_IN_RANGE, value, start, end);
     }
 
-    public static <T extends Comparable<T>> T inRange(T value, T start, T end, String message, Object... values) {
+    public static <T extends Comparable<T>> T inRange(@Nullable T value, @Nullable T start, @Nullable T end, String message, Object... values) {
         notNull(value, message, values);
         notNull(start, message, values);
         notNull(end, message, values);
@@ -667,11 +668,11 @@ public abstract class Assert {
         return value;
     }
 
-    public static <T extends Comparable<T>> T notInRange(T value, T start, T end) {
+    public static <T extends Comparable<T>> T notInRange(@Nullable T value, @Nullable T start, @Nullable T end) {
         return notInRange(start, end, value, VALID_VALUE_IN_RANGE, value, start, end);
     }
 
-    public static <T extends Comparable<T>> T notInRange(T value, T start, T end, String message, Object... values) {
+    public static <T extends Comparable<T>> T notInRange(@Nullable T value, @Nullable T start, @Nullable T end, String message, Object... values) {
         notNull(value, message, values);
         notNull(start, message, values);
         notNull(end, message, values);
@@ -681,11 +682,11 @@ public abstract class Assert {
         return value;
     }
 
-    public static String validLength(String s, int length) {
+    public static String validLength(@Nullable String s, int length) {
         return validLength(s, length, VALID_STRING_LENGTH, length);
     }
 
-    public static String validLength(String s, int length, String message, Object... values) {
+    public static String validLength(@Nullable String s, int length, String message, Object... values) {
         notNull(s, message, values);
         if (s.length() != length) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
@@ -693,11 +694,11 @@ public abstract class Assert {
         return s;
     }
 
-    public static String validLengthIn(String s, int start, int end) {
+    public static String validLengthIn(@Nullable String s, int start, int end) {
         return validLengthIn(s, start, end, VALID_STRING_LENGTH_IN, start, end);
     }
 
-    public static String validLengthIn(String s, int start, int end, String message, Object... values) {
+    public static String validLengthIn(@Nullable String s, int start, int end, String message, Object... values) {
         notNull(s, message, values);
         if (!Compares.inRange(s.length(), start, end)) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
@@ -705,11 +706,11 @@ public abstract class Assert {
         return s;
     }
 
-    public static String validLengthGt(String s, int length) {
+    public static String validLengthGt(@Nullable String s, int length) {
         return validLengthGt(s, length, VALID_LENGTH_NOT_GT, length);
     }
 
-    public static String validLengthGt(String s, int length, String message, Object... values) {
+    public static String validLengthGt(@Nullable String s, int length, String message, Object... values) {
         notNull(s, message, values);
         if (s.length() <= length) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
@@ -717,11 +718,11 @@ public abstract class Assert {
         return s;
     }
 
-    public static String validLengthGte(String s, int length) {
+    public static String validLengthGte(@Nullable String s, int length) {
         return validLengthGte(s, length, VALID_LENGTH_NOT_GT_EQ, length);
     }
 
-    public static String validLengthGte(String s, int length, String message, Object... values) {
+    public static String validLengthGte(@Nullable String s, int length, String message, Object... values) {
         notNull(s, message, values);
         if (s.length() < length) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
@@ -729,11 +730,11 @@ public abstract class Assert {
         return s;
     }
 
-    public static String validLengthLt(String s, int length) {
+    public static String validLengthLt(@Nullable String s, int length) {
         return validLengthLt(s, length, VALID_LENGTH_NOT_LT, length);
     }
 
-    public static String validLengthLt(String s, int length, String message, Object... values) {
+    public static String validLengthLt(@Nullable String s, int length, String message, Object... values) {
         notNull(s, message, values);
         if (s.length() >= length) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
@@ -741,11 +742,11 @@ public abstract class Assert {
         return s;
     }
 
-    public static String validLengthLte(String s, int length) {
+    public static String validLengthLte(@Nullable String s, int length) {
         return validLengthLte(s, length, VALID_LENGTH_NOT_LT_EQ, length);
     }
 
-    public static String validLengthLte(String s, int length, String message, Object... values) {
+    public static String validLengthLte(@Nullable String s, int length, String message, Object... values) {
         notNull(s, message, values);
         if (s.length() > length) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
@@ -753,33 +754,33 @@ public abstract class Assert {
         return s;
     }
 
-    public static <T> T isInstanceOf(Object obj, Class<T> type) {
+    public static <T> T isInstanceOf(@Nullable Object obj, Class<T> type) {
         if (!type.isInstance(obj)) {
             throw Exceptions.invalidArgument(Strings.format(VALID_NOT_INSTANCE, type.getName(), obj == null ? Const.NULL : obj.getClass().getName()));
         }
         return type.cast(obj);
     }
 
-    public static <T> T isInstanceOf(Object obj, Class<T> type, String message, Object... values) {
+    public static <T> T isInstanceOf(@Nullable Object obj, Class<T> type, String message, Object... values) {
         if (!type.isInstance(obj)) {
             throw Exceptions.invalidArgument(Strings.format(message, values));
         }
         return type.cast(obj);
     }
 
-    public static <T> T validWrapper(HttpWrapper<T> wrapper) {
+    public static <T> T validWrapper(@Nullable HttpWrapper<T> wrapper) {
         notNull(wrapper);
         isTrue(wrapper.isOk(), HTTP_WRAPPER_NOT_OK, wrapper.getCode(), wrapper.getMsg());
         return wrapper.getData();
     }
 
-    public static <T> T validWrapper(RpcWrapper<T> wrapper) {
+    public static <T> T validWrapper(@Nullable RpcWrapper<T> wrapper) {
         notNull(wrapper);
         isTrue(wrapper.isSuccess(), RPC_WRAPPER_NOT_SUCCESS, wrapper.getCode(), wrapper.getMsg());
         return wrapper.getData();
     }
 
-    public static <T extends IHttpResponse> T validHttpOk(T resp) {
+    public static <T extends IHttpResponse> T validHttpOk(@Nullable T resp) {
         notNull(resp);
         int code = resp.getCode();
         if (code < 200 || code >= 300) {

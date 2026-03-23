@@ -142,6 +142,14 @@
             <version>${slf4j.version}</version>
         </dependency>
 
+        <!-- spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- python script -->
         <!--        <dependency>-->
         <!--            <groupId>org.python</groupId>-->
