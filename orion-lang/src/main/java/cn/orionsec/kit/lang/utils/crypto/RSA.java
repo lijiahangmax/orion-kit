@@ -338,7 +338,7 @@ public class RSA {
      * @return PublicKey PrivateKey
      */
     public static Pair<RSAPublicKey, RSAPrivateKey> generatorKeys() {
-        return generatorKeys(CryptoConst.RSA_KEY_LENGTH);
+        return generatorKeys(CryptoConst.RSA_KEY_LENGTH_BITS);
     }
 
     /**

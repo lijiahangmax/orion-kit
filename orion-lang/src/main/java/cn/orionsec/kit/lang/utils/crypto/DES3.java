@@ -48,7 +48,7 @@ public class DES3 {
     public static String encrypt(String s, String key) {
         return SymmetricBuilder.des3()
                 .workingMode(WorkingMode.ECB)
-                .generatorSecretKey(key)
+                .secretKey(key)
                 .buildEcb()
                 .encryptAsString(s);
     }
@@ -80,7 +80,7 @@ public class DES3 {
     public static String encrypt(String s, String key, String iv) {
         return SymmetricBuilder.des3()
                 .workingMode(WorkingMode.CBC)
-                .generatorSecretKey(key)
+                .secretKey(key)
                 .ivSpec(iv)
                 .buildParam()
                 .encryptAsString(s);
@@ -116,7 +116,7 @@ public class DES3 {
     public static String encrypt(String s, String key, String gcm, String aad) {
         return SymmetricBuilder.des3()
                 .workingMode(WorkingMode.GCM)
-                .generatorSecretKey(key)
+                .secretKey(key)
                 .gcmSpec(gcm)
                 .aad(aad)
                 .buildParam()
@@ -158,7 +158,7 @@ public class DES3 {
     public static String decrypt(String s, String key) {
         return SymmetricBuilder.des3()
                 .workingMode(WorkingMode.ECB)
-                .generatorSecretKey(key)
+                .secretKey(key)
                 .buildEcb()
                 .decryptAsString(s);
     }
@@ -190,7 +190,7 @@ public class DES3 {
     public static String decrypt(String s, String key, String iv) {
         return SymmetricBuilder.des3()
                 .workingMode(WorkingMode.CBC)
-                .generatorSecretKey(key)
+                .secretKey(key)
                 .ivSpec(iv)
                 .buildParam()
                 .decryptAsString(s);
@@ -226,7 +226,7 @@ public class DES3 {
     public static String decrypt(String s, String key, String gcm, String aad) {
         return SymmetricBuilder.des3()
                 .workingMode(WorkingMode.GCM)
-                .generatorSecretKey(key)
+                .secretKey(key)
                 .gcmSpec(gcm)
                 .aad(aad)
                 .buildParam()

@@ -249,42 +249,62 @@ public class Keys {
      * @param mode mode
      * @return key 长度
      */
-    public static int getKeySpecLength(CipherAlgorithm mode) {
+    public static int getKeySpecBitLength(CipherAlgorithm mode) {
         switch (mode) {
             case AES:
-                return CryptoConst.AES_KEY_LENGTH;
+                return CryptoConst.AES_KEY_LENGTH_BITS;
             case DES:
-                return CryptoConst.DES_KEY_LENGTH;
+                return CryptoConst.DES_KEY_LENGTH_BITS;
             case DES3:
-                return CryptoConst.DES3_KEY_LENGTH;
+                return CryptoConst.DES3_KEY_LENGTH_BITS;
             case SM4:
-                return CryptoConst.SM4_KEY_LENGTH;
+                return CryptoConst.SM4_KEY_LENGTH_BITS;
             case RSA:
-                return CryptoConst.RSA_KEY_LENGTH;
+                return CryptoConst.RSA_KEY_LENGTH_BITS;
             default:
                 throw Exceptions.unsupported("unsupported get " + mode + " key spec length");
         }
     }
 
     /**
-     * 获取 IV 规格长度
+     * 获取 key 规格长度
      *
      * @param mode mode
-     * @return IV 长度
+     * @return key 长度
      */
-    public static int getIvSpecLength(CipherAlgorithm mode) {
+    public static int getKeySpecByteLength(CipherAlgorithm mode) {
+        return getKeySpecBitLength(mode) / Byte.SIZE;
+    }
+
+    /**
+     * 获取 iv 规格长度
+     *
+     * @param mode mode
+     * @return iv 长度
+     */
+    public static int getIvSpecBitLength(CipherAlgorithm mode) {
         switch (mode) {
             case AES:
-                return CryptoConst.AES_IV_LENGTH;
+                return CryptoConst.AES_IV_LENGTH_BITS;
             case DES:
-                return CryptoConst.DES_IV_LENGTH;
+                return CryptoConst.DES_IV_LENGTH_BITS;
             case DES3:
-                return CryptoConst.DES3_IV_LENGTH;
+                return CryptoConst.DES3_IV_LENGTH_BITS;
             case SM4:
-                return CryptoConst.SM4_IV_LENGTH;
+                return CryptoConst.SM4_IV_LENGTH_BITS;
             default:
                 throw Exceptions.unsupported("unsupported get " + mode + "iv spec length");
         }
+    }
+
+    /**
+     * 获取 iv 规格长度
+     *
+     * @param mode mode
+     * @return iv 长度
+     */
+    public static int getIvSpecByteLength(CipherAlgorithm mode) {
+        return getIvSpecBitLength(mode) / Byte.SIZE;
     }
 
     /**
@@ -296,7 +316,7 @@ public class Keys {
     public static int getGcmSpecLength(CipherAlgorithm mode) {
         switch (mode) {
             case AES:
-                return CryptoConst.GCM_SPEC_LENGTH;
+                return CryptoConst.GCM_TAG_LENGTH_BITS;
             default:
                 throw Exceptions.unsupported("unsupported get " + mode + "gcm spec length");
         }
@@ -307,7 +327,7 @@ public class Keys {
     }
 
     public static IvParameterSpec getIvSpec(CipherAlgorithm mode, byte[] iv) {
-        return getIvSpec(iv, getIvSpecLength(mode));
+        return getIvSpec(iv, getIvSpecBitLength(mode));
     }
 
     /**
@@ -318,11 +338,11 @@ public class Keys {
      * @return 填充后的向量
      */
     public static IvParameterSpec getIvSpec(byte[] iv, int ivSpecLen) {
-        return new IvParameterSpec(Arrays1.resize(iv, ivSpecLen));
+        return new IvParameterSpec(Arrays1.resize(iv, ivSpecLen / Byte.SIZE));
     }
 
     public static GCMParameterSpec getGcmSpec(byte[] gcm) {
-        return new GCMParameterSpec(CryptoConst.GCM_SPEC_LENGTH, gcm);
+        return new GCMParameterSpec(CryptoConst.GCM_TAG_LENGTH_BITS, gcm);
     }
 
     public static GCMParameterSpec getGcmSpec(CipherAlgorithm mode, byte[] gcm) {
@@ -385,11 +405,11 @@ public class Keys {
     }
 
     public static SecretKey generatorKey(String key, CipherAlgorithm mode) {
-        return generatorKey(Strings.bytes(key), getKeySpecLength(mode), mode);
+        return generatorKey(Strings.bytes(key), getKeySpecBitLength(mode), mode);
     }
 
     public static SecretKey generatorKey(byte[] key, CipherAlgorithm mode) {
-        return generatorKey(key, getKeySpecLength(mode), mode);
+        return generatorKey(key, getKeySpecBitLength(mode), mode);
     }
 
     public static SecretKey generatorKey(String key, int keySize, CipherAlgorithm mode) {
@@ -404,11 +424,11 @@ public class Keys {
      * String -> SecretKey
      *
      * @param key     key
-     * @param keySize key 位数
-     *                AES 128 192 256  {@link CryptoConst#AES_KEY_LENGTH}
-     *                DES 8            {@link CryptoConst#DES_KEY_LENGTH}
-     *                3DES 24          {@link CryptoConst#DES3_KEY_LENGTH}
-     *                SM4  16          {@link CryptoConst#SM4_KEY_LENGTH}
+     * @param keySize key 长度
+     *                AES 128 192 256  {@link CryptoConst#AES_KEY_LENGTH_BITS}
+     *                DES 64           {@link CryptoConst#DES_KEY_LENGTH_BITS}
+     *                3DES 192         {@link CryptoConst#DES3_KEY_LENGTH_BITS}
+     *                SM4 128          {@link CryptoConst#SM4_KEY_LENGTH_BITS}
      * @param mode    CipherAlgorithm
      * @return SecretKey
      */
@@ -422,18 +442,21 @@ public class Keys {
                     keyGenerator.init(keySize, random);
                     return SecretKeySpecMode.AES.getSecretKeySpec(keyGenerator.generateKey().getEncoded());
                 case DES:
-                    if (key.length != keySize) {
-                        key = Arrays1.resize(key, keySize);
+                    int desKeyBytes = keySize / Byte.SIZE;
+                    if (key.length != desKeyBytes) {
+                        key = Arrays1.resize(key, desKeyBytes);
                     }
                     return SecretKeyFactory.getInstance(mode.getMode()).generateSecret(new DESKeySpec(key));
                 case DES3:
-                    if (key.length != keySize) {
-                        key = Arrays1.resize(key, keySize);
+                    int des3KeyBytes = keySize / Byte.SIZE;
+                    if (key.length != des3KeyBytes) {
+                        key = Arrays1.resize(key, des3KeyBytes);
                     }
                     return SecretKeyFactory.getInstance(mode.getMode()).generateSecret(new DESedeKeySpec(key));
                 case SM4:
-                    if (key.length != keySize) {
-                        key = Arrays1.resize(key, keySize);
+                    int sm4KeyBytes = keySize / Byte.SIZE;
+                    if (key.length != sm4KeyBytes) {
+                        key = Arrays1.resize(key, sm4KeyBytes);
                     }
                     return SecretKeySpecMode.SM4.getSecretKeySpec(key);
                 default:

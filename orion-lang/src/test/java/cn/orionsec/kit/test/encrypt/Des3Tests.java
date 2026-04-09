@@ -28,13 +28,10 @@ package cn.orionsec.kit.test.encrypt;
 
 import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.crypto.AES;
 import cn.orionsec.kit.lang.utils.crypto.CryptoConst;
+import cn.orionsec.kit.lang.utils.crypto.DES3;
 import cn.orionsec.kit.lang.utils.crypto.Keys;
 import cn.orionsec.kit.lang.utils.crypto.enums.CipherAlgorithm;
-import cn.orionsec.kit.lang.utils.crypto.enums.WorkingMode;
-import cn.orionsec.kit.lang.utils.crypto.symmetric.ParamSymmetric;
-import cn.orionsec.kit.lang.utils.crypto.symmetric.SymmetricBuilder;
 import cn.orionsec.kit.lang.utils.random.Randoms;
 import org.junit.Test;
 
@@ -45,71 +42,43 @@ import javax.crypto.SecretKey;
  * @version 1.0.0
  * @since 2020/9/29 11:48
  */
-public class AesTests {
+public class Des3Tests {
 
-    private final String s = "123";
-    private final String key = Randoms.randomAscii(CryptoConst.AES_KEY_LENGTH_BITS / 8);
-    private final String iv = Randoms.randomAscii(CryptoConst.AES_IV_LENGTH_BITS / 8);
+    private final String key = Randoms.randomAscii(CryptoConst.DES3_KEY_LENGTH_BITS / 8);
+    private final String iv = Randoms.randomAscii(CryptoConst.DES3_IV_LENGTH_BITS / 8);
 
     @Test
-    public void test() {
-        ParamSymmetric sy = SymmetricBuilder.aes()
-                .workingMode(WorkingMode.CFB)
-                .ivSpec(iv)
-                .secretKey(key)
-                .buildParam();
-        String s1 = sy.encryptAsString(s);
-        String d1 = sy.decryptAsString(s1);
-        System.out.println(s1);
-        System.out.println(d1);
-        System.out.println(sy.verify(d1, s1));
+    public void des3() {
+        String e2 = DES3.encrypt("123", key, iv);
+        String e3 = DES3.encrypt("123", key);
+        System.out.println(e2);
+        System.out.println(e3);
+        String d2 = DES3.decrypt(e2, key, iv);
+        String d3 = DES3.decrypt(e3, key);
+        System.out.println(d2);
+        System.out.println(d3);
     }
 
     @Test
-    public void ecb() {
-        String e1 = AES.encrypt(s, key);
-        String d1 = AES.decrypt(e1, key);
-        System.out.println("e1 = " + e1);
-        System.out.println("d1 = " + d1);
-    }
-
-    @Test
-    public void cbc() {
-        String s1 = AES.encrypt(s, key, iv);
-        String d1 = AES.decrypt(s1, key, iv);
-        System.out.println("s1 = " + s1);
-        System.out.println("d1 = " + d1);
-    }
-
-    @Test
-    public void gcm() {
-        String gcm = Strings.repeat('1', 96 / 8);
-        String s1 = AES.encrypt(s, key, gcm, "aad");
-        String d1 = AES.decrypt(s1, key, gcm, "aad");
-        System.out.println("s1 = " + s1);
-        System.out.println("d1 = " + d1);
-    }
-
-    @Test
-    public void test1() {
-        SecretKey key = Keys.generatorKey("key", CipherAlgorithm.AES);
+    public void test2() {
+        SecretKey key = Keys.generatorKey("key", CipherAlgorithm.DES3);
         for (int i = 0; i < 1000; i++) {
             String s = Strings.randomChars(Randoms.randomInt(5, 20));
-            String enc = AES.encrypt(s, key);
+            String enc = DES3.encrypt(s, key);
             System.out.println(enc);
-            String dec = AES.decrypt(enc, key);
+            String dec = DES3.decrypt(enc, key);
             System.out.println(dec);
             Assert.isTrue(s.equals(dec));
         }
     }
 
     @Test
-    public void testAes() {
+    public void test3Des() {
         for (int i = 0; i < 5000; i++) {
             String val = Strings.randomChars(Randoms.randomInt(30));
-            String key = Randoms.randomAscii(CryptoConst.AES_KEY_LENGTH_BITS / 8);
-            String en = AES.encrypt(val, key);
-            String de = AES.decrypt(en, key);
+            String key = Randoms.randomAscii(CryptoConst.DES3_KEY_LENGTH_BITS / 8);
+            String en = DES3.encrypt(val, key);
+            String de = DES3.decrypt(en, key);
             // System.out.println(val);
             // System.out.println(key);
             // System.out.println(en);
