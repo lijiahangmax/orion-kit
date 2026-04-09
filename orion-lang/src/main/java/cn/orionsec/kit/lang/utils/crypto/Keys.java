@@ -322,7 +322,7 @@ public class Keys {
     }
 
     public static GCMParameterSpec getGcmSpec(byte[] gcm) {
-        return new GCMParameterSpec(gcm.length, gcm);
+        return new GCMParameterSpec(CryptoConst.GCM_SPEC_LENGTH, gcm);
     }
 
     public static GCMParameterSpec getGcmSpec(CipherAlgorithm mode, byte[] gcm) {
@@ -341,6 +341,28 @@ public class Keys {
     }
 
     /**
+     * Base64Key -> SecretKey
+     *
+     * @param key  StringKey
+     * @param mode CipherAlgorithm
+     * @return SecretKey
+     */
+    public static SecretKey getSecretKeyBase64(byte[] key, CipherAlgorithm mode) {
+        return new SecretKeySpec(decode(key), mode.getMode());
+    }
+
+    /**
+     * Base64Key -> SecretKey
+     *
+     * @param key  StringKey
+     * @param mode CipherAlgorithm
+     * @return SecretKey
+     */
+    public static SecretKey getSecretKeyBase64(String key, CipherAlgorithm mode) {
+        return new SecretKeySpec(decode(Strings.bytes(key)), mode.getMode());
+    }
+
+    /**
      * StringKey -> SecretKey
      *
      * @param key  StringKey
@@ -348,7 +370,7 @@ public class Keys {
      * @return SecretKey
      */
     public static SecretKey getSecretKey(byte[] key, CipherAlgorithm mode) {
-        return new SecretKeySpec(decode(key), mode.getMode());
+        return new SecretKeySpec(key, mode.getMode());
     }
 
     /**
@@ -359,7 +381,7 @@ public class Keys {
      * @return SecretKey
      */
     public static SecretKey getSecretKey(String key, CipherAlgorithm mode) {
-        return new SecretKeySpec(decode(Strings.bytes(key)), mode.getMode());
+        return getSecretKey(Strings.bytes(key), mode);
     }
 
     public static SecretKey generatorKey(String key, CipherAlgorithm mode) {

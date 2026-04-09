@@ -182,6 +182,28 @@ public class SymmetricBuilder {
     }
 
     /**
+     * 设置 Base64 密钥
+     *
+     * @param secretKey secretKey
+     * @return this
+     */
+    public SymmetricBuilder secretKeyBase64(String secretKey) {
+        this.secretKey = Keys.getSecretKeyBase64(secretKey, algorithm);
+        return this;
+    }
+
+    /**
+     * 设置 Base64 密钥
+     *
+     * @param secretKey secretKey
+     * @return this
+     */
+    public SymmetricBuilder secretKeyBase64(byte[] secretKey) {
+        this.secretKey = Keys.getSecretKeyBase64(secretKey, algorithm);
+        return this;
+    }
+
+    /**
      * 生成密钥
      *
      * @param secretKey secretKey
@@ -436,7 +458,8 @@ public class SymmetricBuilder {
      * @return ParamSymmetric
      */
     public ParamSymmetric buildParam() {
-        ParamSymmetric symmetric = new ParamSymmetric(algorithm, workingMode, paddingMode, secretKey, paramSpec);
+        PaddingMode usePaddingMode = WorkingMode.GCM.equals(workingMode) ? PaddingMode.NO_PADDING : paddingMode;
+        ParamSymmetric symmetric = new ParamSymmetric(algorithm, workingMode, usePaddingMode, secretKey, paramSpec);
         symmetric.setAad(aad);
         return symmetric;
     }
