@@ -40,10 +40,10 @@ import java.util.Arrays;
  */
 public class ReadTests {
 
-    private static CsvReader array = new CsvReader("C:\\Users\\ljh15\\Desktop\\csv\\array.csv");
-    private static CsvReader map = new CsvReader("C:\\Users\\ljh15\\Desktop\\csv\\map.csv");
-    private static CsvReader bean = new CsvReader("C:\\Users\\ljh15\\Desktop\\csv\\bean.csv");
-    private static CsvReader lambda = new CsvReader("C:\\Users\\ljh15\\Desktop\\csv\\lambda.csv");
+    private static CsvReader array = new CsvReader("C:\\Users\\Administrator\\Desktop\\csv\\array.csv");
+    private static CsvReader map = new CsvReader("C:\\Users\\Administrator\\Desktop\\csv\\map.csv");
+    private static CsvReader bean = new CsvReader("C:\\Users\\Administrator\\Desktop\\csv\\bean.csv");
+    private static CsvReader lambda = new CsvReader("C:\\Users\\Administrator\\Desktop\\csv\\lambda.csv");
 
     @Test
     public void rawTests() {

@@ -51,7 +51,7 @@ public class GitTests {
 
     @Test
     public void cloneTest() {
-        Gits.clone("https://gitee.com/lijiahangmax/tmp1.git", new File("C:\\Users\\ljh15\\Desktop\\1"));
+        Gits.clone("https://gitee.com/lijiahangmax/tmp1.git", new File("C:\\Users\\Administrator\\Desktop\\1"));
     }
 
     @Test

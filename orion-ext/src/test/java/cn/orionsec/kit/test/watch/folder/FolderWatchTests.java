@@ -62,7 +62,7 @@ public class FolderWatchTests {
                 System.out.println("overflow " + path + " " + event.kind() + " " + event.count() + " " + event.context());
             }
         }, WatchEventKind.ALL);
-        watcher.registerPath("C:\\Users\\ljh15\\Desktop\\t\\k1");
+        watcher.registerPath("C:\\Users\\Administrator\\Desktop\\t\\k1");
         watcher.run();
 
     }

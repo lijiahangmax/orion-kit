@@ -57,9 +57,9 @@ public class MailTests {
                 .addLine("-------------------")
                 .addLine("--------end--------")
                 .addLine("-------------------")
-                .attachment(new MailAttachment("C:\\Users\\ljh15\\Desktop\\tmp.txt"))
-                .attachment(new MailAttachment(new File("C:\\Users\\ljh15\\Desktop\\新增&列表.txt")))
-                .attachment(new MailAttachment(Files1.openInputStreamSafe(new File("C:\\Users\\ljh15\\Desktop\\sql.txt")), "sql.md"))
+                .attachment(new MailAttachment("C:\\Users\\Administrator\\Desktop\\tmp.txt"))
+                .attachment(new MailAttachment(new File("C:\\Users\\Administrator\\Desktop\\新增&列表.txt")))
+                .attachment(new MailAttachment(Files1.openInputStreamSafe(new File("C:\\Users\\Administrator\\Desktop\\sql.txt")), "sql.md"))
                 .attachment(new MailAttachment("fq".getBytes(), "1.file"));
         System.out.println(msg);
         sender.send(msg);

@@ -61,7 +61,7 @@ public class FileWatchTests {
             public void onDelete(File file, FileAttribute before) {
                 System.out.println("delete: " + file);
             }
-        }).addFile("C:\\Users\\ljh15\\Desktop\\t\\s.txt", "C:\\Users\\ljh15\\Desktop\\t\\e.txt");
+        }).addFile("C:\\Users\\Administrator\\Desktop\\t\\s.txt", "C:\\Users\\Administrator\\Desktop\\t\\e.txt");
 
         Threads.start(watcher);
         Threads.sleep(21000);

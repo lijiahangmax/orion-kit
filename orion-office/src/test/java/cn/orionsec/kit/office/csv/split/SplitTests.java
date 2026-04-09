@@ -39,18 +39,18 @@ public class SplitTests {
 
     @Test
     public void rowSplitTests() {
-        CsvArrayReader reader = new CsvArrayReader(new CsvReader("C:\\Users\\ljh15\\Desktop\\1.csv"));
+        CsvArrayReader reader = new CsvArrayReader(new CsvReader("C:\\Users\\Administrator\\Desktop\\1.csv"));
         reader.getOption().setSkipEmptyRows(false);
         CsvRowSplit split = new CsvRowSplit(reader, 5).skip(1);
-        split.targetPath("C:\\Users\\ljh15\\Desktop\\split1", "sp");
+        split.targetPath("C:\\Users\\Administrator\\Desktop\\split1", "sp");
         split.split().close();
     }
 
     @Test
     public void columnSplitTests() {
-        CsvArrayReader reader = new CsvArrayReader(new CsvReader("C:\\Users\\ljh15\\Desktop\\1.csv"));
+        CsvArrayReader reader = new CsvArrayReader(new CsvReader("C:\\Users\\Administrator\\Desktop\\1.csv"));
         reader.getOption().setSkipEmptyRows(false);
-        new CsvColumnSplit(reader, 2, 3, 1).split("C:\\Users\\ljh15\\Desktop\\2.csv");
+        new CsvColumnSplit(reader, 2, 3, 1).split("C:\\Users\\Administrator\\Desktop\\2.csv");
     }
 
 }

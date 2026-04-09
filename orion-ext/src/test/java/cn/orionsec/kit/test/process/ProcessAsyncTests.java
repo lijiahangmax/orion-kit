@@ -41,7 +41,7 @@ public class ProcessAsyncTests {
     @Test
     public void echo() {
         new ProcessAsyncExecutor("echo %JAVA_HOME%")
-                .outputFile(new File("C:\\Users\\ljh15\\Desktop\\r1.txt"))
+                .outputFile(new File("C:\\Users\\Administrator\\Desktop\\r1.txt"))
                 .terminal()
                 .exec();
     }
@@ -49,8 +49,8 @@ public class ProcessAsyncTests {
     @Test
     public void sql() {
         ProcessAsyncExecutor exec = new ProcessAsyncExecutor("mysql -u root -padmin123")
-                .outputFile(new File("C:\\Users\\ljh15\\Desktop\\r1.txt"))
-                .inputFile(new File("C:\\Users\\ljh15\\Desktop\\r2.txt"));
+                .outputFile(new File("C:\\Users\\Administrator\\Desktop\\r1.txt"))
+                .inputFile(new File("C:\\Users\\Administrator\\Desktop\\r2.txt"));
         exec.terminal()
                 .redirectError()
                 .exec();
@@ -59,8 +59,8 @@ public class ProcessAsyncTests {
 
     @Test
     public void bat() {
-        new ProcessAsyncExecutor("C:\\Users\\ljh15\\Desktop\\1.bat")
-                .outputFile(new File("C:\\Users\\ljh15\\Desktop\\r1.txt"))
+        new ProcessAsyncExecutor("C:\\Users\\Administrator\\Desktop\\1.bat")
+                .outputFile(new File("C:\\Users\\Administrator\\Desktop\\r1.txt"))
                 .exec();
     }
 

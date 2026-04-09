@@ -76,7 +76,7 @@ public class WriteTests {
 
     @Test
     public void arrayTests() {
-        CsvWriter writer = new CsvWriter("C:\\Users\\ljh15\\Desktop\\csv\\array.csv");
+        CsvWriter writer = new CsvWriter("C:\\Users\\Administrator\\Desktop\\csv\\array.csv");
         writer.getOption().setTrim(true);
         CsvArrayWriter cw = new CsvArrayWriter(writer);
         cw.capacity(8)
@@ -93,7 +93,7 @@ public class WriteTests {
 
     @Test
     public void mapTests() {
-        CsvWriter writer = new CsvWriter("C:\\Users\\ljh15\\Desktop\\csv\\map.csv");
+        CsvWriter writer = new CsvWriter("C:\\Users\\Administrator\\Desktop\\csv\\map.csv");
         writer.getOption().setTrim(true);
         CsvMapWriter<String, Object> cw = new CsvMapWriter<>(writer);
         cw.capacity(6)
@@ -113,7 +113,7 @@ public class WriteTests {
 
     @Test
     public void beanTests() {
-        CsvBeanWriter<ExportUser> writer = new CsvBeanWriter<>("C:\\Users\\ljh15\\Desktop\\csv\\bean.csv", ExportUser.class);
+        CsvBeanWriter<ExportUser> writer = new CsvBeanWriter<>("C:\\Users\\Administrator\\Desktop\\csv\\bean.csv", ExportUser.class);
         writer.getOption().setTrim(true);
         writer.defaultValue("desc", "def")
                 .skip()
@@ -126,7 +126,7 @@ public class WriteTests {
 
     @Test
     public void lambdaTests() {
-        CsvLambdaWriter<ExportUser> writer = new CsvLambdaWriter<>("C:\\Users\\ljh15\\Desktop\\csv\\lambda.csv");
+        CsvLambdaWriter<ExportUser> writer = new CsvLambdaWriter<>("C:\\Users\\Administrator\\Desktop\\csv\\lambda.csv");
         writer.getOption().setTrim(true);
         writer.capacity(5)
                 .mapping(0, ExportUser::getNum)

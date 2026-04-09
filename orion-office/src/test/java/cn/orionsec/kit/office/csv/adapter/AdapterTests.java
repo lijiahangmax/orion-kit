@@ -39,9 +39,9 @@ public class AdapterTests {
 
     @Test
     public void toXlsx() {
-        CsvExt csvExt = new CsvExt("C:\\Users\\ljh15\\Desktop\\zb.csv");
+        CsvExt csvExt = new CsvExt("C:\\Users\\Administrator\\Desktop\\zb.csv");
         CsvConvert.excelAdapter(csvExt).forNew()
-                .write("C:\\Users\\ljh15\\Desktop\\zb1.xlsx")
+                .write("C:\\Users\\Administrator\\Desktop\\zb1.xlsx")
                 .close();
     }
 

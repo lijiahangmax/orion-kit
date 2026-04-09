@@ -47,10 +47,10 @@ public class KeyTests {
     @Test
     @Ignore
     public void test1() {
-        String k1 = Keys.getKey("C:\\Users\\ljh15\\Desktop\\key\\rsa_public.pem");
-        String k2 = Keys.getKey("C:\\Users\\ljh15\\Desktop\\key\\rsa_private_pkcs8.pem");
-        PublicKey k3 = Keys.getCerPublicKey("C:\\Users\\ljh15\\Desktop\\key\\openssl.cer");
-        Pair<PublicKey, PrivateKey> keys = Keys.getPfxKeys("C:\\Users\\ljh15\\Desktop\\key\\openssl.pfx", "123456");
+        String k1 = Keys.getKey("C:\\Users\\Administrator\\Desktop\\key\\rsa_public.pem");
+        String k2 = Keys.getKey("C:\\Users\\Administrator\\Desktop\\key\\rsa_private_pkcs8.pem");
+        PublicKey k3 = Keys.getCerPublicKey("C:\\Users\\Administrator\\Desktop\\key\\openssl.cer");
+        Pair<PublicKey, PrivateKey> keys = Keys.getPfxKeys("C:\\Users\\Administrator\\Desktop\\key\\openssl.pfx", "123456");
         PublicKey k4 = keys.getKey();
         PrivateKey k5 = keys.getValue();
         System.out.println("k1 = " + k1);

@@ -60,7 +60,7 @@ public class QRCodeTests {
     @Test
     public void test3() {
         QRCodes c = new QRCodes();
-        c.logo(new File("C:\\Users\\ljh15\\Pictures\\帽子\\1.jpg"));
+        c.logo(new File("C:\\Users\\Administrator\\Pictures\\帽子\\1.jpg"));
         c.logoCompress();
         String s = c.encodeBase64("www");
         System.out.println(s);
@@ -71,7 +71,7 @@ public class QRCodeTests {
     @Test
     public void test4() {
         QRCodes c = new QRCodes();
-        c.logo(new File("C:\\Users\\ljh15\\Pictures\\帽子\\1.jpg"));
+        c.logo(new File("C:\\Users\\Administrator\\Pictures\\帽子\\1.jpg"));
         c.logoCompress();
         c.fontColor(Color.RED);
         String s = c.encodeBase64("哦哦哦哦哦!", "哦哦哦哦哦!");

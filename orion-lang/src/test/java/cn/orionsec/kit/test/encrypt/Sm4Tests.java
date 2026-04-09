@@ -44,20 +44,20 @@ import javax.crypto.SecretKey;
 public class Sm4Tests {
 
     private String s = "123";
-    private String k1 = "345";
+    private String key = "0123456789012345";
 
     @Test
     public void ecb() {
-        String e1 = SM4.encrypt(s, k1);
-        String d1 = SM4.decrypt(e1, k1);
+        String e1 = SM4.encrypt(s, key);
+        String d1 = SM4.decrypt(e1, key);
         System.out.println("e1 = " + e1);
         System.out.println("d1 = " + d1);
     }
 
     @Test
     public void cbc() {
-        String s1 = SM4.encrypt(s, k1, "1234567812345678");
-        String d1 = SM4.decrypt(s1, k1, "1234567812345678");
+        String s1 = SM4.encrypt(s, key, "1234567812345678");
+        String d1 = SM4.decrypt(s1, key, "1234567812345678");
         System.out.println("s1 = " + s1);
         System.out.println("d1 = " + d1);
     }
@@ -79,7 +79,7 @@ public class Sm4Tests {
     public void testSM4() {
         for (int i = 0; i < 5000; i++) {
             String val = Strings.randomChars(Randoms.randomInt(30));
-            String key = Randoms.randomAscii(Randoms.randomInt(30));
+            String key = Randoms.randomAscii(16);
             String en = SM4.encrypt(val, key);
             String de = SM4.decrypt(en, key);
             // System.out.println(val);

@@ -47,14 +47,14 @@ import javax.crypto.SecretKey;
 public class AesTests {
 
     private String s = "123";
-    private String k = "123";
+    private String key = "0123456789012345";
 
     @Test
     public void test() {
         ParamSymmetric sy = SymmetricBuilder.aes()
                 .workingMode(WorkingMode.CFB)
                 .ivSpec("1234567812345678")
-                .generatorSecretKey(k)
+                .secretKey(key)
                 .buildParam();
         String s1 = sy.encryptAsString(s);
         String d1 = sy.decryptAsString(s1);
@@ -65,16 +65,16 @@ public class AesTests {
 
     @Test
     public void ecb() {
-        String e1 = AES.encrypt(s, k);
-        String d1 = AES.decrypt(e1, k);
+        String e1 = AES.encrypt(s, key);
+        String d1 = AES.decrypt(e1, key);
         System.out.println("e1 = " + e1);
         System.out.println("d1 = " + d1);
     }
 
     @Test
     public void cbc() {
-        String s1 = AES.encrypt(s, k, "1234567812345678");
-        String d1 = AES.decrypt(s1, k, "1234567812345678");
+        String s1 = AES.encrypt(s, key, "1234567812345678");
+        String d1 = AES.decrypt(s1, key, "1234567812345678");
         System.out.println("s1 = " + s1);
         System.out.println("d1 = " + d1);
     }
@@ -82,8 +82,8 @@ public class AesTests {
     @Test
     public void gcm() {
         String gcm = Strings.repeat('1', 96);
-        String s1 = AES.encrypt(s, k, gcm, "aad");
-        String d1 = AES.decrypt(s1, k, gcm, "aad");
+        String s1 = AES.encrypt(s, key, gcm, "aad");
+        String d1 = AES.decrypt(s1, key, gcm, "aad");
         System.out.println("s1 = " + s1);
         System.out.println("d1 = " + d1);
     }
@@ -105,7 +105,7 @@ public class AesTests {
     public void testAes() {
         for (int i = 0; i < 5000; i++) {
             String val = Strings.randomChars(Randoms.randomInt(30));
-            String key = Randoms.randomAscii(Randoms.randomInt(30));
+            String key = Randoms.randomAscii(16);
             String en = AES.encrypt(val, key);
             String de = AES.decrypt(en, key);
             // System.out.println(val);

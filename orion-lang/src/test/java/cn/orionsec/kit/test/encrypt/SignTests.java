@@ -51,7 +51,7 @@ public class SignTests {
         System.out.println("Signatures.sha384(s) = " + Signatures.sha384(s));
         System.out.println("Signatures.sha512(s) = " + Signatures.sha512(s));
         System.out.println();
-        File f = new File("C:\\Users\\ljh15\\Desktop\\bug.txt");
+        File f = new File("C:\\Users\\Administrator\\Desktop\\bug.txt");
         System.out.println("Files1.md5(f) = " + Files1.md5(f));
         System.out.println("Files1.sha1(f) = " + Files1.sha1(f));
         System.out.println("Files1.sha224(f) = " + Files1.sha224(f));

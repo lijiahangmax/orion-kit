@@ -176,6 +176,17 @@ public class SymmetricBuilder {
      * @param secretKey secretKey
      * @return this
      */
+    public SymmetricBuilder secretKey(String secretKey) {
+        this.secretKey = Keys.getSecretKey(secretKey, algorithm);
+        return this;
+    }
+
+    /**
+     * 设置密钥
+     *
+     * @param secretKey secretKey
+     * @return this
+     */
     public SymmetricBuilder secretKey(byte[] secretKey) {
         this.secretKey = Keys.getSecretKey(secretKey, algorithm);
         return this;

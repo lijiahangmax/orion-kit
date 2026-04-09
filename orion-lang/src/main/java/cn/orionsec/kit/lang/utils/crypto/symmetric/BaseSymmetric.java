@@ -80,12 +80,12 @@ public abstract class BaseSymmetric implements SymmetricCrypto {
     }
 
     /**
-     * ZeroPadding 去除解密后的0位数
+     * 去除解密后的填充 (ZeroPadding 的 0)
      *
      * @param bytes bytes
      * @return bytes
      */
-    protected byte[] clearZeroPadding(byte[] bytes) {
+    protected byte[] clearPadding(byte[] bytes) {
         // 如果是0填充的话则需要去除0 否则解密结果的byte[]最后都是0 与明文比对会不匹配
         if (!PaddingMode.ZERO_PADDING.equals(paddingMode)) {
             return bytes;
@@ -106,14 +106,14 @@ public abstract class BaseSymmetric implements SymmetricCrypto {
     }
 
     /**
-     * ZeroPadding 0填充数据
+     * 执行填充 0填充数据
      *
      * @param bytes     数据
      * @param blockSize 块大小
      * @return 0填充块数据
      */
-    protected byte[] zeroPadding(byte[] bytes, int blockSize) {
-        // 如果是0填充的话则需要补全数据块的0
+    protected byte[] doPadding(byte[] bytes, int blockSize) {
+        // 如果是 0 填充的话则需要补全数据块的0
         if (!PaddingMode.ZERO_PADDING.equals(paddingMode)) {
             return bytes;
         }

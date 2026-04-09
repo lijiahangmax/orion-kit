@@ -38,12 +38,12 @@ import org.junit.Test;
  */
 public class MergeTests {
 
-    private Workbook w = Excels.openWorkbook("C:\\Users\\ljh15\\Desktop\\2.xlsx");
+    private Workbook w = Excels.openWorkbook("C:\\Users\\Administrator\\Desktop\\2.xlsx");
     private Sheet s1 = w.getSheetAt(0);
     private Sheet s2 = w.getSheetAt(1);
     private Sheet s3 = w.getSheetAt(2);
 
-    private Workbook w1 = Excels.openStreamingWorkbook("C:\\Users\\ljh15\\Desktop\\2.xlsx");
+    private Workbook w1 = Excels.openStreamingWorkbook("C:\\Users\\Administrator\\Desktop\\2.xlsx");
     private Sheet s11 = w1.getSheetAt(0);
     private Sheet s12 = w1.getSheetAt(1);
     private Sheet s13 = w1.getSheetAt(2);
@@ -57,7 +57,7 @@ public class MergeTests {
                 .skip()
                 .skipRows(2)
                 .merge(s3)
-                .write("C:\\Users\\ljh15\\Desktop\\3.xlsx")
+                .write("C:\\Users\\Administrator\\Desktop\\3.xlsx")
                 .close();
     }
 
@@ -69,7 +69,7 @@ public class MergeTests {
                 .merge(s2)
                 .skip()
                 .merge(s3)
-                .write("C:\\Users\\ljh15\\Desktop\\3.xlsx")
+                .write("C:\\Users\\Administrator\\Desktop\\3.xlsx")
                 .close();
     }
 
@@ -81,7 +81,7 @@ public class MergeTests {
                 .merge(s12)
                 .skip()
                 .merge(s13)
-                .write("C:\\Users\\ljh15\\Desktop\\4.xlsx")
+                .write("C:\\Users\\Administrator\\Desktop\\4.xlsx")
                 .close();
     }
 

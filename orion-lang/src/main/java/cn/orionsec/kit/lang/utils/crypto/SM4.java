@@ -48,7 +48,7 @@ public class SM4 {
     public static String encrypt(String s, String key) {
         return SymmetricBuilder.sm4()
                 .workingMode(WorkingMode.ECB)
-                .generatorSecretKey(key)
+                .secretKey(key)
                 .buildEcb()
                 .encryptAsString(s);
     }
@@ -80,7 +80,7 @@ public class SM4 {
     public static String encrypt(String s, String key, String iv) {
         return SymmetricBuilder.sm4()
                 .workingMode(WorkingMode.CBC)
-                .generatorSecretKey(key)
+                .secretKey(key)
                 .ivSpec(iv)
                 .buildParam()
                 .encryptAsString(s);
@@ -118,7 +118,7 @@ public class SM4 {
     public static String decrypt(String s, String key) {
         return SymmetricBuilder.sm4()
                 .workingMode(WorkingMode.ECB)
-                .generatorSecretKey(key)
+                .secretKey(key)
                 .buildEcb()
                 .decryptAsString(s);
     }
@@ -150,7 +150,7 @@ public class SM4 {
     public static String decrypt(String s, String key, String iv) {
         return SymmetricBuilder.sm4()
                 .workingMode(WorkingMode.CBC)
-                .generatorSecretKey(key)
+                .secretKey(key)
                 .ivSpec(iv)
                 .buildParam()
                 .decryptAsString(s);
