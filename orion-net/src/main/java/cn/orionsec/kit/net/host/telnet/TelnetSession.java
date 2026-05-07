@@ -221,10 +221,6 @@ public class TelnetSession implements SafeCloseable {
                 client.setConnectTimeout(timeout);
                 client.setDefaultTimeout(timeout);
             }
-            int soTimeout = readTimeout > 0 ? readTimeout : timeout;
-            if (soTimeout > 0) {
-                client.setSoTimeout(soTimeout);
-            }
             // 建立连接
             client.connect(host, port);
             // 获取输入输出流
@@ -250,6 +246,10 @@ public class TelnetSession implements SafeCloseable {
             throw Exceptions.connection("telnet session is not connected");
         }
         return new TelnetExecutor(client, inputStream, outputStream, prompt, charset, readTimeout);
+    }
+
+    public TelnetExecutor getShellExecutor() {
+        return this.getExecutor();
     }
 
     /**
@@ -333,6 +333,9 @@ public class TelnetSession implements SafeCloseable {
             }
             if (maxTimeout > 0 && System.currentTimeMillis() - startTime > maxTimeout) {
                 throw Exceptions.timeout("telnet read timeout");
+            }
+            if (builder.length() > Const.BUFFER_KB_32) {
+                throw Exceptions.runtime("telnet read buffer overflow");
             }
         }
         return builder.toString();

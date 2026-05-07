@@ -68,7 +68,10 @@ public class TelnetExecutor implements ITelnetExecutor {
 
     private String charset;
 
-    private int readTimeout;
+    /**
+     * 是否正在读取输出流
+     */
+    private volatile boolean isStreamReading;
 
     /**
      * @param client       client
@@ -89,7 +92,6 @@ public class TelnetExecutor implements ITelnetExecutor {
         this.outputStream = outputStream;
         this.prompt = prompt;
         this.charset = charset;
-        this.readTimeout = readTimeout;
     }
 
     /**
@@ -125,10 +127,12 @@ public class TelnetExecutor implements ITelnetExecutor {
     }
 
     /**
-     * @param readTimeout readTimeout
+     * 检查是否正在读取输出流
      */
-    public void readTimeout(int readTimeout) {
-        this.readTimeout = readTimeout;
+    private void checkStreamReading() {
+        if (isStreamReading) {
+            throw Exceptions.runtime("telnet output stream is reading");
+        }
     }
 
     /**
@@ -171,10 +175,21 @@ public class TelnetExecutor implements ITelnetExecutor {
         }
     }
 
+    public boolean isConnected() {
+        return client != null && client.isConnected();
+    }
+
+    public void connect() {
+        if (!this.isConnected()) {
+            throw Exceptions.connection("telnet session is not connected");
+        }
+    }
+
     /**
      * 监听输出流
      */
     protected void listenerOutput() {
+        this.isStreamReading = true;
         try {
             // 读取输出流
             streamHandler.accept(inputStream);
@@ -193,6 +208,9 @@ public class TelnetExecutor implements ITelnetExecutor {
     public void exec() {
         if (streamHandler == null) {
             throw Exceptions.runtime("telnet std output stream handler is null");
+        }
+        if (!this.isConnected()) {
+            throw Exceptions.runtime("telnet session is not connected");
         }
         if (inputStream == null || outputStream == null) {
             throw Exceptions.runtime("telnet stream is null");
@@ -304,10 +322,10 @@ public class TelnetExecutor implements ITelnetExecutor {
      * @throws IOException IOException
      */
     private String doReadUntil(String pattern, int timeout) throws IOException {
+        this.checkStreamReading();
         if (Strings.isBlank(pattern)) {
             return Const.EMPTY;
         }
-        int maxTimeout = timeout > 0 ? timeout : readTimeout;
         long startTime = System.currentTimeMillis();
         StringBuilder builder = new StringBuilder();
         int read;
@@ -317,8 +335,11 @@ public class TelnetExecutor implements ITelnetExecutor {
             if (endsWith(builder, pattern)) {
                 break;
             }
-            if (maxTimeout > 0 && System.currentTimeMillis() - startTime > maxTimeout) {
+            if (timeout > 0 && System.currentTimeMillis() - startTime > timeout) {
                 throw Exceptions.timeout("telnet read timeout");
+            }
+            if (builder.length() > Const.BUFFER_KB_32) {
+                throw Exceptions.runtime("telnet read buffer overflow");
             }
         }
         return builder.toString();
