@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mvn clean *)",
+      "Bash(mvn javadoc:aggregate -P '!skip-docs')",
+      "Bash(rm -rf \"C:\\\\Users\\\\Administrator\\\\.claude\\\\skills\\\\orion-kit-docs\\\\references\\\\lang\")",
+      "Bash(rm -f \"C:\\\\Users\\\\Administrator\\\\.claude\\\\skills\\\\orion-kit-docs\\\\references\\\\ext.md\")",
+      "Bash(rm -f \"C:\\\\Users\\\\Administrator\\\\.claude\\\\skills\\\\orion-kit-docs\\\\references\\\\http.md\")",
+      "Bash(rm -f \"C:\\\\Users\\\\Administrator\\\\.claude\\\\skills\\\\orion-kit-docs\\\\references\\\\net.md\")",
+      "Bash(rm -f \"C:\\\\Users\\\\Administrator\\\\.claude\\\\skills\\\\orion-kit-docs\\\\references\\\\office.md\")",
+      "Bash(rm -rf \"C:\\\\Users\\\\Administrator\\\\.claude\\\\skills\\\\orion-kit-docs\\\\references\\\\ext\")",
+      "Bash(rm -rf \"C:\\\\Users\\\\Administrator\\\\.claude\\\\skills\\\\orion-kit-docs\\\\references\\\\generator\")",
+      "Bash(rm -rf \"C:\\\\Users\\\\Administrator\\\\.claude\\\\skills\\\\orion-kit-docs\\\\references\\\\http\")",
+      "Bash(rm -rf \"C:\\\\Users\\\\Administrator\\\\.claude\\\\skills\\\\orion-kit-docs\\\\references\\\\net\")",
+      "Bash(rm -rf \"C:\\\\Users\\\\Administrator\\\\.claude\\\\skills\\\\orion-kit-docs\\\\references\\\\office\")",
+      "Bash(bash generate-skill.sh --skip-docs)",
+      "Bash(mvn javadoc:aggregate -pl orion-lang -q)",
+      "WebSearch",
+      "WebFetch(domain:search.maven.org)",
+      "Bash(mvn dependency:resolve -Dartifact=pw.krejci:markdown-doclet:0.6 -q)",
+      "Bash(python javadoc2md.py)",
+      "Bash(python -c ' *)",
+      "Bash(python javadoc2md.py --output-dir \"C:/Users/Administrator/.claude/skills/orion-kit-docs/references\")",
+      "Bash(mvn javadoc:javadoc -q)",
+      "Bash(mvn javadoc:javadoc)",
+      "Bash([ -d \"$m/target/reports/apidocs/cn\" ])",
+      "Bash(mkdir -p C:/Users/Administrator/.claude/skills/orion-kit-docs/references C:/Users/Administrator/.claude/skills/orion-kit-docs/scripts)",
+      "Bash(cp D:/workspace/idea-project/orion-kit/skill/SKILL.md C:/Users/Administrator/.claude/skills/orion-kit-docs/SKILL.md)",
+      "Bash(cp D:/workspace/idea-project/orion-kit/generate-skill.sh C:/Users/Administrator/.claude/skills/orion-kit-docs/scripts/generate-skill.sh)",
+      "Bash(cp D:/workspace/idea-project/orion-kit/generate-skill.bat C:/Users/Administrator/.claude/skills/orion-kit-docs/scripts/generate-skill.bat)",
+      "Bash(cp D:/workspace/idea-project/orion-kit/javadoc2md.py C:/Users/Administrator/.claude/skills/orion-kit-docs/scripts/javadoc2md.py)",
+      "Bash(mvn javadoc:javadoc -q -pl orion-lang,orion-ext,orion-office,orion-http,orion-net,orion-web,orion-redis,orion-spring,orion-generator)",
+      "Bash(python javadoc2md.py --output-dir \"D:/workspace/idea-project/orion-kit/skill/references\")",
+      "Bash(mvn javadoc:javadoc -q -pl orion-lang,orion-ext,orion-office,orion-http,orion-net,orion-web,orion-spring,orion-generator)"
+    ]
+  }
+}
