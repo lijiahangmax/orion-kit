@@ -31,7 +31,8 @@
       "Bash(cp D:/workspace/idea-project/orion-kit/javadoc2md.py C:/Users/Administrator/.claude/skills/orion-kit-docs/scripts/javadoc2md.py)",
       "Bash(mvn javadoc:javadoc -q -pl orion-lang,orion-ext,orion-office,orion-http,orion-net,orion-web,orion-redis,orion-spring,orion-generator)",
       "Bash(python javadoc2md.py --output-dir \"D:/workspace/idea-project/orion-kit/skill/references\")",
-      "Bash(mvn javadoc:javadoc -q -pl orion-lang,orion-ext,orion-office,orion-http,orion-net,orion-web,orion-spring,orion-generator)"
+      "Bash(mvn javadoc:javadoc -q -pl orion-lang,orion-ext,orion-office,orion-http,orion-net,orion-web,orion-spring,orion-generator)",
+      "Bash(python3 *)"
     ]
   }
 }

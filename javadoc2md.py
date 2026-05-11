@@ -82,8 +82,9 @@ def extract_class_info(html):
         return None
 
     # Description: first <div class="block"> after class declaration
+    # Use .*? before <hr> to handle interfaces with superinterface <dl> blocks
     desc_m = re.search(
-        r'<div class="description">\s*<ul class="blockList">\s*<li class="blockList">\s*<hr>.*?<div class="block">(.*?)</div>',
+        r'<div class="description">\s*<ul class="blockList">\s*<li class="blockList">.*?<hr>.*?<div class="block">(.*?)</div>',
         html, re.DOTALL
     )
     if desc_m:
@@ -95,7 +96,12 @@ def extract_class_info(html):
 def extract_fields(html):
     """Extract field summary."""
     fields = []
-    section = re.search(r'FIELD SUMMARY(.*?)METHOD SUMMARY', html, re.DOTALL | re.IGNORECASE)
+    # Match FIELD SUMMARY section: anchor -> table -> end of </table>
+    # Handles classes with no METHOD SUMMARY or METHOD DETAIL (e.g. constant interfaces)
+    section = re.search(
+        r'<a\s+name="field\.summary".*?<table[^>]*class="memberSummary"[^>]*>(.*?)</table>',
+        html, re.DOTALL | re.IGNORECASE
+    )
     if not section:
         return fields
 
