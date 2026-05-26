@@ -2,21 +2,28 @@
 REM ============================================================================
 REM orion-kit Claude Code Skill Generator
 REM
-REM Generates JavaDoc, converts to Markdown, deploys the orion-kit-docs skill
+REM creates JavaDoc, converts to Markdown, deploys the orion-kit skill
 REM to ~/.claude/skills/, and bundles CodeGraph DB.
 REM
 REM Usage:
-REM   generate-skill.cmd              -- build javadoc + convert + deploy + codegraph
-REM   generate-skill.cmd --skip-docs  -- convert + deploy + codegraph, skip javadoc build
+REM   create-skill.cmd              -- build javadoc + convert + deploy + codegraph
+REM   create-skill.cmd --skip-docs  -- convert + deploy + codegraph, skip javadoc build
 REM ============================================================================
 
 setlocal
 
 set SKILL_DIR=%~dp0
 set PROJECT_DIR=%SKILL_DIR%..
-set SKILL_NAME=orion-kit-docs
+set SKILL_NAME=orion-kit
 set SKILL_SRC=%SKILL_DIR%
-set SKILL_DST=%USERPROFILE%\.claude\skills\%SKILL_NAME%
+
+REM Check if mcc directory exists in parent of project root
+set PARENT_DIR=%PROJECT_DIR%\..
+if exist "%PARENT_DIR%\mcc" (
+    set SKILL_DST=%PARENT_DIR%\mcc\skills\%SKILL_NAME%
+) else (
+    set SKILL_DST=%USERPROFILE%\.claude\skills\%SKILL_NAME%
+)
 
 echo ============================================
 echo   orion-kit Claude Code Skill Generator
@@ -25,13 +32,13 @@ echo.
 
 set MODULES=orion-lang,orion-ext,orion-office,orion-http,orion-net,orion-web,orion-spring,orion-generator
 
-REM Step 1: Clean and Generate JavaDoc HTML (unless --skip-docs)
+REM Step 1: Clean and create JavaDoc HTML (unless --skip-docs)
 if "%1"=="--skip-docs" goto skip_docs
 echo [1/5] Clean and Generating JavaDoc HTML...
 cd /d "%PROJECT_DIR%"
 call mvn clean -q
 call mvn javadoc:javadoc -q -Dforce=true -pl %MODULES%
-echo   JavaDoc HTML generated.
+echo   JavaDoc HTML created.
 goto after_docs
 
 :skip_docs
@@ -74,8 +81,8 @@ echo [4/5] Deploying skill to %SKILL_DST%
 if not exist "%SKILL_DST%\scripts" mkdir "%SKILL_DST%\scripts"
 
 copy /Y "%SKILL_SRC%SKILL.md" "%SKILL_DST%\SKILL.md" >nul
-copy /Y "%SKILL_DIR%generate-skill.cmd" "%SKILL_DST%\scripts\generate-skill.cmd" >nul
-copy /Y "%SKILL_DIR%generate-skill.sh" "%SKILL_DST%\scripts\generate-skill.sh" >nul
+copy /Y "%SKILL_DIR%create-skill.cmd" "%SKILL_DST%\scripts\create-skill.cmd" >nul
+copy /Y "%SKILL_DIR%create-skill.sh" "%SKILL_DST%\scripts\create-skill.sh" >nul
 copy /Y "%SKILL_DIR%javadoc2md.py" "%SKILL_DST%\scripts\javadoc2md.py" >nul
 echo   Copied SKILL.md and scripts
 echo.

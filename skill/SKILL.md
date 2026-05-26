@@ -1,11 +1,7 @@
 ---
-name: "orion-kit-docs"
-description: "orion-kit Java utility library API reference. Invoke when the user asks about orion-kit, cn.orionsec.kit, or needs utility classes for strings, collections, crypto, IO, HTTP, SSH, SFTP, FTP, Excel, CSV, random data, dates, encoding, reflection, or threads."
+name: orion-kit
+description: orion-kit Java utility library API reference. Invoke when the user asks about orion-kit, cn.orionsec.kit, or needs utility classes.
 ---
-
-# orion-kit Docs
-
-Java utility library (JDK 8+). GroupId: `cn.orionsec.kit` | Version: `2.0.7`
 
 ## Decision Table
 
@@ -51,7 +47,7 @@ Pattern: `{function}s`. If JDK class exists, suffix with `1`:
 
 ### 1. CodeGraph (preferred)
 
-Use CodeGraph when available.`~/.claude/skills/orion-kit-docs/references/codegraph.db`
+Use CodeGraph when available.`~/.claude/skills/orion-kit/references/codegraph.db`
 
 ```
 codegraph_search(query="ClassName")           # find definition
@@ -64,12 +60,12 @@ codegraph_impact(symbol="method")             # what breaks if changed
 
 ### 2. Markdown Fallback
 
-Use when CodeGraph is unavailable. Path: `~/.claude/skills/orion-kit-docs/references/{module}/{package/path}/{ClassName}.md`
+Use when CodeGraph is unavailable. Path: `~/.claude/skills/orion-kit/references/{module}/{package/path}/{ClassName}.md`
 
 ```
-Glob pattern="**/{ClassName}.md" path="~/.claude/skills/orion-kit-docs/references"
-Grep pattern="methodName" path="~/.claude/skills/orion-kit-docs/references" glob="*.md"
-Read file="~/.claude/skills/orion-kit-docs/references/{module}/{pkg}/{Class}.md"
+Glob pattern="**/{ClassName}.md" path="~/.claude/skills/orion-kit/references"
+Grep pattern="methodName" path="~/.claude/skills/orion-kit/references" glob="*.md"
+Read file="~/.claude/skills/orion-kit/references/{module}/{pkg}/{Class}.md"
 ```
 
 ## Quick Answers

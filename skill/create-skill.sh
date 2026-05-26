@@ -2,21 +2,28 @@
 # ============================================================================
 # orion-kit Claude Code Skill Generator
 #
-# Generates JavaDoc, converts to Markdown, deploys the orion-kit-docs skill
+# creates JavaDoc, converts to Markdown, deploys the orion-kit skill
 # to ~/.claude/skills/, and bundles CodeGraph DB.
 #
 # Usage:
-#   ./generate-skill.sh              -- build javadoc + convert + deploy + codegraph
-#   ./generate-skill.sh --skip-docs  -- convert + deploy + codegraph, skip javadoc build
+#   ./create-skill.sh              -- build javadoc + convert + deploy + codegraph
+#   ./create-skill.sh --skip-docs  -- convert + deploy + codegraph, skip javadoc build
 # ============================================================================
 
 set -e
 
 SKILL_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(dirname "$SKILL_DIR")"
-SKILL_NAME="orion-kit-docs"
+SKILL_NAME="orion-kit"
 SKILL_SRC="$SKILL_DIR"
-SKILL_DST="$HOME/.claude/skills/$SKILL_NAME"
+
+# Check if mcc directory exists in parent of project root
+PARENT_DIR="$(dirname "$PROJECT_DIR")"
+if [ -d "$PARENT_DIR/mcc" ]; then
+    SKILL_DST="$PARENT_DIR/mcc/skills/$SKILL_NAME"
+else
+    SKILL_DST="$HOME/.claude/skills/$SKILL_NAME"
+fi
 
 echo "============================================"
 echo "  orion-kit Claude Code Skill Generator"
@@ -25,7 +32,7 @@ echo
 
 MODULES="orion-lang,orion-ext,orion-office,orion-http,orion-net,orion-web,orion-spring,orion-generator"
 
-# Step 1: Clean and Generate JavaDoc HTML (unless --skip-docs)
+# Step 1: Clean and create JavaDoc HTML (unless --skip-docs)
 if [ "$1" = "--skip-docs" ]; then
     echo "[1/5] Skipping JavaDoc generation (--skip-docs)"
 else
@@ -33,7 +40,7 @@ else
     cd "$PROJECT_DIR"
     mvn clean -q
     mvn javadoc:javadoc -q -Dforce=true -pl "$MODULES"
-    echo "  JavaDoc HTML generated."
+    echo "  JavaDoc HTML created."
 fi
 echo
 
@@ -70,8 +77,8 @@ echo "[4/5] Deploying skill to $SKILL_DST"
 mkdir -p "$SKILL_DST/scripts"
 
 cp -f "$SKILL_SRC/SKILL.md" "$SKILL_DST/SKILL.md"
-cp -f "$SKILL_DIR/generate-skill.bat" "$SKILL_DST/scripts/generate-skill.bat"
-cp -f "$SKILL_DIR/generate-skill.sh" "$SKILL_DST/scripts/generate-skill.sh"
+cp -f "$SKILL_DIR/create-skill.bat" "$SKILL_DST/scripts/create-skill.bat"
+cp -f "$SKILL_DIR/create-skill.sh" "$SKILL_DST/scripts/create-skill.sh"
 cp -f "$SKILL_DIR/javadoc2md.py" "$SKILL_DST/scripts/javadoc2md.py"
 echo "  Copied SKILL.md and scripts"
 echo

@@ -8,7 +8,7 @@ One .md file per class, organized by module and package.
 
 Usage:
     python javadoc2md.py
-    python javadoc2md.py --output-dir ~/.claude/skills/orion-kit-docs/references
+    python javadoc2md.py --output-dir ~/.claude/skills/orion-kit/references
 """
 
 import os
@@ -402,7 +402,7 @@ def main():
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
     project_dir = args.javadoc_dir or script_dir
-    default_output = os.path.join(os.path.expanduser('~'), '.claude', 'skills', 'orion-kit-docs', 'references')
+    default_output = os.path.join(os.path.expanduser('~'), '.claude', 'skills', 'orion-kit', 'references')
     output_base = args.output_dir or default_output
 
     print('============================================')
