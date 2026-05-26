@@ -26,11 +26,9 @@ hs_err_pid*
 .classpath
 .project
 .settings
-.idea
+.idea/
 .logs
 .jython_cache
-target
-
-# [core]
-# editor = vim
-# excludesfile = C:/Users/Li/Java.gitignore
+target/
+.codegraph/
+settings.local.json
