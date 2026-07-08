@@ -37,6 +37,7 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * List 工具类
@@ -224,18 +225,6 @@ public class Lists extends Collections {
         return list;
     }
 
-    public static <E, V> List<E> map(List<V> list, Function<V, E> mapper) {
-        Assert.notNull(mapper, "convert function is null");
-        List<E> result = new ArrayList<>();
-        if (isEmpty(list)) {
-            return result;
-        }
-        for (V v : list) {
-            result.add(mapper.apply(v));
-        }
-        return result;
-    }
-
     public static <E> List<E> as(Iterator<E> iterator) {
         List<E> list = new ArrayList<>();
         if (iterator != null) {
@@ -254,6 +243,27 @@ public class Lists extends Collections {
             }
         }
         return list;
+    }
+
+    public static <E, V> List<E> map(List<V> list, Function<V, E> mapper) {
+        Assert.notNull(mapper, "convert function is null");
+        List<E> result = new ArrayList<>();
+        if (isEmpty(list)) {
+            return result;
+        }
+        for (V v : list) {
+            result.add(mapper.apply(v));
+        }
+        return result;
+    }
+
+    public static <E, V> List<E> distinctMap(List<V> list, Function<V, E> mapper) {
+        Assert.notNull(mapper, "convert function is null");
+        return list.stream()
+                .map(mapper)
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     /**
