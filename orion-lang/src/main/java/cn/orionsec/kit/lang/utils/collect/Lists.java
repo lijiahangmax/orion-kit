@@ -36,6 +36,7 @@ import cn.orionsec.kit.lang.utils.random.Randoms;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -452,19 +453,24 @@ public class Lists extends Collections {
         return new ArrayList<>(Collections.distinct(c, keyGetter));
     }
 
-    public static <E, V> List<E> distinctMap(List<V> list, Function<V, E> mapper) {
-        Assert.notNull(mapper, "convert function is null");
+    public static <E, V> List<E> distinctMap(Collection<V> list, Function<V, E> mapper) {
+        return distinctMap(list, mapper, Objects::nonNull);
+    }
+
+    public static <E, V> List<E> distinctMap(Collection<V> list, Function<V, E> mapper, Predicate<E> predicate) {
+        Assert.notNull(mapper, "mapper function is null");
+        Assert.notNull(predicate, "predicate function is null");
         if (isEmpty(list)) {
             return new ArrayList<>();
         }
         return list.stream()
                 .map(mapper)
-                .filter(Objects::nonNull)
+                .filter(predicate)
                 .distinct()
                 .collect(Collectors.toList());
     }
 
-    public static <E> List<E> distinctNull(List<E> list) {
+    public static <E> List<E> distinctNull(Collection<E> list) {
         if (isEmpty(list)) {
             return new ArrayList<>();
         }
