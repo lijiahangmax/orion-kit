@@ -257,15 +257,6 @@ public class Lists extends Collections {
         return result;
     }
 
-    public static <E, V> List<E> distinctMap(List<V> list, Function<V, E> mapper) {
-        Assert.notNull(mapper, "convert function is null");
-        return list.stream()
-                .map(mapper)
-                .filter(Objects::nonNull)
-                .distinct()
-                .collect(Collectors.toList());
-    }
-
     /**
      * 保留集合的前几位
      *
@@ -449,7 +440,6 @@ public class Lists extends Collections {
         return new PartitionList<>(list, size);
     }
 
-
     /**
      * 集合去重 -> list
      *
@@ -460,6 +450,28 @@ public class Lists extends Collections {
      */
     public static <E> List<E> distinct(Collection<E> c, Function<E, ?> keyGetter) {
         return new ArrayList<>(Collections.distinct(c, keyGetter));
+    }
+
+    public static <E, V> List<E> distinctMap(List<V> list, Function<V, E> mapper) {
+        Assert.notNull(mapper, "convert function is null");
+        if (isEmpty(list)) {
+            return new ArrayList<>();
+        }
+        return list.stream()
+                .map(mapper)
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    public static <E> List<E> distinctNull(List<E> list) {
+        if (isEmpty(list)) {
+            return new ArrayList<>();
+        }
+        return list.stream()
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     // -------------------- get set --------------------
