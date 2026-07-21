@@ -36,7 +36,7 @@
         <spring.version>5.3.39</spring.version>
         <cglib.version>3.3.0</cglib.version>
         <jedis.version>2.1.0</jedis.version>
-        <fastjson.version>2.0.42</fastjson.version>
+        <fastjson.version>2.0.53</fastjson.version>
         <jackson.version>2.10.2</jackson.version>
         <google.zxing.version>3.5.2</google.zxing.version>
         <thumbnailator.version>0.4.8</thumbnailator.version>
