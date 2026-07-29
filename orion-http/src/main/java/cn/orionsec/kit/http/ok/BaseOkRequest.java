@@ -128,13 +128,13 @@ public abstract class BaseOkRequest extends BaseHttpRequest {
      */
     protected void setBody(Request.Builder requestBuilder) {
         if (body != null) {
-            requestBuilder.method(method, RequestBody.create(MediaType.parse(contentType), body, bodyOffset, bodyLen));
+            requestBuilder.method(method, RequestBody.create(body, MediaType.parse(contentType), bodyOffset, bodyLen));
         } else if (formParts != null) {
             FormBody.Builder formBuilder = new FormBody.Builder(Charset.forName(charset));
             formParts.forEach(formBuilder::addEncoded);
             requestBuilder.method(method, formBuilder.build());
         } else {
-            requestBuilder.method(method, RequestBody.create(MediaType.parse(contentType), Strings.EMPTY));
+            requestBuilder.method(method, RequestBody.create(Strings.EMPTY, MediaType.parse(contentType)));
         }
     }
 
@@ -156,14 +156,14 @@ public abstract class BaseOkRequest extends BaseHttpRequest {
             RequestBody body = null;
             if (part.getIn() != null) {
                 try {
-                    body = RequestBody.create(MediaType.parse(part.getContentType()), Streams.toByteArray(part.getIn()));
+                    body = RequestBody.create(Streams.toByteArray(part.getIn()), MediaType.parse(part.getContentType()));
                 } catch (IOException e) {
                     throw Exceptions.ioRuntime("set upload file error", e);
                 }
             } else if (part.getFile() != null) {
-                body = RequestBody.create(MediaType.parse(part.getContentType()), part.getFile());
+                body = RequestBody.create(part.getFile(), MediaType.parse(part.getContentType()));
             } else if (part.getBytes() != null) {
-                body = RequestBody.create(MediaType.parse(part.getContentType()), part.getBytes(), part.getOff(), part.getLen());
+                body = RequestBody.create(part.getBytes(), MediaType.parse(part.getContentType()), part.getOff(), part.getLen());
             }
             if (body != null) {
                 builder.addFormDataPart(part.getParam(), part.getFileName(), body);

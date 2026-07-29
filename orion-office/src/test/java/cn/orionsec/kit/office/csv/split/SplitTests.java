@@ -28,7 +28,11 @@ package cn.orionsec.kit.office.csv.split;
 
 import cn.orionsec.kit.office.csv.core.CsvReader;
 import cn.orionsec.kit.office.csv.reader.CsvArrayReader;
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
+
+import java.io.File;
 
 /**
  * @author Jiahang Li
@@ -37,9 +41,17 @@ import org.junit.Test;
  */
 public class SplitTests {
 
+    private static final File FILE = new File("C:\\Users\\Administrator\\Desktop\\1.csv");
+
+    @Before
+    public void setUp() {
+        // 文件不存在则跳过测试
+        Assume.assumeTrue(FILE.exists());
+    }
+
     @Test
     public void rowSplitTests() {
-        CsvArrayReader reader = new CsvArrayReader(new CsvReader("C:\\Users\\Administrator\\Desktop\\1.csv"));
+        CsvArrayReader reader = new CsvArrayReader(new CsvReader(FILE));
         reader.getOption().setSkipEmptyRows(false);
         CsvRowSplit split = new CsvRowSplit(reader, 5).skip(1);
         split.targetPath("C:\\Users\\Administrator\\Desktop\\split1", "sp");
@@ -48,7 +60,7 @@ public class SplitTests {
 
     @Test
     public void columnSplitTests() {
-        CsvArrayReader reader = new CsvArrayReader(new CsvReader("C:\\Users\\Administrator\\Desktop\\1.csv"));
+        CsvArrayReader reader = new CsvArrayReader(new CsvReader(FILE));
         reader.getOption().setSkipEmptyRows(false);
         new CsvColumnSplit(reader, 2, 3, 1).split("C:\\Users\\Administrator\\Desktop\\2.csv");
     }

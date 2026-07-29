@@ -28,6 +28,7 @@ package cn.orionsec.kit.test.vcs;
 
 import cn.orionsec.kit.ext.vcs.git.Gits;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -37,6 +38,7 @@ import java.io.File;
  * @version 1.0.0
  * @since 2021/7/2 15:44
  */
+@Ignore("依赖本地 A 盘 git 仓库与网络 clone, 属于外部资源测试")
 public class GitTests {
 
     private Gits gits;

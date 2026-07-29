@@ -34,8 +34,11 @@ import cn.orionsec.kit.office.excel.option.ImportFieldOption;
 import cn.orionsec.kit.office.excel.type.ExcelReadType;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
@@ -46,9 +49,19 @@ import java.util.ArrayList;
  */
 public class ImportShopTest {
 
-    private Workbook workbook = Excels.openWorkbook("C:\\Users\\Administrator\\Desktop\\shop.xlsx");
+    private static final File FILE = new File("C:\\Users\\Administrator\\Desktop\\shop.xlsx");
 
-    private Sheet sheet = workbook.getSheetAt(0);
+    private Workbook workbook;
+
+    private Sheet sheet;
+
+    @Before
+    public void setUp() {
+        // 文件不存在则跳过测试
+        Assume.assumeTrue(FILE.exists());
+        this.workbook = Excels.openWorkbook(FILE);
+        this.sheet = workbook.getSheetAt(0);
+    }
 
     @Test
     public void testBean1() {

@@ -29,8 +29,11 @@ package cn.orionsec.kit.office.csv.reader;
 import cn.orionsec.kit.lang.define.Console;
 import cn.orionsec.kit.lang.define.collect.MutableMap;
 import cn.orionsec.kit.office.csv.core.CsvReader;
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.Arrays;
 
 /**
@@ -40,10 +43,25 @@ import java.util.Arrays;
  */
 public class ReadTests {
 
-    private static CsvReader array = new CsvReader("C:\\Users\\Administrator\\Desktop\\csv\\array.csv");
-    private static CsvReader map = new CsvReader("C:\\Users\\Administrator\\Desktop\\csv\\map.csv");
-    private static CsvReader bean = new CsvReader("C:\\Users\\Administrator\\Desktop\\csv\\bean.csv");
-    private static CsvReader lambda = new CsvReader("C:\\Users\\Administrator\\Desktop\\csv\\lambda.csv");
+    private static final File ARRAY_FILE = new File("C:\\Users\\Administrator\\Desktop\\csv\\array.csv");
+    private static final File MAP_FILE = new File("C:\\Users\\Administrator\\Desktop\\csv\\map.csv");
+    private static final File BEAN_FILE = new File("C:\\Users\\Administrator\\Desktop\\csv\\bean.csv");
+    private static final File LAMBDA_FILE = new File("C:\\Users\\Administrator\\Desktop\\csv\\lambda.csv");
+
+    private CsvReader array;
+    private CsvReader map;
+    private CsvReader bean;
+    private CsvReader lambda;
+
+    @Before
+    public void setUp() {
+        // 文件不存在则跳过测试
+        Assume.assumeTrue(ARRAY_FILE.exists() && MAP_FILE.exists() && BEAN_FILE.exists() && LAMBDA_FILE.exists());
+        this.array = new CsvReader(ARRAY_FILE);
+        this.map = new CsvReader(MAP_FILE);
+        this.bean = new CsvReader(BEAN_FILE);
+        this.lambda = new CsvReader(LAMBDA_FILE);
+    }
 
     @Test
     public void rawTests() {

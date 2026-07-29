@@ -33,6 +33,7 @@ import cn.orionsec.kit.http.support.HttpCookie;
 import cn.orionsec.kit.http.support.HttpMethod;
 import cn.orionsec.kit.http.support.HttpUploadPart;
 import cn.orionsec.kit.http.useragent.UserAgentGenerators;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -42,6 +43,7 @@ import java.io.IOException;
  * @version 1.0.0
  * @since 2020/11/4 18:42
  */
+@Ignore("需要本地 localhost:8080 测试服务器 无法在单元测试环境请求")
 public class ApacheTests {
 
     private static final String REQ = "http://localhost:8080/http/req";

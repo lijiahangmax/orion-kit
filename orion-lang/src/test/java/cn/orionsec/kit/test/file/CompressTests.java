@@ -47,13 +47,16 @@ import cn.orionsec.kit.lang.utils.io.compress.z7.Z7Compressor;
 import cn.orionsec.kit.lang.utils.io.compress.z7.Z7Decompressor;
 import cn.orionsec.kit.lang.utils.io.compress.zip.ZipCompressor;
 import cn.orionsec.kit.lang.utils.io.compress.zip.ZipDecompressor;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 /**
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/9/27 19:19
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CompressTests {
 
     private String fileName = "3";
@@ -254,6 +257,7 @@ public class CompressTests {
 
     @Test
     public void unzip() {
+        Compresses.zip(dir, dir + ".zip");
         Compresses.unzip(dir + ".zip", target);
     }
 

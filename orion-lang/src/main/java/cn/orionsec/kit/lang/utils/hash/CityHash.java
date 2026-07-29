@@ -537,7 +537,7 @@ public class CityHash {
 
     private static class OrderIter {
 
-        private static final boolean IS_LITTLE_ENDIAN = "little".equals(System.getProperty("sun.cpu.endian"));
+        private static final boolean IS_LITTLE_ENDIAN = java.nio.ByteOrder.nativeOrder() == java.nio.ByteOrder.LITTLE_ENDIAN;
 
         private final int size;
         private int index;

@@ -39,10 +39,11 @@ import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.lang.utils.net.IPs;
 import com.alibaba.fastjson2.JSON;
 
-import javax.servlet.ServletInputStream;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;

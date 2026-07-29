@@ -33,7 +33,7 @@ import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.office.excel.option.ImportFieldOption;
 import cn.orionsec.kit.office.excel.picture.PictureParser;
 import cn.orionsec.kit.office.excel.type.ExcelReadType;
-import com.monitorjbl.xlsx.impl.StreamingSheet;
+import com.github.pjfanning.xlsx.impl.StreamingSheet;
 import org.apache.poi.ss.usermodel.PictureData;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;

@@ -28,7 +28,11 @@ package cn.orionsec.kit.office.csv.adapter;
 
 import cn.orionsec.kit.office.csv.CsvExt;
 import cn.orionsec.kit.office.csv.convert.CsvConvert;
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
+
+import java.io.File;
 
 /**
  * @author Jiahang Li
@@ -37,9 +41,19 @@ import org.junit.Test;
  */
 public class AdapterTests {
 
+    private static final File FILE = new File("C:\\Users\\Administrator\\Desktop\\zb.csv");
+
+    private CsvExt csvExt;
+
+    @Before
+    public void setUp() {
+        // 文件不存在则跳过测试
+        Assume.assumeTrue(FILE.exists());
+        this.csvExt = new CsvExt(FILE);
+    }
+
     @Test
     public void toXlsx() {
-        CsvExt csvExt = new CsvExt("C:\\Users\\Administrator\\Desktop\\zb.csv");
         CsvConvert.excelAdapter(csvExt).forNew()
                 .write("C:\\Users\\Administrator\\Desktop\\zb1.xlsx")
                 .close();

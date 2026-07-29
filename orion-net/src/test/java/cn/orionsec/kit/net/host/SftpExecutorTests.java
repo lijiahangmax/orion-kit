@@ -40,6 +40,7 @@ import cn.orionsec.kit.net.specification.transfer.IFileUploader;
 import com.alibaba.fastjson2.JSON;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -51,6 +52,7 @@ import java.util.regex.Pattern;
  * @version 1.0.0
  * @since 2020/10/7 20:36
  */
+@Ignore("需要真实 SSH 服务器 无法在单元测试环境连接")
 public class SftpExecutorTests {
 
     private SessionHolder h;

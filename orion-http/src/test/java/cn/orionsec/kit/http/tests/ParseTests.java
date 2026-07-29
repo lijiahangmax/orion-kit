@@ -33,6 +33,7 @@ import cn.orionsec.kit.http.support.HttpCookie;
 import cn.orionsec.kit.http.support.HttpMethod;
 import cn.orionsec.kit.http.useragent.UserAgentGenerators;
 import org.jsoup.nodes.Document;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -40,6 +41,7 @@ import org.junit.Test;
  * @version 1.0.0
  * @since 2021/3/8 17:37
  */
+@Ignore("需要本地 localhost:8080 测试服务器 无法在单元测试环境请求")
 public class ParseTests {
 
     private static final String REQ = "http://localhost:8080/http/req";

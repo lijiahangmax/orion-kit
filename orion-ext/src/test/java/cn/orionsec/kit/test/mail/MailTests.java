@@ -31,6 +31,7 @@ import cn.orionsec.kit.ext.mail.MailMessage;
 import cn.orionsec.kit.ext.mail.MailSender;
 import cn.orionsec.kit.ext.mail.MailServerType;
 import cn.orionsec.kit.lang.utils.io.Files1;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -40,6 +41,7 @@ import java.io.File;
  * @version 1.0.0
  * @since 2021/1/28 9:56
  */
+@Ignore("需要真实邮箱账号密码与网络, 属于外部资源测试")
 public class MailTests {
 
     @Test

@@ -134,7 +134,8 @@ public class ProcessAwaitTests {
 
     @Test
     public void testResult3() throws UnsupportedEncodingException {
-        System.out.println(new String(Processes.getOutputResultWithDir(true, "D:\\JDK1.8\\bin", "jps", "-lv"), Const.GBK));
+        String jdkBin = new java.io.File(System.getProperty("java.home"), "bin").getAbsolutePath();
+        System.out.println(new String(Processes.getOutputResultWithDir(true, jdkBin, "jps", "-lv"), Const.GBK));
     }
 
     @Test
@@ -144,7 +145,8 @@ public class ProcessAwaitTests {
 
     @Test
     public void testResult5() throws UnsupportedEncodingException {
-        System.out.println(new String(Processes.getOutputResultWithDir(true, "A:\\Work\\jdk1.8\\bin1111\\", "jps", "-lv"), Const.GBK));
+        String jdkBin = new java.io.File(System.getProperty("java.home"), "bin").getAbsolutePath();
+        System.out.println(new String(Processes.getOutputResultWithDir(true, jdkBin, "jps", "-lv"), Const.GBK));
     }
 
 }

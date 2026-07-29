@@ -54,6 +54,35 @@ public interface ITelnetExecutor extends IHostExecutor {
     void charset(String charset);
 
     /**
+     * 校验连接
+     * <p>
+     * telnet 没有 channel 概念 连接由 {@link TelnetSession} 建立并持有
+     * 此方法仅校验底层连接是否可用 未连接则抛出异常
+     */
+    void connect();
+
+    /**
+     * 校验连接
+     * <p>
+     * telnet 连接由 {@link TelnetSession} 建立并持有 timeout 不参与建连
+     *
+     * @param timeout timeout
+     */
+    void connect(int timeout);
+
+    /**
+     * 是否已连接
+     *
+     * @return 是否已连接
+     */
+    boolean isConnected();
+
+    /**
+     * 断开连接
+     */
+    void disconnect();
+
+    /**
      * 读取直到命中指定内容
      *
      * @param pattern pattern
@@ -79,25 +108,6 @@ public interface ITelnetExecutor extends IHostExecutor {
      * @throws IOException IOException
      */
     String readUntilPrompt() throws IOException;
-
-    /**
-     * 执行命令
-     *
-     * @param command command
-     * @return 输出内容
-     * @throws IOException IOException
-     */
-    String execCommand(String command) throws IOException;
-
-    /**
-     * 执行命令
-     *
-     * @param command command
-     * @param timeout timeout
-     * @return 输出内容
-     * @throws IOException IOException
-     */
-    String execCommand(String command, int timeout) throws IOException;
 
     /**
      * @return 提示符

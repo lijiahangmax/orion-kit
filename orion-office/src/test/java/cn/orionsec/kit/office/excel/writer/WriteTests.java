@@ -44,9 +44,11 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.junit.After;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -60,6 +62,8 @@ import java.util.stream.IntStream;
  * @since 2021/1/13 16:02
  */
 public class WriteTests {
+
+    private static final File TARGET_DIR = new File("C:\\Users\\lijiahang\\Desktop");
 
     private final ExcelWriterBuilder build = new ExcelWriterBuilder();
 
@@ -98,6 +102,8 @@ public class WriteTests {
 
     @Before
     public void setProperties() {
+        // 目录不存在则跳过测试
+        Assume.assumeTrue(TARGET_DIR.exists());
         PropertiesOption option = new PropertiesOption();
         option.setAuthor(Const.ORION_AUTHOR);
         option.setDescription("writeTests");
@@ -304,6 +310,10 @@ public class WriteTests {
 
     @After
     public void write() {
+        // 目录不存在时跳过写入 (assume 失败后 @After 仍会执行)
+        if (!TARGET_DIR.exists()) {
+            return;
+        }
         build.write("C:\\Users\\lijiahang\\Desktop\\2.xlsx");
     }
 

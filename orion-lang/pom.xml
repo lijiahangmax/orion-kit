@@ -4,7 +4,7 @@
     <parent>
         <groupId>cn.orionsec.kit</groupId>
         <artifactId>orion-kit</artifactId>
-        <version>2.0.7</version>
+        <version>3.0.0</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -148,6 +148,13 @@
             <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- nashorn js 脚本引擎 (JDK 15+ 移除了内置 Nashorn, 使用独立版本) -->
+        <dependency>
+            <groupId>org.openjdk.nashorn</groupId>
+            <artifactId>nashorn-core</artifactId>
+            <version>${nashorn.version}</version>
         </dependency>
 
         <!-- python script -->

@@ -29,7 +29,11 @@ package cn.orionsec.kit.office.excel.split;
 import cn.orionsec.kit.office.excel.Excels;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
+
+import java.io.File;
 
 /**
  * @author Jiahang Li
@@ -38,10 +42,24 @@ import org.junit.Test;
  */
 public class ColumnSplitTests {
 
-    private final Workbook w1 = Excels.openWorkbook("C:\\Users\\lijiahang\\Desktop\\2.xlsx");
-    private final Workbook w2 = Excels.openStreamingWorkbook("C:\\Users\\lijiahang\\Desktop\\2.xlsx");
-    private final Sheet sheet1 = w1.getSheetAt(2);
-    private final Sheet sheet2 = w2.getSheetAt(2);
+    private static final File FILE = new File("C:\\Users\\lijiahang\\Desktop\\2.xlsx");
+
+    private Workbook w1;
+    private Workbook w2;
+    private Sheet sheet1;
+    private Sheet sheet2;
+
+    @Before
+    public void setUp() {
+        // 文件不存在则跳过测试
+        Assume.assumeTrue(FILE.exists());
+        this.w1 = Excels.openWorkbook(FILE);
+        // sheet 数量不足则跳过测试
+        Assume.assumeTrue(w1.getNumberOfSheets() >= 3);
+        this.w2 = Excels.openStreamingWorkbook(FILE);
+        this.sheet1 = w1.getSheetAt(2);
+        this.sheet2 = w2.getSheetAt(2);
+    }
 
     @Test
     public void single1() {

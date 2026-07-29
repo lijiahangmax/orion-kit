@@ -30,7 +30,11 @@ import cn.orionsec.kit.office.csv.writer.CsvArrayWriter;
 import cn.orionsec.kit.office.excel.Excels;
 import cn.orionsec.kit.office.excel.convert.ExcelConvert;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
+
+import java.io.File;
 
 /**
  * @author Jiahang Li
@@ -39,9 +43,19 @@ import org.junit.Test;
  */
 public class AdapterTests {
 
+    private static final File FILE = new File("C:\\Users\\Administrator\\Desktop\\zb.xlsx");
+
+    private Sheet sheet;
+
+    @Before
+    public void setUp() {
+        // 文件不存在则跳过测试
+        Assume.assumeTrue(FILE.exists());
+        this.sheet = Excels.openWorkbook(FILE).getSheetAt(0);
+    }
+
     @Test
     public void toCsv() {
-        Sheet sheet = Excels.openWorkbook("C:\\Users\\Administrator\\Desktop\\zb.xlsx").getSheetAt(0);
         CsvArrayWriter writer = new CsvArrayWriter("C:\\Users\\Administrator\\Desktop\\zb.csv");
         ExcelConvert.csvAdapter(sheet, writer).forNew().close();
     }

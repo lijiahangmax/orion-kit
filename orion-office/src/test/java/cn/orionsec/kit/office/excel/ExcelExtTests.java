@@ -28,7 +28,10 @@ package cn.orionsec.kit.office.excel;
 
 import cn.orionsec.kit.lang.define.Console;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.junit.Assume;
 import org.junit.Test;
+
+import java.io.File;
 
 /**
  * @author Jiahang Li
@@ -37,8 +40,19 @@ import org.junit.Test;
  */
 public class ExcelExtTests {
 
+    /**
+     * 文件不存在则跳过测试
+     */
+    private static void assumeExists(String... files) {
+        for (String file : files) {
+            Assume.assumeTrue(new File(file).exists());
+        }
+    }
+
     @Test
     public void openHss() {
+        assumeExists("C:\\Users\\Administrator\\Desktop\\data\\user.xls",
+                "C:\\Users\\Administrator\\Desktop\\data\\user_password.xls");
         System.out.println(Excels.openWorkbook("C:\\Users\\Administrator\\Desktop\\data\\user.xls", null));
         System.out.println(Excels.openWorkbook("C:\\Users\\Administrator\\Desktop\\data\\user_password.xls", "123"));
         System.out.println(Excels.openWorkbook("C:\\Users\\Administrator\\Desktop\\data\\user_password.xls", "1234"));
@@ -46,6 +60,8 @@ public class ExcelExtTests {
 
     @Test
     public void openXss() {
+        assumeExists("C:\\Users\\Administrator\\Desktop\\data\\user.xlsx",
+                "C:\\Users\\Administrator\\Desktop\\data\\user_password.xlsx");
         System.out.println(Excels.openWorkbook("C:\\Users\\Administrator\\Desktop\\data\\user.xlsx", null));
         System.out.println(Excels.openWorkbook("C:\\Users\\Administrator\\Desktop\\data\\user_password.xlsx", "123"));
         System.out.println(Excels.openWorkbook("C:\\Users\\Administrator\\Desktop\\data\\user_password.xlsx", "1234"));
@@ -53,6 +69,8 @@ public class ExcelExtTests {
 
     @Test
     public void openStream() {
+        assumeExists("C:\\Users\\Administrator\\Desktop\\data\\user.xlsx",
+                "C:\\Users\\Administrator\\Desktop\\data\\user_password.xlsx");
         System.out.println(Excels.openStreamingWorkbook("C:\\Users\\Administrator\\Desktop\\data\\user.xlsx", null));
         System.out.println(Excels.openStreamingWorkbook("C:\\Users\\Administrator\\Desktop\\data\\user_password.xlsx", "123"));
         System.out.println(Excels.openStreamingWorkbook("C:\\Users\\Administrator\\Desktop\\data\\user_password.xlsx", "1234"));
@@ -60,18 +78,23 @@ public class ExcelExtTests {
 
     @Test
     public void open() {
+        assumeExists("C:\\Users\\Administrator\\Desktop\\1.xlsx",
+                "C:\\Users\\Administrator\\Desktop\\1.xls");
         System.out.println(Excels.openWorkbook("C:\\Users\\Administrator\\Desktop\\1.xlsx", null).getClass());
         System.out.println(Excels.openWorkbook("C:\\Users\\Administrator\\Desktop\\1.xls", null).getClass());
     }
 
     @Test
     public void openExt() {
+        assumeExists("C:\\Users\\Administrator\\Desktop\\data\\user.xlsx",
+                "C:\\Users\\Administrator\\Desktop\\data\\user_password.xlsx");
         System.out.println(new ExcelExt("C:\\Users\\Administrator\\Desktop\\data\\user.xlsx"));
         System.out.println(new ExcelExt("C:\\Users\\Administrator\\Desktop\\data\\user_password.xlsx"));
     }
 
     @Test
     public void openExtReader() {
+        assumeExists("C:\\Users\\Administrator\\Desktop\\data\\user.xlsx");
         ExcelExt x = new ExcelExt("C:\\Users\\Administrator\\Desktop\\data\\user.xlsx", true);
         x.arrayReader(0, Console::trace).read().close();
     }

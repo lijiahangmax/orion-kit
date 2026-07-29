@@ -26,7 +26,12 @@
  */
 package cn.orionsec.kit.net.host.telnet;
 
+import cn.orionsec.kit.lang.utils.Assert;
+import cn.orionsec.kit.lang.utils.io.Streams;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * Telnet 执行器工具
@@ -41,11 +46,13 @@ public class TelnetExecutors {
     }
 
     /**
+     * 执行命令获取命令输出
+     *
      * @param host     host
-     * @param username username
-     * @param password password
-     * @param command  command
-     * @return result
+     * @param username 用户名
+     * @param password 密码
+     * @param command  命令
+     * @return 命令输出
      * @throws IOException IOException
      */
     public static String getCommandOutputResult(String host, String username, String password, String command) throws IOException {
@@ -53,12 +60,14 @@ public class TelnetExecutors {
     }
 
     /**
+     * 执行命令获取命令输出
+     *
      * @param host     host
      * @param port     port
-     * @param username username
-     * @param password password
-     * @param command  command
-     * @return result
+     * @param username 用户名
+     * @param password 密码
+     * @param command  命令
+     * @return 命令输出
      * @throws IOException IOException
      */
     public static String getCommandOutputResult(String host, int port, String username, String password, String command) throws IOException {
@@ -67,10 +76,52 @@ public class TelnetExecutors {
                 .username(username)
                 .password(password)
                 .connect();
-             TelnetExecutor executor = session.getExecutor()) {
-            // 执行命令
-            return executor.execCommand(command);
+             TelnetCommandExecutor executor = session.getCommandExecutor(command)) {
+            return getCommandOutputResultString(executor);
         }
+    }
+
+    /**
+     * 执行命令获取命令输出
+     *
+     * @param executor executor
+     * @return result
+     * @throws IOException IOException
+     */
+    public static String getCommandOutputResultString(ITelnetCommandExecutor executor) throws IOException {
+        return new String(getCommandOutputResult(executor));
+    }
+
+    /**
+     * 执行命令获取命令输出
+     *
+     * @param executor executor
+     * @return result
+     * @throws IOException IOException
+     */
+    public static byte[] getCommandOutputResult(ITelnetCommandExecutor executor) throws IOException {
+        Assert.notNull(executor, "telnet command executor is null");
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            // 执行命令
+            execCommand(executor, out);
+            return out.toByteArray();
+        } finally {
+            Streams.close(out);
+        }
+    }
+
+    /**
+     * 执行命令
+     *
+     * @param executor executor
+     * @param transfer transfer
+     * @throws IOException IOException
+     */
+    public static void execCommand(ITelnetCommandExecutor executor, OutputStream transfer) throws IOException {
+        executor.transfer(transfer);
+        executor.connect();
+        executor.exec();
     }
 
 }

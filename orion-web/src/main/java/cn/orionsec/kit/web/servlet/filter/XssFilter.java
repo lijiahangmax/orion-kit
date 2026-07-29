@@ -29,8 +29,9 @@ package cn.orionsec.kit.web.servlet.filter;
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.web.servlet.wrapper.XssHttpServletRequestWrapper;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;

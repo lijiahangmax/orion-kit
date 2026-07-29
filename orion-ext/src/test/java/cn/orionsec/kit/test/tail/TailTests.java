@@ -34,6 +34,7 @@ import cn.orionsec.kit.ext.tail.mode.FileOffsetMode;
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.Threads;
 import cn.orionsec.kit.lang.utils.io.Files1;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -46,6 +47,7 @@ import java.io.OutputStream;
  * @version 1.0.0
  * @since 2020/5/14 16:07
  */
+@Ignore("手工交互测试: tail 监听与死循环写入不会结束, 会阻塞构建")
 public class TailTests {
 
     @Test

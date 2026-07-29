@@ -28,8 +28,9 @@ package cn.orionsec.kit.web.servlet.filter;
 
 import cn.orionsec.kit.lang.constant.StandardHttpHeader;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 /**

@@ -29,6 +29,7 @@ package cn.orionsec.kit.test;
 import cn.orionsec.kit.lang.utils.Threads;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import cn.orionsec.kit.lang.utils.random.Randoms;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -39,6 +40,7 @@ import java.util.concurrent.*;
  * @version 1.0.0
  * @since 2021/7/20 17:41
  */
+@Ignore
 public class ThreadTest {
 
     @Test

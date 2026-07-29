@@ -4,7 +4,7 @@
     <parent>
         <groupId>cn.orionsec.kit</groupId>
         <artifactId>orion-kit</artifactId>
-        <version>2.0.7</version>
+        <version>3.0.0</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -30,8 +30,8 @@
 
         <!-- mail -->
         <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
+            <groupId>org.eclipse.angus</groupId>
+            <artifactId>angus-mail</artifactId>
             <version>${mail.version}</version>
         </dependency>
 

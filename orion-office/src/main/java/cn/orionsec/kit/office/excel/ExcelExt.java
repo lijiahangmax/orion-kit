@@ -35,7 +35,7 @@ import cn.orionsec.kit.office.excel.reader.ExcelArrayReader;
 import cn.orionsec.kit.office.excel.reader.ExcelBeanReader;
 import cn.orionsec.kit.office.excel.reader.ExcelLambdaReader;
 import cn.orionsec.kit.office.excel.reader.ExcelMapReader;
-import com.monitorjbl.xlsx.impl.StreamingWorkbook;
+import com.github.pjfanning.xlsx.impl.StreamingWorkbook;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 

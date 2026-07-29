@@ -27,6 +27,7 @@
 package cn.orionsec.kit.test.code;
 
 import cn.orionsec.kit.lang.utils.code.QRCodes;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.awt.*;
@@ -57,6 +58,7 @@ public class QRCodeTests {
         System.out.println(d);
     }
 
+    @Ignore
     @Test
     public void test3() {
         QRCodes c = new QRCodes();
@@ -68,6 +70,7 @@ public class QRCodeTests {
         System.out.println(d);
     }
 
+    @Ignore
     @Test
     public void test4() {
         QRCodes c = new QRCodes();

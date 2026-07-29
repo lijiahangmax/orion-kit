@@ -26,11 +26,10 @@
  */
 package cn.orionsec.kit.lang.utils.awt;
 
-import sun.font.FontDesignMetrics;
-
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
+import java.awt.image.BufferedImage;
 
 /**
  * 字体工具类
@@ -51,7 +50,13 @@ public class Fonts {
      * @return metrics
      */
     public static FontMetrics getMetrics(Font font) {
-        return FontDesignMetrics.getMetrics(font);
+        BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = image.createGraphics();
+        try {
+            return g2d.getFontMetrics(font);
+        } finally {
+            g2d.dispose();
+        }
     }
 
     /**
@@ -62,7 +67,7 @@ public class Fonts {
      * @return 实际长度
      */
     public static int getStringWidth(char c, Font font) {
-        FontMetrics fm = FontDesignMetrics.getMetrics(font);
+        FontMetrics fm = getMetrics(font);
         return fm.charWidth(c);
     }
 
@@ -74,7 +79,7 @@ public class Fonts {
      * @return 实际长度
      */
     public static int getStringWidth(String s, Font font) {
-        FontMetrics fm = FontDesignMetrics.getMetrics(font);
+        FontMetrics fm = getMetrics(font);
         return fm.stringWidth(s);
     }
 
@@ -85,7 +90,7 @@ public class Fonts {
      * @return 高度
      */
     public static int getHeight(Font font) {
-        FontMetrics fm = FontDesignMetrics.getMetrics(font);
+        FontMetrics fm = getMetrics(font);
         return fm.getHeight();
     }
 

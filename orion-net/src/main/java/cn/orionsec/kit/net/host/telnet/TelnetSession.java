@@ -32,7 +32,8 @@ import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.io.Streams;
-import org.apache.commons.net.telnet.TelnetClient;
+import cn.orionsec.kit.net.host.ssh.TerminalType;
+import org.apache.commons.net.telnet.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,6 +86,12 @@ public class TelnetSession implements SafeCloseable {
 
     private String prompt;
 
+    private String terminalType;
+
+    private int cols;
+
+    private int rows;
+
     private volatile boolean connected;
 
     private TelnetSession(String host, int port) {
@@ -98,6 +105,9 @@ public class TelnetSession implements SafeCloseable {
         this.loginPrompt = DEFAULT_LOGIN_PROMPT;
         this.passwordPrompt = DEFAULT_PASSWORD_PROMPT;
         this.prompt = DEFAULT_PROMPT;
+        this.terminalType = TerminalType.XTERM.getType();
+        this.cols = 180;
+        this.rows = 36;
     }
 
     /**
@@ -210,19 +220,59 @@ public class TelnetSession implements SafeCloseable {
     }
 
     /**
+     * 设置终端类型
+     *
+     * @param type type
+     * @return this
+     */
+    public TelnetSession terminalType(TerminalType type) {
+        return this.terminalType(type.getType());
+    }
+
+    /**
+     * 设置终端类型
+     *
+     * @param terminalType terminalType
+     * @return this
+     */
+    public TelnetSession terminalType(String terminalType) {
+        this.terminalType = terminalType;
+        return this;
+    }
+
+    /**
+     * 设置页面大小
+     *
+     * @param cols 行字数
+     * @param rows 列数
+     * @return this
+     */
+    public TelnetSession size(int cols, int rows) {
+        this.cols = cols;
+        this.rows = rows;
+        return this;
+    }
+
+    /**
      * 建立连接
      *
      * @return this
      */
     public TelnetSession connect() {
         try {
-            // 设置超时
+            // 注册终端协商
+            this.addOptionHandlers();
+            // 设置连接超时
             if (timeout > 0) {
                 client.setConnectTimeout(timeout);
                 client.setDefaultTimeout(timeout);
             }
             // 建立连接
             client.connect(host, port);
+            // 设置读取超时 (阻塞读取依赖 soTimeout 触发超时)
+            if (readTimeout > 0) {
+                client.setSoTimeout(readTimeout);
+            }
             // 获取输入输出流
             inputStream = client.getInputStream();
             outputStream = client.getOutputStream();
@@ -237,19 +287,51 @@ public class TelnetSession implements SafeCloseable {
     }
 
     /**
-     * 获取执行器
+     * 注册终端协商 option handlers
+     * <p>
+     * 需要在建连前注册
+     *
+     * @throws Exception Exception
+     */
+    private void addOptionHandlers() throws Exception {
+        // 终端类型
+        client.addOptionHandler(new TerminalTypeOptionHandler(terminalType, false, false, true, false));
+        // 回显
+        client.addOptionHandler(new EchoOptionHandler(true, false, true, false));
+        // 抑制 go ahead
+        client.addOptionHandler(new SuppressGAOptionHandler(true, true, true, true));
+        // 窗口大小 (NAWS)
+        client.addOptionHandler(new WindowSizeOptionHandler(cols, rows, true, false, true, false));
+    }
+
+    /**
+     * 获取 shell 执行器
      *
      * @return executor
      */
-    public TelnetExecutor getExecutor() {
+    public TelnetShellExecutor getShellExecutor() {
+        this.checkConnected();
+        return new TelnetShellExecutor(client, inputStream, outputStream, prompt, charset, readTimeout, terminalType, cols, rows);
+    }
+
+    /**
+     * 获取命令执行器
+     *
+     * @param command command
+     * @return executor
+     */
+    public TelnetCommandExecutor getCommandExecutor(String command) {
+        this.checkConnected();
+        return new TelnetCommandExecutor(client, inputStream, outputStream, prompt, charset, readTimeout, command);
+    }
+
+    /**
+     * 检查是否已连接
+     */
+    private void checkConnected() {
         if (!connected) {
             throw Exceptions.connection("telnet session is not connected");
         }
-        return new TelnetExecutor(client, inputStream, outputStream, prompt, charset, readTimeout);
-    }
-
-    public TelnetExecutor getShellExecutor() {
-        return this.getExecutor();
     }
 
     /**
@@ -274,30 +356,34 @@ public class TelnetSession implements SafeCloseable {
     }
 
     /**
-     * @throws IOException IOException
+     * 登录
      */
-    private void login() throws IOException {
+    private void login() {
         if (Strings.isBlank(username)) {
             return;
         }
         LOGGER.info("TelnetSession-login start");
-        if (Strings.isNotBlank(loginPrompt)) {
-            // 读取登录提示
-            readUntil(loginPrompt, readTimeout);
-        }
-        // 发送用户名
-        writeLine(username);
-        if (Strings.isNotBlank(password)) {
-            if (Strings.isNotBlank(passwordPrompt)) {
-                // 读取密码提示
-                readUntil(passwordPrompt, readTimeout);
+        try {
+            if (Strings.isNotBlank(loginPrompt)) {
+                // 读取登录提示
+                readUntil(loginPrompt);
             }
-            // 发送密码
-            writeLine(password);
-        }
-        if (Strings.isNotBlank(prompt)) {
-            // 读取命令提示符
-            readUntil(prompt, readTimeout);
+            // 发送用户名
+            writeLine(username);
+            if (Strings.isNotBlank(password)) {
+                if (Strings.isNotBlank(passwordPrompt)) {
+                    // 读取密码提示
+                    readUntil(passwordPrompt);
+                }
+                // 发送密码
+                writeLine(password);
+            }
+            if (Strings.isNotBlank(prompt)) {
+                // 读取命令提示符
+                readUntil(prompt);
+            }
+        } catch (IOException e) {
+            throw Exceptions.ioRuntime(e);
         }
         LOGGER.info("TelnetSession-login done");
     }
@@ -313,52 +399,11 @@ public class TelnetSession implements SafeCloseable {
 
     /**
      * @param pattern pattern
-     * @param timeout timeout
      * @return result
      * @throws IOException IOException
      */
-    private String readUntil(String pattern, int timeout) throws IOException {
-        if (Strings.isBlank(pattern)) {
-            return Const.EMPTY;
-        }
-        int maxTimeout = timeout > 0 ? timeout : readTimeout;
-        long startTime = System.currentTimeMillis();
-        StringBuilder builder = new StringBuilder();
-        int read;
-        while ((read = inputStream.read()) != -1) {
-            // 逐字节读取
-            builder.append((char) read);
-            if (endsWith(builder, pattern)) {
-                break;
-            }
-            if (maxTimeout > 0 && System.currentTimeMillis() - startTime > maxTimeout) {
-                throw Exceptions.timeout("telnet read timeout");
-            }
-            if (builder.length() > Const.BUFFER_KB_32) {
-                throw Exceptions.runtime("telnet read buffer overflow");
-            }
-        }
-        return builder.toString();
-    }
-
-    /**
-     * @param builder builder
-     * @param pattern pattern
-     * @return result
-     */
-    private boolean endsWith(StringBuilder builder, String pattern) {
-        int patternLength = pattern.length();
-        int builderLength = builder.length();
-        if (builderLength < patternLength) {
-            return false;
-        }
-        int offset = builderLength - patternLength;
-        for (int i = 0; i < patternLength; i++) {
-            if (builder.charAt(offset + i) != pattern.charAt(i)) {
-                return false;
-            }
-        }
-        return true;
+    private String readUntil(String pattern) throws IOException {
+        return TelnetReads.readUntil(inputStream, pattern, charset, readTimeout, Const.BUFFER_KB_32);
     }
 
     /**
@@ -408,6 +453,27 @@ public class TelnetSession implements SafeCloseable {
      */
     public String getPrompt() {
         return prompt;
+    }
+
+    /**
+     * @return 终端类型
+     */
+    public String getTerminalType() {
+        return terminalType;
+    }
+
+    /**
+     * @return 行字数
+     */
+    public int getCols() {
+        return cols;
+    }
+
+    /**
+     * @return 列数
+     */
+    public int getRows() {
+        return rows;
     }
 
     /**

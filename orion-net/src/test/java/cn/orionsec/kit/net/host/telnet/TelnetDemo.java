@@ -61,7 +61,7 @@ public class TelnetDemo {
                 .readTimeout(10000)
                 .connect();
         // 获取执行器
-        TelnetExecutor executor = session.getShellExecutor();
+        TelnetShellExecutor executor = session.getShellExecutor();
         // 设置输出处理器
         executor.streamHandler(ReaderLineConsumer.printer());
         // 设置回调

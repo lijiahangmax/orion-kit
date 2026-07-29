@@ -4,7 +4,7 @@
     <parent>
         <groupId>cn.orionsec.kit</groupId>
         <artifactId>orion-kit</artifactId>
-        <version>2.0.7</version>
+        <version>3.0.0</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -47,26 +47,25 @@
         </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml-schemas</artifactId>
+            <artifactId>poi-ooxml-full</artifactId>
             <version>${poi.version}</version>
         </dependency>
 
         <!-- poi-streaming -->
         <dependency>
-            <groupId>com.monitorjbl</groupId>
-            <artifactId>xlsx-streamer</artifactId>
+            <groupId>com.github.pjfanning</groupId>
+            <artifactId>excel-streaming-reader</artifactId>
             <version>${poi.stream.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>slf4j-api</artifactId>
                     <groupId>org.slf4j</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>poi-ooxml</artifactId>
+                    <groupId>org.apache.poi</groupId>
+                </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>xml-apis</groupId>
-            <artifactId>xml-apis</artifactId>
-            <version>${poi.stream.xml.version}</version>
         </dependency>
     </dependencies>
 

@@ -27,6 +27,7 @@
 package cn.orionsec.kit.test.script;
 
 import cn.orionsec.kit.lang.utils.script.Scripts;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.script.ScriptEngine;
@@ -36,6 +37,7 @@ import javax.script.ScriptEngine;
  * @version 1.0.0
  * @since 2021/3/2 0:48
  */
+@Ignore("python 脚本引擎依赖 jython, pom 中已注释, 无法创建引擎")
 public class PythonScriptTests {
 
     @Test

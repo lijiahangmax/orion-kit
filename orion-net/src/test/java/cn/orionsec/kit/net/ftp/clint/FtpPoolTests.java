@@ -33,6 +33,7 @@ import cn.orionsec.kit.net.ftp.client.pool.FtpClientFactory;
 import cn.orionsec.kit.net.ftp.client.pool.FtpClientPool;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -40,6 +41,7 @@ import org.junit.Test;
  * @version 1.0.0
  * @since 2021/3/13 1:43
  */
+@Ignore("需要真实 FTP 服务器 无法在单元测试环境连接")
 public class FtpPoolTests {
 
     private FtpClientPool pool;

@@ -43,7 +43,7 @@ public class FileSplitMergeTests {
     @Test
     public void s1() {
         // split
-        String file = "F:\\test\\jdk1.7.zip";
+        String file = "C:\\Users\\Administrator\\orion-kit-test\\split\\test.bin";
         System.out.println(Files1.md5(file));
         String[] c = new FileSplit(file).call();
         System.out.println(Arrays.toString(c));
@@ -52,7 +52,7 @@ public class FileSplitMergeTests {
     @Test
     public void m1() {
         // merge
-        String file = "F:\\test\\jdk1.7.zip";
+        String file = "C:\\Users\\Administrator\\orion-kit-test\\split\\test.bin";
         String newFile = new FileMerge(file + ".block").call();
         System.out.println(newFile);
         System.out.println(Files1.md5(newFile));
