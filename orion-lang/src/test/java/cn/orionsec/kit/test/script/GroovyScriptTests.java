@@ -26,40 +26,62 @@
  */
 package cn.orionsec.kit.test.script;
 
+import cn.orionsec.kit.lang.utils.collect.Maps;
+import cn.orionsec.kit.lang.utils.script.ScriptType;
 import cn.orionsec.kit.lang.utils.script.Scripts;
-import org.junit.Ignore;
+import org.junit.Assert;
 import org.junit.Test;
 
 import javax.script.ScriptEngine;
 
 /**
+ * groovy 脚本引擎单元测试
+ * <p>
+ * groovy 引擎由 org.apache.groovy:groovy-jsr223 提供 (JSR-223)
+ *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2021/3/2 0:48
+ * @since 2026/7/30 0:00
  */
-@Ignore("python 脚本引擎依赖 jython, pom 中已注释, 无法创建引擎")
-public class PythonScriptTests {
+public class GroovyScriptTests {
 
     @Test
     public void createScriptEngine() {
-        ScriptEngine e1 = Scripts.createPythonScript();
-        ScriptEngine e2 = Scripts.createScript("python");
-        System.out.println(e1);
-        System.out.println(e2);
+        ScriptEngine e1 = Scripts.createGroovyScript();
+        ScriptEngine e2 = Scripts.createScript("groovy");
+        ScriptEngine e3 = Scripts.createScript(ScriptType.GROOVY);
+        Assert.assertNotNull(e1);
+        Assert.assertNotNull(e2);
+        Assert.assertNotNull(e3);
     }
 
     @Test
     public void getScriptEngine() {
-        ScriptEngine e1 = Scripts.getPythonScript();
-        ScriptEngine e2 = Scripts.getScript("python");
-        System.out.println(e1);
-        System.out.println(e2);
+        ScriptEngine e1 = Scripts.getGroovyScript();
+        ScriptEngine e2 = Scripts.getScript("groovy");
+        Assert.assertNotNull(e1);
+        Assert.assertNotNull(e2);
     }
 
     @Test
     public void eval() {
-        ScriptEngine e1 = Scripts.createPythonScript();
-        System.out.println(Scripts.eval(e1, "1+2"));
+        ScriptEngine engine = Scripts.createGroovyScript();
+        Object result = Scripts.eval(engine, "1 + 2");
+        Assert.assertEquals(3, ((Number) result).intValue());
+    }
+
+    @Test
+    public void evalWithBindings() {
+        ScriptEngine engine = Scripts.createGroovyScript();
+        Object result = Scripts.eval(engine, "x * y", Maps.of("x", 6, "y", 7));
+        Assert.assertEquals(42, ((Number) result).intValue());
+    }
+
+    @Test
+    public void evalFunction() {
+        ScriptEngine engine = Scripts.createGroovyScript();
+        Object result = Scripts.eval(engine, "def add(a, b) { a + b }\nadd(20, 22)");
+        Assert.assertEquals(42, ((Number) result).intValue());
     }
 
 }

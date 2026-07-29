@@ -27,123 +27,116 @@
 package cn.orionsec.kit.http.tests;
 
 import cn.orionsec.kit.http.apache.ApacheRequest;
+import cn.orionsec.kit.http.apache.ApacheResponse;
 import cn.orionsec.kit.http.apache.file.ApacheDownload;
 import cn.orionsec.kit.http.apache.file.ApacheUpload;
-import cn.orionsec.kit.http.support.HttpCookie;
 import cn.orionsec.kit.http.support.HttpMethod;
 import cn.orionsec.kit.http.support.HttpUploadPart;
-import cn.orionsec.kit.http.useragent.UserAgentGenerators;
-import org.junit.Ignore;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 /**
+ * Apache HttpClient 请求测试 (基于 mockwebserver 自包含)
+ *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/11/4 18:42
  */
-@Ignore("需要本地 localhost:8080 测试服务器 无法在单元测试环境请求")
 public class ApacheTests {
 
-    private static final String REQ = "http://localhost:8080/http/req";
-    private static final String REQ1 = "http://localhost:8080/http/req1";
-    private static final String SLEEP = "http://localhost:8080/http/sleep";
-    private static final String TEXT = "http://localhost:8080/http/text";
-    private static final String HTML = "http://localhost:8080/http/html";
-    private static final String UP = "http://localhost:8080/http/upload";
-    private static final String DOWN = "http://localhost:8080/http/download";
-    private static final String NULL = "http://localhost:8080/http/null";
-    private static final String TIMEOUT = "http://localhost:8081/http/download";
+    private MockWebServer server;
 
-    @Test
-    public void testReq1() {
-        System.out.println(new ApacheRequest(REQ).await().getBodyString());
+    private String baseUrl;
+
+    @Before
+    public void setUp() throws IOException {
+        server = new MockWebServer();
+        server.start();
+        baseUrl = server.url("/").toString();
+    }
+
+    @After
+    public void tearDown() throws IOException {
+        server.shutdown();
     }
 
     @Test
-    public void testReq2() {
-        ApacheRequest req = new ApacheRequest(REQ);
-        req.userAgent(UserAgentGenerators.generator());
+    public void testGet() {
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("hello"));
+        ApacheResponse resp = new ApacheRequest(baseUrl + "http/req").await();
+        Assert.assertEquals(200, resp.getCode());
+        Assert.assertEquals("hello", resp.getBodyString());
+    }
+
+    @Test
+    public void testPostBody() throws InterruptedException {
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("ok"));
+        ApacheRequest req = new ApacheRequest(baseUrl + "http/req");
         req.method(HttpMethod.POST);
         req.header("A", "B");
-        req.body("身体哦");
-        System.out.println(req.await().getBodyString());
+        req.body("body-content");
+        ApacheResponse resp = req.await();
+        Assert.assertEquals("ok", resp.getBodyString());
+        RecordedRequest recorded = server.takeRequest();
+        Assert.assertEquals("POST", recorded.getMethod());
+        Assert.assertEquals("B", recorded.getHeader("A"));
+        Assert.assertEquals("body-content", recorded.getBody().readUtf8());
     }
 
     @Test
-    public void testReq3() {
-        ApacheRequest req = new ApacheRequest(REQ1);
-        req.userAgent(UserAgentGenerators.generator());
-        req.method(HttpMethod.OPTIONS);
-        req.queryParam("name", "12");
-        req.header("A", "B");
-        System.out.println(req.await().getBodyString());
-    }
-
-    @Test
-    public void testReq4() {
-        ApacheRequest req = new ApacheRequest(REQ1);
-        req.userAgent(UserAgentGenerators.generator());
+    public void testFormPost() throws InterruptedException {
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("ok"));
+        ApacheRequest req = new ApacheRequest(baseUrl + "http/form");
         req.method(HttpMethod.POST);
         req.formPart("name", "whh");
         req.formPart("age", "18");
-        req.formPart("sex", "女");
-        req.cookie(new HttpCookie().addValue("uid", "1"));
-        System.out.println(req.await().getBodyString());
+        req.await();
+        RecordedRequest recorded = server.takeRequest();
+        Assert.assertEquals("POST", recorded.getMethod());
+        String body = recorded.getBody().readUtf8();
+        Assert.assertTrue(body.contains("name=whh"));
+        Assert.assertTrue(body.contains("age=18"));
     }
 
     @Test
-    public void testReq5() {
-        ApacheRequest req = new ApacheRequest(SLEEP);
-        req.method(HttpMethod.POST);
-        System.out.println(req.await().getBodyString());
-    }
-
-    @Test
-    public void testReq6() {
-        ApacheRequest req = new ApacheRequest(TEXT);
+    public void testDelete() throws InterruptedException {
+        server.enqueue(new MockResponse().setResponseCode(204));
+        ApacheRequest req = new ApacheRequest(baseUrl + "http/text");
         req.method(HttpMethod.DELETE);
-        System.out.println(req.await().getBodyString());
+        ApacheResponse resp = req.await();
+        Assert.assertEquals(204, resp.getCode());
+        Assert.assertEquals("DELETE", server.takeRequest().getMethod());
     }
 
     @Test
-    public void testReq7() {
-        ApacheRequest req = new ApacheRequest(HTML);
-        req.method(HttpMethod.GET);
-        System.out.println(req.await().getBodyString());
-    }
-
-    @Test
-    public void testReq8() {
-        ApacheUpload req = new ApacheUpload(UP);
-        req.method(HttpMethod.PATCH);
+    public void testUpload() throws InterruptedException {
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("uploaded"));
+        ApacheUpload req = new ApacheUpload(baseUrl + "http/upload");
+        req.method(HttpMethod.POST);
         req.part(new HttpUploadPart("file", "文件内容".getBytes(), ".txt"));
-        System.out.println(req.await());
+        ApacheResponse resp = req.await();
+        Assert.assertEquals("uploaded", resp.getBodyString());
+        RecordedRequest recorded = server.takeRequest();
+        Assert.assertEquals("POST", recorded.getMethod());
+        Assert.assertTrue(recorded.getBody().readUtf8().contains("file"));
     }
 
     @Test
-    public void testReq9() throws IOException {
-        ApacheRequest req = new ApacheRequest(DOWN + "?name={}");
-        req.queryStringEncode(false);
-        req.method("POST");
-        req.format("文本");
-        ApacheDownload d = new ApacheDownload(req);
-        d.download(System.out);
-    }
-
-    @Test
-    public void testReq10() {
-        ApacheRequest req = new ApacheRequest(NULL);
-        req.method(HttpMethod.GET);
-        System.out.println(req.await().getBodyString());
-    }
-
-    @Test
-    public void testReq11() {
-        ApacheRequest req = new ApacheRequest(TIMEOUT);
-        req.method(HttpMethod.GET);
-        System.out.println(req.await().getBodyString());
+    public void testDownload() throws IOException {
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("file-data"));
+        ApacheRequest req = new ApacheRequest(baseUrl + "http/download");
+        ApacheDownload download = new ApacheDownload(req);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        download.download(out);
+        Assert.assertEquals("file-data", out.toString());
     }
 
 }

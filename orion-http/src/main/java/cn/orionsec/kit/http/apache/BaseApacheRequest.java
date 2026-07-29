@@ -33,14 +33,14 @@ import cn.orionsec.kit.lang.able.Awaitable;
 import cn.orionsec.kit.lang.constant.StandardContentType;
 import cn.orionsec.kit.lang.constant.StandardHttpHeader;
 import cn.orionsec.kit.lang.utils.Charsets;
-import org.apache.http.HttpEntity;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.*;
-import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.message.BasicNameValuePair;
+import org.apache.hc.client5.http.classic.methods.*;
+import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.NameValuePair;
+import org.apache.hc.core5.http.io.entity.ByteArrayEntity;
+import org.apache.hc.core5.http.message.BasicHeader;
+import org.apache.hc.core5.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +62,7 @@ public abstract class BaseApacheRequest extends BaseHttpRequest implements Await
     /**
      * HttpRequest
      */
-    protected HttpRequestBase request;
+    protected HttpUriRequestBase request;
 
     /**
      * client
@@ -81,7 +81,7 @@ public abstract class BaseApacheRequest extends BaseHttpRequest implements Await
      * @return this
      */
     public BaseApacheRequest cancel() {
-        this.request.abort();
+        this.request.cancel();
         return this;
     }
 
@@ -101,7 +101,7 @@ public abstract class BaseApacheRequest extends BaseHttpRequest implements Await
         }
         // 忽略的请求头
         if (ignoreHeaders != null) {
-            ignoreHeaders.forEach(ignoreHeader -> request.removeHeader(new BasicHeader(ignoreHeader, null)));
+            ignoreHeaders.forEach(ignoreHeader -> request.removeHeaders(ignoreHeader));
         }
         // 设置 contentType
         if (!super.isNoBodyRequest()) {
@@ -131,8 +131,9 @@ public abstract class BaseApacheRequest extends BaseHttpRequest implements Await
         } else if (HttpMethod.OPTIONS.method().equals(method)) {
             this.request = new HttpOptions(url);
         }
-        if (request instanceof HttpEntityEnclosingRequestBase) {
-            ((HttpEntityEnclosingRequestBase) request).setEntity(this.getEntry());
+        HttpEntity entity = this.getEntry();
+        if (entity != null) {
+            request.setEntity(entity);
         }
     }
 
@@ -143,7 +144,7 @@ public abstract class BaseApacheRequest extends BaseHttpRequest implements Await
      */
     protected HttpEntity getEntry() {
         if (body != null) {
-            return new ByteArrayEntity(body, bodyOffset, bodyLen);
+            return new ByteArrayEntity(body, bodyOffset, bodyLen, null);
         } else if (formParts != null) {
             List<NameValuePair> pairs = new ArrayList<>();
             formParts.forEach((k, v) -> pairs.add(new BasicNameValuePair(k, v)));

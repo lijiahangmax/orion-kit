@@ -157,26 +157,12 @@
             <version>${nashorn.version}</version>
         </dependency>
 
-        <!-- python script -->
-        <!--        <dependency>-->
-        <!--            <groupId>org.python</groupId>-->
-        <!--            <artifactId>jython</artifactId>-->
-        <!--            <version>${python.script.version}</version>-->
-        <!--        </dependency>-->
-
-        <!-- lua script -->
-        <!--        <dependency>-->
-        <!--            <groupId>org.luaj</groupId>-->
-        <!--            <artifactId>luaj-jse</artifactId>-->
-        <!--            <version>${lua.script.version}</version>-->
-        <!--        </dependency>-->
-
-        <!-- groovy script -->
-        <!--        <dependency>-->
-        <!--            <groupId>org.codehaus.groovy</groupId>-->
-        <!--            <artifactId>groovy-all</artifactId>-->
-        <!--            <version>${groovy.script.version}</version>-->
-        <!--        </dependency>-->
+        <!-- groovy 脚本引擎 (JSR-223) -->
+        <dependency>
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy-jsr223</artifactId>
+            <version>${groovy.version}</version>
+        </dependency>
 
         <!-- tools.jar -->
         <!--        <dependency>-->

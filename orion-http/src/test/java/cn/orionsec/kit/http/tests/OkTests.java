@@ -27,155 +27,119 @@
 package cn.orionsec.kit.http.tests;
 
 import cn.orionsec.kit.http.ok.OkRequest;
-import cn.orionsec.kit.http.ok.file.OkAsyncDownload;
-import cn.orionsec.kit.http.ok.file.OkAsyncUpload;
+import cn.orionsec.kit.http.ok.OkResponse;
 import cn.orionsec.kit.http.ok.file.OkDownload;
 import cn.orionsec.kit.http.ok.file.OkUpload;
-import cn.orionsec.kit.http.support.HttpCookie;
 import cn.orionsec.kit.http.support.HttpMethod;
 import cn.orionsec.kit.http.support.HttpUploadPart;
-import cn.orionsec.kit.http.useragent.UserAgentGenerators;
-import cn.orionsec.kit.lang.utils.Threads;
-import org.junit.Ignore;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
+ * OkHttp 请求测试 (基于 mockwebserver 自包含)
+ *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2020/11/5 16:27
  */
-@Ignore("需要本地 localhost:8080 测试服务器 无法在单元测试环境请求")
 public class OkTests {
 
-    private static final String REQ = "http://localhost:8080/http/req";
-    private static final String REQ1 = "http://localhost:8080/http/req1";
-    private static final String SLEEP = "http://localhost:8080/http/sleep";
-    private static final String TEXT = "http://localhost:8080/http/text";
-    private static final String HTML = "http://localhost:8080/http/html";
-    private static final String UP = "http://localhost:8080/http/upload";
-    private static final String DOWN = "http://localhost:8080/http/download";
-    private static final String NULL = "http://localhost:8080/http/null";
-    private static final String TIMEOUT = "http://localhost:8081/http/download";
+    private MockWebServer server;
 
-    @Test
-    public void testReq1() {
-        System.out.println(new OkRequest(REQ).await().getBodyString());
+    private String baseUrl;
+
+    @Before
+    public void setUp() throws IOException {
+        server = new MockWebServer();
+        server.start();
+        baseUrl = server.url("/").toString();
+    }
+
+    @After
+    public void tearDown() throws IOException {
+        server.shutdown();
     }
 
     @Test
-    public void testReq2() {
-        OkRequest req = new OkRequest(REQ);
-        req.userAgent(UserAgentGenerators.generator());
+    public void testGet() {
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("hello"));
+        OkResponse resp = new OkRequest(baseUrl + "http/req").await();
+        Assert.assertEquals(200, resp.getCode());
+        Assert.assertEquals("hello", resp.getBodyString());
+    }
+
+    @Test
+    public void testPostBody() throws InterruptedException {
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("ok"));
+        OkRequest req = new OkRequest(baseUrl + "http/req");
         req.method(HttpMethod.POST);
         req.header("A", "B");
-        req.body("身体哦");
-        System.out.println(req.await().getBodyString());
+        req.body("body-content");
+        OkResponse resp = req.await();
+        Assert.assertEquals("ok", resp.getBodyString());
+        RecordedRequest recorded = server.takeRequest();
+        Assert.assertEquals("POST", recorded.getMethod());
+        Assert.assertEquals("B", recorded.getHeader("A"));
+        Assert.assertEquals("body-content", recorded.getBody().readUtf8());
     }
 
     @Test
-    public void testReq3() {
-        OkRequest req = new OkRequest(REQ1);
-        req.userAgent(UserAgentGenerators.generator());
+    public void testDelete() throws InterruptedException {
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("deleted"));
+        OkRequest req = new OkRequest(baseUrl + "http/text");
         req.method(HttpMethod.DELETE);
-        req.queryParam("name", "12");
-        req.header("A", "B");
-        System.out.println(req.await().getBodyString());
+        OkResponse resp = req.await();
+        Assert.assertEquals("deleted", resp.getBodyString());
+        Assert.assertEquals("DELETE", server.takeRequest().getMethod());
     }
 
     @Test
-    public void testReq4() {
-        OkRequest req = new OkRequest(REQ1);
-        req.userAgent(UserAgentGenerators.generator());
+    public void testUpload() throws InterruptedException {
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("uploaded"));
+        OkUpload req = new OkUpload(baseUrl + "http/upload");
         req.method(HttpMethod.POST);
-        req.formPart("name", "whh");
-        req.formPart("age", "18");
-        req.formPart("sex", "女");
-        req.cookie(new HttpCookie().addValue("uid", "1"));
-        System.out.println(req.await().getBodyString());
+        req.part(new HttpUploadPart("file", "文件内容".getBytes(), ".txt"));
+        OkResponse resp = req.await();
+        Assert.assertEquals("uploaded", resp.getBodyString());
+        RecordedRequest recorded = server.takeRequest();
+        Assert.assertEquals("POST", recorded.getMethod());
+        Assert.assertTrue(recorded.getHeader("Content-Type").startsWith("multipart/form-data"));
     }
 
     @Test
-    public void testReq5() {
-        OkRequest req = new OkRequest(SLEEP);
+    public void testDownload() throws IOException {
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("file-data"));
+        OkRequest req = new OkRequest(baseUrl + "http/download");
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        new OkDownload(req).download(out);
+        Assert.assertEquals("file-data", out.toString());
+    }
+
+    @Test
+    public void testAsync() throws InterruptedException {
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("async-body"));
+        OkRequest req = new OkRequest(baseUrl + "http/req");
         req.method(HttpMethod.POST);
-        System.out.println(req.await().getBodyString());
-    }
-
-    @Test
-    public void testReq6() {
-        OkRequest req = new OkRequest(TEXT);
-        req.method(HttpMethod.DELETE);
-        System.out.println(req.await().getBodyString());
-    }
-
-    @Test
-    public void testReq7() {
-        OkRequest req = new OkRequest(HTML);
-        req.method(HttpMethod.GET);
-        System.out.println(req.await().getBodyString());
-    }
-
-    @Test
-    public void testReq8() {
-        OkRequest req = new OkRequest(NULL);
-        req.method(HttpMethod.GET);
-        System.out.println(req.await().getBodyString());
-    }
-
-    @Test
-    public void testReq9() {
-        OkRequest req = new OkRequest(TIMEOUT);
-        req.method(HttpMethod.GET);
-        System.out.println(req.await().getBodyString());
-    }
-
-    @Test
-    public void testReq10() {
-        OkUpload req = new OkUpload(UP);
-        req.method(HttpMethod.PATCH);
-        req.part(new HttpUploadPart("file", "文件内容1".getBytes(), ".txt"));
-        System.out.println(req.await());
-    }
-
-    @Test
-    public void testReq11() {
-        OkAsyncUpload req = new OkAsyncUpload(UP);
-        req.method(HttpMethod.PATCH);
-        req.part(new HttpUploadPart("file", "文件内容2".getBytes(), ".txt"));
+        req.body("hi");
+        CountDownLatch latch = new CountDownLatch(1);
+        AtomicReference<String> ref = new AtomicReference<>();
         req.async(s -> {
-            System.out.println(s);
-            System.out.println(s.getBodyString());
+            ref.set(s.getBodyString());
+            latch.countDown();
         });
-        Threads.sleep(2000);
-    }
-
-    @Test
-    public void testReq12() throws IOException {
-        OkRequest req = new OkRequest(DOWN + "?name={}");
-        req.format("哈哈");
-        new OkDownload(req).download(System.out);
-    }
-
-    @Test
-    public void testReq13() {
-        OkAsyncDownload req = new OkAsyncDownload(DOWN + "?name={}");
-        req.format("哈哈");
-        req.download(System.out);
-        req.async(System.out::println);
-        Threads.sleep(2000);
-    }
-
-    @Test
-    public void testReq14() {
-        OkRequest req = new OkRequest(REQ);
-        req.userAgent(UserAgentGenerators.generator());
-        req.method(HttpMethod.POST);
-        req.header("A", "B");
-        req.body("身体哦");
-        req.async(s -> System.out.println(s.getBodyString()));
-        Threads.sleep(2000);
+        Assert.assertTrue(latch.await(5, TimeUnit.SECONDS));
+        Assert.assertEquals("async-body", ref.get());
     }
 
 }

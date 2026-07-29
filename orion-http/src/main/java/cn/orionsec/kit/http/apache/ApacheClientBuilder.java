@@ -31,17 +31,23 @@ import cn.orionsec.kit.lang.able.Buildable;
 import cn.orionsec.kit.lang.config.KitConfig;
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.utils.collect.Lists;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpRequestInterceptor;
-import org.apache.http.HttpResponseInterceptor;
-import org.apache.http.client.CookieStore;
-import org.apache.http.client.HttpRequestRetryHandler;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.conn.HttpClientConnectionManager;
-import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.hc.client5.http.HttpRequestRetryStrategy;
+import org.apache.hc.client5.http.config.ConnectionConfig;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.cookie.CookieStore;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.client5.http.io.HttpClientConnectionManager;
+import org.apache.hc.client5.http.socket.LayeredConnectionSocketFactory;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.core5.http.HttpHost;
+import org.apache.hc.core5.http.HttpRequestInterceptor;
+import org.apache.hc.core5.http.HttpResponseInterceptor;
+import org.apache.hc.core5.http.io.SocketConfig;
+import org.apache.hc.core5.util.TimeValue;
+import org.apache.hc.core5.util.Timeout;
 
 import javax.net.ssl.SSLContext;
 import java.util.ArrayList;
@@ -135,7 +141,7 @@ public class ApacheClientBuilder implements Buildable<CloseableHttpClient> {
     /**
      * 重试策略
      */
-    private HttpRequestRetryHandler requestRetryHandler;
+    private HttpRequestRetryStrategy requestRetryStrategy;
 
     /**
      * SSL Context
@@ -246,17 +252,17 @@ public class ApacheClientBuilder implements Buildable<CloseableHttpClient> {
     }
 
     public ApacheClientBuilder noRetry() {
-        this.requestRetryHandler = ApacheClientRetryPolicy.NO_RETRY.getHandler();
+        this.requestRetryStrategy = ApacheClientRetryPolicy.NO_RETRY.getStrategy();
         return this;
     }
 
-    public ApacheClientBuilder requestRetryHandler(HttpRequestRetryHandler requestRetryHandler) {
-        this.requestRetryHandler = requestRetryHandler;
+    public ApacheClientBuilder requestRetryStrategy(HttpRequestRetryStrategy requestRetryStrategy) {
+        this.requestRetryStrategy = requestRetryStrategy;
         return this;
     }
 
-    public ApacheClientBuilder requestRetryHandler(ApacheClientRetryPolicy policy) {
-        this.requestRetryHandler = policy.getHandler();
+    public ApacheClientBuilder requestRetryStrategy(ApacheClientRetryPolicy policy) {
+        this.requestRetryStrategy = policy.getStrategy();
         return this;
     }
 
@@ -322,8 +328,8 @@ public class ApacheClientBuilder implements Buildable<CloseableHttpClient> {
         return connectionManager;
     }
 
-    public HttpRequestRetryHandler getRequestRetryHandler() {
-        return requestRetryHandler;
+    public HttpRequestRetryStrategy getRequestRetryStrategy() {
+        return requestRetryStrategy;
     }
 
     public SSLContext getSslContext() {
@@ -341,46 +347,55 @@ public class ApacheClientBuilder implements Buildable<CloseableHttpClient> {
      */
     public HttpClientBuilder buildClientBuilder() {
         RequestConfig requestConfig = RequestConfig.custom()
-                .setConnectTimeout(connectTimeout)
-                .setSocketTimeout(socketTimeout)
-                .setConnectionRequestTimeout(requestTimeout)
+                .setConnectionRequestTimeout(Timeout.ofMilliseconds(requestTimeout))
+                .setResponseTimeout(Timeout.ofMilliseconds(socketTimeout))
                 .build();
         HttpClientBuilder builder = HttpClients.custom()
-                .setConnectionTimeToLive(connTimeToLive, connTimeToLiveTimeUnit)
-                .setMaxConnTotal(maxRequest)
-                .setMaxConnPerRoute(maxRoute)
                 .setDefaultRequestConfig(requestConfig);
         if (connectionManager != null) {
             builder.setConnectionManager(connectionManager);
+        } else {
+            ConnectionConfig.Builder connectionConfig = ConnectionConfig.custom()
+                    .setConnectTimeout(Timeout.ofMilliseconds(connectTimeout));
+            if (connTimeToLive >= 0) {
+                connectionConfig.setTimeToLive(TimeValue.of(connTimeToLive, connTimeToLiveTimeUnit));
+            }
+            PoolingHttpClientConnectionManagerBuilder connectionManagerBuilder = PoolingHttpClientConnectionManagerBuilder.create()
+                    .setMaxConnTotal(maxRequest)
+                    .setMaxConnPerRoute(maxRoute)
+                    .setDefaultSocketConfig(SocketConfig.custom()
+                            .setSoTimeout(Timeout.ofMilliseconds(socketTimeout))
+                            .build())
+                    .setDefaultConnectionConfig(connectionConfig.build());
+            if (sslSocketFactory != null) {
+                connectionManagerBuilder.setSSLSocketFactory(sslSocketFactory);
+            } else if (sslContext != null) {
+                connectionManagerBuilder.setSSLSocketFactory(new SSLConnectionSocketFactory(sslContext));
+            }
+            builder.setConnectionManager(connectionManagerBuilder.build());
         }
-        if (requestRetryHandler != null) {
-            builder.setRetryHandler(requestRetryHandler);
+        if (requestRetryStrategy != null) {
+            builder.setRetryStrategy(requestRetryStrategy);
         }
         if (userAgent != null) {
             builder.setUserAgent(userAgent);
         }
         if (logInterceptor) {
             ApacheLoggerInterceptor loggerInterceptor = new ApacheLoggerInterceptor();
-            builder.addInterceptorFirst((HttpRequestInterceptor) loggerInterceptor)
-                    .addInterceptorLast((HttpResponseInterceptor) loggerInterceptor);
+            builder.addRequestInterceptorFirst(loggerInterceptor);
+            builder.addResponseInterceptorLast(loggerInterceptor);
         }
         if (!Lists.isEmpty(requestInterceptors)) {
-            requestInterceptors.forEach(builder::addInterceptorFirst);
+            requestInterceptors.forEach(builder::addRequestInterceptorFirst);
         }
         if (!Lists.isEmpty(responseInterceptors)) {
-            requestInterceptors.forEach(builder::addInterceptorLast);
+            responseInterceptors.forEach(builder::addResponseInterceptorLast);
         }
         if (proxyHost != null && proxyPort != 0) {
             builder.setProxy(new HttpHost(proxyHost, proxyPort));
         }
         if (cookies != null) {
             builder.setDefaultCookieStore(cookies);
-        }
-        if (sslContext != null) {
-            builder.setSSLContext(sslContext);
-        }
-        if (sslSocketFactory != null) {
-            builder.setSSLSocketFactory(sslSocketFactory);
         }
         return builder;
     }

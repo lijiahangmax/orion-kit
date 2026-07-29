@@ -29,7 +29,7 @@ public class SystemsTest {
     @Test
     public void testBeWindowsOrUnix() {
         // At least one should be true
-        assertTrue(Systems.BE_WINDOWS || Systems.BE_UNIX);
+        assertTrue(Systems.IS_WINDOWS || Systems.IS_UNIX);
     }
 
     @Test

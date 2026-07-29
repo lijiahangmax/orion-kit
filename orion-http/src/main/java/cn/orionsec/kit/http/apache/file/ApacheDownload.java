@@ -30,7 +30,7 @@ import cn.orionsec.kit.http.apache.ApacheRequest;
 import cn.orionsec.kit.http.apache.ApacheResponse;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.lang.utils.io.Streams;
-import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 
 import java.io.File;
 import java.io.IOException;

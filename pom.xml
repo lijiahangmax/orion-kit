@@ -32,44 +32,41 @@
         <maven.compiler.target>21</maven.compiler.target>
         <maven.compiler.charset>UTF-8</maven.compiler.charset>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-        <junit.version>4.13.1</junit.version>
-        <spring.version>5.3.39</spring.version>
+        <junit.version>4.13.2</junit.version>
+        <spring.version>7.0.8</spring.version>
         <cglib.version>3.3.0</cglib.version>
-        <jedis.version>5.1.0</jedis.version>
-        <fastjson.version>2.0.42</fastjson.version>
-        <jackson.version>2.17.2</jackson.version>
-        <google.zxing.version>3.5.2</google.zxing.version>
+        <jedis.version>7.5.3</jedis.version>
+        <fastjson.version>2.0.63</fastjson.version>
+        <jackson.version>2.19.4</jackson.version>
+        <google.zxing.version>3.5.3</google.zxing.version>
         <thumbnailator.version>0.4.20</thumbnailator.version>
-        <servlet.version>6.0.0</servlet.version>
-        <apache.lang3.version>3.18.0</apache.lang3.version>
-        <apache.compress.version>1.26.0</apache.compress.version>
-        <apache.codec.version>1.13</apache.codec.version>
-        <org.tukaani.version>1.8</org.tukaani.version>
-        <apache.net.version>3.9.0</apache.net.version>
+        <servlet.version>6.1.0</servlet.version>
+        <apache.lang3.version>3.20.0</apache.lang3.version>
+        <apache.compress.version>1.28.0</apache.compress.version>
+        <apache.codec.version>1.18.0</apache.codec.version>
+        <org.tukaani.version>1.10</org.tukaani.version>
+        <apache.net.version>3.11.1</apache.net.version>
         <apache.ftp.server.version>1.2.1</apache.ftp.server.version>
-        <mail.version>2.0.3</mail.version>
+        <mail.version>2.0.5</mail.version>
         <pinyin4j.version>2.5.1</pinyin4j.version>
         <dom4j.version>2.1.4</dom4j.version>
         <emoji.version>5.1.1</emoji.version>
-        <org.json.version>20231013</org.json.version>
-        <yaml.version>2.0</yaml.version>
-        <aspectj.version>1.9.22.1</aspectj.version>
-        <poi.version>5.2.5</poi.version>
-        <poi.stream.version>4.3.0</poi.stream.version>
-        <okhttp.version>4.12.0</okhttp.version>
-        <http.client.version>4.5.14</http.client.version>
-        <log4j.version>2.20.0</log4j.version>
-        <slf4j.version>2.0.9</slf4j.version>
-        <log4j.slf4j.version>2.0.9</log4j.slf4j.version>
-        <jsch.version>2.27.7</jsch.version>
-        <nashorn.version>15.4</nashorn.version>
-        <python.script.version>2.7.2</python.script.version>
-        <lua.script.version>3.0.1</lua.script.version>
-        <groovy.script.version>3.0.4</groovy.script.version>
-        <jsoup.version>1.15.3</jsoup.version>
+        <org.json.version>20250517</org.json.version>
+        <yaml.version>2.4</yaml.version>
+        <aspectj.version>1.9.24</aspectj.version>
+        <poi.version>5.5.1</poi.version>
+        <poi.stream.version>5.2.0</poi.stream.version>
+        <okhttp.version>5.1.0</okhttp.version>
+        <httpclient5.version>5.6.2</httpclient5.version>
+        <log4j.version>2.26.1</log4j.version>
+        <slf4j.version>2.0.17</slf4j.version>
+        <groovy.version>5.0.7</groovy.version>
+        <jsch.version>2.28.6</jsch.version>
+        <nashorn.version>15.7</nashorn.version>
+        <jsoup.version>1.22.2</jsoup.version>
         <ua.utils.version>1.21</ua.utils.version>
-        <jgit.version>6.10.0.202406032230-r</jgit.version>
-        <bcprov.jdk18on.version>1.83</bcprov.jdk18on.version>
+        <jgit.version>7.7.1.202607240634-r</jgit.version>
+        <bcprov.jdk18on.version>1.85</bcprov.jdk18on.version>
     </properties>
 
     <!-- license -->

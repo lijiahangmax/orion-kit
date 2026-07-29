@@ -15,19 +15,15 @@ public class ScriptsTest {
     @Test
     public void testScriptTypeValues() {
         assertEquals("js", ScriptType.JAVA_SCRIPT.getType());
-        assertEquals("lua", ScriptType.LUA.getType());
         assertEquals("groovy", ScriptType.GROOVY.getType());
-        assertEquals("python", ScriptType.PYTHON.getType());
     }
 
     @Test
     public void testScriptTypeEnum() {
         ScriptType[] values = ScriptType.values();
-        assertEquals(4, values.length);
+        assertEquals(2, values.length);
         assertEquals(ScriptType.JAVA_SCRIPT, ScriptType.valueOf("JAVA_SCRIPT"));
-        assertEquals(ScriptType.LUA, ScriptType.valueOf("LUA"));
         assertEquals(ScriptType.GROOVY, ScriptType.valueOf("GROOVY"));
-        assertEquals(ScriptType.PYTHON, ScriptType.valueOf("PYTHON"));
     }
 
     @Test(expected = Exception.class)

@@ -27,8 +27,8 @@
 package cn.orionsec.kit.http.apache;
 
 import cn.orionsec.kit.lang.constant.Const;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.cookie.BasicClientCookie;
+import org.apache.hc.client5.http.cookie.BasicCookieStore;
+import org.apache.hc.client5.http.impl.cookie.BasicClientCookie;
 
 import java.util.Map;
 

@@ -56,19 +56,19 @@ public class Systems {
     public static final String FILE_SEPARATOR;
 
     /**
-     * 是否是unix环境下
+     * 是否是 unix 环境下
      */
-    public static final boolean BE_UNIX;
+    public static final boolean IS_UNIX;
 
     /**
-     * 是否是windows环境下
+     * 是否是 windows 环境下
      */
-    public static final boolean BE_WINDOWS;
+    public static final boolean IS_WINDOWS;
 
     /**
-     * 是否是Android环境下
+     * 是否是 Android 环境下
      */
-    public static final boolean BE_ANDROID;
+    public static final boolean IS_ANDROID;
 
     /**
      * 当前用户名
@@ -141,8 +141,8 @@ public class Systems {
     static {
         LINE_SEPARATOR = getProperty("line.separator", Const.LF);
         FILE_SEPARATOR = File.separator;
-        BE_UNIX = Const.SLASH.equals(File.separator);
-        BE_WINDOWS = Const.BACKSLASH.equals(File.separator);
+        IS_UNIX = Const.SLASH.equals(File.separator);
+        IS_WINDOWS = Const.BACKSLASH.equals(File.separator);
         USER_NAME = getProperty("user.name", Const.UNKNOWN);
         FILE_ENCODING = getProperty("file.encoding", Const.UTF_8);
         HOME_DIR = getProperty("user.home", Const.ROOT_PATH);
@@ -151,7 +151,7 @@ public class Systems {
         OS_NAME = getProperty("os.name", Const.UNKNOWN);
         OS_VERSION = getProperty("os.version", Const.UNKNOWN);
         JAVA_HOME = getProperty("java.home", Const.ROOT_PATH);
-        if (BE_WINDOWS) {
+        if (IS_WINDOWS) {
             HOST_NAME = getEnv("COMPUTERNAME");
         } else {
             HOST_NAME = getEnv("HOSTNAME");
@@ -162,7 +162,7 @@ public class Systems {
         } catch (Exception e) {
             beAndroid = false;
         }
-        BE_ANDROID = beAndroid;
+        IS_ANDROID = beAndroid;
         RuntimeMXBean runtimeBean = ManagementFactory.getRuntimeMXBean();
         String processName = runtimeBean.getName();
         int si = processName.indexOf('@');

@@ -31,8 +31,8 @@ public class DateAgoTest {
 
     @Test
     public void testSecondsAgo() {
-        Date source = Dates.build(2020, 6, 15, 10, 30, 30);
-        Date target = Dates.build(2020, 6, 15, 10, 30, 10);
+        Date source = Dates.build(2020, 6, 15, 10, 30, 30, 0);
+        Date target = Dates.build(2020, 6, 15, 10, 30, 10, 0);
         DateAgo ago = new DateAgo(source, target);
         ago.vague(false);
         assertEquals("20秒前", ago.ago());
@@ -137,8 +137,8 @@ public class DateAgoTest {
 
     @Test
     public void testSecondsFuture() {
-        Date source = Dates.build(2020, 6, 15, 10, 30, 10);
-        Date target = Dates.build(2020, 6, 15, 10, 30, 30);
+        Date source = Dates.build(2020, 6, 15, 10, 30, 10, 0);
+        Date target = Dates.build(2020, 6, 15, 10, 30, 30, 0);
         DateAgo ago = new DateAgo(source, target);
         ago.vague(false);
         assertEquals("20秒后", ago.ago());

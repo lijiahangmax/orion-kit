@@ -87,4 +87,30 @@ public class StringsTest {
         assertEquals("hello", Strings.str("hello"));
         assertEquals("abc", Strings.str(new char[]{'a', 'b', 'c'}));
     }
+
+    @Test
+    public void testSplit() {
+        assertArrayEquals(new String[]{"a", "b", "c"}, Strings.split("a,b,c"));
+        assertArrayEquals(new String[]{"a", "b", "c"}, Strings.split("a-b-c", "-"));
+        // 保留空串与顺序
+        assertArrayEquals(new String[]{"a", "", "b"}, Strings.split("a,,b"));
+        assertArrayEquals(new String[]{"", "a", ""}, Strings.split(",a,"));
+        // 多字符字面量分隔符 (非正则)
+        assertArrayEquals(new String[]{"a", "b"}, Strings.split("a::b", "::"));
+        // "." 作为字面量而非正则元字符
+        assertArrayEquals(new String[]{"a", "b", "c"}, Strings.split("a.b.c", "."));
+        // 无分隔符命中
+        assertArrayEquals(new String[]{"abc"}, Strings.split("abc", ","));
+    }
+
+    @Test
+    public void testSplitEdgeCases() {
+        // 空输入返回空数组
+        assertArrayEquals(new String[0], Strings.split(null));
+        assertArrayEquals(new String[0], Strings.split(""));
+        assertArrayEquals(new String[0], Strings.split(null, ","));
+        // 分隔符为空返回单元素数组
+        assertArrayEquals(new String[]{"abc"}, Strings.split("abc", null));
+        assertArrayEquals(new String[]{"abc"}, Strings.split("abc", ""));
+    }
 }

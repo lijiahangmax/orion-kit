@@ -28,8 +28,8 @@ package cn.orionsec.kit.http.apache;
 
 import cn.orionsec.kit.lang.define.wrapper.Tuple;
 import cn.orionsec.kit.lang.id.UUIds;
-import org.apache.http.*;
-import org.apache.http.protocol.HttpContext;
+import org.apache.hc.core5.http.*;
+import org.apache.hc.core5.http.protocol.HttpContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,23 +62,21 @@ public class ApacheLoggerInterceptor implements HttpRequestInterceptor, HttpResp
     }
 
     @Override
-    public void process(HttpRequest httpRequest, HttpContext httpContext) {
+    public void process(HttpRequest httpRequest, EntityDetails entityDetails, HttpContext httpContext) {
         long start = System.currentTimeMillis();
-        RequestLine request = httpRequest.getRequestLine();
-        String method = request.getMethod();
-        String uri = request.getUri();
+        String method = httpRequest.getMethod();
+        String uri = httpRequest.getRequestUri();
         String traceId = UUIds.random32();
         HOLDER.set(Tuple.of(method, uri, start, traceId));
         LOGGER.info(suffix + "START method: [{}], url: [{}], start: [{}], traceId: [{}]", method, uri, start, traceId);
     }
 
     @Override
-    public void process(HttpResponse httpResponse, HttpContext httpContext) {
+    public void process(HttpResponse httpResponse, EntityDetails entityDetails, HttpContext httpContext) {
         long end = System.currentTimeMillis();
         Tuple tuple = HOLDER.get();
         HOLDER.remove();
-        StatusLine response = httpResponse.getStatusLine();
-        int code = response.getStatusCode();
+        int code = httpResponse.getCode();
         LOGGER.info(suffix + "END [use: {}ms], code: {}, method: [{}], url: [{}], traceId: [{}]",
                 end - (Long) tuple.get(2), code, tuple.get(0), tuple.get(1), tuple.get(3));
     }

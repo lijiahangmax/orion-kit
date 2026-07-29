@@ -27,122 +27,85 @@
 package cn.orionsec.kit.http.tests;
 
 import cn.orionsec.kit.http.parse.ParseRequest;
-import cn.orionsec.kit.http.parse.ParseRequestConfig;
 import cn.orionsec.kit.http.parse.ParseResponse;
-import cn.orionsec.kit.http.support.HttpCookie;
 import cn.orionsec.kit.http.support.HttpMethod;
-import cn.orionsec.kit.http.useragent.UserAgentGenerators;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
 import org.jsoup.nodes.Document;
-import org.junit.Ignore;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+
 /**
+ * jsoup parse 请求测试 (基于 mockwebserver 自包含)
+ *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2021/3/8 17:37
  */
-@Ignore("需要本地 localhost:8080 测试服务器 无法在单元测试环境请求")
 public class ParseTests {
 
-    private static final String REQ = "http://localhost:8080/http/req";
-    private static final String SLEEP = "http://localhost:8080/http/sleep";
-    private static final String TEXT = "http://localhost:8080/http/text";
-    private static final String HTML = "http://localhost:8080/http/html";
-    private static final String NULL = "http://localhost:8080/http/null";
-    private static final String TIMEOUT = "http://localhost:8081/http/download";
+    private static final String HTML = "<html><head><title>t</title></head>"
+            + "<body><div id=\"div1\"><p id=\"p\">hello</p></div></body></html>";
 
-    @Test
-    public void testReq1() {
-        System.out.println(new ParseRequest(TEXT).await().getBodyString());
+    private MockWebServer server;
+
+    private String baseUrl;
+
+    @Before
+    public void setUp() throws IOException {
+        server = new MockWebServer();
+        server.start();
+        baseUrl = server.url("/").toString();
+    }
+
+    @After
+    public void tearDown() throws IOException {
+        server.shutdown();
     }
 
     @Test
-    public void testReq2() {
-        ParseRequest req = new ParseRequest(TEXT);
-        req.userAgent(UserAgentGenerators.generator());
+    public void testGet() {
+        server.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .addHeader("Content-Type", "text/html; charset=utf-8")
+                .setBody(HTML));
+        ParseResponse resp = new ParseRequest(baseUrl + "http/html").await();
+        Assert.assertTrue(resp.getBodyString().contains("hello"));
+    }
+
+    @Test
+    public void testParseHtml() {
+        server.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .addHeader("Content-Type", "text/html; charset=utf-8")
+                .setBody(HTML));
+        ParseRequest req = new ParseRequest(baseUrl + "http/html");
+        req.method(HttpMethod.GET);
+        ParseResponse resp = req.await();
+        Document doc = resp.parse().getDocument();
+        Assert.assertEquals("hello", doc.select("#p").text());
+        Assert.assertEquals("hello", doc.select("#div1 p").text());
+    }
+
+    @Test
+    public void testPostBody() throws InterruptedException {
+        server.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .addHeader("Content-Type", "text/html; charset=utf-8")
+                .setBody(HTML));
+        ParseRequest req = new ParseRequest(baseUrl + "http/req");
         req.method(HttpMethod.POST);
         req.header("A", "B");
-        req.body("身体哦");
-        System.out.println(req.await().getBodyString());
-    }
-
-    @Test
-    public void testReq3() {
-        ParseRequest req = new ParseRequest(TEXT);
-        req.userAgent(UserAgentGenerators.generator());
-        req.method(HttpMethod.DELETE);
-        req.queryParam("name", "12");
-        req.header("A", "B");
-        System.out.println(req.await().getBodyString());
-    }
-
-    @Test
-    public void testReq4() {
-        ParseRequest req = new ParseRequest(TEXT);
-        req.userAgent(UserAgentGenerators.generator());
-        req.method(HttpMethod.POST);
-        req.formPart("name", "whh");
-        req.formPart("age", "18");
-        req.formPart("sex", "女");
-        req.cookie(new HttpCookie().addValue("uid", "1"));
-        System.out.println(req.await().getBodyString());
-    }
-
-    @Test
-    public void testReq5() {
-        ParseRequest req = new ParseRequest(SLEEP);
-        req.method(HttpMethod.POST);
-        System.out.println(req.await().getBodyString());
-    }
-
-    @Test
-    public void testReq6() {
-        ParseRequest req = new ParseRequest(TEXT);
-        req.method(HttpMethod.DELETE);
-        System.out.println(req.await().getBodyString());
-    }
-
-    @Test
-    public void testReq7() {
-        ParseRequest req = new ParseRequest(HTML);
-        req.method(HttpMethod.GET);
-        ParseResponse await = req.await();
-        System.out.println(await.getBodyString());
-        Document doc = await.parse().getDocument();
-        System.out.println(doc.select("button").attr("onclick"));
-        System.out.println(doc.select("#p"));
-        System.out.println(doc.select("#div1 p"));
-    }
-
-    @Test
-    public void testReq8() {
-        ParseRequest req = new ParseRequest(NULL);
-        req.method(HttpMethod.GET);
-        System.out.println(req.await().getBodyString());
-    }
-
-    @Test
-    public void testReq9() {
-        ParseRequest req = new ParseRequest(TIMEOUT);
-        req.method(HttpMethod.GET);
-        System.out.println(req.await().getBodyString());
-    }
-
-    @Test
-    public void testReq10() {
-        ParseRequest req = new ParseRequest(REQ);
-        req.method(HttpMethod.GET);
-        System.out.println(req.await().getBodyString());
-    }
-
-    @Test
-    public void testReq11() {
-        ParseRequest req = new ParseRequest(REQ);
-        ParseRequestConfig config = new ParseRequestConfig();
-        config.ignoreContentType(false);
-        req.config(config);
-        req.method(HttpMethod.GET);
-        System.out.println(req.await().getBodyString());
+        req.body("body-content");
+        req.await();
+        RecordedRequest recorded = server.takeRequest();
+        Assert.assertEquals("POST", recorded.getMethod());
+        Assert.assertEquals("B", recorded.getHeader("A"));
     }
 
 }

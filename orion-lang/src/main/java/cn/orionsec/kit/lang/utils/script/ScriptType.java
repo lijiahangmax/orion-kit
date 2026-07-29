@@ -41,20 +41,9 @@ public enum ScriptType {
     JAVA_SCRIPT("js"),
 
     /**
-     * lua
-     */
-    LUA("lua"),
-
-    /**
      * groovy
      */
-    GROOVY("groovy"),
-
-    /**
-     * python
-     * 需要设置 python.import.site 为 false
-     */
-    PYTHON("python");
+    GROOVY("groovy");
 
     private final String type;
 

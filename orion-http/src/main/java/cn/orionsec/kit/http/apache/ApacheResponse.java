@@ -32,9 +32,9 @@ import cn.orionsec.kit.lang.define.collect.MutableArrayList;
 import cn.orionsec.kit.lang.define.mutable.MutableString;
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.io.Streams;
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
+import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.HttpEntity;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -55,7 +55,7 @@ public class ApacheResponse extends BaseHttpResponse implements Serializable {
     /**
      * 响应
      */
-    private final HttpResponse response;
+    private final ClassicHttpResponse response;
 
     /**
      * url
@@ -67,7 +67,7 @@ public class ApacheResponse extends BaseHttpResponse implements Serializable {
      */
     private byte[] body;
 
-    public ApacheResponse(String url, HttpResponse response) throws IOException {
+    public ApacheResponse(String url, ClassicHttpResponse response) throws IOException {
         this.url = url;
         this.response = response;
         HttpEntity entity = response.getEntity();
@@ -76,7 +76,7 @@ public class ApacheResponse extends BaseHttpResponse implements Serializable {
         }
     }
 
-    public HttpResponse getResponse() {
+    public ClassicHttpResponse getResponse() {
         return response;
     }
 
@@ -87,11 +87,11 @@ public class ApacheResponse extends BaseHttpResponse implements Serializable {
 
     @Override
     public int getCode() {
-        return response.getStatusLine().getStatusCode();
+        return response.getCode();
     }
 
     public String getMessage() {
-        return response.getStatusLine().getReasonPhrase();
+        return response.getReasonPhrase();
     }
 
     @Override
@@ -109,7 +109,7 @@ public class ApacheResponse extends BaseHttpResponse implements Serializable {
 
     public Map<String, MutableArrayList<String>> getHeaders() {
         Map<String, MutableArrayList<String>> headers = new LinkedHashMap<>();
-        for (Header header : response.getAllHeaders()) {
+        for (Header header : response.getHeaders()) {
             MutableArrayList<String> list = headers.computeIfAbsent(header.getName(), k -> new MutableArrayList<>());
             list.add(header.getValue());
         }

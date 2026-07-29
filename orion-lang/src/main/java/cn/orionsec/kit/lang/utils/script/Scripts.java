@@ -58,16 +58,8 @@ public class Scripts {
         return createScript(ScriptType.JAVA_SCRIPT.getType());
     }
 
-    public static ScriptEngine createLuaScript() {
-        return createScript(ScriptType.LUA.getType());
-    }
-
     public static ScriptEngine createGroovyScript() {
         return createScript(ScriptType.GROOVY.getType());
-    }
-
-    public static ScriptEngine createPythonScript() {
-        return createScript(ScriptType.PYTHON.getType());
     }
 
     public static ScriptEngine createScript(ScriptType type) {
@@ -81,9 +73,6 @@ public class Scripts {
      * @return 脚本引擎
      */
     public static ScriptEngine createScript(String type) {
-        if (ScriptType.PYTHON.getType().equals(type)) {
-            System.setProperty("python.import.site", "false");
-        }
         ScriptEngine engine = MANAGER.getEngineByName(type);
         if (engine == null) {
             engine = MANAGER.getEngineByExtension(type);
@@ -103,16 +92,8 @@ public class Scripts {
         return getScript(ScriptType.JAVA_SCRIPT.getType());
     }
 
-    public static ScriptEngine getLuaScript() {
-        return getScript(ScriptType.LUA.getType());
-    }
-
     public static ScriptEngine getGroovyScript() {
         return getScript(ScriptType.GROOVY.getType());
-    }
-
-    public static ScriptEngine getPythonScript() {
-        return getScript(ScriptType.PYTHON.getType());
     }
 
     public static ScriptEngine getScript(ScriptType type) {

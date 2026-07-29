@@ -30,7 +30,7 @@ import cn.orionsec.kit.http.apache.file.ApacheDownload;
 import cn.orionsec.kit.http.apache.file.ApacheUpload;
 import cn.orionsec.kit.http.support.HttpContentType;
 import cn.orionsec.kit.http.support.HttpMethod;
-import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 
 import java.util.Map;
 
