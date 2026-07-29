@@ -29,6 +29,7 @@ package cn.orionsec.kit.office.excel.reader;
 import cn.orionsec.kit.lang.define.Console;
 import cn.orionsec.kit.lang.define.collect.MutableMap;
 import cn.orionsec.kit.lang.utils.Objects1;
+import cn.orionsec.kit.lang.utils.Systems;
 import cn.orionsec.kit.office.excel.Excels;
 import cn.orionsec.kit.office.excel.option.ImportFieldOption;
 import cn.orionsec.kit.office.excel.type.ExcelReadType;
@@ -49,7 +50,7 @@ import java.util.ArrayList;
  */
 public class ImportShopTest {
 
-    private static final File FILE = new File("C:\\Users\\Administrator\\Desktop\\shop.xlsx");
+    private static final File FILE = new File(Systems.HOME_DIR + "\\orion-kit-test\\shop.xlsx");
 
     private Workbook workbook;
 

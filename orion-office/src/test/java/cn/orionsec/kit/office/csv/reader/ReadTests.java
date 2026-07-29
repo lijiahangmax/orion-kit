@@ -28,6 +28,7 @@ package cn.orionsec.kit.office.csv.reader;
 
 import cn.orionsec.kit.lang.define.Console;
 import cn.orionsec.kit.lang.define.collect.MutableMap;
+import cn.orionsec.kit.lang.utils.Systems;
 import cn.orionsec.kit.office.csv.core.CsvReader;
 import org.junit.Assume;
 import org.junit.Before;
@@ -43,10 +44,10 @@ import java.util.Arrays;
  */
 public class ReadTests {
 
-    private static final File ARRAY_FILE = new File("C:\\Users\\Administrator\\Desktop\\csv\\array.csv");
-    private static final File MAP_FILE = new File("C:\\Users\\Administrator\\Desktop\\csv\\map.csv");
-    private static final File BEAN_FILE = new File("C:\\Users\\Administrator\\Desktop\\csv\\bean.csv");
-    private static final File LAMBDA_FILE = new File("C:\\Users\\Administrator\\Desktop\\csv\\lambda.csv");
+    private static final File ARRAY_FILE = new File(Systems.HOME_DIR + "\\orion-kit-test\\csv\\array.csv");
+    private static final File MAP_FILE = new File(Systems.HOME_DIR + "\\orion-kit-test\\csv\\map.csv");
+    private static final File BEAN_FILE = new File(Systems.HOME_DIR + "\\orion-kit-test\\csv\\bean.csv");
+    private static final File LAMBDA_FILE = new File(Systems.HOME_DIR + "\\orion-kit-test\\csv\\lambda.csv");
 
     private CsvReader array;
     private CsvReader map;

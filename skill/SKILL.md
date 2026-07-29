@@ -7,31 +7,31 @@ description: orion-kit Java utility library API reference. Invoke when the user 
 
 Route user requests by domain:
 
-| Domain | Module | Key Classes |
-|--------|--------|-------------|
-| Strings, collections, IO, crypto, dates, reflection, encoding, threads | `orion-lang` | `Strings`, `Lists`, `Maps`, `Sets`, `Dates`, `Files1`, `Streams`, `Arrays1`, `Objects1`, `AES`, `RSA`, `Signatures` |
-| IP geolocation, email, process, file tailing, git | `orion-ext` | `IPs`, `Emails`, `Processes`, `GitPush` |
-| CSV and Excel import/export | `orion-office` | `CsvBeanReader`, `CsvBeanWriter`, `ExcelReads`, `ExcelWrites` |
-| OkHttp, HttpClient, Jsoup | `orion-http` | `Https`, `HttpClients`, `JsoupDocument` |
-| SSH, SFTP, FTP, TCP/UDP | `orion-net` | `SshExecutor`, `SftpExecutor`, `FtpExecutor`, `SocketChannel` |
-| Servlet utilities | `orion-web` | `Servlets`, `Cookies` |
-| Spring container utilities | `orion-spring` | `ApplicationContexts` |
-| Random data generators | `orion-generator` | `AddressGenerator`, `NameGenerator`, `IdCardGenerator` |
+| Domain                                                                 | Module            | Key Classes                                                                                                         |
+|------------------------------------------------------------------------|-------------------|---------------------------------------------------------------------------------------------------------------------|
+| Strings, collections, IO, crypto, dates, reflection, encoding, threads | `orion-lang`      | `Strings`, `Lists`, `Maps`, `Sets`, `Dates`, `Files1`, `Streams`, `Arrays1`, `Objects1`, `AES`, `RSA`, `Signatures` |
+| IP geolocation, email, process, file tailing, git                      | `orion-ext`       | `IPs`, `Emails`, `Processes`, `GitPush`                                                                             |
+| CSV and Excel import/export                                            | `orion-office`    | `CsvBeanReader`, `CsvBeanWriter`, `ExcelReads`, `ExcelWrites`                                                       |
+| OkHttp, HttpClient, Jsoup                                              | `orion-http`      | `Https`, `HttpClients`, `JsoupDocument`                                                                             |
+| SSH, SFTP, FTP, TCP/UDP                                                | `orion-net`       | `SshExecutor`, `SftpExecutor`, `FtpExecutor`, `SocketChannel`                                                       |
+| Servlet utilities                                                      | `orion-web`       | `Servlets`, `Cookies`                                                                                               |
+| Spring container utilities                                             | `orion-spring`    | `ApplicationContexts`                                                                                               |
+| Random data generators                                                 | `orion-generator` | `AddressGenerator`, `NameGenerator`, `IdCardGenerator`                                                              |
 
 ## Naming Convention
 
 Pattern: `{function}s`. If JDK class exists, suffix with `1`:
 
-| Need | Class |
-|------|-------|
-| Strings | `Strings` |
-| Lists | `Lists` |
-| Maps | `Maps` |
-| Dates | `Dates` |
-| Files | `Files1` (JDK has `File`) |
-| Streams | `Streams` |
+| Need    | Class                          |
+|---------|--------------------------------|
+| Strings | `Strings`                      |
+| Lists   | `Lists`                        |
+| Maps    | `Maps`                         |
+| Dates   | `Dates`                        |
+| Files   | `Files1` (JDK has `File`)      |
+| Streams | `Streams`                      |
 | Objects | `Objects1` (JDK has `Objects`) |
-| Arrays | `Arrays1` (JDK has `Arrays`) |
+| Arrays  | `Arrays1` (JDK has `Arrays`)   |
 
 ## Maven
 

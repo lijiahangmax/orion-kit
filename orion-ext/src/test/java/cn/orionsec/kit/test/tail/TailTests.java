@@ -32,6 +32,7 @@ import cn.orionsec.kit.ext.tail.mode.FileMinusMode;
 import cn.orionsec.kit.ext.tail.mode.FileNotFoundMode;
 import cn.orionsec.kit.ext.tail.mode.FileOffsetMode;
 import cn.orionsec.kit.lang.utils.Strings;
+import cn.orionsec.kit.lang.utils.Systems;
 import cn.orionsec.kit.lang.utils.Threads;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import org.junit.Ignore;
@@ -52,7 +53,7 @@ public class TailTests {
 
     @Test
     public void read1() {
-        DelayTracker tracker = new DelayTracker("C:\\Users\\Administrator\\Desktop\\tail.txt", (s, l, t) -> {
+        DelayTracker tracker = new DelayTracker(Systems.HOME_DIR + "\\orion-kit-test\\tail.txt", (s, l, t) -> {
             System.out.println(l + ": " + s);
         });
         tracker.offset(FileOffsetMode.LINE, 5)
@@ -63,8 +64,8 @@ public class TailTests {
 
     @Test
     public void read2() {
-        OutputStream out = Files1.openOutputStreamSafe("C:\\Users\\Administrator\\Desktop\\merge.txt");
-        DelayTrackerListener tracker = new DelayTrackerListener("C:\\Users\\Administrator\\Desktop\\tail.txt", (s, l, t) -> {
+        OutputStream out = Files1.openOutputStreamSafe(Systems.HOME_DIR + "\\orion-kit-test\\merge.txt");
+        DelayTrackerListener tracker = new DelayTrackerListener(Systems.HOME_DIR + "\\orion-kit-test\\tail.txt", (s, l, t) -> {
             try {
                 if (l != -1) {
                     out.write(s, 0, l);
@@ -80,7 +81,7 @@ public class TailTests {
 
     @Test
     public void testAdd() throws IOException {
-        FileOutputStream outputStream = Files1.openOutputStream(new File("C:\\Users\\Administrator\\Desktop\\tail.txt"), true);
+        FileOutputStream outputStream = Files1.openOutputStream(new File(Systems.HOME_DIR + "\\orion-kit-test\\tail.txt"), true);
         while (true) {
             outputStream.write(Strings.bytes(Strings.randomChars(10)));
             outputStream.write(13);

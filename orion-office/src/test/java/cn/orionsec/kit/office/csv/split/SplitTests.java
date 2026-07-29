@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.office.csv.split;
 
+import cn.orionsec.kit.lang.utils.Systems;
 import cn.orionsec.kit.office.csv.core.CsvReader;
 import cn.orionsec.kit.office.csv.reader.CsvArrayReader;
 import org.junit.Assume;
@@ -41,7 +42,7 @@ import java.io.File;
  */
 public class SplitTests {
 
-    private static final File FILE = new File("C:\\Users\\Administrator\\Desktop\\1.csv");
+    private static final File FILE = new File(Systems.HOME_DIR + "\\orion-kit-test\\1.csv");
 
     @Before
     public void setUp() {
@@ -54,7 +55,7 @@ public class SplitTests {
         CsvArrayReader reader = new CsvArrayReader(new CsvReader(FILE));
         reader.getOption().setSkipEmptyRows(false);
         CsvRowSplit split = new CsvRowSplit(reader, 5).skip(1);
-        split.targetPath("C:\\Users\\Administrator\\Desktop\\split1", "sp");
+        split.targetPath(Systems.HOME_DIR + "\\orion-kit-test\\split1", "sp");
         split.split().close();
     }
 
@@ -62,7 +63,7 @@ public class SplitTests {
     public void columnSplitTests() {
         CsvArrayReader reader = new CsvArrayReader(new CsvReader(FILE));
         reader.getOption().setSkipEmptyRows(false);
-        new CsvColumnSplit(reader, 2, 3, 1).split("C:\\Users\\Administrator\\Desktop\\2.csv");
+        new CsvColumnSplit(reader, 2, 3, 1).split(Systems.HOME_DIR + "\\orion-kit-test\\2.csv");
     }
 
 }

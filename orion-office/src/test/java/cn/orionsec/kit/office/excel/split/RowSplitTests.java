@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.office.excel.split;
 
+import cn.orionsec.kit.lang.utils.Systems;
 import cn.orionsec.kit.office.excel.Excels;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -42,7 +43,7 @@ import java.io.File;
  */
 public class RowSplitTests {
 
-    private static final File FILE = new File("C:\\Users\\lijiahang\\Desktop\\2.xlsx");
+    private static final File FILE = new File(Systems.HOME_DIR + "\\orion-kit-test\\2.xlsx");
 
     private Workbook w1;
     private Workbook w2;
@@ -64,7 +65,7 @@ public class RowSplitTests {
     @Test
     public void rowSplit1() {
         ExcelRowSplit s = new ExcelRowSplit(sheet1, 5);
-        s.targetPath("C:\\Users\\lijiahang\\Desktop\\split1", "sp");
+        s.targetPath(Systems.HOME_DIR + "\\orion-kit-test\\split1", "sp");
         s.header("1", "3", "4")
                 .columns(1, 3, 4)
                 .skip(1)
@@ -75,7 +76,7 @@ public class RowSplitTests {
     @Test
     public void rowSplit2() {
         ExcelRowSplit s = new ExcelRowSplit(sheet2, 5);
-        s.targetPath("C:\\Users\\lijiahang\\Desktop\\split2", "sp");
+        s.targetPath(Systems.HOME_DIR + "\\orion-kit-test\\split2", "sp");
         s.header("1", "2", "3")
                 .skip(1)
                 .split()
@@ -85,7 +86,7 @@ public class RowSplitTests {
     @Test
     public void rowSplit3() {
         ExcelRowSplit s = new ExcelRowSplit(sheet2, 5);
-        s.target("C:\\Users\\lijiahang\\Desktop\\split3\\1.xlsx");
+        s.target(Systems.HOME_DIR + "\\orion-kit-test\\split3\\1.xlsx");
         s.header("1", "2", "3")
                 .skip(1)
                 .split()

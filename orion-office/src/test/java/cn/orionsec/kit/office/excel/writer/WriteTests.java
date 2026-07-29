@@ -31,6 +31,7 @@ import cn.orionsec.kit.lang.function.select.Branches;
 import cn.orionsec.kit.lang.function.select.Selector;
 import cn.orionsec.kit.lang.utils.Colors;
 import cn.orionsec.kit.lang.utils.Strings;
+import cn.orionsec.kit.lang.utils.Systems;
 import cn.orionsec.kit.lang.utils.random.Randoms;
 import cn.orionsec.kit.lang.utils.time.Dates;
 import cn.orionsec.kit.office.excel.option.FooterOption;
@@ -63,7 +64,7 @@ import java.util.stream.IntStream;
  */
 public class WriteTests {
 
-    private static final File TARGET_DIR = new File("C:\\Users\\lijiahang\\Desktop");
+    private static final File TARGET_DIR = new File(Systems.HOME_DIR + "\\orion-kit-test");
 
     private final ExcelWriterBuilder build = new ExcelWriterBuilder();
 
@@ -314,7 +315,7 @@ public class WriteTests {
         if (!TARGET_DIR.exists()) {
             return;
         }
-        build.write("C:\\Users\\lijiahang\\Desktop\\2.xlsx");
+        build.write(Systems.HOME_DIR + "\\orion-kit-test\\2.xlsx");
     }
 
 }

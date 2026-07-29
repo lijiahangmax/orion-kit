@@ -26,6 +26,8 @@
  */
 package cn.orionsec.kit.net.ftp.server;
 
+import cn.orionsec.kit.lang.utils.Systems;
+
 /**
  * @author Jiahang Li
  * @version 1.0.0
@@ -38,10 +40,10 @@ public class FtpServerTests {
         FtpUser user = new FtpUser();
         user.setUsername("user");
         user.setPassword("123");
-        user.setHomePath("C:\\Users\\Administrator\\Desktop\\sftp");
+        user.setHomePath(Systems.HOME_DIR + "\\orion-kit-test\\sftp");
         user.setWritePermission(true);
         instance.addUser(user)
-                // .sslConfig(new FtpServerSslConfig("C:\Users\Administrator\Desktop\sftp\\1.jks", "123456"))
+                // .sslConfig(new FtpServerSslConfig(Systems.HOME_DIR + "\\orion-kit-test\\sftp\\1.jks", "123456"))
                 .listener()
                 .start();
     }

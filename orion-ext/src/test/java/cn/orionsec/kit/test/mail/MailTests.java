@@ -30,6 +30,7 @@ import cn.orionsec.kit.ext.mail.MailAttachment;
 import cn.orionsec.kit.ext.mail.MailMessage;
 import cn.orionsec.kit.ext.mail.MailSender;
 import cn.orionsec.kit.ext.mail.MailServerType;
+import cn.orionsec.kit.lang.utils.Systems;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -59,9 +60,9 @@ public class MailTests {
                 .addLine("-------------------")
                 .addLine("--------end--------")
                 .addLine("-------------------")
-                .attachment(new MailAttachment("C:\\Users\\Administrator\\Desktop\\tmp.txt"))
-                .attachment(new MailAttachment(new File("C:\\Users\\Administrator\\Desktop\\新增&列表.txt")))
-                .attachment(new MailAttachment(Files1.openInputStreamSafe(new File("C:\\Users\\Administrator\\Desktop\\sql.txt")), "sql.md"))
+                .attachment(new MailAttachment(Systems.HOME_DIR + "\\orion-kit-test\\tmp.txt"))
+                .attachment(new MailAttachment(new File(Systems.HOME_DIR + "\\orion-kit-test\\新增&列表.txt")))
+                .attachment(new MailAttachment(Files1.openInputStreamSafe(new File(Systems.HOME_DIR + "\\orion-kit-test\\sql.txt")), "sql.md"))
                 .attachment(new MailAttachment("fq".getBytes(), "1.file"));
         System.out.println(msg);
         sender.send(msg);

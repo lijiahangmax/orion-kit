@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.test.encrypt;
 
+import cn.orionsec.kit.lang.utils.Systems;
 import cn.orionsec.kit.lang.utils.crypto.Signatures;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import org.junit.Test;
@@ -51,7 +52,7 @@ public class SignTests {
         System.out.println("Signatures.sha384(s) = " + Signatures.sha384(s));
         System.out.println("Signatures.sha512(s) = " + Signatures.sha512(s));
         System.out.println();
-        File f = new File("C:\\Users\\Administrator\\Desktop\\bug.txt");
+        File f = new File(Systems.HOME_DIR + "\\orion-kit-test\\bug.txt");
         System.out.println("Files1.md5(f) = " + Files1.md5(f));
         System.out.println("Files1.sha1(f) = " + Files1.sha1(f));
         System.out.println("Files1.sha224(f) = " + Files1.sha224(f));

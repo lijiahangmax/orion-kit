@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.test.file;
 
+import cn.orionsec.kit.lang.utils.Systems;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.lang.utils.io.compress.CompressTypeEnum;
 import cn.orionsec.kit.lang.utils.io.compress.Compresses;
@@ -61,11 +62,11 @@ public class CompressTests {
 
     private String fileName = "3";
 
-    private String dir = "C:\\Users\\Administrator\\Desktop\\" + fileName;
+    private String dir = Systems.HOME_DIR + "\\orion-kit-test\\" + fileName;
 
-    private String desktop = "C:\\Users\\Administrator\\Desktop";
+    private String desktop = Systems.HOME_DIR + "\\orion-kit-test";
 
-    private String target = "C:\\Users\\Administrator\\Desktop\\target1";
+    private String target = Systems.HOME_DIR + "\\orion-kit-test\\target1";
 
     @Test
     public void zipCompress() throws Exception {

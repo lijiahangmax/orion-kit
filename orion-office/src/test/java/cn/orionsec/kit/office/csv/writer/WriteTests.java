@@ -27,6 +27,7 @@
 package cn.orionsec.kit.office.csv.writer;
 
 import cn.orionsec.kit.lang.utils.Strings;
+import cn.orionsec.kit.lang.utils.Systems;
 import cn.orionsec.kit.lang.utils.time.Dates;
 import cn.orionsec.kit.office.csv.core.CsvWriter;
 import org.junit.Test;
@@ -76,7 +77,7 @@ public class WriteTests {
 
     @Test
     public void arrayTests() {
-        CsvWriter writer = new CsvWriter("C:\\Users\\Administrator\\Desktop\\csv\\array.csv");
+        CsvWriter writer = new CsvWriter(Systems.HOME_DIR + "\\orion-kit-test\\csv\\array.csv");
         writer.getOption().setTrim(true);
         CsvArrayWriter cw = new CsvArrayWriter(writer);
         cw.capacity(8)
@@ -93,7 +94,7 @@ public class WriteTests {
 
     @Test
     public void mapTests() {
-        CsvWriter writer = new CsvWriter("C:\\Users\\Administrator\\Desktop\\csv\\map.csv");
+        CsvWriter writer = new CsvWriter(Systems.HOME_DIR + "\\orion-kit-test\\csv\\map.csv");
         writer.getOption().setTrim(true);
         CsvMapWriter<String, Object> cw = new CsvMapWriter<>(writer);
         cw.capacity(6)
@@ -113,7 +114,7 @@ public class WriteTests {
 
     @Test
     public void beanTests() {
-        CsvBeanWriter<ExportUser> writer = new CsvBeanWriter<>("C:\\Users\\Administrator\\Desktop\\csv\\bean.csv", ExportUser.class);
+        CsvBeanWriter<ExportUser> writer = new CsvBeanWriter<>(Systems.HOME_DIR + "\\orion-kit-test\\csv\\bean.csv", ExportUser.class);
         writer.getOption().setTrim(true);
         writer.defaultValue("desc", "def")
                 .skip()
@@ -126,7 +127,7 @@ public class WriteTests {
 
     @Test
     public void lambdaTests() {
-        CsvLambdaWriter<ExportUser> writer = new CsvLambdaWriter<>("C:\\Users\\Administrator\\Desktop\\csv\\lambda.csv");
+        CsvLambdaWriter<ExportUser> writer = new CsvLambdaWriter<>(Systems.HOME_DIR + "\\orion-kit-test\\csv\\lambda.csv");
         writer.getOption().setTrim(true);
         writer.capacity(5)
                 .mapping(0, ExportUser::getNum)

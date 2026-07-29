@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.office.excel.adapter;
 
+import cn.orionsec.kit.lang.utils.Systems;
 import cn.orionsec.kit.office.csv.writer.CsvArrayWriter;
 import cn.orionsec.kit.office.excel.Excels;
 import cn.orionsec.kit.office.excel.convert.ExcelConvert;
@@ -43,7 +44,7 @@ import java.io.File;
  */
 public class AdapterTests {
 
-    private static final File FILE = new File("C:\\Users\\Administrator\\Desktop\\zb.xlsx");
+    private static final File FILE = new File(Systems.HOME_DIR + "\\orion-kit-test\\zb.xlsx");
 
     private Sheet sheet;
 
@@ -56,7 +57,7 @@ public class AdapterTests {
 
     @Test
     public void toCsv() {
-        CsvArrayWriter writer = new CsvArrayWriter("C:\\Users\\Administrator\\Desktop\\zb.csv");
+        CsvArrayWriter writer = new CsvArrayWriter(Systems.HOME_DIR + "\\orion-kit-test\\zb.csv");
         ExcelConvert.csvAdapter(sheet, writer).forNew().close();
     }
 

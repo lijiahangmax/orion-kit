@@ -28,6 +28,7 @@ package cn.orionsec.kit.office.excel.writer;
 
 import cn.orionsec.kit.lang.utils.Spells;
 import cn.orionsec.kit.lang.utils.Strings;
+import cn.orionsec.kit.lang.utils.Systems;
 import cn.orionsec.kit.lang.utils.random.Randoms;
 import cn.orionsec.kit.lang.utils.time.Dates;
 import cn.orionsec.kit.office.excel.writer.exporting.ExcelExport;
@@ -60,7 +61,7 @@ public class ExportUserTests {
             String spell = Spells.getSpell(realName);
             e.setBlogUrl("http://" + spell + ".com");
             e.setEmailUrl(spell + "@orion.com");
-            e.setFile("C:/Users/ljh15/Desktop/list.html");
+            e.setFile(Systems.HOME_DIR + "/orion-kit-test/list.html");
             e.setRealName(realName);
             return e;
         }).collect(Collectors.toList());
@@ -79,7 +80,7 @@ public class ExportUserTests {
                 .addRows(list)
                 .merge(1, 0, 1)
                 .merge(1, 4, 7)
-                .write("C:\\Users\\Administrator\\Desktop\\2.xlsx")
+                .write(Systems.HOME_DIR + "\\orion-kit-test\\2.xlsx")
                 .close();
     }
 

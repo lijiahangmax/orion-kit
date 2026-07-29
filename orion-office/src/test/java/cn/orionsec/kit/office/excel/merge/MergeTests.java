@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.office.excel.merge;
 
+import cn.orionsec.kit.lang.utils.Systems;
 import cn.orionsec.kit.office.excel.Excels;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -42,7 +43,7 @@ import java.io.File;
  */
 public class MergeTests {
 
-    private static final File FILE = new File("C:\\Users\\Administrator\\Desktop\\2.xlsx");
+    private static final File FILE = new File(Systems.HOME_DIR + "\\orion-kit-test\\2.xlsx");
 
     private Workbook w;
     private Sheet s1;
@@ -80,7 +81,7 @@ public class MergeTests {
                 .skip()
                 .skipRows(2)
                 .merge(s3)
-                .write("C:\\Users\\Administrator\\Desktop\\3.xlsx")
+                .write(Systems.HOME_DIR + "\\orion-kit-test\\3.xlsx")
                 .close();
     }
 
@@ -92,7 +93,7 @@ public class MergeTests {
                 .merge(s2)
                 .skip()
                 .merge(s3)
-                .write("C:\\Users\\Administrator\\Desktop\\3.xlsx")
+                .write(Systems.HOME_DIR + "\\orion-kit-test\\3.xlsx")
                 .close();
     }
 
@@ -104,7 +105,7 @@ public class MergeTests {
                 .merge(s12)
                 .skip()
                 .merge(s13)
-                .write("C:\\Users\\Administrator\\Desktop\\4.xlsx")
+                .write(Systems.HOME_DIR + "\\orion-kit-test\\4.xlsx")
                 .close();
     }
 

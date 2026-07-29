@@ -27,6 +27,7 @@
 package cn.orionsec.kit.test.vcs;
 
 import cn.orionsec.kit.ext.vcs.git.Gits;
+import cn.orionsec.kit.lang.utils.Systems;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -45,7 +46,7 @@ public class GitTests {
 
     @Before
     public void before() throws Exception {
-        gits = Gits.of(new File("A:\\tmp\\git\\tmp"));
+        gits = Gits.of(new File(Systems.HOME_DIR + "\\orion-kit-test\\git\\tmp"));
         System.out.println(gits.getBranch());
         System.out.println(gits.getRemoteUrl());
         System.out.println(gits.getDirectory());
@@ -53,7 +54,7 @@ public class GitTests {
 
     @Test
     public void cloneTest() {
-        Gits.clone("https://gitee.com/lijiahangmax/tmp1.git", new File("C:\\Users\\Administrator\\Desktop\\1"));
+        Gits.clone("https://gitee.com/lijiahangmax/tmp1.git", new File(Systems.HOME_DIR + "\\orion-kit-test\\1"));
     }
 
     @Test

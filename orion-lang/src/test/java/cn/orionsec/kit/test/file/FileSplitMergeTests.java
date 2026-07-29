@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.test.file;
 
+import cn.orionsec.kit.lang.utils.Systems;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.lang.utils.io.split.FileMerge;
 import cn.orionsec.kit.lang.utils.io.split.FileSplit;
@@ -43,7 +44,7 @@ public class FileSplitMergeTests {
     @Test
     public void s1() {
         // split
-        String file = "C:\\Users\\Administrator\\orion-kit-test\\split\\test.bin";
+        String file = Systems.HOME_DIR + "\\orion-kit-test\\split\\test.bin";
         System.out.println(Files1.md5(file));
         String[] c = new FileSplit(file).call();
         System.out.println(Arrays.toString(c));
@@ -52,7 +53,7 @@ public class FileSplitMergeTests {
     @Test
     public void m1() {
         // merge
-        String file = "C:\\Users\\Administrator\\orion-kit-test\\split\\test.bin";
+        String file = Systems.HOME_DIR + "\\orion-kit-test\\split\\test.bin";
         String newFile = new FileMerge(file + ".block").call();
         System.out.println(newFile);
         System.out.println(Files1.md5(newFile));

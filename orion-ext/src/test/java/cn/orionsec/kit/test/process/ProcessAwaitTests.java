@@ -30,6 +30,7 @@ import cn.orionsec.kit.ext.process.ProcessAwaitExecutor;
 import cn.orionsec.kit.ext.process.Processes;
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.function.impl.ReaderLineConsumer;
+import cn.orionsec.kit.lang.utils.Systems;
 import cn.orionsec.kit.lang.utils.Threads;
 import org.junit.Test;
 
@@ -74,7 +75,7 @@ public class ProcessAwaitTests {
     }
 
     public static void bat() {
-        ProcessAwaitExecutor exec = new ProcessAwaitExecutor("C:\\Users\\lijiahang\\Desktop\\1.bat");
+        ProcessAwaitExecutor exec = new ProcessAwaitExecutor(Systems.HOME_DIR + "\\orion-kit-test\\1.bat");
         exec.streamHandler(ReaderLineConsumer.printer())
                 .callback(() -> {
                     System.out.println("end");
@@ -115,7 +116,7 @@ public class ProcessAwaitTests {
         e.callback(() -> {
             System.out.println("end");
         });
-        e.dir("D:\\JDK1.8\\bin");
+        e.dir(new java.io.File(System.getProperty("java.home"), "bin").getAbsolutePath());
         e.redirectError();
         e.exec();
         Threads.sleep(5000);

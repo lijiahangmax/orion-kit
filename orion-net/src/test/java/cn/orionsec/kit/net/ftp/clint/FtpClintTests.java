@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.net.ftp.clint;
 
+import cn.orionsec.kit.lang.utils.Systems;
 import cn.orionsec.kit.lang.utils.Threads;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import cn.orionsec.kit.lang.utils.io.Files1;
@@ -281,19 +282,19 @@ public class FtpClintTests {
 
     @Test
     public void testUpload() throws IOException {
-        e.uploadFile("/root/test/bug.txt", "C:\\Users\\Administrator\\Desktop\\bug.txt");
-        e.uploadDir("/root/test/dir", "C:\\Users\\Administrator\\Desktop\\FastStoneCapture7.3", true);
+        e.uploadFile("/root/test/bug.txt", Systems.HOME_DIR + "\\orion-kit-test\\bug.txt");
+        e.uploadDir("/root/test/dir", Systems.HOME_DIR + "\\orion-kit-test\\FastStoneCapture7.3", true);
     }
 
     @Test
     public void testDownload() throws IOException {
-        e.downloadFile("/root/test/bug.txt", "C:\\Users\\Administrator\\Desktop\\bug1.txt");
-        e.downloadDir("/root/test/dir", "C:\\Users\\Administrator\\Desktop\\_FastStoneCapture7.3", true);
+        e.downloadFile("/root/test/bug.txt", Systems.HOME_DIR + "\\orion-kit-test\\bug1.txt");
+        e.downloadDir("/root/test/dir", Systems.HOME_DIR + "\\orion-kit-test\\_FastStoneCapture7.3", true);
     }
 
     @Test
     public void testTransferUpload() {
-        String local = "C:\\Users\\Administrator\\Desktop\\cp.zip";
+        String local = Systems.HOME_DIR + "\\orion-kit-test\\cp.zip";
         System.out.println(Files1.md5(local));
 
         IFileUploader u = e.upload("/root/test/cp.zip", local);
@@ -314,7 +315,7 @@ public class FtpClintTests {
 
     @Test
     public void testTransferDownload() {
-        String local = "C:\\Users\\Administrator\\Desktop\\cp1.zip";
+        String local = Systems.HOME_DIR + "\\orion-kit-test\\cp1.zip";
 
         IFileDownloader u = e.download("/root/test/cp.zip", local);
         u.getProgress()

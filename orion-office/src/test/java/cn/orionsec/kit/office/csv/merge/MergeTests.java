@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.office.csv.merge;
 
+import cn.orionsec.kit.lang.utils.Systems;
 import cn.orionsec.kit.office.csv.core.CsvReader;
 import cn.orionsec.kit.office.csv.reader.CsvArrayReader;
 import cn.orionsec.kit.office.csv.writer.CsvArrayWriter;
@@ -42,11 +43,11 @@ import java.io.File;
  */
 public class MergeTests {
 
-    private static final File SP1 = new File("C:\\Users\\Administrator\\Desktop\\split1\\sp1.csv");
-    private static final File SP2 = new File("C:\\Users\\Administrator\\Desktop\\split1\\sp2.csv");
-    private static final File SP3 = new File("C:\\Users\\Administrator\\Desktop\\split1\\sp3.csv");
-    private static final File SP4 = new File("C:\\Users\\Administrator\\Desktop\\split1\\sp4.csv");
-    private static final File SP5 = new File("C:\\Users\\Administrator\\Desktop\\split1\\sp5.csv");
+    private static final File SP1 = new File(Systems.HOME_DIR + "\\orion-kit-test\\split1\\sp1.csv");
+    private static final File SP2 = new File(Systems.HOME_DIR + "\\orion-kit-test\\split1\\sp2.csv");
+    private static final File SP3 = new File(Systems.HOME_DIR + "\\orion-kit-test\\split1\\sp3.csv");
+    private static final File SP4 = new File(Systems.HOME_DIR + "\\orion-kit-test\\split1\\sp4.csv");
+    private static final File SP5 = new File(Systems.HOME_DIR + "\\orion-kit-test\\split1\\sp5.csv");
 
     @Before
     public void setUp() {
@@ -56,7 +57,7 @@ public class MergeTests {
 
     @Test
     public void testMerge() {
-        CsvArrayWriter writer = new CsvArrayWriter("C:\\Users\\Administrator\\Desktop\\3.csv");
+        CsvArrayWriter writer = new CsvArrayWriter(Systems.HOME_DIR + "\\orion-kit-test\\3.csv");
         new CsvMerge(writer)
                 .skipRows()
                 .header("m1", "m2", "m3", "m4")

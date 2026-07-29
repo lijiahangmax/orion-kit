@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.net.ftp.server;
 
+import cn.orionsec.kit.lang.utils.Systems;
 import org.junit.Test;
 
 import java.io.File;
@@ -43,8 +44,8 @@ public class FtpServerSslConfigTest {
 
     @Test
     public void testStringConstructor() {
-        FtpServerSslConfig config = new FtpServerSslConfig("C:/key/store.jks", "123456");
-        assertEquals(new File("C:/key/store.jks"), config.getKeyStoreFile());
+        FtpServerSslConfig config = new FtpServerSslConfig(Systems.HOME_DIR + "/orion-kit-test/key/store.jks", "123456");
+        assertEquals(new File(Systems.HOME_DIR + "/orion-kit-test/key/store.jks"), config.getKeyStoreFile());
         assertEquals("123456", config.getKeyStorePassword());
         assertNull(config.getSslProtocol());
         assertNull(config.getKeyStoreAlgorithm());
@@ -53,7 +54,7 @@ public class FtpServerSslConfigTest {
 
     @Test
     public void testFileConstructor() {
-        File file = new File("C:/key/store.jks");
+        File file = new File(Systems.HOME_DIR + "/orion-kit-test/key/store.jks");
         FtpServerSslConfig config = new FtpServerSslConfig(file, "123456");
         assertSame(file, config.getKeyStoreFile());
         assertEquals("123456", config.getKeyStorePassword());
@@ -61,20 +62,20 @@ public class FtpServerSslConfigTest {
 
     @Test
     public void testSetter() {
-        FtpServerSslConfig config = new FtpServerSslConfig("C:/key/store.jks", "123456");
+        FtpServerSslConfig config = new FtpServerSslConfig(Systems.HOME_DIR + "/orion-kit-test/key/store.jks", "123456");
         config.setSslProtocol("TLSv1.2");
         config.setKeyStorePassword("654321");
         config.setKeyStoreAlgorithm("SunX509");
         config.setKeyAlias("orion");
-        config.setKeyStoreFile("C:/key/other.jks");
+        config.setKeyStoreFile(Systems.HOME_DIR + "/orion-kit-test/key/other.jks");
 
         assertEquals("TLSv1.2", config.getSslProtocol());
         assertEquals("654321", config.getKeyStorePassword());
         assertEquals("SunX509", config.getKeyStoreAlgorithm());
         assertEquals("orion", config.getKeyAlias());
-        assertEquals(new File("C:/key/other.jks"), config.getKeyStoreFile());
+        assertEquals(new File(Systems.HOME_DIR + "/orion-kit-test/key/other.jks"), config.getKeyStoreFile());
 
-        File file = new File("C:/key/file.jks");
+        File file = new File(Systems.HOME_DIR + "/orion-kit-test/key/file.jks");
         config.setKeyStoreFile(file);
         assertSame(file, config.getKeyStoreFile());
     }

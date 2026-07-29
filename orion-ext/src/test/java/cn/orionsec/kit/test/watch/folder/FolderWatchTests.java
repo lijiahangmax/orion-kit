@@ -29,6 +29,7 @@ package cn.orionsec.kit.test.watch.folder;
 import cn.orionsec.kit.ext.watch.folder.BlockFolderWatcher;
 import cn.orionsec.kit.ext.watch.folder.WatchEventKind;
 import cn.orionsec.kit.ext.watch.folder.handler.DefaultWatchHandler;
+import cn.orionsec.kit.lang.utils.Systems;
 
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
@@ -62,7 +63,7 @@ public class FolderWatchTests {
                 System.out.println("overflow " + path + " " + event.kind() + " " + event.count() + " " + event.context());
             }
         }, WatchEventKind.ALL);
-        watcher.registerPath("C:\\Users\\Administrator\\Desktop\\t\\k1");
+        watcher.registerPath(Systems.HOME_DIR + "\\orion-kit-test\\t\\k1");
         watcher.run();
 
     }

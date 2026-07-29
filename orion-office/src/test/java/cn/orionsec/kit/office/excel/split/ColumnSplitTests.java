@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.office.excel.split;
 
+import cn.orionsec.kit.lang.utils.Systems;
 import cn.orionsec.kit.office.excel.Excels;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -42,7 +43,7 @@ import java.io.File;
  */
 public class ColumnSplitTests {
 
-    private static final File FILE = new File("C:\\Users\\lijiahang\\Desktop\\2.xlsx");
+    private static final File FILE = new File(Systems.HOME_DIR + "\\orion-kit-test\\2.xlsx");
 
     private Workbook w1;
     private Workbook w2;
@@ -67,7 +68,7 @@ public class ColumnSplitTests {
                 .skip(3)
                 .header("1", "0", "2")
                 .split()
-                .write("C:\\Users\\lijiahang\\Desktop\\3.xlsx")
+                .write(Systems.HOME_DIR + "\\orion-kit-test\\3.xlsx")
                 .close();
     }
 
@@ -76,7 +77,7 @@ public class ColumnSplitTests {
         new ExcelColumnSingleSplit(w2, sheet2, 1, 0, 2)
                 .header("11", "00", "22")
                 .split()
-                .write("C:\\Users\\lijiahang\\Desktop\\3.xlsx")
+                .write(Systems.HOME_DIR + "\\orion-kit-test\\3.xlsx")
                 .close();
     }
 
@@ -87,7 +88,7 @@ public class ColumnSplitTests {
                 .split(2, 1, 0)
                 .split(new int[]{0, 2, 3}, new String[]{"xx1", "xx2", "xx3"})
                 .split(new int[]{0, 2, 3, 4}, "123")
-                .write("C:\\Users\\lijiahang\\Desktop\\4.xlsx")
+                .write(Systems.HOME_DIR + "\\orion-kit-test\\4.xlsx")
                 .close();
     }
 
@@ -97,16 +98,16 @@ public class ColumnSplitTests {
                 .split(2, 1, 0)
                 .split(new int[]{0, 2, 3}, new String[]{"xx1", "xx2", "xx3"})
                 .split(new int[]{0, 2, 3, 4}, "123")
-                .write("C:\\Users\\lijiahang\\Desktop\\5.xlsx")
+                .write(Systems.HOME_DIR + "\\orion-kit-test\\5.xlsx")
                 .close();
     }
 
     @Test
     public void multi1() {
         new ExcelColumnMultiSplit(w1, "bean")
-                .split(new int[]{2, 1, 0}, "C:\\Users\\lijiahang\\Desktop\\split\\1.xlsx")
-                .split(new int[]{0, 2, 3}, new String[]{"xx1", "xx2", "xx3"}, "C:\\Users\\lijiahang\\Desktop\\split\\2.xlsx")
-                .split(new int[]{0, 2, 3, 4}, "123", "C:\\Users\\lijiahang\\Desktop\\split\\3.xlsx")
+                .split(new int[]{2, 1, 0}, Systems.HOME_DIR + "\\orion-kit-test\\split\\1.xlsx")
+                .split(new int[]{0, 2, 3}, new String[]{"xx1", "xx2", "xx3"}, Systems.HOME_DIR + "\\orion-kit-test\\split\\2.xlsx")
+                .split(new int[]{0, 2, 3, 4}, "123", Systems.HOME_DIR + "\\orion-kit-test\\split\\3.xlsx")
                 .close();
     }
 
@@ -114,8 +115,8 @@ public class ColumnSplitTests {
     public void multi2() {
         new ExcelColumnMultiSplit(w1, "bean")
                 .skip(3)
-                .split(new int[]{2, 1, 0}, "C:\\Users\\lijiahang\\Desktop\\split\\1.xlsx")
-                .split(new int[]{0, 2, 3}, new String[]{"xx1", "xx2", "xx3"}, "C:\\Users\\lijiahang\\Desktop\\split\\2.xlsx")
+                .split(new int[]{2, 1, 0}, Systems.HOME_DIR + "\\orion-kit-test\\split\\1.xlsx")
+                .split(new int[]{0, 2, 3}, new String[]{"xx1", "xx2", "xx3"}, Systems.HOME_DIR + "\\orion-kit-test\\split\\2.xlsx")
                 .split(new int[]{0, 2, 3, 4}, "123", System.out)
                 .close();
     }

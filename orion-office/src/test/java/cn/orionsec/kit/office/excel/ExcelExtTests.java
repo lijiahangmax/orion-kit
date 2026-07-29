@@ -27,6 +27,7 @@
 package cn.orionsec.kit.office.excel;
 
 import cn.orionsec.kit.lang.define.Console;
+import cn.orionsec.kit.lang.utils.Systems;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Assume;
 import org.junit.Test;
@@ -51,57 +52,57 @@ public class ExcelExtTests {
 
     @Test
     public void openHss() {
-        assumeExists("C:\\Users\\Administrator\\Desktop\\data\\user.xls",
-                "C:\\Users\\Administrator\\Desktop\\data\\user_password.xls");
-        System.out.println(Excels.openWorkbook("C:\\Users\\Administrator\\Desktop\\data\\user.xls", null));
-        System.out.println(Excels.openWorkbook("C:\\Users\\Administrator\\Desktop\\data\\user_password.xls", "123"));
-        System.out.println(Excels.openWorkbook("C:\\Users\\Administrator\\Desktop\\data\\user_password.xls", "1234"));
+        assumeExists(Systems.HOME_DIR + "\\orion-kit-test\\data\\user.xls",
+                Systems.HOME_DIR + "\\orion-kit-test\\data\\user_password.xls");
+        System.out.println(Excels.openWorkbook(Systems.HOME_DIR + "\\orion-kit-test\\data\\user.xls", null));
+        System.out.println(Excels.openWorkbook(Systems.HOME_DIR + "\\orion-kit-test\\data\\user_password.xls", "123"));
+        System.out.println(Excels.openWorkbook(Systems.HOME_DIR + "\\orion-kit-test\\data\\user_password.xls", "1234"));
     }
 
     @Test
     public void openXss() {
-        assumeExists("C:\\Users\\Administrator\\Desktop\\data\\user.xlsx",
-                "C:\\Users\\Administrator\\Desktop\\data\\user_password.xlsx");
-        System.out.println(Excels.openWorkbook("C:\\Users\\Administrator\\Desktop\\data\\user.xlsx", null));
-        System.out.println(Excels.openWorkbook("C:\\Users\\Administrator\\Desktop\\data\\user_password.xlsx", "123"));
-        System.out.println(Excels.openWorkbook("C:\\Users\\Administrator\\Desktop\\data\\user_password.xlsx", "1234"));
+        assumeExists(Systems.HOME_DIR + "\\orion-kit-test\\data\\user.xlsx",
+                Systems.HOME_DIR + "\\orion-kit-test\\data\\user_password.xlsx");
+        System.out.println(Excels.openWorkbook(Systems.HOME_DIR + "\\orion-kit-test\\data\\user.xlsx", null));
+        System.out.println(Excels.openWorkbook(Systems.HOME_DIR + "\\orion-kit-test\\data\\user_password.xlsx", "123"));
+        System.out.println(Excels.openWorkbook(Systems.HOME_DIR + "\\orion-kit-test\\data\\user_password.xlsx", "1234"));
     }
 
     @Test
     public void openStream() {
-        assumeExists("C:\\Users\\Administrator\\Desktop\\data\\user.xlsx",
-                "C:\\Users\\Administrator\\Desktop\\data\\user_password.xlsx");
-        System.out.println(Excels.openStreamingWorkbook("C:\\Users\\Administrator\\Desktop\\data\\user.xlsx", null));
-        System.out.println(Excels.openStreamingWorkbook("C:\\Users\\Administrator\\Desktop\\data\\user_password.xlsx", "123"));
-        System.out.println(Excels.openStreamingWorkbook("C:\\Users\\Administrator\\Desktop\\data\\user_password.xlsx", "1234"));
+        assumeExists(Systems.HOME_DIR + "\\orion-kit-test\\data\\user.xlsx",
+                Systems.HOME_DIR + "\\orion-kit-test\\data\\user_password.xlsx");
+        System.out.println(Excels.openStreamingWorkbook(Systems.HOME_DIR + "\\orion-kit-test\\data\\user.xlsx", null));
+        System.out.println(Excels.openStreamingWorkbook(Systems.HOME_DIR + "\\orion-kit-test\\data\\user_password.xlsx", "123"));
+        System.out.println(Excels.openStreamingWorkbook(Systems.HOME_DIR + "\\orion-kit-test\\data\\user_password.xlsx", "1234"));
     }
 
     @Test
     public void open() {
-        assumeExists("C:\\Users\\Administrator\\Desktop\\1.xlsx",
-                "C:\\Users\\Administrator\\Desktop\\1.xls");
-        System.out.println(Excels.openWorkbook("C:\\Users\\Administrator\\Desktop\\1.xlsx", null).getClass());
-        System.out.println(Excels.openWorkbook("C:\\Users\\Administrator\\Desktop\\1.xls", null).getClass());
+        assumeExists(Systems.HOME_DIR + "\\orion-kit-test\\1.xlsx",
+                Systems.HOME_DIR + "\\orion-kit-test\\1.xls");
+        System.out.println(Excels.openWorkbook(Systems.HOME_DIR + "\\orion-kit-test\\1.xlsx", null).getClass());
+        System.out.println(Excels.openWorkbook(Systems.HOME_DIR + "\\orion-kit-test\\1.xls", null).getClass());
     }
 
     @Test
     public void openExt() {
-        assumeExists("C:\\Users\\Administrator\\Desktop\\data\\user.xlsx",
-                "C:\\Users\\Administrator\\Desktop\\data\\user_password.xlsx");
-        System.out.println(new ExcelExt("C:\\Users\\Administrator\\Desktop\\data\\user.xlsx"));
-        System.out.println(new ExcelExt("C:\\Users\\Administrator\\Desktop\\data\\user_password.xlsx"));
+        assumeExists(Systems.HOME_DIR + "\\orion-kit-test\\data\\user.xlsx",
+                Systems.HOME_DIR + "\\orion-kit-test\\data\\user_password.xlsx");
+        System.out.println(new ExcelExt(Systems.HOME_DIR + "\\orion-kit-test\\data\\user.xlsx"));
+        System.out.println(new ExcelExt(Systems.HOME_DIR + "\\orion-kit-test\\data\\user_password.xlsx"));
     }
 
     @Test
     public void openExtReader() {
-        assumeExists("C:\\Users\\Administrator\\Desktop\\data\\user.xlsx");
-        ExcelExt x = new ExcelExt("C:\\Users\\Administrator\\Desktop\\data\\user.xlsx", true);
+        assumeExists(Systems.HOME_DIR + "\\orion-kit-test\\data\\user.xlsx");
+        ExcelExt x = new ExcelExt(Systems.HOME_DIR + "\\orion-kit-test\\data\\user.xlsx", true);
         x.arrayReader(0, Console::trace).read().close();
     }
 
     @Test
     public void writePassword() {
-        String s = "C:\\Users\\Administrator\\Desktop\\data\\1.xlsx";
+        String s = Systems.HOME_DIR + "\\orion-kit-test\\data\\1.xlsx";
         XSSFWorkbook workbook = new XSSFWorkbook();
         Excels.write(workbook, s, "123");
     }
