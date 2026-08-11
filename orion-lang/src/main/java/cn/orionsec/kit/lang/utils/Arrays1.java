@@ -49,7 +49,6 @@ import java.util.function.Supplier;
  * 需要注意: 可变参数 Object... Object[] T... T[] 不应该传基本类型的数组, 应该传基本类型的包装类
  * 基本类型数组无法转化为包装类型的数组, 从而入参为转化Object, 导致与预期结果不相同
  */
-@SuppressWarnings("ALL")
 public class Arrays1 {
 
     private static final int BINARY = 2;
@@ -1759,7 +1758,7 @@ public class Arrays1 {
     }
 
     public static <T> T[] arraycopys(T[] src, int srcPos, T[] dest, int destPos, int length, IntFunction<T[]> generator) {
-        int destlen = lengths(dest);
+        int destlen = length(dest);
         if (destPos + length >= destlen) {
             T[] apply = generator.apply(destlen * 2);
             System.arraycopy(dest, 0, apply, 0, destlen - (destlen - destPos));
@@ -1914,27 +1913,18 @@ public class Arrays1 {
     }
 
     public static Object wrap(Object arr) {
-        if (arr == null) {
-            return null;
-        } else if (arr instanceof byte[]) {
-            return wrap((byte[]) arr);
-        } else if (arr instanceof short[]) {
-            return wrap((short[]) arr);
-        } else if (arr instanceof int[]) {
-            return wrap((int[]) arr);
-        } else if (arr instanceof long[]) {
-            return wrap((long[]) arr);
-        } else if (arr instanceof float[]) {
-            return wrap((float[]) arr);
-        } else if (arr instanceof double[]) {
-            return wrap((double[]) arr);
-        } else if (arr instanceof boolean[]) {
-            return wrap((boolean[]) arr);
-        } else if (arr instanceof char[]) {
-            return wrap((char[]) arr);
-        } else {
-            return arr;
-        }
+        return switch (arr) {
+            case null -> null;
+            case byte[] bytes -> wrap(bytes);
+            case short[] shorts -> wrap(shorts);
+            case int[] ints -> wrap(ints);
+            case long[] longs -> wrap(longs);
+            case float[] floats -> wrap(floats);
+            case double[] doubles -> wrap(doubles);
+            case boolean[] booleans -> wrap(booleans);
+            case char[] chars -> wrap(chars);
+            default -> arr;
+        };
     }
 
     // -------------------- unWrap --------------------
@@ -2042,27 +2032,18 @@ public class Arrays1 {
     }
 
     public static Object unWrap(Object arr) {
-        if (arr == null) {
-            return null;
-        } else if (arr instanceof Byte[]) {
-            return unWrap((Byte[]) arr);
-        } else if (arr instanceof Short[]) {
-            return unWrap((Short[]) arr);
-        } else if (arr instanceof Integer[]) {
-            return unWrap((Integer[]) arr);
-        } else if (arr instanceof Long[]) {
-            return unWrap((Long[]) arr);
-        } else if (arr instanceof Float[]) {
-            return unWrap((Float[]) arr);
-        } else if (arr instanceof Double[]) {
-            return unWrap((Double[]) arr);
-        } else if (arr instanceof Boolean[]) {
-            return unWrap((Boolean[]) arr);
-        } else if (arr instanceof Character[]) {
-            return unWrap((Character[]) arr);
-        } else {
-            return arr;
-        }
+        return switch (arr) {
+            case null -> null;
+            case Byte[] bytes -> unWrap(bytes);
+            case Short[] shorts -> unWrap(shorts);
+            case Integer[] integers -> unWrap(integers);
+            case Long[] longs -> unWrap(longs);
+            case Float[] floats -> unWrap(floats);
+            case Double[] doubles -> unWrap(doubles);
+            case Boolean[] booleans -> unWrap(booleans);
+            case Character[] characters -> unWrap(characters);
+            default -> arr;
+        };
     }
 
     // -------------------- merge --------------------
@@ -3230,6 +3211,7 @@ public class Arrays1 {
      * @param <T>    T
      * @return value
      */
+    @SafeVarargs
     public static <T> T coalesce(T... values) {
         int length = length(values);
         if (length == 0) {

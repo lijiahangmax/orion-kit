@@ -84,6 +84,18 @@ public class Objects1 {
     }
 
     /**
+     * 获取第一个非 null 的值
+     *
+     * @param values values
+     * @param <T>    T
+     * @return value
+     */
+    @SafeVarargs
+    public static <T> T coalesce(T... values) {
+        return Arrays1.coalesce(values);
+    }
+
+    /**
      * 如果对象不为 null 调用 function
      *
      * @param o 对象
@@ -397,31 +409,20 @@ public class Objects1 {
      * @return ignore
      */
     public static String toString(Object o) {
-        if (o == null) {
-            return Strings.EMPTY;
-        } else if (o instanceof String) {
-            return (String) o;
-        } else if (o instanceof Object[]) {
-            return Arrays.toString((Object[]) o);
-        } else if (o instanceof byte[]) {
-            return Arrays.toString((byte[]) o);
-        } else if (o instanceof short[]) {
-            return Arrays.toString((short[]) o);
-        } else if (o instanceof int[]) {
-            return Arrays.toString((int[]) o);
-        } else if (o instanceof long[]) {
-            return Arrays.toString((long[]) o);
-        } else if (o instanceof float[]) {
-            return Arrays.toString((float[]) o);
-        } else if (o instanceof double[]) {
-            return Arrays.toString((double[]) o);
-        } else if (o instanceof char[]) {
-            return Arrays.toString((char[]) o);
-        } else if (o instanceof boolean[]) {
-            return Arrays.toString((boolean[]) o);
-        } else {
-            return def(o.toString(), Strings.EMPTY);
-        }
+        return switch (o) {
+            case null -> Strings.EMPTY;
+            case String s -> s;
+            case Object[] objects -> Arrays.toString(objects);
+            case byte[] bytes -> Arrays.toString(bytes);
+            case short[] shorts -> Arrays.toString(shorts);
+            case int[] ints -> Arrays.toString(ints);
+            case long[] longs -> Arrays.toString(longs);
+            case float[] floats -> Arrays.toString(floats);
+            case double[] doubles -> Arrays.toString(doubles);
+            case char[] chars -> Arrays.toString(chars);
+            case boolean[] booleans -> Arrays.toString(booleans);
+            default -> def(o.toString(), Strings.EMPTY);
+        };
     }
 
     /**

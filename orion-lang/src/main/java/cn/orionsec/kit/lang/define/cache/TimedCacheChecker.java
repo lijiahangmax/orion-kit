@@ -75,16 +75,20 @@ public class TimedCacheChecker<T> implements Runnable, Closeable {
     public void run() {
         while (run) {
             Threads.sleep(checkInterval);
-            long curr = System.currentTimeMillis();
-            for (String key : store.keySet()) {
-                TimedCacheValue<T> value = store.get(key);
-                if (value.expireTime < curr) {
-                    // 删除
-                    store.remove(key);
+            // 执行检查
+            this.doCheck();
+        }
+    }
+
+    private void doCheck() {
+        long curr = System.currentTimeMillis();
+        for (Map.Entry<String, TimedCacheValue<T>> entry : store.entrySet()) {
+            TimedCacheValue<T> value = entry.getValue();
+            if (value.expireTime < curr) {
+                // 删除
+                if (store.remove(entry.getKey()) != null && expiredListener != null) {
                     // 通知
-                    if (expiredListener != null) {
-                        expiredListener.accept(key, value.value);
-                    }
+                    expiredListener.accept(entry.getKey(), value.value);
                 }
             }
         }

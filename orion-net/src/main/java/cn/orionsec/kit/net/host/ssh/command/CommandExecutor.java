@@ -158,7 +158,7 @@ public class CommandExecutor extends BaseSshExecutor<ChannelExec> implements ICo
 
     @Override
     public boolean checkTimeout() {
-        if (timeout == 0) {
+        if (timeout == 0 || done) {
             return false;
         }
         // 未超时
