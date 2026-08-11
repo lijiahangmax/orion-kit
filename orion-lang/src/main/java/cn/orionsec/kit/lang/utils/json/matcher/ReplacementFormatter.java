@@ -30,8 +30,8 @@ import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Objects1;
 import cn.orionsec.kit.lang.utils.Strings;
-import com.alibaba.fastjson.JSONPath;
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONPath;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -165,7 +165,7 @@ public class ReplacementFormatter {
             Object readValue = null;
             try {
                 // 解析内容
-                readValue = JSONPath.read(json, path);
+                readValue = JSONPath.extract(json, path);
                 // 设置默认值
                 if (readValue == null && defaults != null) {
                     readValue = defaults.get(path);

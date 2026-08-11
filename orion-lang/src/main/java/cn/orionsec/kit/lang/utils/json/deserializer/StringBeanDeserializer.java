@@ -26,9 +26,9 @@
  */
 package cn.orionsec.kit.lang.utils.json.deserializer;
 
-import com.alibaba.fastjson.parser.DefaultJSONParser;
-import com.alibaba.fastjson.parser.deserializer.ObjectDeserializer;
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONReader;
+import com.alibaba.fastjson2.reader.ObjectReader;
 
 import java.lang.reflect.Type;
 
@@ -39,21 +39,15 @@ import java.lang.reflect.Type;
  * @version 1.0.0
  * @since 2023/1/10 16:36
  */
-public class StringBeanDeserializer implements ObjectDeserializer {
+public class StringBeanDeserializer implements ObjectReader<Object> {
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T> T deserialze(DefaultJSONParser parser, Type type, Object fieldName) {
-        String val = parser.getInput();
+    public Object readObject(JSONReader jsonReader, Type fieldType, Object fieldName, long features) {
+        String val = jsonReader.readString();
         if (val == null) {
             return null;
         }
-        return (T) JSON.parseObject(val, type);
-    }
-
-    @Override
-    public int getFastMatchToken() {
-        return 0;
+        return JSON.parseObject(val, fieldType);
     }
 
 }
