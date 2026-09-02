@@ -224,6 +224,26 @@ public class Signatures {
     }
 
     /**
+     * SM3签名
+     *
+     * @param s 明文
+     * @return 签名
+     */
+    public static String sm3(String s) {
+        return SM3.digestHex(s);
+    }
+
+    /**
+     * SM3签名
+     *
+     * @param bs 明文
+     * @return 签名
+     */
+    public static String sm3(byte[] bs) {
+        return SM3.digestHex(bs);
+    }
+
+    /**
      * hash签名
      *
      * @param s    明文

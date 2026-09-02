@@ -30,6 +30,7 @@ import cn.orionsec.kit.lang.utils.Arrays1;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.codec.Base64s;
+import cn.orionsec.kit.lang.utils.math.Hex;
 
 /**
  * RC4 实现
@@ -59,6 +60,26 @@ public class RC4 {
     }
 
     /**
+     * 加密 输出 hex 编码
+     *
+     * @param s 明文
+     * @return 密文 hex
+     */
+    public String encryptHex(String s) {
+        return Hex.bytesToHex(this.encryptOrDecrypt(Strings.bytes(s)));
+    }
+
+    /**
+     * 加密 输出 base64 编码
+     *
+     * @param s 明文
+     * @return 密文 base64
+     */
+    public String encryptBase64(String s) {
+        return this.encrypt(s);
+    }
+
+    /**
      * 加密
      *
      * @param bs 明文
@@ -70,6 +91,26 @@ public class RC4 {
 
     public String decrypt(String s) {
         return new String(this.encryptOrDecrypt(Base64s.decodeToBytes(s)));
+    }
+
+    /**
+     * 解密 输入 hex 编码
+     *
+     * @param s 密文 hex
+     * @return 明文
+     */
+    public String decryptHex(String s) {
+        return new String(this.encryptOrDecrypt(Hex.hexToBytes(s)));
+    }
+
+    /**
+     * 解密 输入 base64 编码
+     *
+     * @param s 密文 base64
+     * @return 明文
+     */
+    public String decryptBase64(String s) {
+        return this.decrypt(s);
     }
 
     /**

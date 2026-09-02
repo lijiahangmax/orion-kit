@@ -29,6 +29,7 @@ package cn.orionsec.kit.lang.utils.crypto.symmetric;
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.crypto.Keys;
 import cn.orionsec.kit.lang.utils.crypto.enums.CipherAlgorithm;
+import cn.orionsec.kit.lang.utils.crypto.enums.CryptoCodec;
 import cn.orionsec.kit.lang.utils.crypto.enums.PaddingMode;
 import cn.orionsec.kit.lang.utils.crypto.enums.WorkingMode;
 
@@ -72,6 +73,11 @@ public class SymmetricBuilder {
     protected AlgorithmParameterSpec paramSpec;
 
     /**
+     * 输入输出编解码器
+     */
+    protected CryptoCodec codec;
+
+    /**
      * aad
      */
     private byte[] aad;
@@ -79,6 +85,7 @@ public class SymmetricBuilder {
     public SymmetricBuilder() {
         this.workingMode = WorkingMode.ECB;
         this.paddingMode = PaddingMode.PKCS5_PADDING;
+        this.codec = CryptoCodec.BASE64;
     }
 
     /**
@@ -156,6 +163,17 @@ public class SymmetricBuilder {
      */
     public SymmetricBuilder paddingMode(PaddingMode paddingMode) {
         this.paddingMode = paddingMode;
+        return this;
+    }
+
+    /**
+     * 设置输入输出编解码器
+     *
+     * @param codec 编解码器
+     * @return this
+     */
+    public SymmetricBuilder codec(CryptoCodec codec) {
+        this.codec = codec;
         return this;
     }
 
@@ -457,20 +475,20 @@ public class SymmetricBuilder {
     /**
      * 构建 ECB
      *
-     * @return EcbSymmetric
+     * @return symmetric
      */
     public EcbSymmetric buildEcb() {
-        return new EcbSymmetric(algorithm, paddingMode, secretKey);
+        return new EcbSymmetric(algorithm, paddingMode, secretKey, codec);
     }
 
     /**
      * 构建 PARAM
      *
-     * @return ParamSymmetric
+     * @return symmetric
      */
     public ParamSymmetric buildParam() {
         PaddingMode usePaddingMode = WorkingMode.GCM.equals(workingMode) ? PaddingMode.NO_PADDING : paddingMode;
-        ParamSymmetric symmetric = new ParamSymmetric(algorithm, workingMode, usePaddingMode, secretKey, paramSpec);
+        ParamSymmetric symmetric = new ParamSymmetric(algorithm, workingMode, usePaddingMode, secretKey, paramSpec, codec);
         symmetric.setAad(aad);
         return symmetric;
     }

@@ -747,6 +747,38 @@ public class Exceptions {
         return new SignInvalidException(s, t);
     }
 
+    public static SsoAuthException ssoAuth() {
+        return new SsoAuthException();
+    }
+
+    public static SsoAuthException ssoAuth(Throwable t) {
+        return new SsoAuthException(t);
+    }
+
+    public static SsoAuthException ssoAuth(String s) {
+        return new SsoAuthException(s);
+    }
+
+    public static SsoAuthException ssoAuth(String s, Throwable t) {
+        return new SsoAuthException(s, t);
+    }
+
+    public static SsoConnectException ssoConnect() {
+        return new SsoConnectException();
+    }
+
+    public static SsoConnectException ssoConnect(Throwable t) {
+        return new SsoConnectException(t);
+    }
+
+    public static SsoConnectException ssoConnect(String s) {
+        return new SsoConnectException(s);
+    }
+
+    public static SsoConnectException ssoConnect(String s, Throwable t) {
+        return new SsoConnectException(s, t);
+    }
+
     public static NoSuchElementException noSuchElement() {
         return new NoSuchElementException();
     }

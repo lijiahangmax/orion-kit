@@ -30,15 +30,13 @@ import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.crypto.enums.CipherAlgorithm;
+import cn.orionsec.kit.lang.utils.crypto.enums.CryptoCodec;
 import cn.orionsec.kit.lang.utils.crypto.enums.PaddingMode;
 import cn.orionsec.kit.lang.utils.crypto.enums.WorkingMode;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import java.security.spec.AlgorithmParameterSpec;
-
-import static cn.orionsec.kit.lang.utils.codec.Base64s.decode;
-import static cn.orionsec.kit.lang.utils.codec.Base64s.encode;
 
 /**
  * CBC CFB OFB FTP GCM 模式非对称加密 AES DES 3DES
@@ -59,12 +57,8 @@ public class ParamSymmetric extends BaseSymmetric {
      */
     private byte[] aad;
 
-    public ParamSymmetric(CipherAlgorithm cipherAlgorithm, WorkingMode workingMode, SecretKey secretKey, AlgorithmParameterSpec paramSpec) {
-        this(cipherAlgorithm, workingMode, PaddingMode.PKCS5_PADDING, secretKey, paramSpec);
-    }
-
-    public ParamSymmetric(CipherAlgorithm cipherAlgorithm, WorkingMode workingMode, PaddingMode paddingMode, SecretKey secretKey, AlgorithmParameterSpec paramSpec) {
-        super(cipherAlgorithm, workingMode, paddingMode, secretKey);
+    protected ParamSymmetric(CipherAlgorithm cipherAlgorithm, WorkingMode workingMode, PaddingMode paddingMode, SecretKey secretKey, AlgorithmParameterSpec paramSpec, CryptoCodec codec) {
+        super(cipherAlgorithm, workingMode, paddingMode, secretKey, codec);
         this.paramSpec = Assert.notNull(paramSpec, "paramSpec is null");
     }
 
@@ -84,7 +78,7 @@ public class ParamSymmetric extends BaseSymmetric {
             if (aad != null) {
                 cipher.updateAAD(aad);
             }
-            return encode(cipher.doFinal(this.doPadding(plain, cipher.getBlockSize())));
+            return codec.encode(cipher.doFinal(this.doPadding(plain, cipher.getBlockSize())));
         } catch (Exception e) {
             throw Exceptions.encrypt("encrypt data error", e);
         }
@@ -98,7 +92,7 @@ public class ParamSymmetric extends BaseSymmetric {
             if (aad != null) {
                 cipher.updateAAD(aad);
             }
-            return this.clearPadding(cipher.doFinal(decode(text)));
+            return this.clearPadding(cipher.doFinal(codec.decode(text)));
         } catch (Exception e) {
             throw Exceptions.decrypt("decrypt data error", e);
         }
