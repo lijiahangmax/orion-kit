@@ -61,8 +61,14 @@ public interface StandardContentType {
      */
     String TEXT_XML = "text/xml";
 
+    /**
+     * event stream 格式
+     */
     String TEXT_EVENT_STREAM = "text/event-stream";
 
+    /**
+     * markdown 格式
+     */
     String TEXT_MARKDOWN = "text/markdown";
 
     // -------------------- image --------------------
@@ -81,6 +87,21 @@ public interface StandardContentType {
      * png 图片格式
      */
     String IMAGE_PNG = "image/png";
+
+    /**
+     * webp 图片格式
+     */
+    String IMAGE_WEBP = "image/webp";
+
+    /**
+     * svg 图片格式
+     */
+    String IMAGE_SVG = "image/svg+xml";
+
+    /**
+     * ico 图片格式
+     */
+    String IMAGE_ICO = "image/x-icon";
 
     // -------------------- application --------------------
 

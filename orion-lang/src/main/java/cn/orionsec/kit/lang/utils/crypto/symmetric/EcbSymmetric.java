@@ -28,14 +28,12 @@ package cn.orionsec.kit.lang.utils.crypto.symmetric;
 
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.crypto.enums.CipherAlgorithm;
+import cn.orionsec.kit.lang.utils.crypto.enums.CryptoCodec;
 import cn.orionsec.kit.lang.utils.crypto.enums.PaddingMode;
 import cn.orionsec.kit.lang.utils.crypto.enums.WorkingMode;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
-
-import static cn.orionsec.kit.lang.utils.codec.Base64s.decode;
-import static cn.orionsec.kit.lang.utils.codec.Base64s.encode;
 
 /**
  * ECB 模式非对称加密 AES DES 3DES
@@ -46,12 +44,8 @@ import static cn.orionsec.kit.lang.utils.codec.Base64s.encode;
  */
 public class EcbSymmetric extends BaseSymmetric {
 
-    public EcbSymmetric(CipherAlgorithm algorithm, SecretKey secretKey) {
-        this(algorithm, PaddingMode.PKCS5_PADDING, secretKey);
-    }
-
-    public EcbSymmetric(CipherAlgorithm algorithm, PaddingMode paddingMode, SecretKey secretKey) {
-        super(algorithm, WorkingMode.ECB, paddingMode, secretKey);
+    protected EcbSymmetric(CipherAlgorithm algorithm, PaddingMode paddingMode, SecretKey secretKey, CryptoCodec codec) {
+        super(algorithm, WorkingMode.ECB, paddingMode, secretKey, codec);
     }
 
     @Override
@@ -59,7 +53,7 @@ public class EcbSymmetric extends BaseSymmetric {
         try {
             Cipher cipher = super.getCipher();
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-            return encode(cipher.doFinal(this.doPadding(plain, cipher.getBlockSize())));
+            return codec.encode(cipher.doFinal(this.doPadding(plain, cipher.getBlockSize())));
         } catch (Exception e) {
             throw Exceptions.encrypt("encrypt data error", e);
         }
@@ -70,7 +64,7 @@ public class EcbSymmetric extends BaseSymmetric {
         try {
             Cipher cipher = super.getCipher();
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
-            return this.clearPadding(cipher.doFinal(decode(text)));
+            return this.clearPadding(cipher.doFinal(codec.decode(text)));
         } catch (Exception e) {
             throw Exceptions.decrypt("decrypt data error", e);
         }

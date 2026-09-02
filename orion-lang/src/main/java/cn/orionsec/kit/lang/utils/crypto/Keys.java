@@ -316,6 +316,7 @@ public class Keys {
     public static int getGcmSpecLength(CipherAlgorithm mode) {
         switch (mode) {
             case AES:
+            case SM4:
                 return CryptoConst.GCM_TAG_LENGTH_BITS;
             default:
                 throw Exceptions.unsupported("unsupported get " + mode + "gcm spec length");

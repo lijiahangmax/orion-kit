@@ -27,7 +27,9 @@
 package cn.orionsec.kit.lang.utils.awt;
 
 import cn.orionsec.kit.lang.constant.Const;
+import cn.orionsec.kit.lang.constant.StandardContentType;
 import cn.orionsec.kit.lang.utils.Exceptions;
+import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.codec.Base64s;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.lang.utils.io.Streams;
@@ -427,6 +429,33 @@ public class Images {
      */
     public static byte[] base64Decode(String s) {
         return Base64s.mimeTypeDecode(s);
+    }
+
+    /**
+     * 根据文件名获取图片 MIME 类型
+     *
+     * @param fileName fileName
+     * @return mime
+     */
+    public static String getMimeType(String fileName) {
+        if (Strings.isBlank(fileName)) {
+            return StandardContentType.IMAGE_PNG;
+        }
+        String lowerName = fileName.toLowerCase();
+        if (lowerName.endsWith(".svg")) {
+            return StandardContentType.IMAGE_SVG;
+        } else if (lowerName.endsWith(".ico")) {
+            return StandardContentType.IMAGE_ICO;
+        } else if (lowerName.endsWith(".jpg") || lowerName.endsWith(".jpeg")) {
+            return StandardContentType.IMAGE_JPEG;
+        } else if (lowerName.endsWith(".png")) {
+            return StandardContentType.IMAGE_PNG;
+        } else if (lowerName.endsWith(".gif")) {
+            return StandardContentType.IMAGE_GIF;
+        } else if (lowerName.endsWith(".webp")) {
+            return StandardContentType.IMAGE_WEBP;
+        }
+        return StandardContentType.IMAGE_PNG;
     }
 
 }
