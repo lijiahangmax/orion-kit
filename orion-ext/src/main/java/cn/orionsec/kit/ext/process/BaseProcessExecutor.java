@@ -51,7 +51,7 @@ public abstract class BaseProcessExecutor implements Executable, SafeCloseable {
 
     static {
         COMMAND = new ArrayList<>();
-        if (Systems.BE_WINDOWS) {
+        if (Systems.IS_WINDOWS) {
             COMMAND.add("cmd");
             COMMAND.add("/c");
         } else {
