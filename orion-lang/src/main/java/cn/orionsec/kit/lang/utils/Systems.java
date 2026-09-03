@@ -71,6 +71,16 @@ public class Systems {
     public static final boolean IS_ANDROID;
 
     /**
+     * 是否是 mac 环境下
+     */
+    public static final boolean IS_MAC;
+
+    /**
+     * 是否是 arm64 架构
+     */
+    public static final boolean IS_ARM;
+
+    /**
      * 当前用户名
      */
     public static final String USER_NAME;
@@ -150,6 +160,9 @@ public class Systems {
         TEMP_DIR = getProperty("java.io.tmpdir", Const.ROOT_PATH);
         OS_NAME = getProperty("os.name", Const.UNKNOWN);
         OS_VERSION = getProperty("os.version", Const.UNKNOWN);
+        IS_MAC = OS_NAME.toLowerCase().contains("mac") || OS_NAME.toLowerCase().contains("darwin");
+        String osArch = getProperty("os.arch", Const.UNKNOWN).toLowerCase();
+        IS_ARM = osArch.startsWith("aarch64") || osArch.startsWith("arm");
         JAVA_HOME = getProperty("java.home", Const.ROOT_PATH);
         if (IS_WINDOWS) {
             HOST_NAME = getEnv("COMPUTERNAME");
