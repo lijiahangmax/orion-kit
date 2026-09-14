@@ -756,6 +756,33 @@ public class Strings {
     }
 
     /**
+     * 分割字符串
+     *
+     * @param s 字符串
+     * @return arr
+     */
+    public static String[] split(String s) {
+        return split(s, Const.COMMA);
+    }
+
+    /**
+     * 分割字符串
+     *
+     * @param s         字符串
+     * @param separator 分隔符
+     * @return arr
+     */
+    public static String[] split(String s, String separator) {
+        if (isEmpty(s)) {
+            return new String[0];
+        }
+        if (isEmpty(separator)) {
+            return new String[]{s};
+        }
+        return s.split(separator, -1);
+    }
+
+    /**
      * 拼接字符串
      *
      * @param s      拼接字符串到前后

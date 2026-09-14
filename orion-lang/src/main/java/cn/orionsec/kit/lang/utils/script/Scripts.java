@@ -44,7 +44,6 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2021/3/1 23:29
  */
-// FIXME JDK17 移除了 js 的支持
 public class Scripts {
 
     private static final ScriptEngineManager MANAGER = new ScriptEngineManager();

@@ -258,6 +258,23 @@ public class Lists extends Collections {
         return result;
     }
 
+    public static <E, K> Map<K, List<E>> grouping(Collection<E> list, Function<E, K> keyMapping) {
+        return grouping(list, keyMapping, Function.identity());
+    }
+
+    public static <E, K, V> Map<K, List<V>> grouping(Collection<E> list, Function<E, K> keyMapping, Function<E, V> valueMapping) {
+        Assert.notNull(keyMapping, "key mapping function is null");
+        Assert.notNull(valueMapping, "value mapping function is null");
+        Map<K, List<V>> result = new HashMap<>();
+        if (isEmpty(list)) {
+            return result;
+        }
+        for (E e : list) {
+            result.computeIfAbsent(keyMapping.apply(e), k -> new ArrayList<>()).add(valueMapping.apply(e));
+        }
+        return result;
+    }
+
     /**
      * 保留集合的前几位
      *

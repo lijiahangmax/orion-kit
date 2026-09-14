@@ -28,8 +28,8 @@ package cn.orionsec.kit.lang.support.timeout;
 
 import cn.orionsec.kit.lang.utils.Threads;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * 超时检测器
@@ -40,7 +40,7 @@ import java.util.List;
  */
 public class TimeoutCheckerImpl<T extends TimeoutEndpoint> implements TimeoutChecker<T> {
 
-    private final List<T> tasks = new ArrayList<>();
+    private final List<T> tasks;
 
     private final long delay;
 
@@ -53,6 +53,7 @@ public class TimeoutCheckerImpl<T extends TimeoutEndpoint> implements TimeoutChe
     public TimeoutCheckerImpl(long delay) {
         this.delay = delay;
         this.run = true;
+        this.tasks = new CopyOnWriteArrayList<>();
     }
 
     @Override
@@ -65,8 +66,9 @@ public class TimeoutCheckerImpl<T extends TimeoutEndpoint> implements TimeoutChe
         while (run) {
             // 完成或超时 直接移除
             tasks.removeIf(ch -> ch.isDone() || ch.checkTimeout());
-            // 等待
-            Threads.sleep(delay);
+            // 无任务时延长休眠减少空转
+            long sleepTime = tasks.isEmpty() ? delay * 5 : delay;
+            Threads.sleep(sleepTime);
         }
     }
 

@@ -84,6 +84,18 @@ public class Objects1 {
     }
 
     /**
+     * 获取第一个非 null 的值
+     *
+     * @param values values
+     * @param <T>    T
+     * @return value
+     */
+    @SafeVarargs
+    public static <T> T coalesce(T... values) {
+        return Arrays1.coalesce(values);
+    }
+
+    /**
      * 如果对象不为 null 调用 function
      *
      * @param o 对象

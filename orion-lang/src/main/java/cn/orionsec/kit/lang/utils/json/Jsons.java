@@ -29,8 +29,8 @@ package cn.orionsec.kit.lang.utils.json;
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.utils.Objects1;
 import cn.orionsec.kit.lang.utils.Strings;
-import com.alibaba.fastjson.JSONPath;
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONPath;
 import com.alibaba.fastjson2.JSONWriter;
 import com.alibaba.fastjson2.TypeReference;
 
@@ -154,7 +154,7 @@ public class Jsons {
      */
     public static Object readPath(String json, String path) {
         try {
-            return JSONPath.read(json, path);
+            return JSONPath.extract(json, path);
         } catch (Exception e) {
             return null;
         }
