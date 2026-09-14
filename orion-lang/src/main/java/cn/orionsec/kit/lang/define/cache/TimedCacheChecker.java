@@ -80,6 +80,9 @@ public class TimedCacheChecker<T> implements Runnable, Closeable {
         }
     }
 
+    /**
+     * 执行检查
+     */
     private void doCheck() {
         long curr = System.currentTimeMillis();
         for (Map.Entry<String, TimedCacheValue<T>> entry : store.entrySet()) {
