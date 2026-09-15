@@ -28,7 +28,6 @@ hs_err_pid*
 .settings
 .idea/
 .logs
-.jython_cache
 target/
 .codegraph/
 settings.local.json

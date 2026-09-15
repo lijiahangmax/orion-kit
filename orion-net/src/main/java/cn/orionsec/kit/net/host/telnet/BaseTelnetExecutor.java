@@ -176,6 +176,9 @@ public abstract class BaseTelnetExecutor implements ITelnetExecutor {
     @Override
     public String readUntil(String pattern, int timeout) throws IOException {
         this.checkStreamReading();
+        if (!this.isConnected()) {
+            throw Exceptions.connection("telnet session is not connected");
+        }
         // socket 读超时只在阻塞读取期间生效, 否则流式监听会被空闲超时打断
         client.setSoTimeout(timeout);
         try {
@@ -211,10 +214,13 @@ public abstract class BaseTelnetExecutor implements ITelnetExecutor {
      * 关闭 socket 读超时
      */
     private void resetSoTimeout() {
+        if (client == null || !client.isConnected()) {
+            return;
+        }
         try {
             client.setSoTimeout(0);
-        } catch (IOException e) {
-            // 连接已关闭时忽略
+        } catch (Exception e) {
+            // ignored
         }
     }
 

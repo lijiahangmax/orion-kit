@@ -28,6 +28,7 @@ package cn.orionsec.kit.net.host.telnet;
 
 import cn.orionsec.kit.lang.able.SafeCloseable;
 import cn.orionsec.kit.lang.constant.Const;
+import cn.orionsec.kit.lang.exception.ConnectionRuntimeException;
 import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
@@ -50,7 +51,7 @@ import java.io.OutputStream;
  * @version 1.0.0
  * @since 2026/3/2 1:40
  */
-public class TelnetSession implements SafeCloseable {
+public class TelnetTunnel implements SafeCloseable {
 
     public static final int DEFAULT_TELNET_PORT = 23;
 
@@ -60,114 +61,51 @@ public class TelnetSession implements SafeCloseable {
 
     private static final String DEFAULT_PROMPT = "$";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TelnetSession.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TelnetTunnel.class);
 
-    /**
-     * telnet 客户端
-     */
     private final TelnetClient client;
 
-    /**
-     * 标准输出流
-     */
     private InputStream inputStream;
 
-    /**
-     * 标准输入流
-     */
     private OutputStream outputStream;
 
-    /**
-     * 主机
-     */
-    private String host;
+    private final String host;
 
-    /**
-     * 端口
-     */
     private int port;
 
-    /**
-     * 连接超时时间 ms
-     */
-    private int timeout;
-
-    /**
-     * 阻塞读取超时时间 ms (0 为不超时)
-     * <p>
-     * 仅作用于登录等阻塞读取, 流式监听不受该超时限制
-     */
-    private int readTimeout;
-
-    /**
-     * 是否关闭 Nagle 算法
-     */
-    private boolean tcpNoDelay;
-
-    /**
-     * 是否开启 TCP 保活
-     */
-    private boolean keepAlive;
-
-    /**
-     * 用户名
-     */
     private String username;
 
-    /**
-     * 密码
-     */
     private String password;
 
-    /**
-     * 编码
-     */
+    private int readTimeout;
+
+    private boolean tcpNoDelay;
+
     private String charset;
 
-    /**
-     * 登录提示符
-     */
     private String loginPrompt;
 
-    /**
-     * 密码提示符
-     */
     private String passwordPrompt;
 
-    /**
-     * 命令提示符
-     */
     private String prompt;
 
-    /**
-     * 终端类型
-     */
     private String terminalType;
 
-    /**
-     * 终端 行
-     */
     private int cols;
 
-    /**
-     * 终端 列
-     */
     private int rows;
 
-    /**
-     * 是否已连接
-     */
     private volatile boolean connected;
 
-    private TelnetSession(String host, int port) {
+    private boolean initialed;
+
+    private TelnetTunnel(String host, int port) {
         Assert.notBlank(host, "host is blank");
         this.client = new TelnetClient();
         this.host = host;
         this.port = port;
-        this.timeout = 0;
         this.readTimeout = 0;
         this.tcpNoDelay = true;
-        this.keepAlive = true;
         this.charset = Const.UTF_8;
         this.loginPrompt = DEFAULT_LOGIN_PROMPT;
         this.passwordPrompt = DEFAULT_PASSWORD_PROMPT;
@@ -177,111 +115,118 @@ public class TelnetSession implements SafeCloseable {
         this.rows = 36;
     }
 
-    /**
-     * @param host host
-     * @return session
-     */
-    public static TelnetSession create(String host) {
+    public static TelnetTunnel create(String host) {
         return create(host, DEFAULT_TELNET_PORT);
     }
 
     /**
+     * 创建会话
+     *
      * @param host host
      * @param port port
      * @return session
      */
-    public static TelnetSession create(String host, int port) {
-        return new TelnetSession(host, port);
+    public static TelnetTunnel create(String host, int port) {
+        return new TelnetTunnel(host, port);
     }
 
     /**
-     * @param host host
-     * @return this
-     */
-    public TelnetSession host(String host) {
-        this.host = host;
-        return this;
-    }
-
-    /**
+     * 设置端口
+     *
      * @param port port
      * @return this
      */
-    public TelnetSession port(int port) {
+    public TelnetTunnel port(int port) {
         this.port = port;
         return this;
     }
 
     /**
+     * 设置连接超时时间
+     *
      * @param timeout timeout
      * @return this
      */
-    public TelnetSession timeout(int timeout) {
-        Assert.gte(timeout, 0, "timeout must gte 0");
-        this.timeout = timeout;
+    public TelnetTunnel connectTimeout(int timeout) {
+        Assert.gte(timeout, 0, "the time must greater than or equal 0");
+        client.setConnectTimeout(timeout);
         return this;
     }
 
     /**
-     * @param readTimeout readTimeout
+     * 设置阻塞读取超时时间
+     *
+     * @param readTimeout timeout
      * @return this
      */
-    public TelnetSession readTimeout(int readTimeout) {
+    public TelnetTunnel readTimeout(int readTimeout) {
         Assert.gte(readTimeout, 0, "readTimeout must gte 0");
         this.readTimeout = readTimeout;
         return this;
     }
 
     /**
+     * 设置用户名
+     *
      * @param username username
      * @return this
      */
-    public TelnetSession username(String username) {
+    public TelnetTunnel username(String username) {
         this.username = username;
         return this;
     }
 
     /**
+     * 设置密码
+     *
      * @param password password
      * @return this
      */
-    public TelnetSession password(String password) {
+    public TelnetTunnel password(String password) {
         this.password = password;
         return this;
     }
 
     /**
+     * 设置字符编码
+     *
      * @param charset charset
      * @return this
      */
-    public TelnetSession charset(String charset) {
+    public TelnetTunnel charset(String charset) {
         this.charset = charset;
         return this;
     }
 
     /**
+     * 设置登录提示符
+     *
      * @param loginPrompt loginPrompt
      * @return this
      */
-    public TelnetSession loginPrompt(String loginPrompt) {
+    public TelnetTunnel loginPrompt(String loginPrompt) {
         this.loginPrompt = loginPrompt;
         return this;
     }
 
     /**
+     * 设置密码提示符
+     *
      * @param passwordPrompt passwordPrompt
      * @return this
      */
-    public TelnetSession passwordPrompt(String passwordPrompt) {
+    public TelnetTunnel passwordPrompt(String passwordPrompt) {
         this.passwordPrompt = passwordPrompt;
         return this;
     }
 
     /**
+     * 设置命令提示符
+     *
      * @param prompt prompt
      * @return this
      */
-    public TelnetSession prompt(String prompt) {
+    public TelnetTunnel prompt(String prompt) {
         this.prompt = prompt;
         return this;
     }
@@ -292,7 +237,7 @@ public class TelnetSession implements SafeCloseable {
      * @param type type
      * @return this
      */
-    public TelnetSession terminalType(TerminalType type) {
+    public TelnetTunnel terminalType(TerminalType type) {
         return this.terminalType(type.getType());
     }
 
@@ -302,7 +247,7 @@ public class TelnetSession implements SafeCloseable {
      * @param terminalType terminalType
      * @return this
      */
-    public TelnetSession terminalType(String terminalType) {
+    public TelnetTunnel terminalType(String terminalType) {
         this.terminalType = terminalType;
         return this;
     }
@@ -314,7 +259,7 @@ public class TelnetSession implements SafeCloseable {
      * @param rows 列数
      * @return this
      */
-    public TelnetSession size(int cols, int rows) {
+    public TelnetTunnel size(int cols, int rows) {
         this.cols = cols;
         this.rows = rows;
         return this;
@@ -328,19 +273,23 @@ public class TelnetSession implements SafeCloseable {
      * @param tcpNoDelay 是否关闭
      * @return this
      */
-    public TelnetSession tcpNoDelay(boolean tcpNoDelay) {
+    public TelnetTunnel tcpNoDelay(boolean tcpNoDelay) {
         this.tcpNoDelay = tcpNoDelay;
         return this;
     }
 
     /**
-     * 设置是否开启 TCP 保活
+     * 发送保活信号
      *
-     * @param keepAlive 是否开启
      * @return this
      */
-    public TelnetSession keepAlive(boolean keepAlive) {
-        this.keepAlive = keepAlive;
+    public TelnetTunnel keepAlive() {
+        this.checkConnected();
+        try {
+            client.sendCommand((byte) TelnetCommand.NOP);
+        } catch (Exception e) {
+            // ignored
+        }
         return this;
     }
 
@@ -362,8 +311,8 @@ public class TelnetSession implements SafeCloseable {
                     TelnetOption.WINDOW_SIZE,
                     (cols >> 8) & 0xFF, cols & 0xFF,
                     (rows >> 8) & 0xFF, rows & 0xFF});
-        } catch (IOException e) {
-            throw Exceptions.ioRuntime(e);
+        } catch (Exception e) {
+            // ignored
         }
     }
 
@@ -372,43 +321,47 @@ public class TelnetSession implements SafeCloseable {
      *
      * @return this
      */
-    public TelnetSession connect() {
+    public TelnetTunnel connect() {
         try {
-            // 注册终端协商
+            // 添加参数
             this.addOptionHandlers();
-            // 设置连接超时
-            if (timeout > 0) {
-                client.setConnectTimeout(timeout);
-                client.setDefaultTimeout(timeout);
-            }
             // 建立连接
-            client.connect(host, port);
-            // 关闭 Nagle 算法 交互式场景下避免小包被攒批导致按键延迟
-            client.setTcpNoDelay(tcpNoDelay);
-            // 开启 TCP 保活 避免空闲连接被 NAT/防火墙静默断开
-            client.setKeepAlive(keepAlive);
-            // 获取输入输出流
+            client.connect(this.host, this.port);
+            client.setTcpNoDelay(this.tcpNoDelay);
             this.inputStream = client.getInputStream();
             this.outputStream = client.getOutputStream();
             this.connected = true;
-            LOGGER.info("TelnetSession-connect connected {}:{}", host, port);
-            // 登录
-            login();
-            return this;
+            LOGGER.info("TelnetSession-connect connected {}:{}", this.host, this.port);
         } catch (Exception e) {
             this.disconnect();
             throw Exceptions.connection(e);
         }
+
+        try {
+            // 登录
+            this.login(username, password);
+        } catch (Exception e) {
+            // 登录失败一般是账号密码错误或提示符不匹配
+            this.disconnect();
+            if (e instanceof ConnectionRuntimeException) {
+                throw (ConnectionRuntimeException) e;
+            }
+            throw Exceptions.authentication("telnet login fail", e);
+        }
+        return this;
     }
 
     /**
-     * 注册终端协商 option handlers
+     * 注册终端协商 option handler
      *
      * @throws Exception Exception
      */
     private void addOptionHandlers() throws Exception {
+        if (this.initialed) {
+            return;
+        }
         // 终端类型
-        client.addOptionHandler(new TerminalTypeOptionHandler(terminalType, false, false, true, false));
+        client.addOptionHandler(new TerminalTypeOptionHandler(this.terminalType, false, false, true, false));
         // 回显
         client.addOptionHandler(new EchoOptionHandler(false, false, false, true));
         // 抑制 go ahead
@@ -416,7 +369,8 @@ public class TelnetSession implements SafeCloseable {
         // 8bit 透明传输 保证中文等多字节编码不被破坏
         client.addOptionHandler(new SimpleOptionHandler(TelnetOption.BINARY, true, true, true, true));
         // 窗口大小
-        client.addOptionHandler(new WindowSizeOptionHandler(cols, rows, true, false, true, false));
+        client.addOptionHandler(new WindowSizeOptionHandler(this.cols, this.rows, true, false, true, false));
+        this.initialed = true;
     }
 
     /**
@@ -425,8 +379,9 @@ public class TelnetSession implements SafeCloseable {
      * @return executor
      */
     public TelnetShellExecutor getShellExecutor() {
+        // 检查是否已连接
         this.checkConnected();
-        return new TelnetShellExecutor(client, inputStream, outputStream, prompt, charset, readTimeout);
+        return new TelnetShellExecutor(client, this.inputStream, this.outputStream, this.prompt, this.charset, this.readTimeout);
     }
 
     /**
@@ -436,23 +391,99 @@ public class TelnetSession implements SafeCloseable {
      * @return executor
      */
     public TelnetCommandExecutor getCommandExecutor(String command) {
+        // 检查是否已连接
         this.checkConnected();
-        return new TelnetCommandExecutor(client, inputStream, outputStream, prompt, charset, readTimeout, command);
+        return new TelnetCommandExecutor(client, this.inputStream, this.outputStream, this.prompt, this.charset, this.readTimeout, command);
+    }
+
+    /**
+     * 登录
+     *
+     * @param username 用户名
+     * @param password 密码
+     * @throws IOException IOException
+     */
+    private void login(String username, String password) throws IOException {
+        if (Strings.isBlank(username)) {
+            return;
+        }
+        LOGGER.info("TelnetSession-login start");
+        // 读取登录提示
+        if (Strings.isNotBlank(this.loginPrompt)) {
+            this.readUntil(this.loginPrompt);
+        }
+        // 发送用户名
+        this.writeLine(username);
+
+        if (Strings.isNotBlank(password)) {
+            // 读取密码提示
+            if (Strings.isNotBlank(this.passwordPrompt)) {
+                this.readUntil(this.passwordPrompt);
+            }
+            // 发送密码
+            this.writeLine(password);
+        }
+
+        // 读取命令提示符
+        if (Strings.isNotBlank(this.prompt)) {
+            this.readUntil(this.prompt);
+        }
+        LOGGER.info("TelnetSession-login done");
+    }
+
+    /**
+     * 写入行
+     *
+     * @param command command
+     * @throws IOException IOException
+     */
+    private void writeLine(String command) throws IOException {
+        this.outputStream.write(Strings.bytes(command + Const.LF, this.charset));
+        this.outputStream.flush();
+    }
+
+    /**
+     * 阻塞读取直到命中指定内容
+     *
+     * @param pattern pattern
+     * @return result
+     * @throws IOException IOException
+     */
+    private String readUntil(String pattern) throws IOException {
+        this.checkConnected();
+        client.setSoTimeout(this.readTimeout);
+        try {
+            return TelnetReads.readUntil(this.inputStream, pattern, this.charset, this.readTimeout, Const.BUFFER_KB_32);
+        } finally {
+            this.resetSoTimeout();
+        }
+    }
+
+    /**
+     * 关闭 socket 读超时
+     */
+    private void resetSoTimeout() {
+        if (!client.isConnected()) {
+            return;
+        }
+        try {
+            client.setSoTimeout(0);
+        } catch (Exception e) {
+            // ignored
+        }
     }
 
     /**
      * 检查是否已连接
      */
     private void checkConnected() {
-        if (!connected) {
+        if (!this.isConnected()) {
             throw Exceptions.connection("telnet session is not connected");
         }
     }
 
     /**
      * 断开连接
-     * <p>
-     * 幂等且不抛异常, 无论断开是否成功都会重置连接状态
      */
     public void disconnect() {
         try {
@@ -467,158 +498,56 @@ public class TelnetSession implements SafeCloseable {
     }
 
     /**
-     * 登录
-     */
-    private void login() {
-        if (Strings.isBlank(username)) {
-            return;
-        }
-        LOGGER.info("TelnetSession-login start");
-        try {
-            if (Strings.isNotBlank(loginPrompt)) {
-                // 读取登录提示
-                readUntil(loginPrompt);
-            }
-            // 发送用户名
-            writeLine(username);
-            if (Strings.isNotBlank(password)) {
-                if (Strings.isNotBlank(passwordPrompt)) {
-                    // 读取密码提示
-                    readUntil(passwordPrompt);
-                }
-                // 发送密码
-                writeLine(password);
-            }
-            if (Strings.isNotBlank(prompt)) {
-                // 读取命令提示符
-                readUntil(prompt);
-            }
-        } catch (IOException e) {
-            throw Exceptions.ioRuntime(e);
-        }
-        LOGGER.info("TelnetSession-login done");
-    }
-
-    /**
-     * @param command command
-     * @throws IOException IOException
-     */
-    private void writeLine(String command) throws IOException {
-        outputStream.write(Strings.bytes(command + Const.LF, charset));
-        outputStream.flush();
-    }
-
-    /**
-     * 阻塞读取直到命中指定内容
-     *
-     * @param pattern pattern
-     * @return result
-     * @throws IOException IOException
-     */
-    private String readUntil(String pattern) throws IOException {
-        client.setSoTimeout(readTimeout);
-        try {
-            return TelnetReads.readUntil(inputStream, pattern, charset, readTimeout, Const.BUFFER_KB_32);
-        } finally {
-            this.resetSoTimeout();
-        }
-    }
-
-    /**
-     * 关闭 socket 读超时
-     */
-    private void resetSoTimeout() {
-        try {
-            client.setSoTimeout(0);
-        } catch (IOException e) {
-            // 连接已关闭时忽略
-        }
-    }
-
-    /**
      * @return 是否已连接
      */
     public boolean isConnected() {
         return connected && client.isConnected();
     }
 
-    /**
-     * @return host
-     */
     public String getHost() {
-        return host;
+        return this.host;
     }
 
-    /**
-     * @return port
-     */
     public int getPort() {
-        return port;
+        return this.port;
     }
 
-    /**
-     * @return username
-     */
     public String getUsername() {
         return username;
     }
 
-    /**
-     * @return charset
-     */
     public String getCharset() {
-        return charset;
+        return this.charset;
     }
 
-    /**
-     * @return loginPrompt
-     */
     public String getLoginPrompt() {
-        return loginPrompt;
+        return this.loginPrompt;
     }
 
-    /**
-     * @return passwordPrompt
-     */
     public String getPasswordPrompt() {
-        return passwordPrompt;
+        return this.passwordPrompt;
     }
 
-    /**
-     * @return prompt
-     */
     public String getPrompt() {
-        return prompt;
+        return this.prompt;
     }
 
-    /**
-     * @return 终端类型
-     */
     public String getTerminalType() {
-        return terminalType;
+        return this.terminalType;
     }
 
-    /**
-     * @return 行字数
-     */
     public int getCols() {
-        return cols;
+        return this.cols;
     }
 
-    /**
-     * @return 列数
-     */
     public int getRows() {
-        return rows;
+        return this.rows;
     }
 
-    /**
-     * 关闭会话
-     */
     @Override
     public void close() {
-        Streams.close(inputStream);
-        Streams.close(outputStream);
+        Streams.close(this.inputStream);
+        Streams.close(this.outputStream);
         this.disconnect();
     }
 

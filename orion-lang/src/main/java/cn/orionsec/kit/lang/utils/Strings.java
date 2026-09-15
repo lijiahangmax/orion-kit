@@ -695,7 +695,7 @@ public class Strings {
         if (isBlank(str) || isBlank(tokenizer)) {
             return;
         }
-        String[] arr = str.split(tokenizer);
+        String[] arr = str.split(Pattern.quote(tokenizer), -1);
         for (String s : arr) {
             consumer.accept(s);
         }
