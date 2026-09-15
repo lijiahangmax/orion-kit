@@ -31,13 +31,18 @@ import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
+import cn.orionsec.kit.lang.utils.io.Files1;
+import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.net.host.sftp.SftpExecutor;
 import cn.orionsec.kit.net.host.ssh.command.CommandExecutor;
 import cn.orionsec.kit.net.host.ssh.shell.ShellExecutor;
 import com.jcraft.jsch.*;
 
+import java.io.File;
+import java.io.InputStream;
+
 /**
- * Session Store
+ * SSH 会话
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -45,21 +50,155 @@ import com.jcraft.jsch.*;
  */
 public class SessionStore implements SafeCloseable {
 
+    public static final int DEFAULT_SSH_PORT = 22;
+
     private static final String COMMAND_TYPE = "exec";
-
     private static final String SHELL_TYPE = "shell";
-
     private static final String SFTP_TYPE = "sftp";
 
     private static final String AUTH_FAIL_MESSAGE = "auth fail";
 
-    /**
-     * session
-     */
-    protected final Session session;
+    private final JSch ch;
+    private final Session session;
 
-    public SessionStore(Session session) {
-        this.session = session;
+    static {
+        // 不检查私钥
+        JSch.setConfig("StrictHostKeyChecking", "no");
+        // add RSA/SHA1 key support
+        JSch.setConfig("server_host_key", JSch.getConfig("server_host_key") + ",ssh-rsa");
+        JSch.setConfig("PubkeyAcceptedAlgorithms", JSch.getConfig("PubkeyAcceptedAlgorithms") + ",ssh-rsa");
+    }
+
+    private SessionStore(String host, int port, String username) {
+        Assert.notBlank(host, "host is blank");
+        Assert.notBlank(username, "username is blank");
+        this.ch = new JSch();
+        try {
+            this.session = ch.getSession(username, host, port);
+        } catch (Exception e) {
+            throw Exceptions.connection(e);
+        }
+    }
+
+    public static SessionStore create(String host, String username) {
+        return create(host, DEFAULT_SSH_PORT, username);
+    }
+
+    /**
+     * 创建会话
+     *
+     * @param host     主机
+     * @param port     端口
+     * @param username 用户名
+     * @return SessionStore
+     */
+    public static SessionStore create(String host, int port, String username) {
+        return new SessionStore(host, port, username);
+    }
+
+    public SessionStore password(byte[] password) {
+        session.setPassword(password);
+        return this;
+    }
+
+    /**
+     * 设置密码
+     *
+     * @param password 密码
+     * @return this
+     */
+    public SessionStore password(String password) {
+        session.setPassword(password);
+        return this;
+    }
+
+    public SessionStore identity(File privateKey) {
+        return this.identity(privateKey, null, null);
+    }
+
+    public SessionStore identity(File privateKey, String passphrase) {
+        return this.identity(privateKey, null, passphrase);
+    }
+
+    public SessionStore identity(File privateKey, File publicKey, String passphrase) {
+        Assert.notNull(privateKey, "private key is null");
+        try {
+            ch.addIdentity(privateKey.getAbsolutePath(),
+                    publicKey == null ? null : publicKey.getAbsolutePath(),
+                    passphrase == null ? null : Strings.bytes(passphrase));
+        } catch (Exception e) {
+            throw Exceptions.runtime("add identity error " + e.getMessage(), e);
+        }
+        return this;
+    }
+
+    public SessionStore identity(String publicKeyValue, String privateKeyValue) {
+        return this.identity(publicKeyValue, privateKeyValue, null);
+    }
+
+    /**
+     * 添加私钥认证
+     *
+     * @param publicKey  公钥文本
+     * @param privateKey 私钥文本
+     * @param passphrase 私钥口令
+     * @return this
+     */
+    public SessionStore identity(String publicKey, String privateKey, String passphrase) {
+        Assert.notNull(privateKey, "private key is null");
+        try {
+            ch.addIdentity(session.getHost(),
+                    Strings.bytes(privateKey),
+                    publicKey == null ? null : Strings.bytes(publicKey),
+                    passphrase == null ? null : Strings.bytes(passphrase));
+        } catch (Exception e) {
+            throw Exceptions.runtime("add identity error " + e.getMessage(), e);
+        }
+        return this;
+    }
+
+    public SessionStore knownHosts(File file) {
+        Assert.notNull(file, "known hosts file is null");
+        return this.knownHosts(Files1.openInputStreamSafe(file));
+    }
+
+    public SessionStore knownHosts(String value) {
+        Assert.notNull(value, "known hosts is null");
+        return this.knownHosts(Streams.toInputStream(value));
+    }
+
+    /**
+     * 设置已知主机
+     *
+     * @param in 文件流
+     * @return this
+     */
+    public SessionStore knownHosts(InputStream in) {
+        try {
+            ch.setKnownHosts(in);
+        } catch (Exception e) {
+            throw Exceptions.runtime("set unknown hosts error " + e.getMessage());
+        }
+        return this;
+    }
+
+    /**
+     * 设置超时时间
+     *
+     * @param timeout 超时时间 ms
+     * @return this
+     */
+    public SessionStore timeout(int timeout) {
+        Assert.gte(timeout, 0, "the time must greater than or equal 0");
+        try {
+            session.setServerAliveInterval(timeout);
+            session.setServerAliveCountMax(2);
+            session.setTimeout(timeout);
+        } catch (Exception e) {
+            // impossible
+            throw Exceptions.runtime(e);
+        }
+        return this;
     }
 
     /**
@@ -75,24 +214,24 @@ public class SessionStore implements SafeCloseable {
     }
 
     /**
-     * 设置密码
+     * 设置日志等级
      *
-     * @param password 密码
+     * @param logger 日志等级
      * @return this
      */
-    public SessionStore password(String password) {
-        session.setPassword(password);
-        return this;
-    }
+    public SessionStore logger(SessionLogger logger) {
+        int loggerLevel = logger.getLevel();
+        ch.setInstanceLogger(new com.jcraft.jsch.Logger() {
+            @Override
+            public boolean isEnabled(int level) {
+                return loggerLevel <= level;
+            }
 
-    /**
-     * 设置密码
-     *
-     * @param password 密码
-     * @return this
-     */
-    public SessionStore password(byte[] password) {
-        session.setPassword(password);
+            @Override
+            public void log(int level, String message) {
+                SessionLogger.log(level, message);
+            }
+        });
         return this;
     }
 
@@ -184,45 +323,6 @@ public class SessionStore implements SafeCloseable {
     }
 
     /**
-     * 获取配置信息
-     *
-     * @param key key
-     * @return value
-     */
-    public String getConfig(String key) {
-        return session.getConfig(key);
-    }
-
-    /**
-     * 设置配置信息
-     *
-     * @param key   key
-     * @param value value
-     */
-    public void setConfig(String key, String value) {
-        session.setConfig(key, value);
-    }
-
-    /**
-     * 设置连接超时时间
-     *
-     * @param timeout 超时时间
-     * @return this
-     */
-    public SessionStore timeout(int timeout) {
-        Assert.gte(timeout, 0, "the time must greater than or equal 0");
-        try {
-            session.setServerAliveInterval(timeout);
-            session.setServerAliveCountMax(2);
-            session.setTimeout(timeout);
-        } catch (Exception e) {
-            // impossible
-            throw Exceptions.runtime(e);
-        }
-        return this;
-    }
-
-    /**
      * 建立连接
      *
      * @return this
@@ -234,14 +334,15 @@ public class SessionStore implements SafeCloseable {
     /**
      * 建立连接
      *
-     * @param timeout 超时时间
+     * @param timeout 超时时间 ms
      * @return this
      */
     public SessionStore connect(int timeout) {
+        Assert.gte(timeout, 0, "the time must greater than or equal 0");
         try {
             session.connect(timeout);
         } catch (Exception e) {
-            if (Strings.def(e.getMessage()).contains(AUTH_FAIL_MESSAGE)) {
+            if (Strings.def(e.getMessage()).toLowerCase().contains(AUTH_FAIL_MESSAGE)) {
                 // 认证失败
                 throw Exceptions.authentication(e);
             } else {
@@ -266,6 +367,7 @@ public class SessionStore implements SafeCloseable {
      * @return CommandExecutor
      */
     public CommandExecutor getCommandExecutor(byte[] command) {
+        this.checkConnected();
         try {
             return new CommandExecutor((ChannelExec) session.openChannel(COMMAND_TYPE), command);
         } catch (JSchException e) {
@@ -279,6 +381,7 @@ public class SessionStore implements SafeCloseable {
      * @return ShellExecutor
      */
     public ShellExecutor getShellExecutor() {
+        this.checkConnected();
         try {
             return new ShellExecutor((ChannelShell) session.openChannel(SHELL_TYPE));
         } catch (JSchException e) {
@@ -297,6 +400,7 @@ public class SessionStore implements SafeCloseable {
      * @return SftpExecutor
      */
     public SftpExecutor getSftpExecutor(String fileNameCharset) {
+        this.checkConnected();
         try {
             return new SftpExecutor((ChannelSftp) session.openChannel(SFTP_TYPE), fileNameCharset);
         } catch (JSchException e) {
@@ -305,7 +409,16 @@ public class SessionStore implements SafeCloseable {
     }
 
     /**
-     * 关闭连接
+     * 检查是否已连接
+     */
+    private void checkConnected() {
+        if (!this.isConnected()) {
+            throw Exceptions.connection("session is not connected");
+        }
+    }
+
+    /**
+     * 断开连接
      */
     public void disconnect() {
         session.disconnect();
@@ -318,11 +431,6 @@ public class SessionStore implements SafeCloseable {
         return session.isConnected();
     }
 
-    /**
-     * 获取 session
-     *
-     * @return Session
-     */
     public Session getSession() {
         return session;
     }
@@ -331,16 +439,8 @@ public class SessionStore implements SafeCloseable {
         return session.getHost();
     }
 
-    public void setHost(String host) {
-        session.setHost(host);
-    }
-
     public int getPort() {
         return session.getPort();
-    }
-
-    public void setPort(int port) {
-        session.setPort(port);
     }
 
     public String getUsername() {
@@ -349,9 +449,7 @@ public class SessionStore implements SafeCloseable {
 
     @Override
     public void close() {
-        if (this.isConnected()) {
-            this.disconnect();
-        }
+        this.disconnect();
     }
 
 }

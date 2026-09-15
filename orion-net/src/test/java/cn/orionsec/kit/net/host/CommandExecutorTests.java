@@ -47,14 +47,11 @@ import java.io.IOException;
 @Ignore("需要真实 SSH 服务器 无法在单元测试环境连接")
 public class CommandExecutorTests {
 
-    private SessionHolder h;
-
     private SessionStore s;
 
     @Before
     public void init() {
-        this.h = SessionHolder.create();
-        this.s = h.getSession("192.168.146.230", "root")
+        this.s = SessionStore.create("192.168.146.230", "root")
                 .password("admin123")
                 .timeout(20000)
                 .connect(20000);
@@ -62,7 +59,7 @@ public class CommandExecutorTests {
 
     @Test
     public void ls() {
-        h.setLogger(SessionLogger.ERROR);
+        s.logger(SessionLogger.ERROR);
         CommandExecutor e = s.getCommandExecutor("ls -la /root");
         e.callback(() -> {
             System.out.println("end....");
@@ -78,7 +75,7 @@ public class CommandExecutorTests {
 
     @Test
     public void echo() {
-        h.setLogger(SessionLogger.INFO);
+        s.logger(SessionLogger.INFO);
         CommandExecutor e = s.getCommandExecutor("echo $PATH");
         e.merge();
         e.streamHandler(ReaderLineConsumer.printer());

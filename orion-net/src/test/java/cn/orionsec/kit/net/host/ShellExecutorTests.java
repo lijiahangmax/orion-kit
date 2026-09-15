@@ -40,10 +40,9 @@ import java.util.Scanner;
 public class ShellExecutorTests {
 
     public static void main(String[] args) {
-        SessionHolder h = SessionHolder.create();
-        h.setLogger(SessionLogger.INFO);
-        ShellExecutor e = h.getSession("192.168.146.230", "root")
+        ShellExecutor e = SessionStore.create("192.168.146.230", "root")
                 .password("admin123")
+                .logger(SessionLogger.INFO)
                 .timeout(20000)
                 .connect(20000)
                 .getShellExecutor();

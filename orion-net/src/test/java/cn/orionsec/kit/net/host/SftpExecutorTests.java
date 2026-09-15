@@ -56,16 +56,13 @@ import java.util.regex.Pattern;
 @Ignore("需要真实 SSH 服务器 无法在单元测试环境连接")
 public class SftpExecutorTests {
 
-    private SessionHolder h;
-
     private SftpExecutor e;
 
     @Before
     public void before() {
-        this.h = SessionHolder.create();
-        h.setLogger(SessionLogger.ERROR);
-        this.e = h.getSession("192.168.146.230", "root")
+        this.e = SessionStore.create("192.168.146.230", "root")
                 .password("admin123")
+                .logger(SessionLogger.ERROR)
                 .timeout(20000)
                 .connect(20000)
                 .getSftpExecutor();
