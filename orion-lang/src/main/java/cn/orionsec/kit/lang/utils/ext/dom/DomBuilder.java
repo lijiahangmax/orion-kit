@@ -115,11 +115,6 @@ public class DomBuilder implements Buildable<DomBuilder> {
         return this;
     }
 
-    /**
-     * 构建
-     *
-     * @return this
-     */
     @Override
     public DomBuilder build() {
         Assert.notNull(domElement, "element is null");

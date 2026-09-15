@@ -222,11 +222,6 @@ public class FtpClientPool implements AutoCloseable {
         Ftps.destroy(client);
     }
 
-    /**
-     * 关闭连接池 并且释放连接
-     *
-     * @throws InterruptedException 释放连接超时
-     */
     @Override
     public void close() throws InterruptedException {
         LOGGER.debug("ftp client pool closing...");

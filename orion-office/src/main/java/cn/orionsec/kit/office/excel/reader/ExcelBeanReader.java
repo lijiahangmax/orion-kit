@@ -169,12 +169,6 @@ public class ExcelBeanReader<T> extends BaseExcelReader<String, T> {
         return this;
     }
 
-    /**
-     * 添加配置
-     *
-     * @param field  field
-     * @param option 配置
-     */
     @Override
     protected void addOption(String field, ImportFieldOption option) {
         Assert.notNull(option, "field option is null");

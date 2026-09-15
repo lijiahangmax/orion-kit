@@ -37,9 +37,6 @@ import java.io.Flushable;
  */
 public interface SafeFlushable extends Flushable {
 
-    /**
-     * 安全刷新以及强制写出
-     */
     @Override
     void flush();
 

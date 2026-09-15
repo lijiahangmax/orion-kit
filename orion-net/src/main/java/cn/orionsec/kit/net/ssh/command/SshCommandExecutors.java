@@ -1,0 +1,141 @@
+/*
+ * Copyright (c) 2019 - present Jiahang Li, All rights reserved.
+ *
+ *   https://kit.orionsec.cn
+ *
+ * Members:
+ *   Jiahang Li - ljh1553488six@139.com - author
+ *
+ * The MIT License (MIT)
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+package cn.orionsec.kit.net.ssh.command;
+
+import cn.orionsec.kit.lang.utils.Assert;
+import cn.orionsec.kit.lang.utils.io.Streams;
+import cn.orionsec.kit.net.ssh.SshClient;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
+/**
+ * 命令执行器工具
+ *
+ * @author Jiahang Li
+ * @version 1.0.0
+ * @since 2022/5/18 13:48
+ */
+public class SshCommandExecutors {
+
+    private SshCommandExecutors() {
+    }
+
+    /**
+     * 执行命令获取命令输出
+     *
+     * @param host     机器主机
+     * @param username 用户名
+     * @param password 密码
+     * @param command  命令
+     * @return 命令输出
+     * @throws IOException IOException
+     */
+    public static String getCommandOutputResult(String host, String username, String password, String command) throws IOException {
+        return getCommandOutputResult(host, SshClient.DEFAULT_SSH_PORT, username, password, command);
+    }
+
+    /**
+     * 执行命令获取命令输出
+     *
+     * @param host     机器主机
+     * @param port     port
+     * @param username 用户名
+     * @param password 密码
+     * @param command  命令
+     * @return 命令输出
+     * @throws IOException IOException
+     */
+    public static String getCommandOutputResult(String host, int port, String username, String password, String command) throws IOException {
+        try (SshClient session = SshClient.create(host, port, username)
+                .password(password)
+                .connect();
+             SshCommandExecutor executor = session.getCommandExecutor(command)) {
+            return getCommandOutputResultString(executor);
+        }
+    }
+
+    /**
+     * 执行命令获取命令输出
+     *
+     * @param executor executor
+     * @return result
+     * @throws IOException IOException
+     */
+    public static String getCommandOutputResultString(ISshCommandExecutor executor) throws IOException {
+        return new String(getCommandOutputResult(executor));
+    }
+
+    /**
+     * 执行命令获取命令输出
+     *
+     * @param executor executor
+     * @return result
+     * @throws IOException IOException
+     */
+    public static byte[] getCommandOutputResult(ISshCommandExecutor executor) throws IOException {
+        Assert.notNull(executor, "command executor is null");
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            // 执行命令
+            execCommand(executor, out);
+            return out.toByteArray();
+        } finally {
+            Streams.close(out);
+        }
+    }
+
+    /**
+     * 执行命令
+     *
+     * @param executor executor
+     * @param transfer transfer
+     * @throws IOException IOException
+     */
+    public static void execCommand(ISshCommandExecutor executor, OutputStream transfer) throws IOException {
+        execCommand(executor, transfer, true);
+    }
+
+    /**
+     * 执行命令
+     *
+     * @param executor executor
+     * @param transfer transfer
+     * @param merge    merge
+     * @throws IOException IOException
+     */
+    public static void execCommand(ISshCommandExecutor executor, OutputStream transfer, boolean merge) throws IOException {
+        if (merge) {
+            executor.merge();
+        }
+        executor.transfer(transfer);
+        executor.connect();
+        executor.exec();
+    }
+
+}

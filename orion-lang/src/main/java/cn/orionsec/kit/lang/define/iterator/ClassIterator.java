@@ -72,9 +72,6 @@ public class ClassIterator<T> implements Iterator<Class<? super T>>, Iterable<Cl
         return includeObject || !Object.class.equals(current);
     }
 
-    /**
-     * @return 父类
-     */
     @Override
     public Class<? super T> next() {
         return current;

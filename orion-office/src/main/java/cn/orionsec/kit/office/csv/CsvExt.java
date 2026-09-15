@@ -218,9 +218,6 @@ public class CsvExt implements SafeCloseable {
         return reader;
     }
 
-    /**
-     * 关闭读取流
-     */
     @Override
     public void close() {
         reader.close();

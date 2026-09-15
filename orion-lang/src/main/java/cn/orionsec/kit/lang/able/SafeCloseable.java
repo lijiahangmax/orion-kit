@@ -37,9 +37,6 @@ import java.io.Closeable;
  */
 public interface SafeCloseable extends Closeable {
 
-    /**
-     * 安全关闭
-     */
     @Override
     void close();
 

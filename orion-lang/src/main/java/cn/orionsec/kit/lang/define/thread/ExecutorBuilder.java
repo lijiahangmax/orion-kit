@@ -292,9 +292,6 @@ public class ExecutorBuilder implements Buildable<ThreadPoolExecutor> {
         return this;
     }
 
-    /**
-     * 构建 ThreadPoolExecutor
-     */
     @Override
     public ThreadPoolExecutor build() {
         return build(this);

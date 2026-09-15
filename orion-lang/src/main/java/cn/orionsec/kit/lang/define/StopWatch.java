@@ -235,9 +235,6 @@ public class StopWatch {
         return this.tag(Strings.format(tpl, args));
     }
 
-    /**
-     * @return 格式为 Total: [计时时间][计时时间单位] : [计时开始时间] => [计时结束时间] 的字符串
-     */
     @Override
     public String toString() {
         String prefix = String.format("Total: %d%s; [%s] => [%s]",

@@ -33,11 +33,23 @@ package cn.orionsec.kit.lang.able;
  * @version 1.0.0
  * @since 2021/6/16 19:08
  */
-public interface Connectable {
+public interface Connectable extends DisConnectable, SafeCloseable {
 
     /**
-     * 连接
+     * 建立连接
+     *
+     * @return this
      */
-    void connect();
+    Connectable connect();
+
+    /**
+     * @return 是否已连接
+     */
+    boolean isConnected();
+
+    @Override
+    default void close() {
+        this.disconnect();
+    }
 
 }

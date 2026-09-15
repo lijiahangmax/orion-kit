@@ -130,9 +130,6 @@ public class CsvAdapter implements Adaptable<CsvAdapter>, SafeCloseable {
         return this;
     }
 
-    /**
-     * 关闭sheet
-     */
     @Override
     public void close() {
         try {

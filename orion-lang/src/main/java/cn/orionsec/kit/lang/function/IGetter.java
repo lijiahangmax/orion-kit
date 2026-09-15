@@ -39,12 +39,6 @@ import java.util.function.Function;
 @FunctionalInterface
 public interface IGetter<T, R> extends Function<T, R>, Serializable {
 
-    /**
-     * getter
-     *
-     * @param t t
-     * @return r
-     */
     @Override
     R apply(T t);
 

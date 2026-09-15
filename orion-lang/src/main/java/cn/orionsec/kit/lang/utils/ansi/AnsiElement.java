@@ -35,11 +35,6 @@ package cn.orionsec.kit.lang.utils.ansi;
  */
 public interface AnsiElement {
 
-    /**
-     * 获取元素
-     *
-     * @return 元素值
-     */
     @Override
     String toString();
 

@@ -149,11 +149,6 @@ public abstract class BaseExcelReader<K, T> implements SafeCloseable, Iterable<T
         this.init = true;
     }
 
-    /**
-     * excel 迭代器 不会存储也不会消费
-     *
-     * @return 迭代器
-     */
     @Override
     public ExcelReaderIterator<T> iterator() {
         return new ExcelReaderIterator<>(this);
