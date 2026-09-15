@@ -27,8 +27,8 @@
 package cn.orionsec.kit.net.host.ssh.shell;
 
 import cn.orionsec.kit.lang.utils.Exceptions;
+import cn.orionsec.kit.net.host.TerminalType;
 import cn.orionsec.kit.net.host.ssh.BaseSshExecutor;
-import cn.orionsec.kit.net.host.ssh.TerminalType;
 import com.jcraft.jsch.ChannelShell;
 
 import java.io.IOException;

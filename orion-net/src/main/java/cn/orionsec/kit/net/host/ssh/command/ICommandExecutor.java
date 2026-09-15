@@ -28,8 +28,8 @@ package cn.orionsec.kit.net.host.ssh.command;
 
 import cn.orionsec.kit.lang.support.timeout.TimeoutChecker;
 import cn.orionsec.kit.lang.support.timeout.TimeoutEndpoint;
+import cn.orionsec.kit.net.host.ExitCode;
 import cn.orionsec.kit.net.host.HostConnector;
-import cn.orionsec.kit.net.host.ssh.ExitCode;
 import cn.orionsec.kit.net.host.ssh.ISshExecutor;
 
 import java.io.IOException;

@@ -27,8 +27,8 @@
 package cn.orionsec.kit.net.host.ssh.shell;
 
 import cn.orionsec.kit.net.host.HostConnector;
+import cn.orionsec.kit.net.host.TerminalType;
 import cn.orionsec.kit.net.host.ssh.ISshExecutor;
-import cn.orionsec.kit.net.host.ssh.TerminalType;
 
 /**
  * shell 执行器 api
