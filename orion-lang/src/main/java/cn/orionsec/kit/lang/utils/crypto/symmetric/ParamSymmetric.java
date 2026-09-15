@@ -78,7 +78,7 @@ public class ParamSymmetric extends BaseSymmetric {
             if (aad != null) {
                 cipher.updateAAD(aad);
             }
-            return codec.encode(cipher.doFinal(this.doPadding(plain, cipher.getBlockSize())));
+            return codec.encode(cipher.doFinal(plain));
         } catch (Exception e) {
             throw Exceptions.encrypt("encrypt data error", e);
         }
@@ -92,7 +92,7 @@ public class ParamSymmetric extends BaseSymmetric {
             if (aad != null) {
                 cipher.updateAAD(aad);
             }
-            return this.clearPadding(cipher.doFinal(codec.decode(text)));
+            return cipher.doFinal(codec.decode(text));
         } catch (Exception e) {
             throw Exceptions.decrypt("decrypt data error", e);
         }

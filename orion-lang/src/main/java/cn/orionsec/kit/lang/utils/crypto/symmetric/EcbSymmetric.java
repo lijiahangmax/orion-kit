@@ -53,7 +53,7 @@ public class EcbSymmetric extends BaseSymmetric {
         try {
             Cipher cipher = super.getCipher();
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-            return codec.encode(cipher.doFinal(this.doPadding(plain, cipher.getBlockSize())));
+            return codec.encode(cipher.doFinal(plain));
         } catch (Exception e) {
             throw Exceptions.encrypt("encrypt data error", e);
         }
@@ -64,7 +64,7 @@ public class EcbSymmetric extends BaseSymmetric {
         try {
             Cipher cipher = super.getCipher();
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
-            return this.clearPadding(cipher.doFinal(codec.decode(text)));
+            return cipher.doFinal(codec.decode(text));
         } catch (Exception e) {
             throw Exceptions.decrypt("decrypt data error", e);
         }
