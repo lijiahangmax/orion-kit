@@ -51,6 +51,7 @@ import java.util.function.Consumer;
  * @version 1.0.0
  * @since 2026/7/26
  */
+@Ignore("需要真实 SSH 服务器 无法在单元测试环境连接")
 public class CommandExecutorsTest {
 
     @Test

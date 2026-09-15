@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.net.host;
 
+import cn.orionsec.kit.lang.exception.ConnectionRuntimeException;
 import cn.orionsec.kit.lang.exception.argument.InvalidArgumentException;
 import org.junit.Assert;
 import org.junit.Before;
@@ -136,8 +137,8 @@ public class SessionStoreTest {
         try {
             store.getCommandExecutor("echo 1");
             Assert.fail("should throw exception");
-        } catch (IllegalStateException e) {
-            Assert.assertTrue(e.getMessage().contains("could not open channel"));
+        } catch (ConnectionRuntimeException e) {
+            Assert.assertTrue(e.getMessage().contains("session is not connected"));
         }
     }
 
@@ -146,8 +147,8 @@ public class SessionStoreTest {
         try {
             store.getShellExecutor();
             Assert.fail("should throw exception");
-        } catch (IllegalStateException e) {
-            Assert.assertTrue(e.getMessage().contains("could not open channel"));
+        } catch (ConnectionRuntimeException e) {
+            Assert.assertTrue(e.getMessage().contains("session is not connected"));
         }
     }
 
@@ -156,8 +157,8 @@ public class SessionStoreTest {
         try {
             store.getSftpExecutor();
             Assert.fail("should throw exception");
-        } catch (IllegalStateException e) {
-            Assert.assertTrue(e.getMessage().contains("could not open channel"));
+        } catch (ConnectionRuntimeException e) {
+            Assert.assertTrue(e.getMessage().contains("session is not connected"));
         }
     }
 

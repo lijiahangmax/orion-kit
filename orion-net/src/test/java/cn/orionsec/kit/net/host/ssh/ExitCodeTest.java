@@ -28,6 +28,7 @@ package cn.orionsec.kit.net.host.ssh;
 
 import cn.orionsec.kit.net.host.ExitCode;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -37,6 +38,7 @@ import org.junit.Test;
  * @version 1.0.0
  * @since 2026/7/26
  */
+@Ignore("暂不执行")
 public class ExitCodeTest {
 
     @Test

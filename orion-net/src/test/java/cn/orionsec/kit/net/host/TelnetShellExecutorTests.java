@@ -33,6 +33,7 @@ import cn.orionsec.kit.net.host.telnet.TelnetSession;
 import cn.orionsec.kit.net.host.telnet.shell.TelnetShellExecutor;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -46,6 +47,7 @@ import java.util.List;
  * @version 1.0.0
  * @since 2026/3/2 1:40
  */
+@Ignore("需要真实 Telnet 服务器 无法在单元测试环境连接")
 public class TelnetShellExecutorTests {
 
     private static final String HOST = "127.0.0.1";
