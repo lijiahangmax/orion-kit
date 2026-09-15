@@ -779,7 +779,7 @@ public class Strings {
         if (isEmpty(separator)) {
             return new String[]{s};
         }
-        return s.split(separator, -1);
+        return s.split(Pattern.quote(separator), -1);
     }
 
     /**
