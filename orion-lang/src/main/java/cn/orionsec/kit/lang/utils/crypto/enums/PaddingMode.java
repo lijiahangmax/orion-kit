@@ -68,12 +68,7 @@ public enum PaddingMode {
     /**
      * 不填充
      */
-    NO_PADDING("NoPadding"),
-
-    /**
-     * 0填充 需要自己实现
-     */
-    ZERO_PADDING("NoPadding");
+    NO_PADDING("NoPadding");
 
     private final String mode;
 

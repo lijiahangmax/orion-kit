@@ -86,53 +86,6 @@ public abstract class BaseSymmetric implements SymmetricCrypto {
         return algorithm.getCipher(workingMode, paddingMode);
     }
 
-    /**
-     * 去除解密后的填充 (ZeroPadding 的 0)
-     *
-     * @param bytes bytes
-     * @return bytes
-     */
-    protected byte[] clearPadding(byte[] bytes) {
-        // 如果是0填充的话则需要去除0 否则解密结果的byte[]最后都是0 与明文比对会不匹配
-        if (!PaddingMode.ZERO_PADDING.equals(paddingMode)) {
-            return bytes;
-        }
-        int f = bytes.length;
-        for (int i = 0; i < f; i++) {
-            if (bytes[i] == 0) {
-                f = i;
-                break;
-            }
-        }
-        if (f == bytes.length) {
-            return bytes;
-        }
-        byte[] res = new byte[f];
-        System.arraycopy(bytes, 0, res, 0, f);
-        return res;
-    }
-
-    /**
-     * 执行填充 0填充数据
-     *
-     * @param bytes     数据
-     * @param blockSize 块大小
-     * @return 0填充块数据
-     */
-    protected byte[] doPadding(byte[] bytes, int blockSize) {
-        // 如果是 0 填充的话则需要补全数据块的0
-        if (!PaddingMode.ZERO_PADDING.equals(paddingMode)) {
-            return bytes;
-        }
-        if (bytes.length % blockSize == 0) {
-            return bytes;
-        }
-        int newSize = ((bytes.length / blockSize) + 1) * blockSize;
-        byte[] res = new byte[newSize];
-        System.arraycopy(bytes, 0, res, 0, bytes.length);
-        return res;
-    }
-
     public CipherAlgorithm getAlgorithm() {
         return algorithm;
     }
