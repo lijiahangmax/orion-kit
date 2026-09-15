@@ -26,7 +26,6 @@
  */
 package cn.orionsec.kit.net.host;
 
-import cn.orionsec.kit.lang.able.SafeCloseable;
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
@@ -48,9 +47,7 @@ import java.io.InputStream;
  * @version 1.0.0
  * @since 2020/10/5 23:08
  */
-public class SessionStore implements SafeCloseable {
-
-    public static final int DEFAULT_SSH_PORT = 22;
+public class SessionStore implements ISessionStore {
 
     private static final String COMMAND_TYPE = "exec";
     private static final String SHELL_TYPE = "shell";
@@ -96,30 +93,29 @@ public class SessionStore implements SafeCloseable {
         return new SessionStore(host, port, username);
     }
 
+    @Override
     public SessionStore password(byte[] password) {
         session.setPassword(password);
         return this;
     }
 
-    /**
-     * 设置密码
-     *
-     * @param password 密码
-     * @return this
-     */
+    @Override
     public SessionStore password(String password) {
         session.setPassword(password);
         return this;
     }
 
+    @Override
     public SessionStore identity(File privateKey) {
         return this.identity(privateKey, null, null);
     }
 
+    @Override
     public SessionStore identity(File privateKey, String passphrase) {
         return this.identity(privateKey, null, passphrase);
     }
 
+    @Override
     public SessionStore identity(File privateKey, File publicKey, String passphrase) {
         Assert.notNull(privateKey, "private key is null");
         try {
@@ -132,18 +128,12 @@ public class SessionStore implements SafeCloseable {
         return this;
     }
 
+    @Override
     public SessionStore identity(String publicKeyValue, String privateKeyValue) {
         return this.identity(publicKeyValue, privateKeyValue, null);
     }
 
-    /**
-     * 添加私钥认证
-     *
-     * @param publicKey  公钥文本
-     * @param privateKey 私钥文本
-     * @param passphrase 私钥口令
-     * @return this
-     */
+    @Override
     public SessionStore identity(String publicKey, String privateKey, String passphrase) {
         Assert.notNull(privateKey, "private key is null");
         try {
@@ -157,22 +147,19 @@ public class SessionStore implements SafeCloseable {
         return this;
     }
 
+    @Override
     public SessionStore knownHosts(File file) {
         Assert.notNull(file, "known hosts file is null");
         return this.knownHosts(Files1.openInputStreamSafe(file));
     }
 
+    @Override
     public SessionStore knownHosts(String value) {
         Assert.notNull(value, "known hosts is null");
         return this.knownHosts(Streams.toInputStream(value));
     }
 
-    /**
-     * 设置已知主机
-     *
-     * @param in 文件流
-     * @return this
-     */
+    @Override
     public SessionStore knownHosts(InputStream in) {
         try {
             ch.setKnownHosts(in);
@@ -182,12 +169,7 @@ public class SessionStore implements SafeCloseable {
         return this;
     }
 
-    /**
-     * 设置超时时间
-     *
-     * @param timeout 超时时间 ms
-     * @return this
-     */
+    @Override
     public SessionStore timeout(int timeout) {
         Assert.gte(timeout, 0, "the time must greater than or equal 0");
         try {
@@ -201,24 +183,13 @@ public class SessionStore implements SafeCloseable {
         return this;
     }
 
-    /**
-     * 设置属性
-     *
-     * @param key   key
-     * @param value value
-     * @return this
-     */
+    @Override
     public SessionStore config(String key, String value) {
         session.setConfig(key, value);
         return this;
     }
 
-    /**
-     * 设置日志等级
-     *
-     * @param logger 日志等级
-     * @return this
-     */
+    @Override
     public SessionStore logger(SessionLogger logger) {
         int loggerLevel = logger.getLevel();
         ch.setInstanceLogger(new com.jcraft.jsch.Logger() {
@@ -235,44 +206,42 @@ public class SessionStore implements SafeCloseable {
         return this;
     }
 
+    @Override
     public SessionStore httpProxy(String host, int port) {
         return this.proxy(SessionProxyType.HTTP, host, port, null, null);
     }
 
+    @Override
     public SessionStore httpProxy(String host, int port, String username, String password) {
         return this.proxy(SessionProxyType.HTTP, host, port, username, password);
     }
 
+    @Override
     public SessionStore socks4Proxy(String host, int port) {
         return this.proxy(SessionProxyType.SOCKS4, host, port, null, null);
     }
 
+    @Override
     public SessionStore socks4Proxy(String host, int port, String username, String password) {
         return this.proxy(SessionProxyType.SOCKS4, host, port, username, password);
     }
 
+    @Override
     public SessionStore socks5Proxy(String host, int port) {
         return this.proxy(SessionProxyType.SOCKS5, host, port, null, null);
     }
 
+    @Override
     public SessionStore socks5Proxy(String host, int port, String username, String password) {
         return this.proxy(SessionProxyType.SOCKS5, host, port, username, password);
     }
 
+    @Override
     public SessionStore proxy(SessionProxyType type, String host, int port) {
         return this.proxy(type, host, port, null, null);
     }
 
-    /**
-     * 设置代理
-     *
-     * @param type     代理类型
-     * @param host     代理地址
-     * @param port     代理端口
-     * @param username 代理用户名
-     * @param password 代理密码
-     * @return this
-     */
+    @Override
     public SessionStore proxy(SessionProxyType type,
                               String host, int port,
                               String username, String password) {
@@ -300,43 +269,39 @@ public class SessionStore implements SafeCloseable {
         return this;
     }
 
-    /**
-     * 设置客户端版本
-     *
-     * @param version 版本
-     * @return this
-     */
+    @Override
     public SessionStore clientVersion(String version) {
         session.setClientVersion(version);
         return this;
     }
 
-    /**
-     * 设置是否守护进程
-     *
-     * @param daemon true守护进程
-     * @return this
-     */
+    @Override
     public SessionStore daemonThread(boolean daemon) {
         session.setDaemonThread(daemon);
         return this;
     }
 
-    /**
-     * 建立连接
-     *
-     * @return this
-     */
+    @Override
+    public int setPortForwardingL(String host, int rport) {
+        return this.setPortForwardingL(0, host, rport);
+    }
+
+    @Override
+    public int setPortForwardingL(int lport, String host, int rport) {
+        this.checkConnected();
+        try {
+            return session.setPortForwardingL(lport, host, rport);
+        } catch (JSchException e) {
+            throw Exceptions.state("could not set port forwarding", e);
+        }
+    }
+
+    @Override
     public SessionStore connect() {
         return this.connect(session.getTimeout());
     }
 
-    /**
-     * 建立连接
-     *
-     * @param timeout 超时时间 ms
-     * @return this
-     */
+    @Override
     public SessionStore connect(int timeout) {
         Assert.gte(timeout, 0, "the time must greater than or equal 0");
         try {
@@ -352,20 +317,17 @@ public class SessionStore implements SafeCloseable {
         return this;
     }
 
+    @Override
     public CommandExecutor getCommandExecutor(String command) {
         return this.getCommandExecutor(Strings.bytes(command, Const.UTF_8));
     }
 
+    @Override
     public CommandExecutor getCommandExecutor(String command, String charset) {
         return this.getCommandExecutor(Strings.bytes(command, charset));
     }
 
-    /**
-     * 获取 CommandExecutor
-     *
-     * @param command 命令
-     * @return CommandExecutor
-     */
+    @Override
     public CommandExecutor getCommandExecutor(byte[] command) {
         this.checkConnected();
         try {
@@ -375,11 +337,7 @@ public class SessionStore implements SafeCloseable {
         }
     }
 
-    /**
-     * 获取 ShellExecutor
-     *
-     * @return ShellExecutor
-     */
+    @Override
     public ShellExecutor getShellExecutor() {
         this.checkConnected();
         try {
@@ -389,16 +347,12 @@ public class SessionStore implements SafeCloseable {
         }
     }
 
+    @Override
     public SftpExecutor getSftpExecutor() {
         return this.getSftpExecutor(Const.UTF_8);
     }
 
-    /**
-     * 获取 SftpExecutor
-     *
-     * @param fileNameCharset 文件名称编码
-     * @return SftpExecutor
-     */
+    @Override
     public SftpExecutor getSftpExecutor(String fileNameCharset) {
         this.checkConnected();
         try {
@@ -417,32 +371,32 @@ public class SessionStore implements SafeCloseable {
         }
     }
 
-    /**
-     * 断开连接
-     */
+    @Override
     public void disconnect() {
         session.disconnect();
     }
 
-    /**
-     * @return 是否已建立连接
-     */
+    @Override
     public boolean isConnected() {
         return session.isConnected();
     }
 
+    @Override
     public Session getSession() {
         return session;
     }
 
+    @Override
     public String getHost() {
         return session.getHost();
     }
 
+    @Override
     public int getPort() {
         return session.getPort();
     }
 
+    @Override
     public String getUsername() {
         return session.getUserName();
     }
