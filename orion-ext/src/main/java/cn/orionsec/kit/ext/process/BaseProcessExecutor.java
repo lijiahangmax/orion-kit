@@ -108,12 +108,6 @@ public abstract class BaseProcessExecutor implements Executable, SafeCloseable {
     }
 
     /**
-     * 关闭
-     */
-    @Override
-    public abstract void close();
-
-    /**
      * 是否正在执行
      *
      * @return true执行中

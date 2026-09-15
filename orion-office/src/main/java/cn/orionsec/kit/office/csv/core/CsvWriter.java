@@ -289,9 +289,6 @@ public class CsvWriter implements SafeCloseable, SafeFlushable {
         firstColumn = true;
     }
 
-    /**
-     * 缓冲区写入
-     */
     @Override
     public void flush() {
         Streams.flush(writer);

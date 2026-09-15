@@ -63,11 +63,6 @@ public class ExcelReaderIterator<T> implements Iterator<T>, Iterable<T> {
         this.first = true;
     }
 
-    /**
-     * 迭代器 不会存储也不会消费
-     *
-     * @return 迭代器
-     */
     @Override
     public Iterator<T> iterator() {
         return this;

@@ -180,6 +180,7 @@
                     <docencoding>UTF-8</docencoding>
                     <charset>UTF-8</charset>
                     <additionalJOption>-Xdoclint:none</additionalJOption>
+                    <detectOfflineLinks>false</detectOfflineLinks>
                 </configuration>
             </plugin>
         </plugins>

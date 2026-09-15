@@ -84,11 +84,6 @@ public abstract class BaseCsvReader<T> implements SafeCloseable, Iterable<T> {
         this.store = rows != null;
     }
 
-    /**
-     * csv 迭代器 不会存储也不会消费
-     *
-     * @return 迭代器
-     */
     @Override
     public CsvReaderIterator<T> iterator() {
         return new CsvReaderIterator<>(this);

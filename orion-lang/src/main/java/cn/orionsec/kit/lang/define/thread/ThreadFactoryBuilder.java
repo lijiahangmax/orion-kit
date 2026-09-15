@@ -122,11 +122,6 @@ public class ThreadFactoryBuilder implements Buildable<ThreadFactory> {
         return this;
     }
 
-    /**
-     * 构建 ThreadFactory
-     *
-     * @return ThreadFactory
-     */
     @Override
     public ThreadFactory build() {
         return build(this);

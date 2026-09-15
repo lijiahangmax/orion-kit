@@ -367,21 +367,11 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
         Streams.close(errorStream);
     }
 
-    /**
-     * 是否正在执行
-     *
-     * @return true执行中
-     */
     @Override
     public boolean isAlive() {
         return process.isAlive();
     }
 
-    /**
-     * 获取exit code 会阻塞
-     *
-     * @return -1 未执行完毕  0 成功  1 失败
-     */
     @Override
     public int getExitCode() {
         if (!process.isAlive()) {

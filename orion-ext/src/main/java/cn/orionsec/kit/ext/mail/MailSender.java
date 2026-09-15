@@ -143,9 +143,6 @@ public class MailSender implements ISendEvent<MailMessage> {
         return this;
     }
 
-    /**
-     * 发件
-     */
     @Override
     public void send(MailMessage msg) {
         Assert.notNull(authentication, "sender service unauthorized");

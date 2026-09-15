@@ -39,12 +39,6 @@ import java.util.function.BiConsumer;
 @FunctionalInterface
 public interface ISetter<T, U> extends BiConsumer<T, U>, Serializable {
 
-    /**
-     * setter
-     *
-     * @param t t
-     * @param u u
-     */
     @Override
     void accept(T t, U u);
 

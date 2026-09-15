@@ -70,11 +70,6 @@ public class ObjectIdWorker implements IdGenerator<String> {
         return bb.array();
     }
 
-    /**
-     * 获取一个 objectId (无下划线)
-     *
-     * @return objectId
-     */
     @Override
     public String nextId() {
         return this.nextId(false);

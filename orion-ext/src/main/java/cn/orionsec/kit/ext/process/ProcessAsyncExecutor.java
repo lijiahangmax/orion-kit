@@ -259,29 +259,16 @@ public class ProcessAsyncExecutor extends BaseProcessExecutor {
         }
     }
 
-    /**
-     * 关闭进程
-     */
     @Override
     public void close() {
         process.destroy();
     }
 
-    /**
-     * 是否正在执行
-     *
-     * @return true执行中
-     */
     @Override
     public boolean isAlive() {
         return process.isAlive();
     }
 
-    /**
-     * 获取exit code
-     *
-     * @return -1 未执行完毕  0 成功  1 失败
-     */
     @Override
     public int getExitCode() {
         if (!process.isAlive()) {

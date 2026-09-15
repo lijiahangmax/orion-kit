@@ -158,9 +158,6 @@ public class ExcelAdapter extends BaseExcelWriteable implements Adaptable<ExcelA
         return this;
     }
 
-    /**
-     * 关闭workbook
-     */
     @Override
     public void close() {
         Streams.close(workbook);
