@@ -24,97 +24,60 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package cn.orionsec.kit.net.host.ssh;
+package cn.orionsec.kit.net.host;
 
 /**
- * 终端类型
+ * 程序退出码
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2021/3/26 17:40
+ * @since 2021/2/21 18:57
  */
-public enum TerminalType {
+public enum ExitCode {
 
     /**
-     * xterm
+     * 执行成功 0
      */
-    XTERM("xterm"),
+    SUCCESS(0),
 
     /**
-     * xterm-16color
+     * 执行遇到错误 1
      */
-    XTERM_16_COLOR("xterm-16color"),
+    ERROR(1),
 
     /**
-     * xterm-256color
+     * 程序没有 exitCode
      */
-    XTERM_256_COLOR("xterm-256color"),
+    NULL(null);
 
-    /**
-     * bash
-     */
-    BASH("bash"),
+    private final Integer code;
 
-    /**
-     * vt100
-     */
-    VT_100("vt100"),
-
-    /**
-     * vt102
-     */
-    VT_102("vt102"),
-
-    /**
-     * vt220
-     */
-    VT_220("vt220"),
-
-    /**
-     * vt320
-     */
-    VT_320("vt320"),
-
-    /**
-     * linux
-     */
-    LINUX("linux"),
-
-    /**
-     * ansi
-     */
-    ANSI("ansi"),
-
-    /**
-     * dumb
-     */
-    DUMB("dumb"),
-
-    /**
-     * scoansi
-     */
-    SCO_ANSI("scoansi");
-
-    private final String type;
-
-    TerminalType(String type) {
-        this.type = type;
+    ExitCode(Integer code) {
+        this.code = code;
     }
 
-    public String getType() {
-        return type;
+    public Integer getCode() {
+        return code;
     }
 
-    public static TerminalType of(String type) {
-        if (type == null) {
-            return XTERM;
-        }
-        for (TerminalType value : values()) {
-            if (value.type.equals(type)) {
-                return value;
-            }
-        }
-        return XTERM;
+    /**
+     * 判断是否执行成功
+     *
+     * @param exitCode exitCode
+     * @return isSuccess
+     */
+    public static boolean isSuccess(Integer exitCode) {
+        return SUCCESS.code.equals(exitCode);
+    }
+
+    /**
+     * 判断是否执行失败
+     *
+     * @param exitCode exitCode
+     * @return isFailed
+     */
+    public static boolean isFailed(Integer exitCode) {
+        return !SUCCESS.code.equals(exitCode);
     }
 
 }

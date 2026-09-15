@@ -24,60 +24,97 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package cn.orionsec.kit.net.host.ssh;
+package cn.orionsec.kit.net.host;
 
 /**
- * 程序退出码
+ * 终端类型
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2021/2/21 18:57
+ * @since 2021/3/26 17:40
  */
-public enum ExitCode {
+public enum TerminalType {
 
     /**
-     * 执行成功 0
+     * xterm
      */
-    SUCCESS(0),
+    XTERM("xterm"),
 
     /**
-     * 执行遇到错误 1
+     * xterm-16color
      */
-    ERROR(1),
+    XTERM_16_COLOR("xterm-16color"),
 
     /**
-     * 程序没有 exitCode
+     * xterm-256color
      */
-    NULL(null);
+    XTERM_256_COLOR("xterm-256color"),
 
-    private final Integer code;
+    /**
+     * bash
+     */
+    BASH("bash"),
 
-    ExitCode(Integer code) {
-        this.code = code;
+    /**
+     * vt100
+     */
+    VT_100("vt100"),
+
+    /**
+     * vt102
+     */
+    VT_102("vt102"),
+
+    /**
+     * vt220
+     */
+    VT_220("vt220"),
+
+    /**
+     * vt320
+     */
+    VT_320("vt320"),
+
+    /**
+     * linux
+     */
+    LINUX("linux"),
+
+    /**
+     * ansi
+     */
+    ANSI("ansi"),
+
+    /**
+     * dumb
+     */
+    DUMB("dumb"),
+
+    /**
+     * scoansi
+     */
+    SCO_ANSI("scoansi");
+
+    private final String type;
+
+    TerminalType(String type) {
+        this.type = type;
     }
 
-    public Integer getCode() {
-        return code;
+    public String getType() {
+        return type;
     }
 
-    /**
-     * 判断是否执行成功
-     *
-     * @param exitCode exitCode
-     * @return isSuccess
-     */
-    public static boolean isSuccess(Integer exitCode) {
-        return SUCCESS.code.equals(exitCode);
-    }
-
-    /**
-     * 判断是否执行失败
-     *
-     * @param exitCode exitCode
-     * @return isFailed
-     */
-    public static boolean isFailed(Integer exitCode) {
-        return !SUCCESS.code.equals(exitCode);
+    public static TerminalType of(String type) {
+        if (type == null) {
+            return XTERM;
+        }
+        for (TerminalType value : values()) {
+            if (value.type.equals(type)) {
+                return value;
+            }
+        }
+        return XTERM;
     }
 
 }

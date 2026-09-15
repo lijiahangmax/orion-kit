@@ -29,16 +29,10 @@ package cn.orionsec.kit.net.host;
 import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.io.Files1;
-import com.jcraft.jsch.Identity;
 import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Logger;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
 
 /**
  * Session Holder
@@ -137,8 +131,8 @@ public class SessionHolder {
     /**
      * 添加私钥认证 - 文本
      *
-     * @param keyName        名称
-     * @param privateKeyPath 私钥文本
+     * @param keyName         名称
+     * @param privateKeyValue 私钥文本
      */
     public void addIdentityValue(String keyName, String privateKeyValue) {
         this.addIdentityValue(keyName, privateKeyValue, null, null);
@@ -147,21 +141,21 @@ public class SessionHolder {
     /**
      * 添加私钥认证 - 文本
      *
-     * @param keyName        名称
-     * @param privateKeyPath 私钥文本
-     * @param password       私钥密码
+     * @param keyName         名称
+     * @param privateKeyValue 私钥文本
+     * @param passphrase      私钥口令
      */
-    public void addIdentityValue(String keyName, String privateKeyValue, String password) {
-        this.addIdentityValue(keyName, privateKeyValue, null, password);
+    public void addIdentityValue(String keyName, String privateKeyValue, String passphrase) {
+        this.addIdentityValue(keyName, privateKeyValue, null, passphrase);
     }
 
     /**
      * 添加私钥认证 - 文本
      *
-     * @param keyName        名称
-     * @param privateKeyPath 私钥文本
-     * @param publicKeyPath  公钥文本
-     * @param password       私钥密码
+     * @param keyName         名称
+     * @param privateKeyValue 私钥文本
+     * @param publicKeyValue  公钥文本
+     * @param password        私钥密码
      */
     public void addIdentityValue(String keyName, String privateKeyValue, String publicKeyValue, String password) {
         Assert.notNull(keyName, "key name is null");
@@ -174,55 +168,6 @@ public class SessionHolder {
         } catch (Exception e) {
             throw Exceptions.runtime("add identity error " + e.getMessage(), e);
         }
-    }
-
-    /**
-     * 删除加载的密钥
-     *
-     * @param key key
-     */
-    public void removeIdentity(String key) {
-        Vector<?> identities = ch.getIdentityRepository().getIdentities();
-        for (Object identity : identities) {
-            if (identity instanceof Identity) {
-                String keyName = ((Identity) identity).getName();
-                if (keyName.equals(key) ||
-                        Files1.getPath(keyName).equals(Files1.getPath(key))) {
-                    try {
-                        ch.removeIdentity((Identity) identity);
-                    } catch (Exception e) {
-                        throw Exceptions.runtime("remove identity error " + e.getMessage());
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * 删除所有加载的密钥
-     */
-    public void removeAllIdentity() {
-        try {
-            ch.removeAllIdentity();
-        } catch (JSchException e) {
-            throw Exceptions.runtime("remove all identity error " + e.getMessage());
-        }
-    }
-
-    /**
-     * 获取加载的密钥
-     *
-     * @return keys
-     */
-    public List<String> getLoadKeys() {
-        List<String> keys = new ArrayList<>();
-        Vector<?> identities = ch.getIdentityRepository().getIdentities();
-        for (Object identity : identities) {
-            if (identity instanceof Identity) {
-                keys.add(Files1.getPath(((Identity) identity).getName()));
-            }
-        }
-        return keys;
     }
 
     /**

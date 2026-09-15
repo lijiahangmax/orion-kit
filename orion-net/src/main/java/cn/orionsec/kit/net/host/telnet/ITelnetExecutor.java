@@ -27,6 +27,7 @@
 package cn.orionsec.kit.net.host.telnet;
 
 import cn.orionsec.kit.net.host.IHostExecutor;
+import org.apache.commons.net.telnet.TelnetClient;
 
 import java.io.IOException;
 
@@ -52,6 +53,13 @@ public interface ITelnetExecutor extends IHostExecutor {
      * @param charset charset
      */
     void charset(String charset);
+
+    /**
+     * 设置最大读取缓冲区字节数
+     *
+     * @param maxReadBuffer maxReadBuffer
+     */
+    void maxReadBuffer(int maxReadBuffer);
 
     /**
      * 读取直到命中指定内容
@@ -81,23 +89,16 @@ public interface ITelnetExecutor extends IHostExecutor {
     String readUntilPrompt() throws IOException;
 
     /**
-     * 执行命令
-     *
-     * @param command command
-     * @return 输出内容
-     * @throws IOException IOException
+     * 断开连接
      */
-    String execCommand(String command) throws IOException;
+    void disconnect();
 
     /**
-     * 执行命令
+     * 是否已连接
      *
-     * @param command command
-     * @param timeout timeout
-     * @return 输出内容
-     * @throws IOException IOException
+     * @return 是否已连接
      */
-    String execCommand(String command, int timeout) throws IOException;
+    boolean isConnected();
 
     /**
      * @return 提示符
@@ -108,5 +109,20 @@ public interface ITelnetExecutor extends IHostExecutor {
      * @return 编码
      */
     String getCharset();
+
+    /**
+     * @return 读取超时时间 ms
+     */
+    int getReadTimeout();
+
+    /**
+     * @return 最大读取缓冲区字节数
+     */
+    int getMaxReadBuffer();
+
+    /**
+     * @return client
+     */
+    TelnetClient getClient();
 
 }
