@@ -28,7 +28,6 @@ package cn.orionsec.kit.net.host.ssh.command;
 
 import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.io.Streams;
-import cn.orionsec.kit.net.host.SessionHolder;
 import cn.orionsec.kit.net.host.SessionStore;
 
 import java.io.ByteArrayOutputStream;
@@ -58,7 +57,7 @@ public class CommandExecutors {
      * @throws IOException IOException
      */
     public static String getCommandOutputResult(String host, String username, String password, String command) throws IOException {
-        return getCommandOutputResult(host, 22, username, password, command);
+        return getCommandOutputResult(host, SessionStore.DEFAULT_SSH_PORT, username, password, command);
     }
 
     /**
@@ -73,8 +72,8 @@ public class CommandExecutors {
      * @throws IOException IOException
      */
     public static String getCommandOutputResult(String host, int port, String username, String password, String command) throws IOException {
-        try (SessionStore session = SessionHolder.create()
-                .getSession(host, port, username)
+        try (SessionStore session = SessionStore.create(host, port)
+                .username(username)
                 .password(password)
                 .connect();
              CommandExecutor executor = session.getCommandExecutor(command)) {
