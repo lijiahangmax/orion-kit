@@ -137,13 +137,15 @@ public class SshCommandExecutorsTest {
         }
 
         @Override
-        public void connect() {
+        public MockCommandExecutor connect() {
             this.connected = true;
+            return this;
         }
 
         @Override
-        public void connect(int timeout) {
+        public MockCommandExecutor connect(int timeout) {
             this.connected = true;
+            return this;
         }
 
         @Override

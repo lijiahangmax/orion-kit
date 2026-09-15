@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.net.ssh;
 
+import cn.orionsec.kit.net.specification.executor.IRemoteExecutor;
 import org.junit.Assert;
 import org.junit.Test;
 

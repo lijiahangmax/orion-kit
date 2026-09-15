@@ -35,6 +35,7 @@ import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.net.specification.transfer.IFileDownloader;
 import cn.orionsec.kit.net.specification.transfer.IFileUploader;
+import com.jcraft.jsch.Channel;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -76,6 +77,12 @@ public class BaseSftpExecutorTest {
 
         private InMemorySftpExecutor() {
             this.charset = Const.UTF_8;
+        }
+
+        @Override
+        public Channel getChannel() {
+            // 内存实现 不建立真实通道
+            return null;
         }
 
         /**

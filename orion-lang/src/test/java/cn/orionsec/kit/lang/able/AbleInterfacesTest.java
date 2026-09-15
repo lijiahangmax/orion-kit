@@ -64,9 +64,29 @@ public class AbleInterfacesTest {
     @Test
     public void testConnectable() {
         AtomicBoolean connected = new AtomicBoolean(false);
-        Connectable connectable = () -> connected.set(true);
-        connectable.connect();
-        assertTrue(connected.get());
+        Connectable connectable = new Connectable() {
+            @Override
+            public Connectable connect() {
+                connected.set(true);
+                return this;
+            }
+
+            @Override
+            public void disconnect() {
+                connected.set(false);
+            }
+
+            @Override
+            public boolean isConnected() {
+                return connected.get();
+            }
+        };
+        assertFalse(connectable.isConnected());
+        assertSame(connectable, connectable.connect());
+        assertTrue(connectable.isConnected());
+        // close 默认为断开连接
+        connectable.close();
+        assertFalse(connectable.isConnected());
     }
 
     @Test
