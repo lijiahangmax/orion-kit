@@ -27,6 +27,7 @@
 package cn.orionsec.kit.net.host.telnet;
 
 import cn.orionsec.kit.net.host.IHostExecutor;
+import org.apache.commons.net.telnet.TelnetClient;
 
 import java.io.IOException;
 
@@ -54,33 +55,11 @@ public interface ITelnetExecutor extends IHostExecutor {
     void charset(String charset);
 
     /**
-     * 校验连接
-     * <p>
-     * telnet 没有 channel 概念 连接由 {@link TelnetSession} 建立并持有
-     * 此方法仅校验底层连接是否可用 未连接则抛出异常
-     */
-    void connect();
-
-    /**
-     * 校验连接
-     * <p>
-     * telnet 连接由 {@link TelnetSession} 建立并持有 timeout 不参与建连
+     * 设置最大读取缓冲区字节数
      *
-     * @param timeout timeout
+     * @param maxReadBuffer maxReadBuffer
      */
-    void connect(int timeout);
-
-    /**
-     * 是否已连接
-     *
-     * @return 是否已连接
-     */
-    boolean isConnected();
-
-    /**
-     * 断开连接
-     */
-    void disconnect();
+    void maxReadBuffer(int maxReadBuffer);
 
     /**
      * 读取直到命中指定内容
@@ -110,6 +89,18 @@ public interface ITelnetExecutor extends IHostExecutor {
     String readUntilPrompt() throws IOException;
 
     /**
+     * 断开连接
+     */
+    void disconnect();
+
+    /**
+     * 是否已连接
+     *
+     * @return 是否已连接
+     */
+    boolean isConnected();
+
+    /**
      * @return 提示符
      */
     String getPrompt();
@@ -118,5 +109,20 @@ public interface ITelnetExecutor extends IHostExecutor {
      * @return 编码
      */
     String getCharset();
+
+    /**
+     * @return 读取超时时间 ms
+     */
+    int getReadTimeout();
+
+    /**
+     * @return 最大读取缓冲区字节数
+     */
+    int getMaxReadBuffer();
+
+    /**
+     * @return client
+     */
+    TelnetClient getClient();
 
 }

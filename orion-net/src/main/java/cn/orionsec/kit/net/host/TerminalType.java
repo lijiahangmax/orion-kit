@@ -24,55 +24,97 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package cn.orionsec.kit.net.host.telnet;
-
-import java.io.IOException;
+package cn.orionsec.kit.net.host;
 
 /**
- * Telnet 命令执行器 api
+ * 终端类型
  *
  * @author Jiahang Li
  * @version 1.0.0
- * @since 2026/7/29
+ * @since 2021/3/26 17:40
  */
-public interface ITelnetCommandExecutor extends ITelnetExecutor {
+public enum TerminalType {
 
     /**
-     * 执行命令
-     *
-     * @param command command
-     * @return 输出内容
-     * @throws IOException IOException
+     * xterm
      */
-    String execCommand(String command) throws IOException;
+    XTERM("xterm"),
 
     /**
-     * 执行命令
-     *
-     * @param command command
-     * @param timeout timeout
-     * @return 输出内容
-     * @throws IOException IOException
+     * xterm-16color
      */
-    String execCommand(String command, int timeout) throws IOException;
+    XTERM_16_COLOR("xterm-16color"),
 
     /**
-     * 是否保留命令回显和提示符
-     *
-     * @param keepEcho keepEcho
+     * xterm-256color
      */
-    void keepEcho(boolean keepEcho);
+    XTERM_256_COLOR("xterm-256color"),
 
     /**
-     * 设置最大读取缓冲区字节数
-     *
-     * @param maxReadBuffer maxReadBuffer
+     * bash
      */
-    void maxReadBuffer(int maxReadBuffer);
+    BASH("bash"),
 
     /**
-     * @return 执行的命令
+     * vt100
      */
-    String getCommand();
+    VT_100("vt100"),
+
+    /**
+     * vt102
+     */
+    VT_102("vt102"),
+
+    /**
+     * vt220
+     */
+    VT_220("vt220"),
+
+    /**
+     * vt320
+     */
+    VT_320("vt320"),
+
+    /**
+     * linux
+     */
+    LINUX("linux"),
+
+    /**
+     * ansi
+     */
+    ANSI("ansi"),
+
+    /**
+     * dumb
+     */
+    DUMB("dumb"),
+
+    /**
+     * scoansi
+     */
+    SCO_ANSI("scoansi");
+
+    private final String type;
+
+    TerminalType(String type) {
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public static TerminalType of(String type) {
+        if (type == null) {
+            return XTERM;
+        }
+        for (TerminalType value : values()) {
+            if (value.type.equals(type)) {
+                return value;
+            }
+        }
+        return XTERM;
+    }
 
 }

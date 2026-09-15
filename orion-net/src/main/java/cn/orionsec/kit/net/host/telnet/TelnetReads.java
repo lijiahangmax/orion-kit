@@ -31,10 +31,11 @@ import cn.orionsec.kit.lang.utils.Charsets;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketTimeoutException;
+import java.util.Arrays;
+import java.util.regex.Pattern;
 
 /**
  * Telnet 流读取工具
@@ -45,14 +46,26 @@ import java.net.SocketTimeoutException;
  */
 final class TelnetReads {
 
+    /**
+     * ANSI CSI 转义序列
+     * <p>
+     * shell 的行编辑会在提示符前后输出 ESC[6n / ESC[0m 之类的控制序列,
+     * 这些内容不属于命令输出 需要剔除
+     */
+    private static final Pattern ANSI_CSI = Pattern.compile("\\u001B\\[[0-9;?]*[A-Za-z]");
+
     private TelnetReads() {
     }
 
     /**
      * 读取直到命中指定内容
      * <p>
-     * 按字节累积 按 charset 解码 支持多字节编码
-     * 读取阻塞超时依赖 socket soTimeout 触发 {@link SocketTimeoutException}
+     * 按块读取以避免逐字节读取的开销, 命中后返回内容截至 pattern 末尾
+     * <p>
+     * 注意: 与 pattern 同批到达的后续字节会被一并消费, 不再留给下一次读取,
+     * 因此调用方应保证 pattern 之后不紧跟需要保留的数据
+     * <p>
+     * 返回内容中的 ANSI CSI 转义序列会被剔除
      *
      * @param in        in
      * @param pattern   pattern
@@ -67,49 +80,69 @@ final class TelnetReads {
             return Const.EMPTY;
         }
         byte[] patternBytes = Strings.bytes(pattern, charset);
-        // 尾部环形缓冲区 用于字节级尾部匹配
-        byte[] tail = new byte[patternBytes.length];
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        int patternLength = patternBytes.length;
+        // 缓冲区上限 非法值退化为默认上限
+        int limit = maxBuffer > 0 ? maxBuffer : Const.BUFFER_KB_32;
+        byte[] data = new byte[Math.min(limit, Const.BUFFER_KB_4)];
+        byte[] chunk = new byte[Const.BUFFER_KB_4];
+        int size = 0;
         long startTime = System.currentTimeMillis();
-        int read;
         try {
-            while ((read = in.read()) != -1) {
-                buffer.write(read);
-                tail[(buffer.size() - 1) % tail.length] = (byte) read;
-                // 尾部命中 pattern
-                if (buffer.size() >= patternBytes.length && tailMatches(tail, buffer.size(), patternBytes)) {
+            while (true) {
+                int read = in.read(chunk);
+                if (read == -1) {
+                    // 对端已关闭
+                    break;
+                }
+                if (size + read > limit) {
+                    throw Exceptions.runtime("telnet read buffer overflow");
+                }
+                if (size + read > data.length) {
+                    data = Arrays.copyOf(data, Math.min(limit, Math.max(data.length << 1, size + read)));
+                }
+                // 上一次已读取的尾部字节需要参与匹配 避免 pattern 跨越块边界时漏判
+                int searchFrom = Math.max(size - patternLength + 1, 0);
+                System.arraycopy(chunk, 0, data, size, read);
+                size += read;
+                // 命中 pattern 后截断到 pattern 末尾, 与逐字节读取的语义保持一致
+                int matched = indexOf(data, searchFrom, size, patternBytes);
+                if (matched != -1) {
+                    size = matched + patternLength;
                     break;
                 }
                 if (timeout > 0 && System.currentTimeMillis() - startTime > timeout) {
                     throw Exceptions.timeout("telnet read timeout");
-                }
-                if (buffer.size() > maxBuffer) {
-                    throw Exceptions.runtime("telnet read buffer overflow");
                 }
             }
         } catch (SocketTimeoutException e) {
             // soTimeout 阻塞超时
             throw Exceptions.timeout("telnet read timeout", e);
         }
-        return new String(buffer.toByteArray(), Charsets.of(charset));
+        return ANSI_CSI.matcher(new String(data, 0, size, Charsets.of(charset)))
+                .replaceAll(Const.EMPTY);
     }
 
     /**
-     * 环形缓冲区尾部是否命中 pattern
+     * 在缓冲区 [from, size) 范围内查找 pattern
      *
-     * @param tail    tail
-     * @param total   已读取总字节数
+     * @param data    数据缓冲区
+     * @param from    起始位置
+     * @param size    已读取字节数
      * @param pattern pattern
-     * @return 是否命中
+     * @return pattern 的起始下标, 未命中返回 -1
      */
-    private static boolean tailMatches(byte[] tail, int total, byte[] pattern) {
-        int length = pattern.length;
-        for (int i = 0; i < length; i++) {
-            if (tail[(total - length + i) % length] != pattern[i]) {
-                return false;
+    private static int indexOf(byte[] data, int from, int size, byte[] pattern) {
+        int last = size - pattern.length;
+        for (int i = from; i <= last; i++) {
+            int j = 0;
+            while (j < pattern.length && data[i + j] == pattern[j]) {
+                j++;
+            }
+            if (j == pattern.length) {
+                return i;
             }
         }
-        return true;
+        return -1;
     }
 
 }

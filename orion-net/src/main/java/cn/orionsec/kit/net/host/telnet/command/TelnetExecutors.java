@@ -24,17 +24,18 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package cn.orionsec.kit.net.host.telnet;
+package cn.orionsec.kit.net.host.telnet.command;
 
 import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.io.Streams;
+import cn.orionsec.kit.net.host.telnet.TelnetSession;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Telnet 执行器工具
+ * Telnet 命令执行器工具
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -120,7 +121,6 @@ public class TelnetExecutors {
      */
     public static void execCommand(ITelnetCommandExecutor executor, OutputStream transfer) throws IOException {
         executor.transfer(transfer);
-        executor.connect();
         executor.exec();
     }
 

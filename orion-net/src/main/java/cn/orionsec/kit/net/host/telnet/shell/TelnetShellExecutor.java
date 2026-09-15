@@ -24,9 +24,10 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package cn.orionsec.kit.net.host.telnet;
+package cn.orionsec.kit.net.host.telnet.shell;
 
 import cn.orionsec.kit.lang.utils.Exceptions;
+import cn.orionsec.kit.net.host.telnet.BaseTelnetExecutor;
 import org.apache.commons.net.telnet.TelnetClient;
 
 import java.io.InputStream;
@@ -34,30 +35,12 @@ import java.io.OutputStream;
 
 /**
  * Telnet shell 执行器
- * <p>
- * 交互式执行器 通过 {@link #streamHandler} 监听输出流
- * 通过 {@link #write} / {@link #writeLine} 写入命令交互
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2026/7/29
  */
-public class TelnetShellExecutor extends BaseTelnetExecutor implements ITelnetShellExecutor {
-
-    /**
-     * 终端类型
-     */
-    private String terminalType;
-
-    /**
-     * 终端 行
-     */
-    private int cols;
-
-    /**
-     * 终端 列
-     */
-    private int rows;
+public class TelnetShellExecutor extends BaseTelnetExecutor {
 
     /**
      * @param client       client
@@ -66,34 +49,14 @@ public class TelnetShellExecutor extends BaseTelnetExecutor implements ITelnetSh
      * @param prompt       prompt
      * @param charset      charset
      * @param readTimeout  readTimeout
-     * @param terminalType terminalType
-     * @param cols         cols
-     * @param rows         rows
      */
     public TelnetShellExecutor(TelnetClient client,
                                InputStream inputStream,
                                OutputStream outputStream,
                                String prompt,
                                String charset,
-                               int readTimeout,
-                               String terminalType,
-                               int cols,
-                               int rows) {
+                               int readTimeout) {
         super(client, inputStream, outputStream, prompt, charset, readTimeout);
-        this.terminalType = terminalType;
-        this.cols = cols;
-        this.rows = rows;
-    }
-
-    @Override
-    public void terminalType(String terminalType) {
-        this.terminalType = terminalType;
-    }
-
-    @Override
-    public void size(int cols, int rows) {
-        this.cols = cols;
-        this.rows = rows;
     }
 
     @Override
@@ -122,21 +85,6 @@ public class TelnetShellExecutor extends BaseTelnetExecutor implements ITelnetSh
         this.checkStreamReading();
         // 监听输出流
         this.listenerOutput();
-    }
-
-    @Override
-    public String getTerminalType() {
-        return terminalType;
-    }
-
-    @Override
-    public int getCols() {
-        return cols;
-    }
-
-    @Override
-    public int getRows() {
-        return rows;
     }
 
 }

@@ -24,12 +24,13 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package cn.orionsec.kit.net.host.telnet;
+package cn.orionsec.kit.net.host.telnet.command;
 
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
+import cn.orionsec.kit.net.host.telnet.BaseTelnetExecutor;
 import org.apache.commons.net.telnet.TelnetClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,8 +42,6 @@ import java.io.OutputStream;
 
 /**
  * Telnet 命令执行器
- * <p>
- * 一次性命令执行器 发送命令后读取直到命中提示符
  *
  * @author Jiahang Li
  * @version 1.0.0
@@ -87,15 +86,8 @@ public class TelnetCommandExecutor extends BaseTelnetExecutor implements ITelnet
         this.keepEcho = keepEcho;
     }
 
-    /**
-     * 执行命令并将结果传输到输出流处理器
-     */
     @Override
-    public void exec() {
-        Assert.notBlank(command, "command is blank");
-        if (!this.isConnected()) {
-            throw Exceptions.runtime("telnet session is not connected");
-        }
+    protected void listenerOutput() {
         try {
             // 执行命令
             String result = this.execCommand(command, readTimeout);
@@ -112,6 +104,16 @@ public class TelnetCommandExecutor extends BaseTelnetExecutor implements ITelnet
                 callback.run();
             }
         }
+    }
+
+    @Override
+    public void exec() {
+        Assert.notBlank(command, "command is blank");
+        if (!this.isConnected()) {
+            throw Exceptions.runtime("telnet session is not connected");
+        }
+        // 监听 标准输出
+        this.listenerOutput();
     }
 
     @Override
@@ -133,6 +135,9 @@ public class TelnetCommandExecutor extends BaseTelnetExecutor implements ITelnet
 
     /**
      * 清理命令回显和末尾提示符
+     * <p>
+     * 提示符通常只是尾部片段 (例如配置 '#' 时实际提示符为 'host:~# '),
+     * 因此会连同提示符所在整行一起去掉
      *
      * @param result  result
      * @param command command
@@ -143,9 +148,10 @@ public class TelnetCommandExecutor extends BaseTelnetExecutor implements ITelnet
             return result;
         }
         String cleaned = result;
-        // 去除末尾提示符
+        // 去除末尾提示符 (含提示符所在行的前缀)
         if (Strings.isNotBlank(prompt) && cleaned.endsWith(prompt)) {
-            cleaned = cleaned.substring(0, cleaned.length() - prompt.length());
+            int promptLine = cleaned.lastIndexOf(Const.LF);
+            cleaned = promptLine == -1 ? Const.EMPTY : cleaned.substring(0, promptLine);
         }
         // 去除首行命令回显
         int firstLine = cleaned.indexOf(Const.LF);
@@ -153,11 +159,6 @@ public class TelnetCommandExecutor extends BaseTelnetExecutor implements ITelnet
             cleaned = cleaned.substring(firstLine + 1);
         }
         return cleaned;
-    }
-
-    @Override
-    protected void listenerOutput() {
-        // 命令执行器为同步读取 无需监听输出流
     }
 
     @Override

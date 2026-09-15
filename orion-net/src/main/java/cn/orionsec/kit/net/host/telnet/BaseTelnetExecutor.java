@@ -31,6 +31,8 @@ import cn.orionsec.kit.lang.support.Attempt;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import org.apache.commons.net.telnet.TelnetClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,6 +47,8 @@ import java.util.function.Consumer;
  * @since 2026/7/29
  */
 public abstract class BaseTelnetExecutor implements ITelnetExecutor {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BaseTelnetExecutor.class);
 
     protected final TelnetClient client;
 
@@ -77,6 +81,11 @@ public abstract class BaseTelnetExecutor implements ITelnetExecutor {
      * 是否正在监听输出流
      */
     protected volatile boolean streamReading;
+
+    /**
+     * 连接是否已断开
+     */
+    protected volatile boolean disconnected;
 
     /**
      * 提示符
@@ -123,11 +132,7 @@ public abstract class BaseTelnetExecutor implements ITelnetExecutor {
         this.charset = charset;
     }
 
-    /**
-     * 设置最大读取缓冲区字节数
-     *
-     * @param maxReadBuffer maxReadBuffer
-     */
+    @Override
     public void maxReadBuffer(int maxReadBuffer) {
         this.maxReadBuffer = maxReadBuffer;
     }
@@ -151,38 +156,14 @@ public abstract class BaseTelnetExecutor implements ITelnetExecutor {
 
     @Override
     public void write(byte[] command) {
+        if (outputStream == null) {
+            throw Exceptions.state("telnet output stream is null");
+        }
         try {
             outputStream.write(command);
             outputStream.flush();
         } catch (IOException e) {
-            throw Exceptions.ioRuntime(e);
-        }
-    }
-
-    @Override
-    public boolean isConnected() {
-        return client != null && client.isConnected();
-    }
-
-    @Override
-    public void connect() {
-        if (!this.isConnected()) {
-            throw Exceptions.connection("telnet session is not connected");
-        }
-    }
-
-    @Override
-    public void connect(int timeout) {
-        this.connect();
-    }
-
-    @Override
-    public void disconnect() {
-        try {
-            if (client != null && client.isConnected()) {
-                client.disconnect();
-            }
-        } catch (IOException e) {
+            this.disconnected = true;
             throw Exceptions.ioRuntime(e);
         }
     }
@@ -195,7 +176,16 @@ public abstract class BaseTelnetExecutor implements ITelnetExecutor {
     @Override
     public String readUntil(String pattern, int timeout) throws IOException {
         this.checkStreamReading();
-        return TelnetReads.readUntil(inputStream, pattern, charset, timeout, maxReadBuffer);
+        // socket 读超时只在阻塞读取期间生效, 否则流式监听会被空闲超时打断
+        client.setSoTimeout(timeout);
+        try {
+            return TelnetReads.readUntil(inputStream, pattern, charset, timeout, maxReadBuffer);
+        } catch (IOException e) {
+            this.disconnected = true;
+            throw e;
+        } finally {
+            this.resetSoTimeout();
+        }
     }
 
     @Override
@@ -217,6 +207,30 @@ public abstract class BaseTelnetExecutor implements ITelnetExecutor {
      */
     protected abstract void listenerOutput();
 
+    /**
+     * 关闭 socket 读超时
+     */
+    private void resetSoTimeout() {
+        try {
+            client.setSoTimeout(0);
+        } catch (IOException e) {
+            // 连接已关闭时忽略
+        }
+    }
+
+    @Override
+    public void disconnect() {
+        try {
+            if (client != null && client.isConnected()) {
+                client.disconnect();
+            }
+        } catch (Exception e) {
+            LOGGER.warn("telnet executor disconnect error", e);
+        } finally {
+            this.disconnected = true;
+        }
+    }
+
     @Override
     public void close() {
         Streams.close(inputStream);
@@ -226,6 +240,11 @@ public abstract class BaseTelnetExecutor implements ITelnetExecutor {
     @Override
     public boolean isDone() {
         return done;
+    }
+
+    @Override
+    public boolean isConnected() {
+        return !disconnected && client != null && client.isConnected();
     }
 
     @Override
@@ -248,23 +267,17 @@ public abstract class BaseTelnetExecutor implements ITelnetExecutor {
         return charset;
     }
 
-    /**
-     * @return 读取超时时间 ms
-     */
+    @Override
     public int getReadTimeout() {
         return readTimeout;
     }
 
-    /**
-     * @return 最大读取缓冲区字节数
-     */
+    @Override
     public int getMaxReadBuffer() {
         return maxReadBuffer;
     }
 
-    /**
-     * @return client
-     */
+    @Override
     public TelnetClient getClient() {
         return client;
     }

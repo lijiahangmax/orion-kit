@@ -24,71 +24,57 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package cn.orionsec.kit.net.host.telnet;
+package cn.orionsec.kit.net.host.telnet.command;
 
-import cn.orionsec.kit.net.host.ssh.TerminalType;
+import cn.orionsec.kit.net.host.telnet.ITelnetExecutor;
+
+import java.io.IOException;
 
 /**
- * Telnet shell 执行器 api
+ * Telnet 命令执行器 api
  *
  * @author Jiahang Li
  * @version 1.0.0
  * @since 2026/7/29
  */
-public interface ITelnetShellExecutor extends ITelnetExecutor {
+public interface ITelnetCommandExecutor extends ITelnetExecutor {
 
     /**
-     * 设置终端类型
-     * <p>
-     * 终端协商在 {@link TelnetSession#connect()} 建连时完成
-     * 建连后设置仅更新查询值 不会重新协商
+     * 执行命令
      *
-     * @param type type
+     * @param command command
+     * @return 输出内容
+     * @throws IOException IOException
      */
-    default void terminalType(TerminalType type) {
-        this.terminalType(type.getType());
-    }
+    String execCommand(String command) throws IOException;
 
     /**
-     * 设置终端类型
-     * <p>
-     * 终端协商在 {@link TelnetSession#connect()} 建连时完成
-     * 建连后设置仅更新查询值 不会重新协商
+     * 执行命令
      *
-     * @param terminalType terminalType
+     * @param command command
+     * @param timeout timeout
+     * @return 输出内容
+     * @throws IOException IOException
      */
-    void terminalType(String terminalType);
+    String execCommand(String command, int timeout) throws IOException;
 
     /**
-     * 设置页面大小
-     * <p>
-     * 窗口大小协商在 {@link TelnetSession#connect()} 建连时完成
-     * 建连后设置仅更新查询值 不会重新协商
+     * 是否保留命令回显和提示符
      *
-     * @param cols 行字数
-     * @param rows 列数
+     * @param keepEcho keepEcho
      */
-    void size(int cols, int rows);
+    void keepEcho(boolean keepEcho);
 
     /**
-     * 获取设置的终端类型
+     * 设置最大读取缓冲区字节数
      *
-     * @return 终端类型
+     * @param maxReadBuffer maxReadBuffer
      */
-    String getTerminalType();
+    void maxReadBuffer(int maxReadBuffer);
 
     /**
-     * 获取 行字数
-     *
-     * @return 行字数
+     * @return 执行的命令
      */
-    int getCols();
-
-    /**
-     * 获取 列数
-     *
-     * @return 列数
-     */
-    int getRows();
+    String getCommand();
 
 }
