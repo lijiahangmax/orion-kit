@@ -24,12 +24,11 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package cn.orionsec.kit.net.host;
+package cn.orionsec.kit.net.host.telnet;
 
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.utils.Threads;
 import cn.orionsec.kit.lang.utils.io.Streams;
-import cn.orionsec.kit.net.host.telnet.TelnetSession;
 import cn.orionsec.kit.net.host.telnet.shell.TelnetShellExecutor;
 import org.junit.Assert;
 import org.junit.Before;
@@ -58,15 +57,15 @@ public class TelnetShellExecutorTests {
 
     private static final String PROMPT = "#";
 
-    private TelnetSession s;
+    private TelnetTunnel s;
 
     @Before
     public void init() {
-        this.s = TelnetSession.create(HOST, PORT)
+        this.s = TelnetTunnel.create(HOST, PORT)
                 .username(USERNAME)
                 .password(PASSWORD)
                 .prompt(PROMPT)
-                .timeout(10000)
+                .connectTimeout(10000)
                 .readTimeout(10000)
                 .connect();
     }

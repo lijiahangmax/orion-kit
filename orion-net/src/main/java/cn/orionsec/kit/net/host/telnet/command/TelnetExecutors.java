@@ -28,7 +28,7 @@ package cn.orionsec.kit.net.host.telnet.command;
 
 import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.io.Streams;
-import cn.orionsec.kit.net.host.telnet.TelnetSession;
+import cn.orionsec.kit.net.host.telnet.TelnetTunnel;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -57,7 +57,7 @@ public class TelnetExecutors {
      * @throws IOException IOException
      */
     public static String getCommandOutputResult(String host, String username, String password, String command) throws IOException {
-        return getCommandOutputResult(host, TelnetSession.DEFAULT_TELNET_PORT, username, password, command);
+        return getCommandOutputResult(host, TelnetTunnel.DEFAULT_TELNET_PORT, username, password, command);
     }
 
     /**
@@ -73,7 +73,7 @@ public class TelnetExecutors {
      */
     public static String getCommandOutputResult(String host, int port, String username, String password, String command) throws IOException {
         // 建立会话并连接
-        try (TelnetSession session = TelnetSession.create(host, port)
+        try (TelnetTunnel session = TelnetTunnel.create(host, port)
                 .username(username)
                 .password(password)
                 .connect();
