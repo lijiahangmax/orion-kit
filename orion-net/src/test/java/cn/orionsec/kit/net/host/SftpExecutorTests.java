@@ -53,16 +53,13 @@ import java.util.regex.Pattern;
  */
 public class SftpExecutorTests {
 
-    private SessionHolder h;
-
     private SftpExecutor e;
 
     @Before
     public void before() {
-        this.h = SessionHolder.create();
-        h.setLogger(SessionLogger.ERROR);
-        this.e = h.getSession("192.168.146.230", "root")
+        this.e = SessionStore.create("192.168.146.230", "root")
                 .password("admin123")
+                .logger(SessionLogger.ERROR)
                 .timeout(20000)
                 .connect(20000)
                 .getSftpExecutor();
