@@ -695,7 +695,7 @@ public class Strings {
         if (isBlank(str) || isBlank(tokenizer)) {
             return;
         }
-        String[] arr = str.split(Pattern.quote(tokenizer), -1);
+        String[] arr = str.split(tokenizer);
         for (String s : arr) {
             consumer.accept(s);
         }
@@ -779,7 +779,7 @@ public class Strings {
         if (isEmpty(separator)) {
             return new String[]{s};
         }
-        return s.split(Pattern.quote(separator), -1);
+        return s.split(separator, -1);
     }
 
     /**

@@ -95,10 +95,12 @@ public class StringsTest {
         // 保留空串与顺序
         assertArrayEquals(new String[]{"a", "", "b"}, Strings.split("a,,b"));
         assertArrayEquals(new String[]{"", "a", ""}, Strings.split(",a,"));
-        // 多字符字面量分隔符 (非正则)
+        // 多字符分隔符
         assertArrayEquals(new String[]{"a", "b"}, Strings.split("a::b", "::"));
-        // "." 作为字面量而非正则元字符
-        assertArrayEquals(new String[]{"a", "b", "c"}, Strings.split("a.b.c", "."));
+        // 分隔符按正则语义处理: "." 是元字符 会匹配任意字符
+        assertArrayEquals(new String[]{"", "", "", "", "", ""}, Strings.split("a.b.c", "."));
+        // 需要按字面量分割时由调用方自行转义
+        assertArrayEquals(new String[]{"a", "b", "c"}, Strings.split("a.b.c", "\\."));
         // 无分隔符命中
         assertArrayEquals(new String[]{"abc"}, Strings.split("abc", ","));
     }
