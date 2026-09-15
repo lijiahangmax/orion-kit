@@ -33,7 +33,7 @@ import com.alibaba.fastjson2.reader.ObjectReader;
 import java.lang.reflect.Type;
 
 /**
- * string json 反序列化 (fastjson2)
+ * string json 反序列化
  *
  * @author Jiahang Li
  * @version 1.0.0

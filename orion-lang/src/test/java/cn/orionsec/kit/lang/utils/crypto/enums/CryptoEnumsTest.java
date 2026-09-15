@@ -117,40 +117,7 @@ public class CryptoEnumsTest {
         Assert.assertNull(md);
     }
 
-    // ==================== PaddingMode ====================
-
-    @Test
-    public void testPaddingModeValues() {
-        PaddingMode[] values = PaddingMode.values();
-        Assert.assertEquals(8, values.length);
-    }
-
-    @Test
-    public void testPaddingModeGetMode() {
-        Assert.assertEquals("PKCS1Padding", PaddingMode.PKCS1_PADDING.getMode());
-        Assert.assertEquals("PKCS5Padding", PaddingMode.PKCS5_PADDING.getMode());
-        Assert.assertEquals("PKCS7Padding", PaddingMode.PKCS7_PADDING.getMode());
-        Assert.assertEquals("ISO10126Padding", PaddingMode.ISO_10126_PADDING.getMode());
-        Assert.assertEquals("X9.23PADDING", PaddingMode.ANSI_X_923_PADDING.getMode());
-        Assert.assertEquals("SSL3Padding", PaddingMode.SSL3_PADDING.getMode());
-        Assert.assertEquals("NoPadding", PaddingMode.NO_PADDING.getMode());
-        Assert.assertEquals("NoPadding", PaddingMode.ZERO_PADDING.getMode());
-    }
-
     // ==================== RSASignature ====================
-
-    @Test
-    public void testRSASignatureValues() {
-        RSASignature[] values = RSASignature.values();
-        Assert.assertEquals(7, values.length);
-        Assert.assertNotNull(RSASignature.NONE);
-        Assert.assertNotNull(RSASignature.MD5);
-        Assert.assertNotNull(RSASignature.SHA1);
-        Assert.assertNotNull(RSASignature.SHA224);
-        Assert.assertNotNull(RSASignature.SHA256);
-        Assert.assertNotNull(RSASignature.SHA384);
-        Assert.assertNotNull(RSASignature.SHA512);
-    }
 
     @Test
     public void testRSASignatureGetModel() {

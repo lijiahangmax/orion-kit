@@ -81,11 +81,11 @@ public class SM2 {
         BigInteger d = ((ECPrivateKeyParameters) keyPair.getPrivate()).getD();
         return new String[]{
                 Hex.bytesToHex(q.getEncoded(false)),
-                leftPad64(d.toString(16))
+                Strings.leftPad(d.toString(16), 64, '0')
         };
     }
 
-    // -------------------- enc --------------------
+    // -------------------- encrypt --------------------
 
     /**
      * SM2 加密
@@ -115,7 +115,7 @@ public class SM2 {
             SM2Engine engine = new SM2Engine(SM2Engine.Mode.C1C3C2);
             engine.init(true, new ParametersWithRandom(new ECPublicKeyParameters(q, DOMAIN_PARAMS), new SecureRandom()));
             byte[] out = engine.processBlock(bs, 0, bs.length);
-            // 去掉 C1 的 04 前缀 与前端 sm-crypto 输出格式保持一致
+            // 去掉 C1 的 04 前缀
             byte[] result = new byte[out.length - 1];
             System.arraycopy(out, 1, result, 0, result.length);
             return result;
@@ -124,7 +124,7 @@ public class SM2 {
         }
     }
 
-    // -------------------- dec --------------------
+    // -------------------- decrypt --------------------
 
     /**
      * SM2 解密
@@ -155,7 +155,7 @@ public class SM2 {
         if (plain != null) {
             return plain;
         }
-        // 尝试按无 04 前缀格式解密 (前端 sm-crypto 输出)
+        // 尝试按无 04 前缀格式解密
         byte[] input = new byte[bs.length + 1];
         input[0] = 0x04;
         System.arraycopy(bs, 0, input, 1, bs.length);
@@ -170,15 +170,6 @@ public class SM2 {
         } catch (Exception e) {
             return null;
         }
-    }
-
-    private static String leftPad64(String s) {
-        if (s.length() >= 64) {
-            return s;
-        }
-        StringBuilder sb = new StringBuilder(64);
-        sb.repeat("0", 64 - s.length());
-        return sb.append(s).toString();
     }
 
 }
