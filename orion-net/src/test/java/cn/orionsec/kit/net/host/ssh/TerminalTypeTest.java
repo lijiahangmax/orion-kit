@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.net.host.ssh;
 
+import cn.orionsec.kit.net.host.TerminalType;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -27,7 +27,6 @@
 package cn.orionsec.kit.net.host;
 
 import cn.orionsec.kit.lang.exception.argument.InvalidArgumentException;
-import com.jcraft.jsch.JSch;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -47,9 +46,9 @@ public class SessionStoreTest {
     private SessionStore store;
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
         // 仅创建 session 不连接
-        this.store = new SessionStore(new JSch().getSession("orion", "127.0.0.1", 2222));
+        this.store = SessionStore.create("127.0.0.1", 2222, "orion");
     }
 
     @Test
@@ -60,25 +59,9 @@ public class SessionStoreTest {
     }
 
     @Test
-    public void testSetHostPort() {
-        store.setHost("192.168.1.1");
-        store.setPort(22);
-        Assert.assertEquals("192.168.1.1", store.getHost());
-        Assert.assertEquals(22, store.getPort());
-    }
-
-    @Test
-    public void testPasswordChain() {
-        Assert.assertSame(store, store.password("password"));
-        Assert.assertSame(store, store.password("password".getBytes()));
-    }
-
-    @Test
     public void testConfig() {
         Assert.assertSame(store, store.config("PreferredAuthentications", "password"));
-        Assert.assertEquals("password", store.getConfig("PreferredAuthentications"));
-        store.setConfig("PreferredAuthentications", "publickey");
-        Assert.assertEquals("publickey", store.getConfig("PreferredAuthentications"));
+        Assert.assertEquals("password", store.getSession().getConfig("PreferredAuthentications"));
     }
 
     @Test

@@ -26,7 +26,7 @@
  */
 package cn.orionsec.kit.net.host.ssh.shell;
 
-import cn.orionsec.kit.net.host.ssh.TerminalType;
+import cn.orionsec.kit.net.host.TerminalType;
 import com.jcraft.jsch.ChannelShell;
 import org.junit.Assert;
 import org.junit.Ignore;
