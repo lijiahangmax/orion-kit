@@ -137,17 +137,17 @@ public class Exceptions {
     }
 
     /**
-     * 判断异常是否由某些底层的异常引起
+     * 判断异常自身或其底层的异常是否属于某些类型
      *
      * @param r                     异常
      * @param causeThrowableClasses checkClass
-     * @return ignore
+     * @return caused
      */
     @SafeVarargs
-    public static boolean isCausedBy(Throwable r, Class<? extends Exception>... causeThrowableClasses) {
-        Throwable cause = r.getCause();
+    public static boolean isCausedBy(Throwable r, Class<? extends Throwable>... causeThrowableClasses) {
+        Throwable cause = r;
         while (cause != null) {
-            for (Class<? extends Exception> causeClass : causeThrowableClasses) {
+            for (Class<? extends Throwable> causeClass : causeThrowableClasses) {
                 if (causeClass.isInstance(cause)) {
                     return true;
                 }
