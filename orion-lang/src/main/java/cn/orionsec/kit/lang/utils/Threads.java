@@ -32,6 +32,7 @@ import cn.orionsec.kit.lang.define.thread.*;
 import cn.orionsec.kit.lang.define.wrapper.Tuple;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.*;
@@ -181,6 +182,69 @@ public class Threads {
         return new TaskCollector(GLOBAL_EXECUTOR)
                 .tasks(tasks)
                 .collect();
+    }
+
+    /**
+     * 等待任务执行完成
+     *
+     * @param futures futures
+     */
+    public static void await(Future<?>... futures) {
+        await(Arrays.asList(futures));
+    }
+
+    /**
+     * 等待任务执行完成
+     *
+     * @param futures futures
+     */
+    public static void await(Collection<? extends Future<?>> futures) {
+        Assert.notNull(futures, "future is null");
+        for (Future<?> future : futures) {
+            getFuture(future);
+        }
+    }
+
+    /**
+     * 等待任务执行完成并且获取结果
+     *
+     * @param futures futures
+     * @return 任务结果
+     */
+    @SafeVarargs
+    public static <V> List<V> awaitGet(Future<V>... futures) {
+        return awaitGet(Arrays.asList(futures));
+    }
+
+    /**
+     * 等待任务执行完成并且获取结果
+     *
+     * @param futures futures
+     * @return 任务结果
+     */
+    public static <V> List<V> awaitGet(Collection<? extends Future<V>> futures) {
+        Assert.notNull(futures, "future is null");
+        List<V> list = new ArrayList<>(futures.size());
+        for (Future<V> future : futures) {
+            list.add(getFuture(future));
+        }
+        return list;
+    }
+
+    /**
+     * 获取任务结果
+     *
+     * @param future future
+     * @return 任务结果
+     */
+    public static <V> V getFuture(Future<V> future) {
+        try {
+            return future.get();
+        } catch (InterruptedException e) {
+            throw Exceptions.interruptedRuntime(e);
+        } catch (ExecutionException e) {
+            throw Exceptions.runtime(e);
+        }
     }
 
     /**
