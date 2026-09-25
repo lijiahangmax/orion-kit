@@ -45,7 +45,18 @@
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-api</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.apache.mina</groupId>
+                    <artifactId>mina-core</artifactId>
+                </exclusion>
             </exclusions>
+        </dependency>
+
+        <!-- mina (ftp server 依赖, 显式指定版本修复反序列化漏洞) -->
+        <dependency>
+            <groupId>org.apache.mina</groupId>
+            <artifactId>mina-core</artifactId>
+            <version>${apache.mina.version}</version>
         </dependency>
 
         <!-- jsch -->

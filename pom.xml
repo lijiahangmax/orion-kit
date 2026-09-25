@@ -47,6 +47,7 @@
         <org.tukaani.version>1.10</org.tukaani.version>
         <apache.net.version>3.11.1</apache.net.version>
         <apache.ftp.server.version>1.2.1</apache.ftp.server.version>
+        <apache.mina.version>2.2.8</apache.mina.version>
         <mail.version>2.0.5</mail.version>
         <pinyin4j.version>2.5.1</pinyin4j.version>
         <dom4j.version>2.1.4</dom4j.version>
@@ -57,13 +58,13 @@
         <poi.version>5.5.1</poi.version>
         <poi.stream.version>5.2.0</poi.stream.version>
         <okhttp.version>5.1.0</okhttp.version>
-        <httpclient5.version>5.6.2</httpclient5.version>
+        <httpclient5.version>5.6.3</httpclient5.version>
         <log4j.version>2.26.1</log4j.version>
         <slf4j.version>2.0.17</slf4j.version>
         <groovy.version>5.0.7</groovy.version>
         <jsch.version>2.28.6</jsch.version>
         <nashorn.version>15.7</nashorn.version>
-        <jsoup.version>1.22.2</jsoup.version>
+        <jsoup.version>1.23.1</jsoup.version>
         <ua.utils.version>1.21</ua.utils.version>
         <jgit.version>7.7.1.202607240634-r</jgit.version>
         <bcprov.jdk18on.version>1.85</bcprov.jdk18on.version>
