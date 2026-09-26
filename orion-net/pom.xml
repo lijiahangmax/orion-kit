@@ -52,7 +52,7 @@
             </exclusions>
         </dependency>
 
-        <!-- mina (ftp server 依赖, 显式指定版本修复反序列化漏洞) -->
+        <!-- mina -->
         <dependency>
             <groupId>org.apache.mina</groupId>
             <artifactId>mina-core</artifactId>
