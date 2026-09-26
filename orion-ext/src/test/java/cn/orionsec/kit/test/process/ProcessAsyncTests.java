@@ -28,6 +28,7 @@ package cn.orionsec.kit.test.process;
 
 import cn.orionsec.kit.ext.process.ProcessAsyncExecutor;
 import cn.orionsec.kit.lang.utils.Systems;
+import org.junit.Assume;
 import org.junit.Test;
 
 import java.io.File;
@@ -60,6 +61,7 @@ public class ProcessAsyncTests {
 
     @Test
     public void bat() {
+        Assume.assumeTrue(new File(Systems.HOME_DIR + "\\orion-kit-test\\1.bat").exists());
         new ProcessAsyncExecutor(Systems.HOME_DIR + "\\orion-kit-test\\1.bat")
                 .outputFile(new File(Systems.HOME_DIR + "\\orion-kit-test\\r1.txt"))
                 .exec();

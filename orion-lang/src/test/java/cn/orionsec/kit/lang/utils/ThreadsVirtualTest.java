@@ -1,5 +1,6 @@
 package cn.orionsec.kit.lang.utils;
 
+import cn.orionsec.kit.lang.define.thread.VirtualExecutorBuilder;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -90,7 +91,7 @@ public class ThreadsVirtualTest {
         try {
             Future<String> future = pool.submit(() -> Thread.currentThread().getName());
             String name = future.get(5, TimeUnit.SECONDS);
-            assertTrue(name.startsWith("orion-virtual-thread-"));
+            assertTrue(name.startsWith(VirtualExecutorBuilder.DEFAULT_NAME_PREFIX));
         } finally {
             Threads.shutdownVirtualPool(pool, 1000);
         }

@@ -168,7 +168,7 @@ Every source file must carry the MIT license header:
 - 每个模块目录结构镜像 main 包名；`orion-lang` 另有一套 `cn.orionsec.kit.test.*` 旧式测试
 - 新增/修改的公共能力必须有单元测试；并发相关必须包含**虚拟线程并发用例**与**停止/关闭立即性用例**
 - 并发/虚拟线程用例参考：`ThreadsVirtualTest`、`VirtualExecutorBuilderTest`、`WaiterTest`、`SnowFlakeIdWorkerTest#testNextIdConcurrentUnique`、`FtpClientPoolTest#testPoolConcurrentGetReturn`、`TcpSocketTest#testVirtualThreadAccept`、`ProcessAwaitExecutorTest#testVirtualSchedulerReadStream`
-- 环境依赖型用例（`CompressTests`、`FileSplitMergeTests`、`RsaTests#pfx`、orion-ext 的 `ProcessAsyncTests` 等 7 个硬编码 `C:\Users\Administrator\orion-kit-test\` 素材的集成用例）需要本地测试素材，缺失时失败属预期，不计入回归
+- 环境依赖型用例（`CompressTests`、`FileSplitMergeTests`、`RsaTests#pfx`、orion-ext 的 `ProcessAsyncTests` 等硬编码 `C:\Users\Administrator\orion-kit-test\` 素材的集成用例）需要本地测试素材，缺失时通过 `Assume` 自动跳过，不计入回归；新增依赖本地素材的用例须沿用该守卫方式
 - 提交门槛：至少通过受影响模块的全量测试 + `orion-lang` 全量测试
 - 修改并发代码后建议附加 JFR/线程转储验证（无 pinning 事件、无死锁）
 
