@@ -28,6 +28,10 @@ package cn.orionsec.kit.ext.tail;
 
 import cn.orionsec.kit.lang.able.SafeCloseable;
 import cn.orionsec.kit.lang.able.Stoppable;
+import cn.orionsec.kit.lang.define.thread.Waiter;
+import cn.orionsec.kit.lang.utils.Threads;
+
+import java.util.concurrent.Executor;
 
 /**
  * 文件追踪器
@@ -43,6 +47,11 @@ public abstract class Tracker implements Runnable, Stoppable, SafeCloseable {
      */
     protected volatile boolean run;
 
+    /**
+     * 可唤醒等待器
+     */
+    protected final Waiter waiter = new Waiter();
+
     public Tracker() {
     }
 
@@ -50,6 +59,29 @@ public abstract class Tracker implements Runnable, Stoppable, SafeCloseable {
      * 开启tail
      */
     public abstract void tail();
+
+    /**
+     * 使用平台线程池开启
+     */
+    public void start() {
+        Threads.start(this, Threads.CACHE_EXECUTOR);
+    }
+
+    /**
+     * 使用指定线程池开启
+     *
+     * @param executor 线程池
+     */
+    public void start(Executor executor) {
+        Threads.start(this, executor);
+    }
+
+    /**
+     * 使用虚拟线程开启
+     */
+    public void startVirtual() {
+        Threads.startVirtual(this);
+    }
 
     @Override
     public void run() {
@@ -59,6 +91,7 @@ public abstract class Tracker implements Runnable, Stoppable, SafeCloseable {
     @Override
     public void stop() {
         this.run = false;
+        waiter.signal();
     }
 
     public boolean isRun() {

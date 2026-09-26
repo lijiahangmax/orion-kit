@@ -212,6 +212,16 @@ public class ProcessAwaitExecutor extends BaseProcessExecutor {
     }
 
     /**
+     * 使用虚拟线程读取进程输出流
+     *
+     * @return this
+     */
+    public ProcessAwaitExecutor virtualScheduler() {
+        this.scheduler = Threads.VIRTUAL_EXECUTOR;
+        return this;
+    }
+
+    /**
      * 回调
      *
      * @param callback 回调方法

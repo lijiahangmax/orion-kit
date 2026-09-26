@@ -70,6 +70,11 @@ public class Threads {
             .allowCoreThreadTimeout(true)
             .build();
 
+    /**
+     * 虚拟线程池
+     */
+    public static final ExecutorService VIRTUAL_EXECUTOR = newVirtualThreadPool();
+
     private Threads() {
     }
 
@@ -77,6 +82,7 @@ public class Threads {
         Systems.addShutdownHook(() -> {
             shutdownPoolNow(GLOBAL_EXECUTOR, Const.MS_S_3);
             shutdownPoolNow(CACHE_EXECUTOR, Const.MS_S_3);
+            shutdownVirtualPool(VIRTUAL_EXECUTOR, Const.MS_S_3);
         });
     }
 
@@ -170,6 +176,70 @@ public class Threads {
         } catch (InterruptedException e) {
             throw Exceptions.interruptedRuntime(e);
         }
+    }
+
+    /**
+     * 执行虚拟线程任务
+     *
+     * @param r 任务
+     */
+    public static void startVirtual(Runnable r) {
+        VIRTUAL_EXECUTOR.execute(r);
+    }
+
+    /**
+     * 执行虚拟线程任务
+     *
+     * @param rs 任务集合
+     */
+    public static void startVirtual(Collection<Runnable> rs) {
+        Assert.notEmpty(rs, "task is empty");
+        for (Runnable r : rs) {
+            VIRTUAL_EXECUTOR.execute(r);
+        }
+    }
+
+    /**
+     * 执行虚拟线程任务并且获取结果
+     *
+     * @param c   任务
+     * @param <V> 结果类型
+     * @return future
+     */
+    public static <V> Future<V> callVirtual(Callable<V> c) {
+        return VIRTUAL_EXECUTOR.submit(c);
+    }
+
+    /**
+     * 创建虚拟线程池
+     *
+     * @return 虚拟线程池
+     * @see VirtualExecutorBuilder
+     */
+    public static ExecutorService newVirtualThreadPool() {
+        return VirtualExecutorBuilder.create().build();
+    }
+
+    /**
+     * 创建虚拟线程池
+     *
+     * @param namePrefix 线程名称前缀
+     * @return 虚拟线程池
+     * @see VirtualExecutorBuilder
+     */
+    public static ExecutorService newVirtualThreadPool(String namePrefix) {
+        return VirtualExecutorBuilder.create()
+                .namedThreadFactory(namePrefix)
+                .build();
+    }
+
+    /**
+     * 当前线程是否为虚拟线程
+     *
+     * @return true 为虚拟线程
+     */
+    public static boolean isVirtualThread() {
+        return Thread.currentThread().isVirtual();
     }
 
     /**
@@ -558,6 +628,26 @@ public class Threads {
             pool.shutdownNow();
             if (!pool.awaitTermination(timeout, timeUnit)) {
                 Console.error("thread pool did not terminated");
+            }
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    /**
+     * 关闭虚拟线程池
+     *
+     * @param pool     虚拟线程池
+     * @param waitMill 等待时间毫秒
+     */
+    public static void shutdownVirtualPool(ExecutorService pool, long waitMill) {
+        if (pool == null || pool.isShutdown()) {
+            return;
+        }
+        pool.shutdown();
+        try {
+            if (!pool.awaitTermination(waitMill, TimeUnit.MILLISECONDS)) {
+                Console.error("virtual thread pool did not terminated");
             }
         } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();

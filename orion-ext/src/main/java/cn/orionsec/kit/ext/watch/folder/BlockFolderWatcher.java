@@ -65,6 +65,9 @@ public class BlockFolderWatcher extends FolderWatcher {
                 // 用户中断
                 return;
             }
+            if (wk == null) {
+                continue;
+            }
             Path currentPath = watchKeys.get(wk);
             WatchEvent.Kind<?> kind;
             for (WatchEvent<?> event : wk.pollEvents()) {

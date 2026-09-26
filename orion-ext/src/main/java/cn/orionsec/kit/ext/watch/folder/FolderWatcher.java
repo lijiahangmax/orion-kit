@@ -33,6 +33,7 @@ import cn.orionsec.kit.lang.able.Watchable;
 import cn.orionsec.kit.lang.utils.Arrays1;
 import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
+import cn.orionsec.kit.lang.utils.Threads;
 import cn.orionsec.kit.lang.utils.io.Streams;
 
 import java.io.File;
@@ -43,6 +44,7 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.Executor;
 
 /**
  * 文件夹监听器
@@ -170,6 +172,29 @@ public abstract class FolderWatcher implements Runnable, Watchable, Stoppable, S
         }
     }
 
+    /**
+     * 使用平台线程池开启监听
+     */
+    public void start() {
+        Threads.start(this, Threads.CACHE_EXECUTOR);
+    }
+
+    /**
+     * 使用指定线程池开启监听
+     *
+     * @param executor 线程池
+     */
+    public void start(Executor executor) {
+        Threads.start(this, executor);
+    }
+
+    /**
+     * 使用虚拟线程开启监听
+     */
+    public void startVirtual() {
+        Threads.startVirtual(this);
+    }
+
     @Override
     public void run() {
         this.run = true;
@@ -179,6 +204,8 @@ public abstract class FolderWatcher implements Runnable, Watchable, Stoppable, S
     @Override
     public void stop() {
         this.run = false;
+        // 关闭 watchService 以中断阻塞中的 take
+        Streams.close(watchService);
     }
 
     @Override

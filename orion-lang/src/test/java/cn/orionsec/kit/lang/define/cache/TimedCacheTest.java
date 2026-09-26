@@ -1,5 +1,6 @@
 package cn.orionsec.kit.lang.define.cache;
 
+import cn.orionsec.kit.lang.utils.Threads;
 import org.junit.After;
 import org.junit.Test;
 
@@ -8,6 +9,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.*;
@@ -259,5 +264,26 @@ public class TimedCacheTest {
     public void testRemoveNonExistent() {
         cache = TimedCacheBuilder.create(5000, 100);
         assertNull(cache.remove("nonexistent"));
+    }
+
+    @Test
+    public void testCheckerCloseImmediately() throws Exception {
+        Map<String, TimedCacheValue<String>> store = new ConcurrentHashMap<>();
+        CountDownLatch done = new CountDownLatch(1);
+        Executor executor = r -> Threads.startVirtual(() -> {
+            try {
+                r.run();
+            } finally {
+                done.countDown();
+            }
+        });
+        TimedCacheChecker<String> checker = new TimedCacheChecker<>(30_000, executor, store, null);
+        checker.start();
+        Thread.sleep(100);
+        long start = System.currentTimeMillis();
+        checker.close();
+        assertTrue("close 应立即停止检查循环", done.await(5, TimeUnit.SECONDS));
+        long elapsed = System.currentTimeMillis() - start;
+        assertTrue("elapsed=" + elapsed, elapsed < 5000);
     }
 }

@@ -95,6 +95,16 @@ public class TcpReceive implements AutoCloseable {
     }
 
     /**
+     * 使用虚拟线程接收连接
+     *
+     * @return this
+     */
+    public TcpReceive virtualAcceptThreadPool() {
+        this.acceptThreadPool = Threads.VIRTUAL_EXECUTOR;
+        return this;
+    }
+
+    /**
      * 接收几个连接
      *
      * @param count count
@@ -209,6 +219,10 @@ public class TcpReceive implements AutoCloseable {
      * @return this
      */
     public TcpReceive closePool() {
+        if (acceptThreadPool == Threads.VIRTUAL_EXECUTOR) {
+            LOGGER.warn("TcpReceive.closePool ignore, acceptThreadPool is global virtual thread pool");
+            return this;
+        }
         Threads.shutdownPoolNow(acceptThreadPool, Const.MS_S_5, TimeUnit.MILLISECONDS);
         return this;
     }

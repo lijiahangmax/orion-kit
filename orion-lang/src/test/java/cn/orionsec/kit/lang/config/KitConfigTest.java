@@ -1,9 +1,12 @@
 package cn.orionsec.kit.lang.config;
 
+import cn.orionsec.kit.lang.utils.Threads;
 import org.junit.After;
 import org.junit.Test;
 
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
 
@@ -84,6 +87,54 @@ public class KitConfigTest {
         KitConfig.override("test.key", 123);
         Integer val = KitConfig.get("test.key");
         assertEquals(Integer.valueOf(123), val);
+    }
+
+    @Test
+    public void testConcurrentInitAndGet() throws Exception {
+        int threads = 16;
+        CountDownLatch start = new CountDownLatch(1);
+        CountDownLatch done = new CountDownLatch(threads);
+        for (int i = 0; i < threads; i++) {
+            final int index = i;
+            Threads.startVirtual(() -> {
+                try {
+                    start.await();
+                    for (int j = 0; j < 200; j++) {
+                        KitConfig.init("test.concurrent." + index, index);
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                } finally {
+                    done.countDown();
+                }
+            });
+        }
+        start.countDown();
+        assertTrue(done.await(10, TimeUnit.SECONDS));
+        for (int i = 0; i < threads; i++) {
+            Integer value = KitConfig.get("test.concurrent." + i);
+            assertEquals(Integer.valueOf(i), value);
+            KitConfig.remove("test.concurrent." + i);
+        }
+    }
+
+    @Test
+    public void testConcurrentOverrideVisible() throws Exception {
+        int threads = 8;
+        CountDownLatch done = new CountDownLatch(threads);
+        for (int i = 0; i < threads; i++) {
+            final int index = i;
+            Threads.startVirtual(() -> {
+                try {
+                    KitConfig.override("test.concurrent.override", index);
+                } finally {
+                    done.countDown();
+                }
+            });
+        }
+        assertTrue(done.await(10, TimeUnit.SECONDS));
+        assertNotNull(KitConfig.get("test.concurrent.override"));
+        KitConfig.remove("test.concurrent.override");
     }
 
 }

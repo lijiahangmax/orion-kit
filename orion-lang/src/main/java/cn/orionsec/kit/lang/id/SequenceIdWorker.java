@@ -31,6 +31,9 @@ import cn.orionsec.kit.lang.define.SystemClock;
 import cn.orionsec.kit.lang.utils.Exceptions;
 
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 分布式有序 id 生成器
@@ -90,6 +93,16 @@ public class SequenceIdWorker implements IdGenerator<Long> {
 
     private long lastTimestamp = -1L;
 
+    /**
+     * 生成锁
+     */
+    private final ReentrantLock lock = new ReentrantLock();
+
+    /**
+     * 时间回拨等待条件
+     */
+    private final Condition waitCondition = lock.newCondition();
+
     private final boolean clock;
 
     private final long timeOffset;
@@ -130,59 +143,65 @@ public class SequenceIdWorker implements IdGenerator<Long> {
     }
 
     @Override
-    public synchronized Long nextId() {
-        long currentTimestamp = this.timeGen();
-        // 闰秒: 如果当前时间小于上一次ID生成的时间戳, 说明系统时钟回退过, 这个时候应当抛出异常
-        if (currentTimestamp < lastTimestamp) {
-            // 校验时间偏移回拨量
-            long offset = lastTimestamp - currentTimestamp;
-            if (offset > timeOffset) {
-                throw Exceptions.runtime("clock moved backwards, refusing to generate id for [" + offset + "ms]");
-            }
-            try {
-                // 时间回退timeOffset毫秒内, 则允许等待2倍的偏移量后重新获取, 解决小范围的时间回拨问题
-                this.wait(offset << 1);
-            } catch (Exception e) {
-                throw Exceptions.runtime(e);
-            }
-            // 再次获取
-            currentTimestamp = this.timeGen();
-            // 再次校验
+    public Long nextId() {
+        lock.lock();
+        try {
+            long currentTimestamp = this.timeGen();
+            // 闰秒: 如果当前时间小于上一次ID生成的时间戳, 说明系统时钟回退过, 这个时候应当抛出异常
             if (currentTimestamp < lastTimestamp) {
-                throw Exceptions.runtime("clock moved backwards, refusing to generate id for [" + offset + "ms]");
+                // 校验时间偏移回拨量
+                long offset = lastTimestamp - currentTimestamp;
+                if (offset > timeOffset) {
+                    throw Exceptions.runtime("clock moved backwards, refusing to generate id for [" + offset + "ms]");
+                }
+                try {
+                    // 时间回退timeOffset毫秒内, 则允许等待2倍的偏移量后重新获取, 解决小范围的时间回拨问题
+                    waitCondition.await(offset << 1, TimeUnit.MILLISECONDS);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw Exceptions.runtime(e);
+                }
+                // 再次获取
+                currentTimestamp = this.timeGen();
+                // 再次校验
+                if (currentTimestamp < lastTimestamp) {
+                    throw Exceptions.runtime("clock moved backwards, refusing to generate id for [" + offset + "ms]");
+                }
             }
-        }
 
-        // 同一毫秒内序列直接自增
-        if (lastTimestamp == currentTimestamp) {
-            // randomSequence为true表示随机生成允许范围内的序列起始值并取余数,否则毫秒内起始值为0L开始自增
-            long tempSequence = sequence + 1;
-            if (randomSequence && tempSequence > SEQUENCE_MASK) {
-                tempSequence = tempSequence % SEQUENCE_MASK;
+            // 同一毫秒内序列直接自增
+            if (lastTimestamp == currentTimestamp) {
+                // randomSequence为true表示随机生成允许范围内的序列起始值并取余数,否则毫秒内起始值为0L开始自增
+                long tempSequence = sequence + 1;
+                if (randomSequence && tempSequence > SEQUENCE_MASK) {
+                    tempSequence = tempSequence % SEQUENCE_MASK;
+                }
+                // 通过位与运算保证计算的结果范围始终是 0-4095
+                this.sequence = tempSequence & SEQUENCE_MASK;
+                if (sequence == 0) {
+                    currentTimestamp = this.tilNextMillis(lastTimestamp);
+                }
+            } else {
+                // randomSequence为true表示随机生成允许范围内的序列起始值,否则毫秒内起始值为0L开始自增
+                this.sequence = randomSequence ? random.nextLong(SEQUENCE_MASK + 1) : 0L;
             }
-            // 通过位与运算保证计算的结果范围始终是 0-4095
-            this.sequence = tempSequence & SEQUENCE_MASK;
-            if (sequence == 0) {
-                currentTimestamp = this.tilNextMillis(lastTimestamp);
-            }
-        } else {
-            // randomSequence为true表示随机生成允许范围内的序列起始值,否则毫秒内起始值为0L开始自增
-            this.sequence = randomSequence ? random.nextLong(SEQUENCE_MASK + 1) : 0L;
+            this.lastTimestamp = currentTimestamp;
+            long currentOffsetTime = currentTimestamp - START_TIME;
+            /*
+             * 1.左移运算是为了将数值移动到对应的段(41、5、5, 12那段因为本来就在最右, 因此不用左移)
+             * 2.然后对每个左移后的值(la、lb、lc、sequence)做位或运算, 是为了把各个短的数据合并起来, 合并成一个二进制数
+             * 3.最后转换成10进制, 就是最终生成的id
+             */
+            return (currentOffsetTime << TIMESTAMP_LEFT_SHIFT) |
+                    // 数据中心位
+                    (dataCenterId << DATA_CENTER_ID_SHIFT) |
+                    // 工作ID位
+                    (workerId << WORKER_ID_SHIFT) |
+                    // 毫秒序列化位
+                    sequence;
+        } finally {
+            lock.unlock();
         }
-        this.lastTimestamp = currentTimestamp;
-        long currentOffsetTime = currentTimestamp - START_TIME;
-        /*
-         * 1.左移运算是为了将数值移动到对应的段(41、5、5, 12那段因为本来就在最右, 因此不用左移)
-         * 2.然后对每个左移后的值(la、lb、lc、sequence)做位或运算, 是为了把各个短的数据合并起来, 合并成一个二进制数
-         * 3.最后转换成10进制, 就是最终生成的id
-         */
-        return (currentOffsetTime << TIMESTAMP_LEFT_SHIFT) |
-                // 数据中心位
-                (dataCenterId << DATA_CENTER_ID_SHIFT) |
-                // 工作ID位
-                (workerId << WORKER_ID_SHIFT) |
-                // 毫秒序列化位
-                sequence;
     }
 
     /**

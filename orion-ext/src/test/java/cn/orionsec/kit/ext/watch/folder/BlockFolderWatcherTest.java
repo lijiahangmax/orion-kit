@@ -169,6 +169,27 @@ public class BlockFolderWatcherTest {
     }
 
     @Test
+    public void testStopWakeup() throws Exception {
+        File watchDir = tempFolder.newFolder("watch-dir");
+
+        watcher = new BlockFolderWatcher(new DefaultWatchHandler(), WatchEventKind.CREATE);
+        watcher.registerPath(watchDir);
+
+        watchThread = new Thread(watcher);
+        watchThread.setDaemon(true);
+        watchThread.start();
+
+        Thread.sleep(300);
+        long start = System.currentTimeMillis();
+        watcher.stop();
+        watchThread.join(2000);
+        long elapsed = System.currentTimeMillis() - start;
+
+        assertFalse("stop 未唤醒阻塞中的监听线程", watchThread.isAlive());
+        assertTrue("stop 唤醒耗时过长, elapsed=" + elapsed, elapsed < 2000);
+    }
+
+    @Test
     public void testRegisterPathString() throws Exception {
         File watchDir = tempFolder.newFolder("watch-dir");
 

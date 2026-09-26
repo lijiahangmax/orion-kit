@@ -2,6 +2,10 @@ package cn.orionsec.kit.ext.tail;
 
 import org.junit.Test;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -66,6 +70,21 @@ public class TrackerTest {
     public void testIsRunnable() {
         TestTracker tracker = new TestTracker();
         assertTrue(tracker instanceof Runnable);
+    }
+
+    @Test
+    public void testStartWithExecutor() throws Exception {
+        TestTracker tracker = new TestTracker();
+        CountDownLatch latch = new CountDownLatch(1);
+        Executor executor = r -> {
+            r.run();
+            latch.countDown();
+        };
+        tracker.start(executor);
+        assertTrue(latch.await(5, TimeUnit.SECONDS));
+        assertTrue(tracker.isTailCalled());
+        tracker.stop();
+        assertFalse(tracker.isRun());
     }
 
 }

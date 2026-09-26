@@ -29,6 +29,8 @@ package cn.orionsec.kit.lang.id;
 import cn.orionsec.kit.lang.able.IdGenerator;
 import cn.orionsec.kit.lang.utils.Exceptions;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * 雪花 id 生成器
  *
@@ -109,6 +111,11 @@ public class SnowFlakeIdWorker implements IdGenerator<Long> {
     private long lastTimestamp = -1L;
 
     /**
+     * 生成锁
+     */
+    private final ReentrantLock lock = new ReentrantLock();
+
+    /**
      * @param workerId     工作ID (0~31)
      * @param dataCenterId 数据中心ID (0~31)
      */
@@ -124,32 +131,37 @@ public class SnowFlakeIdWorker implements IdGenerator<Long> {
     }
 
     @Override
-    public synchronized Long nextId() {
-        long timestamp = timeGen();
-        // 系统时钟回退
-        if (timestamp < lastTimestamp) {
-            throw Exceptions.runtime(String.format("clock moved backwards. refusing to generate id for %d milliseconds", lastTimestamp - timestamp));
-        }
-        // 如果是同一时间生成的, 则进行毫秒内序列
-        if (lastTimestamp == timestamp) {
-            this.sequence = (sequence + 1) & SEQUENCE_MASK;
-            // 毫秒内序列溢出
-            if (sequence == 0) {
-                // 阻塞到下一个毫秒, 获得新的时间戳
-                timestamp = tilNextMillis(lastTimestamp);
+    public Long nextId() {
+        lock.lock();
+        try {
+            long timestamp = timeGen();
+            // 系统时钟回退
+            if (timestamp < lastTimestamp) {
+                throw Exceptions.runtime(String.format("clock moved backwards. refusing to generate id for %d milliseconds", lastTimestamp - timestamp));
             }
-        } else {
-            // 时间戳改变, 毫秒内序列重置
-            this.sequence = 0L;
-        }
+            // 如果是同一时间生成的, 则进行毫秒内序列
+            if (lastTimestamp == timestamp) {
+                this.sequence = (sequence + 1) & SEQUENCE_MASK;
+                // 毫秒内序列溢出
+                if (sequence == 0) {
+                    // 阻塞到下一个毫秒, 获得新的时间戳
+                    timestamp = tilNextMillis(lastTimestamp);
+                }
+            } else {
+                // 时间戳改变, 毫秒内序列重置
+                this.sequence = 0L;
+            }
 
-        // 上次生成ID的时间截
-        this.lastTimestamp = timestamp;
-        // 移位并通过或运算拼到一起组成64位的ID
-        return ((timestamp - START_TIME) << TIMESTAMP_LEFT_SHIFT)
-                | (dataCenterId << DATA_CENTER_ID_SHIFT)
-                | (workerId << WORKER_ID_SHIFT)
-                | sequence;
+            // 上次生成ID的时间截
+            this.lastTimestamp = timestamp;
+            // 移位并通过或运算拼到一起组成64位的ID
+            return ((timestamp - START_TIME) << TIMESTAMP_LEFT_SHIFT)
+                    | (dataCenterId << DATA_CENTER_ID_SHIFT)
+                    | (workerId << WORKER_ID_SHIFT)
+                    | sequence;
+        } finally {
+            lock.unlock();
+        }
     }
 
     /**
@@ -161,6 +173,8 @@ public class SnowFlakeIdWorker implements IdGenerator<Long> {
     private long tilNextMillis(long lastTimestamp) {
         long timestamp = timeGen();
         while (timestamp <= lastTimestamp) {
+            // 自旋等待下一个毫秒
+            Thread.onSpinWait();
             timestamp = timeGen();
         }
         return timestamp;

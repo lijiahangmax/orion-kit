@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.net.ftp.client.pool;
 
+import cn.orionsec.kit.lang.utils.Threads;
 import cn.orionsec.kit.net.ftp.client.Ftps;
 import cn.orionsec.kit.net.ftp.client.config.FtpConfig;
 import cn.orionsec.kit.net.ftp.client.instance.IFtpInstance;
@@ -40,6 +41,9 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.Assert.*;
 
@@ -180,6 +184,41 @@ public class FtpClientPoolTest {
             // 池中无空闲连接 超时报错
             assertThrows(RuntimeException.class, pool::getClient);
             pool.returnClient(client);
+        } finally {
+            pool.close();
+        }
+    }
+
+    @Test(timeout = 60000)
+    public void testPoolConcurrentGetReturn() throws Exception {
+        int poolSize = 4;
+        int threads = 16;
+        FtpClientPool pool = Ftps.createClientPool(config, poolSize).timeout(10000);
+        try {
+            CountDownLatch start = new CountDownLatch(1);
+            CountDownLatch done = new CountDownLatch(threads);
+            AtomicReference<Throwable> error = new AtomicReference<>();
+            for (int i = 0; i < threads; i++) {
+                Threads.startVirtual(() -> {
+                    try {
+                        start.await();
+                        FTPClient client = pool.getClient();
+                        try {
+                            assertTrue(Ftps.isActive(client));
+                        } finally {
+                            pool.returnClient(client);
+                        }
+                    } catch (Throwable t) {
+                        error.compareAndSet(null, t);
+                    } finally {
+                        done.countDown();
+                    }
+                });
+            }
+            start.countDown();
+            assertTrue(done.await(30, TimeUnit.SECONDS));
+            assertNull("并发操作连接池出现异常: " + error.get(), error.get());
+            assertEquals(poolSize, pool.getFreeSize());
         } finally {
             pool.close();
         }

@@ -32,8 +32,6 @@ import java.util.Arrays;
 
 /**
  * 参数类型实现
- * <p>
- * from FastJSON 1.2.70
  *
  * @author Jiahang Li
  * @version 1.0.0

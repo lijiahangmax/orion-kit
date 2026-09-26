@@ -26,9 +26,8 @@
  */
 package cn.orionsec.kit.lang.config;
 
-import cn.orionsec.kit.lang.utils.collect.Maps;
-
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * orion-kit 配置项
@@ -41,7 +40,7 @@ import java.util.Map;
  */
 public class KitConfig {
 
-    private static final Map<String, Object> CONFIG = Maps.newMap();
+    private static final Map<String, Object> CONFIG = new ConcurrentHashMap<>(16);
 
     /**
      * 覆盖配置 (会覆盖) 一般用于重写配置

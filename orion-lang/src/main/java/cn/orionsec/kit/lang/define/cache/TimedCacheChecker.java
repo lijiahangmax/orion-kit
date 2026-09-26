@@ -26,7 +26,7 @@
  */
 package cn.orionsec.kit.lang.define.cache;
 
-import cn.orionsec.kit.lang.utils.Threads;
+import cn.orionsec.kit.lang.define.thread.Waiter;
 
 import java.io.Closeable;
 import java.util.Map;
@@ -49,6 +49,11 @@ public class TimedCacheChecker<T> implements Runnable, Closeable {
     private final int checkInterval;
 
     private final BiConsumer<String, T> expiredListener;
+
+    /**
+     * 可唤醒等待器
+     */
+    private final Waiter waiter = new Waiter();
 
     private volatile boolean run;
 
@@ -73,10 +78,12 @@ public class TimedCacheChecker<T> implements Runnable, Closeable {
 
     @Override
     public void run() {
-        while (run) {
-            Threads.sleep(checkInterval);
-            // 执行检查
-            this.doCheck();
+        while (run && !Thread.currentThread().isInterrupted()) {
+            waiter.await(checkInterval);
+            if (run) {
+                // 执行检查
+                this.doCheck();
+            }
         }
     }
 
@@ -100,5 +107,6 @@ public class TimedCacheChecker<T> implements Runnable, Closeable {
     @Override
     public void close() {
         this.run = false;
+        waiter.signal();
     }
 }

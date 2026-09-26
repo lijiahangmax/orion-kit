@@ -28,6 +28,9 @@ package cn.orionsec.kit.ext.watch.file;
 
 import cn.orionsec.kit.lang.able.Stoppable;
 import cn.orionsec.kit.lang.able.Watchable;
+import cn.orionsec.kit.lang.utils.Threads;
+
+import java.util.concurrent.Executor;
 
 /**
  * 文件监听器
@@ -41,6 +44,29 @@ public abstract class FileWatcher implements Watchable, Runnable, Stoppable {
     @Override
     public void run() {
         watch();
+    }
+
+    /**
+     * 使用平台线程池开启监听
+     */
+    public void start() {
+        Threads.start(this, Threads.CACHE_EXECUTOR);
+    }
+
+    /**
+     * 使用指定线程池开启监听
+     *
+     * @param executor 线程池
+     */
+    public void start(Executor executor) {
+        Threads.start(this, executor);
+    }
+
+    /**
+     * 使用虚拟线程开启监听
+     */
+    public void startVirtual() {
+        Threads.startVirtual(this);
     }
 
     /**

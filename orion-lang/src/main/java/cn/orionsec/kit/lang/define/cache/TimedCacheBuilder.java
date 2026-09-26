@@ -29,6 +29,8 @@ package cn.orionsec.kit.lang.define.cache;
 import cn.orionsec.kit.lang.able.Buildable;
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.define.thread.ExecutorBuilder;
+import cn.orionsec.kit.lang.define.thread.NamedThreadFactory;
+import cn.orionsec.kit.lang.utils.Systems;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -50,7 +52,7 @@ public class TimedCacheBuilder<T> implements Buildable<TimedCache<T>> {
      * 检测线程池
      */
     private static final ExecutorService CHECKER_EXECUTOR = ExecutorBuilder.create()
-            .namedThreadFactory("orion-cache-checker-")
+            .threadFactory(new NamedThreadFactory("orion-cache-checker-").setDaemon(true))
             .corePoolSize(1)
             .maxPoolSize(Integer.MAX_VALUE)
             .keepAliveTime(Const.MS_S_60)
@@ -59,6 +61,10 @@ public class TimedCacheBuilder<T> implements Buildable<TimedCache<T>> {
             .build();
 
     private static final int DEFAULT_CHECK_INTERVAL = 5000;
+
+    static {
+        Systems.addShutdownHook(CHECKER_EXECUTOR::shutdownNow);
+    }
 
     /**
      * 过期时间 ms

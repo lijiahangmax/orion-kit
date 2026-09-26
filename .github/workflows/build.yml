@@ -1,0 +1,43 @@
+name: Build
+
+on:
+  push:
+    branches: [ master, main, dev ]
+  pull_request:
+    branches: [ master, main, dev ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build (skip tests & javadoc)
+        run: mvn -B -ntp clean install -DskipTests -P skip-docs
+
+      - name: Test orion-lang
+        # 排除依赖本地测试素材的用例
+        run: >
+          mvn -B -ntp -pl orion-lang test -P skip-docs
+          -Dtest='!CompressTests,!FileSplitMergeTests,!RsaTests'
+          -DfailIfNoSpecifiedTests=false
+
+      - name: Test orion-office
+        run: mvn -B -ntp -pl orion-office test -P skip-docs
+
+      - name: Test orion-generator
+        run: mvn -B -ntp -pl orion-generator test -P skip-docs
+
+      - name: Test orion-net (concurrency)
+        run: >
+          mvn -B -ntp -pl orion-net test -P skip-docs
+          -Dtest='FtpClientPoolTest,TcpSocketTest'
+          -DfailIfNoSpecifiedTests=false
+

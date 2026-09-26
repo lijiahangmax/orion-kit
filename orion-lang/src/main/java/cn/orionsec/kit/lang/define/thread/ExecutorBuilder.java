@@ -292,6 +292,15 @@ public class ExecutorBuilder implements Buildable<ThreadPoolExecutor> {
         return this;
     }
 
+    /**
+     * 切换为虚拟线程池构建
+     *
+     * @return 虚拟线程池构造器
+     */
+    public VirtualExecutorBuilder virtual() {
+        return VirtualExecutorBuilder.create();
+    }
+
     @Override
     public ThreadPoolExecutor build() {
         return build(this);

@@ -148,10 +148,10 @@ public class FtpClientPool implements AutoCloseable {
      *
      * @return 连接
      */
-    public synchronized FTPClient getClient() {
+    public FTPClient getClient() {
         LOGGER.debug("get ftp client with pool");
         try {
-            if (pool.size() == 0 && noAvailableThenCreate) {
+            if (noAvailableThenCreate && pool.isEmpty()) {
                 LOGGER.debug("there are no free ftp connections in the pool, used create temp client");
                 return factory.createClient();
             }
@@ -176,25 +176,26 @@ public class FtpClientPool implements AutoCloseable {
     /**
      * 获取一个实例
      *
-     * @return this
+     * @return FTP 实例
      */
-    public synchronized IFtpInstance getInstance() {
+    public IFtpInstance getInstance() {
         return new FtpInstance(this);
     }
 
     /**
-     * 归还一个连接, 如果归还超时则销毁改对象
+     * 归还一个连接, 如果归还超时则销毁该对象
      *
      * @param client 客户端
      */
-    public synchronized void returnClient(FTPClient client) {
+    public void returnClient(FTPClient client) {
+        Assert.notNull(client, "return client is null");
+        LOGGER.debug("return ftp client with pool");
         try {
-            Assert.notNull(client, "return client is null");
-            LOGGER.debug("return ftp client with pool");
             if (!pool.offer(client, timeout, TimeUnit.MILLISECONDS)) {
                 Ftps.destroy(client);
             }
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             LOGGER.error("return ftp client with to pool error", e);
         }
     }
@@ -202,11 +203,19 @@ public class FtpClientPool implements AutoCloseable {
     /**
      * 新建一个连接到池中
      */
-    protected synchronized void addClient() {
+    protected void addClient() {
+        FTPClient client = factory.createClient();
         try {
-            pool.offer(factory.createClient(), timeout, TimeUnit.MILLISECONDS);
-            LOGGER.debug("add ftp client with pool");
+            if (!pool.offer(client, timeout, TimeUnit.MILLISECONDS)) {
+                // 入池超时, 销毁连接
+                Ftps.destroy(client);
+                LOGGER.error("cannot add a new connection to the pool, pool is full");
+            } else {
+                LOGGER.debug("add ftp client with pool");
+            }
         } catch (InterruptedException e) {
+            Ftps.destroy(client);
+            Thread.currentThread().interrupt();
             LOGGER.error("cannot add a new connection to the pool", e);
         }
     }
@@ -216,7 +225,7 @@ public class FtpClientPool implements AutoCloseable {
      *
      * @param client 客户端
      */
-    protected synchronized void invalidClient(FTPClient client) {
+    protected void invalidClient(FTPClient client) {
         LOGGER.debug("invalid ftp client with pool");
         pool.remove(client);
         Ftps.destroy(client);

@@ -26,7 +26,7 @@
  */
 package cn.orionsec.kit.lang.support.timeout;
 
-import cn.orionsec.kit.lang.utils.Threads;
+import cn.orionsec.kit.lang.define.thread.Waiter;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -44,7 +44,15 @@ public class TimeoutCheckerImpl<T extends TimeoutEndpoint> implements TimeoutChe
 
     private final long delay;
 
-    private boolean run;
+    /**
+     * 可唤醒等待器
+     */
+    private final Waiter waiter = new Waiter();
+
+    /**
+     * 运行标记
+     */
+    private volatile boolean run;
 
     public TimeoutCheckerImpl() {
         this(TimeoutCheckers.DEFAULT_DELAY);
@@ -63,12 +71,12 @@ public class TimeoutCheckerImpl<T extends TimeoutEndpoint> implements TimeoutChe
 
     @Override
     public void run() {
-        while (run) {
+        while (run && !Thread.currentThread().isInterrupted()) {
             // 完成或超时 直接移除
             tasks.removeIf(ch -> ch.isDone() || ch.checkTimeout());
             // 无任务时延长休眠减少空转
             long sleepTime = tasks.isEmpty() ? delay * 5 : delay;
-            Threads.sleep(sleepTime);
+            waiter.await(sleepTime);
         }
     }
 
@@ -97,6 +105,7 @@ public class TimeoutCheckerImpl<T extends TimeoutEndpoint> implements TimeoutChe
     @Override
     public void close() {
         this.run = false;
+        waiter.signal();
     }
 
 }

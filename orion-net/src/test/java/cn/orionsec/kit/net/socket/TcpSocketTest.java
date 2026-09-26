@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.net.socket;
 
+import cn.orionsec.kit.lang.utils.Threads;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -158,6 +159,32 @@ public class TcpSocketTest {
                 assertNotNull(send.getSocket());
             }
         }
+    }
+
+    @Test(timeout = 10000)
+    public void testVirtualThreadAccept() throws IOException, InterruptedException {
+        int port = findFreePort();
+        try (TcpReceive receive = new TcpReceive(port)) {
+            receive.timeout(8000).virtualAcceptThreadPool().accept(1);
+            assertFalse(Threads.VIRTUAL_EXECUTOR.isShutdown());
+            try (TcpSend send = new TcpSend(LOCALHOST, port)) {
+                Socket accepted = waitForAccept(receive);
+                assertNotNull(accepted);
+                assertTrue(accepted.isConnected());
+            }
+        }
+        assertFalse(Threads.VIRTUAL_EXECUTOR.isShutdown());
+    }
+
+    @Test(timeout = 10000)
+    public void testClosePoolWithVirtualPoolIgnored() throws IOException {
+        int port = findFreePort();
+        try (TcpReceive receive = new TcpReceive(port)) {
+            receive.timeout(8000).virtualAcceptThreadPool();
+            receive.closePool();
+            assertFalse(Threads.VIRTUAL_EXECUTOR.isShutdown());
+        }
+        assertFalse(Threads.VIRTUAL_EXECUTOR.isShutdown());
     }
 
     @Test(timeout = 10000)

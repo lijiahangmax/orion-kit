@@ -39,9 +39,12 @@ Pattern: `{function}s`. If JDK class exists, suffix with `1`:
 <dependency>
     <groupId>cn.orionsec.kit</groupId>
     <artifactId>orion-all</artifactId>
-    <version>2.0.7</version>
+    <version>3.0.0</version>
 </dependency>
 ```
+
+JDK 21+ required. Individual modules: `orion-lang`, `orion-ext`, `orion-office`, `orion-http`, `orion-net`, `orion-web`,
+`orion-spring`, `orion-redis`, `orion-generator`.
 
 ## Query Strategy
 
@@ -79,3 +82,21 @@ For common questions, answer directly without lookup:
 - `RSA.sign(data, privateKey)` / `RSA.verify(data, publicKey, sig)` → asymmetric
 - `Files1.touch(path)` → create file + parents
 - `Streams.toByteArray(is)` → `byte[]`
+
+## Concurrency (JDK 21)
+
+| Need                                  | API                                                                                                              |
+|:--------------------------------------|:-----------------------------------------------------------------------------------------------------------------|
+| Run task on virtual thread            | `Threads.startVirtual(r)` / `Threads.callVirtual(c)`                                                             |
+| Virtual thread pool                   | `Threads.VIRTUAL_EXECUTOR`, `Threads.newVirtualThreadPool(prefix)`                                               |
+| Virtual thread pool builder           | `VirtualExecutorBuilder.create().namedThreadFactory("x-").build()`, `ExecutorBuilder.create().virtual().build()` |
+| Interruptible sleep                   | `Threads.sleepInterruptibly(ms)`                                                                                 |
+| Signal-able delay wait                | `new Waiter().await(ms)` / `signal()` (replaces polling sleep)                                                   |
+| Tail / watch on virtual thread        | `Tracker.startVirtual()`, `FileWatcher.startVirtual()`, `FolderWatcher.startVirtual()`                           |
+| Tail / watch on platform pool         | `Tracker.start()`, `FileWatcher.start()`, `FolderWatcher.start()`, 或 `start(Executor)` 指定线程池                     |
+| Process read stream on virtual thread | `ProcessAwaitExecutor.virtualScheduler()`                                                                        |
+| TCP accept on virtual thread          | `TcpReceive.virtualAcceptThreadPool()`                                                                           |
+| Current thread is virtual             | `Threads.isVirtualThread()`                                                                                      |
+
+Notes: virtual threads are opt-in; do not pool them (use `Semaphore` to limit concurrency); keep CPU-bound and scheduled
+tasks on platform threads; on JDK 21-23 `synchronized` blocks pin virtual threads (prefer `ReentrantLock`).

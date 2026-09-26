@@ -40,7 +40,7 @@ public interface StandardContentType {
     String CONTENT_TYPE = StandardHttpHeader.CONTENT_TYPE;
 
     /**
-     *
+     * all
      */
     String ALL = "*/*";
 

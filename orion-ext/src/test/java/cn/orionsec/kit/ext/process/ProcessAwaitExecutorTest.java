@@ -1,11 +1,14 @@
 package cn.orionsec.kit.ext.process;
 
+import cn.orionsec.kit.lang.utils.Threads;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import static org.junit.Assert.*;
@@ -377,6 +380,31 @@ public class ProcessAwaitExecutorTest {
         // calling close again should not throw
         executor.close();
         assertTrue(executor.isClose());
+    }
+
+    @Test(timeout = 20000)
+    public void testVirtualSchedulerReadStream() throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        CountDownLatch latch = new CountDownLatch(1);
+        ProcessAwaitExecutor executor = new ProcessAwaitExecutor(new String[]{"cmd", "/c", "echo", "virtual_scheduler_test"});
+        Consumer<InputStream> handler = inputStream -> {
+            try {
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = inputStream.read(buf)) != -1) {
+                    baos.write(buf, 0, len);
+                }
+            } catch (Exception e) {
+            }
+        };
+        executor.virtualScheduler()
+                .streamHandler(handler)
+                .callback(latch::countDown)
+                .exec();
+        assertTrue("虚拟线程读取进程输出超时", latch.await(10, TimeUnit.SECONDS));
+        assertTrue(baos.toString().contains("virtual_scheduler_test"));
+        assertFalse(Threads.VIRTUAL_EXECUTOR.isShutdown());
+        executor.close();
     }
 
 }

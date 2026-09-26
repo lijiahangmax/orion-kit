@@ -1,8 +1,11 @@
 package cn.orionsec.kit.lang.support.timeout;
 
+import cn.orionsec.kit.lang.utils.Threads;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
 
@@ -73,6 +76,26 @@ public class TimeoutCheckerTest {
         assertTrue(impl.isRun());
         assertTrue(impl.isEmpty());
         impl.close();
+        assertFalse(impl.isRun());
+    }
+
+    @Test
+    public void testCloseImmediatelyWakeup() throws Exception {
+        TimeoutCheckerImpl<TimeoutEndpoint> impl = new TimeoutCheckerImpl<>(30_000);
+        CountDownLatch done = new CountDownLatch(1);
+        Threads.startVirtual(() -> {
+            try {
+                impl.run();
+            } finally {
+                done.countDown();
+            }
+        });
+        Thread.sleep(100);
+        long start = System.currentTimeMillis();
+        impl.close();
+        assertTrue("close 应立即唤醒检测循环", done.await(5, TimeUnit.SECONDS));
+        long elapsed = System.currentTimeMillis() - start;
+        assertTrue("elapsed=" + elapsed, elapsed < 5000);
         assertFalse(impl.isRun());
     }
 

@@ -12,8 +12,8 @@
     </a>
     <a target="_blank"
        style="text-decoration: none !important;"
-       href="https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html">
-        <img src="https://img.shields.io/badge/JDK-8+-green.svg" alt="jdk8"/>
+       href="https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html">
+        <img src="https://img.shields.io/badge/JDK-21+-green.svg" alt="jdk21"/>
     </a>
     <a target="_blank"
        style="text-decoration: none !important;"
@@ -44,19 +44,29 @@
 
 ### 工程模块
 
-| 模块              | 数量                                          |
-|:----------------|:--------------------------------------------|
-| orion-lang      | 底层核心模块 集合、IO、反射、转换、日期、异常、加密、编码, 函数等         |
-| orion-ext       | 拓展模块 IP位置、邮件、process、tail、git, watch等       |
-| orion-office    | 数据处理模块 csv, excel导入导出以及相互转化等                |
-| orion-http      | Http 模块 OkHttp、HttpClient、jsup的统一封装, UA生成器等 |
-| orion-net       | 网络交互模块 SSH、SFTP、FTP, Socket的简单封装            |
-| orion-web       | Web 模块 Servlet 工具类等                         |
-| orion-spring    | Spring 模块 容器工具类等                            |
-| orion-log       | 日志模块 (忽略)                                   |
-| orion-redis     | Redis 模块 (忽略)                               |
-| orion-generator | 随机信息生成器模块 包含各式各样的随机数据生成器                    |
-| orion-all       | 全部模块聚合 包含了上述所有模块的引用                         |
+| 模块              | 数量                                           |
+|:----------------|:---------------------------------------------|
+| orion-lang      | 底层核心模块 集合、IO、反射、转换、日期、异常、加密、编码, 函数等          |
+| orion-ext       | 拓展模块 IP位置、邮件、process、tail、git, watch等        |
+| orion-office    | 数据处理模块 csv, excel导入导出以及相互转化等                 |
+| orion-http      | Http 模块 OkHttp、HttpClient、jsoup的统一封装, UA生成器等 |
+| orion-net       | 网络交互模块 SSH、SFTP、FTP, Socket的简单封装             |
+| orion-web       | Web 模块 Servlet 工具类等                          |
+| orion-spring    | Spring 模块 容器工具类等                             |
+| orion-log       | 日志模块 (忽略)                                    |
+| orion-redis     | Redis 模块 (忽略)                                |
+| orion-generator | 随机信息生成器模块 包含各式各样的随机数据生成器                     |
+| orion-all       | 全部模块聚合 包含了上述所有模块的引用                          |
+
+## 运行环境
+
+- **JDK 21+**（编译与运行基线，`maven.compiler.release=21`）
+- 构建前确认 `JAVA_HOME` 指向 JDK 21，否则 `mvn` 会因 `release 21` 报错：
+
+```powershell
+$env:JAVA_HOME='D:\Profile\jdk-21.0.8'; $env:Path="$env:JAVA_HOME\bin;$env:Path"
+mvn clean install -DskipTests -P skip-docs
+```
 
 ## 模块化引用
 

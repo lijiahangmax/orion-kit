@@ -34,7 +34,6 @@ import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
-import cn.orionsec.kit.lang.utils.Threads;
 import cn.orionsec.kit.lang.utils.io.FileReaders;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.lang.utils.io.Streams;
@@ -120,16 +119,17 @@ public abstract class AbstractDelayTracker extends Tracker {
     @Override
     public void tail() {
         try {
+            this.run = true;
             if (!this.init()) {
+                this.run = false;
                 return;
             }
-            this.run = true;
             this.setSeek();
             // 上次检查文件更改的时间
             long lastMod = 0;
             // 上次文件大小
             long lastLen = tailFile.length();
-            while (run) {
+            while (run && !Thread.currentThread().isInterrupted()) {
                 if (tailFile.lastModified() > lastMod) {
                     long length = tailFile.length();
                     if (lastLen > length && reader.getFilePointer() >= length) {
@@ -141,7 +141,7 @@ public abstract class AbstractDelayTracker extends Tracker {
                 }
                 lastMod = tailFile.lastModified();
                 lastLen = tailFile.length();
-                Threads.sleep(delayMillis);
+                waiter.await(delayMillis);
             }
         } catch (IOException e) {
             throw Exceptions.ioRuntime(e);
@@ -167,9 +167,8 @@ public abstract class AbstractDelayTracker extends Tracker {
         switch (notFoundMode) {
             case WAIT:
                 // 等待
-                this.run = true;
-                while (run) {
-                    Threads.sleep(delayMillis);
+                while (run && !Thread.currentThread().isInterrupted()) {
+                    waiter.await(delayMillis);
                     if (Files1.isFile(tailFile)) {
                         this.reader = Files1.openRandomAccess(tailFile, Const.ACCESS_R);
                         return true;
@@ -192,10 +191,13 @@ public abstract class AbstractDelayTracker extends Tracker {
                     }
                 }
                 for (int i = 0; i < fi; i++) {
+                    if (!run) {
+                        return false;
+                    }
                     if (i == fi - 1) {
-                        Threads.sleep(last);
+                        waiter.await(last);
                     } else {
-                        Threads.sleep(fd);
+                        waiter.await(fd);
                     }
                     if (run && Files1.isFile(tailFile)) {
                         this.reader = Files1.openRandomAccess(tailFile, Const.ACCESS_R);
@@ -206,7 +208,10 @@ public abstract class AbstractDelayTracker extends Tracker {
             case WAIT_COUNT:
                 // 等待次数
                 for (int i = 0; i < notFountTimes; i++) {
-                    Threads.sleep(delayMillis);
+                    if (!run) {
+                        return false;
+                    }
+                    waiter.await(delayMillis);
                     if (run && Files1.isFile(tailFile)) {
                         this.reader = Files1.openRandomAccess(tailFile, Const.ACCESS_R);
                         return true;

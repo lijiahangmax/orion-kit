@@ -1,9 +1,13 @@
 package cn.orionsec.kit.lang.id;
 
+import cn.orionsec.kit.lang.utils.Threads;
 import org.junit.Test;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
 
@@ -88,6 +92,32 @@ public class UUIdsTest {
             ids.add(UUIds.random32());
         }
         assertEquals(count, ids.size());
+    }
+
+    @Test
+    public void testRandom15ConcurrentUnique() throws Exception {
+        int threads = 16;
+        int perThread = 500;
+        Set<String> ids = ConcurrentHashMap.newKeySet();
+        CountDownLatch start = new CountDownLatch(1);
+        CountDownLatch done = new CountDownLatch(threads);
+        for (int i = 0; i < threads; i++) {
+            Threads.startVirtual(() -> {
+                try {
+                    start.await();
+                    for (int j = 0; j < perThread; j++) {
+                        ids.add(UUIds.random15());
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                } finally {
+                    done.countDown();
+                }
+            });
+        }
+        start.countDown();
+        assertTrue(done.await(20, TimeUnit.SECONDS));
+        assertEquals(threads * perThread, ids.size());
     }
 
 }

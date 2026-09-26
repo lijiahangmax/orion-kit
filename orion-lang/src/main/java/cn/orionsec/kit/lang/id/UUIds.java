@@ -34,6 +34,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * uuid 工具类
@@ -237,6 +238,12 @@ public class UUIds {
 
         private final static String STR = "0123456789abcdefghijklmnopqrstuvwxyz";
         private final static int PIX_LEN = STR.length();
+
+        /**
+         * 生成锁
+         */
+        private static final ReentrantLock LOCK = new ReentrantLock();
+
         private static volatile int pixOne = 0;
         private static volatile int pixTwo = 0;
         private static volatile int pixThree = 0;
@@ -250,25 +257,30 @@ public class UUIds {
          * 由于系统返回的毫秒数与操作系统关系很大, 所以本方法并不准确
          * 本方法可以保证在系统返回的一个毫秒数内生成36的4次方个 (1679616) ID不重复
          */
-        private synchronized static String generate() {
-            String hexString = Long.toHexString(System.currentTimeMillis());
-            pixFour++;
-            if (pixFour == PIX_LEN) {
-                pixFour = 0;
-                pixThree++;
-                if (pixThree == PIX_LEN) {
-                    pixThree = 0;
-                    pixTwo++;
-                    if (pixTwo == PIX_LEN) {
-                        pixTwo = 0;
-                        pixOne++;
-                        if (pixOne == PIX_LEN) {
-                            pixOne = 0;
+        private static String generate() {
+            LOCK.lock();
+            try {
+                String hexString = Long.toHexString(System.currentTimeMillis());
+                pixFour++;
+                if (pixFour == PIX_LEN) {
+                    pixFour = 0;
+                    pixThree++;
+                    if (pixThree == PIX_LEN) {
+                        pixThree = 0;
+                        pixTwo++;
+                        if (pixTwo == PIX_LEN) {
+                            pixTwo = 0;
+                            pixOne++;
+                            if (pixOne == PIX_LEN) {
+                                pixOne = 0;
+                            }
                         }
                     }
                 }
+                return hexString + STR.charAt(pixOne) + STR.charAt(pixTwo) + STR.charAt(pixThree) + STR.charAt(pixFour);
+            } finally {
+                LOCK.unlock();
             }
-            return hexString + STR.charAt(pixOne) + STR.charAt(pixTwo) + STR.charAt(pixThree) + STR.charAt(pixFour);
         }
     }
 

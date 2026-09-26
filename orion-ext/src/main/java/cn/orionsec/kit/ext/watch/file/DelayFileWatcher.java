@@ -28,9 +28,9 @@ package cn.orionsec.kit.ext.watch.file;
 
 import cn.orionsec.kit.ext.watch.file.handler.EventHandler;
 import cn.orionsec.kit.lang.constant.Const;
+import cn.orionsec.kit.lang.define.thread.Waiter;
 import cn.orionsec.kit.lang.utils.Arrays1;
 import cn.orionsec.kit.lang.utils.Assert;
-import cn.orionsec.kit.lang.utils.Threads;
 import cn.orionsec.kit.lang.utils.io.FileAttribute;
 import cn.orionsec.kit.lang.utils.io.Files1;
 
@@ -71,6 +71,11 @@ public class DelayFileWatcher extends FileWatcher {
     private final boolean inCreateEvent;
 
     private volatile boolean run;
+
+    /**
+     * 可唤醒等待器
+     */
+    private final Waiter waiter = new Waiter();
 
     public DelayFileWatcher(EventHandler handler, FileWatchEvent... events) {
         this(Const.MS_S_5, handler, events);
@@ -171,7 +176,7 @@ public class DelayFileWatcher extends FileWatcher {
     @Override
     public void watch() {
         this.run = true;
-        while (run) {
+        while (run && !Thread.currentThread().isInterrupted()) {
             for (File file : watchKeys.keySet()) {
                 FileAttribute currAttr = Files1.getAttribute(file);
                 FileAttribute beforeAttr = watchKeys.put(file, currAttr);
@@ -202,13 +207,14 @@ public class DelayFileWatcher extends FileWatcher {
                     }
                 }
             }
-            Threads.sleep(delayMillis);
+            waiter.await(delayMillis);
         }
     }
 
     @Override
     public void stop() {
         this.run = false;
+        waiter.signal();
     }
 
     @Override
