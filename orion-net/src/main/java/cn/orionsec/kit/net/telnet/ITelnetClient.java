@@ -59,12 +59,12 @@ public interface ITelnetClient extends Connectable {
     ITelnetClient connectTimeout(int timeout);
 
     /**
-     * 设置阻塞读取超时时间
+     * 设置登录阶段读取超时时间
      *
-     * @param readTimeout timeout
+     * @param loginTimeout loginTimeout
      * @return this
      */
-    ITelnetClient readTimeout(int readTimeout);
+    ITelnetClient loginTimeout(int loginTimeout);
 
     /**
      * 设置用户名

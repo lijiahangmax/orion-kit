@@ -68,7 +68,7 @@ public class TelnetShellExecutorTests {
                 .password(PASSWORD)
                 .prompt(PROMPT)
                 .connectTimeout(10000)
-                .readTimeout(10000)
+                .loginTimeout(10000)
                 .connect();
     }
 
