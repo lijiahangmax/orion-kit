@@ -30,11 +30,16 @@ import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.utils.Charsets;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
+import cn.orionsec.kit.lang.utils.collect.Lists;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 /**
@@ -44,28 +49,52 @@ import java.util.regex.Pattern;
  * @version 1.0.0
  * @since 2026/7/29
  */
-final class TelnetReads {
+public final class TelnetReads {
 
     /**
      * ANSI CSI 转义序列
-     * <p>
-     * shell 的行编辑会在提示符前后输出 ESC[6n / ESC[0m 之类的控制序列,
-     * 这些内容不属于命令输出 需要剔除
      */
-    private static final Pattern ANSI_CSI = Pattern.compile("\\u001B\\[[0-9;?]*[A-Za-z]");
+    private static final Pattern ANSI_CSI = Pattern.compile("\\u001B\\[[0-9:;<=>?]*[\\u0020-\\u002F]*[@-~]");
+
+    /**
+     * ANSI CSI 未闭合片段 (至末尾仍无终止字节)
+     */
+    private static final Pattern ANSI_CSI_INCOMPLETE = Pattern.compile("\\u001B\\[[0-9:;<=>?]*[\\u0020-\\u002F]*$");
+
+    /**
+     * ANSI 字符串类序列 OSC/DCS/APC/PM/SOS
+     */
+    private static final Pattern ANSI_STRING = Pattern.compile("\\u001B[]P^_X][^\\u0007\\u001B]*(?:\\u0007|\\u001B\\\\)");
+
+    /**
+     * ANSI 字符串类未闭合片段 (至末尾仍无终止符)
+     */
+    private static final Pattern ANSI_STRING_INCOMPLETE = Pattern.compile("\\u001B[]P^_X][^\\u0007\\u001B]*$");
+
+    /**
+     * ANSI 非 CSI 转义序列 (ESC + 中间字节 + 终止字节, 如 ESC 7/8/=/>, ESC # 8, 字符集选择)
+     */
+    private static final Pattern ANSI_ESC = Pattern.compile("\\u001B[\\u0020-\\u002F]*[\\u0030-\\u007E]");
 
     private TelnetReads() {
     }
 
     /**
+     * 剔除 ANSI 转义序列
+     *
+     * @param text 文本
+     * @return 清理后的文本
+     */
+    private static String stripAnsi(String text) {
+        text = ANSI_CSI.matcher(text).replaceAll(Const.EMPTY);
+        text = ANSI_CSI_INCOMPLETE.matcher(text).replaceAll(Const.EMPTY);
+        text = ANSI_STRING.matcher(text).replaceAll(Const.EMPTY);
+        text = ANSI_STRING_INCOMPLETE.matcher(text).replaceAll(Const.EMPTY);
+        return ANSI_ESC.matcher(text).replaceAll(Const.EMPTY);
+    }
+
+    /**
      * 读取直到命中指定内容
-     * <p>
-     * 按块读取以避免逐字节读取的开销, 命中后返回内容截至 pattern 末尾
-     * <p>
-     * 注意: 与 pattern 同批到达的后续字节会被一并消费, 不再留给下一次读取,
-     * 因此调用方应保证 pattern 之后不紧跟需要保留的数据
-     * <p>
-     * 返回内容中的 ANSI CSI 转义序列会被剔除
      *
      * @param in        in
      * @param pattern   pattern
@@ -75,74 +104,209 @@ final class TelnetReads {
      * @return 读取内容
      * @throws IOException IOException
      */
-    static String readUntil(InputStream in, String pattern, String charset, int timeout, int maxBuffer) throws IOException {
-        if (Strings.isBlank(pattern)) {
-            return Const.EMPTY;
+    public static String readUntil(InputStream in, String pattern, String charset, int timeout, int maxBuffer) throws IOException {
+        return readUntil(in, Lists.singleton(pattern), charset, timeout, maxBuffer);
+    }
+
+    /**
+     * 读取直到命中任意一个指定内容
+     *
+     * @param in        in
+     * @param patterns  patterns (空值会被忽略)
+     * @param charset   charset
+     * @param timeout   超时时间 ms (0 为不超时)
+     * @param maxBuffer 最大读取缓冲区字节数
+     * @return 读取内容
+     * @throws IOException IOException
+     */
+    public static String readUntil(InputStream in, Collection<String> patterns, String charset, int timeout, int maxBuffer) throws IOException {
+        TelnetReadResult result = readUntilResult(in, patterns, charset, timeout, maxBuffer);
+        if (result.isTimeout()) {
+            throw Exceptions.timeout("telnet read timeout");
         }
-        byte[] patternBytes = Strings.bytes(pattern, charset);
-        int patternLength = patternBytes.length;
-        // 缓冲区上限 非法值退化为默认上限
+        return result.getContent();
+    }
+
+    /**
+     * 读取直到命中任意一个指定内容并返回结束状态
+     *
+     * @param in        in
+     * @param patterns  patterns (空值会被忽略)
+     * @param charset   charset
+     * @param timeout   超时时间 ms (0 为不超时)
+     * @param maxBuffer 最大读取缓冲区字节数
+     * @return 读取结果
+     * @throws IOException IOException
+     */
+    public static TelnetReadResult readUntilResult(InputStream in, Collection<String> patterns, String charset, int timeout, int maxBuffer) throws IOException {
+        List<String> targets = new ArrayList<>(patterns.size());
+        for (String pattern : patterns) {
+            if (Strings.isNotBlank(pattern)) {
+                targets.add(pattern);
+            }
+        }
+        if (targets.isEmpty()) {
+            return new TelnetReadResult(Const.EMPTY, false, false);
+        }
+        // timeout 为总耗时上限 (0 为不限)
+        TelnetReadResult result = readUntilDecided(in, charset, timeout > 0 ? timeout : Integer.MAX_VALUE, maxBuffer,
+                text -> matchEnd(text, targets) != -1,
+                text -> true);
+        // 未命中且对端未关闭即为超时
+        String text = result.getContent();
+        int matchedEnd = matchEnd(text, targets);
+        if (matchedEnd == -1) {
+            return new TelnetReadResult(text, result.isEof(), !result.isEof());
+        }
+        return new TelnetReadResult(text.substring(0, matchedEnd), result.isEof(), false);
+    }
+
+    /**
+     * 读取直到输出静默或达到最大等待
+     *
+     * @param in        in
+     * @param charset   charset
+     * @param maxWaitMs 最大等待 ms
+     * @param maxBuffer 最大读取缓冲区字节数
+     * @return 读取内容
+     * @throws IOException IOException
+     */
+    public static String readUntilIdle(InputStream in, String charset, int maxWaitMs, int maxBuffer) throws IOException {
+        return readUntilIdleResult(in, charset, maxWaitMs, maxBuffer).getContent();
+    }
+
+    /**
+     * 读取直到输出静默或达到最大等待并返回结束状态
+     *
+     * @param in        in
+     * @param charset   charset
+     * @param maxWaitMs 最大等待 ms
+     * @param maxBuffer 最大读取缓冲区字节数
+     * @return 读取结果
+     * @throws IOException IOException
+     */
+    public static TelnetReadResult readUntilIdleResult(InputStream in, String charset, int maxWaitMs, int maxBuffer) throws IOException {
+        // 收到数据后的首次静默即结算
+        return readUntilDecided(in, charset, maxWaitMs, maxBuffer, null, text -> true);
+    }
+
+    /**
+     * 读取直到判定回调可结算或达到最大等待
+     *
+     * @param in           in
+     * @param charset      charset
+     * @param maxWaitMs    最大等待 ms
+     * @param maxBuffer    最大读取缓冲区字节数
+     * @param decided      数据到达判定回调, true 表示可结算
+     * @param settleOnIdle 静默判定回调 (可为 null), true 表示可结算
+     * @return 读取结果
+     * @throws IOException IOException
+     */
+    public static TelnetReadResult readUntilDecided(InputStream in, String charset, int maxWaitMs, int maxBuffer,
+                                                    Predicate<String> decided,
+                                                    Predicate<String> settleOnIdle) throws IOException {
         int limit = maxBuffer > 0 ? maxBuffer : Const.BUFFER_KB_32;
         byte[] data = new byte[Math.min(limit, Const.BUFFER_KB_4)];
         byte[] chunk = new byte[Const.BUFFER_KB_4];
         int size = 0;
+        boolean received = false;
+        boolean eof = false;
         long startTime = System.currentTimeMillis();
-        try {
-            while (true) {
+        while (true) {
+            if (System.currentTimeMillis() - startTime >= maxWaitMs) {
+                break;
+            }
+            try {
                 int read = in.read(chunk);
                 if (read == -1) {
-                    // 对端已关闭
+                    eof = true;
                     break;
                 }
-                if (size + read > limit) {
-                    throw Exceptions.runtime("telnet read buffer overflow");
-                }
-                if (size + read > data.length) {
-                    data = Arrays.copyOf(data, Math.min(limit, Math.max(data.length << 1, size + read)));
-                }
-                // 上一次已读取的尾部字节需要参与匹配 避免 pattern 跨越块边界时漏判
-                int searchFrom = Math.max(size - patternLength + 1, 0);
+                data = ensureCapacity(data, size, read, limit);
                 System.arraycopy(chunk, 0, data, size, read);
                 size += read;
-                // 命中 pattern 后截断到 pattern 末尾, 与逐字节读取的语义保持一致
-                int matched = indexOf(data, searchFrom, size, patternBytes);
-                if (matched != -1) {
-                    size = matched + patternLength;
+                received = true;
+                if (decided != null && decided.test(readText(data, size, charset))) {
                     break;
                 }
-                if (timeout > 0 && System.currentTimeMillis() - startTime > timeout) {
-                    throw Exceptions.timeout("telnet read timeout");
+            } catch (SocketTimeoutException e) {
+                if (settleOnIdle != null && received && settleOnIdle.test(readText(data, size, charset))) {
+                    break;
                 }
             }
-        } catch (SocketTimeoutException e) {
-            // soTimeout 阻塞超时
-            throw Exceptions.timeout("telnet read timeout", e);
         }
-        return ANSI_CSI.matcher(new String(data, 0, size, Charsets.of(charset)))
-                .replaceAll(Const.EMPTY);
+        boolean timeout = !received && !eof;
+        return new TelnetReadResult(readText(data, size, charset), eof, timeout);
     }
 
     /**
-     * 在缓冲区 [from, size) 范围内查找 pattern
+     * 读取直到数据到达判定回调可结算或达到最大等待
+     *
+     * @param in        in
+     * @param charset   charset
+     * @param maxWaitMs 最大等待 ms
+     * @param maxBuffer 最大读取缓冲区字节数
+     * @param decided   数据到达判定回调, true 表示可结算
+     * @return 读取结果
+     * @throws IOException IOException
+     */
+    public static TelnetReadResult readUntilDecided(InputStream in, String charset, int maxWaitMs, int maxBuffer, Predicate<String> decided) throws IOException {
+        return readUntilDecided(in, charset, maxWaitMs, maxBuffer, decided, null);
+    }
+
+    /**
+     * 校验缓冲区容量, 不足则扩容
+     *
+     * @param data  数据缓冲区
+     * @param size  已读取字节数
+     * @param read  单次读取字节数
+     * @param limit 最大读取缓冲区字节数
+     * @return 可写入的缓冲区
+     */
+    private static byte[] ensureCapacity(byte[] data, int size, int read, int limit) {
+        if (size + read > limit) {
+            throw Exceptions.runtime("telnet read buffer overflow");
+        }
+        if (size + read > data.length) {
+            return Arrays.copyOf(data, Math.clamp((long) data.length << 1, size + read, limit));
+        }
+        return data;
+    }
+
+    /**
+     * 读取缓冲区文本 (剔除 ANSI)
      *
      * @param data    数据缓冲区
-     * @param from    起始位置
      * @param size    已读取字节数
-     * @param pattern pattern
-     * @return pattern 的起始下标, 未命中返回 -1
+     * @param charset charset
+     * @return 文本
      */
-    private static int indexOf(byte[] data, int from, int size, byte[] pattern) {
-        int last = size - pattern.length;
-        for (int i = from; i <= last; i++) {
-            int j = 0;
-            while (j < pattern.length && data[i + j] == pattern[j]) {
-                j++;
+    private static String readText(byte[] data, int size, String charset) {
+        return stripAnsi(new String(data, 0, size, Charsets.of(charset)));
+    }
+
+    /**
+     * 查找最靠前命中 (起点最小, 同起点取更长的结束下标)
+     *
+     * @param text    文本
+     * @param targets 目标内容
+     * @return 结束下标, 未命中返回 -1
+     */
+    private static int matchEnd(String text, List<String> targets) {
+        int matchedStart = -1;
+        int matchedEnd = -1;
+        for (String target : targets) {
+            int matched = text.indexOf(target);
+            if (matched == -1) {
+                continue;
             }
-            if (j == pattern.length) {
-                return i;
+            int end = matched + target.length();
+            if (matchedStart == -1 || matched < matchedStart || (matched == matchedStart && end > matchedEnd)) {
+                matchedStart = matched;
+                matchedEnd = end;
             }
         }
-        return -1;
+        return matchedEnd;
     }
 
 }
