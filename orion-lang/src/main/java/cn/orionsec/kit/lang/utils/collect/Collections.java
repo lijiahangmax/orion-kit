@@ -482,8 +482,8 @@ public class Collections {
     /**
      * 获取第一个非 null 的值
      *
-     * @param c 集合
-     * @param <E>    T
+     * @param c   集合
+     * @param <E> T
      * @return value
      */
     public static <E> E coalesce(Collection<E> c) {

@@ -123,10 +123,10 @@ public class EmojiExt {
 
     /**
      * 将别名 用 ":" 拼接到字符首尾 转化为 Unicode 表情
-     * e.g.  :dog: -> 🐶
+     * e.g. :dog: -> 🐶
      * <p>
      * 将HTML字符(或16进制) 转化为 Unicode 表情
-     * e.g.  {@code &#128054;} -> 🐶
+     * e.g. {@code &#128054;} -> 🐶
      * <p>
      * 将别名 用 ":" 拼接到字符首尾 转化为 Unicode 表情, 用 "|" 拼接类型
      * e.g. :boy|type_6: -> 👦🏿

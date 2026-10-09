@@ -40,7 +40,7 @@ orion-all           (aggregator POM, depends on all above)
 | JGit                                    | Git operations                        |
 | OkHttp 5.x / HttpClient 5.x             | HTTP clients                          |
 | Jsoup                                   | HTML parsing                          |
-| jspecify 1.0.0                          | `@NonNull` / `@Nullable` 空安全注解   |
+| jspecify 1.0.0                          | `@NonNull` / `@Nullable` 空安全注解        |
 
 ## Scope & Rules（硬性约束）
 
@@ -133,23 +133,25 @@ Every source file must carry the MIT license header:
 1. 平台线程池（`Threads.GLOBAL_EXECUTOR` / `CACHE_EXECUTOR`）为默认；虚拟线程必须显式选择（`Threads.VIRTUAL_EXECUTOR` 或 `newVirtualThreadPool`），库不静默切换。
 2. **禁止池化虚拟线程**（`newThreadPerTaskExecutor` 语义）；并发上限使用 `Semaphore` 或既有连接池，不得用线程池大小限流。
 3. **禁止把 CPU 密集型任务放到虚拟线程**（crypto/hash/Excel/图片/序列化/生成器）。
-4. **禁止新增 `synchronized` 阻塞段**（JDK 21-23 pinning）；已有 `synchronized` 逐步替换为 `ReentrantLock`，且替换时必须保持锁对象语义（跨实例共享的锁不能改为实例私有锁）；FTP/SFTP 传输类的 `synchronized(instance/executor)` 已标注注释，传输任务建议使用平台线程。
+4. **禁止新增 `synchronized` 阻塞段**（JDK 21-23 pinning）；已有 `synchronized` 逐步替换为 `ReentrantLock`，且替换时必须保持锁对象语义（跨实例共享的锁不能改为实例私有锁）；FTP/SFTP
+   传输类的 `synchronized(instance/executor)` 已标注注释，传输任务建议使用平台线程。
 5. **持锁期间禁止阻塞等待**（如连接池 `poll(timeout)`）；等待必须在锁外进行。
 6. 定时/周期/常驻任务禁止使用虚拟线程（会让 JVM 无法退出），保留平台线程（`SystemClock`、缓存过期检查、心跳保活）。
 7. 新增 `ThreadLocal` 必须说明生命周期；虚拟线程下每任务一个实例。
-8. 阻塞型任务必须支持注入 `Executor`/`ExecutorService`，并提供虚拟线程便捷方法（参考 `virtualScheduler()`、`virtualAcceptThreadPool()`）；虚拟线程池统一通过 `VirtualExecutorBuilder`（或 `ExecutorBuilder.create().virtual()`）构建，不要在业务代码里直接 `Executors.newThreadPerTaskExecutor`。
+8. 阻塞型任务必须支持注入 `Executor`/`ExecutorService`，并提供虚拟线程便捷方法（参考 `virtualScheduler()`、`virtualAcceptThreadPool()`）；虚拟线程池统一通过
+   `VirtualExecutorBuilder`（或 `ExecutorBuilder.create().virtual()`）构建，不要在业务代码里直接 `Executors.newThreadPerTaskExecutor`。
 9. 全局 `Threads.VIRTUAL_EXECUTOR` 为共享资源，任何关闭入口必须防御误关闭（参考 `TcpReceive.closePool()` 的判断）。
 
 ## JDK 21 改造速查
 
-| 能力 | 入口 | 说明 |
-|:--|:--|:--|
-| 可唤醒延时等待 | `cn.orionsec.kit.lang.define.thread.Waiter` | 替代轮询 `sleep`（`await`/`signal`） |
-| tail/watch 虚拟线程 | `Tracker.startVirtual()`、`FileWatcher.startVirtual()`、`FolderWatcher.startVirtual()` | 配合 `stop()` 立即唤醒 |
-| 进程虚拟线程读流 | `ProcessAwaitExecutor.virtualScheduler()` | 阻塞输出流读取 |
-| TCP 虚拟线程 accept | `TcpReceive.virtualAcceptThreadPool()` | 阻塞 accept |
-| 显式锁 | `UUIds`、`SnowFlakeIdWorker`、`FtpClientPool`、`TimedCacheChecker`、`TimeoutCheckerImpl` | 替代 `synchronized`，避免 JDK21 pinning |
-| switch 模式匹配 | `Arrays1.wrap/unWrap`、`Objects1.toString` | 语法现代化先例 |
+| 能力              | 入口                                                                                   | 说明                                 |
+|:----------------|:-------------------------------------------------------------------------------------|:-----------------------------------|
+| 可唤醒延时等待         | `cn.orionsec.kit.lang.define.thread.Waiter`                                          | 替代轮询 `sleep`（`await`/`signal`）     |
+| tail/watch 虚拟线程 | `Tracker.startVirtual()`、`FileWatcher.startVirtual()`、`FolderWatcher.startVirtual()` | 配合 `stop()` 立即唤醒                   |
+| 进程虚拟线程读流        | `ProcessAwaitExecutor.virtualScheduler()`                                            | 阻塞输出流读取                            |
+| TCP 虚拟线程 accept | `TcpReceive.virtualAcceptThreadPool()`                                               | 阻塞 accept                          |
+| 显式锁             | `UUIds`、`SnowFlakeIdWorker`、`FtpClientPool`、`TimedCacheChecker`、`TimeoutCheckerImpl` | 替代 `synchronized`，避免 JDK21 pinning |
+| switch 模式匹配     | `Arrays1.wrap/unWrap`、`Objects1.toString`                                            | 语法现代化先例                            |
 
 ## Files requiring review（高风险文件）
 
@@ -167,8 +169,10 @@ Every source file must carry the MIT license header:
 - 命名：`XxxTest` / `XxxTests` 混用（保持现状）
 - 每个模块目录结构镜像 main 包名；`orion-lang` 另有一套 `cn.orionsec.kit.test.*` 旧式测试
 - 新增/修改的公共能力必须有单元测试；并发相关必须包含**虚拟线程并发用例**与**停止/关闭立即性用例**
-- 并发/虚拟线程用例参考：`ThreadsVirtualTest`、`VirtualExecutorBuilderTest`、`WaiterTest`、`SnowFlakeIdWorkerTest#testNextIdConcurrentUnique`、`FtpClientPoolTest#testPoolConcurrentGetReturn`、`TcpSocketTest#testVirtualThreadAccept`、`ProcessAwaitExecutorTest#testVirtualSchedulerReadStream`
-- 环境依赖型用例（`CompressTests`、`FileSplitMergeTests`、`RsaTests#pfx`、orion-ext 的 `ProcessAsyncTests` 等硬编码 `C:\Users\Administrator\orion-kit-test\` 素材的集成用例）需要本地测试素材，缺失时通过 `Assume` 自动跳过，不计入回归；新增依赖本地素材的用例须沿用该守卫方式
+- 并发/虚拟线程用例参考：`ThreadsVirtualTest`、`VirtualExecutorBuilderTest`、`WaiterTest`、`SnowFlakeIdWorkerTest#testNextIdConcurrentUnique`、
+  `FtpClientPoolTest#testPoolConcurrentGetReturn`、`TcpSocketTest#testVirtualThreadAccept`、`ProcessAwaitExecutorTest#testVirtualSchedulerReadStream`
+- 环境依赖型用例（`CompressTests`、`FileSplitMergeTests`、`RsaTests#pfx`、orion-ext 的 `ProcessAsyncTests` 等硬编码 `C:\Users\Administrator\orion-kit-test\`
+  素材的集成用例）需要本地测试素材，缺失时通过 `Assume` 自动跳过，不计入回归；新增依赖本地素材的用例须沿用该守卫方式
 - 提交门槛：至少通过受影响模块的全量测试 + `orion-lang` 全量测试
 - 修改并发代码后建议附加 JFR/线程转储验证（无 pinning 事件、无死锁）
 
@@ -178,7 +182,8 @@ Every source file must carry the MIT license header:
 2. `orion-web` / `orion-spring` / `orion-redis` / `orion-log` 无测试覆盖；`orion-http` 仅 3 个测试
 3. JDK 17+ 强封装：对 JDK 内部 API/`Unsafe` 的反射访问需要 `--add-opens`，`utils/reflect` 包改造需注意
 4. FTP/SFTP 传输类的 `synchronized` 在 JDK 21-23 上会 pin 虚拟线程（接口锁定改造列入 4.0）
-5. `orion-http` 的 main 源码 `OkWebSocketServer` 基于 MockWebServer（继承 `org.junit.rules.ExternalResource`），该模块 main 编译需要 junit（compile scope），属测试设施泄漏，列入 4.0 清理
+5. `orion-http` 的 main 源码 `OkWebSocketServer` 基于 MockWebServer（继承 `org.junit.rules.ExternalResource`），该模块 main 编译需要 junit（compile
+   scope），属测试设施泄漏，列入 4.0 清理
 6. `excel-streaming-reader 5.2.0` 与 POI 5.5.1 的兼容性、`cglib 3.3.0`（provided）在 Spring 7 下的使用未做运行时验证
 7. 无 `module-info.java`（未采用 JPMS）
 8. 语法现代化（record 化 wrapper、`Converts` 拆分、`Files1` 现代化）尚未开展，列入 P2 backlog

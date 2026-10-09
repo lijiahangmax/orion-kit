@@ -148,7 +148,7 @@ public class StreamReaders {
      * @param input   input
      * @param charset charset
      * @param skip    偏移量
-     * @param lines   读取多少行  {@code <= 0} 所有行
+     * @param lines   读取多少行 {@code <= 0} 所有行
      * @return 行
      */
     public static List<String> readLines(InputStream input, String charset, long skip, int lines) throws IOException {
@@ -201,7 +201,7 @@ public class StreamReaders {
      *
      * @param reader   reader
      * @param skipLine 偏移行
-     * @param lines    读取多少行  {@code <=0} 所有行
+     * @param lines    读取多少行 {@code <=0} 所有行
      * @return 行
      */
     public static List<String> readLines(Reader reader, int skipLine, int lines) throws IOException {

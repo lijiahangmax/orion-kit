@@ -50,7 +50,7 @@
 | orion-ext       | 拓展模块 IP位置、邮件、process、tail、git, watch等        |
 | orion-office    | 数据处理模块 csv, excel导入导出以及相互转化等                 |
 | orion-http      | Http 模块 OkHttp、HttpClient、jsoup的统一封装, UA生成器等 |
-| orion-net       | 网络交互模块 SSH、SFTP、FTP、Telnet, Socket的简单封装             |
+| orion-net       | 网络交互模块 SSH、SFTP、FTP、Telnet, Socket的简单封装      |
 | orion-web       | Web 模块 Servlet 工具类等                          |
 | orion-spring    | Spring 模块 容器工具类等                             |
 | orion-log       | 日志模块 (忽略)                                    |
