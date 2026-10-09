@@ -97,12 +97,12 @@ public class Compares {
     }
 
     /**
-     * test value < refer
+     * test value {@code <} refer
      *
      * @param value value
      * @param refer refer
      * @param <T>   T
-     * @return true  value < refer
+     * @return true  value {@code <} refer
      */
     public static <T extends Comparable<T>> boolean lt(T value, T refer) {
         Assert.notNull(value, "value is null");
@@ -111,12 +111,12 @@ public class Compares {
     }
 
     /**
-     * test value <= refer
+     * test value {@code <=} refer
      *
      * @param value value
      * @param refer refer
      * @param <T>   T
-     * @return true  value <= refer
+     * @return true  value {@code <=} refer
      */
     public static <T extends Comparable<T>> boolean lte(T value, T refer) {
         Assert.notNull(value, "value is null");

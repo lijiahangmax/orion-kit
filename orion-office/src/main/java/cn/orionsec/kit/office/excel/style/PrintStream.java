@@ -225,7 +225,7 @@ public class PrintStream {
     /**
      * 打印自适应
      *
-     * @param auto 是否自适应
+     * @param fit 是否自适应
      * @return this
      */
     public PrintStream fit(boolean fit) {

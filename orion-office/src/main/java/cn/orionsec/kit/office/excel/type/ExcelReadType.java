@@ -93,8 +93,9 @@ public enum ExcelReadType {
 
     /**
      * 图片
+     * <p>
+     * byte[]
      *
-     * @see byte[]
      * @see String base64
      * @see java.io.OutputStream
      * @see java.io.ByteArrayOutputStream

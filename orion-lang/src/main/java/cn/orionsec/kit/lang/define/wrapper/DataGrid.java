@@ -70,7 +70,7 @@ public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializab
     private int limit;
 
     /**
-     * 当前页的数量 应该 <= limit
+     * 当前页的数量 应该小于 limit
      */
     @JSONField(ordinal = 2)
     private int size;

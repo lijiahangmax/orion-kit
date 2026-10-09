@@ -215,10 +215,10 @@ public class DomSupport {
      * 将 map 转为 document
      *
      * @param rootName 根节点名称
-     * @param childMap Map <String, String>
-     *                 Map <String, Map<String,Object>>
-     *                 Map <String, List<Map>>
-     *                 Map <String, List<String>>
+     * @param childMap {@code Map<String, String>}
+     *                 {@code Map<String, Map<String,Object>>}
+     *                 {@code Map<String, List<Map>>}
+     *                 {@code Map<String, List<String>>}
      * @param cdata    string是否使用CDATA修饰
      * @return Document
      */
@@ -248,10 +248,10 @@ public class DomSupport {
      * 将 map 转为 element
      *
      * @param rootName 根节点名称
-     * @param childMap Map <String, String>
-     *                 Map <String, Map<String,Object>>
-     *                 Map <String, List<Map>>
-     *                 Map <String, List<String>>
+     * @param childMap {@code Map<String, String>}
+     *                 {@code Map<String, Map<String,Object>>}
+     *                 {@code Map<String, List<Map>>}
+     *                 {@code Map<String, List<String>>}
      * @param cdata    string是否使用CDATA修饰
      * @return element
      */
@@ -265,10 +265,10 @@ public class DomSupport {
      * 将 map 转为 element
      *
      * @param element  根节点
-     * @param childMap Map <String, String>
-     *                 Map <String, Map<String,Object>>
-     *                 Map <String, List<Map>>
-     *                 Map <String, List<String>>
+     * @param childMap {@code Map<String, String>}
+     *                 {@code Map<String, Map<String,Object>>}
+     *                 {@code Map<String, List<Map>>}
+     *                 {@code Map<String, List<String>>}
      * @param cdata    string是否使用CDATA修饰
      */
     private static void toElement(Element element, Map<String, ?> childMap, boolean cdata) {

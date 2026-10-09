@@ -482,7 +482,7 @@ public class Collections {
     /**
      * 获取第一个非 null 的值
      *
-     * @param values values
+     * @param c 集合
      * @param <E>    T
      * @return value
      */

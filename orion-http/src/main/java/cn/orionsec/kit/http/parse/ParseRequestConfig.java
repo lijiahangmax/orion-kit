@@ -72,7 +72,7 @@ public class ParseRequestConfig implements Serializable {
     private boolean ignoreContentType;
 
     /**
-     * 是否忽略错误code ( status < 200 || status >= 400)
+     * 是否忽略错误code ( {@code status < 200 || status >= 400})
      */
     private boolean ignoreError;
 

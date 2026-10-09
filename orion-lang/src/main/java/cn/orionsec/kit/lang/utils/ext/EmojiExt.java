@@ -126,7 +126,7 @@ public class EmojiExt {
      * e.g.  :dog: -> 🐶
      * <p>
      * 将HTML字符(或16进制) 转化为 Unicode 表情
-     * e.g.  &amp;#128054; -> 🐶
+     * e.g.  {@code &#128054;} -> 🐶
      * <p>
      * 将别名 用 ":" 拼接到字符首尾 转化为 Unicode 表情, 用 "|" 拼接类型
      * e.g. :boy|type_6: -> 👦🏿
@@ -171,7 +171,7 @@ public class EmojiExt {
 
     /**
      * 转义 unicode 为 html 16进制
-     * e.g. 👦🏿 -> &amp;#x1f466;
+     * e.g. 👦🏿 -> {@code &#x1f466;}
      *
      * @param str 包含表情的字符串
      * @return 替换后的字符串
@@ -193,7 +193,7 @@ public class EmojiExt {
 
     /**
      * 转义 unicode 为 html 10进制
-     * e.g. 👦🏿 -> &amp;#128102;
+     * e.g. 👦🏿 -> {@code &#128102;}
      *
      * @param str 包含表情的字符串
      * @return 替换后的字符串

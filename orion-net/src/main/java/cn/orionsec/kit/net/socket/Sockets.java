@@ -73,7 +73,7 @@ public class Sockets {
      * 获取一个指定端口范围中可用端口的 ServerSocket
      *
      * @param start 端口开始 > 1000
-     * @param end   端口结束 <= 65535
+     * @param end   端口结束 {@code <= 65535}
      * @return ServerSocket 未找到返回null
      */
     public static ServerSocket create(int start, int end) {

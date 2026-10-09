@@ -397,7 +397,7 @@ public class FileReaders {
      *
      * @param file    文件
      * @param skip    文件偏移量
-     * @param lines   读取多少行  <= 0 所有行
+     * @param lines   读取多少行  {@code <= 0} 所有行
      * @param charset 编码格式
      * @return 行
      */
@@ -426,7 +426,7 @@ public class FileReaders {
      *
      * @param file     文件
      * @param skipLine 文件偏移行
-     * @param lines    读取多少行  <=0 所有行
+     * @param lines    读取多少行  {@code <=0} 所有行
      * @param charset  编码格式
      * @return 行
      */

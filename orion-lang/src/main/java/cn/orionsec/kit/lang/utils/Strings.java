@@ -1323,10 +1323,10 @@ public class Strings {
      * [2, 3] 1234567 12...7
      * [2, 4] 1234567 1234567
      *
-     * @param str    字符串
-     * @param length 左侧保留几位
-     * @param length 总共保留几位
-     * @param omit   省略符
+     * @param str        字符串
+     * @param leftLength 左侧保留几位
+     * @param length     总共保留几位
+     * @param omit       省略符
      * @return 省略后的字符串
      */
     public static String centerOmit(String str, int leftLength, int length, String omit) {

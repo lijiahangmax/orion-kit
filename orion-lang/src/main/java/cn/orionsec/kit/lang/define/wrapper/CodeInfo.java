@@ -29,7 +29,7 @@ package cn.orionsec.kit.lang.define.wrapper;
 import java.io.Serializable;
 
 /**
- * wrapper code & message
+ * wrapper code message
  * <p>
  * 可以使用枚举对象定义
  *

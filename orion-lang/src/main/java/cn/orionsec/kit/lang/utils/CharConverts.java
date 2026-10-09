@@ -46,7 +46,7 @@ public class CharConverts {
 
     /**
      * char -> html entity
-     * xx -> &#xxx;
+     * xx -> {@code &#xxx;}
      *
      * @param str char
      * @return html entity
@@ -62,7 +62,7 @@ public class CharConverts {
 
     /**
      * html entity -> char
-     * &#xxx; -> xx
+     * {@code &#xxx;} -> xx
      *
      * @param value html entity
      * @return str

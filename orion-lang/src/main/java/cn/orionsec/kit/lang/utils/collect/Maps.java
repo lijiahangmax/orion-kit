@@ -611,7 +611,8 @@ public class Maps {
      *
      * @param map  map
      * @param size size
-     * @param <E>  E
+     * @param <K>  K
+     * @param <V>  V
      * @return partition map
      */
     public static <K, V> Set<Map<K, V>> partition(Map<K, V> map, int size) {

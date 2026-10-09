@@ -307,7 +307,7 @@ public class IPs {
      * @param ipStart 区间开始
      * @param ipEnd   区间结束
      * @param ip      ip
-     * @return 是否在区间内 ipStart <= ip <= ipEnd
+     * @return 是否在区间内 {@code ipStart <= ip <= ipEnd}
      */
     public static boolean ipInRange(String ipStart, String ipEnd, String ip) {
         long is = ipToLong(ipStart);

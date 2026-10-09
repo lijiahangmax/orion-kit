@@ -569,7 +569,6 @@ public class StyleStream {
     /**
      * 设置背景纹理为实体
      *
-     * @param i 纹理样式
      * @return this
      */
     public StyleStream texture() {

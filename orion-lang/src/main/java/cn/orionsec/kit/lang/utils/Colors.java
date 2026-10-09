@@ -157,7 +157,7 @@ public class Colors {
 
     /**
      * 是否为深色
-     * 亮度值 < 128 ? 深色 : 128
+     * 亮度值 {@code < 128} ? 深色 : 128
      *
      * @param hex hex
      * @return 是否为深色
@@ -169,7 +169,7 @@ public class Colors {
 
     /**
      * 是否为深色
-     * 亮度值 < 128 ? 深色 : 128
+     * 亮度值 {@code < 128} ? 深色 : 128
      *
      * @param r r
      * @param g g
