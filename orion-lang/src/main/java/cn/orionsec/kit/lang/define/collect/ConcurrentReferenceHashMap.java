@@ -29,6 +29,7 @@ package cn.orionsec.kit.lang.define.collect;
 import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Objects1;
+import cn.orionsec.kit.lang.utils.collect.Sets;
 
 import java.io.Serializable;
 import java.lang.ref.ReferenceQueue;
@@ -409,7 +410,7 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
                 try {
                     int countAfterRestructure = this.count;
 
-                    Set<Reference<K, V>> toPurge = Collections.emptySet();
+                    Set<Reference<K, V>> toPurge = Sets.empty();
                     if (reference != null) {
                         toPurge = new HashSet<Reference<K, V>>();
                         while (reference != null) {

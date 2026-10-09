@@ -165,7 +165,7 @@ public class Exceptions {
      * @param <T>  T
      * @return cause
      */
-    private static <T extends Throwable> T findCause(Throwable r, Class<T> type) {
+    public static <T extends Throwable> T findCause(Throwable r, Class<T> type) {
         for (Throwable cause = r; cause != null; cause = cause.getCause()) {
             if (type.isInstance(cause)) {
                 return type.cast(cause);
@@ -602,6 +602,22 @@ public class Exceptions {
 
     public static HttpUnsupportedMethodException httpUnsupportedMethod(String s, Throwable t) {
         return new HttpUnsupportedMethodException(s, t);
+    }
+
+    public static OutputException output(String output) {
+        return new OutputException(output);
+    }
+
+    public static OutputException output(String output, Throwable t) {
+        return new OutputException(output, t);
+    }
+
+    public static OutputException output(String output, String msg) {
+        return new OutputException(output, msg);
+    }
+
+    public static OutputException output(String output, String msg, Throwable t) {
+        return new OutputException(output, msg, t);
     }
 
     public static AuthenticationException authentication() {

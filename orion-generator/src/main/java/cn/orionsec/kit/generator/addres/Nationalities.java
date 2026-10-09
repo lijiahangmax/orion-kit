@@ -27,9 +27,9 @@
 package cn.orionsec.kit.generator.addres;
 
 import cn.orionsec.kit.lang.define.collect.WeightRandomMap;
+import cn.orionsec.kit.lang.utils.collect.Maps;
 import cn.orionsec.kit.lang.utils.random.Randoms;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -252,7 +252,7 @@ public class Nationalities {
             put("俄罗斯族", 1);
             put("塔塔尔族", 1);
         }});
-        MINORITY_PROVINCE = Collections.unmodifiableMap(tempMinorityProvince);
+        MINORITY_PROVINCE = Maps.unmodified(tempMinorityProvince);
     }
 
     static {

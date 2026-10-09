@@ -5,6 +5,7 @@ import cn.orionsec.kit.ext.tail.handler.LineHandler;
 import cn.orionsec.kit.ext.tail.mode.FileMinusMode;
 import cn.orionsec.kit.ext.tail.mode.FileNotFoundMode;
 import cn.orionsec.kit.ext.tail.mode.FileOffsetMode;
+import cn.orionsec.kit.lang.utils.collect.Lists;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
@@ -14,8 +15,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -64,7 +63,7 @@ public class DelayTrackerTest {
         // 先写入初始内容
         writeToFile(file, "initial\n");
 
-        List<String> lines = Collections.synchronizedList(new ArrayList<>());
+        List<String> lines = Lists.newSynchronizedList();
         CountDownLatch latch = new CountDownLatch(1);
 
         tracker = new DelayTracker(file, (read, line, t) -> {
@@ -94,7 +93,7 @@ public class DelayTrackerTest {
     public void testAppendAndRead() throws Exception {
         File file = tempFolder.newFile("tail.txt");
 
-        List<String> lines = Collections.synchronizedList(new ArrayList<>());
+        List<String> lines = Lists.newSynchronizedList();
         CountDownLatch latch = new CountDownLatch(2);
 
         tracker = new DelayTracker(file, (read, line, t) -> {
@@ -130,7 +129,7 @@ public class DelayTrackerTest {
         // 写入内容 "abcdefghij\n" (11字节)
         writeToFile(file, "abcdefghij\n");
 
-        List<String> lines = Collections.synchronizedList(new ArrayList<>());
+        List<String> lines = Lists.newSynchronizedList();
         CountDownLatch latch = new CountDownLatch(1);
 
         tracker = new DelayTracker(file, (read, line, t) -> {
@@ -210,7 +209,7 @@ public class DelayTrackerTest {
         File file = tempFolder.newFile("tail.txt");
         writeToFile(file, "initial content\n");
 
-        List<String> lines = Collections.synchronizedList(new ArrayList<>());
+        List<String> lines = Lists.newSynchronizedList();
         CountDownLatch latch = new CountDownLatch(1);
 
         tracker = new DelayTracker(file, (read, line, t) -> {

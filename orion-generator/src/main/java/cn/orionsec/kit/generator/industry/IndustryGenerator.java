@@ -29,8 +29,8 @@ package cn.orionsec.kit.generator.industry;
 import cn.orionsec.kit.lang.define.collect.WeightRandomMap;
 import cn.orionsec.kit.lang.utils.Arrays1;
 import cn.orionsec.kit.lang.utils.Strings;
+import cn.orionsec.kit.lang.utils.collect.Maps;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -140,7 +140,7 @@ public class IndustryGenerator {
                     "资本管理", "资产"
             });
         }};
-        INDUSTRY = Collections.unmodifiableMap(tempIndustry);
+        INDUSTRY = Maps.unmodified(tempIndustry);
     }
 
     static {

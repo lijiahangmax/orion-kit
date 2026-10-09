@@ -39,7 +39,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -120,7 +119,7 @@ public abstract class BaseTelnetExecutor implements ITelnetExecutor {
         this.client = client;
         this.inputStream = inputStream;
         this.outputStream = outputStream;
-        this.prompts = prompts == null ? Collections.emptyList() : Collections.unmodifiableList(new ArrayList<>(prompts));
+        this.prompts = prompts == null ? Lists.empty() : Lists.unmodified(new ArrayList<>(prompts));
         this.charset = charset;
         this.readTimeout = readTimeout;
         this.maxReadBuffer = Const.BUFFER_KB_32;
@@ -133,7 +132,7 @@ public abstract class BaseTelnetExecutor implements ITelnetExecutor {
 
     @Override
     public void prompt(Collection<String> prompts) {
-        this.prompts = prompts == null ? Collections.emptyList() : Collections.unmodifiableList(new ArrayList<>(prompts));
+        this.prompts = prompts == null ? Lists.empty() : Lists.unmodified(new ArrayList<>(prompts));
     }
 
     @Override

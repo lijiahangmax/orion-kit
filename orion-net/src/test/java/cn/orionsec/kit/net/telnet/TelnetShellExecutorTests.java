@@ -28,6 +28,7 @@ package cn.orionsec.kit.net.telnet;
 
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.utils.Threads;
+import cn.orionsec.kit.lang.utils.collect.Lists;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.net.telnet.shell.TelnetShellExecutor;
 import org.junit.Assert;
@@ -36,7 +37,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -74,7 +74,7 @@ public class TelnetShellExecutorTests {
 
     @Test
     public void shell() {
-        List<String> lines = Collections.synchronizedList(new ArrayList<>());
+        List<String> lines = Lists.newSynchronizedList();
         try {
             TelnetShellExecutor executor = s.getShellExecutor();
             // 监听输出流

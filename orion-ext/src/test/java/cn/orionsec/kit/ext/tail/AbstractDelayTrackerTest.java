@@ -5,6 +5,7 @@ import cn.orionsec.kit.ext.tail.delay.DelayTracker;
 import cn.orionsec.kit.ext.tail.mode.FileMinusMode;
 import cn.orionsec.kit.ext.tail.mode.FileNotFoundMode;
 import cn.orionsec.kit.ext.tail.mode.FileOffsetMode;
+import cn.orionsec.kit.lang.utils.collect.Lists;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
@@ -14,8 +15,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -104,7 +103,7 @@ public class AbstractDelayTrackerTest {
         // 写入多行
         writeToFile(file, "line1\nline2\nline3\nline4\nline5\n");
 
-        List<String> lines = Collections.synchronizedList(new ArrayList<>());
+        List<String> lines = Lists.newSynchronizedList();
         CountDownLatch latch = new CountDownLatch(2);
 
         tracker = new DelayTracker(file, (read, line, t) -> {
@@ -131,7 +130,7 @@ public class AbstractDelayTrackerTest {
         File file = tempFolder.newFile("tail.txt");
         writeToFile(file, "first\nsecond\n");
 
-        List<String> lines = Collections.synchronizedList(new ArrayList<>());
+        List<String> lines = Lists.newSynchronizedList();
         CountDownLatch latch = new CountDownLatch(2);
 
         tracker = new DelayTracker(file, (read, line, t) -> {

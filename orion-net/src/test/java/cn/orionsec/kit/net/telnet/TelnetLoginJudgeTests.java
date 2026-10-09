@@ -30,7 +30,6 @@ import cn.orionsec.kit.lang.utils.collect.Lists;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -61,7 +60,7 @@ public class TelnetLoginJudgeTests {
     @Test
     public void testDetectByShapeWhenPromptsEmpty() {
         TelnetLoginResult result = TelnetLoginJudge.judge(
-                "banner\r\nroot@host:/#", LOGIN, PASSWORD, Collections.emptyList(), false);
+                "banner\r\nroot@host:/#", LOGIN, PASSWORD, Lists.empty(), false);
         assertFalse(result.isFailure());
         assertEquals("root@host:/#", result.getDetectedPrompt());
     }
@@ -69,7 +68,7 @@ public class TelnetLoginJudgeTests {
     @Test
     public void testDetectRouterPrompt() {
         TelnetLoginResult result = TelnetLoginJudge.judge(
-                "User Access Verification\r\nRouter>", LOGIN, PASSWORD, Collections.emptyList(), false);
+                "User Access Verification\r\nRouter>", LOGIN, PASSWORD, Lists.empty(), false);
         assertFalse(result.isFailure());
         assertEquals("Router>", result.getDetectedPrompt());
     }
@@ -119,7 +118,7 @@ public class TelnetLoginJudgeTests {
     public void testLoginRejectedWithEmptyPrompts() {
         // 失败关键词优先于留空放行
         TelnetLoginResult result = TelnetLoginJudge.judge(
-                "banner\r\nLogin incorrect\r\n", LOGIN, PASSWORD, Collections.emptyList(), false);
+                "banner\r\nLogin incorrect\r\n", LOGIN, PASSWORD, Lists.empty(), false);
         assertTrue(result.isFailure());
         assertEquals(TelnetLoginFailReason.LOGIN_REJECTED, result.getReason());
     }
@@ -142,7 +141,7 @@ public class TelnetLoginJudgeTests {
     public void testUndecidedSettledWithoutPrompts() {
         // 最终判定: 无明确证据且未配置候选 → 放行
         TelnetLoginResult settled = TelnetLoginJudge.judge(
-                "banner\r\n\r\n", LOGIN, PASSWORD, Collections.emptyList(), false);
+                "banner\r\n\r\n", LOGIN, PASSWORD, Lists.empty(), false);
         assertFalse(settled.isFailure());
         assertFalse(settled.isUndecided());
         assertNull(settled.getDetectedPrompt());
@@ -165,11 +164,11 @@ public class TelnetLoginJudgeTests {
     public void testSettledRequiresPromptAtCursor() {
         // 以换行结尾: 形态证据不成立
         TelnetLoginResult unfinished = TelnetLoginJudge.judgeSettled(
-                "banner\r\nroot@host:~#\r\n", LOGIN, PASSWORD, Collections.emptyList());
+                "banner\r\nroot@host:~#\r\n", LOGIN, PASSWORD, Lists.empty());
         assertTrue(unfinished.isUndecided());
         // 光标停在提示符上 → 结算
         TelnetLoginResult settled = TelnetLoginJudge.judgeSettled(
-                "banner\r\nroot@host:~# ", LOGIN, PASSWORD, Collections.emptyList());
+                "banner\r\nroot@host:~# ", LOGIN, PASSWORD, Lists.empty());
         assertFalse(settled.isUndecided());
         assertFalse(settled.isFailure());
         assertEquals("root@host:~#", settled.getDetectedPrompt());
@@ -225,7 +224,7 @@ public class TelnetLoginJudgeTests {
     @Test
     public void testEmptyPageWithoutPrompts() {
         TelnetLoginResult result = TelnetLoginJudge.judge(
-                "", LOGIN, PASSWORD, Collections.emptyList(), false);
+                "", LOGIN, PASSWORD, Lists.empty(), false);
         assertFalse(result.isFailure());
         assertNull(result.getDetectedPrompt());
     }
@@ -241,7 +240,7 @@ public class TelnetLoginJudgeTests {
     @Test
     public void testTrailingBlankLines() {
         TelnetLoginResult result = TelnetLoginJudge.judge(
-                "banner\r\nroot@host:~#\r\n\r\n", LOGIN, PASSWORD, Collections.emptyList(), false);
+                "banner\r\nroot@host:~#\r\n\r\n", LOGIN, PASSWORD, Lists.empty(), false);
         assertFalse(result.isFailure());
         assertEquals("root@host:~#", result.getDetectedPrompt());
     }
@@ -260,7 +259,7 @@ public class TelnetLoginJudgeTests {
         assertEquals(Arrays.asList("login:", "root@host:~#"),
                 TelnetLoginJudge.normalize(Arrays.asList(" login: ", "", null, "login:", " root@host:~# ")));
         assertTrue(TelnetLoginJudge.normalize(null).isEmpty());
-        assertTrue(TelnetLoginJudge.normalize(Collections.emptyList()).isEmpty());
+        assertTrue(TelnetLoginJudge.normalize(Lists.empty()).isEmpty());
     }
 
     @Test

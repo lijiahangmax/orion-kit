@@ -26,7 +26,8 @@
  */
 package cn.orionsec.kit.generator.bank;
 
-import java.util.Collections;
+import cn.orionsec.kit.lang.utils.collect.Maps;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -1337,8 +1338,8 @@ public enum BankNameType {
     BankNameType(String name, String code, Map<String, Integer> debitPrefix, Map<String, Integer> creditPrefix) {
         this.name = name;
         this.code = code;
-        this.debitPrefix = Collections.unmodifiableMap(debitPrefix);
-        this.creditPrefix = Collections.unmodifiableMap(creditPrefix);
+        this.debitPrefix = Maps.unmodified(debitPrefix);
+        this.creditPrefix = Maps.unmodified(creditPrefix);
     }
 
     public String getName() {

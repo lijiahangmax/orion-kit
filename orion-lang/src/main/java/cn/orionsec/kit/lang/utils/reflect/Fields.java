@@ -32,6 +32,7 @@ import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.collect.Lists;
+import cn.orionsec.kit.lang.utils.collect.Maps;
 import cn.orionsec.kit.lang.utils.convert.TypeStore;
 
 import java.lang.reflect.Field;
@@ -277,7 +278,7 @@ public class Fields {
      */
     public static Map<String, Field> getFieldMap(Class<?> clazz) {
         List<Field> fieldList = getFields(clazz);
-        return Lists.isNotEmpty(fieldList) ? fieldList.stream().collect(Collectors.toMap(Field::getName, field -> field)) : Collections.emptyMap();
+        return Lists.isNotEmpty(fieldList) ? fieldList.stream().collect(Collectors.toMap(Field::getName, field -> field)) : Maps.empty();
     }
 
     /**

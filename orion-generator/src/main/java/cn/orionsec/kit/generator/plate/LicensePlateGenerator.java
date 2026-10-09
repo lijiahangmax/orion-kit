@@ -29,10 +29,10 @@ package cn.orionsec.kit.generator.plate;
 import cn.orionsec.kit.generator.addres.AddressSupport;
 import cn.orionsec.kit.lang.utils.Arrays1;
 import cn.orionsec.kit.lang.utils.Strings;
+import cn.orionsec.kit.lang.utils.collect.Maps;
 import cn.orionsec.kit.lang.utils.random.Randoms;
 import cn.orionsec.kit.lang.utils.regexp.Matches;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -87,7 +87,7 @@ public class LicensePlateGenerator {
         provinceAbbr.put(46, '琼');
         provinceAbbr.put(81, '港');
         provinceAbbr.put(82, '澳');
-        PROVINCE_ABBR = Collections.unmodifiableMap(provinceAbbr);
+        PROVINCE_ABBR = Maps.unmodified(provinceAbbr);
         LETTER = "ABCDEFGHJKLMNPQRSTUVWXYZ".toCharArray();
     }
 

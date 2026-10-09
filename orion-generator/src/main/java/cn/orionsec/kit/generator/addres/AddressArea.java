@@ -27,8 +27,8 @@
 package cn.orionsec.kit.generator.addres;
 
 import cn.orionsec.kit.lang.define.collect.WeightRandomMap;
+import cn.orionsec.kit.lang.utils.collect.Maps;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -132,7 +132,7 @@ public class AddressArea {
         tempProvince.put(63, "青海省");
         tempProvince.put(64, "宁夏回族自治区");
         tempProvince.put(65, "新疆维吾尔自治区");
-        PROVINCE = Collections.unmodifiableSortedMap(tempProvince);
+        PROVINCE = Maps.unmodified(tempProvince);
     }
 
     static {
@@ -479,7 +479,7 @@ public class AddressArea {
         tempCity.put(6542, "塔城地区");
         tempCity.put(6543, "阿勒泰地区");
         tempCity.put(6590, "自治区直辖县级行政区划");
-        CITY = Collections.unmodifiableSortedMap(tempCity);
+        CITY = Maps.unmodified(tempCity);
     }
 
     static {
@@ -3478,7 +3478,7 @@ public class AddressArea {
         tempCounty.put(659008, "可克达拉市");
         tempCounty.put(659009, "昆玉市");
         tempCounty.put(659010, "胡杨河市");
-        COUNTY = Collections.unmodifiableSortedMap(tempCounty);
+        COUNTY = Maps.unmodified(tempCounty);
     }
 
 }

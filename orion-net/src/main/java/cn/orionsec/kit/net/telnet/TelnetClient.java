@@ -27,10 +27,13 @@
 package cn.orionsec.kit.net.telnet;
 
 import cn.orionsec.kit.lang.constant.Const;
+import cn.orionsec.kit.lang.exception.AuthenticationException;
 import cn.orionsec.kit.lang.exception.ConnectionRuntimeException;
+import cn.orionsec.kit.lang.exception.OutputException;
 import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
+import cn.orionsec.kit.lang.utils.collect.Lists;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import cn.orionsec.kit.net.TerminalType;
 import cn.orionsec.kit.net.telnet.command.TelnetCommandExecutor;
@@ -42,6 +45,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Telnet 客户端
@@ -56,7 +61,13 @@ public class TelnetClient implements ITelnetClient {
 
     private static final String DEFAULT_PASSWORD_PROMPT = "Password:";
 
-    private static final String DEFAULT_PROMPT = "$";
+    private static final String LOGIN_FAIL_MESSAGE = "telnet login fail";
+
+    private static final int DEFAULT_PROMPT_IDLE_MS = 300;
+
+    private static final int DEFAULT_PROMPT_WAIT_MS = 10000;
+
+    private static final int DEFAULT_LOGIN_TIMEOUT = 30000;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TelnetClient.class);
 
@@ -74,17 +85,46 @@ public class TelnetClient implements ITelnetClient {
 
     private String password;
 
-    private int readTimeout;
+    private int loginTimeout;
+
+    /**
+     * 登录后探测到的命令提示符
+     */
+    private String detectedPrompt;
+
+    /**
+     * 登录阶段输出
+     */
+    private final StringBuilder loginOutput;
+
+    /**
+     * 提示符探测静默阈值 ms
+     */
+    private int promptIdleMs;
+
+    /**
+     * 提示符探测最大等待 ms
+     */
+    private int promptWaitMs;
 
     private boolean tcpNoDelay;
 
     private String charset;
 
-    private String loginPrompt;
+    /**
+     * 登录提示符候选 (空集合为跳过等待)
+     */
+    private List<String> loginPrompts;
 
-    private String passwordPrompt;
+    /**
+     * 密码提示符候选 (空集合为跳过等待)
+     */
+    private List<String> passwordPrompts;
 
-    private String prompt;
+    /**
+     * 命令提示符候选 (空集合为跳过登录完成检测)
+     */
+    private List<String> prompts;
 
     private String terminalType;
 
@@ -101,15 +141,18 @@ public class TelnetClient implements ITelnetClient {
         this.client = new org.apache.commons.net.telnet.TelnetClient();
         this.host = host;
         this.port = port;
-        this.readTimeout = 0;
-        this.tcpNoDelay = true;
-        this.charset = Const.UTF_8;
-        this.loginPrompt = DEFAULT_LOGIN_PROMPT;
-        this.passwordPrompt = DEFAULT_PASSWORD_PROMPT;
-        this.prompt = DEFAULT_PROMPT;
-        this.terminalType = TerminalType.XTERM.getType();
         this.cols = 180;
         this.rows = 36;
+        this.charset = Const.UTF_8;
+        this.tcpNoDelay = true;
+        this.loginTimeout = DEFAULT_LOGIN_TIMEOUT;
+        this.loginOutput = new StringBuilder();
+        this.promptIdleMs = DEFAULT_PROMPT_IDLE_MS;
+        this.promptWaitMs = DEFAULT_PROMPT_WAIT_MS;
+        this.terminalType = TerminalType.XTERM.getType();
+        this.loginPrompts = Lists.singleton(DEFAULT_LOGIN_PROMPT);
+        this.passwordPrompts = Lists.singleton(DEFAULT_PASSWORD_PROMPT);
+        this.prompts = Lists.empty();
     }
 
     public static TelnetClient create(String host) {
@@ -151,14 +194,29 @@ public class TelnetClient implements ITelnetClient {
     }
 
     /**
-     * 设置阻塞读取超时时间
+     * 设置登录阶段读取超时时间 (默认 30s, 0 为不超时)
      *
-     * @param readTimeout timeout
+     * @param loginTimeout loginTimeout
      * @return this
      */
-    public TelnetClient readTimeout(int readTimeout) {
-        Assert.gte(readTimeout, 0, "readTimeout must gte 0");
-        this.readTimeout = readTimeout;
+    public TelnetClient loginTimeout(int loginTimeout) {
+        Assert.gte(loginTimeout, 0, "loginTimeout must gte 0");
+        this.loginTimeout = loginTimeout;
+        return this;
+    }
+
+    /**
+     * 设置登录后读取/判定的超时参数
+     *
+     * @param idleMs    静默阈值 ms
+     * @param maxWaitMs 最大等待 ms
+     * @return this
+     */
+    public TelnetClient promptDetect(int idleMs, int maxWaitMs) {
+        Assert.gt(idleMs, 0, "idleMs must gt 0");
+        Assert.gte(maxWaitMs, 0, "maxWaitMs must gte 0");
+        this.promptIdleMs = idleMs;
+        this.promptWaitMs = maxWaitMs > 0 ? maxWaitMs : DEFAULT_PROMPT_WAIT_MS;
         return this;
     }
 
@@ -202,7 +260,18 @@ public class TelnetClient implements ITelnetClient {
      * @return this
      */
     public TelnetClient loginPrompt(String loginPrompt) {
-        this.loginPrompt = loginPrompt;
+        this.loginPrompts = TelnetLoginJudge.normalize(Lists.singleton(loginPrompt));
+        return this;
+    }
+
+    /**
+     * 设置登录提示符候选
+     *
+     * @param loginPrompts loginPrompts
+     * @return this
+     */
+    public TelnetClient loginPrompt(Collection<String> loginPrompts) {
+        this.loginPrompts = TelnetLoginJudge.normalize(loginPrompts);
         return this;
     }
 
@@ -213,7 +282,18 @@ public class TelnetClient implements ITelnetClient {
      * @return this
      */
     public TelnetClient passwordPrompt(String passwordPrompt) {
-        this.passwordPrompt = passwordPrompt;
+        this.passwordPrompts = TelnetLoginJudge.normalize(Lists.singleton(passwordPrompt));
+        return this;
+    }
+
+    /**
+     * 设置密码提示符候选
+     *
+     * @param passwordPrompts passwordPrompts
+     * @return this
+     */
+    public TelnetClient passwordPrompt(Collection<String> passwordPrompts) {
+        this.passwordPrompts = TelnetLoginJudge.normalize(passwordPrompts);
         return this;
     }
 
@@ -224,7 +304,18 @@ public class TelnetClient implements ITelnetClient {
      * @return this
      */
     public TelnetClient prompt(String prompt) {
-        this.prompt = prompt;
+        this.prompts = TelnetLoginJudge.normalize(Lists.singleton(prompt));
+        return this;
+    }
+
+    /**
+     * 设置命令提示符候选 (空集合跳过登录完成检测)
+     *
+     * @param prompts prompts
+     * @return this
+     */
+    public TelnetClient prompt(Collection<String> prompts) {
+        this.prompts = TelnetLoginJudge.normalize(prompts);
         return this;
     }
 
@@ -340,10 +431,12 @@ public class TelnetClient implements ITelnetClient {
         } catch (Exception e) {
             // 登录失败一般是账号密码错误或提示符不匹配
             this.disconnect();
-            if (e instanceof ConnectionRuntimeException) {
-                throw (ConnectionRuntimeException) e;
+            switch (e) {
+                case OutputException ex -> throw ex;
+                case AuthenticationException ex -> throw ex;
+                case ConnectionRuntimeException ex -> throw ex;
+                default -> throw Exceptions.authentication(LOGIN_FAIL_MESSAGE, e);
             }
-            throw Exceptions.authentication("telnet login fail", e);
         }
         return this;
     }
@@ -378,7 +471,7 @@ public class TelnetClient implements ITelnetClient {
     public TelnetShellExecutor getShellExecutor() {
         // 检查是否已连接
         this.checkConnected();
-        return new TelnetShellExecutor(client, this.inputStream, this.outputStream, this.prompt, this.charset, this.readTimeout);
+        return new TelnetShellExecutor(client, this.inputStream, this.outputStream, this.prompts, this.charset, this.loginTimeout);
     }
 
     /**
@@ -390,7 +483,7 @@ public class TelnetClient implements ITelnetClient {
     public TelnetCommandExecutor getCommandExecutor(String command) {
         // 检查是否已连接
         this.checkConnected();
-        return new TelnetCommandExecutor(client, this.inputStream, this.outputStream, this.prompt, this.charset, this.readTimeout, command);
+        return new TelnetCommandExecutor(client, this.inputStream, this.outputStream, this.prompts, this.charset, this.loginTimeout, command);
     }
 
     /**
@@ -398,34 +491,157 @@ public class TelnetClient implements ITelnetClient {
      *
      * @param username 用户名
      * @param password 密码
-     * @throws IOException IOException
      */
-    private void login(String username, String password) throws IOException {
+    private void login(String username, String password) {
         if (Strings.isBlank(username)) {
             return;
         }
         LOGGER.info("TelnetClient-login start");
-        // 读取登录提示
-        if (Strings.isNotBlank(this.loginPrompt)) {
-            this.readUntil(this.loginPrompt);
-        }
-        // 发送用户名
-        this.writeLine(username);
-
-        if (Strings.isNotBlank(password)) {
-            // 读取密码提示
-            if (Strings.isNotBlank(this.passwordPrompt)) {
-                this.readUntil(this.passwordPrompt);
+        try {
+            // 读取登录提示
+            if (!this.loginPrompts.isEmpty()) {
+                TelnetReadResult result = this.readUntilCandidates(this.loginPrompts);
+                this.appendLoginOutput(result.getContent());
+                this.checkLoginReadResult(result);
             }
-            // 发送密码
-            this.writeLine(password);
-        }
+            // 发送用户名
+            this.writeLine(username);
 
-        // 读取命令提示符
-        if (Strings.isNotBlank(this.prompt)) {
-            this.readUntil(this.prompt);
+            // 读取密码提示
+            if (!Strings.isBlank(password)) {
+                if (!this.passwordPrompts.isEmpty()) {
+                    TelnetReadResult result = this.readUntilCandidates(this.passwordPrompts);
+                    this.appendLoginOutput(result.getContent());
+                    this.checkLoginReadResult(result);
+                }
+                // 发送密码
+                this.writeLine(password);
+            }
+
+            // 登录后读取信息页
+            TelnetReadResult pageResult = this.readLoginPage();
+            this.appendLoginPage(pageResult.getContent());
+            if (pageResult.isEof()) {
+                throw this.loginFailure(TelnetLoginFailReason.EOF, null);
+            }
+            if (pageResult.isTimeout()) {
+                throw this.loginFailure(TelnetLoginFailReason.READ_TIMEOUT, null);
+            }
+            // 判定登录结果
+            TelnetLoginResult result = TelnetLoginJudge.judge(pageResult.getContent(), this.loginPrompts, this.passwordPrompts, this.prompts, false);
+            if (result.isFailure()) {
+                throw this.loginFailure(result.getReason(), null);
+            }
+            // 探测真实命令提示符
+            this.detectedPrompt = result.getDetectedPrompt();
+            if (this.detectedPrompt != null) {
+                LOGGER.info("TelnetClient-login detected prompt: {}", this.detectedPrompt);
+            }
+            LOGGER.info("TelnetClient-login done");
+        } catch (OutputException e) {
+            throw e;
+        } catch (Exception e) {
+            throw this.loginFailure(TelnetLoginFailReason.READ_FAILED, e);
         }
-        LOGGER.info("TelnetClient-login done");
+    }
+
+    /**
+     * 构建登录失败异常并记录失败原因
+     *
+     * @param reason 失败原因
+     * @param cause  底层异常
+     * @return 登录失败异常
+     */
+    private OutputException loginFailure(TelnetLoginFailReason reason, Throwable cause) {
+        if (cause == null) {
+            LOGGER.warn("TelnetClient-login fail reason: {}", reason);
+        } else {
+            LOGGER.warn("TelnetClient-login fail reason: {}", reason, cause);
+        }
+        // 携带设备原始输出 并嵌套认证异常 供上层识别登录失败与回显
+        return Exceptions.output(this.getLoginOutput(), LOGIN_FAIL_MESSAGE, Exceptions.authentication(LOGIN_FAIL_MESSAGE, cause));
+    }
+
+    /**
+     * 检查登录提示读取结果
+     *
+     * @param result 读取结果
+     */
+    private void checkLoginReadResult(TelnetReadResult result) {
+        if (result.isEof()) {
+            throw this.loginFailure(TelnetLoginFailReason.EOF, null);
+        }
+        if (result.isTimeout()) {
+            throw this.loginFailure(TelnetLoginFailReason.READ_TIMEOUT, null);
+        }
+    }
+
+    /**
+     * 读取登录后输出直到判定可结算或达到最大等待
+     *
+     * @return 读取结果
+     * @throws IOException IOException
+     */
+    private TelnetReadResult readLoginPage() throws IOException {
+        this.checkConnected();
+        try {
+            client.setSoTimeout(this.promptIdleMs);
+            return TelnetReads.readUntilDecided(this.inputStream, this.charset, this.promptWaitMs, Const.BUFFER_KB_32,
+                    // 数据到达结算
+                    page -> !TelnetLoginJudge.judgeReading(page, this.loginPrompts, this.passwordPrompts, this.prompts).isUndecided(),
+                    // 静默结算
+                    page -> !TelnetLoginJudge.judgeSettled(page, this.loginPrompts, this.passwordPrompts, this.prompts).isUndecided());
+        } finally {
+            this.resetSoTimeout();
+        }
+    }
+
+    /**
+     * 读取直到命中任一候选
+     *
+     * @param patterns 候选列表
+     * @return 读取结果
+     * @throws IOException IOException
+     */
+    private TelnetReadResult readUntilCandidates(Collection<String> patterns) throws IOException {
+        // 检查是否已连接
+        this.checkConnected();
+        client.setSoTimeout(this.loginTimeout);
+        try {
+            return TelnetReads.readUntilResult(this.inputStream, patterns, this.charset, this.loginTimeout, Const.BUFFER_KB_32);
+        } finally {
+            this.resetSoTimeout();
+        }
+    }
+
+    /**
+     * 追加登录输出 (登录/密码提示阶段)
+     *
+     * @param output output
+     */
+    private void appendLoginOutput(String output) {
+        if (!Strings.isBlank(output)) {
+            loginOutput.append(output);
+        }
+    }
+
+    /**
+     * 追加 shell 信息页到登录输出缓冲 (丢弃设备回显的密码行)
+     *
+     * @param page 信息页内容
+     */
+    private void appendLoginPage(String page) {
+        if (Strings.isBlank(page)) {
+            return;
+        }
+        int index = page.indexOf('\n');
+        String firstLine = (index == -1 ? page : page.substring(0, index)).trim();
+        if (Strings.isNotBlank(this.password) && firstLine.equals(this.password)) {
+            page = index == -1 ? Const.EMPTY : page.substring(index + 1);
+        }
+        if (!Strings.isBlank(page)) {
+            loginOutput.append(page);
+        }
     }
 
     /**
@@ -435,25 +651,8 @@ public class TelnetClient implements ITelnetClient {
      * @throws IOException IOException
      */
     private void writeLine(String command) throws IOException {
-        this.outputStream.write(Strings.bytes(command + Const.LF, this.charset));
-        this.outputStream.flush();
-    }
-
-    /**
-     * 阻塞读取直到命中指定内容
-     *
-     * @param pattern pattern
-     * @return result
-     * @throws IOException IOException
-     */
-    private String readUntil(String pattern) throws IOException {
-        this.checkConnected();
-        client.setSoTimeout(this.readTimeout);
-        try {
-            return TelnetReads.readUntil(this.inputStream, pattern, this.charset, this.readTimeout, Const.BUFFER_KB_32);
-        } finally {
-            this.resetSoTimeout();
-        }
+        outputStream.write(Strings.bytes(command + Const.LF, this.charset));
+        outputStream.flush();
     }
 
     /**
@@ -517,16 +716,12 @@ public class TelnetClient implements ITelnetClient {
         return this.charset;
     }
 
-    public String getLoginPrompt() {
-        return this.loginPrompt;
+    public String getDetectedPrompt() {
+        return this.detectedPrompt;
     }
 
-    public String getPasswordPrompt() {
-        return this.passwordPrompt;
-    }
-
-    public String getPrompt() {
-        return this.prompt;
+    public String getLoginOutput() {
+        return this.loginOutput.isEmpty() ? null : this.loginOutput.toString();
     }
 
     public String getTerminalType() {

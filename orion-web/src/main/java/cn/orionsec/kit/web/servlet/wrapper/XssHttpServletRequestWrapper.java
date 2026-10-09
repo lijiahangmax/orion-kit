@@ -28,11 +28,11 @@ package cn.orionsec.kit.web.servlet.wrapper;
 
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.utils.Xsses;
+import cn.orionsec.kit.lang.utils.collect.Sets;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -52,7 +52,7 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
     public XssHttpServletRequestWrapper(HttpServletRequest servletRequest) {
         super(servletRequest);
-        this.ignoreFields = Collections.emptySet();
+        this.ignoreFields = Sets.empty();
     }
 
     public XssHttpServletRequestWrapper(HttpServletRequest servletRequest, String fields) {
