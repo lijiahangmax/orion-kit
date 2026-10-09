@@ -29,6 +29,8 @@ package cn.orionsec.kit.net.telnet;
 import cn.orionsec.kit.net.specification.executor.IRemoteExecutor;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Telnet 执行器 api
@@ -45,6 +47,13 @@ public interface ITelnetExecutor extends IRemoteExecutor {
      * @param prompt prompt
      */
     void prompt(String prompt);
+
+    /**
+     * 设置提示符候选 (任意命中即匹配)
+     *
+     * @param prompts prompts
+     */
+    void prompt(Collection<String> prompts);
 
     /**
      * 设置编码
@@ -80,12 +89,14 @@ public interface ITelnetExecutor extends IRemoteExecutor {
     String readUntil(String pattern, int timeout) throws IOException;
 
     /**
-     * 读取直到命中提示符
+     * 读取直到命中任意一个指定内容
      *
+     * @param patterns patterns
+     * @param timeout  timeout
      * @return 读取内容
      * @throws IOException IOException
      */
-    String readUntilPrompt() throws IOException;
+    String readUntil(Collection<String> patterns, int timeout) throws IOException;
 
     /**
      * 断开连接
@@ -100,9 +111,9 @@ public interface ITelnetExecutor extends IRemoteExecutor {
     boolean isConnected();
 
     /**
-     * @return 提示符
+     * @return 提示符候选
      */
-    String getPrompt();
+    List<String> getPrompts();
 
     /**
      * @return 编码

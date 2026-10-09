@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.net.ftp.server;
 
+import cn.orionsec.kit.lang.utils.collect.Lists;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -33,7 +34,6 @@ import org.junit.rules.TemporaryFolder;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -124,7 +124,7 @@ public class FtpServerInstanceTest {
         FtpServerInstance instance = new FtpServerInstance(port);
         // 监听前添加
         instance.addUser(new FtpUser("u1", "123456", home.getRoot().getAbsolutePath()));
-        instance.addUsers(Collections.singletonList(new FtpUser("u2", "123456", home.getRoot().getAbsolutePath())));
+        instance.addUsers(Lists.singleton(new FtpUser("u2", "123456", home.getRoot().getAbsolutePath())));
         instance.addUser("u3", "123456");
         instance.listener().start();
         try {
@@ -136,7 +136,7 @@ public class FtpServerInstanceTest {
             // 监听后添加
             instance.addUser("u4", "123456", home.getRoot().getAbsolutePath());
             instance.addUser(new FtpUser("u5", "123456", home.getRoot().getAbsolutePath()));
-            instance.addUsers(Collections.singletonList(new FtpUser("u6", "123456", home.getRoot().getAbsolutePath())));
+            instance.addUsers(Lists.singleton(new FtpUser("u6", "123456", home.getRoot().getAbsolutePath())));
             List<String> userNames = instance.getUserNames();
             assertTrue(userNames.containsAll(Arrays.asList("u1", "u2", "u3", "u4", "u5", "u6")));
 

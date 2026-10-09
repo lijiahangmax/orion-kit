@@ -38,6 +38,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collection;
 
 /**
  * Telnet 命令执行器
@@ -64,7 +65,7 @@ public class TelnetCommandExecutor extends BaseTelnetExecutor implements ITelnet
      * @param client       client
      * @param inputStream  inputStream
      * @param outputStream outputStream
-     * @param prompt       prompt
+     * @param prompts      prompts
      * @param charset      charset
      * @param readTimeout  readTimeout
      * @param command      command
@@ -72,11 +73,11 @@ public class TelnetCommandExecutor extends BaseTelnetExecutor implements ITelnet
     public TelnetCommandExecutor(org.apache.commons.net.telnet.TelnetClient client,
                                  InputStream inputStream,
                                  OutputStream outputStream,
-                                 String prompt,
+                                 Collection<String> prompts,
                                  String charset,
                                  int readTimeout,
                                  String command) {
-        super(client, inputStream, outputStream, prompt, charset, readTimeout);
+        super(client, inputStream, outputStream, prompts, charset, readTimeout);
         this.command = command;
     }
 
@@ -127,7 +128,7 @@ public class TelnetCommandExecutor extends BaseTelnetExecutor implements ITelnet
         // 发送命令
         this.write(Strings.bytes(command + Const.LF, charset));
         // 读取直到提示符
-        String result = this.readUntil(prompt, timeout);
+        String result = this.readUntil(prompts, timeout);
         // 清理回显和提示符
         return this.cleanResult(result, command);
     }
@@ -148,7 +149,7 @@ public class TelnetCommandExecutor extends BaseTelnetExecutor implements ITelnet
         }
         String cleaned = result;
         // 去除末尾提示符 (含提示符所在行的前缀)
-        if (Strings.isNotBlank(prompt) && cleaned.endsWith(prompt)) {
+        if (this.endsWithPrompt(cleaned)) {
             int promptLine = cleaned.lastIndexOf(Const.LF);
             cleaned = promptLine == -1 ? Const.EMPTY : cleaned.substring(0, promptLine);
         }
@@ -158,6 +159,24 @@ public class TelnetCommandExecutor extends BaseTelnetExecutor implements ITelnet
             cleaned = cleaned.substring(firstLine + 1);
         }
         return cleaned;
+    }
+
+    /**
+     * 内容是否以任一提示符候选结尾
+     *
+     * @param content content
+     * @return true 结尾为候选提示符
+     */
+    private boolean endsWithPrompt(String content) {
+        if (prompts == null || prompts.isEmpty()) {
+            return false;
+        }
+        for (String candidate : prompts) {
+            if (Strings.isNotBlank(candidate) && content.endsWith(candidate)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

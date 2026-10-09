@@ -13,7 +13,7 @@ Route user requests by domain:
 | IP geolocation, email, process, file tailing, git                      | `orion-ext`       | `IPs`, `Emails`, `Processes`, `GitPush`                                                                             |
 | CSV and Excel import/export                                            | `orion-office`    | `CsvBeanReader`, `CsvBeanWriter`, `ExcelReads`, `ExcelWrites`                                                       |
 | OkHttp, HttpClient, Jsoup                                              | `orion-http`      | `Https`, `HttpClients`, `JsoupDocument`                                                                             |
-| SSH, SFTP, FTP, TCP/UDP                                                | `orion-net`       | `SshExecutor`, `SftpExecutor`, `FtpExecutor`, `SocketChannel`                                                       |
+| SSH, SFTP, FTP, Telnet, TCP/UDP                                        | `orion-net`       | `SshExecutor`, `SftpExecutor`, `FtpExecutor`, `TelnetClient`, `SocketChannel`                                        |
 | Servlet utilities                                                      | `orion-web`       | `Servlets`, `Cookies`                                                                                               |
 | Spring container utilities                                             | `orion-spring`    | `ApplicationContexts`                                                                                               |
 | Random data generators                                                 | `orion-generator` | `AddressGenerator`, `NameGenerator`, `IdCardGenerator`                                                              |

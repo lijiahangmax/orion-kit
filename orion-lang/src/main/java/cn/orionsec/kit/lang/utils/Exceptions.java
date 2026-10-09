@@ -157,6 +157,23 @@ public class Exceptions {
         return false;
     }
 
+    /**
+     * 查找异常链中的指定类型
+     *
+     * @param r    异常
+     * @param type type
+     * @param <T>  T
+     * @return cause
+     */
+    private static <T extends Throwable> T findCause(Throwable r, Class<T> type) {
+        for (Throwable cause = r; cause != null; cause = cause.getCause()) {
+            if (type.isInstance(cause)) {
+                return type.cast(cause);
+            }
+        }
+        return null;
+    }
+
     // -------------------- new --------------------
 
     public static Exception exception() {

@@ -29,6 +29,7 @@ package cn.orionsec.kit.net.telnet;
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.support.Attempt;
 import cn.orionsec.kit.lang.utils.Exceptions;
+import cn.orionsec.kit.lang.utils.collect.Lists;
 import cn.orionsec.kit.lang.utils.io.Streams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,10 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -87,9 +92,9 @@ public abstract class BaseTelnetExecutor implements ITelnetExecutor {
     protected volatile boolean disconnected;
 
     /**
-     * 提示符
+     * 提示符候选
      */
-    protected String prompt;
+    protected List<String> prompts;
 
     /**
      * 编码
@@ -109,13 +114,13 @@ public abstract class BaseTelnetExecutor implements ITelnetExecutor {
     public BaseTelnetExecutor(org.apache.commons.net.telnet.TelnetClient client,
                               InputStream inputStream,
                               OutputStream outputStream,
-                              String prompt,
+                              Collection<String> prompts,
                               String charset,
                               int readTimeout) {
         this.client = client;
         this.inputStream = inputStream;
         this.outputStream = outputStream;
-        this.prompt = prompt;
+        this.prompts = prompts == null ? Collections.emptyList() : Collections.unmodifiableList(new ArrayList<>(prompts));
         this.charset = charset;
         this.readTimeout = readTimeout;
         this.maxReadBuffer = Const.BUFFER_KB_32;
@@ -123,7 +128,12 @@ public abstract class BaseTelnetExecutor implements ITelnetExecutor {
 
     @Override
     public void prompt(String prompt) {
-        this.prompt = prompt;
+        this.prompts = Lists.singleton(prompt);
+    }
+
+    @Override
+    public void prompt(Collection<String> prompts) {
+        this.prompts = prompts == null ? Collections.emptyList() : Collections.unmodifiableList(new ArrayList<>(prompts));
     }
 
     @Override
@@ -169,11 +179,16 @@ public abstract class BaseTelnetExecutor implements ITelnetExecutor {
 
     @Override
     public String readUntil(String pattern) throws IOException {
-        return readUntil(pattern, readTimeout);
+        return this.readUntil(Lists.singleton(pattern), readTimeout);
     }
 
     @Override
     public String readUntil(String pattern, int timeout) throws IOException {
+        return this.readUntil(Lists.singleton(pattern), timeout);
+    }
+
+    @Override
+    public String readUntil(Collection<String> patterns, int timeout) throws IOException {
         this.checkStreamReading();
         if (!this.isConnected()) {
             throw Exceptions.connection("telnet session is not connected");
@@ -181,18 +196,16 @@ public abstract class BaseTelnetExecutor implements ITelnetExecutor {
         // socket 读超时只在阻塞读取期间生效, 否则流式监听会被空闲超时打断
         client.setSoTimeout(timeout);
         try {
-            return TelnetReads.readUntil(inputStream, pattern, charset, timeout, maxReadBuffer);
+            if (patterns == null || patterns.isEmpty()) {
+                return Const.EMPTY;
+            }
+            return TelnetReads.readUntil(inputStream, patterns, charset, timeout, maxReadBuffer);
         } catch (IOException e) {
             this.disconnected = true;
             throw e;
         } finally {
             this.resetSoTimeout();
         }
-    }
-
-    @Override
-    public String readUntilPrompt() throws IOException {
-        return this.readUntil(prompt, readTimeout);
     }
 
     /**
@@ -261,8 +274,8 @@ public abstract class BaseTelnetExecutor implements ITelnetExecutor {
     }
 
     @Override
-    public String getPrompt() {
-        return prompt;
+    public List<String> getPrompts() {
+        return prompts;
     }
 
     @Override

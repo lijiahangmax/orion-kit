@@ -31,6 +31,7 @@ import cn.orionsec.kit.net.telnet.BaseTelnetExecutor;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collection;
 
 /**
  * Telnet shell 执行器
@@ -45,17 +46,17 @@ public class TelnetShellExecutor extends BaseTelnetExecutor implements ITelnetSh
      * @param client       client
      * @param inputStream  inputStream
      * @param outputStream outputStream
-     * @param prompt       prompt
+     * @param prompts      prompts
      * @param charset      charset
      * @param readTimeout  readTimeout
      */
     public TelnetShellExecutor(org.apache.commons.net.telnet.TelnetClient client,
                                InputStream inputStream,
                                OutputStream outputStream,
-                               String prompt,
+                               Collection<String> prompts,
                                String charset,
                                int readTimeout) {
-        super(client, inputStream, outputStream, prompt, charset, readTimeout);
+        super(client, inputStream, outputStream, prompts, charset, readTimeout);
     }
 
     @Override

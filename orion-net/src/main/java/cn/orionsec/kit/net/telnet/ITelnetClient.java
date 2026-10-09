@@ -31,6 +31,8 @@ import cn.orionsec.kit.net.TerminalType;
 import cn.orionsec.kit.net.telnet.command.TelnetCommandExecutor;
 import cn.orionsec.kit.net.telnet.shell.TelnetShellExecutor;
 
+import java.util.Collection;
+
 /**
  * Telnet 客户端 api
  *
@@ -99,6 +101,14 @@ public interface ITelnetClient extends Connectable {
     ITelnetClient loginPrompt(String loginPrompt);
 
     /**
+     * 设置登录提示符候选 (任意命中即匹配)
+     *
+     * @param loginPrompts loginPrompts
+     * @return this
+     */
+    ITelnetClient loginPrompt(Collection<String> loginPrompts);
+
+    /**
      * 设置密码提示符
      *
      * @param passwordPrompt passwordPrompt
@@ -107,12 +117,30 @@ public interface ITelnetClient extends Connectable {
     ITelnetClient passwordPrompt(String passwordPrompt);
 
     /**
+     * 设置密码提示符候选 (任意命中即匹配)
+     *
+     * @param passwordPrompts passwordPrompts
+     * @return this
+     */
+    ITelnetClient passwordPrompt(Collection<String> passwordPrompts);
+
+    /**
      * 设置命令提示符
      *
      * @param prompt prompt
      * @return this
      */
     ITelnetClient prompt(String prompt);
+
+    /**
+     * 设置命令提示符候选
+     * <p>
+     * 用于登录完成校验与提示符探测; 留空则跳过登录完成检测
+     *
+     * @param prompts prompts
+     * @return this
+     */
+    ITelnetClient prompt(Collection<String> prompts);
 
     /**
      * 设置终端类型
@@ -205,21 +233,6 @@ public interface ITelnetClient extends Connectable {
      * @return 编码
      */
     String getCharset();
-
-    /**
-     * @return 登录提示符
-     */
-    String getLoginPrompt();
-
-    /**
-     * @return 密码提示符
-     */
-    String getPasswordPrompt();
-
-    /**
-     * @return 命令提示符
-     */
-    String getPrompt();
 
     /**
      * @return 终端类型
