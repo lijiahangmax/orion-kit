@@ -37,6 +37,7 @@ import com.jcraft.jsch.Session;
 import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author Jiahang Li
@@ -53,7 +54,7 @@ public class ShellTests {
         long start = System.currentTimeMillis();
         JSch c = new JSch();
         Session session = c.getSession(USERNAME, IP1, 22);
-        session.setPassword(PASSWORD);
+        session.setPassword(PASSWORD.getBytes(StandardCharsets.UTF_8));
         session.setConfig("StrictHostKeyChecking", "no");
         session.connect(2000);
         ChannelShell channelShell = (ChannelShell) session.openChannel("shell");

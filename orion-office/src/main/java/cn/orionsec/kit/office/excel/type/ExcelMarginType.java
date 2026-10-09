@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.office.excel.type;
 
+import org.apache.poi.ss.usermodel.PageMargin;
 import org.apache.poi.ss.usermodel.Sheet;
 
 /**
@@ -41,41 +42,48 @@ public enum ExcelMarginType {
     /**
      * 左边距
      */
-    LEFT(Sheet.LeftMargin),
+    LEFT(Sheet.LeftMargin, PageMargin.LEFT),
 
     /**
      * 右边距
      */
-    RIGHT(Sheet.RightMargin),
+    RIGHT(Sheet.RightMargin, PageMargin.RIGHT),
 
     /**
      * 上边距
      */
-    TOP(Sheet.TopMargin),
+    TOP(Sheet.TopMargin, PageMargin.TOP),
 
     /**
      * 下边距
      */
-    BOTTOM(Sheet.BottomMargin),
+    BOTTOM(Sheet.BottomMargin, PageMargin.BOTTOM),
 
     /**
      * 页眉边距
      */
-    HEADER(Sheet.HeaderMargin),
+    HEADER(Sheet.HeaderMargin, PageMargin.HEADER),
 
     /**
      * 页脚边距
      */
-    FOOTER(Sheet.FooterMargin);
+    FOOTER(Sheet.FooterMargin, PageMargin.FOOTER);
 
     private final short code;
 
-    ExcelMarginType(short code) {
+    private final PageMargin pageMargin;
+
+    ExcelMarginType(short code, PageMargin pageMargin) {
         this.code = code;
+        this.pageMargin = pageMargin;
     }
 
     public short getCode() {
         return code;
+    }
+
+    public PageMargin getPageMargin() {
+        return pageMargin;
     }
 
 }

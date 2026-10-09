@@ -68,7 +68,7 @@ public class MapsTest {
 
     @Test
     public void testIsNoneEmpty() {
-        assertFalse(Maps.isNoneEmpty(null));
+        assertFalse(Maps.isNoneEmpty((Map<?, ?>[]) null));
         Map<String, String> m = Maps.newMap();
         m.put("k", "v");
         assertTrue(Maps.isNoneEmpty(m));

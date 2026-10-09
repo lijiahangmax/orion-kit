@@ -347,7 +347,7 @@ public class Fields {
      */
     public static void setAccessible(Field field) {
         Assert.notNull(field, "set accessible field class is null");
-        if ((!Modifier.isPublic(field.getModifiers()) || !Modifier.isPublic(field.getDeclaringClass().getModifiers()) || Modifier.isFinal(field.getModifiers())) && !field.isAccessible()) {
+        if (!Modifier.isPublic(field.getModifiers()) || !Modifier.isPublic(field.getDeclaringClass().getModifiers()) || Modifier.isFinal(field.getModifiers())) {
             field.setAccessible(true);
         }
     }

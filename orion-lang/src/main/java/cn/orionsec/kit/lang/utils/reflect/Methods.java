@@ -497,7 +497,7 @@ public class Methods {
      */
     public static void setAccessible(Method method) {
         Assert.notNull(method, "set accessible method class is null");
-        if ((!Modifier.isPublic(method.getModifiers()) || !Modifier.isPublic(method.getDeclaringClass().getModifiers())) && !method.isAccessible()) {
+        if (!Modifier.isPublic(method.getModifiers()) || !Modifier.isPublic(method.getDeclaringClass().getModifiers())) {
             method.setAccessible(true);
         }
     }

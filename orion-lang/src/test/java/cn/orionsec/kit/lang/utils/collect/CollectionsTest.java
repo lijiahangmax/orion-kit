@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -41,7 +42,7 @@ public class CollectionsTest {
 
     @Test
     public void testIsNoneEmpty() {
-        assertFalse(Collections.isNoneEmpty(null));
+        assertFalse(Collections.isNoneEmpty((Collection<?>[]) null));
         assertTrue(Collections.isNoneEmpty(Arrays.asList(1), Arrays.asList(2)));
         assertFalse(Collections.isNoneEmpty(Arrays.asList(1), new ArrayList<>()));
     }

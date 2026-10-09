@@ -319,10 +319,8 @@ public class Urls {
      * @throws IOException IOException
      */
     public static InputStream openInputStream(String url) throws IOException {
-        URL u = new URL(url);
-        URLConnection con = u.openConnection();
-        con.connect();
-        return con.getInputStream();
+        URL u = URI.create(url).toURL();
+        return openInputStream(u);
     }
 
     /**
@@ -333,7 +331,7 @@ public class Urls {
      * @throws IOException IOException
      */
     public static byte[] getUrlBytes(String url) throws IOException {
-        URL u = new URL(url);
+        URL u = URI.create(url).toURL();
         HttpURLConnection con = (HttpURLConnection) u.openConnection();
         con.connect();
         return Streams.toByteArray(con.getInputStream());

@@ -28,7 +28,7 @@ package cn.orionsec.kit.http.parse;
 
 import cn.orionsec.kit.lang.constant.Const;
 
-import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.SSLContext;
 import java.io.Serializable;
 
 /**
@@ -82,9 +82,9 @@ public class ParseRequestConfig implements Serializable {
     private boolean followRedirects;
 
     /**
-     * ssl 工厂
+     * ssl context
      */
-    private SSLSocketFactory sslSocketFactory;
+    private SSLContext sslContext;
 
     public ParseRequestConfig() {
         this.timeout = Const.MS_S_10;
@@ -124,8 +124,8 @@ public class ParseRequestConfig implements Serializable {
         return this;
     }
 
-    public ParseRequestConfig sslSocketFactory(SSLSocketFactory sslSocketFactory) {
-        this.sslSocketFactory = sslSocketFactory;
+    public ParseRequestConfig sslContext(SSLContext sslContext) {
+        this.sslContext = sslContext;
         return this;
     }
 
@@ -157,7 +157,7 @@ public class ParseRequestConfig implements Serializable {
         return ignoreError;
     }
 
-    public SSLSocketFactory getSslSocketFactory() {
-        return sslSocketFactory;
+    public SSLContext getSslContext() {
+        return sslContext;
     }
 }

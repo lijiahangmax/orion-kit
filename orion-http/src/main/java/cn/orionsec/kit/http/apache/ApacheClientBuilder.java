@@ -40,8 +40,8 @@ import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
 import org.apache.hc.client5.http.io.HttpClientConnectionManager;
-import org.apache.hc.client5.http.socket.LayeredConnectionSocketFactory;
-import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.client5.http.ssl.DefaultClientTlsStrategy;
+import org.apache.hc.client5.http.ssl.TlsSocketStrategy;
 import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.http.HttpRequestInterceptor;
 import org.apache.hc.core5.http.HttpResponseInterceptor;
@@ -149,9 +149,9 @@ public class ApacheClientBuilder implements Buildable<CloseableHttpClient> {
     private SSLContext sslContext;
 
     /**
-     * SSL Socket Factory
+     * TLS Socket Strategy
      */
-    private LayeredConnectionSocketFactory sslSocketFactory;
+    private TlsSocketStrategy tlsSocketStrategy;
 
     public ApacheClientBuilder() {
         this.connectTimeout = Const.MS_S_10;
@@ -271,8 +271,8 @@ public class ApacheClientBuilder implements Buildable<CloseableHttpClient> {
         return this;
     }
 
-    public ApacheClientBuilder sslSocketFactory(LayeredConnectionSocketFactory sslSocketFactory) {
-        this.sslSocketFactory = sslSocketFactory;
+    public ApacheClientBuilder tlsSocketStrategy(TlsSocketStrategy tlsSocketStrategy) {
+        this.tlsSocketStrategy = tlsSocketStrategy;
         return this;
     }
 
@@ -336,8 +336,8 @@ public class ApacheClientBuilder implements Buildable<CloseableHttpClient> {
         return sslContext;
     }
 
-    public LayeredConnectionSocketFactory getSslSocketFactory() {
-        return sslSocketFactory;
+    public TlsSocketStrategy getTlsSocketStrategy() {
+        return tlsSocketStrategy;
     }
 
     /**
@@ -367,10 +367,10 @@ public class ApacheClientBuilder implements Buildable<CloseableHttpClient> {
                             .setSoTimeout(Timeout.ofMilliseconds(socketTimeout))
                             .build())
                     .setDefaultConnectionConfig(connectionConfig.build());
-            if (sslSocketFactory != null) {
-                connectionManagerBuilder.setSSLSocketFactory(sslSocketFactory);
+            if (tlsSocketStrategy != null) {
+                connectionManagerBuilder.setTlsSocketStrategy(tlsSocketStrategy);
             } else if (sslContext != null) {
-                connectionManagerBuilder.setSSLSocketFactory(new SSLConnectionSocketFactory(sslContext));
+                connectionManagerBuilder.setTlsSocketStrategy(new DefaultClientTlsStrategy(sslContext));
             }
             builder.setConnectionManager(connectionManagerBuilder.build());
         }

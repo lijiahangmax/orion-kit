@@ -201,6 +201,6 @@ public class FieldsTest {
         Field field = Fields.getAccessibleField(Child.class, "id");
         Assert.assertNotNull(field);
         Fields.setAccessible(field);
-        Assert.assertTrue(field.isAccessible());
+        Assert.assertTrue(field.canAccess(new Child()));
     }
 }

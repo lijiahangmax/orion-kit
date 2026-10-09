@@ -40,7 +40,6 @@ import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpEntity;
 
@@ -167,8 +166,8 @@ public class ApacheUpload extends BaseApacheRequest {
     @Override
     public ApacheResponse await() {
         super.buildRequest();
-        try (CloseableHttpResponse resp = client.execute(request)) {
-            return new ApacheResponse(url, resp);
+        try {
+            return client.execute(request, resp -> new ApacheResponse(url, resp));
         } catch (IOException e) {
             throw Exceptions.httpRequest(url, e);
         } finally {

@@ -230,7 +230,7 @@ public class SheetCopier {
         target.setShrinkToFit(source.getShrinkToFit());
         target.setQuotePrefixed(source.getQuotePrefixed());
 
-        Font sourceFont = sourceWorkbook.getFontAt(source.getFontIndexAsInt());
+        Font sourceFont = sourceWorkbook.getFontAt(source.getFontIndex());
         if (sourceFont != null) {
             Font targetFont = targetWorkbook.createFont();
             this.copyFont(sourceFont, targetFont);
@@ -296,8 +296,8 @@ public class SheetCopier {
      * copy margin
      */
     private void copyMargin() {
-        for (short i = 0; i < 5; i++) {
-            targetSheet.setMargin(i, sourceSheet.getMargin(i));
+        for (PageMargin margin : PageMargin.values()) {
+            targetSheet.setMargin(margin, sourceSheet.getMargin(margin));
         }
     }
 

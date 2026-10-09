@@ -29,6 +29,7 @@ package cn.orionsec.kit.redis;
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.utils.Strings;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.params.SetParams;
 
 /**
  * redisLock
@@ -71,13 +72,13 @@ public class RedisLocks {
     public long tryLock(String lock, long expired) {
         try {
             long lockValue = System.currentTimeMillis() + expired;
-            Long r = jedis.setnx(lock, String.valueOf(lockValue));
-            if (r == 1) {
+            String r = jedis.set(lock, String.valueOf(lockValue), SetParams.setParams().nx());
+            if (r != null) {
                 return lockValue;
             } else {
                 long oldLockValue = Long.parseLong(jedis.get(lock));
                 if (oldLockValue < System.currentTimeMillis()) {
-                    String getOldLockValue = jedis.getSet(lock, String.valueOf(lockValue));
+                    String getOldLockValue = jedis.setGet(lock, String.valueOf(lockValue));
                     if (!Strings.isBlank(getOldLockValue) && Long.valueOf(getOldLockValue).equals(oldLockValue)) {
                         return lockValue;
                     } else {

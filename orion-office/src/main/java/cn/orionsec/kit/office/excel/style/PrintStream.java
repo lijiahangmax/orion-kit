@@ -29,6 +29,7 @@ package cn.orionsec.kit.office.excel.style;
 import cn.orionsec.kit.office.excel.option.PrintOption;
 import cn.orionsec.kit.office.excel.type.ExcelMarginType;
 import cn.orionsec.kit.office.excel.type.ExcelPaperType;
+import org.apache.poi.ss.usermodel.PageMargin;
 import org.apache.poi.ss.usermodel.PaperSize;
 import org.apache.poi.ss.usermodel.PrintSetup;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -688,7 +689,7 @@ public class PrintStream {
      * @return this
      */
     public PrintStream margin(ExcelMarginType type, double margin) {
-        sheet.setMargin(type.getCode(), margin);
+        sheet.setMargin(type.getPageMargin(), margin);
         return this;
     }
 
@@ -700,7 +701,7 @@ public class PrintStream {
      * @return this
      */
     public PrintStream margin(short type, double margin) {
-        sheet.setMargin(type, margin);
+        sheet.setMargin(PageMargin.values()[type], margin);
         return this;
     }
 
@@ -964,7 +965,7 @@ public class PrintStream {
      * @return 边距
      */
     public double getMargin(ExcelMarginType type) {
-        return sheet.getMargin(type.getCode());
+        return sheet.getMargin(type.getPageMargin());
     }
 
     /**
@@ -974,7 +975,7 @@ public class PrintStream {
      * @return 边距
      */
     public double getMargin(int type) {
-        return sheet.getMargin((short) type);
+        return sheet.getMargin(PageMargin.values()[type]);
     }
 
     /**

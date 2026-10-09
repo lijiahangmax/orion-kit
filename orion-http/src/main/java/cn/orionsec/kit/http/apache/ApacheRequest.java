@@ -28,7 +28,6 @@ package cn.orionsec.kit.http.apache;
 
 import cn.orionsec.kit.lang.utils.Exceptions;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 
 import java.io.IOException;
 
@@ -61,8 +60,8 @@ public class ApacheRequest extends BaseApacheRequest {
     @Override
     public ApacheResponse await() {
         this.buildRequest();
-        try (CloseableHttpResponse resp = client.execute(request)) {
-            return new ApacheResponse(url, resp);
+        try {
+            return client.execute(request, resp -> new ApacheResponse(url, resp));
         } catch (IOException e) {
             throw Exceptions.httpRequest(url, e);
         }

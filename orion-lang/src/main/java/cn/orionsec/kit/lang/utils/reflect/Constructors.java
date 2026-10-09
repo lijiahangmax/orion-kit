@@ -196,7 +196,7 @@ public class Constructors {
      */
     public static void setAccessible(Constructor<?> constructor) {
         Assert.notNull(constructor, "set accessible constructor class is null");
-        if ((!Modifier.isPublic(constructor.getModifiers()) || !Modifier.isPublic(constructor.getDeclaringClass().getModifiers())) && !constructor.isAccessible()) {
+        if (!Modifier.isPublic(constructor.getModifiers()) || !Modifier.isPublic(constructor.getDeclaringClass().getModifiers())) {
             constructor.setAccessible(true);
         }
     }

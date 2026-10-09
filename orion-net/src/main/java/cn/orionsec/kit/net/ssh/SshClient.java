@@ -101,7 +101,7 @@ public class SshClient implements ISshClient {
 
     @Override
     public SshClient password(String password) {
-        session.setPassword(password);
+        session.setPassword(Strings.bytes(password, Const.UTF_8));
         return this;
     }
 

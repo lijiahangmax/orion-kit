@@ -78,7 +78,7 @@ public class Packages {
      * @return ignore
      */
     public static Package getPackage(Object o) {
-        return o == null ? null : getPackage(getPackageName(o.getClass().getName()));
+        return o == null ? null : o.getClass().getPackage();
     }
 
     /**
@@ -88,7 +88,7 @@ public class Packages {
      * @return ignore
      */
     public static Package getPackage(Class<?> clazz) {
-        return getPackage(getPackageName(clazz.getName()));
+        return clazz.getPackage();
     }
 
     /**
@@ -98,7 +98,7 @@ public class Packages {
      * @return ignore
      */
     public static Package getPackage(String packageName) {
-        return Package.getPackage(packageName);
+        return Packages.class.getClassLoader().getDefinedPackage(packageName);
     }
 
 }

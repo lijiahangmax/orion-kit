@@ -48,7 +48,7 @@ public class FastDateParser implements DateParser, Serializable {
 
     private static final long serialVersionUID = 3L;
 
-    private static final Locale JAPANESE_IMPERIAL = new Locale("ja", "JP", "JP");
+    private static final Locale JAPANESE_IMPERIAL = Locale.of("ja", "JP", "JP");
 
     private final String pattern;
 

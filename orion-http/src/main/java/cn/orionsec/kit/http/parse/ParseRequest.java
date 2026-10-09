@@ -122,14 +122,15 @@ public class ParseRequest extends BaseHttpRequest implements Awaitable<ParseResp
         if (config.getProxyHost() != null && config.getProxyPort() != 0) {
             request.proxy(config.getProxyHost(), config.getProxyPort());
         }
-        request.sslSocketFactory();
         request.maxBodySize(config.getMaxBodySize())
                 .followRedirects(config.isFollowRedirects())
                 .ignoreContentType(config.isIgnoreContentType())
                 .ignoreHttpErrors(config.isIgnoreError())
                 .timeout(config.getTimeout())
-                .postDataCharset(charset)
-                .sslSocketFactory(config.getSslSocketFactory());
+                .postDataCharset(charset);
+        if (config.getSslContext() != null) {
+            request.sslContext(config.getSslContext());
+        }
     }
 
     @Override

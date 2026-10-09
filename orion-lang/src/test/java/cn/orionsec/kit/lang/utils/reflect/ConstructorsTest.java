@@ -135,6 +135,6 @@ public class ConstructorsTest {
         Constructor<PrivateConstructorClass> ctor = Constructors.getDefaultConstructor(PrivateConstructorClass.class);
         Assert.assertNotNull(ctor);
         Constructors.setAccessible(ctor);
-        Assert.assertTrue(ctor.isAccessible());
+        Assert.assertTrue(ctor.canAccess(null));
     }
 }

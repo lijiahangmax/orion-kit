@@ -987,12 +987,13 @@ public class Excels {
 
     /**
      * 设置缩略图
+     * <p>
+     * XLS 设置写入会报错
      *
      * @param workbook  workbook
      * @param thumbnail 缩略图
      * @param fileName  文件名
      * @see org.apache.poi.hpsf.Property#write(OutputStream, int) 519
-     * @deprecated XLS 设置写入会报错
      */
     public static void setThumbnail(Workbook workbook, byte[] thumbnail, String fileName) {
         if (thumbnail == null) {
