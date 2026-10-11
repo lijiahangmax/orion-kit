@@ -211,7 +211,7 @@ public final class TelnetLoginJudge {
      * @param candidate 提示符候选
      * @return true 形似提示符
      */
-    private static boolean isPromptLike(String candidate) {
+    public static boolean isPromptLike(String candidate) {
         if (Strings.isBlank(candidate) || candidate.length() > MAX_PROMPT_LENGTH) {
             return false;
         }

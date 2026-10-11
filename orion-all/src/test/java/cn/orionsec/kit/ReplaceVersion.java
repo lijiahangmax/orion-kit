@@ -69,10 +69,13 @@ public class ReplaceVersion {
 
     private static final String APP_CONST_FILE = "orion-lang/src/main/java/cn/orionsec/kit/lang/constant/OrionConst.java";
 
+    private static final String KIT_ENTRY_FILE = "orion-all/src/main/java/cn/orionsec/kit/OrionKit.java";
+
     public static void main(String[] args) {
         replacePomFiles();
         replaceKitVersionFile();
         replaceAppConst();
+        replaceKitEntry();
     }
 
     /**
@@ -96,6 +99,13 @@ public class ReplaceVersion {
      */
     private static void replaceAppConst() {
         readAndWrite(APP_CONST_FILE, s -> s.replaceAll("String ORION_KIT_VERSION = \"" + TARGET_VERSION + "\"", "String ORION_KIT_VERSION = \"" + REPLACE_VERSION + "\""));
+    }
+
+    /**
+     * 替换 OrionKit 文件
+     */
+    private static void replaceKitEntry() {
+        readAndWrite(KIT_ENTRY_FILE, s -> s.replaceAll("String VERSION = \"" + TARGET_VERSION + "\"", "String VERSION = \"" + REPLACE_VERSION + "\""));
     }
 
     /**
