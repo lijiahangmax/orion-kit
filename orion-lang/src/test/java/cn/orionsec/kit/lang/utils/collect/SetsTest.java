@@ -95,4 +95,20 @@ public class SetsTest {
         Sets.removeToSize(set, 3);
         assertEquals(3, set.size());
     }
+
+    @Test
+    public void testSplit() {
+        assertEquals(new HashSet<>(Arrays.asList("a", "b", "c")), Sets.split(" a , b ,c "));
+        assertEquals(new HashSet<>(Arrays.asList("a", "b")), Sets.split("a;b;;", ";"));
+        assertEquals(new HashSet<>(Arrays.asList("a", "b")), Sets.split("a,b,c", s -> !"c".equals(s)));
+        assertEquals(2, Sets.split("a,a,b").size());
+    }
+
+    @Test
+    public void testSplitBlank() {
+        Set<String> set = Sets.split("  ");
+        assertTrue(set.isEmpty());
+        set.add("x");
+        assertEquals(1, set.size());
+    }
 }

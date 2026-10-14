@@ -95,4 +95,20 @@ public class ListsTest {
         int[] arr = Lists.toInts(list);
         assertArrayEquals(new int[]{1, 2, 3}, arr);
     }
+
+    @Test
+    public void testSplit() {
+        assertEquals(Arrays.asList("a", "b", "c"), Lists.split(" a , b ,c "));
+        assertEquals(Arrays.asList("a", "b"), Lists.split("a;b;;", ";"));
+        assertEquals(Arrays.asList("a", "b"), Lists.split("a,b,c", s -> !"c".equals(s)));
+    }
+
+    @Test
+    public void testSplitBlank() {
+        List<String> list = Lists.split(null);
+        assertTrue(list.isEmpty());
+        list.add("x");
+        assertEquals(1, list.size());
+        assertTrue(Lists.split("  ").isEmpty());
+    }
 }

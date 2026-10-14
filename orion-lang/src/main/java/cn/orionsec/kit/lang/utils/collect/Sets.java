@@ -26,14 +26,18 @@
  */
 package cn.orionsec.kit.lang.utils.collect;
 
+import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.define.collect.*;
 import cn.orionsec.kit.lang.utils.Arrays1;
 import cn.orionsec.kit.lang.utils.Assert;
+import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.random.Randoms;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * Set 工具类
@@ -372,6 +376,58 @@ public class Sets extends Collections {
      */
     public static <E> Set<E> distinct(Collection<E> c, Function<E, ?> keyGetter) {
         return new HashSet<>(Collections.distinct(c, keyGetter));
+    }
+
+    // -------------------- split --------------------
+
+    /**
+     * 将字符串拆分
+     *
+     * @param str 字符串
+     * @return set
+     */
+    public static Set<String> split(String str) {
+        return split(str, Const.COMMA, Strings::isNotEmpty);
+    }
+
+    /**
+     * 将字符串按分隔符拆分
+     *
+     * @param str       字符串
+     * @param separator 分隔符
+     * @return set
+     */
+    public static Set<String> split(String str, String separator) {
+        return split(str, separator, Strings::isNotEmpty);
+    }
+
+    /**
+     * 将字符串拆分
+     *
+     * @param str    字符串
+     * @param filter 过滤器
+     * @return set
+     */
+    public static Set<String> split(String str, Predicate<String> filter) {
+        return split(str, Const.COMMA, filter);
+    }
+
+    /**
+     * 将字符串按分隔符拆分
+     *
+     * @param str       字符串
+     * @param separator 分隔符
+     * @param filter    过滤器
+     * @return set
+     */
+    public static Set<String> split(String str, String separator, Predicate<String> filter) {
+        if (Strings.isBlank(str)) {
+            return newSet();
+        }
+        return Arrays.stream(str.split(separator))
+                .map(String::trim)
+                .filter(filter)
+                .collect(Collectors.toSet());
     }
 
 }
