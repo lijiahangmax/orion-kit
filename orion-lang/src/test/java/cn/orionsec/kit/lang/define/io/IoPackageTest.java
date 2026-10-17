@@ -1,5 +1,6 @@
 package cn.orionsec.kit.lang.define.io;
 
+import cn.orionsec.kit.lang.exception.argument.InvalidArgumentException;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -247,5 +248,87 @@ public class IoPackageTest {
         pw.start();
         pw.finish(false);
         assertNotNull(pw.getProgress());
+    }
+
+    // ==================== LimitOutputStream ====================
+
+    @Test
+    public void testLimitOutputStreamWriteInt() {
+        LimitOutputStream out = new LimitOutputStream(3);
+        out.write('A');
+        out.write('B');
+        out.write('C');
+        out.write('D');
+        assertEquals("ABC", new String(out.toByteArray()));
+    }
+
+    @Test
+    public void testLimitOutputStreamWriteBytes() {
+        LimitOutputStream out = new LimitOutputStream(4);
+        out.write("hello".getBytes(), 0, 5);
+        assertEquals("hell", new String(out.toByteArray()));
+    }
+
+    @Test
+    public void testLimitOutputStreamZeroLimit() {
+        LimitOutputStream out = new LimitOutputStream(0);
+        out.write('A');
+        out.write(new byte[]{'B', 'C'});
+        assertEquals(0, out.toByteArray().length);
+    }
+
+    @Test(expected = InvalidArgumentException.class)
+    public void testLimitOutputStreamNegativeLimit() {
+        new LimitOutputStream(-1);
+    }
+
+    // ==================== LimitInputStream ====================
+
+    @Test
+    public void testLimitInputStreamReadSingle() throws Exception {
+        LimitInputStream in = new LimitInputStream(new ByteArrayInputStream("hello".getBytes()), 3);
+        assertEquals('h', in.read());
+        assertEquals('e', in.read());
+        assertEquals('l', in.read());
+        assertEquals(-1, in.read());
+    }
+
+    @Test
+    public void testLimitInputStreamReadBytes() throws Exception {
+        LimitInputStream in = new LimitInputStream(new ByteArrayInputStream("hello".getBytes()), 4);
+        byte[] buf = new byte[10];
+        assertEquals(4, in.read(buf));
+        assertEquals("hell", new String(buf, 0, 4));
+        assertEquals(-1, in.read(buf, 0, 10));
+    }
+
+    @Test
+    public void testLimitInputStreamSkip() throws Exception {
+        LimitInputStream in = new LimitInputStream(new ByteArrayInputStream("hello".getBytes()), 3);
+        assertEquals(3, in.skip(10));
+        assertEquals(-1, in.read());
+    }
+
+    @Test
+    public void testLimitInputStreamAvailable() throws Exception {
+        LimitInputStream in = new LimitInputStream(new ByteArrayInputStream("hello".getBytes()), 2);
+        assertEquals(2, in.available());
+        in.read();
+        assertEquals(1, in.available());
+        in.read();
+        assertEquals(0, in.available());
+    }
+
+    @Test
+    public void testLimitInputStreamZeroLimit() throws Exception {
+        LimitInputStream in = new LimitInputStream(new ByteArrayInputStream("hello".getBytes()), 0);
+        assertEquals(-1, in.read());
+        assertEquals(-1, in.read(new byte[5], 0, 5));
+        assertEquals(0, in.available());
+    }
+
+    @Test(expected = InvalidArgumentException.class)
+    public void testLimitInputStreamNegativeLimit() {
+        new LimitInputStream(new ByteArrayInputStream(new byte[0]), -1);
     }
 }
