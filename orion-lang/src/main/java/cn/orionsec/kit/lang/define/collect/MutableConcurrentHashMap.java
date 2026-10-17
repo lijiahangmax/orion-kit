@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.lang.define.collect;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,6 +40,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class MutableConcurrentHashMap<K, V> extends ConcurrentHashMap<K, V> implements MutableMap<K, V>, Serializable {
 
+    @Serial
     private static final long serialVersionUID = 142731998248615024L;
 
     public MutableConcurrentHashMap() {

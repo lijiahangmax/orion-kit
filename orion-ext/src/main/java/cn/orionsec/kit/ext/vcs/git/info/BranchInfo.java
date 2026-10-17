@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.ext.vcs.git.info;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -37,6 +38,7 @@ import java.io.Serializable;
  */
 public class BranchInfo implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 765488714L;
 
     /**

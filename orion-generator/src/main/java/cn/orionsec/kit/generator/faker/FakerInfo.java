@@ -28,6 +28,7 @@ package cn.orionsec.kit.generator.faker;
 
 import cn.orionsec.kit.lang.utils.Strings;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -40,6 +41,7 @@ import java.util.Date;
  */
 public class FakerInfo implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 668834111187349582L;
 
     /**
@@ -126,305 +128,6 @@ public class FakerInfo implements Serializable {
      * ip
      */
     private String ip;
-
-
-    /**
-     * 地址对象
-     */
-    public static class FakerAddress extends AddressCode implements Serializable {
-
-        private static final long serialVersionUID = -9473126547866L;
-
-        /**
-         * 地址
-         */
-        private String address;
-
-        /**
-         * 详细地址
-         */
-        private String detailAddress;
-
-        public String getAddress() {
-            return address;
-        }
-
-        public void setAddress(String address) {
-            this.address = address;
-        }
-
-        public String getDetailAddress() {
-            return detailAddress;
-        }
-
-        public void setDetailAddress(String detailAddress) {
-            this.detailAddress = detailAddress;
-        }
-
-        @Override
-        public String toString() {
-            return address + detailAddress;
-        }
-
-    }
-
-    /**
-     * 身份证对象
-     */
-    public static class FakerIdCard extends AddressCode implements Serializable {
-
-        private static final long serialVersionUID = 84122189856134796L;
-
-        /**
-         * 身份证号码
-         */
-        private String cardNo;
-
-        /**
-         * 身份证地址
-         */
-        private String address;
-
-        /**
-         * 身份证签发机关
-         */
-        private String issueOrg;
-
-        /**
-         * 身份证有效期
-         */
-        private String period;
-
-        /**
-         * 身份证有效期开始时间
-         */
-        private Date periodStart;
-
-        /**
-         * 身份证有效期结束时间
-         */
-        private Date periodEnd;
-
-        /**
-         * 民族
-         */
-        private String nation;
-
-        public String getCardNo() {
-            return cardNo;
-        }
-
-        public void setCardNo(String cardNo) {
-            this.cardNo = cardNo;
-        }
-
-        public String getAddress() {
-            return address;
-        }
-
-        public void setAddress(String address) {
-            this.address = address;
-        }
-
-        public String getIssueOrg() {
-            return issueOrg;
-        }
-
-        public void setIssueOrg(String issueOrg) {
-            this.issueOrg = issueOrg;
-        }
-
-        public String getPeriod() {
-            return period;
-        }
-
-        public void setPeriod(String period) {
-            this.period = period;
-        }
-
-        public Date getPeriodStart() {
-            return periodStart;
-        }
-
-        public void setPeriodStart(Date periodStart) {
-            this.periodStart = periodStart;
-        }
-
-        public Date getPeriodEnd() {
-            return periodEnd;
-        }
-
-        public void setPeriodEnd(Date periodEnd) {
-            this.periodEnd = periodEnd;
-        }
-
-        public String getNation() {
-            return nation;
-        }
-
-        public void setNation(String nation) {
-            this.nation = nation;
-        }
-
-        @Override
-        public String toString() {
-            return cardNo;
-        }
-
-    }
-
-    /**
-     * 银行卡对象
-     */
-    public static class FakerBankCard extends AddressCode implements Serializable {
-
-        private static final long serialVersionUID = 1114589632785632L;
-
-        /**
-         * 银行卡号
-         */
-        private String cardNo;
-
-        /**
-         * 银行编码
-         */
-        private String bankCode;
-
-        /**
-         * 银行名称
-         */
-        private String bankName;
-
-        /**
-         * 开户行
-         */
-        private String issueOrg;
-
-        public String getCardNo() {
-            return cardNo;
-        }
-
-        public void setCardNo(String cardNo) {
-            this.cardNo = cardNo;
-        }
-
-        public String getBankCode() {
-            return bankCode;
-        }
-
-        public void setBankCode(String bankCode) {
-            this.bankCode = bankCode;
-        }
-
-        public String getBankName() {
-            return bankName;
-        }
-
-        public void setBankName(String bankName) {
-            this.bankName = bankName;
-        }
-
-        public String getIssueOrg() {
-            return issueOrg;
-        }
-
-        public void setIssueOrg(String issueOrg) {
-            this.issueOrg = issueOrg;
-        }
-
-        @Override
-        public String toString() {
-            return bankName + Strings.SPACE + cardNo;
-        }
-
-    }
-
-    /**
-     * 地址对象
-     */
-    public static class AddressCode implements Serializable {
-
-        private static final long serialVersionUID = 6415879632564L;
-
-        /**
-         * 地址 省级编码
-         */
-        private Integer provinceCode;
-
-        /**
-         * 地址 省级编码
-         */
-        private String provinceName;
-
-        /**
-         * 地址 市级编码
-         */
-        private Integer cityCode;
-
-        /**
-         * 地址 市级编码
-         */
-        private String cityName;
-
-        /**
-         * 地址 县级编码
-         */
-        private Integer countryCode;
-
-        /**
-         * 地址 县级编码
-         */
-        private String countryName;
-
-        public Integer getProvinceCode() {
-            return provinceCode;
-        }
-
-        public void setProvinceCode(Integer provinceCode) {
-            this.provinceCode = provinceCode;
-        }
-
-        public String getProvinceName() {
-            return provinceName;
-        }
-
-        public void setProvinceName(String provinceName) {
-            this.provinceName = provinceName;
-        }
-
-        public Integer getCityCode() {
-            return cityCode;
-        }
-
-        public void setCityCode(Integer cityCode) {
-            this.cityCode = cityCode;
-        }
-
-        public String getCityName() {
-            return cityName;
-        }
-
-        public void setCityName(String cityName) {
-            this.cityName = cityName;
-        }
-
-        public Integer getCountryCode() {
-            return countryCode;
-        }
-
-        public void setCountryCode(Integer countryCode) {
-            this.countryCode = countryCode;
-        }
-
-        public String getCountryName() {
-            return countryName;
-        }
-
-        public void setCountryName(String countryName) {
-            this.countryName = countryName;
-        }
-
-    }
 
     public String getName() {
         return name;
@@ -560,6 +263,308 @@ public class FakerInfo implements Serializable {
 
     public void setIp(String ip) {
         this.ip = ip;
+    }
+
+    /**
+     * 地址对象
+     */
+    public static class FakerAddress extends AddressCode implements Serializable {
+
+        @Serial
+        private static final long serialVersionUID = -9473126547866L;
+
+        /**
+         * 地址
+         */
+        private String address;
+
+        /**
+         * 详细地址
+         */
+        private String detailAddress;
+
+        public String getAddress() {
+            return address;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
+
+        public String getDetailAddress() {
+            return detailAddress;
+        }
+
+        public void setDetailAddress(String detailAddress) {
+            this.detailAddress = detailAddress;
+        }
+
+        @Override
+        public String toString() {
+            return address + detailAddress;
+        }
+
+    }
+
+    /**
+     * 身份证对象
+     */
+    public static class FakerIdCard extends AddressCode implements Serializable {
+
+        @Serial
+        private static final long serialVersionUID = 84122189856134796L;
+
+        /**
+         * 身份证号码
+         */
+        private String cardNo;
+
+        /**
+         * 身份证地址
+         */
+        private String address;
+
+        /**
+         * 身份证签发机关
+         */
+        private String issueOrg;
+
+        /**
+         * 身份证有效期
+         */
+        private String period;
+
+        /**
+         * 身份证有效期开始时间
+         */
+        private Date periodStart;
+
+        /**
+         * 身份证有效期结束时间
+         */
+        private Date periodEnd;
+
+        /**
+         * 民族
+         */
+        private String nation;
+
+        public String getCardNo() {
+            return cardNo;
+        }
+
+        public void setCardNo(String cardNo) {
+            this.cardNo = cardNo;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
+
+        public String getIssueOrg() {
+            return issueOrg;
+        }
+
+        public void setIssueOrg(String issueOrg) {
+            this.issueOrg = issueOrg;
+        }
+
+        public String getPeriod() {
+            return period;
+        }
+
+        public void setPeriod(String period) {
+            this.period = period;
+        }
+
+        public Date getPeriodStart() {
+            return periodStart;
+        }
+
+        public void setPeriodStart(Date periodStart) {
+            this.periodStart = periodStart;
+        }
+
+        public Date getPeriodEnd() {
+            return periodEnd;
+        }
+
+        public void setPeriodEnd(Date periodEnd) {
+            this.periodEnd = periodEnd;
+        }
+
+        public String getNation() {
+            return nation;
+        }
+
+        public void setNation(String nation) {
+            this.nation = nation;
+        }
+
+        @Override
+        public String toString() {
+            return cardNo;
+        }
+
+    }
+
+    /**
+     * 银行卡对象
+     */
+    public static class FakerBankCard extends AddressCode implements Serializable {
+
+        @Serial
+        private static final long serialVersionUID = 1114589632785632L;
+
+        /**
+         * 银行卡号
+         */
+        private String cardNo;
+
+        /**
+         * 银行编码
+         */
+        private String bankCode;
+
+        /**
+         * 银行名称
+         */
+        private String bankName;
+
+        /**
+         * 开户行
+         */
+        private String issueOrg;
+
+        public String getCardNo() {
+            return cardNo;
+        }
+
+        public void setCardNo(String cardNo) {
+            this.cardNo = cardNo;
+        }
+
+        public String getBankCode() {
+            return bankCode;
+        }
+
+        public void setBankCode(String bankCode) {
+            this.bankCode = bankCode;
+        }
+
+        public String getBankName() {
+            return bankName;
+        }
+
+        public void setBankName(String bankName) {
+            this.bankName = bankName;
+        }
+
+        public String getIssueOrg() {
+            return issueOrg;
+        }
+
+        public void setIssueOrg(String issueOrg) {
+            this.issueOrg = issueOrg;
+        }
+
+        @Override
+        public String toString() {
+            return bankName + Strings.SPACE + cardNo;
+        }
+
+    }
+
+    /**
+     * 地址对象
+     */
+    public static class AddressCode implements Serializable {
+
+        @Serial
+        private static final long serialVersionUID = 6415879632564L;
+
+        /**
+         * 地址 省级编码
+         */
+        private Integer provinceCode;
+
+        /**
+         * 地址 省级编码
+         */
+        private String provinceName;
+
+        /**
+         * 地址 市级编码
+         */
+        private Integer cityCode;
+
+        /**
+         * 地址 市级编码
+         */
+        private String cityName;
+
+        /**
+         * 地址 县级编码
+         */
+        private Integer countryCode;
+
+        /**
+         * 地址 县级编码
+         */
+        private String countryName;
+
+        public Integer getProvinceCode() {
+            return provinceCode;
+        }
+
+        public void setProvinceCode(Integer provinceCode) {
+            this.provinceCode = provinceCode;
+        }
+
+        public String getProvinceName() {
+            return provinceName;
+        }
+
+        public void setProvinceName(String provinceName) {
+            this.provinceName = provinceName;
+        }
+
+        public Integer getCityCode() {
+            return cityCode;
+        }
+
+        public void setCityCode(Integer cityCode) {
+            this.cityCode = cityCode;
+        }
+
+        public String getCityName() {
+            return cityName;
+        }
+
+        public void setCityName(String cityName) {
+            this.cityName = cityName;
+        }
+
+        public Integer getCountryCode() {
+            return countryCode;
+        }
+
+        public void setCountryCode(Integer countryCode) {
+            this.countryCode = countryCode;
+        }
+
+        public String getCountryName() {
+            return countryName;
+        }
+
+        public void setCountryName(String countryName) {
+            this.countryName = countryName;
+        }
+
     }
 
 }

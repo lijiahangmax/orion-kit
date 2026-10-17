@@ -29,6 +29,7 @@ package cn.orionsec.kit.net.ssh.sftp;
 import cn.orionsec.kit.lang.utils.io.FileType;
 import cn.orionsec.kit.lang.utils.io.Files1;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -41,6 +42,7 @@ import java.util.Date;
  */
 public class SftpFile implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -154572740257792L;
 
     /**
@@ -87,32 +89,64 @@ public class SftpFile implements Serializable {
         return path;
     }
 
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     public Date getAccessTime() {
         return accessTime;
+    }
+
+    public void setAccessTime(Date accessTime) {
+        this.accessTime = accessTime;
     }
 
     public Date getModifyTime() {
         return modifyTime;
     }
 
+    public void setModifyTime(Date modifyTime) {
+        this.modifyTime = modifyTime;
+    }
+
     public long getSize() {
         return size;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
     }
 
     public int getUid() {
         return uid;
     }
 
+    public void setUid(int uid) {
+        this.uid = uid;
+    }
+
     public int getGid() {
         return gid;
+    }
+
+    public void setGid(int gid) {
+        this.gid = gid;
     }
 
     public int getPermission() {
         return permission;
     }
 
+    public void setPermission(int permission) {
+        this.permission = permission;
+    }
+
     public String getPermissionString() {
         return permissionString;
+    }
+
+    public void setPermissionString(String permissionString) {
+        this.permissionString = permissionString;
     }
 
     /**
@@ -149,38 +183,6 @@ public class SftpFile implements Serializable {
      */
     public boolean isRegularFile() {
         return FileType.REGULAR_FILE.isMatch(permissionString);
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public void setAccessTime(Date accessTime) {
-        this.accessTime = accessTime;
-    }
-
-    public void setModifyTime(Date modifyTime) {
-        this.modifyTime = modifyTime;
-    }
-
-    public void setSize(long size) {
-        this.size = size;
-    }
-
-    public void setUid(int uid) {
-        this.uid = uid;
-    }
-
-    public void setGid(int gid) {
-        this.gid = gid;
-    }
-
-    public void setPermission(int permission) {
-        this.permission = permission;
-    }
-
-    public void setPermissionString(String permissionString) {
-        this.permissionString = permissionString;
     }
 
     @Override

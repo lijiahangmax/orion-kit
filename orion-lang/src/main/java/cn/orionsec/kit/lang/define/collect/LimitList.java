@@ -29,6 +29,7 @@ package cn.orionsec.kit.lang.define.collect;
 import cn.orionsec.kit.lang.KitLangConfiguration;
 import cn.orionsec.kit.lang.config.KitConfig;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,6 +44,7 @@ import java.util.List;
  */
 public class LimitList<E> extends ArrayList<E> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 829347812390094123L;
 
     private static final int LIMIT_LIST_DEFAULT_LIMIT = KitConfig.get(KitLangConfiguration.CONFIG.LIMIT_LIST_DEFAULT_LIMIT);

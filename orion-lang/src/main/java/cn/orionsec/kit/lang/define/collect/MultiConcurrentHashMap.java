@@ -28,6 +28,7 @@ package cn.orionsec.kit.lang.define.collect;
 
 import cn.orionsec.kit.lang.constant.Const;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -41,6 +42,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MultiConcurrentHashMap<K, V, E> extends ConcurrentHashMap<K, ConcurrentHashMap<V, E>>
         implements MultiMap<K, V, E, ConcurrentHashMap<V, E>>, Serializable {
 
+    @Serial
     private static final long serialVersionUID = 8455892712354974891L;
 
     /**

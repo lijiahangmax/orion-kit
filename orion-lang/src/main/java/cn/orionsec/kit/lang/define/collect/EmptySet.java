@@ -28,6 +28,7 @@ package cn.orionsec.kit.lang.define.collect;
 
 import cn.orionsec.kit.lang.utils.Exceptions;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.AbstractSet;
 import java.util.Collection;
@@ -46,6 +47,7 @@ public class EmptySet<E> extends AbstractSet<E> implements Serializable {
 
     public static final EmptySet<?> EMPTY = new EmptySet<>();
 
+    @Serial
     private static final long serialVersionUID = 7489127391029385L;
 
     @Override

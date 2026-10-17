@@ -32,6 +32,8 @@ import cn.orionsec.kit.lang.utils.Urls;
 import cn.orionsec.kit.lang.utils.Xsses;
 import cn.orionsec.kit.lang.utils.codec.Base64s;
 
+import java.io.Serial;
+
 /**
  * restful 文本包装
  *
@@ -41,6 +43,7 @@ import cn.orionsec.kit.lang.utils.codec.Base64s;
  */
 public class TextWrapper extends CloneSupport<TextWrapper> implements Wrapper<String> {
 
+    @Serial
     private static final long serialVersionUID = 5693256198048111L;
 
     private final StringBuilder sb;

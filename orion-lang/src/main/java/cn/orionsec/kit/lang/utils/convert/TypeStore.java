@@ -37,6 +37,7 @@ import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.collect.Sets;
 import cn.orionsec.kit.lang.utils.reflect.Classes;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
@@ -54,9 +55,15 @@ import java.util.concurrent.ConcurrentHashMap;
 @SuppressWarnings({"unchecked"})
 public class TypeStore extends CloneSupport<TypeStore> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 12038041239487192L;
 
     public static final TypeStore STORE = new TypeStore();
+
+    static {
+        // 装载基础Mapper
+        new BasicTypeStoreProvider(STORE);
+    }
 
     private final MultiConcurrentHashMap<Class<?>, Class<?>, Conversion<?, ?>> conversionMapping;
 
@@ -64,9 +71,95 @@ public class TypeStore extends CloneSupport<TypeStore> implements Serializable {
         this.conversionMapping = new MultiConcurrentHashMap<>();
     }
 
-    static {
-        // 装载基础Mapper
-        new BasicTypeStoreProvider(STORE);
+    /**
+     * 获取全局 Store
+     *
+     * @return TypeStore
+     */
+    public static TypeStore getStore() {
+        return STORE;
+    }
+
+    /**
+     * 判断类型是否可以转换 sourceClass -> targetClass
+     *
+     * @param sourceClass 源class
+     * @param targetClass 目标class
+     * @return true可以直接转换
+     */
+    public static boolean canConvert(Class<?> sourceClass, Class<?> targetClass) {
+        return canConvert(sourceClass, targetClass, STORE);
+    }
+
+    /**
+     * 判断类型是否可以转换 sourceClass -> targetClass
+     *
+     * @param sourceClass 源class
+     * @param targetClass 目标class
+     * @param store       store
+     * @return true可以直接转换
+     */
+    public static boolean canConvert(Class<?> sourceClass, Class<?> targetClass, TypeStore store) {
+        Assert.notNull(sourceClass, "source class is null");
+        Assert.notNull(targetClass, "target class is null");
+        sourceClass = Classes.getWrapClass(sourceClass);
+        targetClass = Classes.getWrapClass(targetClass);
+        if (canDirectConvert(sourceClass, targetClass, false)) {
+            return true;
+        }
+        if (store.get(sourceClass, targetClass) != null) {
+            return true;
+        }
+        for (Class<?> sourceParentClass : new ClassIterator<>(sourceClass)) {
+            if (store.get(sourceParentClass, targetClass) != null) {
+                return true;
+            }
+        }
+        if (!Classes.isArray(targetClass)) {
+            return false;
+        }
+        Class<?> baseArrayClass = Classes.getBaseArrayClass(targetClass);
+        if (baseArrayClass.equals(targetClass)) {
+            return false;
+        }
+        if (sourceClass.equals(baseArrayClass)) {
+            return true;
+        }
+        return store.get(sourceClass, baseArrayClass) != null;
+    }
+
+    /**
+     * 判断类型是否可以直接转换 sourceClass -> targetClass
+     *
+     * @param sourceClass 源class
+     * @param targetClass 目标class
+     * @return true可以直接转换
+     */
+    public static boolean canDirectConvert(Class<?> sourceClass, Class<?> targetClass) {
+        return canDirectConvert(sourceClass, targetClass, true);
+    }
+
+    /**
+     * 判断类型是否可以直接转换 sourceClass -> targetClass
+     *
+     * @param sourceClass 源class
+     * @param targetClass 目标class
+     * @param wrap        是否包装基本类型
+     * @return true可以直接转换
+     */
+    private static boolean canDirectConvert(Class<?> sourceClass, Class<?> targetClass, boolean wrap) {
+        Assert.notNull(sourceClass, "source class is null");
+        Assert.notNull(targetClass, "target class is null");
+        if (wrap) {
+            sourceClass = Classes.getWrapClass(sourceClass);
+            targetClass = Classes.getWrapClass(targetClass);
+        }
+        // check unable
+        if (targetClass.equals(Object.class) || targetClass.equals(sourceClass)) {
+            return true;
+        }
+        // check impl
+        return Classes.isImplClass(targetClass, sourceClass);
     }
 
     /**
@@ -223,97 +316,6 @@ public class TypeStore extends CloneSupport<TypeStore> implements Serializable {
             }
         }
         return mapping;
-    }
-
-    /**
-     * 获取全局 Store
-     *
-     * @return TypeStore
-     */
-    public static TypeStore getStore() {
-        return STORE;
-    }
-
-    /**
-     * 判断类型是否可以转换 sourceClass -> targetClass
-     *
-     * @param sourceClass 源class
-     * @param targetClass 目标class
-     * @return true可以直接转换
-     */
-    public static boolean canConvert(Class<?> sourceClass, Class<?> targetClass) {
-        return canConvert(sourceClass, targetClass, STORE);
-    }
-
-    /**
-     * 判断类型是否可以转换 sourceClass -> targetClass
-     *
-     * @param sourceClass 源class
-     * @param targetClass 目标class
-     * @param store       store
-     * @return true可以直接转换
-     */
-    public static boolean canConvert(Class<?> sourceClass, Class<?> targetClass, TypeStore store) {
-        Assert.notNull(sourceClass, "source class is null");
-        Assert.notNull(targetClass, "target class is null");
-        sourceClass = Classes.getWrapClass(sourceClass);
-        targetClass = Classes.getWrapClass(targetClass);
-        if (canDirectConvert(sourceClass, targetClass, false)) {
-            return true;
-        }
-        if (store.get(sourceClass, targetClass) != null) {
-            return true;
-        }
-        for (Class<?> sourceParentClass : new ClassIterator<>(sourceClass)) {
-            if (store.get(sourceParentClass, targetClass) != null) {
-                return true;
-            }
-        }
-        if (!Classes.isArray(targetClass)) {
-            return false;
-        }
-        Class<?> baseArrayClass = Classes.getBaseArrayClass(targetClass);
-        if (baseArrayClass.equals(targetClass)) {
-            return false;
-        }
-        if (sourceClass.equals(baseArrayClass)) {
-            return true;
-        }
-        return store.get(sourceClass, baseArrayClass) != null;
-    }
-
-    /**
-     * 判断类型是否可以直接转换 sourceClass -> targetClass
-     *
-     * @param sourceClass 源class
-     * @param targetClass 目标class
-     * @return true可以直接转换
-     */
-    public static boolean canDirectConvert(Class<?> sourceClass, Class<?> targetClass) {
-        return canDirectConvert(sourceClass, targetClass, true);
-    }
-
-    /**
-     * 判断类型是否可以直接转换 sourceClass -> targetClass
-     *
-     * @param sourceClass 源class
-     * @param targetClass 目标class
-     * @param wrap        是否包装基本类型
-     * @return true可以直接转换
-     */
-    private static boolean canDirectConvert(Class<?> sourceClass, Class<?> targetClass, boolean wrap) {
-        Assert.notNull(sourceClass, "source class is null");
-        Assert.notNull(targetClass, "target class is null");
-        if (wrap) {
-            sourceClass = Classes.getWrapClass(sourceClass);
-            targetClass = Classes.getWrapClass(targetClass);
-        }
-        // check unable
-        if (targetClass.equals(Object.class) || targetClass.equals(sourceClass)) {
-            return true;
-        }
-        // check impl
-        return Classes.isImplClass(targetClass, sourceClass);
     }
 
 }

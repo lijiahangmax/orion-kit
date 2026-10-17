@@ -29,6 +29,7 @@ package cn.orionsec.kit.net.ftp.client;
 import cn.orionsec.kit.lang.utils.Strings;
 import org.apache.commons.net.ftp.FTPFile;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -41,6 +42,7 @@ import java.util.Date;
  */
 public class FtpFile implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -8231234702679455L;
 
     private final FTPFile ftpFile;
@@ -224,12 +226,12 @@ public class FtpFile implements Serializable {
         this.permission = permission;
     }
 
-    public void setPermissionString(String permissionString) {
-        this.permissionString = permissionString;
-    }
-
     public String getPermissionString() {
         return permissionString;
+    }
+
+    public void setPermissionString(String permissionString) {
+        this.permissionString = permissionString;
     }
 
     public FTPFile getFtpFile() {

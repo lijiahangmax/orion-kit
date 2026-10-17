@@ -28,6 +28,7 @@ package cn.orionsec.kit.lang.define.wrapper;
 
 import cn.orionsec.kit.lang.define.support.CloneSupport;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Optional;
@@ -41,6 +42,7 @@ import java.util.Optional;
  */
 public class Pair<K, V> extends CloneSupport<Pair<K, V>> implements Map.Entry<K, V>, Serializable {
 
+    @Serial
     private static final long serialVersionUID = 3797556461612462L;
 
     private K key;
@@ -68,10 +70,6 @@ public class Pair<K, V> extends CloneSupport<Pair<K, V>> implements Map.Entry<K,
         return new Pair<>(entry);
     }
 
-    public void setKey(K key) {
-        this.key = key;
-    }
-
     @Override
     public V setValue(V value) {
         this.value = value;
@@ -81,6 +79,10 @@ public class Pair<K, V> extends CloneSupport<Pair<K, V>> implements Map.Entry<K,
     @Override
     public K getKey() {
         return key;
+    }
+
+    public void setKey(K key) {
+        this.key = key;
     }
 
     @Override

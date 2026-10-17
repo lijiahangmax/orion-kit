@@ -29,6 +29,7 @@ package cn.orionsec.kit.lang.utils.time.format;
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.utils.Exceptions;
 
+import java.io.Serial;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -47,6 +48,7 @@ final class GmtTimeZone extends TimeZone {
 
     private static final int HOURS_PER_DAY = 24;
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private final int offset;
@@ -78,13 +80,13 @@ final class GmtTimeZone extends TimeZone {
     }
 
     @Override
-    public void setRawOffset(int offsetMillis) {
-        throw Exceptions.unsupported();
+    public int getRawOffset() {
+        return offset;
     }
 
     @Override
-    public int getRawOffset() {
-        return offset;
+    public void setRawOffset(int offsetMillis) {
+        throw Exceptions.unsupported();
     }
 
     @Override

@@ -28,6 +28,8 @@ package cn.orionsec.kit.lang.define.mutable;
 
 import cn.orionsec.kit.lang.able.Mutable;
 
+import java.io.Serial;
+
 /**
  * 可变 byte
  *
@@ -37,6 +39,7 @@ import cn.orionsec.kit.lang.able.Mutable;
  */
 public class MutableByte extends Number implements Comparable<MutableByte>, Mutable<Number> {
 
+    @Serial
     private static final long serialVersionUID = -9071284079851923804L;
 
     private byte value;

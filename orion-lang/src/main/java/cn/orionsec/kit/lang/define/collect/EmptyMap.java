@@ -28,6 +28,7 @@ package cn.orionsec.kit.lang.define.collect;
 
 import cn.orionsec.kit.lang.utils.Exceptions;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -45,6 +46,7 @@ public class EmptyMap<K, V> extends AbstractMap<K, V> implements Serializable {
 
     public static final EmptyMap<?, ?> EMPTY = new EmptyMap<>();
 
+    @Serial
     private static final long serialVersionUID = 7432616076500907729L;
 
     @Override

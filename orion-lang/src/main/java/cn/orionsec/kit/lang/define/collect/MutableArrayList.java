@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.lang.define.collect;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,6 +40,7 @@ import java.util.Collection;
  */
 public class MutableArrayList<E> extends ArrayList<E> implements MutableList<E>, Serializable {
 
+    @Serial
     private static final long serialVersionUID = 66823498912315567L;
 
     public MutableArrayList() {

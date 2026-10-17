@@ -32,10 +32,7 @@ import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.io.Streams;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Serializable;
+import java.io.*;
 import java.util.Iterator;
 
 /**
@@ -48,6 +45,7 @@ import java.util.Iterator;
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class LineIterator implements Iterator<String>, Iterable<String>, SafeCloseable, Serializable {
 
+    @Serial
     private static final long serialVersionUID = 129389409684095L;
 
     private final BufferedReader reader;

@@ -31,6 +31,7 @@ import cn.orionsec.kit.lang.utils.math.BigDecimals;
 import cn.orionsec.kit.lang.utils.math.BigIntegers;
 import cn.orionsec.kit.lang.utils.time.Dates8;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -48,9 +49,8 @@ import java.util.Date;
 @SuppressWarnings("ALL")
 public class BasicTypeStoreProvider implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -938129593771195L;
-
-    private final TypeStore store;
 
     // -------------------- base --------------------
     private final static Conversion TO_BYTE = Converts::toByte;
@@ -78,6 +78,8 @@ public class BasicTypeStoreProvider implements Serializable {
     private final static Conversion TO_DATE = Converts::toDate;
     private final static Conversion TO_LOCAL_DATE_TIME = Dates8::localDateTime;
     private final static Conversion TO_LOCAL_DATE = Dates8::localDate;
+
+    private final TypeStore store;
 
     public BasicTypeStoreProvider() {
         this(TypeStore.STORE);

@@ -31,6 +31,7 @@ import eu.bitwalker.useragentutils.Browser;
 import eu.bitwalker.useragentutils.OperatingSystem;
 import eu.bitwalker.useragentutils.UserAgent;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -42,6 +43,7 @@ import java.io.Serializable;
  */
 public class UserAgentInfo implements Serializable, IJsonObject {
 
+    @Serial
     private static final long serialVersionUID = 89873451943868422L;
 
     /**

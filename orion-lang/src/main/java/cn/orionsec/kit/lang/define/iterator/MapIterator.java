@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.lang.define.iterator;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
@@ -41,6 +42,7 @@ import java.util.function.Consumer;
  */
 public class MapIterator<K, V> implements Iterator<Map.Entry<K, V>>, Iterable<Map.Entry<K, V>>, Serializable {
 
+    @Serial
     private static final long serialVersionUID = -2395934120935349L;
 
     private Map<K, V> map;

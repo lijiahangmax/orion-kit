@@ -28,6 +28,7 @@ package cn.orionsec.kit.ext.vcs.git.info;
 
 import cn.orionsec.kit.lang.utils.time.Dates;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -40,6 +41,7 @@ import java.util.Date;
  */
 public class LogInfo implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 12956908923748L;
 
     /**

@@ -35,6 +35,7 @@ import cn.orionsec.kit.lang.utils.collect.Lists;
 import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
@@ -52,6 +53,7 @@ import java.util.stream.Stream;
  */
 public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, IJsonObject, Iterable<T> {
 
+    @Serial
     private static final long serialVersionUID = 6354348839019830L;
 
     private static final int DEFAULT_LIMIT = KitConfig.get(KitLangConfiguration.CONFIG.PAGER_DEFAULT_LIMIT);
@@ -169,6 +171,35 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, IJ
             return count != 0;
         }
         return pager.offset < count;
+    }
+
+    /**
+     * 获取总页数
+     *
+     * @param total 条数
+     * @param pager 分页
+     * @return 页数
+     */
+    public static int getPages(int total, Pager<?> pager) {
+        if (pager == null) {
+            return total >= 1 ? 1 : 0;
+        }
+        int limit = pager.getLimit();
+        return getPages(total, limit);
+    }
+
+    /**
+     * 获取总页数
+     *
+     * @param total 条数
+     * @param limit 条数
+     * @return 页数
+     */
+    public static int getPages(int total, int limit) {
+        if (limit == 0) {
+            return total >= 1 ? 1 : 0;
+        }
+        return total % limit == 0 ? total / limit : (total / limit) + 1;
     }
 
     public boolean hasMoreData() {
@@ -295,38 +326,6 @@ public class Pager<T> extends CloneSupport<Pager<T>> implements Serializable, IJ
      */
     public DataGrid<T> toDataGrid() {
         return new DataGrid<>(this);
-    }
-
-    /**
-     * 获取总页数
-     *
-     * @param total 条数
-     * @param pager 分页
-     * @return 页数
-     */
-    public static int getPages(int total, Pager<?> pager) {
-        if (pager == null) {
-            return total >= 1 ? 1 : 0;
-        }
-        int limit = pager.getLimit();
-        if (limit == 0) {
-            return total >= 1 ? 1 : 0;
-        }
-        return total % limit == 0 ? total / limit : (total / limit) + 1;
-    }
-
-    /**
-     * 获取总页数
-     *
-     * @param total 条数
-     * @param limit 条数
-     * @return 页数
-     */
-    public static int getPages(int total, int limit) {
-        if (limit == 0) {
-            return total >= 1 ? 1 : 0;
-        }
-        return total % limit == 0 ? total / limit : (total / limit) + 1;
     }
 
     @JSONField(serialize = false)

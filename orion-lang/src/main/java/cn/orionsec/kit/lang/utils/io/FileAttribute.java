@@ -27,6 +27,7 @@
 package cn.orionsec.kit.lang.utils.io;
 
 import java.io.File;
+import java.io.Serial;
 import java.io.Serializable;
 import java.net.URI;
 import java.nio.file.Path;
@@ -41,6 +42,7 @@ import java.nio.file.attribute.BasicFileAttributes;
  */
 public class FileAttribute implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 90456092839304098L;
 
     /**

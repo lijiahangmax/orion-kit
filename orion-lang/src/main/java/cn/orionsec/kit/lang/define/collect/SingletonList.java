@@ -30,6 +30,7 @@ import cn.orionsec.kit.lang.define.iterator.SingletonIterator;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Objects1;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.AbstractList;
 import java.util.Comparator;
@@ -48,6 +49,7 @@ import java.util.function.UnaryOperator;
  */
 public class SingletonList<E> extends AbstractList<E> implements RandomAccess, Serializable {
 
+    @Serial
     private static final long serialVersionUID = -945902293805399L;
 
     private final E element;

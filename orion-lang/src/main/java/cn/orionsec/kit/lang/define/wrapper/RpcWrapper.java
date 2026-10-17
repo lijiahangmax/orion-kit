@@ -41,6 +41,7 @@ import cn.orionsec.kit.lang.utils.json.Jsons;
 import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.io.Serial;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -54,16 +55,13 @@ import java.util.function.Supplier;
  */
 public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrapper<T>, ILogObject, IMapObject<String, Object> {
 
+    @Serial
     private static final long serialVersionUID = 7940497300629314L;
 
     public static final Integer RPC_SUCCESS_CODE = KitConfig.get(KitLangConfiguration.CONFIG.RPC_SUCCESS_CODE);
-
     public static final String RPC_SUCCESS_MESSAGE = KitConfig.get(KitLangConfiguration.CONFIG.RPC_SUCCESS_MESSAGE);
-
     public static final Integer RPC_ERROR_CODE = KitConfig.get(KitLangConfiguration.CONFIG.RPC_ERROR_CODE);
-
     public static final String RPC_ERROR_MESSAGE = KitConfig.get(KitLangConfiguration.CONFIG.RPC_ERROR_MESSAGE);
-
     public static final String PRC_TRACE_PREFIX = KitConfig.get(KitLangConfiguration.CONFIG.PRC_TRACE_PREFIX);
 
     /**
@@ -248,44 +246,44 @@ public class RpcWrapper<T> extends CloneSupport<RpcWrapper<T>> implements Wrappe
         return this;
     }
 
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
-
-    public void setTraceId(String traceId) {
-        this.traceId = PRC_TRACE_PREFIX + traceId;
-    }
-
-    public void setErrorMessages(List<String> errorMessages) {
-        this.errorMessages = errorMessages;
-    }
-
     public int getCode() {
         return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
 
     public String getMsg() {
         return msg;
     }
 
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
     public T getData() {
         return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
     }
 
     public String getTraceId() {
         return traceId;
     }
 
+    public void setTraceId(String traceId) {
+        this.traceId = PRC_TRACE_PREFIX + traceId;
+    }
+
     public List<String> getErrorMessages() {
         return errorMessages == null ? errorMessages = new ArrayList<>() : errorMessages;
+    }
+
+    public void setErrorMessages(List<String> errorMessages) {
+        this.errorMessages = errorMessages;
     }
 
     @JSONField(serialize = false)

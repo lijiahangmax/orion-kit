@@ -28,6 +28,7 @@ package cn.orionsec.kit.lang.define.iterator;
 
 import cn.orionsec.kit.lang.utils.Exceptions;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Iterator;
 
@@ -40,6 +41,7 @@ import java.util.Iterator;
  */
 public class EmptyIterator<E> implements Iterator<E>, Iterable<E>, Serializable {
 
+    @Serial
     private static final long serialVersionUID = 8739578349180L;
 
     public EmptyIterator() {

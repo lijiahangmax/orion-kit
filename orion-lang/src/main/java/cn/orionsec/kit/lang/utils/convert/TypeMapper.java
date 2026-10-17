@@ -29,6 +29,7 @@ package cn.orionsec.kit.lang.utils.convert;
 import cn.orionsec.kit.lang.function.Conversion;
 import cn.orionsec.kit.lang.utils.Assert;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
@@ -42,6 +43,7 @@ import java.util.Set;
  */
 public abstract class TypeMapper<T> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -123903459090989178L;
 
     private final TypeStore store;

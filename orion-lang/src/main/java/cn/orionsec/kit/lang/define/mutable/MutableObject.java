@@ -28,6 +28,7 @@ package cn.orionsec.kit.lang.define.mutable;
 
 import cn.orionsec.kit.lang.able.Mutable;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -39,6 +40,7 @@ import java.io.Serializable;
  */
 public class MutableObject<T> implements Mutable<T>, Serializable {
 
+    @Serial
     private static final long serialVersionUID = 298530495803846909L;
 
     private T value;

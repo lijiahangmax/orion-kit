@@ -30,6 +30,7 @@ import cn.orionsec.kit.lang.define.wrapper.Pair;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Objects1;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.AbstractMap;
 import java.util.Collection;
@@ -48,6 +49,7 @@ import java.util.function.Function;
  */
 public class SingletonMap<K, V> extends AbstractMap<K, V> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 2238919328937489523L;
 
     private final K k;

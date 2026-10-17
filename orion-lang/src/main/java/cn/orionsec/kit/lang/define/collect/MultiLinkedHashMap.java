@@ -28,6 +28,7 @@ package cn.orionsec.kit.lang.define.collect;
 
 import cn.orionsec.kit.lang.constant.Const;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 
@@ -41,6 +42,7 @@ import java.util.LinkedHashMap;
 public class MultiLinkedHashMap<K, V, E> extends LinkedHashMap<K, LinkedHashMap<V, E>>
         implements MultiMap<K, V, E, LinkedHashMap<V, E>>, Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1237895897912782748L;
 
     private static final float DEFAULT_LOAD_FACTOR = 0.75F;

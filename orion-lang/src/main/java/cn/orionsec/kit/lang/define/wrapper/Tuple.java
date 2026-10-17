@@ -36,6 +36,7 @@ import cn.orionsec.kit.lang.utils.json.Jsons;
 import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -53,6 +54,7 @@ import java.util.stream.Stream;
  */
 public class Tuple extends CloneSupport<Tuple> implements Serializable, IJsonObject, Iterable<Object> {
 
+    @Serial
     private static final long serialVersionUID = 228374192841290087L;
 
     private final Object[] members;

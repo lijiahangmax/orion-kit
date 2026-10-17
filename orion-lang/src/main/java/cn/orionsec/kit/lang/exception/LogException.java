@@ -26,6 +26,8 @@
  */
 package cn.orionsec.kit.lang.exception;
 
+import java.io.Serial;
+
 /**
  * 运行异常 (日志打印)
  *
@@ -35,6 +37,7 @@ package cn.orionsec.kit.lang.exception;
  */
 public class LogException extends RuntimeException {
 
+    @Serial
     private static final long serialVersionUID = 8247610319171014183L;
 
     public LogException() {

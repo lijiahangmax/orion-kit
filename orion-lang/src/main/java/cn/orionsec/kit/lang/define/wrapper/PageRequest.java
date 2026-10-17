@@ -29,6 +29,8 @@ package cn.orionsec.kit.lang.define.wrapper;
 import cn.orionsec.kit.lang.KitLangConfiguration;
 import cn.orionsec.kit.lang.config.KitConfig;
 
+import java.io.Serial;
+
 /**
  * 分页公共请求
  *
@@ -38,6 +40,7 @@ import cn.orionsec.kit.lang.config.KitConfig;
  */
 public class PageRequest implements IPageRequest {
 
+    @Serial
     private static final long serialVersionUID = -773462378602349895L;
 
     private static final int DEFAULT_LIMIT = KitConfig.get(KitLangConfiguration.CONFIG.PAGE_REQUEST_DEFAULT_LIMIT);

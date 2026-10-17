@@ -30,6 +30,7 @@ import cn.orionsec.kit.lang.able.IJsonObject;
 import cn.orionsec.kit.lang.define.support.CloneSupport;
 import cn.orionsec.kit.lang.utils.Objects1;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
@@ -44,6 +45,7 @@ import java.util.function.Function;
  */
 public class Ref<T> extends CloneSupport<Ref<T>> implements Serializable, IJsonObject {
 
+    @Serial
     private static final long serialVersionUID = -885690364340775L;
 
     private T value;

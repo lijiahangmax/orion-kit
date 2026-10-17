@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.lang.utils.time.ago;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -37,6 +38,7 @@ import java.io.Serializable;
  */
 public class DateAgoHint implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 41684659873123848L;
 
     /**

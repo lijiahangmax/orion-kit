@@ -29,6 +29,7 @@ package cn.orionsec.kit.lang.define.collect;
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.utils.Assert;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
@@ -41,6 +42,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
  */
 public class FixedDeque<E> extends ConcurrentLinkedDeque<E> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 923412312354068942L;
 
     private final int maxSize;

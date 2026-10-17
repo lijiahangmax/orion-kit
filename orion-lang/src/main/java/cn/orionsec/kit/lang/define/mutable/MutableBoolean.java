@@ -28,6 +28,7 @@ package cn.orionsec.kit.lang.define.mutable;
 
 import cn.orionsec.kit.lang.able.Mutable;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -39,6 +40,7 @@ import java.io.Serializable;
  */
 public class MutableBoolean implements Mutable<Boolean>, Serializable, Comparable<MutableBoolean> {
 
+    @Serial
     private static final long serialVersionUID = -18927387182378954L;
 
     private boolean value;

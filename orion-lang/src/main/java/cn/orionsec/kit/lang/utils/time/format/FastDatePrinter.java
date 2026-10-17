@@ -31,6 +31,7 @@ import cn.orionsec.kit.lang.utils.Exceptions;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.Serial;
 import java.io.Serializable;
 import java.text.DateFormatSymbols;
 import java.util.*;
@@ -42,6 +43,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class FastDatePrinter implements DatePrinter, Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private static final int MAX_DIGITS = 10;
@@ -66,6 +68,81 @@ public class FastDatePrinter implements DatePrinter, Serializable {
         this.timeZone = timeZone;
         this.locale = locale;
         this.init();
+    }
+
+    private static void appendDigits(Appendable buffer, int value) throws IOException {
+        buffer.append((char) (value / 10 + '0'));
+        buffer.append((char) (value % 10 + '0'));
+    }
+
+    private static void appendFullDigits(Appendable buffer, int value, int minFieldWidth) throws IOException {
+        if (value < 10000) {
+            int nDigits = 4;
+            if (value < 1000) {
+                --nDigits;
+                if (value < 100) {
+                    --nDigits;
+                    if (value < 10) {
+                        --nDigits;
+                    }
+                }
+            }
+            // 左侧0填充
+            for (int i = minFieldWidth - nDigits; i > 0; --i) {
+                buffer.append('0');
+            }
+            switch (nDigits) {
+                case 4:
+                    buffer.append((char) (value / 1000 + '0'));
+                    value %= 1000;
+                case 3:
+                    if (value >= 100) {
+                        buffer.append((char) (value / 100 + '0'));
+                        value %= 100;
+                    } else {
+                        buffer.append('0');
+                    }
+                case 2:
+                    if (value >= 10) {
+                        buffer.append((char) (value / 10 + '0'));
+                        value %= 10;
+                    } else {
+                        buffer.append('0');
+                    }
+                case 1:
+                    buffer.append((char) (value + '0'));
+            }
+        } else {
+            // 十进制表示
+            char[] work = new char[MAX_DIGITS];
+            int digit = 0;
+            while (value != 0) {
+                work[digit++] = (char) (value % 10 + '0');
+                value = value / 10;
+            }
+            // 0填充
+            while (digit < minFieldWidth) {
+                buffer.append('0');
+                --minFieldWidth;
+            }
+            // 倒序
+            while (--digit >= 0) {
+                buffer.append(work[digit]);
+            }
+        }
+    }
+
+    static String getTimeZoneDisplay(TimeZone tz, boolean daylight, int style, Locale locale) {
+        TimeZoneDisplayKey key = new TimeZoneDisplayKey(tz, daylight, style, locale);
+        String value = TIME_ZONE_DISPLAY_CACHE.get(key);
+        if (value == null) {
+            value = tz.getDisplayName(daylight, style, locale);
+            String prior = TIME_ZONE_DISPLAY_CACHE.putIfAbsent(key, value);
+            if (prior != null) {
+                value = prior;
+            }
+        }
+        return value;
     }
 
     /**
@@ -388,10 +465,9 @@ public class FastDatePrinter implements DatePrinter, Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof FastDatePrinter)) {
+        if (!(obj instanceof FastDatePrinter other)) {
             return false;
         }
-        FastDatePrinter other = (FastDatePrinter) obj;
         return pattern.equals(other.pattern)
                 && timeZone.equals(other.timeZone)
                 && locale.equals(other.locale);
@@ -410,81 +486,6 @@ public class FastDatePrinter implements DatePrinter, Serializable {
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         this.init();
-    }
-
-    private static void appendDigits(Appendable buffer, int value) throws IOException {
-        buffer.append((char) (value / 10 + '0'));
-        buffer.append((char) (value % 10 + '0'));
-    }
-
-    private static void appendFullDigits(Appendable buffer, int value, int minFieldWidth) throws IOException {
-        if (value < 10000) {
-            int nDigits = 4;
-            if (value < 1000) {
-                --nDigits;
-                if (value < 100) {
-                    --nDigits;
-                    if (value < 10) {
-                        --nDigits;
-                    }
-                }
-            }
-            // 左侧0填充
-            for (int i = minFieldWidth - nDigits; i > 0; --i) {
-                buffer.append('0');
-            }
-            switch (nDigits) {
-                case 4:
-                    buffer.append((char) (value / 1000 + '0'));
-                    value %= 1000;
-                case 3:
-                    if (value >= 100) {
-                        buffer.append((char) (value / 100 + '0'));
-                        value %= 100;
-                    } else {
-                        buffer.append('0');
-                    }
-                case 2:
-                    if (value >= 10) {
-                        buffer.append((char) (value / 10 + '0'));
-                        value %= 10;
-                    } else {
-                        buffer.append('0');
-                    }
-                case 1:
-                    buffer.append((char) (value + '0'));
-            }
-        } else {
-            // 十进制表示
-            char[] work = new char[MAX_DIGITS];
-            int digit = 0;
-            while (value != 0) {
-                work[digit++] = (char) (value % 10 + '0');
-                value = value / 10;
-            }
-            // 0填充
-            while (digit < minFieldWidth) {
-                buffer.append('0');
-                --minFieldWidth;
-            }
-            // 倒序
-            while (--digit >= 0) {
-                buffer.append(work[digit]);
-            }
-        }
-    }
-
-    static String getTimeZoneDisplay(TimeZone tz, boolean daylight, int style, Locale locale) {
-        TimeZoneDisplayKey key = new TimeZoneDisplayKey(tz, daylight, style, locale);
-        String value = TIME_ZONE_DISPLAY_CACHE.get(key);
-        if (value == null) {
-            value = tz.getDisplayName(daylight, style, locale);
-            String prior = TIME_ZONE_DISPLAY_CACHE.putIfAbsent(key, value);
-            if (prior != null) {
-                value = prior;
-            }
-        }
-        return value;
     }
 
     // -------------------- rule --------------------
@@ -524,7 +525,7 @@ public class FastDatePrinter implements DatePrinter, Serializable {
 
     private static class CharacterLiteral implements Rule {
 
-        private char mValue;
+        private final char mValue;
 
         CharacterLiteral(char value) {
             this.mValue = value;
@@ -544,7 +545,7 @@ public class FastDatePrinter implements DatePrinter, Serializable {
 
     private static class StringLiteral implements Rule {
 
-        private String value;
+        private final String value;
 
         StringLiteral(String value) {
             this.value = value;
@@ -564,9 +565,9 @@ public class FastDatePrinter implements DatePrinter, Serializable {
 
     private static class TextField implements Rule {
 
-        private int field;
+        private final int field;
 
-        private String[] values;
+        private final String[] values;
 
         TextField(int field, String[] values) {
             this.field = field;
@@ -594,7 +595,7 @@ public class FastDatePrinter implements DatePrinter, Serializable {
 
     private static class UnPaddedNumberField implements NumberRule {
 
-        private int field;
+        private final int field;
 
         UnPaddedNumberField(int field) {
             this.field = field;
@@ -654,9 +655,9 @@ public class FastDatePrinter implements DatePrinter, Serializable {
 
     private static class PaddedNumberField implements NumberRule {
 
-        private int field;
+        private final int field;
 
-        private int size;
+        private final int size;
 
         PaddedNumberField(int field, int size) {
             if (size < 3) {
@@ -685,7 +686,7 @@ public class FastDatePrinter implements DatePrinter, Serializable {
 
     private static class TwoDigitNumberField implements NumberRule {
 
-        private int field;
+        private final int field;
 
         TwoDigitNumberField(int field) {
             this.field = field;
@@ -764,7 +765,7 @@ public class FastDatePrinter implements DatePrinter, Serializable {
 
     private static class TwelveHourField implements NumberRule {
 
-        private NumberRule rule;
+        private final NumberRule rule;
 
         TwelveHourField(NumberRule rule) {
             this.rule = rule;
@@ -793,7 +794,7 @@ public class FastDatePrinter implements DatePrinter, Serializable {
 
     private static class TwentyFourHourField implements NumberRule {
 
-        private NumberRule rule;
+        private final NumberRule rule;
 
         TwentyFourHourField(NumberRule rule) {
             this.rule = rule;
@@ -822,7 +823,7 @@ public class FastDatePrinter implements DatePrinter, Serializable {
 
     private static class DayInWeekField implements NumberRule {
 
-        private NumberRule rule;
+        private final NumberRule rule;
 
         DayInWeekField(NumberRule rule) {
             this.rule = rule;
@@ -848,7 +849,7 @@ public class FastDatePrinter implements DatePrinter, Serializable {
 
     private static class WeekYear implements NumberRule {
 
-        private NumberRule rule;
+        private final NumberRule rule;
 
         WeekYear(NumberRule rule) {
             this.rule = rule;
@@ -873,13 +874,13 @@ public class FastDatePrinter implements DatePrinter, Serializable {
 
     private static class TimeZoneNameRule implements Rule {
 
-        private Locale locale;
+        private final Locale locale;
 
-        private int style;
+        private final int style;
 
-        private String standard;
+        private final String standard;
 
-        private String daylight;
+        private final String daylight;
 
         TimeZoneNameRule(TimeZone timeZone, Locale locale, int style) {
             this.locale = locale;
@@ -1035,8 +1036,7 @@ public class FastDatePrinter implements DatePrinter, Serializable {
             if (this == obj) {
                 return true;
             }
-            if (obj instanceof TimeZoneDisplayKey) {
-                TimeZoneDisplayKey other = (TimeZoneDisplayKey) obj;
+            if (obj instanceof TimeZoneDisplayKey other) {
                 return timeZone.equals(other.timeZone)
                         && style == other.style
                         && locale.equals(other.locale);

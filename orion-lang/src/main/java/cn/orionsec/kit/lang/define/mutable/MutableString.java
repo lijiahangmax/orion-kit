@@ -35,6 +35,7 @@ import cn.orionsec.kit.lang.utils.codec.Base64s;
 import cn.orionsec.kit.lang.utils.convert.Converts;
 import cn.orionsec.kit.lang.utils.crypto.Signatures;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -50,6 +51,7 @@ import java.util.Objects;
  */
 public class MutableString implements Mutable<String>, CharSequence, Serializable {
 
+    @Serial
     private static final long serialVersionUID = 8675244107435484L;
 
     private StringBuilder builder;

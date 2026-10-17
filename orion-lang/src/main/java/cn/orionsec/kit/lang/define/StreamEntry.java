@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.lang.define;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -37,6 +38,7 @@ import java.io.Serializable;
  */
 public class StreamEntry implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -8954322539057831L;
 
     private byte[] bytes;
@@ -56,28 +58,28 @@ public class StreamEntry implements Serializable {
         this.len = len;
     }
 
-    public void setBytes(byte[] bytes) {
-        this.bytes = bytes;
-    }
-
-    public void setOff(int off) {
-        this.off = off;
-    }
-
-    public void setLen(int len) {
-        this.len = len;
-    }
-
     public byte[] getBytes() {
         return bytes;
+    }
+
+    public void setBytes(byte[] bytes) {
+        this.bytes = bytes;
     }
 
     public int getOff() {
         return off;
     }
 
+    public void setOff(int off) {
+        this.off = off;
+    }
+
     public int getLen() {
         return len;
+    }
+
+    public void setLen(int len) {
+        this.len = len;
     }
 
     @Override

@@ -29,6 +29,7 @@ package cn.orionsec.kit.lang.define.iterator;
 import cn.orionsec.kit.lang.utils.Arrays1;
 import cn.orionsec.kit.lang.utils.Exceptions;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Iterator;
 
@@ -41,6 +42,7 @@ import java.util.Iterator;
  */
 public class ArrayIterator<E> implements Iterator<E>, Iterable<E>, Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1832735384832234L;
 
     /**

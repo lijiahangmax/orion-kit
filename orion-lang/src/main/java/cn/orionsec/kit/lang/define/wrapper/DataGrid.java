@@ -35,6 +35,7 @@ import cn.orionsec.kit.lang.utils.collect.Lists;
 import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -53,6 +54,7 @@ import java.util.stream.Stream;
  */
 public class DataGrid<T> extends CloneSupport<DataGrid<T>> implements Serializable, IJsonObject, Iterable<T> {
 
+    @Serial
     private static final long serialVersionUID = 3787662930250625L;
 
     private static final int DEFAULT_LIMIT = KitConfig.get(KitLangConfiguration.CONFIG.DATA_GRID_DEFAULT_LIMIT);

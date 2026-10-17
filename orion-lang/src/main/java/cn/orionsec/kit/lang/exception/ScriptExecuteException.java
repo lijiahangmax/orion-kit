@@ -27,6 +27,7 @@
 package cn.orionsec.kit.lang.exception;
 
 import javax.script.ScriptException;
+import java.io.Serial;
 
 /**
  * 脚本执行异常
@@ -37,6 +38,7 @@ import javax.script.ScriptException;
  */
 public class ScriptExecuteException extends RuntimeException {
 
+    @Serial
     private static final long serialVersionUID = 8247610319171014183L;
 
     private String fileName;

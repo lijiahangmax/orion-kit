@@ -29,6 +29,7 @@ package cn.orionsec.kit.lang.define.collect;
 import cn.orionsec.kit.lang.utils.collect.Lists;
 import cn.orionsec.kit.lang.utils.collect.Maps;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -42,6 +43,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class WeightRandomMap<T> extends TreeMap<Double, T> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -978238901200283479L;
 
     private final Random RANDOM = ThreadLocalRandom.current();
@@ -123,14 +125,13 @@ public class WeightRandomMap<T> extends TreeMap<Double, T> implements Serializab
     public static class WeightObject<T> {
 
         /**
-         * 对象
-         */
-        private T object;
-
-        /**
          * 权重
          */
         private final double weight;
+        /**
+         * 对象
+         */
+        private T object;
 
         public WeightObject(T obj, double weight) {
             this.object = obj;

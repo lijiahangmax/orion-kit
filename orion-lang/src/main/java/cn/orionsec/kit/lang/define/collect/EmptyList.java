@@ -28,6 +28,7 @@ package cn.orionsec.kit.lang.define.collect;
 
 import cn.orionsec.kit.lang.utils.Exceptions;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 import java.util.function.Consumer;
@@ -45,6 +46,7 @@ public class EmptyList<E> extends AbstractList<E> implements RandomAccess, Seria
 
     public static final EmptyList<?> EMPTY = new EmptyList<>();
 
+    @Serial
     private static final long serialVersionUID = -4359234034983487L;
 
     @Override

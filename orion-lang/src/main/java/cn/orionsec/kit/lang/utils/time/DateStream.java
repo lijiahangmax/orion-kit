@@ -29,6 +29,7 @@ package cn.orionsec.kit.lang.utils.time;
 import cn.orionsec.kit.lang.define.support.CloneSupport;
 import cn.orionsec.kit.lang.utils.Assert;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
@@ -44,6 +45,7 @@ import java.util.TimeZone;
  */
 public class DateStream extends CloneSupport<DateStream> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -21831208940539450L;
 
     private final Calendar c;
@@ -111,29 +113,17 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
         return this;
     }
 
-    public DateStream setYear(int y) {
-        c.set(Calendar.YEAR, y);
-        return this;
-    }
-
-    // -------------------- month --------------------
-
     public DateStream addMonth(int m) {
         c.add(Calendar.MONTH, m);
         return this;
     }
 
+    // -------------------- month --------------------
+
     public DateStream subMonth(int m) {
         c.add(Calendar.MONTH, -m);
         return this;
     }
-
-    public DateStream setMonth(int m) {
-        c.set(Calendar.MONTH, m - 1);
-        return this;
-    }
-
-    // -------------------- week --------------------
 
     public DateStream addWeek(int w) {
         c.add(Calendar.WEEK_OF_MONTH, w);
@@ -145,12 +135,7 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
         return this;
     }
 
-    public DateStream setWeek(int w) {
-        c.set(Calendar.WEEK_OF_MONTH, w);
-        return this;
-    }
-
-    // -------------------- day --------------------
+    // -------------------- week --------------------
 
     public DateStream addDay(int d) {
         c.add(Calendar.DAY_OF_MONTH, d);
@@ -162,29 +147,17 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
         return this;
     }
 
-    public DateStream setDay(int d) {
-        c.set(Calendar.DAY_OF_MONTH, d);
-        return this;
-    }
-
-    // -------------------- hour --------------------
-
     public DateStream addHour(int h) {
         c.add(Calendar.HOUR_OF_DAY, h);
         return this;
     }
 
+    // -------------------- day --------------------
+
     public DateStream subHour(int h) {
         c.add(Calendar.HOUR_OF_DAY, -h);
         return this;
     }
-
-    public DateStream setHour(int h) {
-        c.set(Calendar.HOUR_OF_DAY, h);
-        return this;
-    }
-
-    // -------------------- minute --------------------
 
     public DateStream addMinute(int m) {
         c.add(Calendar.MINUTE, m);
@@ -196,12 +169,7 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
         return this;
     }
 
-    public DateStream setMinute(int m) {
-        c.set(Calendar.MINUTE, m);
-        return this;
-    }
-
-    // -------------------- second --------------------
+    // -------------------- hour --------------------
 
     public DateStream addSecond(int s) {
         c.add(Calendar.SECOND, s);
@@ -213,25 +181,15 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
         return this;
     }
 
-    public DateStream setSecond(int s) {
-        c.set(Calendar.SECOND, s);
-        return this;
-    }
-
-    // -------------------- milli second --------------------
-
     public DateStream addMilliSecond(int ms) {
         c.add(Calendar.MILLISECOND, ms);
         return this;
     }
 
+    // -------------------- minute --------------------
+
     public DateStream subMilliSecond(int ms) {
         c.add(Calendar.MILLISECOND, -ms);
-        return this;
-    }
-
-    public DateStream setMilliSecond(int ms) {
-        c.set(Calendar.MILLISECOND, ms);
         return this;
     }
 
@@ -245,12 +203,12 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
         return this;
     }
 
+    // -------------------- second --------------------
+
     public DateStream set(int type, int v) {
         c.set(type, v);
         return this;
     }
-
-    // -------------------- compute --------------------
 
     /**
      * 日期的 00:00:00
@@ -272,6 +230,8 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
         Dates.dayEnd(c);
         return this;
     }
+
+    // -------------------- milli second --------------------
 
     /**
      * 设置日期为1号
@@ -335,7 +295,7 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
         return this;
     }
 
-    // -------------------- result --------------------
+    // -------------------- compute --------------------
 
     public String format() {
         return Dates.format(c.getTime());
@@ -368,6 +328,8 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
     public String format(String pattern, TimeZone timeZone, Locale locale) {
         return Dates.format(c.getTime(), pattern, timeZone, locale);
     }
+
+    // -------------------- result --------------------
 
     /**
      * 是否在时间区间内
@@ -442,32 +404,72 @@ public class DateStream extends CloneSupport<DateStream> implements Serializable
         return c.get(Calendar.YEAR);
     }
 
+    public DateStream setYear(int y) {
+        c.set(Calendar.YEAR, y);
+        return this;
+    }
+
     public int getMonth() {
         return c.get(Calendar.MONTH) + 1;
+    }
+
+    public DateStream setMonth(int m) {
+        c.set(Calendar.MONTH, m - 1);
+        return this;
     }
 
     public int getWeek() {
         return c.get(Calendar.WEEK_OF_MONTH);
     }
 
+    public DateStream setWeek(int w) {
+        c.set(Calendar.WEEK_OF_MONTH, w);
+        return this;
+    }
+
     public int getDay() {
         return c.get(Calendar.DAY_OF_MONTH);
+    }
+
+    public DateStream setDay(int d) {
+        c.set(Calendar.DAY_OF_MONTH, d);
+        return this;
     }
 
     public int getHour() {
         return c.get(Calendar.HOUR_OF_DAY);
     }
 
+    public DateStream setHour(int h) {
+        c.set(Calendar.HOUR_OF_DAY, h);
+        return this;
+    }
+
     public int getMinute() {
         return c.get(Calendar.MINUTE);
+    }
+
+    public DateStream setMinute(int m) {
+        c.set(Calendar.MINUTE, m);
+        return this;
     }
 
     public int getSecond() {
         return c.get(Calendar.SECOND);
     }
 
+    public DateStream setSecond(int s) {
+        c.set(Calendar.SECOND, s);
+        return this;
+    }
+
     public int getMilliSecond() {
         return c.get(Calendar.MILLISECOND);
+    }
+
+    public DateStream setMilliSecond(int ms) {
+        c.set(Calendar.MILLISECOND, ms);
+        return this;
     }
 
     public boolean isAm() {

@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.lang.define.collect;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -39,6 +40,7 @@ import java.util.Map;
  */
 public class MutableLinkedHashMap<K, V> extends LinkedHashMap<K, V> implements MutableMap<K, V>, Serializable {
 
+    @Serial
     private static final long serialVersionUID = 876812409459012839L;
 
     public MutableLinkedHashMap() {

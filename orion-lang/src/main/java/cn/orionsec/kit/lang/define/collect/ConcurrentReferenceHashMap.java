@@ -31,6 +31,7 @@ import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Objects1;
 import cn.orionsec.kit.lang.utils.collect.Sets;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
@@ -48,6 +49,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>, Serializable {
 
+    @Serial
     private static final long serialVersionUID = -128497912390452323L;
 
     private static final int DEFAULT_INITIAL_CAPACITY = 16;
@@ -123,6 +125,16 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
 
     public static <K, V> ConcurrentReferenceHashMap<K, V> create(ReferenceType referenceType) {
         return new ConcurrentReferenceHashMap<>(referenceType);
+    }
+
+    protected static int calculateShift(int minimumValue, int maximumValue) {
+        int shift = 0;
+        int value = 1;
+        while (value < minimumValue && value < maximumValue) {
+            value <<= 1;
+            shift++;
+        }
+        return shift;
     }
 
     protected final float getLoadFactor() {
@@ -300,16 +312,6 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
         return this.segments[(hash >>> (32 - this.shift)) & (this.segments.length - 1)];
     }
 
-    protected static int calculateShift(int minimumValue, int maximumValue) {
-        int shift = 0;
-        int value = 1;
-        while (value < minimumValue && value < maximumValue) {
-            value <<= 1;
-            shift++;
-        }
-        return shift;
-    }
-
     public enum ReferenceType {
 
         /**
@@ -321,6 +323,136 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
          * Use {@link WeakReference}
          */
         WEAK
+    }
+
+    private enum TaskOption {
+        RESTRUCTURE_BEFORE, RESTRUCTURE_AFTER, SKIP_IF_EMPTY, RESIZE
+    }
+
+    protected enum Restructure {
+        WHEN_NECESSARY, NEVER
+    }
+
+    protected interface Reference<K, V> {
+
+        Entry<K, V> get();
+
+        int getHash();
+
+        Reference<K, V> getNext();
+
+        void release();
+    }
+
+    protected static final class Entry<K, V> implements Map.Entry<K, V> {
+
+        private final K key;
+
+        private volatile V value;
+
+        public Entry(K key, V value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        @Override
+        public K getKey() {
+            return this.key;
+        }
+
+        @Override
+        public V getValue() {
+            return this.value;
+        }
+
+        @Override
+        public V setValue(V value) {
+            V previous = this.value;
+            this.value = value;
+            return previous;
+        }
+
+        @Override
+        public String toString() {
+            return (this.key + "=" + this.value);
+        }
+
+        @Override
+        @SuppressWarnings("rawtypes")
+        public boolean equals(Object other) {
+            if (this == other) {
+                return true;
+            }
+            if (!(other instanceof Map.Entry otherEntry)) {
+                return false;
+            }
+            return (Objects1.eq(getKey(), otherEntry.getKey())
+                    && Objects1.eq(getValue(), otherEntry.getValue()));
+        }
+
+        @Override
+        public int hashCode() {
+            return (Objects1.hashCode(this.key) ^ Objects1.hashCode(this.value));
+        }
+
+    }
+
+    private static final class SoftEntryReference<K, V> extends SoftReference<Entry<K, V>> implements Reference<K, V> {
+
+        private final int hash;
+
+        private final Reference<K, V> nextReference;
+
+        public SoftEntryReference(Entry<K, V> entry, int hash, Reference<K, V> next, ReferenceQueue<Entry<K, V>> queue) {
+            super(entry, queue);
+            this.hash = hash;
+            this.nextReference = next;
+        }
+
+        @Override
+        public int getHash() {
+            return this.hash;
+        }
+
+        @Override
+        public Reference<K, V> getNext() {
+            return this.nextReference;
+        }
+
+        @Override
+        public void release() {
+            enqueue();
+            clear();
+        }
+    }
+
+    private static final class WeakEntryReference<K, V> extends WeakReference<Entry<K, V>> implements Reference<K, V> {
+
+        private final int hash;
+
+        private final Reference<K, V> nextReference;
+
+        public WeakEntryReference(Entry<K, V> entry, int hash, Reference<K, V> next, ReferenceQueue<Entry<K, V>> queue) {
+            super(entry, queue);
+            this.hash = hash;
+            this.nextReference = next;
+        }
+
+        @Override
+        public int getHash() {
+            return this.hash;
+        }
+
+        @Override
+        public Reference<K, V> getNext() {
+            return this.nextReference;
+        }
+
+        @Override
+        public void release() {
+            enqueue();
+            clear();
+        }
     }
 
     @SuppressWarnings("serial")
@@ -402,7 +534,7 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
             }
         }
 
-        protected final void restructureIfNecessary(boolean allowResize) {
+        protected void restructureIfNecessary(boolean allowResize) {
             boolean needsResize = ((this.count > 0) && (this.count >= this.resizeThreshold));
             Reference<K, V> reference = this.referenceManager.pollForPurge();
             if ((reference != null) || (needsResize && allowResize)) {
@@ -491,78 +623,13 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
             this.resizeThreshold = (int) (references.length * getLoadFactor());
         }
 
-        public final int getSize() {
+        public int getSize() {
             return this.references.length;
         }
 
-        public final int getCount() {
+        public int getCount() {
             return this.count;
         }
-    }
-
-    protected interface Reference<K, V> {
-
-        Entry<K, V> get();
-
-        int getHash();
-
-        Reference<K, V> getNext();
-
-        void release();
-    }
-
-    protected static final class Entry<K, V> implements Map.Entry<K, V> {
-
-        private final K key;
-
-        private volatile V value;
-
-        public Entry(K key, V value) {
-            this.key = key;
-            this.value = value;
-        }
-
-        @Override
-        public K getKey() {
-            return this.key;
-        }
-
-        @Override
-        public V getValue() {
-            return this.value;
-        }
-
-        @Override
-        public V setValue(V value) {
-            V previous = this.value;
-            this.value = value;
-            return previous;
-        }
-
-        @Override
-        public String toString() {
-            return (this.key + "=" + this.value);
-        }
-
-        @Override
-        @SuppressWarnings("rawtypes")
-        public final boolean equals(Object other) {
-            if (this == other) {
-                return true;
-            }
-            if (!(other instanceof Map.Entry)) {
-                return false;
-            }
-            Map.Entry otherEntry = (Map.Entry) other;
-            return (Objects1.eq(getKey(), otherEntry.getKey())
-                    && Objects1.eq(getValue(), otherEntry.getValue()));
-        }
-
-        @Override
-        public final int hashCode() {
-            return (Objects1.hashCode(this.key) ^ Objects1.hashCode(this.value));
-        }
-
     }
 
     private abstract class Task<T> {
@@ -587,10 +654,6 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
 
     }
 
-    private enum TaskOption {
-        RESTRUCTURE_BEFORE, RESTRUCTURE_AFTER, SKIP_IF_EMPTY, RESIZE
-    }
-
     private abstract class Entries {
 
         public abstract void add(V value);
@@ -606,8 +669,7 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
 
         @Override
         public boolean contains(Object o) {
-            if (o instanceof Map.Entry<?, ?>) {
-                Map.Entry<?, ?> entry = (Map.Entry<?, ?>) o;
+            if (o instanceof Map.Entry<?, ?> entry) {
                 Reference<K, V> reference = ConcurrentReferenceHashMap.this.getReference(entry.getKey(), Restructure.NEVER);
                 Entry<K, V> other = (reference != null ? reference.get() : null);
                 if (other != null) {
@@ -619,8 +681,7 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
 
         @Override
         public boolean remove(Object o) {
-            if (o instanceof Map.Entry<?, ?>) {
-                Map.Entry<?, ?> entry = (Map.Entry<?, ?>) o;
+            if (o instanceof Map.Entry<?, ?> entry) {
                 return ConcurrentReferenceHashMap.this.remove(entry.getKey(), entry.getValue());
             }
             return false;
@@ -713,10 +774,6 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
         }
     }
 
-    protected enum Restructure {
-        WHEN_NECESSARY, NEVER
-    }
-
     protected class ReferenceManager {
 
         private final ReferenceQueue<Entry<K, V>> queue = new ReferenceQueue<Entry<K, V>>();
@@ -731,64 +788,6 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
         @SuppressWarnings("unchecked")
         public Reference<K, V> pollForPurge() {
             return (Reference<K, V>) this.queue.poll();
-        }
-    }
-
-    private static final class SoftEntryReference<K, V> extends SoftReference<Entry<K, V>> implements Reference<K, V> {
-
-        private final int hash;
-
-        private final Reference<K, V> nextReference;
-
-        public SoftEntryReference(Entry<K, V> entry, int hash, Reference<K, V> next, ReferenceQueue<Entry<K, V>> queue) {
-            super(entry, queue);
-            this.hash = hash;
-            this.nextReference = next;
-        }
-
-        @Override
-        public int getHash() {
-            return this.hash;
-        }
-
-        @Override
-        public Reference<K, V> getNext() {
-            return this.nextReference;
-        }
-
-        @Override
-        public void release() {
-            enqueue();
-            clear();
-        }
-    }
-
-    private static final class WeakEntryReference<K, V> extends WeakReference<Entry<K, V>> implements Reference<K, V> {
-
-        private final int hash;
-
-        private final Reference<K, V> nextReference;
-
-        public WeakEntryReference(Entry<K, V> entry, int hash, Reference<K, V> next, ReferenceQueue<Entry<K, V>> queue) {
-            super(entry, queue);
-            this.hash = hash;
-            this.nextReference = next;
-        }
-
-        @Override
-        public int getHash() {
-            return this.hash;
-        }
-
-        @Override
-        public Reference<K, V> getNext() {
-            return this.nextReference;
-        }
-
-        @Override
-        public void release() {
-            enqueue();
-            clear();
         }
     }
 

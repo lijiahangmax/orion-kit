@@ -28,6 +28,8 @@ package cn.orionsec.kit.lang.define.mutable;
 
 import cn.orionsec.kit.lang.able.Mutable;
 
+import java.io.Serial;
+
 /**
  * 可变 float
  *
@@ -37,6 +39,7 @@ import cn.orionsec.kit.lang.able.Mutable;
  */
 public class MutableFloat extends Number implements Comparable<MutableFloat>, Mutable<Number> {
 
+    @Serial
     private static final long serialVersionUID = -8176512397589472L;
 
     private float value;

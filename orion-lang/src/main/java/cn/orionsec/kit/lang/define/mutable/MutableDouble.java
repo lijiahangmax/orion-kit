@@ -28,6 +28,8 @@ package cn.orionsec.kit.lang.define.mutable;
 
 import cn.orionsec.kit.lang.able.Mutable;
 
+import java.io.Serial;
+
 /**
  * 可变 double
  *
@@ -37,6 +39,7 @@ import cn.orionsec.kit.lang.able.Mutable;
  */
 public class MutableDouble extends Number implements Comparable<MutableDouble>, Mutable<Number> {
 
+    @Serial
     private static final long serialVersionUID = 8237498752382937491L;
 
     private double value;

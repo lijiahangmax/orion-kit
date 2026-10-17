@@ -28,6 +28,8 @@ package cn.orionsec.kit.lang.define.mutable;
 
 import cn.orionsec.kit.lang.able.Mutable;
 
+import java.io.Serial;
+
 /**
  * 可变 short
  *
@@ -37,6 +39,7 @@ import cn.orionsec.kit.lang.able.Mutable;
  */
 public class MutableShort extends Number implements Comparable<MutableShort>, Mutable<Number> {
 
+    @Serial
     private static final long serialVersionUID = -718264587912374L;
 
     private short value;

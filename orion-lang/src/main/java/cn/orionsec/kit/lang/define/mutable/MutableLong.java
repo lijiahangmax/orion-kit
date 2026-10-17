@@ -28,6 +28,8 @@ package cn.orionsec.kit.lang.define.mutable;
 
 import cn.orionsec.kit.lang.able.Mutable;
 
+import java.io.Serial;
+
 /**
  * 可变 long
  *
@@ -37,6 +39,7 @@ import cn.orionsec.kit.lang.able.Mutable;
  */
 public class MutableLong extends Number implements Comparable<MutableLong>, Mutable<Number> {
 
+    @Serial
     private static final long serialVersionUID = 108275912873945L;
 
     private long value;

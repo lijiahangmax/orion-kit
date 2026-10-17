@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.lang.define.collect;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -39,6 +40,7 @@ import java.util.LinkedList;
  */
 public class MutableLinkedList<E> extends LinkedList<E> implements MutableList<E>, Serializable {
 
+    @Serial
     private static final long serialVersionUID = 112934589387485912L;
 
     public MutableLinkedList() {

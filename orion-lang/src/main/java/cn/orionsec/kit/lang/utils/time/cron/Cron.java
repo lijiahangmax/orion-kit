@@ -31,6 +31,7 @@ import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.time.Dates;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 
@@ -43,7 +44,10 @@ import java.util.*;
  */
 public class Cron implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -1403493223L;
+
+    public static final int MAX_YEAR = Calendar.getInstance().get(Calendar.YEAR) + 100;
 
     protected static final int SECOND = 0;
     protected static final int MINUTE = 1;
@@ -84,8 +88,6 @@ public class Cron implements Serializable {
     }
 
     private final String cronExpression;
-    private TimeZone timeZone;
-
     protected transient TreeSet<Integer> seconds;
     protected transient TreeSet<Integer> minutes;
     protected transient TreeSet<Integer> hours;
@@ -100,8 +102,7 @@ public class Cron implements Serializable {
     protected transient boolean nearestWeekday;
     protected transient int lastDayOffset;
     protected transient boolean expressionParsed;
-
-    public static final int MAX_YEAR = Calendar.getInstance().get(Calendar.YEAR) + 100;
+    private TimeZone timeZone;
 
     public Cron(String cronExpression) {
         Assert.notBlank(cronExpression, "cron expression not be empty");
@@ -191,41 +192,39 @@ public class Cron implements Serializable {
      * @return 摘要
      */
     public String getExpressionSummary() {
-        return new StringBuilder()
-                .append("seconds: ")
-                .append(this.getExpressionSetSummary(seconds))
-                .append("\n")
-                .append("minutes: ")
-                .append(this.getExpressionSetSummary(minutes))
-                .append("\n")
-                .append("hours: ")
-                .append(this.getExpressionSetSummary(hours))
-                .append("\n")
-                .append("daysOfMonth: ")
-                .append(this.getExpressionSetSummary(daysOfMonth))
-                .append("\n")
-                .append("months: ")
-                .append(this.getExpressionSetSummary(months))
-                .append("\n")
-                .append("daysOfWeek: ")
-                .append(this.getExpressionSetSummary(daysOfWeek))
-                .append("\n")
-                .append("lastDayOfWeek: ")
-                .append(lastDayOfWeek)
-                .append("\n")
-                .append("nearestWeekday: ")
-                .append(nearestWeekday)
-                .append("\n")
-                .append("nthDayOfWeek: ")
-                .append(nthDayOfWeek)
-                .append("\n")
-                .append("lastDayOfMonth: ")
-                .append(lastDayOfMonth)
-                .append("\n")
-                .append("years: ")
-                .append(this.getExpressionSetSummary(years))
-                .append("\n")
-                .toString();
+        return "seconds: " +
+                this.getExpressionSetSummary(seconds) +
+                "\n" +
+                "minutes: " +
+                this.getExpressionSetSummary(minutes) +
+                "\n" +
+                "hours: " +
+                this.getExpressionSetSummary(hours) +
+                "\n" +
+                "daysOfMonth: " +
+                this.getExpressionSetSummary(daysOfMonth) +
+                "\n" +
+                "months: " +
+                this.getExpressionSetSummary(months) +
+                "\n" +
+                "daysOfWeek: " +
+                this.getExpressionSetSummary(daysOfWeek) +
+                "\n" +
+                "lastDayOfWeek: " +
+                lastDayOfWeek +
+                "\n" +
+                "nearestWeekday: " +
+                nearestWeekday +
+                "\n" +
+                "nthDayOfWeek: " +
+                nthDayOfWeek +
+                "\n" +
+                "lastDayOfMonth: " +
+                lastDayOfMonth +
+                "\n" +
+                "years: " +
+                this.getExpressionSetSummary(years) +
+                "\n";
     }
 
     @Override
@@ -310,7 +309,7 @@ public class Cron implements Serializable {
                 }
             }
         } catch (Exception e) {
-            throw Exceptions.parseCron("illegal cron expression format (" + e.toString() + ")", 0);
+            throw Exceptions.parseCron("illegal cron expression format (" + e + ")", 0);
         }
     }
 
@@ -1124,10 +1123,7 @@ public class Cron implements Serializable {
                         daysToAdd = dow + (7 - cDow);
                     }
 
-                    boolean dayShifted = false;
-                    if (daysToAdd > 0) {
-                        dayShifted = true;
-                    }
+                    boolean dayShifted = daysToAdd > 0;
 
                     day += daysToAdd;
                     int weekOfMonth = day / 7;

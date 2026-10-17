@@ -29,6 +29,7 @@ package cn.orionsec.kit.http.parse;
 import cn.orionsec.kit.lang.constant.Const;
 
 import javax.net.ssl.SSLContext;
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -40,6 +41,7 @@ import java.io.Serializable;
  */
 public class ParseRequestConfig implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 492034989586956230L;
 
     /**

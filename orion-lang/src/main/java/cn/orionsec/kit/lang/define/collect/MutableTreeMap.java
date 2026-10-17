@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.lang.define.collect;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Map;
@@ -41,6 +42,7 @@ import java.util.TreeMap;
  */
 public class MutableTreeMap<K, V> extends TreeMap<K, V> implements MutableMap<K, V>, Serializable {
 
+    @Serial
     private static final long serialVersionUID = 89347891239048579L;
 
     public MutableTreeMap() {

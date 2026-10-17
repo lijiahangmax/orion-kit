@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.lang.define.number;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -37,6 +38,7 @@ import java.io.Serializable;
  */
 public class Number128 implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -709672812391203L;
 
     private long lowValue;
@@ -56,12 +58,12 @@ public class Number128 implements Serializable {
         return lowValue;
     }
 
-    public long getHighValue() {
-        return highValue;
-    }
-
     public void setLowValue(long lowValue) {
         this.lowValue = lowValue;
+    }
+
+    public long getHighValue() {
+        return highValue;
     }
 
     public void setHighValue(long hiValue) {

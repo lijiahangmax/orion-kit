@@ -30,6 +30,7 @@ import cn.orionsec.kit.lang.define.iterator.SingletonIterator;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Objects1;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.AbstractSet;
 import java.util.Iterator;
@@ -45,6 +46,7 @@ import java.util.function.Predicate;
  */
 public class SingletonSet<E> extends AbstractSet<E> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1283912054341293L;
 
     private final E element;

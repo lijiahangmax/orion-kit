@@ -29,6 +29,7 @@ package cn.orionsec.kit.lang.define.collect;
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.utils.Assert;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -41,6 +42,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class FixedQueue<E> extends ConcurrentLinkedQueue<E> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -12908043940801293L;
 
     private final int maxSize;

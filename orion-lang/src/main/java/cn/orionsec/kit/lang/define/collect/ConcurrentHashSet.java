@@ -28,6 +28,7 @@ package cn.orionsec.kit.lang.define.collect;
 
 import cn.orionsec.kit.lang.define.Null;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.AbstractSet;
 import java.util.Collection;
@@ -46,6 +47,7 @@ import java.util.function.Consumer;
  */
 public class ConcurrentHashSet<E> extends AbstractSet<E> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -6809192700238394L;
 
     private static final Null VALUE = Null.VALUE;

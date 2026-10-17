@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.lang.define.collect;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Comparator;
@@ -41,6 +42,7 @@ import java.util.TreeSet;
  */
 public class MutableTreeSet<E> extends TreeSet<E> implements MutableSet<E>, Serializable {
 
+    @Serial
     private static final long serialVersionUID = -9345897822739429L;
 
     public MutableTreeSet() {

@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.lang.define;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -37,6 +38,7 @@ import java.io.Serializable;
  */
 public class Null implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1523490364340556L;
 
     public static final Null VALUE = new Null();

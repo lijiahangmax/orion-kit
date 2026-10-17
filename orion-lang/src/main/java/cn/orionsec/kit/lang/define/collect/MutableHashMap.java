@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.lang.define.collect;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +40,7 @@ import java.util.Map;
  */
 public class MutableHashMap<K, V> extends HashMap<K, V> implements MutableMap<K, V>, Serializable {
 
+    @Serial
     private static final long serialVersionUID = 111945899468912930L;
 
     public MutableHashMap() {

@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.lang.utils.time.format;
 
+import java.io.Serial;
 import java.text.FieldPosition;
 import java.text.Format;
 import java.text.ParsePosition;
@@ -43,6 +44,7 @@ import java.util.TimeZone;
  */
 public class FastDateFormat extends Format implements DateParser, DatePrinter {
 
+    @Serial
     private static final long serialVersionUID = 2L;
 
     private static final FormatCache<FastDateFormat> CACHE = new FormatCache<FastDateFormat>() {
@@ -230,10 +232,9 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof FastDateFormat)) {
+        if (!(obj instanceof FastDateFormat other)) {
             return false;
         }
-        FastDateFormat other = (FastDateFormat) obj;
         return printer.equals(other.printer);
     }
 

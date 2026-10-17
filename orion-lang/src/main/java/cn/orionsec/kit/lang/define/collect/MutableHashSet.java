@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.lang.define.collect;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
@@ -39,6 +40,7 @@ import java.util.HashSet;
  */
 public class MutableHashSet<E> extends HashSet<E> implements MutableSet<E>, Serializable {
 
+    @Serial
     private static final long serialVersionUID = 9982378111284539L;
 
     public MutableHashSet() {

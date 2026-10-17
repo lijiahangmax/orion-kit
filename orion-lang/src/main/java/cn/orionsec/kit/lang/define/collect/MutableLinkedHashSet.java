@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.lang.define.collect;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -39,6 +40,7 @@ import java.util.LinkedHashSet;
  */
 public class MutableLinkedHashSet<E> extends LinkedHashSet<E> implements MutableSet<E>, Serializable {
 
+    @Serial
     private static final long serialVersionUID = -822822893457969823L;
 
     public MutableLinkedHashSet() {

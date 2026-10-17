@@ -28,6 +28,7 @@ package cn.orionsec.kit.lang.utils.time.format;
 
 import cn.orionsec.kit.lang.utils.Exceptions;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.text.DateFormatSymbols;
 import java.text.ParsePosition;
@@ -46,26 +47,60 @@ import java.util.regex.Pattern;
  */
 public class FastDateParser implements DateParser, Serializable {
 
+    @Serial
     private static final long serialVersionUID = 3L;
 
     private static final Locale JAPANESE_IMPERIAL = Locale.of("ja", "JP", "JP");
-
-    private final String pattern;
-
-    private final TimeZone timeZone;
-
-    private final Locale locale;
-
-    private final int century;
-
-    private final int startYear;
-
-    private transient List<StrategyAndWidth> patterns;
-
     private static final Comparator<String> LONGER_FIRST_LOWERCASE = Comparator.reverseOrder();
-
     @SuppressWarnings("unchecked")
     private static final ConcurrentMap<Locale, Strategy>[] CACHES = new ConcurrentMap[Calendar.FIELD_COUNT];
+    private static final Strategy LITERAL_YEAR_STRATEGY = new NumberStrategy(Calendar.YEAR);
+    private static final Strategy WEEK_OF_YEAR_STRATEGY = new NumberStrategy(Calendar.WEEK_OF_YEAR);
+    private static final Strategy WEEK_OF_MONTH_STRATEGY = new NumberStrategy(Calendar.WEEK_OF_MONTH);
+    private static final Strategy DAY_OF_YEAR_STRATEGY = new NumberStrategy(Calendar.DAY_OF_YEAR);
+    private static final Strategy DAY_OF_MONTH_STRATEGY = new NumberStrategy(Calendar.DAY_OF_MONTH);
+    private static final Strategy DAY_OF_WEEK_IN_MONTH_STRATEGY = new NumberStrategy(Calendar.DAY_OF_WEEK_IN_MONTH);
+    private static final Strategy HOUR_OF_DAY_STRATEGY = new NumberStrategy(Calendar.HOUR_OF_DAY);
+    private static final Strategy HOUR_STRATEGY = new NumberStrategy(Calendar.HOUR);
+    private static final Strategy MINUTE_STRATEGY = new NumberStrategy(Calendar.MINUTE);
+    private static final Strategy SECOND_STRATEGY = new NumberStrategy(Calendar.SECOND);
+    private static final Strategy MILLISECOND_STRATEGY = new NumberStrategy(Calendar.MILLISECOND);
+    private static final Strategy NUMBER_MONTH_STRATEGY = new NumberStrategy(Calendar.MONTH) {
+        @Override
+        int modify(FastDateParser parser, int iValue) {
+            return iValue - 1;
+        }
+    };
+    private static final Strategy DAY_OF_WEEK_STRATEGY = new NumberStrategy(Calendar.DAY_OF_WEEK) {
+        @Override
+        int modify(FastDateParser parser, int iValue) {
+            return iValue == 7 ? Calendar.SUNDAY : iValue + 1;
+        }
+    };
+    private static final Strategy HOUR24_OF_DAY_STRATEGY = new NumberStrategy(Calendar.HOUR_OF_DAY) {
+        @Override
+        int modify(FastDateParser parser, int iValue) {
+            return iValue == 24 ? 0 : iValue;
+        }
+    };
+    private static final Strategy HOUR12_STRATEGY = new NumberStrategy(Calendar.HOUR) {
+        @Override
+        int modify(FastDateParser parser, int iValue) {
+            return iValue == 12 ? 0 : iValue;
+        }
+    };
+    private static final Strategy ABBREVIATED_YEAR_STRATEGY = new NumberStrategy(Calendar.YEAR) {
+        @Override
+        int modify(FastDateParser parser, int iValue) {
+            return iValue < 100 ? parser.adjustYear(iValue) : iValue;
+        }
+    };
+    private final String pattern;
+    private final TimeZone timeZone;
+    private final Locale locale;
+    private final int century;
+    private final int startYear;
+    private transient List<StrategyAndWidth> patterns;
 
     protected FastDateParser(String pattern, TimeZone timeZone, Locale locale) {
         this(pattern, timeZone, locale, null);
@@ -94,23 +129,6 @@ public class FastDateParser implements DateParser, Serializable {
     }
 
     /**
-     * 初始化解析格式
-     *
-     * @param definingCalendar calendar
-     */
-    private void init(Calendar definingCalendar) {
-        this.patterns = new ArrayList<>();
-        StrategyParser fm = new StrategyParser(definingCalendar);
-        for (; ; ) {
-            StrategyAndWidth field = fm.getNextStrategy();
-            if (field == null) {
-                break;
-            }
-            patterns.add(field);
-        }
-    }
-
-    /**
      * 是否为格式化字符
      *
      * @param c c
@@ -120,75 +138,7 @@ public class FastDateParser implements DateParser, Serializable {
         return c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z';
     }
 
-    @Override
-    public String getPattern() {
-        return pattern;
-    }
-
-    @Override
-    public TimeZone getTimeZone() {
-        return timeZone;
-    }
-
-    @Override
-    public Locale getLocale() {
-        return locale;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof FastDateParser)) {
-            return false;
-        }
-        FastDateParser other = (FastDateParser) obj;
-        return pattern.equals(other.pattern)
-                && timeZone.equals(other.timeZone)
-                && locale.equals(other.locale);
-    }
-
-    @Override
-    public int hashCode() {
-        return pattern.hashCode() + 13 * (timeZone.hashCode() + 13 * locale.hashCode());
-    }
-
-    @Override
-    public String toString() {
-        return pattern + ", " + locale + ", " + timeZone.getID();
-    }
-
-    @Override
-    public Date parse(String source) {
-        ParsePosition pp = new ParsePosition(0);
-        Date date = parse(source, pp);
-        if (date == null) {
-            // 支持的日期范围
-            if (locale.equals(JAPANESE_IMPERIAL)) {
-                throw Exceptions.parseDate("(the " + locale + " locale does not support dates before 1868 AD)\nunParse date: \"" + source + " " + pp.getErrorIndex());
-            }
-            throw Exceptions.parseDate("unparsed date: " + source + " " + pp.getErrorIndex());
-        }
-        return date;
-    }
-
-    @Override
-    public Date parse(String source, ParsePosition pos) {
-        Calendar cal = Calendar.getInstance(timeZone, locale);
-        cal.clear();
-        return this.parse(source, pos, cal) ? cal.getTime() : null;
-    }
-
-    @Override
-    public boolean parse(String source, ParsePosition pos, Calendar calendar) {
-        ListIterator<StrategyAndWidth> lt = patterns.listIterator();
-        while (lt.hasNext()) {
-            StrategyAndWidth strategyAndWidth = lt.next();
-            int maxWidth = strategyAndWidth.getMaxWidth(lt);
-            if (!strategyAndWidth.strategy.parse(this, calendar, source, pos, maxWidth)) {
-                return false;
-            }
-        }
-        return true;
-    }
+    // -------------------- class --------------------
 
     /**
      * 转义字符拼接
@@ -247,6 +197,107 @@ public class FastDateParser implements DateParser, Serializable {
             simpleQuote(regex, symbol).append('|');
         }
         return values;
+    }
+
+    /**
+     * 从缓存中获取解析器
+     *
+     * @param field field
+     * @return strategy
+     */
+    private static ConcurrentMap<Locale, Strategy> getCache(int field) {
+        synchronized (CACHES) {
+            if (CACHES[field] == null) {
+                CACHES[field] = new ConcurrentHashMap<>(3);
+            }
+            return CACHES[field];
+        }
+    }
+
+    /**
+     * 初始化解析格式
+     *
+     * @param definingCalendar calendar
+     */
+    private void init(Calendar definingCalendar) {
+        this.patterns = new ArrayList<>();
+        StrategyParser fm = new StrategyParser(definingCalendar);
+        for (; ; ) {
+            StrategyAndWidth field = fm.getNextStrategy();
+            if (field == null) {
+                break;
+            }
+            patterns.add(field);
+        }
+    }
+
+    @Override
+    public String getPattern() {
+        return pattern;
+    }
+
+    @Override
+    public TimeZone getTimeZone() {
+        return timeZone;
+    }
+
+    @Override
+    public Locale getLocale() {
+        return locale;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof FastDateParser other)) {
+            return false;
+        }
+        return pattern.equals(other.pattern)
+                && timeZone.equals(other.timeZone)
+                && locale.equals(other.locale);
+    }
+
+    @Override
+    public int hashCode() {
+        return pattern.hashCode() + 13 * (timeZone.hashCode() + 13 * locale.hashCode());
+    }
+
+    @Override
+    public String toString() {
+        return pattern + ", " + locale + ", " + timeZone.getID();
+    }
+
+    @Override
+    public Date parse(String source) {
+        ParsePosition pp = new ParsePosition(0);
+        Date date = parse(source, pp);
+        if (date == null) {
+            // 支持的日期范围
+            if (locale.equals(JAPANESE_IMPERIAL)) {
+                throw Exceptions.parseDate("(the " + locale + " locale does not support dates before 1868 AD)\nunParse date: \"" + source + " " + pp.getErrorIndex());
+            }
+            throw Exceptions.parseDate("unparsed date: " + source + " " + pp.getErrorIndex());
+        }
+        return date;
+    }
+
+    @Override
+    public Date parse(String source, ParsePosition pos) {
+        Calendar cal = Calendar.getInstance(timeZone, locale);
+        cal.clear();
+        return this.parse(source, pos, cal) ? cal.getTime() : null;
+    }
+
+    @Override
+    public boolean parse(String source, ParsePosition pos, Calendar calendar) {
+        ListIterator<StrategyAndWidth> lt = patterns.listIterator();
+        while (lt.hasNext()) {
+            StrategyAndWidth strategyAndWidth = lt.next();
+            int maxWidth = strategyAndWidth.getMaxWidth(lt);
+            if (!strategyAndWidth.strategy.parse(this, calendar, source, pos, maxWidth)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -334,66 +385,6 @@ public class FastDateParser implements DateParser, Serializable {
         return strategy;
     }
 
-    /**
-     * 从缓存中获取解析器
-     *
-     * @param field field
-     * @return strategy
-     */
-    private static ConcurrentMap<Locale, Strategy> getCache(int field) {
-        synchronized (CACHES) {
-            if (CACHES[field] == null) {
-                CACHES[field] = new ConcurrentHashMap<>(3);
-            }
-            return CACHES[field];
-        }
-    }
-
-    // -------------------- class --------------------
-
-    private static final Strategy LITERAL_YEAR_STRATEGY = new NumberStrategy(Calendar.YEAR);
-    private static final Strategy WEEK_OF_YEAR_STRATEGY = new NumberStrategy(Calendar.WEEK_OF_YEAR);
-    private static final Strategy WEEK_OF_MONTH_STRATEGY = new NumberStrategy(Calendar.WEEK_OF_MONTH);
-    private static final Strategy DAY_OF_YEAR_STRATEGY = new NumberStrategy(Calendar.DAY_OF_YEAR);
-    private static final Strategy DAY_OF_MONTH_STRATEGY = new NumberStrategy(Calendar.DAY_OF_MONTH);
-    private static final Strategy DAY_OF_WEEK_IN_MONTH_STRATEGY = new NumberStrategy(Calendar.DAY_OF_WEEK_IN_MONTH);
-    private static final Strategy HOUR_OF_DAY_STRATEGY = new NumberStrategy(Calendar.HOUR_OF_DAY);
-    private static final Strategy HOUR_STRATEGY = new NumberStrategy(Calendar.HOUR);
-    private static final Strategy MINUTE_STRATEGY = new NumberStrategy(Calendar.MINUTE);
-    private static final Strategy SECOND_STRATEGY = new NumberStrategy(Calendar.SECOND);
-    private static final Strategy MILLISECOND_STRATEGY = new NumberStrategy(Calendar.MILLISECOND);
-
-    private static final Strategy NUMBER_MONTH_STRATEGY = new NumberStrategy(Calendar.MONTH) {
-        @Override
-        int modify(FastDateParser parser, int iValue) {
-            return iValue - 1;
-        }
-    };
-    private static final Strategy DAY_OF_WEEK_STRATEGY = new NumberStrategy(Calendar.DAY_OF_WEEK) {
-        @Override
-        int modify(FastDateParser parser, int iValue) {
-            return iValue == 7 ? Calendar.SUNDAY : iValue + 1;
-        }
-    };
-    private static final Strategy HOUR24_OF_DAY_STRATEGY = new NumberStrategy(Calendar.HOUR_OF_DAY) {
-        @Override
-        int modify(FastDateParser parser, int iValue) {
-            return iValue == 24 ? 0 : iValue;
-        }
-    };
-    private static final Strategy HOUR12_STRATEGY = new NumberStrategy(Calendar.HOUR) {
-        @Override
-        int modify(FastDateParser parser, int iValue) {
-            return iValue == 12 ? 0 : iValue;
-        }
-    };
-    private static final Strategy ABBREVIATED_YEAR_STRATEGY = new NumberStrategy(Calendar.YEAR) {
-        @Override
-        int modify(FastDateParser parser, int iValue) {
-            return iValue < 100 ? parser.adjustYear(iValue) : iValue;
-        }
-    };
-
     private static class StrategyAndWidth {
 
         Strategy strategy;
@@ -411,60 +402,6 @@ public class FastDateParser implements DateParser, Serializable {
             Strategy nextStrategy = lt.next().strategy;
             lt.previous();
             return nextStrategy.isNumber() ? width : 0;
-        }
-
-    }
-
-    private class StrategyParser {
-
-        private Calendar definingCalendar;
-        private int currentIdx;
-
-        StrategyParser(Calendar definingCalendar) {
-            this.definingCalendar = definingCalendar;
-        }
-
-        StrategyAndWidth getNextStrategy() {
-            if (currentIdx >= pattern.length()) {
-                return null;
-            }
-            char c = pattern.charAt(currentIdx);
-            if (isFormatLetter(c)) {
-                return letterPattern(c);
-            }
-            return literal();
-        }
-
-        private StrategyAndWidth letterPattern(char c) {
-            int begin = currentIdx;
-            while (++currentIdx < pattern.length()) {
-                if (pattern.charAt(currentIdx) != c) {
-                    break;
-                }
-            }
-            int width = currentIdx - begin;
-            return new StrategyAndWidth(getStrategy(c, width, definingCalendar), width);
-        }
-
-        private StrategyAndWidth literal() {
-            boolean activeQuote = false;
-            StringBuilder sb = new StringBuilder();
-            while (currentIdx < pattern.length()) {
-                char c = pattern.charAt(currentIdx);
-                if (!activeQuote && isFormatLetter(c)) {
-                    break;
-                } else if (c == '\'' && (++currentIdx == pattern.length() || pattern.charAt(currentIdx) != '\'')) {
-                    activeQuote = !activeQuote;
-                    continue;
-                }
-                ++currentIdx;
-                sb.append(c);
-            }
-            if (activeQuote) {
-                throw Exceptions.argument("unterminated quote");
-            }
-            String formatField = sb.toString();
-            return new StrategyAndWidth(new CopyQuotedStrategy(formatField), formatField.length());
         }
 
     }
@@ -513,7 +450,7 @@ public class FastDateParser implements DateParser, Serializable {
 
     private static class CopyQuotedStrategy extends Strategy {
 
-        private String formatField;
+        private final String formatField;
 
         CopyQuotedStrategy(String formatField) {
             this.formatField = formatField;
@@ -544,9 +481,9 @@ public class FastDateParser implements DateParser, Serializable {
     }
 
     private static class CaseInsensitiveTextStrategy extends PatternStrategy {
-        private int field;
         Locale locale;
-        private Map<String, Integer> lKeyValues;
+        private final int field;
+        private final Map<String, Integer> lKeyValues;
 
         CaseInsensitiveTextStrategy(int field, Calendar definingCalendar, Locale locale) {
             this.field = field;
@@ -573,7 +510,7 @@ public class FastDateParser implements DateParser, Serializable {
 
     private static class NumberStrategy extends Strategy {
 
-        private int field;
+        private final int field;
 
         NumberStrategy(int field) {
             this.field = field;
@@ -706,18 +643,13 @@ public class FastDateParser implements DateParser, Serializable {
     private static class ISO8601TimeZoneStrategy extends PatternStrategy {
         // Z, +hh, -hh, +hhmm, -hhmm, +hh:mm or -hh:mm
 
-        ISO8601TimeZoneStrategy(String pattern) {
-            this.createPattern(pattern);
-        }
-
-        @Override
-        void setCalendar(FastDateParser parser, Calendar cal, String value) {
-            cal.setTimeZone(FastTimeZone.getGmtTimeZone(value));
-        }
-
         private static final Strategy ISO_8601_1_STRATEGY = new ISO8601TimeZoneStrategy("(Z|(?:[+-]\\d{2}))");
         private static final Strategy ISO_8601_2_STRATEGY = new ISO8601TimeZoneStrategy("(Z|(?:[+-]\\d{2}\\d{2}))");
         private static final Strategy ISO_8601_3_STRATEGY = new ISO8601TimeZoneStrategy("(Z|(?:[+-]\\d{2}(?::)\\d{2}))");
+
+        ISO8601TimeZoneStrategy(String pattern) {
+            this.createPattern(pattern);
+        }
 
         static Strategy getStrategy(int tokenLen) {
             switch (tokenLen) {
@@ -731,6 +663,65 @@ public class FastDateParser implements DateParser, Serializable {
                     throw Exceptions.argument("invalid number of X");
             }
         }
+
+        @Override
+        void setCalendar(FastDateParser parser, Calendar cal, String value) {
+            cal.setTimeZone(FastTimeZone.getGmtTimeZone(value));
+        }
+    }
+
+    private class StrategyParser {
+
+        private final Calendar definingCalendar;
+        private int currentIdx;
+
+        StrategyParser(Calendar definingCalendar) {
+            this.definingCalendar = definingCalendar;
+        }
+
+        StrategyAndWidth getNextStrategy() {
+            if (currentIdx >= pattern.length()) {
+                return null;
+            }
+            char c = pattern.charAt(currentIdx);
+            if (isFormatLetter(c)) {
+                return letterPattern(c);
+            }
+            return literal();
+        }
+
+        private StrategyAndWidth letterPattern(char c) {
+            int begin = currentIdx;
+            while (++currentIdx < pattern.length()) {
+                if (pattern.charAt(currentIdx) != c) {
+                    break;
+                }
+            }
+            int width = currentIdx - begin;
+            return new StrategyAndWidth(getStrategy(c, width, definingCalendar), width);
+        }
+
+        private StrategyAndWidth literal() {
+            boolean activeQuote = false;
+            StringBuilder sb = new StringBuilder();
+            while (currentIdx < pattern.length()) {
+                char c = pattern.charAt(currentIdx);
+                if (!activeQuote && isFormatLetter(c)) {
+                    break;
+                } else if (c == '\'' && (++currentIdx == pattern.length() || pattern.charAt(currentIdx) != '\'')) {
+                    activeQuote = !activeQuote;
+                    continue;
+                }
+                ++currentIdx;
+                sb.append(c);
+            }
+            if (activeQuote) {
+                throw Exceptions.argument("unterminated quote");
+            }
+            String formatField = sb.toString();
+            return new StrategyAndWidth(new CopyQuotedStrategy(formatField), formatField.length());
+        }
+
     }
 
 }

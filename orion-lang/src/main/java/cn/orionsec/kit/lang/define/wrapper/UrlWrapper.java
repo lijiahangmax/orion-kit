@@ -35,6 +35,7 @@ import cn.orionsec.kit.lang.define.support.CloneSupport;
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.lang.utils.json.Jsons;
 
+import java.io.Serial;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,14 +49,13 @@ import java.util.Map;
  */
 public class UrlWrapper<T> extends CloneSupport<UrlWrapper<T>> implements Wrapper<T>, ILogObject, IMapObject<String, Object> {
 
+    @Serial
     private static final long serialVersionUID = 4250545197688197L;
-
-    // -------------------- URL --------------------
 
     public static final Integer URL_NO_OPERATION = KitConfig.get(KitLangConfiguration.CONFIG.URL_NO_OPERATION);
 
+    // -------------------- URL --------------------
     public static final Integer URL_REFRESH = KitConfig.get(KitLangConfiguration.CONFIG.URL_REFRESH);
-
     public static final Integer URL_REDIRECT = KitConfig.get(KitLangConfiguration.CONFIG.URL_REDIRECT);
 
     /**
@@ -157,28 +157,28 @@ public class UrlWrapper<T> extends CloneSupport<UrlWrapper<T>> implements Wrappe
         return this;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
-
     public String getUrl() {
         return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public int getType() {
         return type;
     }
 
+    public void setType(int type) {
+        this.type = type;
+    }
+
     public T getData() {
         return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
     }
 
     @Override

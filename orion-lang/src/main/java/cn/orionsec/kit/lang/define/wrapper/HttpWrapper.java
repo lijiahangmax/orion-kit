@@ -37,6 +37,7 @@ import cn.orionsec.kit.lang.utils.Strings;
 import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.io.Serial;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -51,18 +52,14 @@ import java.util.function.Function;
  */
 public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrapper<T>, ILogObject, IMapObject<String, Object> {
 
-    private static final long serialVersionUID = 7048691672612601L;
-
-    // -------------------- HTTP --------------------
-
     public static final Integer HTTP_OK_CODE = KitConfig.get(KitLangConfiguration.CONFIG.HTTP_OK_CODE);
 
+    // -------------------- HTTP --------------------
     public static final String HTTP_OK_MESSAGE = KitConfig.get(KitLangConfiguration.CONFIG.HTTP_OK_MESSAGE);
-
     public static final Integer HTTP_ERROR_CODE = KitConfig.get(KitLangConfiguration.CONFIG.HTTP_ERROR_CODE);
-
     public static final String HTTP_ERROR_MESSAGE = KitConfig.get(KitLangConfiguration.CONFIG.HTTP_ERROR_MESSAGE);
-
+    @Serial
+    private static final long serialVersionUID = 7048691672612601L;
     /**
      * 状态码
      */
@@ -195,28 +192,28 @@ public class HttpWrapper<T> extends CloneSupport<HttpWrapper<T>> implements Wrap
         return this;
     }
 
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
-
     public int getCode() {
         return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
 
     public String getMsg() {
         return msg;
     }
 
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
     public T getData() {
         return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
     }
 
     /**

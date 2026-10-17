@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.lang.define.collect;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Vector;
@@ -39,6 +40,7 @@ import java.util.Vector;
  */
 public class MutableVector<E> extends Vector<E> implements MutableList<E>, Serializable {
 
+    @Serial
     private static final long serialVersionUID = 8976493198238094L;
 
     public MutableVector() {
