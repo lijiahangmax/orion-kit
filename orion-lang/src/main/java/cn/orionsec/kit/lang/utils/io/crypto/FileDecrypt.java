@@ -37,6 +37,7 @@ import cn.orionsec.kit.lang.utils.io.Streams;
 
 import javax.crypto.SecretKey;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.Callable;
 
 /**
@@ -81,7 +82,7 @@ public class FileDecrypt implements Callable<Boolean> {
         this.password = password;
         try {
             Files1.touch(dest);
-            this.reader = new BufferedReader(new FileReader(file), bufferSize);
+            this.reader = new BufferedReader(new InputStreamReader(Files1.openInputStream(file), StandardCharsets.UTF_8), bufferSize);
             this.out = Files1.openOutputStream(dest);
         } catch (Exception e) {
             throw Exceptions.ioRuntime(e);
@@ -91,7 +92,7 @@ public class FileDecrypt implements Callable<Boolean> {
     public FileDecrypt(InputStream in, OutputStream out, String password, int bufferSize) {
         this.autoClose = false;
         this.password = password;
-        this.reader = new BufferedReader(new InputStreamReader(in), bufferSize);
+        this.reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8), bufferSize);
         this.out = out;
     }
 

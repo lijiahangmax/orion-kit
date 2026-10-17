@@ -29,6 +29,7 @@ package cn.orionsec.kit.lang.utils.ext.dom;
 import cn.orionsec.kit.lang.define.collect.MutableArrayList;
 import cn.orionsec.kit.lang.define.collect.MutableHashMap;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,9 @@ import java.util.Map;
  */
 @SuppressWarnings("ALL")
 public class DomNode implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 7236140036337644997L;
 
     /**
      * 值

@@ -37,7 +37,6 @@
         <junit.version>4.13.2</junit.version>
         <jspecify.version>1.0.0</jspecify.version>
         <spring.version>7.0.8</spring.version>
-        <cglib.version>3.3.0</cglib.version>
         <jedis.version>7.5.3</jedis.version>
         <fastjson.version>2.0.65</fastjson.version>
         <jackson.version>2.19.4</jackson.version>

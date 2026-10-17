@@ -29,6 +29,7 @@ package cn.orionsec.kit.lang.define.lock;
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.utils.Strings;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
@@ -40,6 +41,9 @@ import java.util.concurrent.TimeUnit;
  * @since 2026/10/13 10:00
  */
 public class LockKeyDefine implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -8705365086552232598L;
 
     protected static final long DEFAULT_TIMEOUT = 0L;
 

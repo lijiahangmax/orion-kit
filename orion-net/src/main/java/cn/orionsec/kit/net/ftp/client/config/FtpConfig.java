@@ -30,6 +30,7 @@ import cn.orionsec.kit.lang.able.IJsonObject;
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.utils.Charsets;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.nio.charset.Charset;
 
@@ -41,6 +42,9 @@ import java.nio.charset.Charset;
  * @since 2020/3/17 16:00
  */
 public class FtpConfig implements Serializable, IJsonObject {
+
+    @Serial
+    private static final long serialVersionUID = 690557990102164935L;
 
     /**
      * host

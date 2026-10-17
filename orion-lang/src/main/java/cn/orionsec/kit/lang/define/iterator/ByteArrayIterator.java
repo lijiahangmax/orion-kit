@@ -33,6 +33,7 @@ import cn.orionsec.kit.lang.utils.io.Streams;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Iterator;
 
@@ -45,6 +46,9 @@ import java.util.Iterator;
  */
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class ByteArrayIterator implements Iterator<Integer>, Iterable<Integer>, SafeCloseable, Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 5646483627908101423L;
 
     private final InputStream in;
 

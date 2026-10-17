@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.office.excel.option;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -36,6 +37,9 @@ import java.io.Serializable;
  * @since 2020/12/24 16:00
  */
 public class CellOption implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -6184587621471787450L;
 
     /**
      * 格式化

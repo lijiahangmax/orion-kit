@@ -26,6 +26,8 @@
  */
 package cn.orionsec.kit.lang.exception;
 
+import java.io.Serial;
+
 /**
  * 执行失败异常
  *
@@ -34,6 +36,9 @@ package cn.orionsec.kit.lang.exception;
  * @since 2020/4/16 17:38
  */
 public class ExecuteException extends Exception {
+
+    @Serial
+    private static final long serialVersionUID = -5020718296223083273L;
 
     public ExecuteException() {
     }

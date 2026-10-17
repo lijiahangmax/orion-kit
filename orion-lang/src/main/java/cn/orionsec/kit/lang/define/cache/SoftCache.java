@@ -29,6 +29,7 @@ package cn.orionsec.kit.lang.define.cache;
 import cn.orionsec.kit.lang.define.collect.ConcurrentReferenceHashMap;
 import cn.orionsec.kit.lang.utils.Objects1;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
@@ -43,6 +44,9 @@ import java.util.function.Consumer;
  * @since 2020/10/18 20:34
  */
 public class SoftCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 4231235185404506555L;
 
     private final ConcurrentReferenceHashMap<K, V> CACHE;
 

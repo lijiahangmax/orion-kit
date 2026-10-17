@@ -37,6 +37,7 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +51,9 @@ import java.util.Map;
  * @since 2020/4/7 23:52
  */
 public class OkResponse extends BaseHttpResponse implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 5203561201949230185L;
 
     /**
      * response

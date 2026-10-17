@@ -186,9 +186,7 @@ public class Dates extends BaseDates {
     public static Date build(int year, int month, int day, int h, int m, int s, int ms) {
         Calendar c = calendar();
         c.set(year, month - 1, day, h, m, s);
-        if (ms != 0) {
-            c.set(Calendar.MILLISECOND, ms);
-        }
+        c.set(Calendar.MILLISECOND, ms);
         return c.getTime();
     }
 

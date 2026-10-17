@@ -26,6 +26,8 @@
  */
 package cn.orionsec.kit.lang.exception;
 
+import java.io.Serial;
+
 /**
  * 金额转化异常
  *
@@ -34,6 +36,9 @@ package cn.orionsec.kit.lang.exception;
  * @since 2019/12/9 18:10
  */
 public class MoneyFormatException extends RuntimeException {
+
+    @Serial
+    private static final long serialVersionUID = -6141249502869753712L;
 
     public MoneyFormatException() {
     }

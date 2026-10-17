@@ -26,6 +26,8 @@
  */
 package cn.orionsec.kit.lang.exception;
 
+import java.io.Serial;
+
 /**
  * 不安全的异常
  *
@@ -34,6 +36,9 @@ package cn.orionsec.kit.lang.exception;
  * @since 2021/2/25 17:23
  */
 public class UnsafeException extends RuntimeException {
+
+    @Serial
+    private static final long serialVersionUID = -6085158454946391388L;
 
     public UnsafeException() {
     }

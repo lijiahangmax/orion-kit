@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.office.excel.option;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -36,6 +37,9 @@ import java.io.Serializable;
  * @since 2020/5/28 11:20
  */
 public class ExportSheetOption implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 8850778258758346955L;
 
     /**
      * sheet 名称

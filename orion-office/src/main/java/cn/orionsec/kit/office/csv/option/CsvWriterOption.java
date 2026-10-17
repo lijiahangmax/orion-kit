@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.office.csv.option;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.nio.charset.Charset;
 
@@ -37,6 +38,9 @@ import java.nio.charset.Charset;
  * @since 2021/1/22 15:18
  */
 public class CsvWriterOption extends CsvOption implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 2839136633503795817L;
 
     /**
      * 是否强制使用文本限定符 包裹文字

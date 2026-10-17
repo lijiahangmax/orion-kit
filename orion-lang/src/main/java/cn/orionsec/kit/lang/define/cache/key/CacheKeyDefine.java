@@ -31,6 +31,7 @@ import cn.orionsec.kit.lang.define.cache.key.struct.CacheStruct;
 import cn.orionsec.kit.lang.define.cache.key.struct.RedisCacheStruct;
 import cn.orionsec.kit.lang.utils.Strings;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -43,6 +44,9 @@ import java.util.concurrent.TimeUnit;
  * @since 2023/7/10 11:12
  */
 public class CacheKeyDefine implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 3686499715061337005L;
 
     protected static String globalPrefix = null;
 

@@ -41,6 +41,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -198,15 +199,15 @@ public class Keys {
     }
 
     public static String getKey(File file) {
-        return getKey(new InputStreamReader(Files1.openInputStreamSafe(file)), true);
+        return getKey(new InputStreamReader(Files1.openInputStreamSafe(file), StandardCharsets.UTF_8), true);
     }
 
     public static String getKey(String file) {
-        return getKey(new InputStreamReader(Files1.openInputStreamSafe(file)), true);
+        return getKey(new InputStreamReader(Files1.openInputStreamSafe(file), StandardCharsets.UTF_8), true);
     }
 
     public static String getKey(InputStream in) {
-        return getKey(new InputStreamReader(in), false);
+        return getKey(new InputStreamReader(in, StandardCharsets.UTF_8), false);
     }
 
     public static String getKey(Reader reader) {

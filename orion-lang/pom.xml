@@ -155,6 +155,7 @@
             <groupId>org.openjdk.nashorn</groupId>
             <artifactId>nashorn-core</artifactId>
             <version>${nashorn.version}</version>
+            <optional>true</optional>
         </dependency>
 
         <!-- groovy 脚本引擎 -->
@@ -162,6 +163,7 @@
             <groupId>org.apache.groovy</groupId>
             <artifactId>groovy-jsr223</artifactId>
             <version>${groovy.version}</version>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

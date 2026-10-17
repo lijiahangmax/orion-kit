@@ -26,6 +26,8 @@
  */
 package cn.orionsec.kit.lang.exception;
 
+import java.io.Serial;
+
 /**
  * 解析异常
  *
@@ -34,6 +36,9 @@ package cn.orionsec.kit.lang.exception;
  * @since 2020/3/23 14:38
  */
 public class ParseRuntimeException extends RuntimeException {
+
+    @Serial
+    private static final long serialVersionUID = -2281721515429492501L;
 
     private int errorOffset;
 

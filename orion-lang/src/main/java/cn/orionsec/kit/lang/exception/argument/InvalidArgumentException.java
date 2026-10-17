@@ -28,6 +28,8 @@ package cn.orionsec.kit.lang.exception.argument;
 
 import cn.orionsec.kit.lang.utils.Assert;
 
+import java.io.Serial;
+
 /**
  * 对象验证不合法异常
  *
@@ -37,6 +39,9 @@ import cn.orionsec.kit.lang.utils.Assert;
  * @since 2020/10/18 21:37
  */
 public class InvalidArgumentException extends RuntimeException {
+
+    @Serial
+    private static final long serialVersionUID = 5906524434369893713L;
 
     public InvalidArgumentException() {
     }

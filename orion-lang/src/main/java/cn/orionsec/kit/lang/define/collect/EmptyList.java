@@ -49,6 +49,11 @@ public class EmptyList<E> extends AbstractList<E> implements RandomAccess, Seria
     @Serial
     private static final long serialVersionUID = -4359234034983487L;
 
+    @Serial
+    private Object readResolve() {
+        return EMPTY;
+    }
+
     @Override
     public int size() {
         return 0;

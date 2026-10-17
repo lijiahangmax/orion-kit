@@ -29,6 +29,7 @@ package cn.orionsec.kit.lang.define.iterator;
 import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.reflect.Classes;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Iterator;
 
@@ -40,6 +41,9 @@ import java.util.Iterator;
  * @since 2021/1/7 18:52
  */
 public class ClassIterator<T> implements Iterator<Class<? super T>>, Iterable<Class<? super T>>, Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 8523108771713473890L;
 
     private final Class<T> clazz;
 

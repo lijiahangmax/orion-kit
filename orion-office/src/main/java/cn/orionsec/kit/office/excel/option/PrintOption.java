@@ -28,6 +28,7 @@ package cn.orionsec.kit.office.excel.option;
 
 import cn.orionsec.kit.office.excel.type.ExcelPaperType;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -38,6 +39,9 @@ import java.io.Serializable;
  * @since 2020/12/25 16:24
  */
 public class PrintOption implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 644857404866607564L;
 
     /**
      * 是否打印网格线

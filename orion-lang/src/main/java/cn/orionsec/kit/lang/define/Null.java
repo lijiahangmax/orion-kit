@@ -41,6 +41,11 @@ public class Null implements Serializable {
     @Serial
     private static final long serialVersionUID = 1523490364340556L;
 
+    @Serial
+    private Object readResolve() {
+        return VALUE;
+    }
+
     public static final Null VALUE = new Null();
 
     private Null() {

@@ -29,6 +29,7 @@ package cn.orionsec.kit.office.csv.option;
 import cn.orionsec.kit.lang.constant.Letters;
 import cn.orionsec.kit.office.csv.type.CsvEscapeMode;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -41,6 +42,9 @@ import java.nio.charset.StandardCharsets;
  * @since 2021/1/22 15:08
  */
 public class CsvOption implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -6119518973027872049L;
 
     // -------------------- const start --------------------
 

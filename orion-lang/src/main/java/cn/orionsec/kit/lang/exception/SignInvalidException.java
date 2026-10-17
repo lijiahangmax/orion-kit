@@ -26,6 +26,8 @@
  */
 package cn.orionsec.kit.lang.exception;
 
+import java.io.Serial;
+
 /**
  * 验签失败异常
  *
@@ -34,6 +36,9 @@ package cn.orionsec.kit.lang.exception;
  * @since 2020/11/2 18:21
  */
 public class SignInvalidException extends RuntimeException {
+
+    @Serial
+    private static final long serialVersionUID = 8054930190355072869L;
 
     public SignInvalidException() {
     }

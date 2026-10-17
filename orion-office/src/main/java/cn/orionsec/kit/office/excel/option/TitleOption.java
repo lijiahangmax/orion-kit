@@ -30,6 +30,7 @@ import cn.orionsec.kit.office.excel.type.ExcelAlignType;
 import cn.orionsec.kit.office.excel.type.ExcelBorderType;
 import cn.orionsec.kit.office.excel.type.ExcelVerticalAlignType;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -40,6 +41,9 @@ import java.io.Serializable;
  * @since 2020/12/31 14:56
  */
 public class TitleOption implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -3744430304604724830L;
 
     /**
      * 标题

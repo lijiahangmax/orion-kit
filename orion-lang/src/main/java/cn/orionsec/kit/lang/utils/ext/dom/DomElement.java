@@ -28,6 +28,7 @@ package cn.orionsec.kit.lang.utils.ext.dom;
 
 import cn.orionsec.kit.lang.utils.Exceptions;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -42,6 +43,9 @@ import java.util.Map;
  * @since 2020/3/25 14:04
  */
 public class DomElement implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 2403371524722627434L;
 
     /**
      * 标签名称

@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.office.excel.option;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -36,6 +37,9 @@ import java.io.Serializable;
  * @since 2020/12/25 15:59
  */
 public class CommentOption implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -3083060578843587778L;
 
     /**
      * 作者

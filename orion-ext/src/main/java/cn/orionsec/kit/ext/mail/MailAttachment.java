@@ -39,6 +39,7 @@ import jakarta.mail.util.ByteArrayDataSource;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -49,6 +50,9 @@ import java.io.Serializable;
  * @since 2021/1/28 10:51
  */
 public class MailAttachment implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -7333894831761663850L;
 
     /**
      * 名称

@@ -26,6 +26,8 @@
  */
 package cn.orionsec.kit.lang.exception;
 
+import java.io.Serial;
+
 /**
  * HTTP 请求异常
  *
@@ -34,6 +36,9 @@ package cn.orionsec.kit.lang.exception;
  * @since 2021/3/6 21:21
  */
 public class HttpRequestException extends RuntimeException {
+
+    @Serial
+    private static final long serialVersionUID = -3602600423628554146L;
 
     private final String url;
 

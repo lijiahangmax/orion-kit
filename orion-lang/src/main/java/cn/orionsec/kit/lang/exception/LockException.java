@@ -26,6 +26,8 @@
  */
 package cn.orionsec.kit.lang.exception;
 
+import java.io.Serial;
+
 /**
  * 锁定异常
  *
@@ -34,6 +36,9 @@ package cn.orionsec.kit.lang.exception;
  * @since 2020/3/3 2:26
  */
 public class LockException extends RuntimeException {
+
+    @Serial
+    private static final long serialVersionUID = -6180186797889988407L;
 
     public LockException() {
     }

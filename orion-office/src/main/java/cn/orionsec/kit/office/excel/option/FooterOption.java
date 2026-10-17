@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.office.excel.option;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -36,6 +37,9 @@ import java.io.Serializable;
  * @since 2020/12/25 17:28
  */
 public class FooterOption implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -3826953329592481869L;
 
     /**
      * 页脚左侧

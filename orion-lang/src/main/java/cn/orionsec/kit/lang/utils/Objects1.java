@@ -390,12 +390,26 @@ public class Objects1 {
      * @param bytes ignore
      * @return ignore
      */
-    @SuppressWarnings("unchecked")
     public static <T> T deserialize(byte[] bytes) {
+        return deserialize(bytes, null);
+    }
+
+    /**
+     * 反序列化
+     *
+     * @param bytes  ignore
+     * @param filter 对象过滤器
+     * @return ignore
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T deserialize(byte[] bytes, ObjectInputFilter filter) {
         if (bytes == null) {
             return null;
         }
         try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes))) {
+            if (filter != null) {
+                ois.setObjectInputFilter(filter);
+            }
             return (T) ois.readObject();
         } catch (Exception e) {
             throw Exceptions.argument("failed to deserialize object", e);

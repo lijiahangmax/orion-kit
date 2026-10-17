@@ -26,6 +26,8 @@
  */
 package cn.orionsec.kit.lang.exception;
 
+import java.io.Serial;
+
 /**
  * 反射调用异常
  *
@@ -34,6 +36,9 @@ package cn.orionsec.kit.lang.exception;
  * @since 2020/1/7 10:35
  */
 public class InvokeRuntimeException extends RuntimeException {
+
+    @Serial
+    private static final long serialVersionUID = 5823810134292188509L;
 
     public InvokeRuntimeException() {
     }

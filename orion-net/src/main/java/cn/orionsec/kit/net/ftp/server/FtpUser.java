@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.net.ftp.server;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -36,6 +37,9 @@ import java.io.Serializable;
  * @since 2020/8/14 12:03
  */
 public class FtpUser implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 6311049506075347559L;
 
     /**
      * 用户名

@@ -261,7 +261,7 @@ mvn clean install -DskipTests -P skip-docs
     │  │  Birthdays         生日工具类
     │  │  DateRanges        时间区间工具类
     │  │  Dates             时间工具类(Date)
-    │  │  Dates8            时间工具类(jdk1.8)
+    │  │  Dates8            时间工具类(java.time)
     │  │  DateStream        流式时间处理器
     │  │  LunarCalendar     农历工具类
     │  │  Zodiacs           生肖工具类

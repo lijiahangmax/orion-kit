@@ -31,6 +31,7 @@ import cn.orionsec.kit.office.excel.type.ExcelBorderType;
 import cn.orionsec.kit.office.excel.type.ExcelFieldType;
 import cn.orionsec.kit.office.excel.type.ExcelVerticalAlignType;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 
@@ -42,6 +43,9 @@ import java.lang.reflect.Method;
  * @since 2020/5/28 11:20
  */
 public class ExportFieldOption implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -6999212459492895549L;
 
     /**
      * 单元格宽

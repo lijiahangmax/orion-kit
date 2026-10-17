@@ -26,6 +26,8 @@
  */
 package cn.orionsec.kit.lang.exception;
 
+import java.io.Serial;
+
 /**
  * 数据解密异常
  *
@@ -34,6 +36,9 @@ package cn.orionsec.kit.lang.exception;
  * @since 2021/9/29 22:22
  */
 public class DecryptException extends RuntimeException {
+
+    @Serial
+    private static final long serialVersionUID = -8175082287643413047L;
 
     public DecryptException() {
     }

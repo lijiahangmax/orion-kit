@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.office.excel.option;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -37,6 +38,9 @@ import java.util.Date;
  * @since 2020/12/22 18:59
  */
 public class PropertiesOption implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 7834123613171995237L;
 
     /**
      * 作者

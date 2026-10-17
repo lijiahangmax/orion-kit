@@ -26,6 +26,8 @@
  */
 package cn.orionsec.kit.lang.exception;
 
+import java.io.Serial;
+
 /**
  * 连接异常
  *
@@ -34,6 +36,9 @@ package cn.orionsec.kit.lang.exception;
  * @since 2020/3/17 16:19
  */
 public class ConnectionRuntimeException extends RuntimeException {
+
+    @Serial
+    private static final long serialVersionUID = -8179179440194273534L;
 
     public ConnectionRuntimeException() {
     }

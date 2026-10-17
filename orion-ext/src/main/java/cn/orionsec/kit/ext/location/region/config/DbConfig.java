@@ -28,12 +28,16 @@ package cn.orionsec.kit.ext.location.region.config;
 
 import cn.orionsec.kit.lang.constant.Const;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
  * @author Jiahang Li
  */
 public class DbConfig implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -5080805219008231212L;
 
     /**
      * total header data block size

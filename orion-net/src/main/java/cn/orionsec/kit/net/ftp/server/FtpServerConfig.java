@@ -28,6 +28,7 @@ package cn.orionsec.kit.net.ftp.server;
 
 import cn.orionsec.kit.lang.constant.Const;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -38,6 +39,9 @@ import java.io.Serializable;
  * @since 2021/3/10 18:47
  */
 public class FtpServerConfig implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -6741059696442284387L;
 
     /**
      * 最大并发用户数量

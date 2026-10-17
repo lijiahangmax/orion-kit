@@ -26,6 +26,8 @@
  */
 package cn.orionsec.kit.lang.exception;
 
+import java.io.Serial;
+
 /**
  * FTP 异常
  *
@@ -34,6 +36,9 @@ package cn.orionsec.kit.lang.exception;
  * @since 2020/3/17 18:46
  */
 public class FtpException extends RuntimeException {
+
+    @Serial
+    private static final long serialVersionUID = 4288164672021827923L;
 
     public FtpException() {
     }

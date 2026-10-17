@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.ext.location;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -36,6 +37,9 @@ import java.io.Serializable;
  * @since 2020/3/2 22:42
  */
 public class Region implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 866610797776301349L;
 
     /**
      * 国家

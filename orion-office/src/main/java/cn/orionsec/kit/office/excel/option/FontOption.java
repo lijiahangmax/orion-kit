@@ -28,6 +28,7 @@ package cn.orionsec.kit.office.excel.option;
 
 import cn.orionsec.kit.office.excel.type.ExcelUnderType;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -38,6 +39,9 @@ import java.io.Serializable;
  * @since 2020/5/28 11:20
  */
 public class FontOption implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 7362530640512446785L;
 
     /**
      * 字体名称

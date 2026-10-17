@@ -586,7 +586,7 @@ public class Files1 {
         OutputStreamWriter writer = null;
         try {
             if (charset == null) {
-                writer = new OutputStreamWriter(openOutputStream(file));
+                writer = new OutputStreamWriter(openOutputStream(file), Const.UTF_8);
             } else {
                 writer = new OutputStreamWriter(openOutputStream(file), charset);
             }

@@ -26,6 +26,8 @@
  */
 package cn.orionsec.kit.lang.exception;
 
+import java.io.Serial;
+
 /**
  * 初始化异常
  *
@@ -34,6 +36,9 @@ package cn.orionsec.kit.lang.exception;
  * @since 2020/3/3 2:05
  */
 public class InitializeException extends RuntimeException {
+
+    @Serial
+    private static final long serialVersionUID = 2848408022551697850L;
 
     public InitializeException() {
     }

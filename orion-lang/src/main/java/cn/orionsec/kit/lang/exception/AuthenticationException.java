@@ -26,6 +26,8 @@
  */
 package cn.orionsec.kit.lang.exception;
 
+import java.io.Serial;
+
 /**
  * 认证异常
  *
@@ -34,6 +36,9 @@ package cn.orionsec.kit.lang.exception;
  * @since 2020/4/15 21:27
  */
 public class AuthenticationException extends RuntimeException {
+
+    @Serial
+    private static final long serialVersionUID = -7315034499758138673L;
 
     public AuthenticationException() {
     }

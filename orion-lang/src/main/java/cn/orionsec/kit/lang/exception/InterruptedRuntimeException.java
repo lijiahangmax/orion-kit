@@ -26,6 +26,8 @@
  */
 package cn.orionsec.kit.lang.exception;
 
+import java.io.Serial;
+
 /**
  * 中断运行时异常
  *
@@ -34,6 +36,9 @@ package cn.orionsec.kit.lang.exception;
  * @since 2021/3/9 17:34
  */
 public class InterruptedRuntimeException extends RuntimeException {
+
+    @Serial
+    private static final long serialVersionUID = 3385759156191881605L;
 
     public InterruptedRuntimeException() {
     }

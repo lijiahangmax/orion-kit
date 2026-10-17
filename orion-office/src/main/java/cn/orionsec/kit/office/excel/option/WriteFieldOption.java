@@ -28,6 +28,7 @@ package cn.orionsec.kit.office.excel.option;
 
 import cn.orionsec.kit.office.excel.type.ExcelFieldType;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -38,6 +39,9 @@ import java.io.Serializable;
  * @since 2021/1/9 20:57
  */
 public class WriteFieldOption implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -4090951341161059214L;
 
     /**
      * 表格列索引

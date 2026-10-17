@@ -26,6 +26,8 @@
  */
 package cn.orionsec.kit.lang.exception;
 
+import java.io.Serial;
+
 /**
  * 不支持的HTTP方法异常
  *
@@ -34,6 +36,9 @@ package cn.orionsec.kit.lang.exception;
  * @since 2021/3/6 21:07
  */
 public class HttpUnsupportedMethodException extends RuntimeException {
+
+    @Serial
+    private static final long serialVersionUID = 4524613823944936848L;
 
     public HttpUnsupportedMethodException() {
     }

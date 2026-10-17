@@ -34,6 +34,7 @@ import cn.orionsec.kit.lang.utils.regexp.Matches;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Random;
@@ -84,7 +85,7 @@ public class Strings {
         }
         Charset cs;
         if (charset == null) {
-            cs = Charset.defaultCharset();
+            cs = StandardCharsets.UTF_8;
         } else {
             cs = Charset.forName(charset);
         }
@@ -1629,7 +1630,7 @@ public class Strings {
         if (charset != null) {
             return s.getBytes(charset);
         }
-        return s.getBytes(Charsets.of(Systems.FILE_ENCODING));
+        return s.getBytes(StandardCharsets.UTF_8);
     }
 
     /**
@@ -1643,7 +1644,7 @@ public class Strings {
         if (charset != null) {
             return s.getBytes(Charsets.of(charset));
         }
-        return s.getBytes(Charsets.of(Systems.FILE_ENCODING));
+        return s.getBytes(StandardCharsets.UTF_8);
     }
 
     /**

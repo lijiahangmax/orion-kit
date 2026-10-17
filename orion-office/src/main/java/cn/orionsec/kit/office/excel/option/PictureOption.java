@@ -29,6 +29,7 @@ package cn.orionsec.kit.office.excel.option;
 import cn.orionsec.kit.office.excel.type.ExcelFieldType;
 import cn.orionsec.kit.office.excel.type.ExcelPictureType;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 
@@ -40,6 +41,9 @@ import java.lang.reflect.Method;
  * @since 2020/12/27 23:13
  */
 public class PictureOption implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 6908575316779238726L;
 
     public static final String NORMAL_PREFIX = "!";
 

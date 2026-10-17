@@ -791,4 +791,47 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
         }
     }
 
+    /**
+     * 序列化代理 避免直接序列化引用队列等不可序列化的内部结构
+     *
+     * @return 序列化代理
+     */
+    @Serial
+    private Object writeReplace() {
+        return new SerializedForm<>(this);
+    }
+
+    /**
+     * 序列化表单
+     */
+    private static final class SerializedForm<K, V> implements Serializable {
+
+        @Serial
+        private static final long serialVersionUID = 8827391057012837412L;
+
+        private final ReferenceType referenceType;
+
+        private final float loadFactor;
+
+        private final int concurrencyLevel;
+
+        private final Map<K, V> entries;
+
+        private SerializedForm(ConcurrentReferenceHashMap<K, V> map) {
+            this.referenceType = map.referenceType;
+            this.loadFactor = map.loadFactor;
+            this.concurrencyLevel = map.segments.length;
+            this.entries = new HashMap<>(map);
+        }
+
+        @Serial
+        private Object readResolve() {
+            ConcurrentReferenceHashMap<K, V> map = new ConcurrentReferenceHashMap<>(
+                    Math.max(DEFAULT_INITIAL_CAPACITY, this.entries.size()),
+                    this.loadFactor, this.concurrencyLevel, this.referenceType);
+            map.putAll(this.entries);
+            return map;
+        }
+    }
+
 }

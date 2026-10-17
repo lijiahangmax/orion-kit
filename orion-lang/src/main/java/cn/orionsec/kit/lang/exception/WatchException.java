@@ -26,6 +26,8 @@
  */
 package cn.orionsec.kit.lang.exception;
 
+import java.io.Serial;
+
 /**
  * 监视异常
  *
@@ -34,6 +36,9 @@ package cn.orionsec.kit.lang.exception;
  * @since 2020/10/27 12:20
  */
 public class WatchException extends RuntimeException {
+
+    @Serial
+    private static final long serialVersionUID = -8503849598862888061L;
 
     public WatchException() {
     }

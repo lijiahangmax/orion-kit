@@ -50,6 +50,11 @@ public class EmptySet<E> extends AbstractSet<E> implements Serializable {
     @Serial
     private static final long serialVersionUID = 7489127391029385L;
 
+    @Serial
+    private Object readResolve() {
+        return EMPTY;
+    }
+
     @Override
     public int size() {
         return 0;

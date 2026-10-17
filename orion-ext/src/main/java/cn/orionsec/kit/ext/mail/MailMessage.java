@@ -31,6 +31,7 @@ import cn.orionsec.kit.lang.constant.Letters;
 import cn.orionsec.kit.lang.constant.StandardContentType;
 import cn.orionsec.kit.lang.utils.Strings;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,6 +46,9 @@ import java.util.List;
  * @since 2020/3/15 18:27
  */
 public class MailMessage implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 5380262019732342199L;
 
     /**
      * 发件人账号

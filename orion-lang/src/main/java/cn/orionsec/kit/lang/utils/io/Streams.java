@@ -183,7 +183,7 @@ public class Streams {
     }
 
     public static void transfer(InputStream input, Writer output) throws IOException {
-        transfer(new InputStreamReader(input), output);
+        transfer(new InputStreamReader(input, Const.UTF_8), output);
     }
 
     public static void transfer(InputStream input, Writer output, String charset) throws IOException {
@@ -214,7 +214,7 @@ public class Streams {
     }
 
     public static void transfer(Reader input, OutputStream output) throws IOException {
-        OutputStreamWriter out = new OutputStreamWriter(output);
+        OutputStreamWriter out = new OutputStreamWriter(output, Const.UTF_8);
         transfer(input, out);
         out.flush();
     }
@@ -268,9 +268,7 @@ public class Streams {
     }
 
     public static String toString(InputStream input) throws IOException {
-        StringWriter sw = new StringWriter();
-        transfer(input, sw);
-        return sw.toString();
+        return toString(input, Const.UTF_8);
     }
 
     public static String toString(InputStream input, String charset) throws IOException {
@@ -286,12 +284,12 @@ public class Streams {
     }
 
     public static String toString(byte[] input) throws IOException {
-        return new String(input);
+        return new String(input, Const.UTF_8);
     }
 
     public static String toString(byte[] input, String charset) throws IOException {
         if (charset == null) {
-            return new String(input);
+            return new String(input, Const.UTF_8);
         } else {
             return new String(input, charset);
         }

@@ -31,6 +31,7 @@ import cn.orionsec.kit.office.excel.option.ExportFieldOption;
 import cn.orionsec.kit.office.excel.option.ExportSheetOption;
 import org.apache.poi.ss.usermodel.CellStyle;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.TreeMap;
@@ -44,6 +45,9 @@ import java.util.function.Function;
  * @since 2021/8/30 17:16
  */
 public class SheetConfig<T> implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 9004882047527551599L;
 
     /**
      * 2003版本 调色板自定义颜色索引(可能会覆盖预设颜色), 最大只能有 64-32个自定义颜色

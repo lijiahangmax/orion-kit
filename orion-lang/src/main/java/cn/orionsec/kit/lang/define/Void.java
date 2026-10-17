@@ -41,6 +41,11 @@ public class Void implements Serializable {
     @Serial
     private static final long serialVersionUID = 1079019592799661L;
 
+    @Serial
+    private Object readResolve() {
+        return VALUE;
+    }
+
     public static final Void VALUE = new Void();
 
     private Void() {

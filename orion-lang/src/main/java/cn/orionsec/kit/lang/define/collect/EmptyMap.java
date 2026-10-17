@@ -49,6 +49,11 @@ public class EmptyMap<K, V> extends AbstractMap<K, V> implements Serializable {
     @Serial
     private static final long serialVersionUID = 7432616076500907729L;
 
+    @Serial
+    private Object readResolve() {
+        return EMPTY;
+    }
+
     @Override
     public int size() {
         return 0;

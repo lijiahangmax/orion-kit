@@ -26,6 +26,8 @@
  */
 package cn.orionsec.kit.lang.exception;
 
+import java.io.Serial;
+
 /**
  * SFTP 异常
  *
@@ -34,6 +36,9 @@ package cn.orionsec.kit.lang.exception;
  * @since 2020/10/8 22:18
  */
 public class SftpException extends RuntimeException {
+
+    @Serial
+    private static final long serialVersionUID = -8380035141483575007L;
 
     public SftpException() {
     }

@@ -26,6 +26,7 @@
  */
 package cn.orionsec.kit.lang.utils;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -223,6 +224,9 @@ public class Stacks {
      * 栈内信息
      */
     public static class StackTrace implements Serializable {
+
+        @Serial
+        private static final long serialVersionUID = -8414341473731171970L;
 
         private final StackTraceElement e;
 

@@ -26,6 +26,8 @@
  */
 package cn.orionsec.kit.lang.exception;
 
+import java.io.Serial;
+
 /**
  * 配置异常
  *
@@ -34,6 +36,9 @@ package cn.orionsec.kit.lang.exception;
  * @since 2020/3/2 17:20
  */
 public class ConfigException extends Exception {
+
+    @Serial
+    private static final long serialVersionUID = 970114319231395396L;
 
     public ConfigException() {
     }

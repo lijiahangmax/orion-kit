@@ -33,6 +33,7 @@ import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -43,6 +44,9 @@ import java.io.Serializable;
  * @since 2021/3/6 16:35
  */
 public class ParseResponse extends BaseHttpResponse implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -6755517121914671499L;
 
     /**
      * response

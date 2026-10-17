@@ -38,17 +38,13 @@ public interface StandardTlsVersion {
     String TLS = "TLS";
 
     /**
-     * since 1996
-     */
-    String SSL_3 = "SSLv3";
-
-    /**
      * since 1999
      */
     String TLS_1 = "TLSv1";
 
     /**
      * since 2006
+     *
      */
     String TLS_1_1 = "TLSv1.1";
 

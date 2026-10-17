@@ -31,6 +31,8 @@ import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.time.Dates;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
@@ -1274,6 +1276,12 @@ public class Cron implements Serializable {
 
     protected int getLastDayOfMonth(int monthNum, int year) {
         return Dates.getMonthLastDay(year, monthNum);
+    }
+
+    @Serial
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        this.buildExpression(this.cronExpression);
     }
 
     static class ValueSet {

@@ -26,6 +26,8 @@
  */
 package cn.orionsec.kit.lang.exception;
 
+import java.io.Serial;
+
 /**
  * 超时异常
  *
@@ -34,6 +36,9 @@ package cn.orionsec.kit.lang.exception;
  * @since 2020/3/12 18:10
  */
 public class TimeoutException extends RuntimeException {
+
+    @Serial
+    private static final long serialVersionUID = 6689121402054560616L;
 
     public TimeoutException() {
     }

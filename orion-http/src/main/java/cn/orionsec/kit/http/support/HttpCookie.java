@@ -32,6 +32,7 @@ import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.convert.Converts;
 import cn.orionsec.kit.lang.utils.time.Dates;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Locale;
@@ -45,6 +46,9 @@ import java.util.Map;
  * @since 2020/7/1 10:13
  */
 public class HttpCookie implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 5045266319701708354L;
 
     public static final String[] EXPIRES_DATE = new String[]{
             "EEE, dd MMM yyyy HH:mm:ss 'GMT'",

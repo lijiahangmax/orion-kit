@@ -26,6 +26,8 @@
  */
 package cn.orionsec.kit.lang.exception;
 
+import java.io.Serial;
+
 /**
  * 不支持编码异常
  *
@@ -34,6 +36,9 @@ package cn.orionsec.kit.lang.exception;
  * @since 2020/3/12 18:08
  */
 public class UnsupportedEncodingRuntimeException extends RuntimeException {
+
+    @Serial
+    private static final long serialVersionUID = 2847010740730720191L;
 
     public UnsupportedEncodingRuntimeException() {
     }

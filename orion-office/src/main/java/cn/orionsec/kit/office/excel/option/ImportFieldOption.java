@@ -29,6 +29,7 @@ package cn.orionsec.kit.office.excel.option;
 import cn.orionsec.kit.lang.utils.Strings;
 import cn.orionsec.kit.office.excel.type.ExcelReadType;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -39,6 +40,9 @@ import java.io.Serializable;
  * @since 2021/1/2 0:38
  */
 public class ImportFieldOption implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -6835609939390246127L;
 
     /**
      * row index

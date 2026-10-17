@@ -26,6 +26,8 @@
  */
 package cn.orionsec.kit.lang.exception;
 
+import java.io.Serial;
+
 /**
  * 任务执行异常
  *
@@ -34,6 +36,9 @@ package cn.orionsec.kit.lang.exception;
  * @since 2021/2/25 17:15
  */
 public class TaskExecuteException extends RuntimeException {
+
+    @Serial
+    private static final long serialVersionUID = 539476473058155345L;
 
     public TaskExecuteException() {
     }

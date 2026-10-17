@@ -26,6 +26,8 @@
  */
 package cn.orionsec.kit.lang.exception;
 
+import java.io.Serial;
+
 /**
  * 类型转化异常
  *
@@ -34,6 +36,9 @@ package cn.orionsec.kit.lang.exception;
  * @since 2020/5/23 10:56
  */
 public class ConvertException extends RuntimeException {
+
+    @Serial
+    private static final long serialVersionUID = 5911860874318083443L;
 
     public ConvertException() {
     }

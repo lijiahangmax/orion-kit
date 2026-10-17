@@ -37,6 +37,7 @@ import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.HttpEntity;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -51,6 +52,9 @@ import java.util.Map;
  * @since 2020/6/12 15:08
  */
 public class ApacheResponse extends BaseHttpResponse implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 8169034133333076779L;
 
     /**
      * 响应

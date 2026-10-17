@@ -29,6 +29,7 @@ package cn.orionsec.kit.office.excel.option;
 import cn.orionsec.kit.office.excel.type.ExcelFieldType;
 import cn.orionsec.kit.office.excel.type.ExcelLinkType;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 
@@ -40,6 +41,9 @@ import java.lang.reflect.Method;
  * @since 2020/12/25 10:09
  */
 public class LinkOption implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -3510375252181817651L;
 
     public static final String NORMAL_PREFIX = "!";
 

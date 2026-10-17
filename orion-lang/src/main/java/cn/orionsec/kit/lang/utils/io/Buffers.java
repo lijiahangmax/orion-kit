@@ -31,6 +31,7 @@ import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.Strings;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 /**
  * buffer 工具类
@@ -101,7 +102,7 @@ public class Buffers {
      * @return 字符串
      */
     public static String readStr(ByteBuffer buffer) {
-        return new String(readBytes(buffer));
+        return new String(readBytes(buffer), StandardCharsets.UTF_8);
     }
 
     /**
