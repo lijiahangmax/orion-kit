@@ -30,10 +30,8 @@ import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Exceptions;
 import cn.orionsec.kit.lang.utils.io.Files1;
 import cn.orionsec.kit.lang.utils.reflect.Classes;
-import cn.orionsec.kit.lang.utils.reflect.Methods;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 
@@ -72,35 +70,6 @@ public class JarClassLoader extends URLClassLoader {
         JarClassLoader loader = new JarClassLoader();
         loader.addJar(file);
         return loader;
-    }
-
-    /**
-     * 加载 jar 到 SystemClassLoader
-     *
-     * @param file file
-     * @return SystemClassLoader
-     */
-    public static URLClassLoader loadJar(File file) {
-        URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-        loadJar(urlClassLoader, file);
-        return urlClassLoader;
-    }
-
-    /**
-     * 加载 jar 到 classLoader
-     *
-     * @param loader 加载器
-     * @param file   file
-     */
-    public static void loadJar(URLClassLoader loader, File file) {
-        try {
-            Method method = Methods.getAccessibleMethod(URLClassLoader.class, "addURL", URL.class);
-            if (method != null) {
-                Methods.invokeMethod(loader, method, file.toURI().toURL());
-            }
-        } catch (Exception e) {
-            throw Exceptions.load(e);
-        }
     }
 
     /**

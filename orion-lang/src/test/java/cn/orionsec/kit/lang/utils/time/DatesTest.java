@@ -371,4 +371,10 @@ public class DatesTest {
         assertNotNull(stream);
         assertEquals(2020, stream.getYear());
     }
+
+    @Test
+    public void testBuildWithMillisecond() {
+        assertEquals(0, Dates.build(2020, 6, 15, 10, 30, 30).getTime() % 1000);
+        assertEquals(123, Dates.build(2020, 6, 15, 10, 30, 30, 123).getTime() % 1000);
+    }
 }

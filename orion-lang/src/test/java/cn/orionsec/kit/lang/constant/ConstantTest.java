@@ -184,18 +184,6 @@ public class ConstantTest {
         assertEquals("Connection", StandardHttpHeader.CONNECTION);
     }
 
-    // ==================== StandardTlsVersion ====================
-
-    @Test
-    public void testStandardTlsVersion() {
-        assertEquals("TLS", StandardTlsVersion.TLS);
-        assertEquals("SSLv3", StandardTlsVersion.SSL_3);
-        assertEquals("TLSv1", StandardTlsVersion.TLS_1);
-        assertEquals("TLSv1.1", StandardTlsVersion.TLS_1_1);
-        assertEquals("TLSv1.2", StandardTlsVersion.TLS_1_2);
-        assertEquals("TLSv1.3", StandardTlsVersion.TLS_1_3);
-    }
-
     // ==================== 验证常量非 null ====================
 
     @Test

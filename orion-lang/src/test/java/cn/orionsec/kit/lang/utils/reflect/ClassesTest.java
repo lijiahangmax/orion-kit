@@ -3,6 +3,7 @@ package cn.orionsec.kit.lang.utils.reflect;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -21,6 +22,9 @@ public class ClassesTest {
     }
 
     static class ChildClass extends ParentClass implements MyInterface2, Serializable {
+
+        @Serial
+        private static final long serialVersionUID = 4452723682638468398L;
     }
 
     @Test

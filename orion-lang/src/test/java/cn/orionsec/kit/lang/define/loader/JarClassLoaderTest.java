@@ -4,48 +4,24 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 /**
  * JarClassLoader 测试
  */
-@SuppressWarnings("deprecation")
 public class JarClassLoaderTest {
-
-    @Test
-    public void testLoadJar() throws Exception {
-        File jar = createJar();
-        URLClassLoader loader = JarClassLoader.loadJar(jar);
-        try {
-            assertTrue(loader instanceof JarClassLoader);
-            assertEquals(1, loader.getURLs().length);
-        } finally {
-            loader.close();
-        }
-    }
 
     @Test
     public void testAddJar() throws Exception {
         File jar = createJar();
-        JarClassLoader loader = new JarClassLoader();
-        try {
+        try (JarClassLoader loader = new JarClassLoader()) {
             assertSame(loader, loader.addJar(jar));
             assertEquals(1, loader.getURLs().length);
-        } finally {
-            loader.close();
         }
-    }
-
-    @Test
-    public void testLoadJarToForeignLoader() throws Exception {
-        File jar = createJar();
-        assertThrows(UnsupportedOperationException.class,
-                () -> JarClassLoader.loadJar(new URLClassLoader(new URL[0]), jar));
     }
 
     private File createJar() throws Exception {
