@@ -1260,9 +1260,23 @@ public class Strings {
     }
 
     /**
+     * 删除前后空格
+     *
+     * @param s s
+     * @return s
+     */
+    public static String trim(String s) {
+        if (isEmpty(s)) {
+            return s;
+        }
+        return s.trim();
+    }
+
+    /**
      * 删除所有的标点符号
      *
-     * @param s 处理的字符串
+     * @param s s
+     * @return s
      */
     public static String trimPunct(String s) {
         if (isBlank(s)) {
