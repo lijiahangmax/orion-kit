@@ -29,6 +29,7 @@ package cn.orionsec.kit.lang.utils.math;
 import cn.orionsec.kit.lang.utils.Arrays1;
 import cn.orionsec.kit.lang.utils.Assert;
 import cn.orionsec.kit.lang.utils.Compares;
+import cn.orionsec.kit.lang.utils.Strings;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -1337,6 +1338,110 @@ public class Numbers {
      */
     public static boolean isDecimal(double d) {
         return Double.compare(d, ((double) (long) d)) != 0;
+    }
+
+    // -------------------- parse --------------------
+
+    /**
+     * 解析 byte
+     *
+     * @param s 字符串
+     * @return 解析结果
+     */
+    public static Byte parseByte(String s) {
+        if (Strings.isBlank(s)) {
+            return null;
+        }
+        try {
+            return Byte.valueOf(s);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    /**
+     * 解析 short
+     *
+     * @param s 字符串
+     * @return 解析结果
+     */
+    public static Short parseShort(String s) {
+        if (Strings.isBlank(s)) {
+            return null;
+        }
+        try {
+            return Short.valueOf(s);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    /**
+     * 解析 int
+     *
+     * @param s 字符串
+     * @return 解析结果
+     */
+    public static Integer parseInt(String s) {
+        if (Strings.isBlank(s)) {
+            return null;
+        }
+        try {
+            return Integer.valueOf(s);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    /**
+     * 解析 long
+     *
+     * @param s 字符串
+     * @return 解析结果
+     */
+    public static Long parseLong(String s) {
+        if (Strings.isBlank(s)) {
+            return null;
+        }
+        try {
+            return Long.valueOf(s);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    /**
+     * 解析 float
+     *
+     * @param s 字符串
+     * @return 解析结果
+     */
+    public static Float parseFloat(String s) {
+        if (Strings.isBlank(s)) {
+            return null;
+        }
+        try {
+            return Float.valueOf(s);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    /**
+     * 解析 double
+     *
+     * @param s 字符串
+     * @return 解析结果
+     */
+    public static Double parseDouble(String s) {
+        if (Strings.isBlank(s)) {
+            return null;
+        }
+        try {
+            return Double.valueOf(s);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     /**

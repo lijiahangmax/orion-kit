@@ -103,4 +103,23 @@ public class NumbersTest {
         assertTrue(Numbers.isDecimal(1.5f));
         assertFalse(Numbers.isDecimal(2.0f));
     }
+
+    @Test
+    public void testParse() {
+        assertEquals(Byte.valueOf((byte) 1), Numbers.parseByte("1"));
+        assertEquals(Short.valueOf((short) 2), Numbers.parseShort("2"));
+        assertEquals(Integer.valueOf(3), Numbers.parseInt("3"));
+        assertEquals(Long.valueOf(4L), Numbers.parseLong("4"));
+        assertEquals(Float.valueOf(1.5F), Numbers.parseFloat("1.5"));
+        assertEquals(Double.valueOf(2.5D), Numbers.parseDouble("2.5"));
+        assertNull(Numbers.parseByte("x"));
+        assertNull(Numbers.parseShort("x"));
+        assertNull(Numbers.parseInt("x"));
+        assertNull(Numbers.parseLong("x"));
+        assertNull(Numbers.parseFloat("x"));
+        assertNull(Numbers.parseDouble("x"));
+        assertNull(Numbers.parseLong(null));
+        assertNull(Numbers.parseInt(""));
+    }
+
 }
