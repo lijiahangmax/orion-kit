@@ -1778,7 +1778,7 @@ public class Strings {
      * @param keyword 小写关键字
      * @return 是否包含
      */
-    private boolean containsIgnoreCase(String s, String keyword) {
+    public static boolean containsIgnoreCase(String s, String keyword) {
         return s != null && s.toLowerCase().contains(keyword);
     }
 

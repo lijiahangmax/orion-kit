@@ -97,6 +97,14 @@ public class StringsTest {
     }
 
     @Test
+    public void testContainsIgnoreCase() {
+        assertTrue(Strings.containsIgnoreCase("Hello World", "hello"));
+        assertTrue(Strings.containsIgnoreCase("Hello World", "world"));
+        assertFalse(Strings.containsIgnoreCase("Hello World", "abc"));
+        assertFalse(Strings.containsIgnoreCase(null, "abc"));
+    }
+
+    @Test
     public void testToUpperCase() {
         assertEquals("ABC", Strings.toUpperCase("aBc"));
         assertEquals("ABC", Strings.toUpperCase("ABC"));
