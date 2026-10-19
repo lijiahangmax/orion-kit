@@ -89,6 +89,22 @@ public class StringsTest {
     }
 
     @Test
+    public void testToLowerCase() {
+        assertEquals("abc", Strings.toLowerCase("AbC"));
+        assertEquals("abc", Strings.toLowerCase("abc"));
+        assertEquals("", Strings.toLowerCase(""));
+        assertNull(Strings.toLowerCase(null));
+    }
+
+    @Test
+    public void testToUpperCase() {
+        assertEquals("ABC", Strings.toUpperCase("aBc"));
+        assertEquals("ABC", Strings.toUpperCase("ABC"));
+        assertEquals("", Strings.toUpperCase(""));
+        assertNull(Strings.toUpperCase(null));
+    }
+
+    @Test
     public void testSplit() {
         assertArrayEquals(new String[]{"a", "b", "c"}, Strings.split("a,b,c"));
         assertArrayEquals(new String[]{"a", "b", "c"}, Strings.split("a-b-c", "-"));

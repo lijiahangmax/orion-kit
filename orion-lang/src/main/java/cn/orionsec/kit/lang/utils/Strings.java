@@ -1133,6 +1133,32 @@ public class Strings {
     }
 
     /**
+     * 转小写
+     *
+     * @param str 字符串
+     * @return 小写字符串
+     */
+    public static String toLowerCase(String str) {
+        if (isEmpty(str)) {
+            return str;
+        }
+        return str.toLowerCase();
+    }
+
+    /**
+     * 转大写
+     *
+     * @param str 字符串
+     * @return 大写字符串
+     */
+    public static String toUpperCase(String str) {
+        if (isEmpty(str)) {
+            return str;
+        }
+        return str.toUpperCase();
+    }
+
+    /**
      * 全角字符变半角字符
      *
      * @param s 需要处理的字符串
@@ -1743,6 +1769,17 @@ public class Strings {
             }
         }
         return true;
+    }
+
+    /**
+     * 不区分大小写包含匹配
+     *
+     * @param s       文本
+     * @param keyword 小写关键字
+     * @return 是否包含
+     */
+    private boolean containsIgnoreCase(String s, String keyword) {
+        return s != null && s.toLowerCase().contains(keyword);
     }
 
 }
