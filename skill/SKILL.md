@@ -9,7 +9,7 @@ Route user requests by domain:
 
 | Domain                                                                 | Module            | Key Classes                                                                                                         |
 |------------------------------------------------------------------------|-------------------|---------------------------------------------------------------------------------------------------------------------|
-| Strings, collections, IO, crypto, dates, reflection, encoding, threads | `orion-lang`      | `Strings`, `Lists`, `Maps`, `Sets`, `Dates`, `Files1`, `Streams`, `Arrays1`, `Objects1`, `AES`, `RSA`, `Signatures` |
+| Strings, collections, IO, crypto, dates, reflection, encoding, threads | `orion-lang`      | `Strings`, `Lists`, `Maps`, `Sets`, `Dates`, `Calendars`, `Files1`, `Streams`, `Arrays1`, `Objects1`, `AES`, `RSA`, `Signatures` |
 | IP geolocation, email, process, file tailing, git                      | `orion-ext`       | `IPs`, `Emails`, `Processes`, `GitPush`                                                                             |
 | CSV and Excel import/export                                            | `orion-office`    | `CsvBeanReader`, `CsvBeanWriter`, `ExcelReads`, `ExcelWrites`                                                       |
 | OkHttp, HttpClient, Jsoup                                              | `orion-http`      | `Https`, `HttpClients`, `JsoupDocument`                                                                             |
@@ -78,6 +78,7 @@ For common questions, answer directly without lookup:
 - `Strings.isBlank(null)` → `true`
 - `Lists.of(1,2,3)` → returns `ArrayList`
 - `Dates.format(date, "yyyy-MM-dd")` → formatted string
+- `Calendars.addYear(date, 1, Calendars.START)` → 2027-01-01 00:00:00.000 (END → 12-31 23:59:59.999)
 - `AES.encrypt(plain, key)` / `AES.decrypt(cipher, key)` → symmetric crypto
 - `RSA.sign(data, privateKey)` / `RSA.verify(data, publicKey, sig)` → asymmetric
 - `Files1.touch(path)` → create file + parents

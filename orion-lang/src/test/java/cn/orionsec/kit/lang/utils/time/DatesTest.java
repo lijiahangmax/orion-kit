@@ -4,6 +4,8 @@ import org.junit.Test;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import static org.junit.Assert.*;
 
@@ -85,7 +87,11 @@ public class DatesTest {
 
     @Test
     public void testFormatNull() {
+        assertNull(Dates.format(null));
         assertNull(Dates.format(null, "yyyy-MM-dd"));
+        assertNull(Dates.format(null, Locale.CHINA));
+        assertNull(Dates.format(null, TimeZone.getDefault()));
+        assertNull(Dates.format(null, TimeZone.getDefault(), Locale.CHINA));
     }
 
     @Test

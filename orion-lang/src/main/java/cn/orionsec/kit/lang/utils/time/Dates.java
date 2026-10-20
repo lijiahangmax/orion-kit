@@ -425,7 +425,7 @@ public class Dates extends BaseDates {
     }
 
     public static String format(Date d) {
-        return FastDateFormat.getInstance(YMD_HMS).format(d);
+        return d == null ? null : FastDateFormat.getInstance(YMD_HMS).format(d);
     }
 
     public static String format(Date d, String pattern) {
@@ -433,7 +433,7 @@ public class Dates extends BaseDates {
     }
 
     public static String format(Date d, Locale locale) {
-        return FastDateFormat.getInstance(YMD_HMS, locale).format(d);
+        return d == null ? null : FastDateFormat.getInstance(YMD_HMS, locale).format(d);
     }
 
     public static String format(Date d, String pattern, Locale locale) {
@@ -441,7 +441,7 @@ public class Dates extends BaseDates {
     }
 
     public static String format(Date d, TimeZone timeZone) {
-        return FastDateFormat.getInstance(YMD_HMS, timeZone).format(d);
+        return d == null ? null : FastDateFormat.getInstance(YMD_HMS, timeZone).format(d);
     }
 
     public static String format(Date d, String pattern, TimeZone timeZone) {
@@ -449,7 +449,7 @@ public class Dates extends BaseDates {
     }
 
     public static String format(Date d, TimeZone timeZone, Locale locale) {
-        return FastDateFormat.getInstance(YMD_HMS, timeZone, locale).format(d);
+        return d == null ? null : FastDateFormat.getInstance(YMD_HMS, timeZone, locale).format(d);
     }
 
     /**
