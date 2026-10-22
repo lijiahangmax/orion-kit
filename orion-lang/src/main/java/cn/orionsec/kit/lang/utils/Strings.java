@@ -1324,6 +1324,18 @@ public class Strings {
      * @return str
      */
     public static String retain(String str, int length) {
+        return retain(str, length, false);
+    }
+
+    /**
+     * 保留长度
+     *
+     * @param str            str
+     * @param length         length
+     * @param checkSurrogate 是否避免切断代理对
+     * @return str
+     */
+    public static String retain(String str, int length, boolean checkSurrogate) {
         if (isEmpty(str)) {
             return str;
         }
@@ -1331,7 +1343,15 @@ public class Strings {
         if (len <= length) {
             return str;
         }
-        return str.substring(0, length);
+        if (!checkSurrogate) {
+            return str.substring(0, length);
+        }
+        if (length <= 0) {
+            return Strings.EMPTY;
+        }
+        // 截断点落在代理对中间时丢弃高位
+        int end = Character.isHighSurrogate(str.charAt(length - 1)) ? length - 1 : length;
+        return str.substring(0, end);
     }
 
     public static String omit(String str, int length) {
