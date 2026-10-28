@@ -69,8 +69,8 @@ public abstract class TypeReference<T> {
         Type[] argTypes = argType.getActualTypeArguments();
         int actualIndex = 0;
         for (int i = 0; i < argTypes.length; ++i) {
-            if (argTypes[i] instanceof TypeVariable &&
-                    actualIndex < actualTypeArguments.length) {
+            if (argTypes[i] instanceof TypeVariable
+                    && actualIndex < actualTypeArguments.length) {
                 argTypes[i] = actualTypeArguments[actualIndex++];
             }
             // fix for openjdk and android env
