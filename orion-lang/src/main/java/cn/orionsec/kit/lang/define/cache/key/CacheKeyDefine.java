@@ -50,6 +50,8 @@ public class CacheKeyDefine implements Serializable {
 
     protected static String globalPrefix = null;
 
+    protected static String clearSuffix = null;
+
     protected static final CacheStruct DEFAULT_STRUCT = RedisCacheStruct.STRING;
 
     protected static final long DEFAULT_TIMEOUT = 0L;
@@ -91,15 +93,24 @@ public class CacheKeyDefine implements Serializable {
      */
     private TimeUnit unit;
 
+    /**
+     * 是否允许清理
+     */
+    private final boolean clearable;
+
     public CacheKeyDefine(String key) {
-        this(key, null, Strings.EMPTY, null, DEFAULT_STRUCT, DEFAULT_TIMEOUT, DEFAULT_UNIT);
+        this(key, null, Strings.EMPTY, null, DEFAULT_STRUCT, DEFAULT_TIMEOUT, DEFAULT_UNIT, false);
     }
 
     public CacheKeyDefine(String key, String prefix) {
-        this(key, prefix, Strings.EMPTY, null, DEFAULT_STRUCT, DEFAULT_TIMEOUT, DEFAULT_UNIT);
+        this(key, prefix, Strings.EMPTY, null, DEFAULT_STRUCT, DEFAULT_TIMEOUT, DEFAULT_UNIT, false);
     }
 
     public CacheKeyDefine(String key, String prefix, String desc, Class<?> type, CacheStruct struct, long timeout, TimeUnit unit) {
+        this(key, prefix, desc, type, struct, timeout, unit, false);
+    }
+
+    public CacheKeyDefine(String key, String prefix, String desc, Class<?> type, CacheStruct struct, long timeout, TimeUnit unit, boolean clearable) {
         this.key = key;
         this.prefix = prefix;
         this.desc = desc;
@@ -107,6 +118,7 @@ public class CacheKeyDefine implements Serializable {
         this.struct = struct;
         this.timeout = timeout;
         this.unit = unit;
+        this.clearable = clearable;
     }
 
     /**
@@ -115,7 +127,7 @@ public class CacheKeyDefine implements Serializable {
      * @return key
      */
     public CacheKeyDefine copy() {
-        return new CacheKeyDefine(key, prefix, desc, type, struct, timeout, unit);
+        return new CacheKeyDefine(key, prefix, desc, type, struct, timeout, unit, clearable);
     }
 
     /**
@@ -144,12 +156,20 @@ public class CacheKeyDefine implements Serializable {
      * @return key
      */
     public String getKey() {
+        String cacheKey;
+        // 前缀
         if (prefix != null) {
-            return prefix + key;
+            cacheKey = prefix + key;
         } else if (globalPrefix != null) {
-            return globalPrefix + key;
+            cacheKey = globalPrefix + key;
+        } else {
+            cacheKey = key;
         }
-        return key;
+        // 后缀
+        if (clearable && clearSuffix != null) {
+            return cacheKey + clearSuffix;
+        }
+        return cacheKey;
     }
 
     public String getDesc() {
@@ -162,6 +182,10 @@ public class CacheKeyDefine implements Serializable {
 
     public CacheStruct getStruct() {
         return struct;
+    }
+
+    public boolean isClearable() {
+        return clearable;
     }
 
     public long getTimeout() {
@@ -191,6 +215,19 @@ public class CacheKeyDefine implements Serializable {
 
     public static String getGlobalPrefix() {
         return globalPrefix;
+    }
+
+    /**
+     * 设置全局缓存清理后缀
+     *
+     * @param clearSuffix clearSuffix
+     */
+    public static void setClearSuffix(String clearSuffix) {
+        CacheKeyDefine.clearSuffix = clearSuffix;
+    }
+
+    public static String getClearSuffix() {
+        return clearSuffix;
     }
 
     @Override

@@ -1,6 +1,8 @@
 package cn.orionsec.kit.lang.define.cache.key;
 
 import cn.orionsec.kit.lang.define.cache.key.struct.RedisCacheStruct;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
@@ -11,6 +13,18 @@ import static org.junit.Assert.*;
  * CacheKeyBuilder 单元测试
  */
 public class CacheKeyBuilderTest {
+
+    @Before
+    public void setUp() {
+        CacheKeyDefine.setGlobalPrefix(null);
+        CacheKeyDefine.setClearSuffix(null);
+    }
+
+    @After
+    public void tearDown() {
+        CacheKeyDefine.setGlobalPrefix(null);
+        CacheKeyDefine.setClearSuffix(null);
+    }
 
     @Test
     public void testCreate() {
@@ -121,6 +135,27 @@ public class CacheKeyBuilderTest {
     }
 
     @Test
+    public void testBuildWithClearable() {
+        CacheKeyDefine.setGlobalPrefix("v1:");
+        CacheKeyDefine.setClearSuffix(":cache");
+        CacheKeyDefine define = CacheKeyBuilder.create()
+                .key("user:{}")
+                .clearable(true)
+                .build();
+        assertTrue(define.isClearable());
+        assertEquals("v1:user:{}:cache", define.getKey());
+    }
+
+    @Test
+    public void testBuildWithClearableAndPrefixThrows() {
+        assertThrows(IllegalArgumentException.class, () -> CacheKeyBuilder.create()
+                .key("user:{}")
+                .prefix("app:")
+                .clearable(true)
+                .build());
+    }
+
+    @Test
     public void testDefaultValues() {
         CacheKeyDefine define = CacheKeyBuilder.create()
                 .key("test")
@@ -129,6 +164,7 @@ public class CacheKeyBuilderTest {
         assertEquals(RedisCacheStruct.STRING, define.getStruct());
         assertEquals(0L, define.getTimeout());
         assertEquals(TimeUnit.MILLISECONDS, define.getUnit());
+        assertFalse(define.isClearable());
     }
 
     @Test

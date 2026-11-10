@@ -76,6 +76,11 @@ public class CacheKeyBuilder implements Buildable<CacheKeyDefine> {
      */
     private TimeUnit unit;
 
+    /**
+     * 是否允许清理
+     */
+    private boolean clearable;
+
     public CacheKeyBuilder() {
         this.struct = CacheKeyDefine.DEFAULT_STRUCT;
         this.timeout = CacheKeyDefine.DEFAULT_TIMEOUT;
@@ -186,9 +191,20 @@ public class CacheKeyBuilder implements Buildable<CacheKeyDefine> {
         return this;
     }
 
+    /**
+     * 设置是否允许清理
+     *
+     * @param clearable clearable
+     * @return this
+     */
+    public CacheKeyBuilder clearable(boolean clearable) {
+        this.clearable = clearable;
+        return this;
+    }
+
     @Override
     public CacheKeyDefine build() {
-        return new CacheKeyDefine(key, prefix, desc, type, struct, timeout, unit);
+        return new CacheKeyDefine(key, prefix, desc, type, struct, timeout, unit, clearable);
     }
 
 }

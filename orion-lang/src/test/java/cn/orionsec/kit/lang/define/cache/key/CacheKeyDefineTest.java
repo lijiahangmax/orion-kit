@@ -18,14 +18,16 @@ public class CacheKeyDefineTest {
 
     @Before
     public void setUp() {
-        // 清除全局前缀
+        // 清除全局前缀与清理后缀
         CacheKeyDefine.setGlobalPrefix(null);
+        CacheKeyDefine.setClearSuffix(null);
     }
 
     @After
     public void tearDown() {
-        // 清除全局前缀
+        // 清除全局前缀与清理后缀
         CacheKeyDefine.setGlobalPrefix(null);
+        CacheKeyDefine.setClearSuffix(null);
     }
 
     @Test
@@ -118,6 +120,40 @@ public class CacheKeyDefineTest {
         assertEquals(define.getStruct(), copy.getStruct());
         assertEquals(define.getTimeout(), copy.getTimeout());
         assertEquals(define.getUnit(), copy.getUnit());
+    }
+
+    @Test
+    public void testClearableWithGlobalPrefixAndSuffix() {
+        CacheKeyDefine.setGlobalPrefix("v1:");
+        CacheKeyDefine.setClearSuffix(":cache");
+        CacheKeyDefine define = new CacheKeyDefine("user:{}", null, "用户缓存", String.class, RedisCacheStruct.STRING, 3600, TimeUnit.SECONDS, true);
+        assertTrue(define.isClearable());
+        assertEquals("v1:user:{}:cache", define.getKey());
+    }
+
+    @Test
+    public void testNotClearableWithoutSuffix() {
+        CacheKeyDefine.setGlobalPrefix("v1:");
+        CacheKeyDefine.setClearSuffix(":cache");
+        CacheKeyDefine define = new CacheKeyDefine("user:{}");
+        assertFalse(define.isClearable());
+        assertEquals("v1:user:{}", define.getKey());
+    }
+
+    @Test
+    public void testCopyClearable() {
+        CacheKeyDefine.setGlobalPrefix("v1:");
+        CacheKeyDefine.setClearSuffix(":cache");
+        CacheKeyDefine define = new CacheKeyDefine("user:{}", null, "用户缓存", String.class, RedisCacheStruct.STRING, 3600, TimeUnit.SECONDS, true);
+        CacheKeyDefine copy = define.copy();
+        assertTrue(copy.isClearable());
+        assertEquals("v1:user:{}:cache", copy.getKey());
+    }
+
+    @Test
+    public void testClearableWithPrefixThrows() {
+        assertThrows(IllegalArgumentException.class, () ->
+                new CacheKeyDefine("user:{}", "app:", "用户缓存", String.class, RedisCacheStruct.STRING, 3600, TimeUnit.SECONDS, true));
     }
 
     @Test
