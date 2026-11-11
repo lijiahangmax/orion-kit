@@ -228,7 +228,7 @@ public class Strings {
      * @return 空 true
      */
     public static boolean isBlank(String str) {
-        return str == null || Strings.EMPTY.equals(str) || Strings.EMPTY.equals(str.trim()) || str.replaceAll("\\s", Strings.EMPTY).length() == 0;
+        return str == null || str.isBlank();
     }
 
     /**
@@ -302,7 +302,7 @@ public class Strings {
      * @return 空 true
      */
     public static boolean isEmpty(CharSequence str) {
-        return str == null || str.length() == 0;
+        return str == null || str.isEmpty();
     }
 
     /**
@@ -1656,7 +1656,7 @@ public class Strings {
         if (s == null) {
             return null;
         }
-        if (s.length() == 0) {
+        if (s.isEmpty()) {
             return new int[0];
         }
 

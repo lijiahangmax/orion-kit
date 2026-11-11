@@ -151,9 +151,11 @@ public class CacheKeyDefineTest {
     }
 
     @Test
-    public void testClearableWithPrefixThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new CacheKeyDefine("user:{}", "app:", "用户缓存", String.class, RedisCacheStruct.STRING, 3600, TimeUnit.SECONDS, true));
+    public void testClearableWithPrefix() {
+        CacheKeyDefine.setClearSuffix(":cache");
+        CacheKeyDefine define = new CacheKeyDefine("user:{}", "app:", "用户缓存", String.class, RedisCacheStruct.STRING, 3600, TimeUnit.SECONDS, true);
+        assertTrue(define.isClearable());
+        assertEquals("app:user:{}:cache", define.getKey());
     }
 
     @Test

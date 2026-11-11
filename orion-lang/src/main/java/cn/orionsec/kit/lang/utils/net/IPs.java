@@ -225,7 +225,7 @@ public class IPs {
     }
 
     public static byte[] ipv4ToBytes(String ip) {
-        if (ip.length() == 0) {
+        if (ip.isEmpty()) {
             return null;
         }
         byte[] bytes = new byte[4];

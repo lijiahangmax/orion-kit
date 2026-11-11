@@ -96,7 +96,7 @@ public class WeightRandomMap<T> extends TreeMap<Double, T> implements Serializab
         if (o != null) {
             double weight = o.getWeight();
             if (o.getWeight() > 0) {
-                double lastWeight = (this.size() == 0) ? 0 : this.lastKey();
+                double lastWeight = this.isEmpty() ? 0 : this.lastKey();
                 super.put(weight + lastWeight, o.getObject());
             }
         }

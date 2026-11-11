@@ -28,8 +28,6 @@ package cn.orionsec.kit.lang.utils;
 
 import cn.orionsec.kit.lang.constant.Const;
 import cn.orionsec.kit.lang.define.Null;
-import cn.orionsec.kit.lang.utils.collect.Lists;
-import cn.orionsec.kit.lang.utils.collect.Maps;
 import cn.orionsec.kit.lang.utils.hash.Hashes;
 import cn.orionsec.kit.lang.utils.reflect.Methods;
 
@@ -265,11 +263,11 @@ public class Objects1 {
         if (o.getClass().isArray()) {
             return Array.getLength(o) == 0;
         } else if (o instanceof Collection) {
-            return Lists.isEmpty((Collection<?>) o);
+            return ((Collection<?>) o).isEmpty();
         } else if (o instanceof Map) {
-            return Maps.isEmpty((Map<?, ?>) o);
+            return ((Map<?, ?>) o).isEmpty();
         } else if (o instanceof String) {
-            return Strings.isBlank((String) o);
+            return ((String) o).isBlank();
         }
         return false;
     }

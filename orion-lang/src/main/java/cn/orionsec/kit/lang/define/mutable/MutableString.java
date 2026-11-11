@@ -100,7 +100,7 @@ public class MutableString implements Mutable<String>, CharSequence, Serializabl
      * @return true 空白
      */
     public boolean isBlank() {
-        return Strings.isBlank(builder.toString());
+        return builder.toString().isBlank();
     }
 
     /**
@@ -109,7 +109,7 @@ public class MutableString implements Mutable<String>, CharSequence, Serializabl
      * @return false 空白
      */
     public boolean isNotBlank() {
-        return Strings.isNotBlank(builder.toString());
+        return !isBlank();
     }
 
     /**
@@ -118,7 +118,7 @@ public class MutableString implements Mutable<String>, CharSequence, Serializabl
      * @return true 空
      */
     public boolean isEmpty() {
-        return Strings.isEmpty(builder);
+        return builder.isEmpty();
     }
 
     /**
@@ -127,7 +127,7 @@ public class MutableString implements Mutable<String>, CharSequence, Serializabl
      * @return false 空
      */
     public boolean isNotEmpty() {
-        return Strings.isNotEmpty(builder);
+        return !isEmpty();
     }
 
     /**

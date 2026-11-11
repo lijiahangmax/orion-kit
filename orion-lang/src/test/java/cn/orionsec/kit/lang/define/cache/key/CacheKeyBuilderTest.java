@@ -147,12 +147,15 @@ public class CacheKeyBuilderTest {
     }
 
     @Test
-    public void testBuildWithClearableAndPrefixThrows() {
-        assertThrows(IllegalArgumentException.class, () -> CacheKeyBuilder.create()
+    public void testBuildWithClearableAndPrefix() {
+        CacheKeyDefine.setClearSuffix(":cache");
+        CacheKeyDefine define = CacheKeyBuilder.create()
                 .key("user:{}")
                 .prefix("app:")
                 .clearable(true)
-                .build());
+                .build();
+        assertTrue(define.isClearable());
+        assertEquals("app:user:{}:cache", define.getKey());
     }
 
     @Test

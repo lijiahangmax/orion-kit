@@ -411,7 +411,7 @@ public class Maps {
      * @return true为空
      */
     public static boolean isEmpty(Map<?, ?> map) {
-        return size(map) == 0;
+        return map == null || map.isEmpty();
     }
 
     /**

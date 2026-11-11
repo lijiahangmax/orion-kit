@@ -131,7 +131,7 @@ public class Collections {
      * @return true为空
      */
     public static boolean isEmpty(Collection<?> c) {
-        return size(c) == 0;
+        return c == null || c.isEmpty();
     }
 
     /**
