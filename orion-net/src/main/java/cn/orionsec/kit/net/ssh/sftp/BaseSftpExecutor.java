@@ -98,17 +98,15 @@ public abstract class BaseSftpExecutor implements ISftpExecutor {
         try {
             source = Files1.getPath(source);
             target = Files1.getPath(target);
-            if (target.charAt(0) == '/') {
-                // 检查是否需要创建目标文件目录
-                if (!this.isSameParentPath(source, target)) {
-                    this.makeDirectories(Files1.getParentPath(target));
-                }
-                // 绝对路径
-                this.doMove(source, Files1.getPath(Files1.normalize(target)));
-            } else {
-                // 相对路径
-                this.doMove(source, Files1.getPath(Files1.normalize(Files1.getPath(source + "/../" + target))));
+            // 相对路径 基于源文件目录解析为绝对路径
+            if (target.charAt(0) != '/') {
+                target = Files1.getPath(Files1.normalize(Files1.getPath(source + "/../" + target)));
             }
+            // 检查是否需要创建目标文件目录
+            if (!this.isSameParentPath(source, target)) {
+                this.makeDirectories(Files1.getParentPath(target));
+            }
+            this.doMove(source, Files1.getPath(Files1.normalize(target)));
         } catch (Exception e) {
             throw Exceptions.sftp(e);
         }
